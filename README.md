@@ -9,7 +9,7 @@ Once connected as the owner of the address, you will also be able to manage your
 Lukso L16
 Lukso Mainnet (to come)
 
-# Using from your project
+# Using on your machine
 
 If you want to use the wallet locally on your machine, please follow these instructions.
 
