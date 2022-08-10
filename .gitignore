@@ -77,6 +77,8 @@ typings/
 
 # Next.js build output
 .next
+.DS_Store
+next-env.d.ts
 
 # Nuxt.js build / generate output
 .nuxt
