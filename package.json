@@ -1,12 +1,13 @@
 {
-  "name": "my-app",
+  "name": "universalprofile-wallet",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next build && next export"
   },
   "dependencies": {
     "next": "12.2.4",
