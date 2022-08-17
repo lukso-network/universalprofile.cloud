@@ -1,8 +1,6 @@
 
 export const L16_RPC_URL = 'https://rpc.l16.lukso.network';
 
-export const L14_RPC_URL = 'https://rpc.l14.lukso.network';
-
 export const INTERFACE_IDS = {
   LSP7DigitalAsset: '0xe33f65c3',
   LSP8IdentifiableDigitalAsset: '0x49399145',

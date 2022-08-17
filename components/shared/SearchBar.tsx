@@ -41,7 +41,7 @@ const SearchBar: React.FC = () => {
         placeholder="Search by wallet"
         value={address}
         className="my-4 ml-8 rounded-md py-1
-                  px-2 bg-darkGray text-gray-300 w-[400px] text-sm
+                  px-2 bg-darkGray w-[400px] text-sm
                   text-gray-400 focus:border-current focus:ring-0
                   "
         onChange={(e) => setAddress(e.target.value)}

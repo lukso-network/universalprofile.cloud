@@ -1,10 +1,8 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import { L16_RPC_URL } from '../constants';
 
-
 const useWeb3Provider = () => {
-
   const [provider, setProvider] = useState<any>(); //web3 does not export httpProvider type
 
   useEffect(() => {

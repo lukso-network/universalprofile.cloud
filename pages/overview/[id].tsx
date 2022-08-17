@@ -6,7 +6,6 @@ import AddressError from '../../components/overview/AddressError';
 import { AssetsContext } from '../../contexts/AssetsContext';
 import fetchReceivedAssets from '../../utils/fetchReceivedAssets';
 import useEthersProvider from '../../hooks/useEthersProvider';
-import { ethersProvider } from '../../types';
 import isLSP7orLSP8 from '../../utils/isLSP7orLSP8';
 import fetchLSP4Metadata from '../../utils/fetchLSP4Metadata';
 import fetchLSP7Balance from '../../utils/fetchLSP7Balance';
@@ -18,6 +17,7 @@ import { Lsp7AssetType, Lsp8AssetType } from '../../contexts/AssetsContext';
 import LSP7Table from '../../components/overview/LSP7sTable';
 import LSP8Table from '../../components/overview/LSP8Table';
 import { luksoImg } from '../../constants';
+import { LSP4Metadata } from '../../interfaces/lsps';
 
 const AdressOverview: NextPage = () => {
   const router = useRouter();
@@ -29,10 +29,40 @@ const AdressOverview: NextPage = () => {
 
   const { lsp7Assets, setLsp7Assets, lsp8Assets, setLsp8Assets } =
     useContext(AssetsContext);
-  const provider = useEthersProvider() as ethersProvider;
+  const provider = useEthersProvider() as ethers.providers.BaseProvider;
 
   //ERC725 does not support ethers provider
   const web3Provider = useWeb3Provider();
+
+  const createLSP8Object = (
+    NFTLSP4MetadataJSON: LSP4Metadata,
+    tokenId: string,
+    collectionName: string,
+    collectionSymbol: string,
+    assetAddress: string,
+    collectionLSP4Metadata: LSP4Metadata,
+  ): Lsp8AssetType => {
+    const { description, links, images, assets, icons } =
+      NFTLSP4MetadataJSON.LSP4Metadata;
+
+    const lsp8AssetObject = {
+      tokenId,
+      description,
+      image: images[0][0]?.url ? images[0][0].url : luksoImg,
+      icon: icons[0]?.url ? icons[0].url : luksoImg,
+      collectionName,
+      collectionSymbol,
+      collectionAddress: assetAddress,
+      collectionDescription: collectionLSP4Metadata.LSP4Metadata.description,
+      collectionImage: collectionLSP4Metadata.LSP4Metadata.images[0][0]?.url
+        ? collectionLSP4Metadata.LSP4Metadata.images[0][0]?.url
+        : luksoImg,
+      collectionIcon: collectionLSP4Metadata.LSP4Metadata.icons[0]?.url
+        ? collectionLSP4Metadata.LSP4Metadata.icons[0]?.url
+        : luksoImg,
+    };
+    return lsp8AssetObject as Lsp8AssetType;
+  };
 
   const getAssets = async (address: string) => {
     //fetch all received assets for specific up address
@@ -93,27 +123,16 @@ const AdressOverview: NextPage = () => {
               assetAddress,
               web3Provider,
             );
-            const { description, links, images, assets, icons } =
-              NFTLSP4MetadataJSON.LSP4Metadata;
 
-            const lsp8AssetObject = {
-              tokenId: tokenId,
-              description,
-              image: images[0][0]?.url ? images[0][0].url : luksoImg,
-              icon: icons[0]?.url ? icons[0].url : luksoImg,
+            const lsp8AssetObject: Lsp8AssetType = createLSP8Object(
+              NFTLSP4MetadataJSON,
+              tokenId,
               collectionName,
               collectionSymbol,
-              collectionAddress: assetAddress,
-              collectionDescription:
-                collectionLSP4Metadata.LSP4Metadata.description,
-              collectionImage: collectionLSP4Metadata.LSP4Metadata.images[0][0]
-                ?.url
-                ? collectionLSP4Metadata.LSP4Metadata.images[0][0]?.url
-                : luksoImg,
-              collectionIcon: collectionLSP4Metadata.LSP4Metadata.icons[0]?.url
-                ? collectionLSP4Metadata.LSP4Metadata.icons[0]?.url
-                : luksoImg,
-            };
+              assetAddress,
+              collectionLSP4Metadata,
+            );
+
             setLsp8Assets((prev: Lsp8AssetType[]): Lsp8AssetType[] => [
               ...prev,
               lsp8AssetObject,

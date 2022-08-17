@@ -1,12 +1,10 @@
 import { LSP4Metadata } from '../interfaces/lsps';
 
-
-export const validateLSP4MetaData = (LSP4MetadataJSON:any): LSP4Metadata => {
+export const validateLSP4MetaData = (LSP4MetadataJSON: any): LSP4Metadata => {
   let images = [[]];
   let links = [];
   let assets = [];
   let icons = [];
-
 
   if (LSP4MetadataJSON?.LSP4Metadata?.images?.length) {
     images = LSP4MetadataJSON?.LSP4Metadata?.images?.filter((image: any) => {
@@ -16,15 +14,14 @@ export const validateLSP4MetaData = (LSP4MetadataJSON:any): LSP4Metadata => {
     });
   }
 
-
   if (LSP4MetadataJSON?.LSP4Metadata?.links?.length) {
-    links = LSP4MetadataJSON?.LSP4Metadata?.links.filter((link:any) => {
+    links = LSP4MetadataJSON?.LSP4Metadata?.links.filter((link: any) => {
       return link?.title && link?.url;
     });
   }
 
   if (LSP4MetadataJSON?.LSP4Metadata?.assets?.length) {
-    assets = LSP4MetadataJSON?.LSP4Metadata?.assets.filter((asset:any) => {
+    assets = LSP4MetadataJSON?.LSP4Metadata?.assets.filter((asset: any) => {
       return asset?.hash && asset?.url && asset?.hashFunction && asset.fileType;
     });
   }
@@ -35,21 +32,21 @@ export const validateLSP4MetaData = (LSP4MetadataJSON:any): LSP4Metadata => {
     });
   }
 
-
   return {
     LSP4Metadata: {
       description: LSP4MetadataJSON?.LSP4Metadata?.description || '',
       links,
       images,
       assets,
-      icons
+      icons,
     },
   };
 };
 
-
-const validateIcon = (icon:any) => {
-  return icon.width && icon.url && icon.hash && icon.hashFunction && icon.height;
+const validateIcon = (icon: any) => {
+  return (
+    icon.width && icon.url && icon.hash && icon.hashFunction && icon.height
+  );
 };
 
 export const validateImage = (image: any[]) => {
