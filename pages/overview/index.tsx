@@ -2,14 +2,18 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-const Home: NextPage = () => {
-  const router = useRouter();
-
+const Overview: NextPage = () => {
   useEffect(() => {
     router.push('/overview');
-  }, [router]);
+  }, []);
 
-  return <div />;
+  const router = useRouter();
+
+  return (
+    <>
+      <div>Overview page</div>
+    </>
+  );
 };
 
-export default Home;
+export default Overview;
