@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import LSP7DigitalAsset from '../contracts/LSP7DigitalAsset.json';
+import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json';
 
 const fetchLSP7Balance = async (
   contractAddress: string,

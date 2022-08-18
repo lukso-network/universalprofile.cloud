@@ -3,10 +3,7 @@ import ERC725js, { ERC725JSONSchema } from '@erc725/erc725.js';
 import LSP4DigitalAssetSchema from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json';
 import { validateLSP4MetaData } from './validateLSP4Metdata';
 import { LSP4Metadata } from '../interfaces/lsps';
-import {
-  URLDataWithHash,
-  URLDataWithJson,
-} from '@erc725/erc725.js/build/main/src/types';
+import { URLDataWithHash } from '@erc725/erc725.js/build/main/src/types';
 
 const fetchLSP4Metadata = async (
   address: string,

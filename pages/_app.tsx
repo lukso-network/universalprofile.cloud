@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Web Wallet</title>
+        <title>Universal Profile Wallet</title>
       </Head>
       <div className="bg-black text-white min-h-screen">
         <AssetsProvider>

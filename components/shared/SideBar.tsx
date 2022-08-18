@@ -5,6 +5,7 @@ import { AiOutlineEye } from 'react-icons/ai';
 
 const SideBar: React.FC = () => {
   const router = useRouter();
+  const isOverviewMode = router.pathname.includes('overview');
 
   return (
     <div
@@ -29,11 +30,7 @@ const SideBar: React.FC = () => {
             <div
               className={`flex text-gray-300 items-center mb-10 py-3
                         px-2 rounded-lg hover:bg-gray-700 text-sm cursor-pointer
-                        ${
-                          router.pathname.includes('overview')
-                            ? 'text-lightPink'
-                            : ''
-                        }
+                        ${isOverviewMode ? 'text-lightPink' : ''}
                       `}
             >
               <AiOutlineEye className="text-2xl mr-3" />
