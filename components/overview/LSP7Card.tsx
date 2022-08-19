@@ -9,7 +9,7 @@ interface LSP7CardProps {
 
 const LSP7Card: React.FC<LSP7CardProps> = ({ icon, amount, name, symbol }) => {
   return (
-    <div className="border border-darkGray p-3 rounded-lg  h-[280px]">
+    <div className="border border-darkGray p-3 rounded-lg h-[280px] mt-8">
       <div className="rounded h-[180px] overflow-hidden mb-2">
         <img
           src={icon}

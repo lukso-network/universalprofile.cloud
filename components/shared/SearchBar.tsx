@@ -6,6 +6,7 @@ import { AssetsContext } from '../../contexts/AssetsContext';
 import identicon from 'ethereum-blockies-base64';
 import { GiCheckMark } from 'react-icons/gi';
 import { useRouter } from 'next/router';
+import { WalletAddressContext } from '../../contexts/WalletAddressContext';
 
 const SearchBar: React.FC = () => {
   const [validAddress, setValidAddress] = useState<boolean>(false);
@@ -13,6 +14,8 @@ const SearchBar: React.FC = () => {
   const { setLsp7Assets, setLsp8Assets } = useContext(AssetsContext);
 
   const router = useRouter();
+
+  const { setWalletAddress } = useContext(WalletAddressContext);
 
   useEffect(() => {
     ethers.utils.isAddress(address)
@@ -45,6 +48,7 @@ const SearchBar: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validAddress) {
+      setWalletAddress(address);
       router.push(`/overview/${address}`);
     }
   };

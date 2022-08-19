@@ -4,6 +4,7 @@ import SideBar from '../components/shared/SideBar';
 import Head from 'next/head';
 import SearchBar from '../components/shared/SearchBar';
 import AssetsProvider from '../contexts/AssetsContext';
+import WalletAddressProvider from '../contexts/WalletAddressContext';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -13,11 +14,13 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <div className="bg-black text-white min-h-screen">
         <AssetsProvider>
-          <SideBar />
-          <div className="ml-[240px]">
-            <SearchBar />
-            <Component {...pageProps} />
-          </div>
+          <WalletAddressProvider>
+            <SideBar />
+            <div className="ml-[240px]">
+              <SearchBar />
+              <Component {...pageProps} />
+            </div>
+          </WalletAddressProvider>
         </AssetsProvider>
       </div>
     </>

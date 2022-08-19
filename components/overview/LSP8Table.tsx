@@ -11,7 +11,7 @@ const LSP8Table = () => {
 
   return (
     <>
-      <div className="grid grid-cols-4 gap-4 mt-8">
+      <div className="grid lg:grid-cols-4 lg:gap-4 md:grid-cols-2 md:gap-3">
         {lsp8Assets.map((asset, index) => {
           return <LSP8Card key={`lsp8-${index}`} assetJSON={asset} />;
         })}

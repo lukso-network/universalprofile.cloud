@@ -10,7 +10,7 @@ const LSP7Table = () => {
   }
 
   return (
-    <div className="grid grid-cols-4 gap-4 mt-8 mt-8">
+    <div className="grid lg:grid-cols-4 lg:gap-4 md:grid-cols-2 md:gap-3">
       {lsp7Assets.map((asset, index) => {
         return (
           <LSP7Card
