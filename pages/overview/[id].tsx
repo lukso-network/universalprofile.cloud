@@ -92,7 +92,6 @@ const AdressOverview: NextPage = () => {
   };
 
   const checkIsUP = async (address: string) => {
-    console.log('checkIsUP');
     const erc725 = new ERC725(
       erc725Schema as ERC725JSONSchema[],
       address,

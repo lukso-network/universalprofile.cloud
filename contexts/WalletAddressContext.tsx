@@ -1,5 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { createContext, useState } from 'react';
 
 interface AddressContextInterface {
   walletAddress: string;
@@ -20,12 +19,6 @@ interface Props {
 
 const WalletAddressProvider: React.FC<Props> = ({ children }) => {
   const [walletAddress, setWalletAddress] = useState<string>('');
-  const router = useRouter();
-  useEffect(() => {
-    if (router.query.id) {
-      setWalletAddress(router.query.id as string);
-    }
-  }, [router]);
 
   return (
     <WalletAddressContext.Provider value={{ walletAddress, setWalletAddress }}>

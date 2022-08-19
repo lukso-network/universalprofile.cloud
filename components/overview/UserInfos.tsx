@@ -1,9 +1,8 @@
 import identicon from 'ethereum-blockies-base64';
 import { IPFS_GATEWAY_BASE_URL } from '../../constants';
 import { useEffect, useState, useContext } from 'react';
-
+import { useRouter } from 'next/router';
 import { Link, LSP3Profile } from '../../interfaces/lsps';
-import { WalletAddressContext } from '../../contexts/WalletAddressContext';
 
 interface UserInfosProps {
   lsp3JSON: LSP3Profile | undefined;
@@ -11,11 +10,11 @@ interface UserInfosProps {
 
 const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
   const [profile, setProfile] = useState<LSP3Profile>();
+  const [address, setAddress] = useState<string>('');
+  const router = useRouter();
 
   const [avatar, setAvatar] = useState<string>();
   const [firstLink, setFirstLink] = useState<Link>();
-
-  const { walletAddress } = useContext(WalletAddressContext);
 
   const userAvatar = (LSP3ProfileJSON: LSP3Profile): string => {
     if (LSP3ProfileJSON.LSP3Profile?.profileImage[0]?.url) {
@@ -28,7 +27,7 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
 
       return LSP3ProfileJSON?.LSP3Profile?.profileImage[0].url;
     }
-    return identicon(walletAddress);
+    return identicon(address);
   };
   const formatUPProfile = async () => {
     if (lsp3JSON) {
@@ -48,18 +47,23 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
   };
 
   useEffect(() => {
-    console.log('changed address: ', walletAddress, lsp3JSON);
     if (lsp3JSON) {
       formatUPProfile();
       return;
-    } else if (walletAddress) {
-      setAvatar(identicon(walletAddress));
+    } else if (address) {
+      setAvatar(identicon(address));
     } else {
       setAvatar(identicon('lukso'));
     }
     setProfile(undefined);
     setFirstLink(undefined);
-  }, [lsp3JSON, walletAddress]);
+  }, [lsp3JSON, address]);
+
+  useEffect(() => {
+    if (router.query.id) {
+      setAddress(addressFormatter(router.query.id as string));
+    }
+  }, [router]);
 
   return (
     <div>
@@ -70,7 +74,7 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
           alt="profileImage"
         />
         <div className="ml-4">
-          <div className="text-xs">{addressFormatter(walletAddress)}</div>
+          <div className="text-xs">{addressFormatter(address)}</div>
           <div className="text-2xl font-bold my-2">
             {profile?.LSP3Profile.name}
           </div>
