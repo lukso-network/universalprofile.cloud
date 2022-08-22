@@ -79,7 +79,11 @@ typings/
 
 # Next.js build output
 .next
+
+.DS_Store
+
 out
+
 
 # Nuxt.js build / generate output
 .nuxt
