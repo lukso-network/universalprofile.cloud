@@ -4,6 +4,9 @@ import SideBar from '../components/shared/SideBar';
 import Head from 'next/head';
 import SearchBar from '../components/shared/SearchBar';
 import AssetsProvider from '../contexts/AssetsContext';
+import WalletAddressProvider from '../contexts/WalletAddressContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -12,12 +15,15 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>Universal Profile Wallet</title>
       </Head>
       <div className="bg-black text-white min-h-screen">
+        <ToastContainer />
         <AssetsProvider>
-          <SideBar />
-          <div className="ml-[240px]">
-            <SearchBar />
-            <Component {...pageProps} />
-          </div>
+          <WalletAddressProvider>
+            <SideBar />
+            <div className="ml-[240px]">
+              <SearchBar />
+              <Component {...pageProps} />
+            </div>
+          </WalletAddressProvider>
         </AssetsProvider>
       </div>
     </>

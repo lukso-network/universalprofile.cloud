@@ -30,3 +30,15 @@ export interface LSP4Metadata {
     icons: Image[];
   };
 }
+
+// https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-3-UniversalProfile-Metadata.md
+export interface LSP3Profile {
+  LSP3Profile: {
+    name: string;
+    description: string;
+    links: Link[];
+    tags: string[];
+    profileImage: Image[];
+    backgroundImage: Image[];
+  };
+}
