@@ -26,3 +26,5 @@ Open [http://localhost:3000](http://localhost:3000)
 # License
 
 wallet.universalprofile.cloud is [Apache 2.0 licensed](./LICENSE)
+
+CI test
