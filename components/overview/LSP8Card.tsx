@@ -1,5 +1,3 @@
-import { Image } from '../../interfaces/lsps';
-
 interface LSP8CardProps {
   assetJSON: {
     icon: string;

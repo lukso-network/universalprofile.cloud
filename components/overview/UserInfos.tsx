@@ -1,6 +1,6 @@
 import identicon from 'ethereum-blockies-base64';
 import { IPFS_GATEWAY_BASE_URL } from '../../constants';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Link, LSP3Profile } from '../../interfaces/lsps';
 

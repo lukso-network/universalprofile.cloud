@@ -29,7 +29,6 @@ const AdressOverview: NextPage = () => {
 
   const [showLSP7, setShowLSP7] = useState<boolean>(true);
   const [lsp3JSON, setLsp3JSON] = useState<LSP3Profile>();
-  const [UPAddress, setUPaddress] = useState<string>('');
 
   const { lsp7Assets, setLsp7Assets, lsp8Assets, setLsp8Assets } =
     useContext(AssetsContext);

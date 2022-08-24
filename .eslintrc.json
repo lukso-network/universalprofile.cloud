@@ -1,6 +1,9 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "no-console": 1 //warning
+    "no-console": "warn",
+    "no-unused-vars": "error",
+    "@next/next/no-img-element": "off",
+    "react-hooks/exhaustive-deps": "off"
   }
 }
