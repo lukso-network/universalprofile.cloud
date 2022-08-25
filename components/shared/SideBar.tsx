@@ -126,7 +126,7 @@ const SideBar: React.FC = () => {
       w-[240px] flex flex-col px-4"
     >
       <div className="flex flex-col items-center my-8 text-center">
-        <div className="text-white font-bold ">{`Welcome to Lukso's Wallet`}</div>
+        <div className="text-white font-bold ">{`Welcome to LUKSO's Wallet`}</div>
         {walletAddress ? renderLoggedIn() : renderLogin()}
       </div>
       <div className="border-t border-solid border-1 border-gray-800 py-3">
