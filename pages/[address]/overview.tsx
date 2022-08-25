@@ -111,10 +111,10 @@ const AdressOverview: NextPage = () => {
   };
 
   useEffect(() => {
-    if (router.query.id) {
-      setAddress(router.query.id as string);
+    if (router.query.address) {
+      setAddress(router.query.address as string);
     }
-  }, [router.query.id]);
+  }, [router.query.address]);
 
   useEffect(() => {
     setLsp8Assets([]);
