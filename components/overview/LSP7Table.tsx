@@ -17,7 +17,7 @@ const LSP7Table: React.FC<Props> = ({ addresses, ownerAddress }) => {
   const { lsp7Assets, setLsp7Assets } = useContext(AssetsContext);
 
   useEffect(() => {
-    if (!web3Provider) {
+    if (!web3Provider || !addresses.length) {
       return;
     }
 
@@ -42,16 +42,16 @@ const LSP7Table: React.FC<Props> = ({ addresses, ownerAddress }) => {
       setIsLoading(false);
     };
     fetch();
-  }, [web3Provider]);
+  }, [web3Provider, addresses]);
 
-  if (!lsp7Assets.length) {
+  if (!lsp7Assets.length && !isLoading) {
     return <div>No token yet</div>;
   }
 
   return (
     <div className="grid lg:grid-cols-4 lg:gap-4 md:grid-cols-2 md:gap-3">
       {isLoading
-        ? 'Loading assets metadata...'
+        ? 'Loading tokens metadata...'
         : lsp7Assets.map((asset, index) => {
             return (
               <LSP7Card
