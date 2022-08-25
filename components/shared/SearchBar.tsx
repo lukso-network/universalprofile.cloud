@@ -14,7 +14,7 @@ const SearchBar: React.FC = () => {
   useEffect(() => {
     if (ethers.utils.isAddress(address)) {
       setIsValidAddress(true); //
-      router.push(`/overview/${address}`);
+      router.push(`/${address}/overview`);
     }
     setIsValidAddress(false);
   }, [address]);
@@ -24,7 +24,7 @@ const SearchBar: React.FC = () => {
       return <GiCheckMark className="text-gray-500" />;
     }
     return (
-      <NextLink href={`/overview/${address}`}>
+      <NextLink href={`/${address}/overview`}>
         <div className="cursor-pointer w-full h-full flex items-center justify-center">
           <GiCheckMark className="text-green-500" />
         </div>
@@ -43,7 +43,7 @@ const SearchBar: React.FC = () => {
             />
           </div>
         </div>
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           <input
             placeholder="Search by wallet"
             value={address}
@@ -55,6 +55,7 @@ const SearchBar: React.FC = () => {
                       "
             onChange={(e) => setAddress(e.target.value)}
             spellCheck="false"
+            id="upAddress"
           />
         </form>
         <div
