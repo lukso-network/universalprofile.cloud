@@ -15,12 +15,8 @@ const fetchLSP7Assets = async (
     web3Provider,
   );
 
-  //fetch amount of tokens received
-  const tokenBalance = await fetchLSP7Balance(
-    assetAddress,
-    UPAddress,
-    web3Provider,
-  );
+  // fetch amount of tokens received
+  const tokenBalance = await fetchLSP7Balance(assetAddress, UPAddress);
 
   if (tokenBalance == 0) {
     return;
@@ -36,9 +32,8 @@ const fetchLSP7Assets = async (
 const fetchLSP7Balance = async (
   contractAddress: string,
   UPAddress: string,
-  web3Provider: any,
 ): Promise<number> => {
-  const web3 = new Web3(L16_RPC_URL);
+  const web3 = new Web3(L16_RPC_URL); // Maybe we can reuse existing provider
   const lsp7Contract = new web3.eth.Contract(
     LSP7DigitalAsset.abi as any,
     contractAddress,
@@ -53,7 +48,8 @@ const createLSP7Object = (
   tokenBalance: number,
   assetAddress: string,
 ): Lsp7AssetType => {
-  let [LSP4TokenName, LSP4TokenSymbol, LSP4MetadataJSON] = LSP4MetadataResponse;
+  const [LSP4TokenName, LSP4TokenSymbol, LSP4MetadataJSON] =
+    LSP4MetadataResponse;
   const lsp7AssetObject = {
     name: LSP4TokenName,
     symbol: LSP4TokenSymbol,

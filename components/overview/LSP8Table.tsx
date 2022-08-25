@@ -2,7 +2,11 @@ import { useContext } from 'react';
 import { AssetsContext } from '../../contexts/AssetsContext';
 import LSP8Card from './LSP8Card';
 
-const LSP8Table = () => {
+interface Props {
+  addresses: string[];
+}
+
+const LSP8Table: React.FC<Props> = ({}) => {
   const { lsp8Assets } = useContext(AssetsContext);
 
   if (!lsp8Assets.length) {
