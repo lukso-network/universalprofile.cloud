@@ -55,6 +55,7 @@ const LSP8Table: React.FC<Props> = ({ addresses, ownerAddress }) => {
               return <LSP8Card key={`lsp8-${index}`} assetJSON={asset} />;
             })}
       </div>
+      {!isLoading && lsp8Assets.length === 0 && <div>No NFTs yet</div>}
     </>
   );
 };

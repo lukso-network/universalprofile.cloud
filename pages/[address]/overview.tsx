@@ -48,19 +48,19 @@ const AdressOverview: NextPage = () => {
     await Promise.all(
       receivedAssets.map(async (assetAddress) => {
         const assetType = await isLSP7orLSP8(assetAddress, provider);
-
         switch (assetType) {
           case LSPType.LSP7:
-            lsp7Addresses.push(assetAddress);
+            lsp7AddressesTemp.push(assetAddress);
             break;
           case LSPType.LSP8:
-            lsp8Addresses.push(assetAddress);
+            lsp8AddressesTemp.push(assetAddress);
             break;
           default:
             break;
         }
       }),
     );
+    console.log(lsp7AddressesTemp, lsp8AddressesTemp);
     setLsp7Addresses(lsp7AddressesTemp);
     setLsp8Addresses(lsp8AddressesTemp);
   };

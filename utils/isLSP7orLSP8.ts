@@ -15,10 +15,20 @@ const supportsInterface = async (
   );
 
   try {
-    const value = await supportsInterfaceContract.supportsInterface(
-      INTERFACE_IDS.LSP7DigitalAsset,
-    );
-    return !!value;
+    if (
+      await supportsInterfaceContract.supportsInterface(
+        INTERFACE_IDS.LSP7DigitalAsset,
+      )
+    ) {
+      return LSPType.LSP7;
+    }
+    if (
+      await supportsInterfaceContract.supportsInterface(
+        INTERFACE_IDS.LSP8IdentifiableDigitalAsset,
+      )
+    ) {
+      return LSPType.LSP8;
+    }
   } catch (err) {
     console.error(
       `Error checking supportInterface for contract: ${contractAddress} and interfaceId: ${interfaceId}`,
@@ -32,22 +42,16 @@ const isLSP7orLSP8 = async (
   contractAddress: string,
   provider: Signer | ethers.providers.BaseProvider,
 ): Promise<LSPType> => {
-  const isLSP7 = await supportsInterface(
+  const lspType = await supportsInterface(
     contractAddress,
     INTERFACE_IDS.LSP7DigitalAsset,
     provider,
   );
-  if (isLSP7) {
+  if (lspType === LSPType.LSP7) {
     return LSPType.LSP7;
   }
 
-  const isLSP8 = await supportsInterface(
-    contractAddress,
-    INTERFACE_IDS.LSP8IdentifiableDigitalAsset,
-    provider,
-  );
-
-  if (isLSP8) {
+  if (lspType === LSPType.LSP8) {
     return LSPType.LSP8;
   }
 

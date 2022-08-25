@@ -22,9 +22,9 @@ const LSP7Table: React.FC<Props> = ({ addresses, ownerAddress }) => {
     }
 
     const fetch = async () => {
+      console.log('fetching lsp7 assets');
       setLsp7Assets([]);
       setIsLoading(true);
-
       // fetch LSP7 assets
       await Promise.all(
         addresses.map(async (assetAddress) => {
@@ -38,7 +38,6 @@ const LSP7Table: React.FC<Props> = ({ addresses, ownerAddress }) => {
           }
         }),
       );
-
       setIsLoading(false);
     };
     fetch();
@@ -63,6 +62,7 @@ const LSP7Table: React.FC<Props> = ({ addresses, ownerAddress }) => {
               />
             );
           })}
+      {!isLoading && lsp7Assets.length === 0 && <div>No token yet</div>}
     </div>
   );
 };
