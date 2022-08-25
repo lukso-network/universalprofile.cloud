@@ -1,53 +1,37 @@
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import NextLink from 'next/link';
-import { useContext } from 'react';
-import { AssetsContext } from '../../contexts/AssetsContext';
 import identicon from 'ethereum-blockies-base64';
 import { GiCheckMark } from 'react-icons/gi';
 import { useRouter } from 'next/router';
 
 const SearchBar: React.FC = () => {
-  const [validAddress, setValidAddress] = useState<boolean>(false);
+  const [isValidAddress, setIsValidAddress] = useState<boolean>(false);
   const [address, setAddress] = useState<string>('');
-  const { setLsp7Assets, setLsp8Assets } = useContext(AssetsContext);
 
   const router = useRouter();
 
   useEffect(() => {
-    ethers.utils.isAddress(address)
-      ? setValidAddress(true)
-      : setValidAddress(false);
+    if (ethers.utils.isAddress(address)) {
+      setIsValidAddress(true); //
+      router.push(`/overview/${address}`);
+    }
+    setIsValidAddress(false);
   }, [address]);
 
-  const clearGlobalAssets = () => {
-    setAddress('');
-    setLsp7Assets([]);
-    setLsp8Assets([]);
-  };
-
   const renderViewButton = () => {
-    if (!validAddress) {
+    if (!isValidAddress) {
       return <GiCheckMark className="text-gray-500" />;
     }
     return (
       <NextLink href={`/overview/${address}`}>
-        <div
-          onClick={clearGlobalAssets}
-          className="cursor-pointer w-full h-full flex items-center justify-center"
-        >
+        <div className="cursor-pointer w-full h-full flex items-center justify-center">
           <GiCheckMark className="text-green-500" />
         </div>
       </NextLink>
     );
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (validAddress) {
-      router.push(`/overview/${address}`);
-    }
-  };
   return (
     <div className="border-b border-gray-800 text-xs pb-4">
       <div className="relative flex items-center pt-4 ml-8">
@@ -59,7 +43,7 @@ const SearchBar: React.FC = () => {
             />
           </div>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form>
           <input
             placeholder="Search by wallet"
             value={address}
@@ -71,7 +55,6 @@ const SearchBar: React.FC = () => {
                       "
             onChange={(e) => setAddress(e.target.value)}
             spellCheck="false"
-            id="skills"
           />
         </form>
         <div
