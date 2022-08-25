@@ -42,3 +42,9 @@ export interface LSP3Profile {
     backgroundImage: Image[];
   };
 }
+
+export enum LSPType {
+  LSP7 = 'LSP7',
+  LSP8 = 'LSP8',
+  Unknown = 'Unknown',
+}

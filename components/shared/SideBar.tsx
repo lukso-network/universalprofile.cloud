@@ -55,7 +55,7 @@ const SideBar: React.FC = () => {
           //find chainId
           if (accounts.length) {
             setWalletAddress(accounts[0]);
-            router.push({ pathname: `/overview/${accounts[0]}` });
+            router.push({ pathname: `/${accounts[0]}/overview` });
           }
         });
     } catch (error: any) {
@@ -109,7 +109,7 @@ const SideBar: React.FC = () => {
       <div className="text-gray-300 my-6 leading-5 text-sm h-12">
         Manage your portfolio
       </div>
-      <Link href={`/overview/${walletAddress}`}>
+      <Link href={`/${walletAddress}/overview`}>
         <button className="flex items-center rounded-lg bg-deepPink py-1 px-4">
           <div className="text-2xl">
             <FiDollarSign className="text-white" />
@@ -126,12 +126,12 @@ const SideBar: React.FC = () => {
       w-[240px] flex flex-col px-4"
     >
       <div className="flex flex-col items-center my-8 text-center">
-        <div className="text-white font-bold ">{`Welcome to Lukso's Wallet`}</div>
+        <div className="text-white font-bold ">{`Welcome to LUKSO's Wallet`}</div>
         {walletAddress ? renderLoggedIn() : renderLogin()}
       </div>
       <div className="border-t border-solid border-1 border-gray-800 py-3">
         <div className="text-sm flex flex-col">
-          <Link href="/overview">
+          <Link href="/">
             <div
               className={`flex text-gray-300 items-center mb-10 py-3
                         px-2 rounded-lg hover:bg-gray-700 text-sm cursor-pointer

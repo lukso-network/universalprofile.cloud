@@ -5,7 +5,7 @@ import Head from 'next/head';
 import SearchBar from '../components/shared/SearchBar';
 import AssetsProvider from '../contexts/AssetsContext';
 import WalletAddressProvider from '../contexts/WalletAddressContext';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function MyApp({ Component, pageProps }: AppProps) {

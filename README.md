@@ -1,13 +1,13 @@
 # wallet.universalprofile.cloud
 
-Wallet that will let you see the Tokens ([LSP7](https://docs.lukso.tech/standards/nft-2.0/LSP7-Digital-Asset)), NFTs ([LSP8](https://docs.lukso.tech/standards/nft-2.0/LSP8-Identifiable-Digital-Asset)) and Vaults ([LSP9](https://docs.lukso.tech/standards/smart-contracts/lsp9-vault)) associated to a specific Lukso's address.
+Wallet that will let you see the Tokens ([LSP7](https://docs.lukso.tech/standards/nft-2.0/LSP7-Digital-Asset)), NFTs ([LSP8](https://docs.lukso.tech/standards/nft-2.0/LSP8-Identifiable-Digital-Asset)) and Vaults ([LSP9](https://docs.lukso.tech/standards/smart-contracts/lsp9-vault)) associated to a specific LUKSO's address.
 
 Once connected as the owner of the address, you will also be able to manage your assets and vaults.
 
 # Supported Blockchains
 
-Lukso L16
-Lukso Mainnet (to come)
+LUKSO L16
+LUKSO Mainnet (to come)
 
 # Using on your machine
 

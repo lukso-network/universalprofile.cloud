@@ -1,5 +1,3 @@
-import NextImage from 'next/image';
-
 interface LSP7CardProps {
   icon: string;
   amount: number;
