@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { AssetsContext, Lsp8AssetType } from '../../contexts/AssetsContext';
-import LSP8Card from './LSP8Card';
+import LSP8Card from '../LSP8Card/LSP8Card';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
 import fetchLSP8Assets from '../../utils/fetchLSP8Assets';
 

@@ -1,5 +1,5 @@
-import LSP7Table from './LSP7Table';
-import LSP8Table from './LSP8Table';
+import LSP7Table from '../LSP7Table/LSP7Table';
+import LSP8Table from '../LSP8Table/LSP8Table';
 import { useState, useEffect } from 'react';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
 import useEthersProvider from '../../hooks/useEthersProvider';
@@ -14,11 +14,7 @@ interface Props {
   vaultIndex: number;
 }
 
-const VaultComponent: React.FC<Props> = ({
-  ownerAddress,
-  vaultAddress,
-  vaultIndex,
-}) => {
+const Vault: React.FC<Props> = ({ ownerAddress, vaultAddress, vaultIndex }) => {
   const web3Provider = useWeb3Provider();
   const ethersProvider = useEthersProvider() as ethers.providers.BaseProvider;
   const [lsp7Addresses, setLsp7Addresses] = useState<string[]>([]);
@@ -31,7 +27,6 @@ const VaultComponent: React.FC<Props> = ({
       vaultAddress,
       web3Provider,
     );
-    console.log(receivedAssets, 'receivedAssets');
 
     if (!receivedAssets.length) {
       setIsLoading(false);
@@ -57,7 +52,6 @@ const VaultComponent: React.FC<Props> = ({
         }
       }),
     );
-    console.log(lsp7AddressesTemp, lsp8AddressesTemp);
     setLsp7Addresses(lsp7AddressesTemp);
     setLsp8Addresses(lsp8AddressesTemp);
     setIsLoading(false);
@@ -95,4 +89,4 @@ const VaultComponent: React.FC<Props> = ({
   );
 };
 
-export default VaultComponent;
+export default Vault;

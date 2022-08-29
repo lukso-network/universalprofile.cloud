@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { AssetsContext, Lsp7AssetType } from '../../contexts/AssetsContext';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
 import fetchLSP7Assets from '../../utils/fetchLSP7Assets';
-import LSP7Card from './LSP7Card';
+import LSP7Card from '../LSP7Card/LSP7Card';
 
 interface Props {
   addresses: string[];
@@ -33,28 +33,29 @@ const LSP7Table: React.FC<Props> = ({
           vaultAddress as string, //checking in the useEffect
           web3Provider,
         );
-        if (lsp7Assets instanceof Object) {
-          //find vault asset
-          const vaultAsset = vaultsAssets.find(
-            (vaultAsset) => vaultAsset.vaultAddress === assetAddress,
-          );
-          if (vaultAsset) {
-            //add lps7 asset to lsp7assets[] of vaultAsset
-            vaultAsset.lsp7Assets.push(lsp7Assets);
-            //add vault assets to vaultsAssets[]
-            setVaultsAssets((prev) => [...prev, vaultAsset]);
-          } else {
-            //create vault asset
-            const newVaultAsset = {
-              vaultAddress: assetAddress,
-              lsp7Assets: [lsp7Assets],
-              lsp8Assets: [],
-            };
-            //add vault asset to vaultsAssets[]
-            setVaultsAssets((prev) => [...prev, newVaultAsset]);
-          }
-          setLsp7s((prev) => [...prev, lsp7Assets]);
+        if (!lsp7Assets) {
+          return;
         }
+        //find vault asset
+        const vaultAsset = vaultsAssets.find(
+          (vaultAsset) => vaultAsset.vaultAddress === assetAddress,
+        );
+        if (vaultAsset) {
+          //add lps7 asset to lsp7assets[] of vaultAsset
+          vaultAsset.lsp7Assets.push(lsp7Assets);
+          //add vault assets to vaultsAssets[]
+          setVaultsAssets((prev) => [...prev, vaultAsset]);
+        } else {
+          //create vault asset
+          const newVaultAsset = {
+            vaultAddress: assetAddress,
+            lsp7Assets: [lsp7Assets],
+            lsp8Assets: [],
+          };
+          //add vault asset to vaultsAssets[]
+          setVaultsAssets((prev) => [...prev, newVaultAsset]);
+        }
+        setLsp7s((prev) => [...prev, lsp7Assets]);
 
         setIsLoading(false);
       }),
@@ -98,10 +99,10 @@ const LSP7Table: React.FC<Props> = ({
     <div className="grid lg:grid-cols-4 lg:gap-4 md:grid-cols-2 md:gap-3">
       {isLoading
         ? 'Loading tokens metadata...'
-        : lsp7s.map((asset, index) => {
+        : lsp7s.map((asset) => {
             return (
               <LSP7Card
-                key={`lsp7-${index}`}
+                key={`lsp7-${asset.address}`}
                 icon={asset.icon}
                 amount={asset.amount}
                 name={asset.name}

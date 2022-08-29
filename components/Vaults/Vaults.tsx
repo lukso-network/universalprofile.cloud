@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 
 import useWeb3Provider from '../../hooks/useWeb3Provider';
 import fetchVaultsAddresses from '../../utils/fetchVaultAddresses';
-import VaultComponent from './VaultComponent';
+import Vault from '../Vault/Vault';
 
 interface Props {
   ownerAddress: string;
 }
 
-const VaultsComponent: React.FC<Props> = ({ ownerAddress }) => {
+const Vaults: React.FC<Props> = ({ ownerAddress }) => {
   const web3Provider = useWeb3Provider();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -41,8 +41,8 @@ const VaultsComponent: React.FC<Props> = ({ ownerAddress }) => {
     <>
       {vaultsAddresses.map((vaultAddress, index) => {
         return (
-          <VaultComponent
-            key={index}
+          <Vault
+            key={vaultAddress}
             ownerAddress={ownerAddress}
             vaultAddress={vaultAddress}
             vaultIndex={index + 1}
@@ -53,4 +53,4 @@ const VaultsComponent: React.FC<Props> = ({ ownerAddress }) => {
   );
 };
 
-export default VaultsComponent;
+export default Vaults;
