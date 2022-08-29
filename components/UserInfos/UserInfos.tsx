@@ -29,6 +29,7 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
     }
     return identicon(address);
   };
+
   const formatUPProfile = async () => {
     if (lsp3JSON) {
       setAvatar(userAvatar(lsp3JSON));
@@ -47,7 +48,7 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
   };
 
   useEffect(() => {
-    if (lsp3JSON) {
+    if (lsp3JSON?.LSP3Profile.name) {
       formatUPProfile();
       return;
     } else if (address) {
@@ -59,9 +60,16 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
     setFirstLink(undefined);
   }, [lsp3JSON, address]);
 
+  const firstFourOfAddress = () => {
+    if (address) {
+      //firs two bytes of address
+      return address.slice(2, 6);
+    }
+  };
+
   useEffect(() => {
-    if (router.query.id) {
-      setAddress(addressFormatter(router.query.id as string));
+    if (router.query.address) {
+      setAddress(addressFormatter(router.query.address as string));
     }
   }, [router]);
 
@@ -74,9 +82,18 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
           alt="profileImage"
         />
         <div className="ml-4">
-          <div className="text-xs">{addressFormatter(address)}</div>
+          {/* <div className="text-xs">{addressFormatter(address)}</div> */}
           <div className="text-2xl font-bold my-2">
-            {profile?.LSP3Profile.name}
+            {profile?.LSP3Profile.name ? (
+              <>
+                {profile?.LSP3Profile.name}
+                <span className="text-sm ml-2 text-gray-400">
+                  #{firstFourOfAddress()}
+                </span>
+              </>
+            ) : (
+              'Anonymous'
+            )}
           </div>
           {/* <div className="text-s">{profile?.LSP3Profile.description}</div> */}
           <div className="h-[120px]">

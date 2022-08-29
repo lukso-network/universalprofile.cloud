@@ -37,32 +37,6 @@ const SideBar: React.FC = () => {
     }
   };
 
-  const loginExtension = async () => {
-    if (!window.ethereum) {
-      alert('Please connect to Universal Profile Extension');
-      return;
-    }
-
-    try {
-      const { ethereum } = window;
-      if (!verifyChainId()) return;
-      await ethereum
-        .request({
-          method: 'eth_requestAccounts',
-        })
-
-        .then(function (accounts: string[]) {
-          //find chainId
-          if (accounts.length) {
-            setWalletAddress(accounts[0]);
-            router.push({ pathname: `/${accounts[0]}/overview` });
-          }
-        });
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
-
   const listenForAccountChanges = () => {
     const { ethereum } = window;
 
@@ -93,7 +67,7 @@ const SideBar: React.FC = () => {
         Connect to the UP extension to manage your portfolio
       </div>
       <button
-        onClick={loginExtension}
+        onClick={() => router.push('/connect-wallets')}
         className="flex items-center rounded-lg bg-deepPink py-1 px-4"
       >
         <div className="text-2xl">
