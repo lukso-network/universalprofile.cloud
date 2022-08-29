@@ -9,16 +9,11 @@ Once connected as the owner of the address, you will also be able to manage your
 LUKSO L16
 LUKSO Mainnet (to come)
 
-# Using on your machine
-
-If you want to use the wallet locally on your machine, please follow these instructions.
-
-First, run the development server:
+# Install / Run
 
 ```
+npm i
 npm run dev
-# or
-yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
