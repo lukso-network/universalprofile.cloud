@@ -4,19 +4,19 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import erc725Schema from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
 
-import AddressError from '../../components/overview/AddressError';
+import AddressError from '../../components/AddressError/AddressError';
 import fetchReceivedAssets from '../../utils/fetchReceivedAssets';
 import useEthersProvider from '../../hooks/useEthersProvider';
 import isLSP7orLSP8 from '../../utils/isLSP7orLSP8';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
-import LSP7Table from '../../components/overview/LSP7Table';
-import LSP8Table from '../../components/overview/LSP8Table';
-import UserInfos from '../../components/overview/UserInfos';
+import LSP7Table from '../../components/LSP7Table/LSP7Table';
+import LSP8Table from '../../components/LSP8Table/LSP8Table';
+import UserInfos from '../../components/UserInfos/UserInfos';
 import { ERC725, ERC725JSONSchema } from '@erc725/erc725.js';
 import { IPFS_GATEWAY_BASE_URL } from '../../constants';
 import { LSP3Profile, LSPType } from '../../interfaces/lsps';
 import { validateLSP3 } from '../../utils/validateLSP3';
-import VaultsComponent from '../../components/overview/VaultsComponent';
+import VaultsComponent from '../../components/Vaults/Vaults';
 
 const config = { ipfsGateway: IPFS_GATEWAY_BASE_URL };
 
