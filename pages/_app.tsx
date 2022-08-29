@@ -1,8 +1,8 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import SideBar from '../components/shared/SideBar';
+import SideBar from '../components/SideBar/SideBar';
 import Head from 'next/head';
-import SearchBar from '../components/shared/SearchBar';
+import SearchBar from '../components/SearchBar/SearchBar';
 import AssetsProvider from '../contexts/AssetsContext';
 import WalletAddressProvider from '../contexts/WalletAddressContext';
 import { ToastContainer } from 'react-toastify';

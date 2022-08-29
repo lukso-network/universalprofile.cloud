@@ -36,11 +36,7 @@ const fetchLSP8Assets = async (
   UPAddress: string,
   web3Provider: any,
 ): Promise<Lsp8AssetType[] | undefined> => {
-  const tokensIds = await fetchLSP8TokensIds(
-    assetAddress,
-    UPAddress,
-    web3Provider,
-  );
+  const tokensIds = await fetchLSP8TokensIds(assetAddress, UPAddress);
 
   if (!tokensIds.length) {
     return;
@@ -75,7 +71,6 @@ const fetchLSP8Assets = async (
 const fetchLSP8TokensIds = async (
   contractAddress: string,
   UPAddress: string,
-  provider: any,
 ): Promise<string[]> => {
   const web3 = new Web3(L16_RPC_URL);
 
@@ -98,8 +93,7 @@ const createLSP8Object = (
   assetAddress: string,
   collectionLSP4Metadata: LSP4Metadata,
 ): Lsp8AssetType => {
-  const { description, links, images, assets, icons } =
-    NFTLSP4MetadataJSON.LSP4Metadata;
+  const { description, images, icons } = NFTLSP4MetadataJSON.LSP4Metadata;
 
   const lsp8AssetObject = {
     tokenId,
