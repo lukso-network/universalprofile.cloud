@@ -43,8 +43,9 @@ const SideBar: React.FC = () => {
   const listenForAccountChanges = () => {
     const { ethereum } = window;
 
-    //added this line below because when using walletconnect, the accounts are not updated when the user switches to another account
-    //so that this function does not override the walletConnect account state
+    //added this line below because when using walletconnect,
+    //so that that listenForAccountChanges does not override the walletConnect account state
+    //but this function will be useful when connected through UP extension
     const walletConnectorAccount = walletConnectConnector().accounts[0];
     if (walletConnectorAccount) {
       return;
@@ -62,7 +63,7 @@ const SideBar: React.FC = () => {
     });
 
     ethereum.on('chainChanged', function (networkId: number) {
-      if (networkId != 2828) {
+      if (networkId != L16_CHAIN_ID) {
         setWalletAddress('');
         toast('Please switch to L16 network');
       }

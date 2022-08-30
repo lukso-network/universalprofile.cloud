@@ -17,11 +17,6 @@ const useWalletConnect = () => {
       account = connector.accounts[0];
       setWalletAddress(account);
     }
-    // Check if connection is already established
-    if (!connector.connected) {
-      // create new session
-      connector.createSession();
-    }
 
     // Subscribe to connection events
     connector.on('connect', (error, payload) => {
@@ -62,7 +57,7 @@ const useWalletConnect = () => {
       // Delete connector
       setWalletAddress('');
     });
-  }, [setWalletAddress]);
+  }, []);
   return account;
 };
 
