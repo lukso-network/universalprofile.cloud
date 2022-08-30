@@ -64,8 +64,8 @@ const WalletConnector: React.FC = () => {
       onClick={() => showModal()}
     >
       <img
-        src="./WalletConnect-icon.png"
-        alt="walletConnect image"
+        src="images/WalletConnect-icon.png"
+        alt="walletConnect logo"
         className="w-[40px] h-auto mb-2"
       />
       <div>WalletConnect</div>

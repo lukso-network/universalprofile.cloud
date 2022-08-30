@@ -43,6 +43,8 @@ const SideBar: React.FC = () => {
   const listenForAccountChanges = () => {
     const { ethereum } = window;
 
+    if (!ethereum) return;
+
     //added this line below because when using walletconnect,
     //so that that listenForAccountChanges does not override the walletConnect account state
     //but this function will be useful when connected through UP extension
@@ -63,7 +65,7 @@ const SideBar: React.FC = () => {
     });
 
     ethereum.on('chainChanged', function (networkId: number) {
-      if (networkId != L16_CHAIN_ID) {
+      if (networkId !== L16_CHAIN_ID) {
         setWalletAddress('');
         toast('Please switch to L16 network');
       }
@@ -80,15 +82,14 @@ const SideBar: React.FC = () => {
       <div className="text-gray-300 my-6 leading-5 text-sm h-12">
         Connect to the UP extension to manage your portfolio
       </div>
-      <button
-        onClick={() => router.push('/connect-wallets')}
-        className="flex items-center rounded-lg bg-deepPink py-1 px-4"
-      >
-        <div className="text-2xl">
-          <FiPlus className="text-white" />
-        </div>
-        <span className="mx-2 text-white text-sm">Connect</span>
-      </button>
+      <Link href="/connect-wallets">
+        <button className="flex items-center rounded-lg bg-deepPink py-1 px-4">
+          <div className="text-2xl">
+            <FiPlus className="text-white" />
+          </div>
+          <span className="mx-2 text-white text-sm">Connect</span>
+        </button>
+      </Link>
     </>
   );
 
@@ -130,7 +131,6 @@ const SideBar: React.FC = () => {
               <div>Overview</div>
             </div>
           </Link>
-          {/* TODO: Add Vaults, Send Links when logged in*/}
         </div>
       </div>
     </div>

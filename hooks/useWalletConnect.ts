@@ -8,14 +8,12 @@ const useWalletConnect = () => {
   const { setWalletAddress } = useContext(WalletAddressContext);
 
   const router = useRouter();
-  let account;
 
   useEffect(() => {
     const connector = walletConnectConnector();
 
     if (connector.accounts) {
-      account = connector.accounts[0];
-      setWalletAddress(account);
+      setWalletAddress(connector.accounts[0]);
     }
 
     // Subscribe to connection events
@@ -42,7 +40,7 @@ const useWalletConnect = () => {
 
       // Get updated accounts and chainId
       const { accounts, chainId } = payload.params[0];
-      if (chainId != L16_CHAIN_ID) {
+      if (chainId !== L16_CHAIN_ID) {
         alert('Please switch to L16 network');
         return;
       }
@@ -58,7 +56,6 @@ const useWalletConnect = () => {
       setWalletAddress('');
     });
   }, []);
-  return account;
 };
 
 export default useWalletConnect;

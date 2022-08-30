@@ -54,7 +54,7 @@ const ConnectWallets: NextPage = () => {
           onClick={loginExtension}
         >
           <img
-            src="lukso-icon-256.png"
+            src="images/lukso-icon-256.png"
             alt="lukso image"
             className="w-[40px] h-auto mb-2"
           />

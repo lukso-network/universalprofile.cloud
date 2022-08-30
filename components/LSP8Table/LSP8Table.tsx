@@ -82,7 +82,6 @@ const LSP8Table: React.FC<Props> = ({
     if (!web3Provider || !addresses.length) {
       return;
     }
-    setIsLoading(true);
     vaultAddress ? fetchVaultAssets() : fetchUPAssets();
   }, [web3Provider, addresses]);
 
