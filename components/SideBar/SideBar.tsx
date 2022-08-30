@@ -14,14 +14,13 @@ const SideBar: React.FC = () => {
 
   const { setWalletAddress, walletAddress } = useContext(WalletAddressContext);
 
-  const verifyChainId = () => {
+  const isValidChainId = () => {
     const chainId = parseInt(window.ethereum.networkVersion);
     if (chainId && window.ethereum.networkVersion != L16_CHAIN_ID) {
       toast('Please switch to L16 network');
       return false;
-    } else {
-      return true;
     }
+    return true;
   };
 
   const isConnected = async () => {
@@ -30,7 +29,7 @@ const SideBar: React.FC = () => {
         method: 'eth_accounts',
       });
       if (accounts.length) {
-        verifyChainId() && setWalletAddress(accounts[0]);
+        isValidChainId() && setWalletAddress(accounts[0]);
       }
     } catch (error) {
       console.log(error);

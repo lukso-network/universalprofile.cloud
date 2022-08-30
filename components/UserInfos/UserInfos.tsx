@@ -3,6 +3,7 @@ import { IPFS_GATEWAY_BASE_URL } from '../../constants';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Link, LSP3Profile } from '../../interfaces/lsps';
+import firstTwoBytesOfAddress from '../../utils/firstTwoBytesOfAddress';
 
 interface UserInfosProps {
   lsp3JSON: LSP3Profile | undefined;
@@ -47,6 +48,20 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
     }
   };
 
+  const UPName = (): JSX.Element => {
+    if (profile?.LSP3Profile.name) {
+      return (
+        <>
+          <span>LSP3ProfileJSON.LSP3Profile.name;</span>
+          <span className="text-sm ml-2 text-gray-400">
+            #{firstTwoBytesOfAddress(address)}
+          </span>
+        </>
+      );
+    }
+    return <>Anonymous</>;
+  };
+
   useEffect(() => {
     if (lsp3JSON?.LSP3Profile.name) {
       formatUPProfile();
@@ -59,13 +74,6 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
     setProfile(undefined);
     setFirstLink(undefined);
   }, [lsp3JSON, address]);
-
-  const firstFourOfAddress = () => {
-    if (address) {
-      //firs two bytes of address
-      return address.slice(2, 6);
-    }
-  };
 
   useEffect(() => {
     if (router.query.address) {
@@ -83,18 +91,7 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
         />
         <div className="ml-4">
           {/* <div className="text-xs">{addressFormatter(address)}</div> */}
-          <div className="text-2xl font-bold my-2">
-            {profile?.LSP3Profile.name ? (
-              <>
-                {profile?.LSP3Profile.name}
-                <span className="text-sm ml-2 text-gray-400">
-                  #{firstFourOfAddress()}
-                </span>
-              </>
-            ) : (
-              'Anonymous'
-            )}
-          </div>
+          <div className="text-2xl font-bold my-2">{UPName()}</div>
           {/* <div className="text-s">{profile?.LSP3Profile.description}</div> */}
           <div className="h-[120px]">
             {firstLink && (

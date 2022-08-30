@@ -10,14 +10,13 @@ const ConnectWallets: NextPage = () => {
   const router = useRouter();
   const { setWalletAddress } = useContext(WalletAddressContext);
 
-  const verifyChainId = () => {
+  const isValidChainId = () => {
     const chainId = parseInt(window.ethereum.networkVersion);
     if (chainId && window.ethereum.networkVersion != L16_CHAIN_ID) {
       toast('Please switch to L16 network');
       return false;
-    } else {
-      return true;
     }
+    return true;
   };
 
   const loginExtension = async () => {
@@ -28,8 +27,8 @@ const ConnectWallets: NextPage = () => {
 
     try {
       const { ethereum } = window;
-      if (!verifyChainId()) return;
-      await ethereum
+      if (!isValidChainId()) return;
+      ethereum
         .request({
           method: 'eth_requestAccounts',
         })

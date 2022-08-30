@@ -3,8 +3,9 @@ import WalletConnect from '@walletconnect/client';
 import { useContext } from 'react';
 import { WalletAddressContext } from '../../contexts/WalletAddressContext';
 import { useRouter } from 'next/router';
+import { L16_CHAIN_ID } from '../../constants';
 
-const WalletConnector = () => {
+const WalletConnector: React.FC = () => {
   const { setWalletAddress } = useContext(WalletAddressContext);
   const router = useRouter();
   const showModal = async () => {
@@ -27,7 +28,7 @@ const WalletConnector = () => {
 
       // Get provided accounts and chainId
       const { accounts, chainId } = payload.params[0];
-      if (chainId != 2828) {
+      if (chainId != L16_CHAIN_ID) {
         alert('Please switch to L16 network');
         return;
       }
@@ -42,7 +43,7 @@ const WalletConnector = () => {
 
       // Get updated accounts and chainId
       const { accounts, chainId } = payload.params[0];
-      if (chainId != 2828) {
+      if (chainId != L16_CHAIN_ID) {
         alert('Please switch to L16 network');
         return;
       }

@@ -15,7 +15,7 @@
     "@types/web3": "^1.2.2",
     "@walletconnect/client": "^1.8.0",
     "@walletconnect/qrcode-modal": "^1.8.0",
-    "@walletconnect/types": "^2.0.0-rc.2",
+    "@walletconnect/types": "^1.8.0",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.6.9",
     "next": "12.2.4",
