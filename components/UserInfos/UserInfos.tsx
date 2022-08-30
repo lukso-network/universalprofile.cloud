@@ -3,6 +3,7 @@ import { IPFS_GATEWAY_BASE_URL } from '../../constants';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Link, LSP3Profile } from '../../interfaces/lsps';
+import { firstTwoBytesOfAddress } from '../../utils/utils';
 
 interface UserInfosProps {
   lsp3JSON: LSP3Profile | undefined;
@@ -29,6 +30,7 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
     }
     return identicon(address);
   };
+
   const formatUPProfile = async () => {
     if (lsp3JSON) {
       setAvatar(userAvatar(lsp3JSON));
@@ -37,17 +39,28 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
     }
   };
 
-  const addressFormatter = (address: string) =>
-    `${address.slice(0, 6)}...${address.slice(-4)}`;
-
   const lsp3FirstLink = (): void => {
     if (lsp3JSON?.LSP3Profile.links[0]?.url) {
       setFirstLink(lsp3JSON.LSP3Profile.links[0]);
     }
   };
 
+  const UPName = (): JSX.Element => {
+    if (profile?.LSP3Profile.name) {
+      return (
+        <>
+          <span>{profile?.LSP3Profile.name}</span>
+          <span className="text-sm ml-2 text-gray-400">
+            #{firstTwoBytesOfAddress(address)}
+          </span>
+        </>
+      );
+    }
+    return <span>Anonymous</span>;
+  };
+
   useEffect(() => {
-    if (lsp3JSON) {
+    if (lsp3JSON?.LSP3Profile.name) {
       formatUPProfile();
       return;
     } else if (address) {
@@ -60,8 +73,8 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
   }, [lsp3JSON, address]);
 
   useEffect(() => {
-    if (router.query.id) {
-      setAddress(addressFormatter(router.query.id as string));
+    if (router.query.address) {
+      setAddress(router.query.address as string);
     }
   }, [router]);
 
@@ -74,11 +87,13 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
           alt="profileImage"
         />
         <div className="ml-4">
-          <div className="text-xs">{addressFormatter(address)}</div>
-          <div className="text-2xl font-bold my-2">
-            {profile?.LSP3Profile.name}
-          </div>
-          {/* <div className="text-s">{profile?.LSP3Profile.description}</div> */}
+          <a
+            href={`https://l16.universalprofile.cloud/${address}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div className="text-2xl font-bold my-2">{UPName()}</div>
+          </a>
           <div className="h-[120px]">
             {firstLink && (
               <a

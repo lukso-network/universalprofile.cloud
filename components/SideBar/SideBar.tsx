@@ -7,6 +7,8 @@ import { WalletAddressContext } from '../../contexts/WalletAddressContext';
 import { FiDollarSign } from 'react-icons/fi';
 import { L16_CHAIN_ID } from '../../constants';
 import { toast } from 'react-toastify';
+import walletConnectConnector from '../../utils/walletConnectConnector';
+import useWalletConnect from '../../hooks/useWalletConnect';
 
 const SideBar: React.FC = () => {
   const router = useRouter();
@@ -14,14 +16,15 @@ const SideBar: React.FC = () => {
 
   const { setWalletAddress, walletAddress } = useContext(WalletAddressContext);
 
-  const verifyChainId = () => {
+  useWalletConnect();
+
+  const isValidChainId = () => {
     const chainId = parseInt(window.ethereum.networkVersion);
     if (chainId && window.ethereum.networkVersion != L16_CHAIN_ID) {
       toast('Please switch to L16 network');
       return false;
-    } else {
-      return true;
     }
+    return true;
   };
 
   const isConnected = async () => {
@@ -30,35 +33,9 @@ const SideBar: React.FC = () => {
         method: 'eth_accounts',
       });
       if (accounts.length) {
-        verifyChainId() && setWalletAddress(accounts[0]);
+        isValidChainId() && setWalletAddress(accounts[0]);
       }
     } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const loginExtension = async () => {
-    if (!window.ethereum) {
-      alert('Please connect to Universal Profile Extension');
-      return;
-    }
-
-    try {
-      const { ethereum } = window;
-      if (!verifyChainId()) return;
-      await ethereum
-        .request({
-          method: 'eth_requestAccounts',
-        })
-
-        .then(function (accounts: string[]) {
-          //find chainId
-          if (accounts.length) {
-            setWalletAddress(accounts[0]);
-            router.push({ pathname: `/${accounts[0]}/overview` });
-          }
-        });
-    } catch (error: any) {
       console.log(error);
     }
   };
@@ -66,16 +43,29 @@ const SideBar: React.FC = () => {
   const listenForAccountChanges = () => {
     const { ethereum } = window;
 
+    if (!ethereum) return;
+
+    //added this line below because when using walletconnect,
+    //so that that listenForAccountChanges does not override the walletConnect account state
+    //but this function will be useful when connected through UP extension
+    const walletConnectorAccount = walletConnectConnector().accounts[0];
+    if (walletConnectorAccount) {
+      return;
+    }
+
     ethereum.on('accountsChanged', function (accounts: string[]) {
+      if (walletAddress) {
+        return;
+      }
       if (accounts.length) {
         setWalletAddress(accounts[0]);
-      } else {
-        setWalletAddress('');
+        return;
       }
+      setWalletAddress('');
     });
 
     ethereum.on('chainChanged', function (networkId: number) {
-      if (networkId != 2828) {
+      if (networkId !== L16_CHAIN_ID) {
         setWalletAddress('');
         toast('Please switch to L16 network');
       }
@@ -92,15 +82,14 @@ const SideBar: React.FC = () => {
       <div className="text-gray-300 my-6 leading-5 text-sm h-12">
         Connect to the UP extension to manage your portfolio
       </div>
-      <button
-        onClick={loginExtension}
-        className="flex items-center rounded-lg bg-deepPink py-1 px-4"
-      >
-        <div className="text-2xl">
-          <FiPlus className="text-white" />
-        </div>
-        <span className="mx-2 text-white text-sm">Connect</span>
-      </button>
+      <Link href="/connect-wallets">
+        <button className="flex items-center rounded-lg bg-deepPink py-1 px-4">
+          <div className="text-2xl">
+            <FiPlus className="text-white" />
+          </div>
+          <span className="mx-2 text-white text-sm">Connect</span>
+        </button>
+      </Link>
     </>
   );
 
@@ -142,7 +131,6 @@ const SideBar: React.FC = () => {
               <div>Overview</div>
             </div>
           </Link>
-          {/* TODO: Add Vaults, Send Links when logged in*/}
         </div>
       </div>
     </div>
