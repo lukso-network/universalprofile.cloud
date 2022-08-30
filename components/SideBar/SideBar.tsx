@@ -7,12 +7,16 @@ import { WalletAddressContext } from '../../contexts/WalletAddressContext';
 import { FiDollarSign } from 'react-icons/fi';
 import { L16_CHAIN_ID } from '../../constants';
 import { toast } from 'react-toastify';
+import walletConnectConnector from '../../utils/walletConnectConnector';
+import useWalletConnect from '../../hooks/useWalletConnect';
 
 const SideBar: React.FC = () => {
   const router = useRouter();
   const isOverviewMode = router.pathname.includes('overview');
 
   const { setWalletAddress, walletAddress } = useContext(WalletAddressContext);
+
+  useWalletConnect();
 
   const isValidChainId = () => {
     const chainId = parseInt(window.ethereum.networkVersion);
@@ -39,12 +43,22 @@ const SideBar: React.FC = () => {
   const listenForAccountChanges = () => {
     const { ethereum } = window;
 
+    //added this line below because when using walletconnect, the accounts are not updated when the user switches to another account
+    //so that this function does not override the walletConnect account state
+    const walletConnectorAccount = walletConnectConnector().accounts[0];
+    if (walletConnectorAccount) {
+      return;
+    }
+
     ethereum.on('accountsChanged', function (accounts: string[]) {
+      if (walletAddress) {
+        return;
+      }
       if (accounts.length) {
         setWalletAddress(accounts[0]);
-      } else {
-        setWalletAddress('');
+        return;
       }
+      setWalletAddress('');
     });
 
     ethereum.on('chainChanged', function (networkId: number) {

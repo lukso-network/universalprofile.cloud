@@ -52,7 +52,7 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
     if (profile?.LSP3Profile.name) {
       return (
         <>
-          <span>LSP3ProfileJSON.LSP3Profile.name;</span>
+          <span>{profile?.LSP3Profile.name}</span>
           <span className="text-sm ml-2 text-gray-400">
             #{firstTwoBytesOfAddress(address)}
           </span>

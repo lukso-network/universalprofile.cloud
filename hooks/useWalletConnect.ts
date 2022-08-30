@@ -1,16 +1,22 @@
-import { useContext } from 'react';
-import { WalletAddressContext } from '../../contexts/WalletAddressContext';
+import { useEffect, useContext } from 'react';
+import { L16_CHAIN_ID } from '../constants';
+import { WalletAddressContext } from '../contexts/WalletAddressContext';
+import walletConnectConnector from '../utils/walletConnectConnector';
 import { useRouter } from 'next/router';
-import { L16_CHAIN_ID } from '../../constants';
-import walletConnectConnector from '../../utils/walletConnectConnector';
-import QRCodeModal from '@walletconnect/qrcode-modal';
 
-const WalletConnector: React.FC = () => {
+const useWalletConnect = () => {
   const { setWalletAddress } = useContext(WalletAddressContext);
+
   const router = useRouter();
-  const showModal = async () => {
+  let account;
+
+  useEffect(() => {
     const connector = walletConnectConnector();
 
+    if (connector.accounts) {
+      account = connector.accounts[0];
+      setWalletAddress(account);
+    }
     // Check if connection is already established
     if (!connector.connected) {
       // create new session
@@ -29,7 +35,7 @@ const WalletConnector: React.FC = () => {
         alert('Please switch to L16 network');
         return;
       }
-      QRCodeModal.close();
+
       setWalletAddress(accounts[0]);
       router.push({ pathname: `/${accounts[0]}/overview` });
     });
@@ -56,21 +62,8 @@ const WalletConnector: React.FC = () => {
       // Delete connector
       setWalletAddress('');
     });
-  };
-
-  return (
-    <div
-      className="flex flex-col items-center py-4 cursor-pointer"
-      onClick={() => showModal()}
-    >
-      <img
-        src="./WalletConnect-icon.png"
-        alt="walletConnect image"
-        className="w-[40px] h-auto mb-2"
-      />
-      <div>WalletConnect</div>
-    </div>
-  );
+  }, [setWalletAddress]);
+  return account;
 };
 
-export default WalletConnector;
+export default useWalletConnect;

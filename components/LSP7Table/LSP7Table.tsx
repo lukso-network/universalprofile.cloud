@@ -17,7 +17,7 @@ const LSP7Table: React.FC<Props> = ({
   vaultAddress,
 }) => {
   const web3Provider = useWeb3Provider();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [lsp7s, setLsp7s] = useState<Lsp7AssetType[]>([]);
 
   const { lsp7Assets, setLsp7Assets, setVaultsAssets, vaultsAssets } =
@@ -87,7 +87,7 @@ const LSP7Table: React.FC<Props> = ({
     if (!web3Provider || !addresses.length) {
       return;
     }
-
+    setIsLoading(true);
     vaultAddress ? fetchVaultAssets() : fetchUPAssets();
   }, [web3Provider, addresses]);
 
