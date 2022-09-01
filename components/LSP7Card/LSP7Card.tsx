@@ -18,7 +18,10 @@ const LSP7Card: React.FC<LSP7CardProps> = ({ icon, amount, name, symbol }) => {
       <div>
         <div className="text-sm font-bold text-gray-600 leading-6">{name}</div>
         <div className="leading-6">{symbol}</div>
-        <div className="text-xs leading-6">{amount} tokens</div>
+        {/* if amount = 0 it means that this is an issued asset so we dont display the balance */}
+        {amount != 0 && (
+          <div className="text-xs leading-6">{amount} tokens</div>
+        )}
       </div>
     </div>
   );

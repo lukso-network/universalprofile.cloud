@@ -62,7 +62,11 @@ const CreatedAssets: React.FC<IProps> = ({
       <div className="text-5xl text-center py-10">Created Assets</div>
       <div className="pb-2">
         <h2 className="px-2 border-b border-darkGray text-2xl pb-2">Tokens</h2>
-        <LSP7Table addresses={lsp7Addresses} ownerAddress={ownerAddress} />
+        <LSP7Table
+          addresses={lsp7Addresses}
+          ownerAddress={ownerAddress}
+          areCreatorLSP7s={true}
+        />
       </div>
       <div className="pb-2">
         <h2 className="px-2 border-b border-darkGray text-2xl pb-2 mt-6">

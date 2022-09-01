@@ -22,7 +22,7 @@ const LSP7Table: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [lsp7s, setLsp7s] = useState<Lsp7AssetType[]>([]);
 
-  const { lsp7Assets, setLsp7Assets, setVaultsAssets, vaultsAssets } =
+  const { setLsp7Assets, setVaultsAssets, vaultsAssets } =
     useContext(AssetsContext);
 
   const fetchVaultAssets = async () => {
@@ -95,14 +95,15 @@ const LSP7Table: React.FC<Props> = ({
           assetAddress,
           ownerAddress,
           web3Provider,
+          true,
         );
         if (!lsp7Assets) {
           return;
         }
         setLsp7s((prev) => [...prev, lsp7Assets]);
-        setIsLoading(false);
       }),
     );
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -115,7 +116,7 @@ const LSP7Table: React.FC<Props> = ({
     vaultAddress ? fetchVaultAssets() : fetchUPAssets();
   }, [web3Provider, addresses]);
 
-  if (!lsp7Assets.length && !isLoading) {
+  if (!lsp7s.length && !isLoading) {
     return <div className="text-sm">No token yet</div>;
   }
 
@@ -134,7 +135,6 @@ const LSP7Table: React.FC<Props> = ({
               />
             );
           })}
-      {!isLoading && lsp7s.length === 0 && <div>No token yet</div>}
     </div>
   );
 };

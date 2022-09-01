@@ -23,7 +23,7 @@ const LSP8Table: React.FC<Props> = ({
   const web3Provider = useWeb3Provider();
   const [isLoading, setIsLoading] = useState(false);
   const [lsp8s, setLsp8s] = useState<Lsp8AssetType[]>([]);
-  const { lsp8Assets, setLsp8Assets, setVaultsAssets, vaultsAssets } =
+  const { setLsp8Assets, setVaultsAssets, vaultsAssets } =
     useContext(AssetsContext);
 
   const fetchVaultAssets = async () => {
@@ -113,7 +113,7 @@ const LSP8Table: React.FC<Props> = ({
     vaultAddress ? fetchVaultAssets() : fetchUPAssets();
   }, [web3Provider, addresses]);
 
-  if (!lsp8Assets.length && !isLoading) {
+  if (!lsp8s.length && !isLoading) {
     return <div className="text-sm">No NFTs yet</div>;
   }
 
