@@ -9,18 +9,20 @@ interface Props {
   addresses: string[];
   ownerAddress: string;
   vaultAddress?: string;
+  areCreatorLSP7s?: boolean;
 }
 
 const LSP7Table: React.FC<Props> = ({
   addresses,
   ownerAddress,
   vaultAddress,
+  areCreatorLSP7s,
 }) => {
   const web3Provider = useWeb3Provider();
   const [isLoading, setIsLoading] = useState(false);
   const [lsp7s, setLsp7s] = useState<Lsp7AssetType[]>([]);
 
-  const { lsp7Assets, setLsp7Assets, setVaultsAssets, vaultsAssets } =
+  const { setLsp7Assets, setVaultsAssets, vaultsAssets } =
     useContext(AssetsContext);
 
   const fetchVaultAssets = async () => {
@@ -73,24 +75,48 @@ const LSP7Table: React.FC<Props> = ({
           ownerAddress,
           web3Provider,
         );
-
-        if (lsp7Assets instanceof Object) {
-          setLsp7s((prev) => [...prev, lsp7Assets]);
-          setLsp7Assets((prev) => [...prev, lsp7Assets]);
+        if (!lsp7Assets) {
+          return;
         }
+        setLsp7s((prev) => [...prev, lsp7Assets]);
+        setLsp7Assets((prev) => [...prev, lsp7Assets]);
+
         setIsLoading(false);
       }),
     );
+  };
+
+  const fetchCreatorAssets = async () => {
+    setLsp7Assets([]);
+    setIsLoading(true);
+    await Promise.all(
+      addresses.map(async (assetAddress) => {
+        const lsp7Assets = await fetchLSP7Assets(
+          assetAddress,
+          ownerAddress,
+          web3Provider,
+          true,
+        );
+        if (!lsp7Assets) {
+          return;
+        }
+        setLsp7s((prev) => [...prev, lsp7Assets]);
+      }),
+    );
+    setIsLoading(false);
   };
 
   useEffect(() => {
     if (!web3Provider || !addresses.length) {
       return;
     }
+    if (areCreatorLSP7s) {
+      fetchCreatorAssets();
+    }
     vaultAddress ? fetchVaultAssets() : fetchUPAssets();
   }, [web3Provider, addresses]);
 
-  if (!lsp7Assets.length && !isLoading) {
+  if (!lsp7s.length && !isLoading) {
     return <div className="text-sm">No token yet</div>;
   }
 
@@ -109,7 +135,6 @@ const LSP7Table: React.FC<Props> = ({
               />
             );
           })}
-      {!isLoading && lsp7s.length === 0 && <div>No token yet</div>}
     </div>
   );
 };

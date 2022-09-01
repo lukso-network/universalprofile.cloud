@@ -4,9 +4,8 @@ import { useState, useEffect } from 'react';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
 import useEthersProvider from '../../hooks/useEthersProvider';
 import fetchReceivedAssets from '../../utils/fetchReceivedAssets';
-import isLSP7orLSP8 from '../../utils/isLSP7orLSP8';
 import { ethers } from 'ethers';
-import { LSPType } from '../../interfaces/lsps';
+import getAssets from '../../utils/getAssets';
 
 interface Props {
   ownerAddress: string;
@@ -33,27 +32,13 @@ const Vault: React.FC<Props> = ({ ownerAddress, vaultAddress, vaultIndex }) => {
       return;
     }
 
-    const lsp7AddressesTemp: string[] = [];
-    const lsp8AddressesTemp: string[] = [];
-
-    //fetch the different assets types
-    await Promise.all(
-      receivedAssets.map(async (assetAddress) => {
-        const assetType = await isLSP7orLSP8(assetAddress, ethersProvider);
-        switch (assetType) {
-          case LSPType.LSP7:
-            lsp7AddressesTemp.push(assetAddress);
-            break;
-          case LSPType.LSP8:
-            lsp8AddressesTemp.push(assetAddress);
-            break;
-          default:
-            break;
-        }
-      }),
+    const { lsp7Addresses, lsp8Addresses } = await getAssets(
+      receivedAssets,
+      ethersProvider,
     );
-    setLsp7Addresses(lsp7AddressesTemp);
-    setLsp8Addresses(lsp8AddressesTemp);
+
+    setLsp7Addresses(lsp7Addresses);
+    setLsp8Addresses(lsp8Addresses);
     setIsLoading(false);
   };
 

@@ -5,11 +5,11 @@ import { useRouter } from 'next/router';
 import { Link, LSP3Profile } from '../../interfaces/lsps';
 import { firstTwoBytesOfAddress } from '../../utils/utils';
 
-interface UserInfosProps {
+interface Props {
   lsp3JSON: LSP3Profile | undefined;
 }
 
-const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
+const UserInfos: React.FC<Props> = ({ lsp3JSON }) => {
   const [profile, setProfile] = useState<LSP3Profile>();
   const [address, setAddress] = useState<string>('');
   const router = useRouter();
