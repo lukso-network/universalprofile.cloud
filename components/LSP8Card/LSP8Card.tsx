@@ -25,7 +25,9 @@ const LSP8Card: React.FC<LSP8CardProps> = ({ assetJSON }) => {
       <div className="text-xs font-bold text-gray-600 leading-6">
         {assetJSON.collectionName}
       </div>
-      <div className="text-sm leading-6">#{parseInt(assetJSON.tokenId)}</div>
+      {assetJSON.tokenId && (
+        <div className="text-sm leading-6">#{parseInt(assetJSON.tokenId)}</div>
+      )}
     </div>
   );
 };
