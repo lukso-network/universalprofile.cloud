@@ -1,13 +1,12 @@
 {
-  "name": "universalprofile-wallet",
+  "name": "wallet.universalprofile.cloud",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "export": "next build && next export"
+    "start": "next start -p ${PORT:-3000}",
+    "lint": "next lint"
   },
   "dependencies": {
     "@erc725/erc725.js": "^0.14.4",
