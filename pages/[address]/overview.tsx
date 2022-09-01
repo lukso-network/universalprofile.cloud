@@ -14,6 +14,7 @@ import Vaults from '../../components/Vaults/Vaults';
 import ReceivedAssets from '../../components/ReceivedAssets';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
 import CreatedAssets from '../../components/CreatedAssets';
+import AddressInput from '../../components/AddressInput';
 
 const config = { ipfsGateway: IPFS_GATEWAY_BASE_URL };
 
@@ -84,6 +85,10 @@ const AdressOverview: NextPage = () => {
       <CreatedAssets
         isUniversalProfile={isUniversalProfile}
         ownerAddress={address}
+      />
+      <AddressInput
+        inputAddress="0x"
+        onChange={(newAddressInfos) => console.log(newAddressInfos)}
       />
       <ReceivedAssets
         isUniversalProfile={isUniversalProfile}
