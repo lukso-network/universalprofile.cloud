@@ -4,17 +4,16 @@ import { ethers } from 'ethers';
 import useEthersProvider from '../../hooks/useEthersProvider';
 import fetchReceivedAssets from '../../utils/fetchReceivedAssets';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
-import isLSP7orLSP8 from '../../utils/isLSP7orLSP8';
-import { LSPType } from '../../interfaces/lsps';
 import LSP7Table from '../../components/LSP7Table/LSP7Table';
 import LSP8Table from '../../components/LSP8Table/LSP8Table';
+import getAssets from '../../utils/getAssets';
 
-interface IProps {
+interface Props {
   isUniversalProfile: boolean;
   ownerAddress: string;
 }
 
-const ReceivedAssets: React.FC<IProps> = ({
+const ReceivedAssets: React.FC<Props> = ({
   isUniversalProfile,
   ownerAddress,
 }) => {
@@ -30,27 +29,13 @@ const ReceivedAssets: React.FC<IProps> = ({
     //fetch all received assets for specific up address
     const receivedAssets = await fetchReceivedAssets(address, web3Provider);
 
-    const lsp7AddressesTemp: string[] = [];
-    const lsp8AddressesTemp: string[] = [];
-
-    //fetch the different assets types
-    await Promise.all(
-      receivedAssets.map(async (assetAddress) => {
-        const assetType = await isLSP7orLSP8(assetAddress, provider);
-        switch (assetType) {
-          case LSPType.LSP7:
-            lsp7AddressesTemp.push(assetAddress);
-            break;
-          case LSPType.LSP8:
-            lsp8AddressesTemp.push(assetAddress);
-            break;
-          default:
-            break;
-        }
-      }),
+    const { lsp7Addresses, lsp8Addresses } = await getAssets(
+      receivedAssets,
+      provider,
     );
-    setLsp7Addresses(lsp7AddressesTemp);
-    setLsp8Addresses(lsp8AddressesTemp);
+
+    setLsp7Addresses(lsp7Addresses);
+    setLsp8Addresses(lsp8Addresses);
   };
 
   useEffect(() => {

@@ -3,18 +3,17 @@ import { ethers } from 'ethers';
 
 import useEthersProvider from '../../hooks/useEthersProvider';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
-import isLSP7orLSP8 from '../../utils/isLSP7orLSP8';
-import { LSPType } from '../../interfaces/lsps';
 import LSP7Table from '../../components/LSP7Table/LSP7Table';
 import LSP8Table from '../../components/LSP8Table/LSP8Table';
-import fetchIssuedAssets from '../../utils/fetchIssuedAssets';
+import fetchCreatedAssets from '../../utils/fetchCreatedAssets';
+import getAssets from '../../utils/getAssets';
 
-interface IProps {
+interface Props {
   isUniversalProfile: boolean;
   ownerAddress: string;
 }
 
-const CreatedAssets: React.FC<IProps> = ({
+const CreatedAssets: React.FC<Props> = ({
   isUniversalProfile,
   ownerAddress,
 }) => {
@@ -26,36 +25,21 @@ const CreatedAssets: React.FC<IProps> = ({
   //ERC725 does not support ethers provider
   const web3Provider = useWeb3Provider();
 
-  const fetchCreatedAssets = async () => {
+  const getCreatedAssets = async () => {
     //fetch all received assets for specific up address
-    const issuedAssets = await fetchIssuedAssets(web3Provider, ownerAddress);
+    const createdAssets = await fetchCreatedAssets(web3Provider, ownerAddress);
 
-    const lsp7AddressesTemp: string[] = [];
-    const lsp8AddressesTemp: string[] = [];
-
-    //fetch the different assets types
-    await Promise.all(
-      issuedAssets.map(async (assetAddress) => {
-        const assetType = await isLSP7orLSP8(assetAddress, provider);
-        switch (assetType) {
-          case LSPType.LSP7:
-            lsp7AddressesTemp.push(assetAddress);
-            break;
-          case LSPType.LSP8:
-            lsp8AddressesTemp.push(assetAddress);
-            break;
-          default:
-            break;
-        }
-      }),
+    const { lsp7Addresses, lsp8Addresses } = await getAssets(
+      createdAssets,
+      provider,
     );
 
-    setLsp7Addresses(lsp7AddressesTemp);
-    setLsp8Addresses(lsp8AddressesTemp);
+    setLsp7Addresses(lsp7Addresses);
+    setLsp8Addresses(lsp8Addresses);
   };
 
   useEffect(() => {
-    isUniversalProfile && fetchCreatedAssets();
+    isUniversalProfile && getCreatedAssets();
   }, [isUniversalProfile, ownerAddress]);
   return (
     <div>
@@ -65,7 +49,7 @@ const CreatedAssets: React.FC<IProps> = ({
         <LSP7Table
           addresses={lsp7Addresses}
           ownerAddress={ownerAddress}
-          areCreatorLSP7s={true}
+          areCreatorLSP7s
         />
       </div>
       <div className="pb-2">
@@ -75,7 +59,7 @@ const CreatedAssets: React.FC<IProps> = ({
         <LSP8Table
           addresses={lsp8Addresses}
           ownerAddress={ownerAddress}
-          areCreatorLSP8s={true}
+          areCreatorLSP8s
         />
       </div>
     </div>

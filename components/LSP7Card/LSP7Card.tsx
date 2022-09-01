@@ -1,11 +1,11 @@
-interface LSP7CardProps {
+interface Props {
   icon: string;
   amount: number;
   name: string;
   symbol: string;
 }
 
-const LSP7Card: React.FC<LSP7CardProps> = ({ icon, amount, name, symbol }) => {
+const LSP7Card: React.FC<Props> = ({ icon, amount, name, symbol }) => {
   return (
     <div className="border border-darkGray p-3 rounded-lg h-[280px] mt-8">
       <div className="rounded h-[180px] overflow-hidden mb-2">

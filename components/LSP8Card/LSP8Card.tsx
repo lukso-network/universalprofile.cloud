@@ -1,4 +1,4 @@
-interface LSP8CardProps {
+interface Props {
   assetJSON: {
     icon: string;
     image: string;
@@ -12,7 +12,7 @@ interface LSP8CardProps {
   };
 }
 
-const LSP8Card: React.FC<LSP8CardProps> = ({ assetJSON }) => {
+const LSP8Card: React.FC<Props> = ({ assetJSON }) => {
   return (
     <div className="border border-darkGray p-3 rounded-lg h-[280px] mt-8">
       <div className="rounded h-[180px] overflow-hidden mb-2">

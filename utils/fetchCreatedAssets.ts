@@ -6,7 +6,7 @@ const verifyCreatorShip = async (
   ownerAddress: string,
   provider: any,
   issuedAssetAddress: string,
-): Promise<string> => {
+): Promise<boolean> => {
   const erc725Asset = new ERC725js(
     LSP4Schemas as ERC725JSONSchema[],
     issuedAssetAddress,
@@ -17,17 +17,17 @@ const verifyCreatorShip = async (
     const creators = fetchCreators.value as string[];
     creators.filter((creator) => {
       if (creator === ownerAddress) {
-        return creator;
+        return true;
       }
     });
-    return '';
+    return false;
   } catch (er) {
     console.log(er);
-    return '';
+    return false;
   }
 };
 
-const fetchIssuedAssets = async (
+const fetchCreatedAssets = async (
   provider: any,
   issuerAddress: string,
 ): Promise<string[]> => {
@@ -37,15 +37,22 @@ const fetchIssuedAssets = async (
     provider,
   );
   try {
-    const fetchIssuedAssetsAddresses = await erc725.fetchData(
+    const fetchCreatedAssetsAddresses = await erc725.fetchData(
       'LSP12IssuedAssets[]',
     );
-    const issuedAssetsAddresses = fetchIssuedAssetsAddresses.value as string[];
+    const issuedAssetsAddresses = fetchCreatedAssetsAddresses.value as string[];
 
     if (issuedAssetsAddresses.length) {
       await Promise.all(
         issuedAssetsAddresses.map(async (assetAddress) => {
-          await verifyCreatorShip(issuerAddress, provider, assetAddress);
+          const isCreator = await verifyCreatorShip(
+            issuerAddress,
+            provider,
+            assetAddress,
+          );
+          if (isCreator) {
+            return assetAddress;
+          }
         }),
       );
       return issuedAssetsAddresses;
@@ -57,4 +64,4 @@ const fetchIssuedAssets = async (
   }
 };
 
-export default fetchIssuedAssets;
+export default fetchCreatedAssets;
