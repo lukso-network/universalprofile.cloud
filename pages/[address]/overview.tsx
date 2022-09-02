@@ -108,7 +108,7 @@ const AdressOverview: NextPage = () => {
 
   return (
     <div className="mx-8">
-      {address && <UserInfos lsp3JSON={lsp3JSON} />}
+      {address && <UserInfos lsp3JSON={lsp3JSON} address={address} />}
       {isLoadingUp && (
         <div className="text-5xl flex justify-center mt-20">
           Loading Universal Profile...

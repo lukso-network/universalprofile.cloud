@@ -1,18 +1,16 @@
 import identicon from 'ethereum-blockies-base64';
 import { IPFS_GATEWAY_BASE_URL } from '../../constants';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { Link, LSP3Profile } from '../../interfaces/lsps';
 import { firstTwoBytesOfAddress } from '../../utils/utils';
 
 interface UserInfosProps {
   lsp3JSON: LSP3Profile | undefined;
+  address: string;
 }
 
-const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
+const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON, address }) => {
   const [profile, setProfile] = useState<LSP3Profile>();
-  const [address, setAddress] = useState<string>('');
-  const router = useRouter();
 
   const [avatar, setAvatar] = useState<string>();
   const [firstLink, setFirstLink] = useState<Link>();
@@ -71,12 +69,6 @@ const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON }) => {
     setProfile(undefined);
     setFirstLink(undefined);
   }, [lsp3JSON, address]);
-
-  useEffect(() => {
-    if (router.query.address) {
-      setAddress(router.query.address as string);
-    }
-  }, [router]);
 
   return (
     <div>
