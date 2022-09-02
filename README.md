@@ -18,6 +18,14 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000)
 
+# Storybook
+
+[Storybook](https://storybook.js.org/) has been installed on this project. You can run it with:
+
+```
+npm run storybook
+```
+
 # License
 
 wallet.universalprofile.cloud is [Apache 2.0 licensed](./LICENSE)
