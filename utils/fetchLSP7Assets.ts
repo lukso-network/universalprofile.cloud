@@ -9,6 +9,7 @@ const fetchLSP7Assets = async (
   assetAddress: string,
   UPAddress: string,
   web3Provider: any,
+  areCreatorAssets?: boolean,
 ): Promise<Lsp7AssetType | undefined> => {
   const LSP4MetadataResponse = await fetchLSP4Metadata(
     assetAddress,
@@ -18,7 +19,8 @@ const fetchLSP7Assets = async (
   // fetch amount of tokens received
   const tokenBalance = await fetchLSP7Balance(assetAddress, UPAddress);
 
-  if (tokenBalance == 0) {
+  //balance = 0 if it is a creator asset
+  if (tokenBalance == 0 && !areCreatorAssets) {
     return;
   }
   const lsp7Object = createLSP7Object(

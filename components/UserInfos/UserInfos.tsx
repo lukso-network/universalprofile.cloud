@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 import { Link, LSP3Profile } from '../../interfaces/lsps';
 import { firstTwoBytesOfAddress } from '../../utils/utils';
 
-interface UserInfosProps {
+interface Props {
   lsp3JSON: LSP3Profile | undefined;
   address: string;
 }
 
-const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON, address }) => {
+const UserInfos: React.FC<Props> = ({ lsp3JSON, address }) => {
   const [profile, setProfile] = useState<LSP3Profile>();
 
   const [avatar, setAvatar] = useState<string>();
