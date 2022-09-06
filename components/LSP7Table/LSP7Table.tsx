@@ -132,6 +132,10 @@ const LSP7Table: React.FC<Props> = ({
                 amount={asset.amount}
                 name={asset.name}
                 symbol={asset.symbol}
+                address={asset.address}
+                isCreatorLsp7={areCreatorLSP7s}
+                ownerAddress={ownerAddress}
+                vaultAddress={vaultAddress}
               />
             );
           })}

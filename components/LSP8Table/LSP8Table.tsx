@@ -123,7 +123,15 @@ const LSP8Table: React.FC<Props> = ({
         {isLoading
           ? 'Loading NFTs metadata...'
           : lsp8s.map((asset, index) => {
-              return <LSP8Card key={`lsp8-${index}`} assetJSON={asset} />;
+              return (
+                <LSP8Card
+                  key={`lsp8-${index}`}
+                  assetJSON={asset}
+                  ownerAddress={ownerAddress}
+                  vaultAddress={vaultAddress}
+                  areCreatorLSP8s={areCreatorLSP8s}
+                />
+              );
             })}
       </div>
     </>

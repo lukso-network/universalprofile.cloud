@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import erc725Schema from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
 
@@ -14,7 +14,8 @@ import Vaults from '../../components/Vaults/Vaults';
 import ReceivedAssets from '../../components/ReceivedAssets';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
 import CreatedAssets from '../../components/CreatedAssets';
-import AddressInput from '../../components/AddressInput';
+import AssetTransferModal from '../../components/AssetTransferModal';
+import { AssetTransferContext } from '../../contexts/AssetTransferContext';
 
 const config = { ipfsGateway: IPFS_GATEWAY_BASE_URL };
 
@@ -26,6 +27,8 @@ const AdressOverview: NextPage = () => {
   const [isLoadingUp, setIsLoadingUp] = useState<boolean>(false);
 
   const [lsp3JSON, setLsp3JSON] = useState<LSP3Profile>();
+
+  const { assetTransferInfos } = useContext(AssetTransferContext);
 
   const web3Provider = useWeb3Provider();
 
@@ -70,7 +73,7 @@ const AdressOverview: NextPage = () => {
   }, [address, web3Provider]);
 
   return (
-    <div className="mx-8">
+    <div className="mx-8 relative">
       {address && <UserInfos lsp3JSON={lsp3JSON} />}
       {isLoadingUp && (
         <div className="text-5xl flex justify-center mt-20">
@@ -82,13 +85,11 @@ const AdressOverview: NextPage = () => {
       ) : (
         <div />
       )}
+      {assetTransferInfos.assetAddress && <AssetTransferModal />}
+
       <CreatedAssets
         isUniversalProfile={isUniversalProfile}
         ownerAddress={address}
-      />
-      <AddressInput
-        inputAddress="0x"
-        onChange={(newAddressInfos) => console.log(newAddressInfos)}
       />
       <ReceivedAssets
         isUniversalProfile={isUniversalProfile}
