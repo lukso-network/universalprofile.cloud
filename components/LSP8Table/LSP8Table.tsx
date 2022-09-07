@@ -29,6 +29,7 @@ const LSP8Table: React.FC<Props> = ({
   const fetchVaultAssets = async () => {
     setLsp8Assets([]);
     setIsLoading(true);
+    let tempVaultAssets = vaultsAssets;
     await Promise.all(
       addresses.map(async (assetAddress) => {
         const lsp8Assets = await fetchLSP8Assets(
@@ -41,26 +42,25 @@ const LSP8Table: React.FC<Props> = ({
         }
         if (vaultAddress) {
           //find vault asset
-          const vaultAsset = vaultsAssets.find(
-            (vaultAsset) => vaultAsset.vaultAddress === assetAddress,
+          const vaultAsset = tempVaultAssets.find(
+            (vaultAsset) => vaultAsset.vaultAddress === vaultAddress,
           );
           if (vaultAsset) {
             vaultAsset.lsp8Assets = lsp8Assets;
-            setVaultsAssets((prev) => [...prev, vaultAsset]);
           } else {
             //create vault asset
             const newVaultAsset = {
-              vaultAddress: assetAddress,
+              vaultAddress,
               lsp7Assets: [],
               lsp8Assets: lsp8Assets,
             };
-            setVaultsAssets((prev) => [...prev, newVaultAsset]);
+            tempVaultAssets = [...tempVaultAssets, newVaultAsset];
           }
         }
         setLsp8s((prev) => [...prev, ...lsp8Assets]);
       }),
     );
-
+    setVaultsAssets(tempVaultAssets);
     setIsLoading(false);
   };
 

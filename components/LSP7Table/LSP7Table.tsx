@@ -28,6 +28,7 @@ const LSP7Table: React.FC<Props> = ({
   const fetchVaultAssets = async () => {
     setLsp7Assets([]);
     setIsLoading(true);
+    let tempVaultAssets = vaultsAssets;
     await Promise.all(
       addresses.map(async (assetAddress) => {
         const lsp7Assets = await fetchLSP7Assets(
@@ -39,29 +40,28 @@ const LSP7Table: React.FC<Props> = ({
           return;
         }
         //find vault asset
-        const vaultAsset = vaultsAssets.find(
-          (vaultAsset) => vaultAsset.vaultAddress === assetAddress,
+        const vaultAsset = tempVaultAssets.find(
+          (vaultAsset) => vaultAsset.vaultAddress === vaultAddress,
         );
         if (vaultAsset) {
           //add lps7 asset to lsp7assets[] of vaultAsset
           vaultAsset.lsp7Assets.push(lsp7Assets);
-          //add vault assets to vaultsAssets[]
-          setVaultsAssets((prev) => [...prev, vaultAsset]);
         } else {
           //create vault asset
           const newVaultAsset = {
-            vaultAddress: assetAddress,
+            vaultAddress: vaultAddress as string, //checking vaultAddress in defined before calling func
             lsp7Assets: [lsp7Assets],
             lsp8Assets: [],
           };
           //add vault asset to vaultsAssets[]
-          setVaultsAssets((prev) => [...prev, newVaultAsset]);
+          tempVaultAssets = [...tempVaultAssets, newVaultAsset];
         }
         setLsp7s((prev) => [...prev, lsp7Assets]);
-
-        setIsLoading(false);
       }),
     );
+
+    setIsLoading(false);
+    setVaultsAssets(tempVaultAssets);
   };
 
   const fetchUPAssets = async () => {
