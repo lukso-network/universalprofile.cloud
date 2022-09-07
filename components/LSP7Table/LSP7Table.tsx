@@ -107,6 +107,7 @@ const LSP7Table: React.FC<Props> = ({
   };
 
   useEffect(() => {
+    setLsp7s([]);
     if (!web3Provider || !addresses.length) {
       return;
     }

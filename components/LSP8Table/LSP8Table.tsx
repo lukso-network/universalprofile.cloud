@@ -104,6 +104,7 @@ const LSP8Table: React.FC<Props> = ({
   };
 
   useEffect(() => {
+    setLsp8s([]);
     if (!web3Provider || !addresses.length) {
       return;
     }
