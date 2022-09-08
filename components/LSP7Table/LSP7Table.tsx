@@ -15,7 +15,6 @@ interface Props {
 const LSP7Table: React.FC<Props> = ({
   addresses,
   ownerAddress,
-  vaultAddress,
   areCreatorLSP7s,
 }) => {
   const web3Provider = useWeb3Provider();
@@ -25,49 +24,9 @@ const LSP7Table: React.FC<Props> = ({
   const { setLsp7Assets, setVaultsAssets, vaultsAssets } =
     useContext(AssetsContext);
 
-  const fetchVaultAssets = async () => {
-    setLsp7Assets([]);
-    setIsLoading(true);
-    await Promise.all(
-      addresses.map(async (assetAddress) => {
-        const lsp7Assets = await fetchLSP7Assets(
-          assetAddress,
-          vaultAddress as string, //checking in the useEffect
-          web3Provider,
-        );
-        if (!lsp7Assets) {
-          return;
-        }
-        //find vault asset
-        const vaultAsset = vaultsAssets.find(
-          (vaultAsset) => vaultAsset.vaultAddress === assetAddress,
-        );
-        if (vaultAsset) {
-          //add lps7 asset to lsp7assets[] of vaultAsset
-          vaultAsset.lsp7Assets.push(lsp7Assets);
-          //add vault assets to vaultsAssets[]
-          setVaultsAssets((prev) => [...prev, vaultAsset]);
-        } else {
-          //create vault asset
-          const newVaultAsset = {
-            vaultAddress: assetAddress,
-            lsp7Assets: [lsp7Assets],
-            lsp8Assets: [],
-          };
-          //add vault asset to vaultsAssets[]
-          setVaultsAssets((prev) => [...prev, newVaultAsset]);
-        }
-        setLsp7s((prev) => [...prev, lsp7Assets]);
-
-        setIsLoading(false);
-      }),
-    );
-  };
-
   const fetchUPAssets = async () => {
-    setLsp7Assets([]);
     setIsLoading(true);
-
+    let tempLsp7s: Lsp7AssetType[] = [];
     await Promise.all(
       addresses.map(async (assetAddress) => {
         const lsp7Assets = await fetchLSP7Assets(
@@ -113,7 +72,7 @@ const LSP7Table: React.FC<Props> = ({
     if (areCreatorLSP7s) {
       fetchCreatorAssets();
     }
-    vaultAddress ? fetchVaultAssets() : fetchUPAssets();
+    fetchUPAssets();
   }, [web3Provider, addresses]);
 
   if (!lsp7s.length && !isLoading) {
@@ -132,6 +91,9 @@ const LSP7Table: React.FC<Props> = ({
                 amount={asset.amount}
                 name={asset.name}
                 symbol={asset.symbol}
+                address={asset.address}
+                isCreatorLsp7={areCreatorLSP7s}
+                ownerAddress={ownerAddress}
               />
             );
           })}

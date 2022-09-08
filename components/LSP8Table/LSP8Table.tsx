@@ -17,7 +17,6 @@ interface Props {
 const LSP8Table: React.FC<Props> = ({
   addresses,
   ownerAddress,
-  vaultAddress,
   areCreatorLSP8s,
 }) => {
   const web3Provider = useWeb3Provider();
@@ -25,44 +24,6 @@ const LSP8Table: React.FC<Props> = ({
   const [lsp8s, setLsp8s] = useState<Lsp8AssetType[]>([]);
   const { setLsp8Assets, setVaultsAssets, vaultsAssets } =
     useContext(AssetsContext);
-
-  const fetchVaultAssets = async () => {
-    setLsp8Assets([]);
-    setIsLoading(true);
-    await Promise.all(
-      addresses.map(async (assetAddress) => {
-        const lsp8Assets = await fetchLSP8Assets(
-          assetAddress,
-          vaultAddress as string, //checking in the useEffect
-          web3Provider,
-        );
-        if (!lsp8Assets) {
-          return;
-        }
-        if (vaultAddress) {
-          //find vault asset
-          const vaultAsset = vaultsAssets.find(
-            (vaultAsset) => vaultAsset.vaultAddress === assetAddress,
-          );
-          if (vaultAsset) {
-            vaultAsset.lsp8Assets = lsp8Assets;
-            setVaultsAssets((prev) => [...prev, vaultAsset]);
-          } else {
-            //create vault asset
-            const newVaultAsset = {
-              vaultAddress: assetAddress,
-              lsp7Assets: [],
-              lsp8Assets: lsp8Assets,
-            };
-            setVaultsAssets((prev) => [...prev, newVaultAsset]);
-          }
-        }
-        setLsp8s((prev) => [...prev, ...lsp8Assets]);
-      }),
-    );
-
-    setIsLoading(false);
-  };
 
   const fetchUPAssets = async () => {
     setLsp8Assets([]);
@@ -110,7 +71,7 @@ const LSP8Table: React.FC<Props> = ({
     if (areCreatorLSP8s) {
       fetchCreatorLSP8s();
     }
-    vaultAddress ? fetchVaultAssets() : fetchUPAssets();
+    fetchUPAssets();
   }, [web3Provider, addresses]);
 
   if (!lsp8s.length && !isLoading) {
@@ -123,7 +84,14 @@ const LSP8Table: React.FC<Props> = ({
         {isLoading
           ? 'Loading NFTs metadata...'
           : lsp8s.map((asset, index) => {
-              return <LSP8Card key={`lsp8-${index}`} assetJSON={asset} />;
+              return (
+                <LSP8Card
+                  key={`lsp8-${index}`}
+                  assetJSON={asset}
+                  ownerAddress={ownerAddress}
+                  areCreatorLSP8s={areCreatorLSP8s}
+                />
+              );
             })}
       </div>
     </>
