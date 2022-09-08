@@ -14,8 +14,6 @@ import Vaults from '../../components/Vaults/Vaults';
 import ReceivedAssets from '../../components/ReceivedAssets';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
 import CreatedAssets from '../../components/CreatedAssets';
-import AssetTransferModal from '../../components/AssetTransferModal';
-import { AssetTransferContext } from '../../contexts/AssetTransferContext';
 
 const config = { ipfsGateway: IPFS_GATEWAY_BASE_URL };
 
@@ -27,8 +25,6 @@ const AdressOverview: NextPage = () => {
   const [isLoadingUp, setIsLoadingUp] = useState<boolean>(false);
 
   const [lsp3JSON, setLsp3JSON] = useState<LSP3Profile>();
-
-  const { assetTransferInfos } = useContext(AssetTransferContext);
 
   const web3Provider = useWeb3Provider();
 
@@ -85,7 +81,6 @@ const AdressOverview: NextPage = () => {
       ) : (
         <div />
       )}
-      {assetTransferInfos.assetAddress && <AssetTransferModal />}
 
       <CreatedAssets
         isUniversalProfile={isUniversalProfile}

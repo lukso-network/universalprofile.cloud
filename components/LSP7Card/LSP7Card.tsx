@@ -1,8 +1,8 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
-import { AssetTransferContext } from '../../contexts/AssetTransferContext';
 import { WalletAddressContext } from '../../contexts/WalletAddressContext';
 import { LSPType } from '../../interfaces/lsps';
+import AssetTransferModal from '../AssetTransferModal';
 
 interface Props {
   icon: string;
@@ -25,8 +25,10 @@ const LSP7Card: React.FC<Props> = ({
   vaultAddress,
   address,
 }) => {
-  const { setAssetTransferInfos } = useContext(AssetTransferContext);
   const { walletAddress } = useContext(WalletAddressContext);
+
+  const [isTransferModalOpen, setIsTransferModalOpen] =
+    useState<boolean>(false);
 
   const isAssetTransferable = () => {
     if (!isCreatorLsp7 && ownerAddress === walletAddress) {
@@ -57,22 +59,24 @@ const LSP7Card: React.FC<Props> = ({
           <div className="flex justify-end">
             <button
               className="mt-2 border border-red-400 py-1 px-2 text-red-400 rounded h-8 mb-2"
-              onClick={() =>
-                setAssetTransferInfos({
-                  assetAddress: address,
-                  amount,
-                  assetType: LSPType.LSP7,
-                  img: icon,
-                  ownerAddress,
-                  vaultAddress,
-                })
-              }
+              onClick={() => setIsTransferModalOpen(true)}
             >
               Send
             </button>
           </div>
         )}
       </div>
+      {isTransferModalOpen && (
+        <AssetTransferModal
+          assetAddress={address}
+          assetImage={icon}
+          assetType={LSPType.LSP7}
+          ownerAddress={ownerAddress}
+          setIsTransferModalOpen={setIsTransferModalOpen}
+          amount={amount}
+          vaultAddress={vaultAddress}
+        />
+      )}
     </div>
   );
 };

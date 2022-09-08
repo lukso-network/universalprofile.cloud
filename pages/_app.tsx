@@ -7,7 +7,6 @@ import AssetsProvider from '../contexts/AssetsContext';
 import WalletAddressProvider from '../contexts/WalletAddressContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AssetTransferProvider from '../contexts/AssetTransferContext';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -19,13 +18,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ToastContainer />
         <AssetsProvider>
           <WalletAddressProvider>
-            <AssetTransferProvider>
-              <SideBar />
-              <div className="ml-[240px]">
-                <SearchBar />
-                <Component {...pageProps} />
-              </div>
-            </AssetTransferProvider>
+            <SideBar />
+            <div className="ml-[240px]">
+              <SearchBar />
+              <Component {...pageProps} />
+            </div>
           </WalletAddressProvider>
         </AssetsProvider>
       </div>

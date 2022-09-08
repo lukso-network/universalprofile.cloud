@@ -1,11 +1,7 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, Dispatch } from 'react';
 import Web3 from 'web3';
 
 import { AssetsContext } from '../../contexts/AssetsContext';
-import {
-  AssetTransferContext,
-  assetTransferInitialContext,
-} from '../../contexts/AssetTransferContext';
 import { WalletAddressContext } from '../../contexts/WalletAddressContext';
 import { LSPType } from '../../interfaces/lsps';
 import {
@@ -38,7 +34,27 @@ enum TransactionStatus {
   None = 'none',
 }
 
-const AssetTransferModal: React.FC = () => {
+interface Props {
+  vaultAddress?: string;
+  assetType: LSPType;
+  tokenId?: string;
+  assetAddress: string;
+  assetImage: string;
+  ownerAddress: string;
+  amount?: number;
+  setIsTransferModalOpen: Dispatch<React.SetStateAction<boolean>>;
+}
+
+const AssetTransferModal: React.FC<Props> = ({
+  vaultAddress,
+  assetType,
+  tokenId,
+  assetAddress,
+  assetImage,
+  ownerAddress,
+  amount,
+  setIsTransferModalOpen,
+}) => {
   const [transfer, setTransfer] = useState<Transfer>({
     assetType: LSPType.Unknown,
     receiverAddress: '',
@@ -53,8 +69,6 @@ const AssetTransferModal: React.FC = () => {
   );
   const [transactionHash, setTransactionHash] = useState<string>('');
 
-  const { setAssetTransferInfos, assetTransferInfos } =
-    useContext(AssetTransferContext);
   const { walletAddress } = useContext(WalletAddressContext);
   const {
     vaultsAssets,
@@ -65,70 +79,12 @@ const AssetTransferModal: React.FC = () => {
     setLsp8Assets,
   } = useContext(AssetsContext);
 
-  // const updateGlobalContext = () => {
-  //   //update sender array
-  //   //if assetTransferInfos.vault address is not empty, it means that the asset is in a vault
-  //   //if asset type is lsp8 remove from array
-  //   //if asset type is lsp7, update amount
-  //   if (assetTransferInfos.vaultAddress) {
-  //     const vault = vaultsAssets.find(
-  //       (vault) => vault.vaultAddress === assetTransferInfos.vaultAddress,
-  //     );
-  //     if (vault) {
-  //       if (assetTransferInfos.assetType === LSPType.LSP7) {
-  //         const asset = vault.lsp7Assets.find(
-  //           (asset) => asset.address === assetTransferInfos.assetAddress,
-  //         );
-  //         if (asset) {
-  //           asset.amount -= assetTransferInfos.amount as number; //if lsp7, amount is defined
-  //           //if amount is 0, remove from array
-  //           if (asset.amount === 0) {
-  //             vault.lsp7Assets = vault.lsp7Assets.filter(
-  //               (asset) => asset.address !== assetTransferInfos.assetAddress,
-  //             );
-  //           }
-  //         }
-  //       } else {
-  //         //filter asset from array
-  //         vault.lsp8Assets = vault.lsp8Assets.filter(
-  //           (asset) =>
-  //             asset.collectionAddress !== assetTransferInfos.assetAddress,
-  //         );
-  //       }
-  //     }
-  //     //update setVaultsAssets
-  //     setVaultsAssets(
-  //       vaultsAssets.map((vault) =>
-  //         vault.vaultAddress === assetTransferInfos.vaultAddress
-  //           ? vault
-  //           : vault,
-  //       ),
-  //     );
-  //   }
-  //   //if not vault look at type of asset and remove from array
-  //   let tempLsp7Assets = lsp7Assets;
-  //   if (assetTransferInfos.assetType === LSPType.LSP7) {
-  //     tempLsp7Assets = tempLsp7Assets.filter(
-  //       (asset) => asset.address !== assetTransferInfos.assetAddress,
-  //     );
-  //     setLsp7Assets(tempLsp7Assets);
-  //   }
-  //   let tempLsp8Assets = lsp8Assets;
-  //   if (assetTransferInfos.assetType === LSPType.LSP8) {
-  //     tempLsp8Assets = tempLsp8Assets.filter(
-  //       (asset) => asset.collectionAddress !== assetTransferInfos.assetAddress,
-  //     );
-  //     setLsp8Assets(tempLsp8Assets);
-  //   }
-  // };
-
   const handleTransaction = async (intiatedTransfer: any) => {
     setTransactionStatus(TransactionStatus.Pending);
     const transferStatus = await intiatedTransfer;
     if (transferStatus.status) {
       setTransactionStatus(TransactionStatus.Success);
       setTransactionHash(transferStatus.transactionHash);
-      // updateGlobalContext();
     } else {
       setTransactionStatus(TransactionStatus.Error);
       setTransactionHash(transferStatus.transactionHash);
@@ -145,25 +101,25 @@ const AssetTransferModal: React.FC = () => {
     }
     const web3 = new Web3(ethereum);
 
-    if (assetTransferInfos.assetType === LSPType.LSP7) {
+    if (assetType === LSPType.LSP7) {
       if (!transfer.amount) {
         return;
       }
       try {
-        if (assetTransferInfos.vaultAddress) {
+        if (vaultAddress) {
           const initiateTransfer = transferLSP7AssetFromVault(
-            assetTransferInfos.assetAddress,
+            assetAddress,
             walletAddress,
             transfer.receiverAddress,
             transfer.isReceiverUniversalProfile,
             transfer.amount,
             web3,
-            assetTransferInfos.vaultAddress,
+            vaultAddress,
           );
           await handleTransaction(initiateTransfer);
         } else {
           const initiateTransfer = transferLSP7Asset(
-            assetTransferInfos.assetAddress,
+            assetAddress,
             walletAddress,
             transfer.receiverAddress,
             transfer.isReceiverUniversalProfile,
@@ -181,29 +137,29 @@ const AssetTransferModal: React.FC = () => {
       return;
     }
 
-    if (assetTransferInfos.assetType === LSPType.LSP8) {
-      if (!assetTransferInfos.tokenId) {
+    if (assetType === LSPType.LSP8) {
+      if (!tokenId) {
         return;
       }
       try {
-        if (assetTransferInfos.vaultAddress) {
+        if (vaultAddress) {
           const initiateTransfer = transferLSP8AssetFromVault(
-            assetTransferInfos.assetAddress,
+            assetAddress,
             walletAddress,
             transfer.receiverAddress,
             transfer.isReceiverUniversalProfile,
-            assetTransferInfos.tokenId,
+            tokenId,
             web3,
-            assetTransferInfos.vaultAddress,
+            vaultAddress,
           );
           await handleTransaction(initiateTransfer);
         } else {
           const initiateTransfer = transferLSP8Asset(
-            assetTransferInfos.assetAddress,
+            assetAddress,
             walletAddress,
             transfer.receiverAddress,
             transfer.isReceiverUniversalProfile,
-            assetTransferInfos.tokenId,
+            tokenId,
             web3,
           );
           await handleTransaction(initiateTransfer);
@@ -252,7 +208,10 @@ const AssetTransferModal: React.FC = () => {
         id="amount"
         value={transfer.amount}
         onChange={(e) =>
-          setTransfer({ ...transfer, amount: parseInt(e.target.value) })
+          setTransfer({
+            ...transfer,
+            amount: parseInt(e.target.value),
+          })
         }
       />
     </div>
@@ -298,7 +257,7 @@ const AssetTransferModal: React.FC = () => {
         />
       )}
       <div className="mt-10 absolute right-6 bottom-10 flex flex-col items-end">
-        {assetTransferInfos.assetType === LSPType.LSP7 && renderAmountInput()}
+        {assetType === LSPType.LSP7 && renderAmountInput()}
         <button
           type="submit"
           className=" w-[120px] h-10 bg-red-400 rounded-lg text-white"
@@ -313,7 +272,7 @@ const AssetTransferModal: React.FC = () => {
     const internalAddresses = [
       ...vaultsAssets.map((vault) => vault.vaultAddress),
       walletAddress,
-    ].filter((address) => address !== assetTransferInfos.ownerAddress);
+    ].filter((address) => address !== ownerAddress);
 
     const uniqueAddresses = internalAddresses.filter(
       (address, index) => internalAddresses.indexOf(address) === index,
@@ -344,16 +303,14 @@ const AssetTransferModal: React.FC = () => {
       <div className="flex h-40">
         <img
           className="w-25 h-25 mr-12 rounded-lg"
-          src={assetTransferInfos.img}
-          alt={`${assetTransferInfos.assetAddress}-image`}
+          src={assetImage}
+          alt={`${assetAddress}-image`}
         />
-        {assetTransferInfos.assetType === LSPType.LSP7 && (
-          <div>Amount: {assetTransferInfos.amount}</div>
-        )}
-        {assetTransferInfos.assetType === LSPType.LSP8 && (
+        {assetType === LSPType.LSP7 && <div>Amount: {amount}</div>}
+        {assetType === LSPType.LSP8 && (
           <div>
             <span className="font-bold">Token ID: </span>#
-            {assetTransferInfos.tokenId && parseInt(assetTransferInfos.tokenId)}
+            {tokenId && parseInt(tokenId)}
           </div>
         )}
       </div>
@@ -366,11 +323,7 @@ const AssetTransferModal: React.FC = () => {
       <div className="w-[500px] h-[700px] fixed top-[calc(50%-350px)] left-[calc(50%-130px)] p-4 bg-black opacity-100 pt-20 px-8">
         <div
           className="absolute top-4 right-4"
-          onClick={() =>
-            setAssetTransferInfos(
-              assetTransferInitialContext.assetTransferInfos,
-            )
-          }
+          onClick={() => setIsTransferModalOpen(false)}
         >
           <AiOutlineClose className="text-white text-2xl cursor-pointer" />
         </div>

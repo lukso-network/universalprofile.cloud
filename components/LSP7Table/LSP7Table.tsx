@@ -15,7 +15,6 @@ interface Props {
 const LSP7Table: React.FC<Props> = ({
   addresses,
   ownerAddress,
-  vaultAddress,
   areCreatorLSP7s,
 }) => {
   const web3Provider = useWeb3Provider();
@@ -24,44 +23,6 @@ const LSP7Table: React.FC<Props> = ({
 
   const { setLsp7Assets, setVaultsAssets, vaultsAssets } =
     useContext(AssetsContext);
-
-  const fetchVaultAssets = async () => {
-    setIsLoading(true);
-    let tempVaultAssets = vaultsAssets;
-    await Promise.all(
-      addresses.map(async (assetAddress) => {
-        const lsp7Assets = await fetchLSP7Assets(
-          assetAddress,
-          vaultAddress as string, //checking in the useEffect
-          web3Provider,
-        );
-        if (!lsp7Assets) {
-          return;
-        }
-        //find vault asset
-        const vaultAsset = tempVaultAssets.find(
-          (vaultAsset) => vaultAsset.vaultAddress === vaultAddress,
-        );
-        if (vaultAsset) {
-          //add lps7 asset to lsp7assets[] of vaultAsset
-          vaultAsset.lsp7Assets.push(lsp7Assets);
-        } else {
-          //create vault asset
-          const newVaultAsset = {
-            vaultAddress: vaultAddress as string, //checking vaultAddress in defined before calling func
-            lsp7Assets: [lsp7Assets],
-            lsp8Assets: [],
-          };
-          //add vault asset to vaultsAssets[]
-          tempVaultAssets = [...tempVaultAssets, newVaultAsset];
-        }
-        setLsp7s((prev) => [...prev, lsp7Assets]);
-      }),
-    );
-
-    setIsLoading(false);
-    setVaultsAssets((prev) => [...prev, ...tempVaultAssets]);
-  };
 
   const fetchUPAssets = async () => {
     setIsLoading(true);
@@ -114,7 +75,7 @@ const LSP7Table: React.FC<Props> = ({
       fetchCreatorAssets();
       return;
     }
-    vaultAddress ? fetchVaultAssets() : fetchUPAssets();
+    fetchUPAssets();
   }, [web3Provider, addresses]);
 
   if (!lsp7s.length && !isLoading) {
@@ -136,7 +97,6 @@ const LSP7Table: React.FC<Props> = ({
                 address={asset.address}
                 isCreatorLsp7={areCreatorLSP7s}
                 ownerAddress={ownerAddress}
-                vaultAddress={vaultAddress}
               />
             );
           })}
