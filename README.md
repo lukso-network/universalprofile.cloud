@@ -4,10 +4,12 @@ Wallet that will let you see the Tokens ([LSP7](https://docs.lukso.tech/standard
 
 Once connected as the owner of the address, you will also be able to manage your assets and vaults.
 
+[Live Demo](https://wallet-staging-dot-lukso-infrastructure-dev.ew.r.appspot.com/)
+
 # Supported Blockchains
 
-LUKSO L16
-LUKSO Mainnet (to come)
+- [LUKSO L16](https://explorer.execution.l16.lukso.network/)
+- LUKSO Mainnet (to come)
 
 # Install / Run
 
