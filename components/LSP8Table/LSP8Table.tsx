@@ -60,7 +60,7 @@ const LSP8Table: React.FC<Props> = ({
         setLsp8s((prev) => [...prev, ...lsp8Assets]);
       }),
     );
-    setVaultsAssets(tempVaultAssets);
+    setVaultsAssets((prev) => [...prev, ...tempVaultAssets]);
     setIsLoading(false);
   };
 

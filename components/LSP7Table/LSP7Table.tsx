@@ -26,7 +26,6 @@ const LSP7Table: React.FC<Props> = ({
     useContext(AssetsContext);
 
   const fetchVaultAssets = async () => {
-    setLsp7Assets([]);
     setIsLoading(true);
     let tempVaultAssets = vaultsAssets;
     await Promise.all(
@@ -61,13 +60,12 @@ const LSP7Table: React.FC<Props> = ({
     );
 
     setIsLoading(false);
-    setVaultsAssets(tempVaultAssets);
+    setVaultsAssets((prev) => [...prev, ...tempVaultAssets]);
   };
 
   const fetchUPAssets = async () => {
-    setLsp7Assets([]);
     setIsLoading(true);
-
+    let tempLsp7s: Lsp7AssetType[] = [];
     await Promise.all(
       addresses.map(async (assetAddress) => {
         const lsp7Assets = await fetchLSP7Assets(
@@ -78,16 +76,17 @@ const LSP7Table: React.FC<Props> = ({
         if (!lsp7Assets) {
           return;
         }
-        setLsp7s((prev) => [...prev, lsp7Assets]);
-        setLsp7Assets((prev) => [...prev, lsp7Assets]);
-
+        console.log('lsp7Assets', lsp7Assets);
+        tempLsp7s = [...tempLsp7s, lsp7Assets];
         setIsLoading(false);
       }),
     );
+    console.log('tempLsp7s', tempLsp7s);
+    setLsp7Assets(tempLsp7s);
+    setLsp7s(tempLsp7s);
   };
 
   const fetchCreatorAssets = async () => {
-    setLsp7Assets([]);
     setIsLoading(true);
     await Promise.all(
       addresses.map(async (assetAddress) => {
@@ -113,6 +112,7 @@ const LSP7Table: React.FC<Props> = ({
     }
     if (areCreatorLSP7s) {
       fetchCreatorAssets();
+      return;
     }
     vaultAddress ? fetchVaultAssets() : fetchUPAssets();
   }, [web3Provider, addresses]);
