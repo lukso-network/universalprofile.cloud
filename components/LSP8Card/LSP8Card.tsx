@@ -10,11 +10,13 @@ interface Props {
     image: string;
     tokenId: string;
     description: string;
-    collectionName: string;
-    collectionDescription: string;
-    collectionImage: string;
-    collectionIcon: string;
-    collectionAddress: string;
+    collection: {
+      name: string;
+      description: string;
+      image: string;
+      icon: string;
+      address: string;
+    };
   };
   ownerAddress: string;
   vaultAddress?: string;
@@ -48,7 +50,7 @@ const LSP8Card: React.FC<Props> = ({
         />
       </div>
       <div className="text-xs font-bold text-gray-600 leading-6">
-        {assetJSON.collectionName}
+        {assetJSON.collection.name}
       </div>
       {assetJSON.tokenId && (
         <div className="text-sm leading-6">#{parseInt(assetJSON.tokenId)}</div>
@@ -68,7 +70,7 @@ const LSP8Card: React.FC<Props> = ({
           vaultAddress={vaultAddress}
           setIsTransferModalOpen={setIsTransferModalOpen}
           assetType={LSPType.LSP8}
-          assetAddress={assetJSON.collectionAddress}
+          assetAddress={assetJSON.collection.name}
           tokenId={assetJSON.tokenId}
           assetImage={assetJSON.image}
           ownerAddress={ownerAddress}

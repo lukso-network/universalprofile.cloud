@@ -10,7 +10,7 @@ import {
   AssetsContext,
   Lsp7AssetType,
   Lsp8AssetType,
-  VaultsAssetsType,
+  VaultType,
 } from '../../contexts/AssetsContext';
 import fetchLSP8Assets from '../../utils/fetchLSP8Assets';
 import LSP7Card from '../LSP7Card';
@@ -29,7 +29,13 @@ const Vault: React.FC<Props> = ({ ownerAddress, vaultAddress, vaultIndex }) => {
   const [lsp8s, setLsp8s] = useState<Lsp8AssetType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const { setVaultsAssets } = useContext(AssetsContext);
+  const {
+    setVaultsAssets,
+    lsp7Assets,
+    lsp8Assets,
+    setLsp7Assets,
+    setLsp8Assets,
+  } = useContext(AssetsContext);
   const fetchVaultLSP7Assets = async (
     addresses: string[],
     vaultAddress: string,
@@ -60,15 +66,28 @@ const Vault: React.FC<Props> = ({ ownerAddress, vaultAddress, vaultIndex }) => {
     let tempLsp8s: Lsp8AssetType[] = [];
     await Promise.all(
       addresses.map(async (assetAddress) => {
-        const lsp8Assets = await fetchLSP8Assets(
+        const lsp8AssetsObj = await fetchLSP8Assets(
           assetAddress,
           vaultAddress,
           web3Provider,
         );
-        if (!lsp8Assets) {
+        if (!lsp8AssetsObj) {
           return;
         }
-        tempLsp8s = [...tempLsp8s, ...lsp8Assets];
+
+        tempLsp8s = [...tempLsp8s, ...lsp8AssetsObj];
+        lsp8AssetsObj.forEach((lsp8Asset) => {
+          setLsp8Assets({
+            ...lsp8Assets,
+            [assetAddress]: {
+              image: lsp8Asset.image,
+              tokenId: lsp8Asset.tokenId,
+              icon: lsp8Asset.icon,
+              description: lsp8Asset.description,
+              collection: lsp8Asset.collection,
+            },
+          });
+        });
       }),
     );
     setLsp8s(tempLsp8s);
@@ -91,18 +110,21 @@ const Vault: React.FC<Props> = ({ ownerAddress, vaultAddress, vaultIndex }) => {
       receivedAssets,
       ethersProvider,
     );
-    const lsp7Assets: Lsp7AssetType[] = await fetchVaultLSP7Assets(
-      lsp7Addresses,
+    // const lsp7Assets: Lsp7AssetType[] = await fetchVaultLSP7Assets(
+    //   lsp7Addresses,
+    //   vaultAddress,
+    // );
+    // const lsp8Assets: Lsp8AssetType[] = await fetchVaultLSP8Assets(
+    //   lsp8Addresses,
+    //   vaultAddress,
+    // );
+    //TODO - fix this
+    const newVaultAsset: VaultType = {
       vaultAddress,
-    );
-    const lsp8Assets: Lsp8AssetType[] = await fetchVaultLSP8Assets(
-      lsp8Addresses,
-      vaultAddress,
-    );
-    const newVaultAsset: VaultsAssetsType = {
-      vaultAddress,
-      lsp7Assets,
-      lsp8Assets,
+      assets: {
+        lsp8Assets,
+        lsp7Assets,
+      },
     };
     setVaultsAssets((prev) => [...prev, newVaultAsset]);
     setIsLoading(false);

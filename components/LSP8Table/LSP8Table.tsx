@@ -1,11 +1,16 @@
 import { useContext, useEffect, useState } from 'react';
-import { AssetsContext, Lsp8AssetType } from '../../contexts/AssetsContext';
+import {
+  AssetsContext,
+  Lps8AssetsType,
+  AssetType,
+} from '../../contexts/AssetsContext';
 
 import LSP8Card from '../LSP8Card/LSP8Card';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
 import fetchLSP8Assets from '../../utils/fetchLSP8Assets';
 import fetchLSP4Metadata from '../../utils/fetchLSP4Metadata';
 import { formatIntoLSP8AssetType } from '../../utils/utils';
+import { LSPType } from '../../interfaces/lsps';
 
 interface Props {
   addresses: string[];
@@ -21,48 +26,76 @@ const LSP8Table: React.FC<Props> = ({
 }) => {
   const web3Provider = useWeb3Provider();
   const [isLoading, setIsLoading] = useState(false);
-  const [lsp8s, setLsp8s] = useState<Lsp8AssetType[]>([]);
-  const { setLsp8Assets, setVaultsAssets, vaultsAssets } =
-    useContext(AssetsContext);
+  const [lsp8s, setLsp8s] = useState<AssetType[]>([]);
+  const { setLsp8Assets, lsp8Assets } = useContext(AssetsContext);
 
   const fetchUPAssets = async () => {
-    setLsp8Assets([]);
+    setLsp8Assets({});
     setIsLoading(true);
+    let tempAssets: AssetType[] = [];
     await Promise.all(
       addresses.map(async (assetAddress) => {
+        console.log('hello here');
         const lsp8Assets = await fetchLSP8Assets(
           assetAddress,
           ownerAddress,
           web3Provider,
         );
+        console.log(lsp8Assets, 'lsp8Assets');
         if (!lsp8Assets) {
           return;
         }
-        setLsp8Assets((prev) => [...prev, ...lsp8Assets]);
-        setLsp8s((prev) => [...prev, ...lsp8Assets]);
+
+        lsp8Assets.forEach((lsp8Asset) => {
+          setLsp8Assets((prev) => ({
+            ...prev,
+            [assetAddress]: {
+              image: lsp8Asset.image,
+              icon: lsp8Asset.icon,
+              tokenId: lsp8Asset.tokenId,
+              description: lsp8Asset.description,
+              collection: {
+                name: lsp8Asset.collection.name,
+                description: lsp8Asset.collection.description,
+                image: lsp8Asset.collection.image,
+                icon: lsp8Asset.collection.icon,
+                address: lsp8Asset.collection.address,
+              },
+            },
+          }));
+          tempAssets = [
+            ...tempAssets,
+            {
+              address: assetAddress,
+              type: LSPType.LSP8,
+              tokenIdOrAmount: lsp8Asset.tokenId,
+            },
+          ];
+          setLsp8s((prev) => [...prev, ...tempAssets]);
+        });
       }),
     );
 
     setIsLoading(false);
   };
 
-  const fetchCreatorLSP8s = async () => {
-    setLsp8Assets([]);
-    setIsLoading(true);
-    await Promise.all(
-      addresses.map(async (assetAddress) => {
-        const [collectionName, , collectionLSP4Metadata] =
-          await fetchLSP4Metadata(assetAddress, web3Provider);
-        const lsp8Asset = formatIntoLSP8AssetType(
-          collectionName,
-          collectionLSP4Metadata,
-          assetAddress,
-        );
+  // const fetchCreatorLSP8s = async () => {
+  //   // setLsp8Assets([]);
+  //   setIsLoading(true);
+  //   await Promise.all(
+  //     addresses.map(async (assetAddress) => {
+  //       const [collectionName, , collectionLSP4Metadata] =
+  //         await fetchLSP4Metadata(assetAddress, web3Provider);
+  //       const lsp8Asset = formatIntoLSP8AssetType(
+  //         collectionName,
+  //         collectionLSP4Metadata,
+  //         assetAddress,
+  //       );
 
-        setLsp8s((prev) => [...prev, lsp8Asset]);
-      }),
-    );
-  };
+  //       setLsp8s((prev) => [...prev, lsp8Asset]);
+  //     }),
+  //   );
+  // };
 
   useEffect(() => {
     setLsp8s([]);
@@ -70,7 +103,7 @@ const LSP8Table: React.FC<Props> = ({
       return;
     }
     if (areCreatorLSP8s) {
-      fetchCreatorLSP8s();
+      // fetchCreatorLSP8s();
     }
     fetchUPAssets();
   }, [web3Provider, addresses]);
@@ -84,11 +117,18 @@ const LSP8Table: React.FC<Props> = ({
       <div className="grid lg:grid-cols-4 lg:gap-4 md:grid-cols-2 md:gap-3">
         {isLoading
           ? 'Loading NFTs metadata...'
-          : lsp8s.map((asset, index) => {
+          : lsp8s.map((assetObj, index) => {
+              const asset = lsp8Assets[assetObj.address];
               return (
                 <LSP8Card
                   key={`lsp8-${index}`}
-                  assetJSON={asset}
+                  assetJSON={{
+                    icon: asset.icon,
+                    image: asset.image,
+                    tokenId: asset.tokenId,
+                    description: asset.description,
+                    collection: asset.collection,
+                  }}
                   ownerAddress={ownerAddress}
                   areCreatorLSP8s={areCreatorLSP8s}
                 />

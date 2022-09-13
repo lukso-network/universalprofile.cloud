@@ -77,7 +77,38 @@ const AssetTransferModal: React.FC<Props> = ({
     setLsp7Assets,
     lsp8Assets,
     setLsp8Assets,
+    setLsp7UPAssets,
+    lsp7UPAssets,
   } = useContext(AssetsContext);
+
+  //WIP - having issues with the Extension and cant proceed with that
+  // const updateAssets = (assetAddress: string) => {
+  //   if (vaultAddress) {
+  //     // const vaultAssets = vaultsAssets[vaultAddress];
+  //     // const updatedVaultAssets = vaultAssets.filter(
+  //     //   (asset) => asset.tokenId !== tokenId,
+  //     // );
+  //     // setVaultsAssets((prev) => ({
+  //     //   ...prev,
+  //     //   [vaultAddress]: updatedVaultAssets,
+  //     // }));
+  //   }
+
+  //   if (assetType === LSPType.LSP7) {
+  //     //find the asset in the lsp7Assets
+  //     console.log('within lsp7 type');
+  //     lsp7UPAssets.map((asset) => {
+  //       if (asset.address === assetAddress) {
+  //         const amount =
+  //           parseInt(asset.tokenIdOrAmount) - (transfer.amount as number);
+  //         return {
+  //           ...asset,
+  //           tokenIdOrAmount: amount,
+  //         };
+  //       }
+  //     });
+  //   }
+  // };
 
   const handleTransaction = async (intiatedTransfer: any) => {
     setTransactionStatus(TransactionStatus.Pending);
@@ -85,6 +116,7 @@ const AssetTransferModal: React.FC<Props> = ({
     if (transferStatus.status) {
       setTransactionStatus(TransactionStatus.Success);
       setTransactionHash(transferStatus.transactionHash);
+      // updateAssets(assetAddress);
     } else {
       setTransactionStatus(TransactionStatus.Error);
       setTransactionHash(transferStatus.transactionHash);
