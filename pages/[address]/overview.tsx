@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { ethers } from 'ethers';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import erc725Schema from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
 
