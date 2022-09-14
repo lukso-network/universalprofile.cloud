@@ -7,6 +7,7 @@ import AssetsProvider from '../contexts/AssetsContext';
 import WalletAddressProvider from '../contexts/WalletAddressContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LoginBtn from '../components/LoginBtn';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -20,7 +21,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           <WalletAddressProvider>
             <SideBar />
             <div className="ml-[240px]">
-              <SearchBar />
+              <div className="flex justify-between items-center px-8">
+                <SearchBar />
+                <LoginBtn />
+              </div>
               <Component {...pageProps} />
             </div>
           </WalletAddressProvider>
