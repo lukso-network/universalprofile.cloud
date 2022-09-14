@@ -34,7 +34,7 @@ const SearchBar: React.FC = () => {
 
   return (
     <div className="border-b border-gray-800 text-xs pb-4">
-      <div className="relative flex items-center pt-4 ml-8">
+      <div className="relative flex items-center pt-4">
         <div className="bg-darkGray w-[38px] h-full h-[32px] flex items-center justify-center relative rounded-l-md">
           <div className="w-[26px] h-[26px]">
             <img
