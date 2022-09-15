@@ -1,10 +1,13 @@
 import { ethers, Signer } from 'ethers';
-import { INTERFACE_IDS, COMMON_ABIS } from '../constants';
+import { COMMON_ABIS } from '../constants';
 import { LSPType } from '../interfaces/lsps';
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts/constants.js';
 
 const supportsInterface = async (
   contractAddress: string,
-  interfaceId: string,
   provider: Signer | ethers.providers.BaseProvider,
 ) => {
   const supportsInterfaceAbi = COMMON_ABIS.supportsInterface as any;
@@ -31,7 +34,7 @@ const supportsInterface = async (
     }
   } catch (err) {
     console.error(
-      `Error checking supportInterface for contract: ${contractAddress} and interfaceId: ${interfaceId}`,
+      `Error checking supportInterface for contract: ${contractAddress} and interfaceId.`,
       err,
     );
     return false;
@@ -42,11 +45,7 @@ const isLSP7orLSP8 = async (
   contractAddress: string,
   provider: Signer | ethers.providers.BaseProvider,
 ): Promise<LSPType> => {
-  const lspType = await supportsInterface(
-    contractAddress,
-    INTERFACE_IDS.LSP7DigitalAsset,
-    provider,
-  );
+  const lspType = await supportsInterface(contractAddress, provider);
   if (lspType === LSPType.LSP7) {
     return LSPType.LSP7;
   }
