@@ -58,7 +58,7 @@ const detectLSPInterface = async (
   contractAddress: string,
   lspType: LSPType,
   web3Provider: Signer,
-  ethersProvider: Signer,
+  ethersProvider: Signer | ethers.providers.BaseProvider,
 ) => {
   if (lspType === LSPType.Unknown) {
     return false;
