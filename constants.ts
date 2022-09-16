@@ -8,6 +8,14 @@ export const INTERFACE_IDS = {
   LSP3UniversalProfile: '0xabe425d6',
 };
 
+export enum OperationType {
+  Call = 0,
+  Create = 1,
+  Create2 = 2,
+  StaticCall = 3,
+  DelegateCall = 4,
+}
+
 export const COMMON_ABIS = {
   supportsInterface: [
     {
