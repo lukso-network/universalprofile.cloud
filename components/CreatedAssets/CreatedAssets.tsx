@@ -20,7 +20,7 @@ const CreatedAssets: React.FC<Props> = ({
   const [lsp7Addresses, setLsp7Addresses] = useState<string[]>([]);
   const [lsp8Addresses, setLsp8Addresses] = useState<string[]>([]);
 
-  const provider = useEthersProvider() as ethers.providers.BaseProvider;
+  const ethersProvider = useEthersProvider() as ethers.providers.BaseProvider;
 
   //ERC725 does not support ethers provider
   const web3Provider = useWeb3Provider();
@@ -31,7 +31,8 @@ const CreatedAssets: React.FC<Props> = ({
 
     const { lsp7Addresses, lsp8Addresses } = await getAssets(
       createdAssets,
-      provider,
+      web3Provider,
+      ethersProvider,
     );
 
     setLsp7Addresses(lsp7Addresses);
