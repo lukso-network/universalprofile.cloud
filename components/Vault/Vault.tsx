@@ -122,6 +122,10 @@ const Vault: React.FC<Props> = ({ ownerAddress, vaultAddress, vaultIndex }) => {
     return <div>No Assets in Vault {vaultIndex}</div>;
   }
 
+  if (!lsp7s.length && !lsp8s.length) {
+    return <div>No Assets in Vault {vaultIndex}</div>;
+  }
+
   return (
     <>
       <h1 className="text-xl mt-3">Vault {vaultIndex}</h1>

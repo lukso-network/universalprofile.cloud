@@ -7,6 +7,7 @@ import { firstTwoBytesOfAddress } from '../../utils/utils';
 interface Props {
   lsp3JSON: LSP3Profile | undefined;
   address: string;
+  address: string;
 }
 
 const UserInfos: React.FC<UserInfosProps> = ({ lsp3JSON, address }) => {

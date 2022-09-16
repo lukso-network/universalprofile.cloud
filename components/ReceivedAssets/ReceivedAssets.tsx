@@ -53,7 +53,7 @@ const ReceivedAssets: React.FC<Props> = ({
         <h2 className="px-2 border-b border-darkGray text-2xl pb-2 mt-6">
           NFTs
         </h2>
-        <LSP8Table addresses={lsp8Addresses} ownerAddress={ownerAddress} />
+        {/* <LSP8Table addresses={lsp8Addresses} ownerAddress={ownerAddress} /> */}
       </div>
     </div>
   );

@@ -86,10 +86,6 @@ const AdressOverview: NextPage = () => {
         isUniversalProfile={isUniversalProfile}
         ownerAddress={address}
       />
-      <AddressInput
-        inputAddress="0x"
-        onChange={(newAddressInfos) => console.log(newAddressInfos)}
-      />
       <ReceivedAssets
         isUniversalProfile={isUniversalProfile}
         ownerAddress={address}

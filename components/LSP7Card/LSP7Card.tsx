@@ -9,6 +9,10 @@ interface Props {
   amount: number;
   name: string;
   symbol: string;
+  address: string;
+  isCreatorLsp7?: boolean;
+  vaultAddress?: string;
+  ownerAddress: string;
 }
 
 const LSP7Card: React.FC<Props> = ({
