@@ -34,6 +34,7 @@ const Vault: React.FC<Props> = ({ ownerAddress, vaultAddress, vaultIndex }) => {
 
     const { lsp7Addresses, lsp8Addresses } = await getAssets(
       receivedAssets,
+      web3Provider,
       ethersProvider,
     );
 
