@@ -37,7 +37,7 @@ interface LspTypeOption {
 const lspTypeOptions: Record<Exclude<LSPType, LSPType.Unknown>, LspTypeOption> =
   {
     [LSPType.LSP3]: {
-      interfaceId: INTERFACE_IDS.LSP3UniversalProfile,
+      interfaceId: INTERFACE_IDS.LSP0ERC725Account,
       lsp2Schema: getSupportedStandardObject(lsp3Schema as ERC725JSONSchema[]),
     },
     [LSPType.LSP7]: {
