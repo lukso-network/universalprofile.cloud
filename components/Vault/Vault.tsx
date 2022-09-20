@@ -52,7 +52,7 @@ const Vault: React.FC<Props> = ({ ownerAddress, vaultAddress, vaultIndex }) => {
     return <div>Loading Vault {vaultIndex}...</div>;
   }
 
-  if (!lsp7s.length && !lsp8s.length) {
+  if (!lsp7Addresses.length && !lsp8Addresses.length) {
     return <div>No Assets in Vault {vaultIndex}</div>;
   }
 
