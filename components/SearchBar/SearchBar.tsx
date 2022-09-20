@@ -34,8 +34,8 @@ const SearchBar: React.FC = () => {
 
   return (
     <div className="border-b border-gray-800 text-xs pb-4">
-      <div className="relative flex items-center pt-4">
-        <div className="bg-darkGray w-[38px] h-full h-[32px] flex items-center justify-center relative rounded-l-md">
+      <div className="relative flex items-center pt-4 ml-8">
+        <div className="bg-mediumPink w-[38px] h-full h-[32px] flex items-center justify-center relative rounded-l-md">
           <div className="w-[26px] h-[26px]">
             <img
               src={address ? identicon(address) : identicon('lukso')}
@@ -48,9 +48,9 @@ const SearchBar: React.FC = () => {
             placeholder="Search by wallet"
             value={address}
             className="py-2
-                      px-2  bg-darkGray w-[350px]
+                      px-2  bg-mediumPink w-[350px]
                       focus:border-current
-                      outline-0 text-white z-10
+                      outline-0 text-lightBlack z-10
                       text-xs
                       "
             onChange={(e) => setAddress(e.target.value)}
@@ -59,7 +59,7 @@ const SearchBar: React.FC = () => {
           />
         </form>
         <div
-          className={`bg-darkGray w-[38px] h-full
+          className={`bg-mediumPink w-[38px] h-full
          h-[32px] border-l border-l-gray-500 flex items-center
          justify-center relative rounded-r-md pr-2`}
         >

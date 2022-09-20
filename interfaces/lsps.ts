@@ -44,7 +44,9 @@ export interface LSP3Profile {
 }
 
 export enum LSPType {
+  LSP3 = 'LSP3',
   LSP7 = 'LSP7',
   LSP8 = 'LSP8',
+  LSP9 = 'LSP9',
   Unknown = 'Unknown',
 }

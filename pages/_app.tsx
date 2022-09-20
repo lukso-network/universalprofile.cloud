@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Universal Profile Wallet</title>
       </Head>
-      <div className="bg-black text-white min-h-screen">
+      <div className="bg-lightestPink darkGray min-h-screen">
         <ToastContainer />
         <AssetsProvider>
           <WalletAddressProvider>

@@ -1,11 +1,12 @@
-import { ethers } from 'ethers';
+import { ethers, Signer } from 'ethers';
 
 import { LSPType } from '../interfaces/lsps';
-import isLSP7orLSP8 from './isLSP7orLSP8';
+import detectLSPInterface from './detectLSPInterface';
 
 const getAssets = async (
   assetsAddresses: string[],
-  provider: ethers.providers.BaseProvider,
+  web3Provider: Signer,
+  ethersProvider: Signer | ethers.providers.BaseProvider,
 ) => {
   const lsp7AddressesTemp: string[] = [];
   const lsp8AddressesTemp: string[] = [];
@@ -13,16 +14,26 @@ const getAssets = async (
   //fetch the different assets types
   await Promise.all(
     assetsAddresses.map(async (assetAddress) => {
-      const assetType = await isLSP7orLSP8(assetAddress, provider);
-      switch (assetType) {
-        case LSPType.LSP7:
-          lsp7AddressesTemp.push(assetAddress);
-          break;
-        case LSPType.LSP8:
-          lsp8AddressesTemp.push(assetAddress);
-          break;
-        default:
-          break;
+      const isLSP7 = await detectLSPInterface(
+        assetAddress,
+        LSPType.LSP7,
+        web3Provider,
+        ethersProvider,
+      );
+
+      const isLSP8 = await detectLSPInterface(
+        assetAddress,
+        LSPType.LSP8,
+        web3Provider,
+        ethersProvider,
+      );
+
+      if (isLSP7 && !isLSP8) {
+        lsp7AddressesTemp.push(assetAddress);
+      } else if (isLSP8 && !isLSP7) {
+        lsp8AddressesTemp.push(assetAddress);
+      } else {
+        console.log('asset is not an LSP');
       }
     }),
   );
