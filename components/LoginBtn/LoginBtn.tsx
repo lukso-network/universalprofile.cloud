@@ -1,6 +1,4 @@
 import { useEffect, useContext, useState } from 'react';
-import { ERC725, ERC725JSONSchema } from '@erc725/erc725.js';
-import erc725Schema from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
 import identicon from 'ethereum-blockies-base64';
 
 import { WalletAddressContext } from '../../contexts/WalletAddressContext';
@@ -12,6 +10,7 @@ import Link from 'next/link';
 import { LSP3Profile } from '../../interfaces/lsps';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
 import { validateLSP3 } from '../../utils/validateLSP3';
+import fetchUPInfos from '../../utils/fechUpInfos';
 
 const LoginBtn: React.FC = () => {
   const { setWalletAddress, walletAddress } = useContext(WalletAddressContext);
@@ -28,6 +27,14 @@ const LoginBtn: React.FC = () => {
       return false;
     }
     return true;
+  };
+
+  const getUPInfos = async () => {
+    const LSP3Profile = await fetchUPInfos(walletAddress, web3Provider);
+    if (LSP3Profile) {
+      const formattedLSP3 = validateLSP3(LSP3Profile[0].value);
+      setLsp3JSON(formattedLSP3);
+    }
   };
 
   const userAvatar = (LSP3ProfileJSON: LSP3Profile): string => {
@@ -55,19 +62,6 @@ const LoginBtn: React.FC = () => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const fetchUPInfos = async () => {
-    const config = { ipfsGateway: IPFS_GATEWAY_BASE_URL };
-    const erc725 = new ERC725(
-      erc725Schema as ERC725JSONSchema[],
-      walletAddress,
-      web3Provider,
-      config,
-    );
-    const LSP3Profile = await erc725.fetchData(['LSP3Profile']);
-    const formattedLSP3 = validateLSP3(LSP3Profile[0].value);
-    setLsp3JSON(formattedLSP3);
   };
 
   const listenForAccountChanges = () => {
@@ -115,14 +109,14 @@ const LoginBtn: React.FC = () => {
 
   useEffect(() => {
     if (walletAddress) {
-      fetchUPInfos();
+      getUPInfos();
     }
   }, [walletAddress]);
 
   const renderLogin = () => (
     <>
       <Link href="/connect-wallets">
-        <button className="flex items-center rounded-lg text-deepPink bg-white py-1 px-4">
+        <button className="flex items-center rounded-lg text-deepPink border border-deepPink py-1 px-4">
           <span className="mx-2 text-sm">Connect</span>
         </button>
       </Link>
@@ -131,7 +125,7 @@ const LoginBtn: React.FC = () => {
 
   const renderLoggedIn = () => (
     <Link href={`/${walletAddress}/overview`}>
-      <button className="flex bg-white items-center rounded-lg text-deepPink py-1 px-4">
+      <button className="flex border border-deepPink items-center rounded-lg text-deepPink py-1 px-4">
         {lsp3JSON && (
           <img
             src={userAvatar(lsp3JSON)}
