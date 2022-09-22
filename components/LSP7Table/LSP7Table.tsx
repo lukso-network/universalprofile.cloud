@@ -69,6 +69,7 @@ const LSP7Table: React.FC<Props> = ({
     setLsp7s(tempAssets);
   };
 
+  //commented because was creating conflic with global context
   // const fetchCreatorAssets = async () => {
   //   setIsLoading(true);
   //   await Promise.all(

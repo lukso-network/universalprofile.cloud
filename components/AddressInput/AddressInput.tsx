@@ -169,7 +169,7 @@ const AddressInput: React.FC<Props> = ({ inputAddress, onChange }) => {
           Address is not a Universal Profile nor Vault
         </div>
       )}
-    </div>
+    </>
   );
 };
 

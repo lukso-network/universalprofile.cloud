@@ -1,9 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import {
-  AssetsContext,
-  Lps8AssetsType,
-  AssetType,
-} from '../../contexts/AssetsContext';
+import { AssetsContext, AssetType } from '../../contexts/AssetsContext';
 
 import LSP8Card from '../LSP8Card/LSP8Card';
 import useWeb3Provider from '../../hooks/useWeb3Provider';
@@ -35,13 +31,11 @@ const LSP8Table: React.FC<Props> = ({
     let tempAssets: AssetType[] = [];
     await Promise.all(
       addresses.map(async (assetAddress) => {
-        console.log('hello here');
         const lsp8Assets = await fetchLSP8Assets(
           assetAddress,
           ownerAddress,
           web3Provider,
         );
-        console.log(lsp8Assets, 'lsp8Assets');
         if (!lsp8Assets) {
           return;
         }
@@ -79,6 +73,7 @@ const LSP8Table: React.FC<Props> = ({
     setIsLoading(false);
   };
 
+  //commented because was creating conflicts with global context
   // const fetchCreatorLSP8s = async () => {
   //   // setLsp8Assets([]);
   //   setIsLoading(true);

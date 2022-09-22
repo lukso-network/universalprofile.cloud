@@ -10,8 +10,8 @@ interface Props {
   name: string;
   symbol: string;
   address: string;
-  isCreatorLsp7?: boolean;
-  vaultAddress?: string;
+  isCreatorLsp7?: boolean; //needed so we dont show the send button
+  vaultAddress?: string; //needed during transfer
   ownerAddress: string;
 }
 
@@ -29,6 +29,7 @@ const LSP7Card: React.FC<Props> = ({
 
   const [isTransferModalOpen, setIsTransferModalOpen] =
     useState<boolean>(false);
+  const [showSendBtn, setShowSendBtn] = useState<boolean>(false);
 
   const isAssetTransferable = () => {
     if (!isCreatorLsp7 && ownerAddress === walletAddress) {
@@ -59,7 +60,7 @@ const LSP7Card: React.FC<Props> = ({
             <div className="text-xs leading-6">{amount} tokens</div>
           )}
         </div>
-        {isAssetTransferable() && (
+        {isAssetTransferable() && showSendBtn && (
           <div className="flex justify-end">
             <button
               className="mt-2 border border-red-400 py-1 px-2 text-red-400 rounded h-8 mb-2"
