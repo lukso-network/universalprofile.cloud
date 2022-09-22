@@ -47,7 +47,9 @@ const ConnectWallets: NextPage = () => {
 
   return (
     <div className="flex flex-col justify-center items-center h-[calc(100vh-64px)]">
-      <h1 className="text-2xl font-bold text-center mb-6">Connect to Wallet</h1>
+      <h1 className="text-2xl font-ibmpBold text-center mb-6">
+        Connect to Wallet
+      </h1>
       <div className="flex flex-col">
         <div
           className="flex flex-col items-center py-4 cursor-pointer"

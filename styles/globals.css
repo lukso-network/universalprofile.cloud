@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'IBMPlexMono-Light';
+  src: url('/fonts/IBMPlexMono-Light.ttf');
+  font-weight: lighter;
+  font-style: light;
+}
+
+@font-face {
+  font-family: 'IBMPlexMono-SemiBold';
+  src: url('/fonts/IBMPlexMono-SemiBold.ttf');
+  font-weight: bolder;
+  font-style: bold;
+}
+
+html {
+  font-family: 'IBMPlexMono-Light';
+}

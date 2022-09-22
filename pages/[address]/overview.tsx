@@ -92,9 +92,7 @@ const AdressOverview: NextPage = () => {
       />
       <div className="mt-8">
         <div className="pb-2 py-6">
-          <h2 className="px-2 border-b border-darkGray text-2xl pb-2">
-            Vaults
-          </h2>
+          <h2 className="border-b border-darkGray text-2xl pb-2">Vaults</h2>
           <Vaults ownerAddress={address} />
         </div>
       </div>

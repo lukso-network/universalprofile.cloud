@@ -1,19 +1,25 @@
 import { ethers } from 'ethers';
 import { useState, useEffect } from 'react';
-import { ERC725, ERC725JSONSchema } from '@erc725/erc725.js';
-import erc725Schema from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
 import identicon from 'ethereum-blockies-base64';
 
+import { ERC725, ERC725JSONSchema } from '@erc725/erc725.js';
+
+import lsp3Schema from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
+
 import useWeb3Provider from '../../hooks/useWeb3Provider';
-import { IPFS_GATEWAY_BASE_URL } from '../../constants';
+import useEthersProvider from '../../hooks/useEthersProvider';
 import { validateLSP3 } from '../../utils/validateLSP3';
-import { LSP3Profile } from '../../interfaces/lsps';
+
+import { LSP3Profile, LSPType } from '../../interfaces/lsps';
+import { IPFS_GATEWAY_BASE_URL } from '../../constants';
+import detectLSPInterface from '../../utils/detectLSPInterface';
 
 const config = { ipfsGateway: IPFS_GATEWAY_BASE_URL };
 
 interface AddressInfo {
   address: string;
   isUniversalProfile: boolean;
+  isVault: boolean;
   LSP3JSON?: LSP3Profile;
 }
 
@@ -28,6 +34,9 @@ const AddressInput: React.FC<Props> = ({ inputAddress, onChange }) => {
   const [address, setAddress] = useState(inputAddress);
 
   const web3Provider = useWeb3Provider();
+  const ethersProvider = useEthersProvider() as
+    | ethers.Signer
+    | ethers.providers.BaseProvider;
 
   useEffect(() => {
     if (!addressInfos) {
@@ -50,27 +59,66 @@ const AddressInput: React.FC<Props> = ({ inputAddress, onChange }) => {
     return identicon(address);
   };
 
-  const checkIsUP = async (address: string) => {
-    const erc725 = new ERC725(
-      erc725Schema as ERC725JSONSchema[],
-      address,
-      web3Provider,
-      config,
-    );
+  const checkAddress = async (address: string) => {
     try {
-      const LSP3Profile = await erc725.fetchData(['LSP3Profile']);
-      const formattedLSP3 = validateLSP3(LSP3Profile[0].value);
-      setAddressInfos({
+      const isVault = await detectLSPInterface(
         address,
-        isUniversalProfile: true,
-        LSP3JSON: formattedLSP3,
-      });
+        LSPType.LSP9,
+        web3Provider,
+        ethersProvider,
+      );
+      if (isVault) {
+        setAddressInfos({
+          address,
+          isUniversalProfile: false,
+          isVault: true,
+        });
+        return;
+      }
     } catch (error) {
       console.log(error);
-      setAddressInfos({
+    }
+
+    try {
+      const isUP = await detectLSPInterface(
         address,
-        isUniversalProfile: false,
-      });
+        LSPType.LSP3,
+        web3Provider,
+        ethersProvider,
+      );
+
+      if (isUP) {
+        const erc725 = new ERC725(
+          lsp3Schema as ERC725JSONSchema[],
+          address,
+          web3Provider,
+          config,
+        );
+
+        // Fetch LSP3 metadata contents
+        const proxyAccountMetadataResult = await erc725.fetchData([
+          'LSP3Profile',
+        ]);
+
+        const formattedLSP3 = validateLSP3(proxyAccountMetadataResult[0].value);
+
+        setAddressInfos({
+          address,
+          isUniversalProfile: true,
+          LSP3JSON: formattedLSP3,
+          isVault: false,
+        });
+
+        return;
+      } else {
+        setAddressInfos({
+          address,
+          isUniversalProfile: false,
+          isVault: false,
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -80,16 +128,8 @@ const AddressInput: React.FC<Props> = ({ inputAddress, onChange }) => {
       setAddressError(true);
       return;
     }
-    checkIsUP(address);
-  };
 
-  const renderNotAnUP = () => {
-    if (addressError || !addressInfos) {
-      return;
-    }
-    return (
-      <div className="text-orange-500">Address is not a Universal Profile</div>
-    );
+    checkAddress(address);
   };
 
   const renderUPInfos = (addressInfos: AddressInfo) => (
@@ -119,11 +159,17 @@ const AddressInput: React.FC<Props> = ({ inputAddress, onChange }) => {
         spellCheck="false"
         className="bg-darkGray focus:outline-none px-3 text-gray-400 focus:shadow-outline rounded-lg py-2 px-4 block w-full appearance-none "
       />
-      <div className="ml-1 mt-2">
-        {addressError && <div className="text-red-500">Invalid address</div>}
-        {addressInfos?.LSP3JSON ? renderUPInfos(addressInfos) : renderNotAnUP()}
-      </div>
-    </>
+      {addressError && <div className="text-red-500">Invalid address</div>}
+      {addressInfos?.isUniversalProfile ? (
+        renderUPInfos(addressInfos)
+      ) : addressInfos?.isVault ? (
+        <div>Address is a Vault 🔐</div>
+      ) : (
+        <div className="text-orange-500">
+          Address is not a Universal Profile nor Vault
+        </div>
+      )}
+    </div>
   );
 };
 

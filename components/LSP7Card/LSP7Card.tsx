@@ -37,12 +37,16 @@ const LSP7Card: React.FC<Props> = ({
   };
 
   return (
-    <div className="border border-darkGray p-3 rounded-lg h-[280px] mt-8">
+    <div
+      className={`border hover:scale-105 relative border-gray-300 rounded-xl h-[280px] overflow-hidden mt-8`}
+      onMouseEnter={() => setShowSendBtn(true)}
+      onMouseLeave={() => setShowSendBtn(false)}
+    >
       <div className="rounded h-[180px] overflow-hidden mb-2">
         <img
           src={icon}
           alt="nft-image"
-          className="object-none rounded w-full h-full bg-cover bg-repeat bg-center"
+          className="object-cover rounded w-full h-full bg-cover bg-repeat bg-center"
         />
       </div>
       <div className="flex justify-between items-end">
