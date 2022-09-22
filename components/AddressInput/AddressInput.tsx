@@ -12,7 +12,7 @@ import { validateLSP3 } from '../../utils/validateLSP3';
 
 import { LSP3Profile, LSPType } from '../../interfaces/lsps';
 import { IPFS_GATEWAY_BASE_URL } from '../../constants';
-import detectLSPInterface from '../../utils/detectLSPInterface';
+import detectLSP from '../../utils/detectLSP';
 
 const config = { ipfsGateway: IPFS_GATEWAY_BASE_URL };
 
@@ -61,9 +61,9 @@ const AddressInput: React.FC<Props> = ({ inputAddress, onChange }) => {
 
   const checkAddress = async (address: string) => {
     try {
-      const isVault = await detectLSPInterface(
+      const isVault = await detectLSP(
         address,
-        LSPType.LSP9,
+        LSPType.LSP9Vault,
         web3Provider,
         ethersProvider,
       );
@@ -76,13 +76,13 @@ const AddressInput: React.FC<Props> = ({ inputAddress, onChange }) => {
         return;
       }
     } catch (error) {
-      console.log(error);
+      return;
     }
 
     try {
-      const isUP = await detectLSPInterface(
+      const isUP = await detectLSP(
         address,
-        LSPType.LSP3,
+        LSPType.LSP3UniversalProfileMetadata,
         web3Provider,
         ethersProvider,
       );
