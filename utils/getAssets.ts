@@ -1,7 +1,7 @@
 import { ethers, Signer } from 'ethers';
 
 import { LSPType } from '../interfaces/lsps';
-import detectLSPInterface from './detectLSPInterface';
+import detectLSP from './detectLSP';
 
 const getAssets = async (
   assetsAddresses: string[],
@@ -14,16 +14,16 @@ const getAssets = async (
   //fetch the different assets types
   await Promise.all(
     assetsAddresses.map(async (assetAddress) => {
-      const isLSP7 = await detectLSPInterface(
+      const isLSP7 = await detectLSP(
         assetAddress,
-        LSPType.LSP7,
+        LSPType.LSP7DigitalAsset,
         web3Provider,
         ethersProvider,
       );
 
-      const isLSP8 = await detectLSPInterface(
+      const isLSP8 = await detectLSP(
         assetAddress,
-        LSPType.LSP8,
+        LSPType.LSP8IdentifiableDigitalAsset,
         web3Provider,
         ethersProvider,
       );

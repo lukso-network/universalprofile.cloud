@@ -36,25 +36,25 @@ interface LspTypeOption {
 
 const lspTypeOptions: Record<Exclude<LSPType, LSPType.Unknown>, LspTypeOption> =
   {
-    [LSPType.LSP3]: {
+    [LSPType.LSP3UniversalProfileMetadata]: {
       interfaceId: INTERFACE_IDS.LSP0ERC725Account,
       lsp2Schema: getSupportedStandardObject(lsp3Schema as ERC725JSONSchema[]),
     },
-    [LSPType.LSP7]: {
+    [LSPType.LSP7DigitalAsset]: {
       interfaceId: INTERFACE_IDS.LSP7DigitalAsset,
       lsp2Schema: getSupportedStandardObject(lsp4Schema as ERC725JSONSchema[]),
     },
-    [LSPType.LSP8]: {
+    [LSPType.LSP8IdentifiableDigitalAsset]: {
       interfaceId: INTERFACE_IDS.LSP8IdentifiableDigitalAsset,
       lsp2Schema: getSupportedStandardObject(lsp4Schema as ERC725JSONSchema[]),
     },
-    [LSPType.LSP9]: {
+    [LSPType.LSP9Vault]: {
       interfaceId: INTERFACE_IDS.LSP9Vault,
       lsp2Schema: getSupportedStandardObject(lsp9Schema as ERC725JSONSchema[]),
     },
   };
 
-const detectLSPInterface = async (
+const detectLSP = async (
   contractAddress: string,
   lspType: LSPType,
   web3Provider: Signer,
@@ -75,9 +75,9 @@ const detectLSPInterface = async (
   let doesSupportInterface: boolean;
   try {
     doesSupportInterface = await contract.callStatic.supportsInterface(
-      lspTypeOptions[lspType],
+      lspTypeOptions[lspType].interfaceId,
     );
-  } catch (err) {
+  } catch (error) {
     doesSupportInterface = false;
   }
 
@@ -103,4 +103,4 @@ const detectLSPInterface = async (
   }
 };
 
-export default detectLSPInterface;
+export default detectLSP;
