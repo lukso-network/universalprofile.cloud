@@ -84,7 +84,7 @@ const UserInfos: React.FC<Props> = ({ lsp3JSON, address }) => {
             target="_blank"
             rel="noreferrer"
           >
-            <div className="text-2xl font-bold my-2">{UPName()}</div>
+            <div className="text-2xl font-ibmpBold my-2">{UPName()}</div>
           </a>
           <div className="h-[120px]">
             {firstLink && (

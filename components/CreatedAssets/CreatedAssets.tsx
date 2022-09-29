@@ -46,7 +46,7 @@ const CreatedAssets: React.FC<Props> = ({
     <div>
       <div className="text-5xl text-center py-10">Created Assets</div>
       <div className="pb-2">
-        <h2 className="px-2 border-b border-darkGray text-2xl pb-2">Tokens</h2>
+        <h2 className="border-b border-darkGray text-2xl pb-2">Tokens</h2>
         <LSP7Table
           addresses={lsp7Addresses}
           ownerAddress={ownerAddress}
@@ -54,9 +54,7 @@ const CreatedAssets: React.FC<Props> = ({
         />
       </div>
       <div className="pb-2">
-        <h2 className="px-2 border-b border-darkGray text-2xl pb-2 mt-6">
-          NFTs
-        </h2>
+        <h2 className="border-b border-darkGray text-2xl pb-2 mt-6">NFTs</h2>
         <LSP8Table
           addresses={lsp8Addresses}
           ownerAddress={ownerAddress}
