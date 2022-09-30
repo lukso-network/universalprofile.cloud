@@ -14,7 +14,7 @@ import { LSPType } from '../interfaces/lsps';
 const getSupportedStandardObject = (schemas: ERC725JSONSchema[]) => {
   try {
     const results = schemas.filter((schema) => {
-      return schema.name.startsWith('SupportedStandard:');
+      return schema.name.startsWith('SupportedStandards:');
     });
 
     if (results.length === 0) {
