@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@erc725/erc725.js": "0.17.2",
-    "@lukso/lsp-smart-contracts": "0.8.2",
+    "@lukso/lsp-smart-contracts": "0.10.3",
     "@types/web3": "^1.2.2",
     "@walletconnect/client": "^1.8.0",
     "@walletconnect/qrcode-modal": "^1.8.0",
