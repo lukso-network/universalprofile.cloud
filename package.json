@@ -11,8 +11,8 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@erc725/erc725.js": "^0.14.4",
-    "@lukso/lsp-smart-contracts": "^0.6.2",
+    "@erc725/erc725.js": "0.17.2",
+    "@lukso/lsp-smart-contracts": "0.8.2",
     "@types/web3": "^1.2.2",
     "@walletconnect/client": "^1.8.0",
     "@walletconnect/qrcode-modal": "^1.8.0",

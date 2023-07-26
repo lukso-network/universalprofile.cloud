@@ -8,7 +8,7 @@ Once connected as the owner of the address, you will also be able to manage your
 
 # Supported Blockchains
 
-- [LUKSO L16](https://explorer.execution.l16.lukso.network/)
+- [LUKSO TESTNET](https://explorer.execution.testnet.lukso.network/)
 - LUKSO Mainnet (to come)
 
 # Install / Run

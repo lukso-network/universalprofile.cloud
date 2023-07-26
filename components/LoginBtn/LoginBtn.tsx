@@ -3,7 +3,7 @@ import identicon from 'ethereum-blockies-base64';
 
 import { WalletAddressContext } from '../../contexts/WalletAddressContext';
 import useWalletConnect from '../../hooks/useWalletConnect';
-import { IPFS_GATEWAY_BASE_URL, L16_CHAIN_ID } from '../../constants';
+import { IPFS_GATEWAY_BASE_URL, CHAIN_ID } from '../../constants';
 import { toast } from 'react-toastify';
 import walletConnectConnector from '../../utils/walletConnectConnector';
 import Link from 'next/link';
@@ -22,8 +22,8 @@ const LoginBtn: React.FC = () => {
 
   const isValidChainId = () => {
     const chainId = parseInt(window.ethereum.networkVersion);
-    if (chainId && window.ethereum.networkVersion != L16_CHAIN_ID) {
-      toast('Please switch to L16 network');
+    if (chainId && window.ethereum.networkVersion != CHAIN_ID) {
+      toast('Please switch to Testnet network');
       return false;
     }
     return true;
@@ -89,9 +89,9 @@ const LoginBtn: React.FC = () => {
     });
 
     ethereum.on('chainChanged', function (networkId: number) {
-      if (networkId !== L16_CHAIN_ID) {
+      if (networkId !== CHAIN_ID) {
         setWalletAddress('');
-        toast('Please switch to L16 network');
+        toast('Please switch to Testnet network');
       }
     });
   };

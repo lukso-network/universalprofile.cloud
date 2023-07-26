@@ -1,7 +1,7 @@
 import fetchLSP4Metadata from './fetchLSP4Metadata';
 import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json';
 import { LSP4Metadata } from '../interfaces/lsps';
-import { L16_RPC_URL, luksoImg } from '../constants';
+import { RPC_URL, luksoImg } from '../constants';
 import { Lsp7AssetType } from '../contexts/AssetsContext';
 import Web3 from 'web3';
 
@@ -35,7 +35,7 @@ const fetchLSP7Balance = async (
   contractAddress: string,
   UPAddress: string,
 ): Promise<number> => {
-  const web3 = new Web3(L16_RPC_URL); // Maybe we can reuse existing provider
+  const web3 = new Web3(RPC_URL); // Maybe we can reuse existing provider
   const lsp7Contract = new web3.eth.Contract(
     LSP7DigitalAsset.abi as any,
     contractAddress,

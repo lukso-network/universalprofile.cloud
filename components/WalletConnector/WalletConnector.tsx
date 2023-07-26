@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { WalletAddressContext } from '../../contexts/WalletAddressContext';
 import { useRouter } from 'next/router';
-import { L16_CHAIN_ID } from '../../constants';
+import { CHAIN_ID } from '../../constants';
 import walletConnectConnector from '../../utils/walletConnectConnector';
 import QRCodeModal from '@walletconnect/qrcode-modal';
 
@@ -25,8 +25,8 @@ const WalletConnector: React.FC = () => {
 
       // Get provided accounts and chainId
       const { accounts, chainId } = payload.params[0];
-      if (chainId != L16_CHAIN_ID) {
-        alert('Please switch to L16 network');
+      if (chainId != CHAIN_ID) {
+        alert('Please switch to Testnet network');
         return;
       }
       QRCodeModal.close();
@@ -41,8 +41,8 @@ const WalletConnector: React.FC = () => {
 
       // Get updated accounts and chainId
       const { accounts, chainId } = payload.params[0];
-      if (chainId != L16_CHAIN_ID) {
-        alert('Please switch to L16 network');
+      if (chainId != CHAIN_ID) {
+        alert('Please switch to Testnet network');
         return;
       }
       setWalletAddress(accounts[0]);

@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { WalletAddressContext } from '../contexts/WalletAddressContext';
 import { toast } from 'react-toastify';
-import { L16_CHAIN_ID } from '../constants';
+import { CHAIN_ID } from '../constants';
 
 const ConnectWallets: NextPage = () => {
   const router = useRouter();
@@ -12,8 +12,8 @@ const ConnectWallets: NextPage = () => {
 
   const isValidChainId = () => {
     const chainId = parseInt(window.ethereum.networkVersion);
-    if (chainId && window.ethereum.networkVersion != L16_CHAIN_ID) {
-      toast('Please switch to L16 network');
+    if (chainId && window.ethereum.networkVersion != CHAIN_ID) {
+      toast('Please switch to Testnet network');
       return false;
     }
     return true;

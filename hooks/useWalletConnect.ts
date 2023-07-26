@@ -1,5 +1,5 @@
 import { useEffect, useContext } from 'react';
-import { L16_CHAIN_ID } from '../constants';
+import { CHAIN_ID } from '../constants';
 import { WalletAddressContext } from '../contexts/WalletAddressContext';
 import walletConnectConnector from '../utils/walletConnectConnector';
 import { useRouter } from 'next/router';
@@ -24,8 +24,8 @@ const useWalletConnect = () => {
 
       // Get provided accounts and chainId
       const { accounts, chainId } = payload.params[0];
-      if (chainId != L16_CHAIN_ID) {
-        alert('Please switch to L16 network');
+      if (chainId != CHAIN_ID) {
+        alert('Please switch to Testnet network');
         return;
       }
 
@@ -40,8 +40,8 @@ const useWalletConnect = () => {
 
       // Get updated accounts and chainId
       const { accounts, chainId } = payload.params[0];
-      if (chainId !== L16_CHAIN_ID) {
-        alert('Please switch to L16 network');
+      if (chainId !== CHAIN_ID) {
+        alert('Please switch to Testnet network');
         return;
       }
       setWalletAddress(accounts[0]);

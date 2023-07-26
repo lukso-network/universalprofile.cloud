@@ -1,5 +1,5 @@
 import fetchLSP4Metadata from './fetchLSP4Metadata';
-import { L16_RPC_URL, luksoImg } from '../constants';
+import { RPC_URL, luksoImg } from '../constants';
 import { Lsp8AssetType } from '../contexts/AssetsContext';
 import Web3 from 'web3';
 import LSP8DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json';
@@ -72,7 +72,7 @@ const fetchLSP8TokensIds = async (
   contractAddress: string,
   UPAddress: string,
 ): Promise<string[]> => {
-  const web3 = new Web3(L16_RPC_URL);
+  const web3 = new Web3(RPC_URL);
 
   const lsp8Contract = new web3.eth.Contract(
     LSP8DigitalAsset.abi as any,
