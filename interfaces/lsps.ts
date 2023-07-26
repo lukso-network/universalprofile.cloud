@@ -44,7 +44,7 @@ export interface LSP3Profile {
 }
 
 export enum LSPType {
-  LSP3UniversalProfileMetadata = 'LSP3UniversalProfileMetadata',
+  LSP3UniversalProfile = 'LSP3UniversalProfile',
   LSP7DigitalAsset = 'LSP7DigitalAsset',
   LSP8IdentifiableDigitalAsset = 'LSP8IdentifiableDigitalAsset',
   LSP9Vault = 'LSP9Vault',

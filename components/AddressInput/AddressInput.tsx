@@ -82,7 +82,7 @@ const AddressInput: React.FC<Props> = ({ inputAddress, onChange }) => {
     try {
       const isUP = await detectLSP(
         address,
-        LSPType.LSP3UniversalProfileMetadata,
+        LSPType.LSP3UniversalProfile,
         web3Provider,
         ethersProvider,
       );

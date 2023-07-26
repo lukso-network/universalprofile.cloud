@@ -36,7 +36,7 @@ interface LspTypeOption {
 
 const lspTypeOptions: Record<Exclude<LSPType, LSPType.Unknown>, LspTypeOption> =
   {
-    [LSPType.LSP3UniversalProfileMetadata]: {
+    [LSPType.LSP3UniversalProfile]: {
       interfaceId: INTERFACE_IDS.LSP0ERC725Account,
       lsp2Schema: getSupportedStandardObject(lsp3Schema as ERC725JSONSchema[]),
     },
@@ -60,6 +60,7 @@ const detectLSP = async (
   web3Provider: Signer,
   ethersProvider: Signer | ethers.providers.BaseProvider,
 ) => {
+  debugger;
   if (lspType === LSPType.Unknown) {
     return false;
   }
@@ -78,6 +79,7 @@ const detectLSP = async (
       lspTypeOptions[lspType].interfaceId,
     );
   } catch (error) {
+    console.error(error);
     doesSupportInterface = false;
   }
 
