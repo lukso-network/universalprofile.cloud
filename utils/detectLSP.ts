@@ -3,12 +3,12 @@ import { ethers, Signer } from 'ethers';
 // @ts-ignore
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts/constants.js';
 
-import { ERC725, ERC725JSONSchema } from '@erc725/erc725.js';
+import { /* ERC725, */ ERC725JSONSchema } from '@erc725/erc725.js';
 import lsp3Schema from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json';
 import lsp4Schema from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json';
 import lsp9Schema from '@erc725/erc725.js/schemas/LSP9Vault.json';
 
-import { COMMON_ABIS, IPFS_GATEWAY_BASE_URL } from '../constants';
+import { COMMON_ABIS /*, IPFS_GATEWAY_BASE_URL*/ } from '../constants';
 import { LSPType } from '../interfaces/lsps';
 
 const getSupportedStandardObject = (schemas: ERC725JSONSchema[]) => {
@@ -27,7 +27,7 @@ const getSupportedStandardObject = (schemas: ERC725JSONSchema[]) => {
   }
 };
 
-const config = { ipfsGateway: IPFS_GATEWAY_BASE_URL };
+// const config = { ipfsGateway: IPFS_GATEWAY_BASE_URL };
 
 interface LspTypeOption {
   interfaceId: string; // EIP-165
