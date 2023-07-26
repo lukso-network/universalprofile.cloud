@@ -81,26 +81,29 @@ const detectLSP = async (
     doesSupportInterface = false;
   }
 
-  const lsp2Schema = lspTypeOptions[lspType].lsp2Schema;
+  // Seem like interface check should be enough for checking which standard is used, although we need more detailed detection
+  // for legacy standards
 
-  if (!lsp2Schema) {
-    return doesSupportInterface;
-  }
+  // const lsp2Schema = lspTypeOptions[lspType].lsp2Schema;
+
+  // if (!lsp2Schema) {
+  return doesSupportInterface;
+  // }
 
   // ERC725 detection
-  const erc725 = new ERC725(
-    [lsp2Schema],
-    contractAddress,
-    web3Provider,
-    config,
-  );
+  // const erc725 = new ERC725(
+  //   [lsp2Schema],
+  //   contractAddress,
+  //   web3Provider,
+  //   config,
+  // );
 
-  try {
-    const lspSupportedStandards = await erc725.fetchData(lsp2Schema.name);
-    return lspSupportedStandards.value === lsp2Schema.valueContent;
-  } catch (error) {
-    return false;
-  }
+  // try {
+  //   const lspSupportedStandards = await erc725.fetchData(lsp2Schema.name);
+  //   return lspSupportedStandards.value === lsp2Schema.valueContent;
+  // } catch (error) {
+  //   return false;
+  // }
 };
 
 export default detectLSP;

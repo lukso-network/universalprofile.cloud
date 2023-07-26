@@ -5,25 +5,11 @@ import Web3 from 'web3';
 import LSP8DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json';
 import { ethers } from 'ethers';
 import { validateLSP4MetaData } from './validateLSP4Metdata';
-import ERC725js, { ERC725JSONSchema } from '@erc725/erc725.js';
+import ERC725, { ERC725JSONSchema } from '@erc725/erc725.js';
 import { LSP4Metadata } from '../interfaces/lsps';
 import { IPFS_GATEWAY_BASE_URL } from '../constants';
-
-const LSP8TokenIdType = {
-  name: 'LSP8TokenIdType',
-  key: '0x715f248956de7ce65e94d9d836bfead479f7e70d69b718d47bfe7b00e05b4fe4',
-  keyType: 'Singleton',
-  valueType: 'uint256',
-  valueContent: 'Number',
-};
-
-const LSP8MetadataJSON = {
-  name: 'LSP8MetadataJSON:<uint256>',
-  key: '0x9a26b4060ae7f7d5e3cd0000<uint256>',
-  keyType: 'Mapping',
-  valueType: 'bytes',
-  valueContent: 'JSONURL',
-};
+import LSP4DigitalAssetSchema from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json';
+import LSP8IdentifiableDigitalAssetSchema from '../schemas/LSP8IdentifiableDigitalAssetSchema.json';
 
 enum TokenIdType {
   address = '1',
@@ -119,6 +105,19 @@ const fetchLSP8Metadata = async (
   address: string,
   provider: any,
 ): Promise<LSP4Metadata> => {
+  const options = {
+    ipfsGateway: IPFS_GATEWAY_BASE_URL,
+  };
+
+  const erc725Asset = new ERC725(
+    LSP8IdentifiableDigitalAssetSchema.concat(
+      LSP4DigitalAssetSchema,
+    ) as ERC725JSONSchema[],
+    address,
+    provider,
+    options,
+  );
+
   const LSP8MetadataGetter = async (
     tokenIdType: string,
     tokenId: string,
@@ -131,17 +130,6 @@ const fetchLSP8Metadata = async (
     ]);
     return validateLSP4MetaData(LSP8Metadata[0].value);
   };
-
-  const options = {
-    ipfsGateway: IPFS_GATEWAY_BASE_URL,
-  };
-
-  const erc725Asset = new ERC725js(
-    [LSP8TokenIdType, LSP8MetadataJSON] as ERC725JSONSchema[],
-    address,
-    provider,
-    options,
-  );
 
   try {
     //fetch tokenIdType

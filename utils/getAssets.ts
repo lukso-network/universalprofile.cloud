@@ -28,8 +28,10 @@ const getAssets = async (
         ethersProvider,
       );
 
-      if (isLSP7 || isLSP8) {
+      if (isLSP7 && !isLSP8) {
         lsp7AddressesTemp.push(assetAddress);
+      } else if (isLSP8 && !isLSP7) {
+        lsp8AddressesTemp.push(assetAddress);
       } else {
         console.log('asset is not an LSP');
       }
