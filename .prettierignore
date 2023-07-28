@@ -25,3 +25,5 @@ tsconfig.json
 /functions
 /translations/
 /playwright-report/
+/.yarn
+.yarnrc.yml

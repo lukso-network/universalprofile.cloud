@@ -15,7 +15,7 @@
     "lint:eslint:fix": "eslint --ext '.js,.vue,.ts' . --fix",
     "lint:css": "stylelint \"**/*.{scss,css,vue}\"",
     "lint:css:fix": "stylelint \"**/*.{scss,css,vue}\" --fix",
-    "lint:fmt": "prettier --check --loglevel=warn .",
+    "lint:fmt": "prettier --check --log-level=warn .",
     "lint:fmt:fix": "prettier --write .",
     "lint:types": "tsc --noEmit --project tsconfig.json",
     "prepare": "husky install",
