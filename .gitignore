@@ -1,15 +1,28 @@
-/node_modules
-/*.log*
-/.nuxt
-/.nitro
-/.cache
-/.output
-/.env
-/dist
-/functions
-/public/assets/*
-/.enable-auto-link
+# Nuxt dev/build outputs
+.output
+.nuxt
+.nitro
+.cache
+dist
 
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# yarn
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
