@@ -16,6 +16,7 @@ logs
 .DS_Store
 .fleet
 .idea
+/public/assets/*
 
 # Local env files
 .env
@@ -23,7 +24,7 @@ logs
 !.env.example
 
 # yarn
-.yarn/*
+.yarn
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
