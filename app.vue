@@ -3,10 +3,15 @@
 if (typeof window !== 'undefined') {
   import('@lukso/web-components')
 }
+
+const { setupIntl } = useIntl()
+setupIntl(defaultConfig)
 </script>
 
 <template>
   <div>
-    <lukso-button>Welcome!</lukso-button>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </div>
 </template>

@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  // devtools: { enabled: true }, // this works in newer nuxt version
   app: {
     head: {
       link: [{ rel: 'icon', type: 'image/png', href: '/images/favicon.png' }],
