@@ -1,6 +1,14 @@
+import nodePolyfills from 'rollup-plugin-polyfill-node'
+import { copyAssets } from '@lukso/web-components/tools/copy-assets'
+import { assets } from '@lukso/web-components/tools/assets'
+
+copyAssets('./public', assets)
+
+const isProduction = process.env.NODE_ENV === 'production'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  // devtools: { enabled: true }, // this works in newer nuxt version
+  devtools: { enabled: !isProduction },
   app: {
     head: {
       link: [{ rel: 'icon', type: 'image/png', href: '/images/favicon.png' }],
@@ -37,9 +45,43 @@ export default defineNuxtConfig({
         allow: ['..'],
       },
     },
+    plugins: [
+      // ↓ Needed for development mode
+      !isProduction &&
+        nodePolyfills({
+          include: [
+            'node_modules/**/*.js',
+            new RegExp('node_modules/.vite/.*js'),
+          ],
+        }),
+    ],
     build: {
+      rollupOptions: {
+        plugins: [
+          // ↓ Needed for build
+          nodePolyfills(),
+        ],
+      },
       commonjsOptions: {
         transformMixedEsModules: true,
+      },
+    },
+    resolve: {
+      alias: {
+        process: 'process/browser',
+        stream: 'stream-browserify',
+        https: 'agent-base',
+        zlib: 'browserify-zlib',
+        util: 'util',
+        buffer: 'buffer',
+      },
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        // Node.js global to browser globalThis
+        define: {
+          global: 'globalThis',
+        },
       },
     },
   },
