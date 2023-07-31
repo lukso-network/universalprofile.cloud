@@ -7,5 +7,7 @@
   "footer_privacy_policy_text": "Privacy Policy",
   "footer_need_help_url": "mailto:support@lukso.network",
   "footer_need_help_text": "NEED HELP?",
-  "footer_faq_text": "FAQs"
+  "footer_faq_text": "FAQs",
+  "asset_filter_owned_assets": "Owned assets",
+  "asset_filter_created_assets": "Created assets"
 }
