@@ -25,18 +25,16 @@ tailwind.config.js
 .env.*
 !.env.example
 
-# yarn
-.yarn
+# Yarn
+.pnp.*
+.yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
 
-# Swap the comments on the following lines if you don't wish to use zero-installs
-# Documentation here: https://yarnpkg.com/features/zero-installs
-!.yarn/cache
-#.pnp.*
-
 # tests
-playwright-report
+/test-results/
+/playwright-report/
+/playwright/.cache/
