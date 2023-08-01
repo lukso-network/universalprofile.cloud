@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     '@nuxtjs/plausible',
   ],
   plausible: {
-    domain: 'migrate.lukso.network',
+    domain: 'wallet.lukso.network',
   },
   device: {
     refreshOnResize: true,
