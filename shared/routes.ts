@@ -1,10 +1,10 @@
-export const tokenRoute = (profileAddress: Address, tokenAddress: Address) =>
-  `/profile/${profileAddress}/token/${tokenAddress}`
+export const tokenRoute = (profileAddress: Address, assetAddress: Address) =>
+  `/profile/${profileAddress}/token/${assetAddress}`
 
 export const collectibleRoute = (
   profileAddress: Address,
-  tokenAddress: Address
-) => `/profile/${profileAddress}/collectible/${tokenAddress}`
+  assetAddress: Address
+) => `/profile/${profileAddress}/collectible/${assetAddress}`
 
 export const profileRoute = (profileAddress: Address) =>
   `/profile/${profileAddress}`
