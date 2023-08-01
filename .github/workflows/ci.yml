@@ -1,0 +1,28 @@
+name: Tests
+on:
+  pull_request:
+    branches:
+      - '*'
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: ⚙️ Install dependencies
+        run: yarn install
+      - name: 🎨 Lint
+        run: yarn lint
+      - name: 🛠 Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      - name: 🎯 Run Playwright tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
