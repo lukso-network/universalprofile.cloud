@@ -27,8 +27,8 @@
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.0",
-    "@lukso/web-components": "^1.29.0",
-    "@nuxt/devtools": "^0.7.2",
+    "@lukso/web-components": "^1.30.0",
+    "@nuxt/devtools": "^0.7.4",
     "@nuxtjs/device": "^3.1.0",
     "@nuxtjs/plausible": "^0.2.1",
     "@nuxtjs/tailwindcss": "^6.8.0",
@@ -37,8 +37,8 @@
     "@types/fs-extra": "11.0.1",
     "@types/node": "^20.4.5",
     "@types/randombytes": "2.0.0",
-    "@typescript-eslint/eslint-plugin": "6.2.0",
-    "@typescript-eslint/parser": "6.2.0",
+    "@typescript-eslint/eslint-plugin": "6.2.1",
+    "@typescript-eslint/parser": "6.2.1",
     "buffer": "6.0.3",
     "dotenv-cli": "7.2.1",
     "eslint": "8.46.0",
@@ -58,7 +58,7 @@
     "postcss-html": "^1.5.0",
     "prettier": "3.0.0",
     "rollup-plugin-polyfill-node": "^0.12.0",
-    "sass": "1.64.1",
+    "sass": "1.64.2",
     "stream-browserify": "3.0.0",
     "stream-http": "3.2.0",
     "stylelint": "15.10.2",
@@ -84,8 +84,5 @@
       "prettier --list-different",
       "stylelint"
     ]
-  },
-  "resolutions": {
-    "@lukso/web-components": "portal:/Users/dominik/www/lukso/tools-web-components/package"
   }
 }
