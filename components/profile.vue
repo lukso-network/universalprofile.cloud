@@ -10,6 +10,7 @@ const { address, name, backgroundUrl, profileUrl } = useProfileStore()
       :profile-url="profileUrl"
       :profile-address="address"
       is-full-width
+      custom-class="rounded-24 shadow-neutral-drop-shadow"
     >
       <div slot="content" class="px-6 pb-6 flex flex-col items-center">
         <lukso-username v-if="name" :name="name" size="large"></lukso-username>

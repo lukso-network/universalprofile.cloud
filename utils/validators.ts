@@ -8,8 +8,12 @@ import { isAddress } from 'web3-validator'
  * @returns - throws an error if the value is not an address
  */
 export function assertAddress(
-  value: string | string[]
+  value?: string | string[]
 ): asserts value is Address {
+  if (!value) {
+    throw Error(`missing address`)
+  }
+
   if (Array.isArray(value)) {
     return value.forEach(value => assertAddress(value))
   }

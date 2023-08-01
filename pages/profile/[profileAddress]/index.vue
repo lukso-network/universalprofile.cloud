@@ -1,10 +1,21 @@
 <script setup lang="ts">
+import { fetchLSP7Assets } from '@/utils/fetchLSP7Assets'
+import { fetchLSP8Assets } from '@/utils/fetchLSP8Assets'
+
 enum AssetFilter {
   owned = 'owned',
   created = 'created',
 }
 
 const assetFilter = ref<AssetFilter>(AssetFilter.owned)
+const { setLsp7Assets, setLsp8Assets } = useAssetsStore()
+
+try {
+  setLsp7Assets(fetchLSP7Assets())
+  setLsp8Assets(fetchLSP8Assets())
+} catch (error) {
+  console.error(error)
+}
 </script>
 
 <template>
@@ -29,6 +40,8 @@ const assetFilter = ref<AssetFilter>(AssetFilter.owned)
           >{{ $formatMessage('asset_filter_created_assets') }}</lukso-button
         >
       </div>
+      <Lsp7AssetList />
+      <Lsp8AssetList />
     </div>
   </div>
 </template>

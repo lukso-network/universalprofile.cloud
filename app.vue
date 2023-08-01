@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { getProfileAddressFromUrl } from '@/utils/getProfileAddressFromUrl'
+import { fetchProfileAddressFromUrl } from '@/utils/fetchProfileAddressFromUrl'
 
-// due to Nuxt SSR we need to check if window is defined
 if (typeof window !== 'undefined') {
   import('@lukso/web-components')
 }
@@ -10,8 +9,11 @@ if (typeof window !== 'undefined') {
 const { setupIntl } = useIntl()
 setupIntl(defaultConfig)
 
-// get profile address from url with additional validation checks
-getProfileAddressFromUrl()
+try {
+  fetchProfileAddressFromUrl()
+} catch (error) {
+  console.error(error)
+}
 </script>
 
 <template>

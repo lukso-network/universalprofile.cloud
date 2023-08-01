@@ -12,6 +12,14 @@ test.describe('assertAddress', () => {
     }
   })
 
+  test('throw when address is missing', async ({ page }) => {
+    try {
+      assertAddress()
+    } catch (error) {
+      expect((error as unknown as Error).message).toBe(`missing address`)
+    }
+  })
+
   test('pass when address is valid', async ({ page }) => {
     expect(
       assertAddress('0x4440a406E00ECfe15a833119D20B848a31c80116')

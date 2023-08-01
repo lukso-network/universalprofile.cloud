@@ -1,15 +1,24 @@
 <script setup lang="ts">
-import { routes } from '@/shared/routes'
+import { profileRoute, sendRoute } from '@/shared/routes'
 
-const router = useRouter()
-const profileAddress = router.currentRoute.value.params?.address
+const { address: profileAddress } = useProfileStore()
 
 const handleNavigateProfile = () => {
-  navigateTo(`/${profileAddress}${routes.profile}`)
+  try {
+    assertAddress(profileAddress)
+    navigateTo(profileRoute(profileAddress))
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 const handleNavigateSend = () => {
-  navigateTo(`/${profileAddress}${routes.send}`)
+  try {
+    assertAddress(profileAddress)
+    navigateTo(sendRoute(profileAddress))
+  } catch (error) {
+    console.error(error)
+  }
 }
 </script>
 

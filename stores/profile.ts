@@ -1,4 +1,4 @@
-export const useProfileStore = defineStore('app', () => {
+export const useProfileStore = defineStore('profile', () => {
   const address = ref<Address>()
   const name = ref<string>()
   const backgroundUrl = ref<string>()

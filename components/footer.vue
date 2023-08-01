@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { routes } from '@/shared/routes'
+import { termsRoute } from '@/shared/routes'
 
 const handleTermsPage = () => {
-  navigateTo(routes.terms)
+  navigateTo(termsRoute())
 }
 </script>
 
