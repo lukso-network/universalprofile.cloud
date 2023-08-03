@@ -15961,7 +15961,7 @@ __metadata:
     stylelint-scss: 5.0.1
     typescript: 5.1.6
     util: 0.12.5
-    web3: ^1.10.0
+    web3: 1.10.0
     web3-utils: ^4.0.3
     yata-fetch: 2.1.5
   languageName: unknown
@@ -16301,7 +16301,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3@npm:1.10.0, web3@npm:^1.10.0":
+"web3@npm:1.10.0":
   version: 1.10.0
   resolution: "web3@npm:1.10.0"
   dependencies:
