@@ -1,4 +1,5 @@
-import { isAddress } from 'web3-utils'
+import web3utils from 'web3-utils'
+const { isAddress } = web3utils // need to import like this due to CommonJS module import issue
 
 /**
  * Ensures that the given value is an address,
