@@ -85,6 +85,7 @@ export default defineNuxtConfig({
         },
         // Enable esbuild polyfill plugins
         plugins: [
+          // @ts-ignore
           NodeGlobalsPolyfillPlugin({
             buffer: true, // fixes `Buffer is not defined` error
           }),
