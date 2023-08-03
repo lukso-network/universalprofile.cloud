@@ -1,18 +1,24 @@
 export const useProfileStore = defineStore('profile', () => {
-  const address = ref<Address>()
-  const name = ref<string>()
-  const backgroundUrl = ref<string>()
-  const profileUrl = ref<string>()
+  const profile = reactive<Profile>({} as Profile)
+  const status = reactive({ isLoading: true })
 
   const setAddress = (newAddress: Address) => {
-    address.value = newAddress
+    profile.address = newAddress
+  }
+
+  const setProfile = (newProfile: Profile) => {
+    Object.assign(profile, newProfile)
+  }
+
+  const setLoading = (newLoading: boolean) => {
+    status.isLoading = newLoading
   }
 
   return {
-    address,
     setAddress,
-    name,
-    backgroundUrl,
-    profileUrl,
+    profile,
+    setProfile,
+    status,
+    setLoading,
   }
 })

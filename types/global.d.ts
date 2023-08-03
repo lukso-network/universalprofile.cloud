@@ -1,3 +1,5 @@
+import { LSP3Profile } from '@lukso/lsp-factory.js'
+
 declare global {
   type Address = `0x${string}`
 
@@ -19,6 +21,27 @@ declare global {
     collectionImage: string
     collectionIcon: string
     collectionAddress: string
+  }
+
+  type Profile = LSP3Profile & {
+    backgroundImageUrl?: string
+    profileImageUrl?: string
+    address?: Address
+  }
+
+  type NetworkId = string
+  type ChainIdHex = `0x${string}`
+
+  interface NetworkInfo {
+    id: NetworkId
+    name: string
+    rpcHttp: string
+    chainId: ChainIdHex
+    ipfsUrl: string
+  }
+
+  interface Window {
+    ethereum: any
   }
 }
 

@@ -25,8 +25,10 @@
     "test:debug": "npx playwright test --debug"
   },
   "devDependencies": {
+    "@erc725/erc725.js": "^0.17.2",
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.0",
+    "@lukso/lsp-factory.js": "^2.5.1",
     "@lukso/web-components": "^1.30.0",
     "@nuxt/devtools": "^0.7.4",
     "@nuxtjs/device": "^3.1.0",
@@ -69,8 +71,7 @@
     "stylelint-scss": "5.0.1",
     "typescript": "5.1.6",
     "util": "0.12.5",
-    "web3": "^4.0.3",
-    "web3-utils": "^4.0.3",
+    "web3": "^1.10.0",
     "yata-fetch": "2.1.5"
   },
   "lint-staged": {
