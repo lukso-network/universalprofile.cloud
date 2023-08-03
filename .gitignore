@@ -17,13 +17,16 @@ logs
 .fleet
 .idea
 /public/assets/*
+# tailwind config is used just for vs code extension intelisense
+tailwind.config.js
 
 # Local env files
 .env
 .env.*
 !.env.example
 
-# yarn
+# Yarn
+.pnp.*
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

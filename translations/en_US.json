@@ -1,1 +1,17 @@
-{}
+{
+  "tokens_title": "Tokens",
+  "header_title": "Wallet",
+  "header_send": "Send",
+  "header_my_profile": "My profile",
+  "header_connect": "Connect",
+  "footer_terms_text": "Terms & Conditions",
+  "footer_privacy_policy_text": "Privacy Policy",
+  "footer_need_help_url": "mailto:support@lukso.network",
+  "footer_need_help_text": "NEED HELP?",
+  "footer_faq_text": "FAQs",
+  "collectibles_title": "Collectibles",
+  "button_send": "Send",
+  "asset_filter_owned_assets": "Owned assets",
+  "asset_filter_created_assets": "Created assets",
+  "asset_created_by": "Created by"
+}

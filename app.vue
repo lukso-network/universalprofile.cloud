@@ -1,12 +1,25 @@
 <script setup lang="ts">
-// due to Nuxt SSR we need to check if window is defined
+import { fetchProfileAddressFromUrl } from '@/utils/fetchProfileAddressFromUrl'
+
 if (typeof window !== 'undefined') {
   import('@lukso/web-components')
+}
+
+// setup translations
+const { setupIntl } = useIntl()
+setupIntl(defaultConfig)
+
+try {
+  fetchProfileAddressFromUrl()
+} catch (error) {
+  console.error(error)
 }
 </script>
 
 <template>
   <div>
-    <lukso-button>Welcome!</lukso-button>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </div>
 </template>
