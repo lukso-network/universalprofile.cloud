@@ -45,7 +45,7 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
-  build-lint-test:
+  deploy:
     runs-on: ubuntu-latest
     needs: test
 
