@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { profileRoute, sendRoute } from '@/shared/routes'
+import { PROVIDERS } from '@/types/enums'
 
 const { profile, status } = useConnectionStore()
 const { connect, disconnect } = useBrowserExtension()

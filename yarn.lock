@@ -506,6 +506,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@erc725/erc725.js@npm:^0.18.0":
+  version: 0.18.0
+  resolution: "@erc725/erc725.js@npm:0.18.0"
+  dependencies:
+    ethereumjs-util: ^7.1.5
+    web3-eth-abi: ^1.10.0
+    web3-providers-http: ^1.10.0
+    web3-utils: ^1.10.0
+  checksum: 2a03510bfb6a6a134a4522ccf366c44016389d380c7ebff39bf26158a23c523e2c1be0010837814aea7877ac533b63d419af4f0494cd639809b000b1f1ab419c
+  languageName: node
+  linkType: hard
+
 "@erc725/smart-contracts@npm:^4.1.1":
   version: 4.2.0
   resolution: "@erc725/smart-contracts@npm:4.2.0"
@@ -2664,7 +2676,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=13.7.0, @types/node@npm:^20.4.5":
+"@types/node@npm:*, @types/node@npm:>=13.7.0":
   version: 20.4.5
   resolution: "@types/node@npm:20.4.5"
   checksum: 36a0304a8dc346a1b2d2edac4c4633eecf70875793d61a5274d0df052d7a7af7a8e34f29884eac4fbd094c4f0201477dcb39c0ecd3307ca141688806538d1138
@@ -2675,6 +2687,13 @@ __metadata:
   version: 12.20.55
   resolution: "@types/node@npm:12.20.55"
   checksum: e4f86785f4092706e0d3b0edff8dca5a13b45627e4b36700acd8dfe6ad53db71928c8dee914d4276c7fd3b6ccd829aa919811c9eb708a2c8e4c6eb3701178c37
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.4.7":
+  version: 20.4.7
+  resolution: "@types/node@npm:20.4.7"
+  checksum: a40d7003f66b56220a2028179e49f950b46fa6dbf860a4a6ecbd6ba7976f05b2f0b31ced39689ec88a7d9e32d07e088c6a06d270b99d5bc13a28291ac2f30ca7
   languageName: node
   linkType: hard
 
@@ -5078,6 +5097,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-env@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "cross-env@npm:7.0.3"
+  dependencies:
+    cross-spawn: ^7.0.1
+  bin:
+    cross-env: src/bin/cross-env.js
+    cross-env-shell: src/bin/cross-env-shell.js
+  checksum: 26f2f3ea2ab32617f57effb70d329c2070d2f5630adc800985d8b30b56e8bf7f5f439dd3a0358b79cee6f930afc23cf8e23515f17ccfb30092c6b62c6b630a79
+  languageName: node
+  linkType: hard
+
 "cross-fetch@npm:^2.1.0":
   version: 2.2.6
   resolution: "cross-fetch@npm:2.2.6"
@@ -5110,7 +5141,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
+"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.1, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-spawn@npm:7.0.3"
   dependencies:
@@ -6255,14 +6286,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:8.9.0":
-  version: 8.9.0
-  resolution: "eslint-config-prettier@npm:8.9.0"
+"eslint-config-prettier@npm:8.10.0":
+  version: 8.10.0
+  resolution: "eslint-config-prettier@npm:8.10.0"
   peerDependencies:
     eslint: ">=7.0.0"
   bin:
     eslint-config-prettier: bin/cli.js
-  checksum: a675d0dabd76b700ef2d062b5ec6a634e105a8e8c070f95281fd2ccb614527fac60b4c758132058c50f0521fd19313f1f5be45ce9ebf081f2e5f77ae6eb7d8db
+  checksum: 153266badd477e49b0759816246b2132f1dbdb6c7f313ca60a9af5822fd1071c2bc5684a3720d78b725452bbac04bb130878b2513aea5e72b1b792de5a69fec8
   languageName: node
   linkType: hard
 
@@ -12579,12 +12610,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.0.0":
-  version: 3.0.0
-  resolution: "prettier@npm:3.0.0"
+"prettier@npm:3.0.1":
+  version: 3.0.1
+  resolution: "prettier@npm:3.0.1"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 6a832876a1552dc58330d2467874e5a0b46b9ccbfc5d3531eb69d15684743e7f83dc9fbd202db6270446deba9c82b79d24383d09924c462b457136a759425e33
+  checksum: e1f3f16c7fe0495de3faa182597871f74927d787cce3c52095a66ff5d7eacc05173371d5f58bf12141a0a1b6bfe739a338531d6cf18b92c7256c1319f2c84e73
   languageName: node
   linkType: hard
 
@@ -15814,7 +15845,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wallet.universalprofile.cloud@workspace:."
   dependencies:
-    "@erc725/erc725.js": ^0.17.2
+    "@erc725/erc725.js": ^0.18.0
     "@esbuild-plugins/node-globals-polyfill": 0.2.3
     "@formatjs/intl": ^2.9.0
     "@lukso/lsp-factory.js": ^2.5.1
@@ -15826,14 +15857,15 @@ __metadata:
     "@pinia/nuxt": ^0.4.11
     "@playwright/test": 1.36.2
     "@types/fs-extra": 11.0.1
-    "@types/node": ^20.4.5
+    "@types/node": ^20.4.7
     "@types/randombytes": 2.0.0
     "@typescript-eslint/eslint-plugin": 6.2.1
     "@typescript-eslint/parser": 6.2.1
     buffer: 6.0.3
+    cross-env: ^7.0.3
     dotenv-cli: 7.2.1
     eslint: 8.46.0
-    eslint-config-prettier: 8.9.0
+    eslint-config-prettier: 8.10.0
     eslint-import-resolver-typescript: 3.5.5
     eslint-plugin-import: 2.28.0
     eslint-plugin-json: 3.1.0
@@ -15847,7 +15879,7 @@ __metadata:
     npm-run-all: 4.1.5
     nuxt: ^3.6.5
     postcss-html: ^1.5.0
-    prettier: 3.0.0
+    prettier: 3.0.1
     rollup-plugin-polyfill-node: ^0.12.0
     sass: 1.64.2
     stream-browserify: 3.0.0
@@ -15954,7 +15986,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-eth-abi@npm:1.10.0, web3-eth-abi@npm:^1.8.2":
+"web3-eth-abi@npm:1.10.0, web3-eth-abi@npm:^1.10.0, web3-eth-abi@npm:^1.8.2":
   version: 1.10.0
   resolution: "web3-eth-abi@npm:1.10.0"
   dependencies:
@@ -16099,7 +16131,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-providers-http@npm:1.10.0, web3-providers-http@npm:^1.8.0":
+"web3-providers-http@npm:1.10.0, web3-providers-http@npm:^1.10.0, web3-providers-http@npm:^1.8.0":
   version: 1.10.0
   resolution: "web3-providers-http@npm:1.10.0"
   dependencies:
@@ -16144,7 +16176,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-utils@npm:1.10.0, web3-utils@npm:^1.8.2, web3-utils@npm:~1.10.0":
+"web3-utils@npm:1.10.0, web3-utils@npm:^1.10.0, web3-utils@npm:^1.8.2, web3-utils@npm:~1.10.0":
   version: 1.10.0
   resolution: "web3-utils@npm:1.10.0"
   dependencies:
