@@ -8,13 +8,13 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { address: profileAddress } = useProfileStore()
+const { profile } = useProfileStore()
 
 const handleShowAsset = () => {
   try {
-    assertAddress(profileAddress)
+    assertAddress(profile.address)
     assertAddress(props.asset.address)
-    navigateTo(tokenRoute(profileAddress, props.asset.address))
+    navigateTo(tokenRoute(profile.address, props.asset.address))
   } catch (error) {
     console.error(error)
   }

@@ -1,6 +1,7 @@
 import nodePolyfills from 'rollup-plugin-polyfill-node'
 import { copyAssets } from '@lukso/web-components/tools/copy-assets'
 import { assets } from '@lukso/web-components/tools/assets'
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 
 copyAssets('./public', assets)
 
@@ -82,6 +83,13 @@ export default defineNuxtConfig({
         define: {
           global: 'globalThis',
         },
+        // Enable esbuild polyfill plugins
+        plugins: [
+          // @ts-ignore
+          NodeGlobalsPolyfillPlugin({
+            buffer: true, // fixes `Buffer is not defined` error
+          }),
+        ],
       },
     },
   },

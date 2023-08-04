@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { profileRoute, sendRoute } from '@/shared/routes'
+import { PROVIDERS } from '@/types/enums'
 
 const { address: profileAddress } = useProfileStore()
 
@@ -19,6 +20,10 @@ const handleNavigateSend = () => {
   } catch (error) {
     console.error(error)
   }
+}
+
+const handleConnect = async () => {
+  await useWeb3(PROVIDERS.INJECTED).requestAccounts()
 }
 </script>
 
@@ -46,6 +51,7 @@ const handleNavigateSend = () => {
       <lukso-button
         variant="secondary"
         custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+        @click="handleConnect"
       >
         {{ $formatMessage('header_connect') }}
       </lukso-button>
@@ -77,6 +83,7 @@ const handleNavigateSend = () => {
         <lukso-button
           variant="text"
           custom-class="text-purple-51 text-12 hover:text-purple-41 uppercase nav-apax-12-medium-uppercase font-apax font-500"
+          @click="handleConnect"
         >
           {{ $formatMessage('header_connect') }}
         </lukso-button>
