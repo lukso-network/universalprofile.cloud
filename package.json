@@ -22,7 +22,8 @@
     "yata-fetch": "dotenv -- yata-fetch --config .yata.json",
     "test": "npx playwright test",
     "test:ui": "npx playwright test --ui",
-    "test:debug": "npx playwright test --debug"
+    "test:debug": "npx playwright test --debug",
+    "pages:build": "cross-env NODE_ENV=production NITRO_PRESET=cloudflare_pages nuxt build --standalone"
   },
   "devDependencies": {
     "@erc725/erc725.js": "^0.18.0",
@@ -86,5 +87,8 @@
       "prettier --list-different",
       "stylelint"
     ]
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3"
   }
 }
