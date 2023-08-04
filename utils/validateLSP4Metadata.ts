@@ -1,12 +1,14 @@
+import { ImageMetadata, LinkMetadata } from '@lukso/lsp-factory.js'
 import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
+import { AssetMetadata } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/metadata'
 
 export const validateLSP4MetaData = (
-  LSP4MetadataJSON: any
+  LSP4MetadataJSON: Record<string, any>
 ): LSP4DigitalAssetJSON => {
-  let images = [[]]
-  let links = []
-  let assets = []
-  let icon = []
+  let images: ImageMetadata[][] = [[]]
+  let links: LinkMetadata[] = []
+  let assets: AssetMetadata[] = []
+  let icon: ImageMetadata[] = []
 
   if (LSP4MetadataJSON?.LSP4Metadata?.images?.length) {
     images = LSP4MetadataJSON?.LSP4Metadata?.images?.filter((image: any) => {
