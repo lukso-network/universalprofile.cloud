@@ -1,5 +1,6 @@
 import nodePolyfills from 'rollup-plugin-polyfill-node'
 import { copyAssets } from '@lukso/web-components/tools/copy-assets'
+// @ts-ignore
 import { assets } from '@lukso/web-components/tools/assets'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 

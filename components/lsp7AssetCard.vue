@@ -8,7 +8,8 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { profile } = useProfileStore()
+const { profile, status } = useConnectionStore()
+const { profile: viewedProfile } = useProfileStore()
 
 const handleShowAsset = () => {
   try {
@@ -52,9 +53,14 @@ const handleShowAsset = () => {
           </div>
           <div class="paragraph-inter-12-regular pb-4">$ 123.24</div>
           <div class="flex justify-end w-full">
-            <lukso-button size="small" variant="secondary">{{
-              $formatMessage('button_send')
-            }}</lukso-button>
+            <lukso-button
+              v-if="
+                status.isConnected && viewedProfile.address === profile.address
+              "
+              size="small"
+              variant="secondary"
+              >{{ $formatMessage('button_send') }}</lukso-button
+            >
           </div>
         </div>
       </div>

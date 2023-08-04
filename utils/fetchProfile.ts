@@ -4,18 +4,15 @@ import { eip165ABI } from '@/shared/abis/eip165ABI'
 import { PROVIDERS } from '@/types/enums'
 import { getDataABI } from '@/shared/abis/getDataABI'
 
-export const fetchProfile = async () => {
-  // get profile address from router (url)
-  const router = useRouter()
-  const { setAddress, setProfile } = useProfileStore()
-  const profileAddress = router.currentRoute.value.params.profileAddress
+export const fetchProfile = async (profileAddress: Address) => {
+  const { contract, isEoA } = useWeb3(PROVIDERS.RPC)
 
-  // valid address check
-  assertAddress(profileAddress)
-  setAddress(profileAddress)
+  // EoA check
+  if (await isEoA(profileAddress)) {
+    throw new Error('The profile is an EoA')
+  }
 
   // interface check
-  const { contract } = useWeb3(PROVIDERS.RPC)
   const eip165Contract = contract(eip165ABI as any, profileAddress)
   await eip165Contract.methods
     .supportsInterface(INTERFACE_IDS.LSP0ERC725Account)
@@ -32,5 +29,8 @@ export const fetchProfile = async () => {
   }
 
   const { fetchProfile } = useErc725()
-  setProfile(await fetchProfile(profileAddress))
+  const profile = await fetchProfile(profileAddress)
+  console.log('profile', profile)
+
+  return profile
 }
