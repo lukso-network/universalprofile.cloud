@@ -1,6 +1,6 @@
 import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
 import { profileRoute } from '@/shared/routes'
-import { INJECTED_PROVIDER } from '@/shared/config'
+import { INJECTED_PROVIDER, CONNECTION_EXPIRY_TIME_MS } from '@/shared/config'
 
 const openStoreLink = () => {
   const { currentNetwork } = useAppStore()
@@ -9,6 +9,13 @@ const openStoreLink = () => {
     currentNetwork.storeUrls && currentNetwork.storeUrls[browserName]
 
   window.open(storeLink, '_blank')
+}
+
+const setConnectionExpiry = () => {
+  const currentDate = Date.now()
+  const expiryDate = currentDate + CONNECTION_EXPIRY_TIME_MS
+
+  setItem(STORAGE_KEY.CONNECTION_EXPIRY, expiryDate.toString())
 }
 
 const connect = async () => {
@@ -41,6 +48,7 @@ const connect = async () => {
     reloadProfile(address, profile)
     reloadConnectedProfile(address, profile)
     setIsConnected(true)
+    setConnectionExpiry()
     await navigateTo(profileRoute(address))
   } catch (error: any) {
     console.error(error)
@@ -77,8 +85,12 @@ const connect = async () => {
 }
 
 const disconnect = () => {
-  useConnectionStore().setIsConnected(false)
-  useLocalStorage().removeItem(STORAGE_KEY.CONNECTED_ADDRESS)
+  const { setIsConnected } = useConnectionStore()
+  const { removeItem } = useLocalStorage()
+
+  setIsConnected(false)
+  removeItem(STORAGE_KEY.CONNECTED_ADDRESS)
+  removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
 }
 
 const providerEvents = async (provider: any) => {

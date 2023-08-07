@@ -44,4 +44,8 @@ export const MODAL_DEFAULT_TEMPLATE = 'default'
 // global provider object injected by browser extension
 export const INJECTED_PROVIDER = window.ethereum
 
-// store links
+// connection expiry time
+export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 30 // 30 minutes
+
+// interval to check if the user is still connected
+export const CONNECTION_EXPIRY_CHECK_INTERVAL_MS = 1000 * 10 // 10 seconds

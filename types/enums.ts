@@ -5,4 +5,5 @@ export enum PROVIDERS {
 
 export enum STORAGE_KEY {
   CONNECTED_ADDRESS = 'LUKSO_WALLET:connectedAddress',
+  CONNECTION_EXPIRY = 'LUKSO_WALLET:connectionExpiry',
 }

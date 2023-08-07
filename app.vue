@@ -3,7 +3,10 @@ import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 
 import { fetchProfile } from '@/utils/fetchProfile'
 import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
-import { INJECTED_PROVIDER } from '@/shared/config'
+import {
+  CONNECTION_EXPIRY_CHECK_INTERVAL_MS,
+  INJECTED_PROVIDER,
+} from '@/shared/config'
 import { assertString } from '@/utils/validators'
 
 if (typeof window !== 'undefined') {
@@ -13,7 +16,7 @@ if (typeof window !== 'undefined') {
 
 const web3Store = useWeb3Store()
 const appStore = useAppStore()
-const { providerEvents } = useBrowserExtension()
+const { providerEvents, disconnect } = useBrowserExtension()
 const { setLoading, setAddress, setProfile, reloadProfile } = useProfileStore()
 const { setIsConnected, setConnectedAddress, setConnectedProfile } =
   useConnectionStore()
@@ -100,9 +103,28 @@ const routerBackProfileLoad = async () => {
   )
 }
 
+const checkConnectionExpiry = () => {
+  const expiryCheck = () => {
+    const expiryDate = getItem(STORAGE_KEY.CONNECTION_EXPIRY)
+
+    try {
+      assertString(expiryDate)
+      const expiryDateParsed = Number(expiryDate)
+
+      if (expiryDateParsed < Date.now()) {
+        disconnect()
+      }
+    } catch (error) {}
+  }
+
+  expiryCheck() // initial check on app load
+  setInterval(expiryCheck, CONNECTION_EXPIRY_CHECK_INTERVAL_MS)
+}
+
 onMounted(async () => {
   setupTranslations()
   setupWeb3Instances()
+  checkConnectionExpiry()
   await setupConnectedProfile()
   await setupWalletProfile()
   await routerBackProfileLoad()
