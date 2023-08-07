@@ -2,6 +2,15 @@ import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
 import { profileRoute } from '@/shared/routes'
 import { INJECTED_PROVIDER } from '@/shared/config'
 
+const openStoreLink = () => {
+  const { currentNetwork } = useAppStore()
+  const browserName = browserInfo().id
+  const storeLink =
+    currentNetwork.storeUrls && currentNetwork.storeUrls[browserName]
+
+  window.open(storeLink, '_blank')
+}
+
 const connect = async () => {
   const { showModal } = useModal()
   const { formatMessage } = useIntl()
@@ -10,6 +19,8 @@ const connect = async () => {
 
   // when no extension installed we show modal
   if (!INJECTED_PROVIDER) {
+    openStoreLink()
+
     return showModal({
       title: formatMessage('web3_connect_error_title'),
       message: formatMessage('web3_connect_no_extension'),

@@ -25,6 +25,8 @@ export const useAppStore = defineStore('app', () => {
     return network
   }
 
+  const currentNetwork = computed(() => getNetwork(selectedNetwork.value))
+
   // --- actions
 
   const setModal = (newModal: Modal) => {
@@ -37,5 +39,6 @@ export const useAppStore = defineStore('app', () => {
     getNetwork,
     modal,
     setModal,
+    currentNetwork,
   }
 })

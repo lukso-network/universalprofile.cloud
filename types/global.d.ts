@@ -38,6 +38,7 @@ declare global {
     rpcHttp: string
     chainId: ChainIdHex
     ipfsUrl: string
+    storeUrls?: { [key in BrowserName]: string }
   }
 
   interface Window {
@@ -53,6 +54,26 @@ declare global {
     icon?: string
     template?: string
     onConfirm?: () => void
+  }
+
+  type NavigatorExtended = Navigator & {
+    brave?: { isBrave: () => Promise<boolean> }
+  }
+
+  type BrowserName =
+    | 'chrome'
+    | 'safari'
+    | 'firefox'
+    | 'edge'
+    | 'opera'
+    | 'brave'
+
+  type DeviceExtended = Device & { isBrave: boolean; isOpera: boolean }
+
+  type BrowserInfo = {
+    id: BrowserName
+    name: string
+    icon: string
   }
 }
 
