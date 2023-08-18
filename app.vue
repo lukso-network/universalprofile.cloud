@@ -61,7 +61,7 @@ const setupWalletProfile = async () => {
     const profileAddress = useRouter().currentRoute.value.params?.profileAddress
 
     setStatus('isProfileLoading', true)
-    assertAddress(profileAddress, 'profile')
+    assertAddress(profileAddress, 'wallet')
     setAddress(profileAddress)
     const profile = await fetchProfile(profileAddress)
     setProfile(profile)
