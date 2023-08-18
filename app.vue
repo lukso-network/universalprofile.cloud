@@ -48,7 +48,7 @@ const setupConnectedProfile = async () => {
   const connectedAddress = getItem(STORAGE_KEY.CONNECTED_ADDRESS)
 
   if (connectedAddress) {
-    assertAddress(connectedAddress)
+    assertAddress(connectedAddress, 'profile')
     setIsConnected(true)
     const profile = await fetchProfile(connectedAddress)
     setConnectedAddress(connectedAddress)
@@ -61,7 +61,7 @@ const setupWalletProfile = async () => {
     const profileAddress = useRouter().currentRoute.value.params?.profileAddress
 
     setLoading(true)
-    assertAddress(profileAddress)
+    assertAddress(profileAddress, 'wallet')
     setAddress(profileAddress)
     const profile = await fetchProfile(profileAddress)
     setProfile(profile)
@@ -85,7 +85,7 @@ const routerBackProfileLoad = async () => {
 
       try {
         assertString(toProfileAddress)
-        assertAddress(toProfileAddress)
+        assertAddress(toProfileAddress, 'profile')
 
         if (
           fromProfileAddress &&

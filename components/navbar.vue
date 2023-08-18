@@ -7,7 +7,7 @@ const { reloadProfile } = useProfileStore()
 
 const handleNavigateProfile = async () => {
   try {
-    assertAddress(profile.address)
+    assertAddress(profile.address, 'profile')
     reloadProfile(profile.address, profile)
     navigateTo(profileRoute(profile.address))
   } catch (error) {

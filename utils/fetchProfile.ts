@@ -3,13 +3,14 @@ import { INTERFACE_IDS, SupportedStandards } from '@lukso/lsp-smart-contracts'
 import { eip165ABI } from '@/shared/abis/eip165ABI'
 import { PROVIDERS } from '@/types/enums'
 import { getDataABI } from '@/shared/abis/getDataABI'
+import { EoAError } from '@/shared/errors'
 
 export const fetchProfile = async (profileAddress: Address) => {
   const { contract, isEoA } = useWeb3(PROVIDERS.RPC)
 
   // EoA check
   if (await isEoA(profileAddress)) {
-    throw new Error('The profile is an EoA')
+    throw new EoAError()
   }
 
   // interface check
@@ -30,7 +31,6 @@ export const fetchProfile = async (profileAddress: Address) => {
 
   const { fetchProfile } = useErc725()
   const profile = await fetchProfile(profileAddress)
-  console.log('profile', profile)
 
   return profile
 }

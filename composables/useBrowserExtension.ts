@@ -1,6 +1,7 @@
 import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
 import { profileRoute } from '@/shared/routes'
 import { INJECTED_PROVIDER, CONNECTION_EXPIRY_TIME_MS } from '@/shared/config'
+import { EoAError } from '@/shared/errors'
 
 const openStoreLink = () => {
   const { currentNetwork } = useAppStore()
@@ -54,6 +55,13 @@ const connect = async () => {
     console.error(error)
     disconnect()
 
+    if (error instanceof EoAError) {
+      return showModal({
+        title: formatMessage('web3_connect_error_title'),
+        message: formatMessage('web3_eoa_error_message'),
+      })
+    }
+
     // errors that have a code or message
     if (error && error.code) {
       switch (error.code) {
@@ -101,7 +109,7 @@ const providerEvents = async (provider: any) => {
   const handleAccountsChanged = async (accounts: string[]) => {
     if (accounts.length) {
       const address = accounts[0]
-      assertAddress(address)
+      assertAddress(address, 'profile')
 
       // if user is already connected we need to update Local Storage key
       if (status.isConnected) {
