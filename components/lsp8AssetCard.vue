@@ -8,13 +8,14 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { address: profileAddress } = useProfileStore()
+const { profile, status } = useConnectionStore()
+const { profile: viewedProfile } = useProfileStore()
 
 const handleShowAsset = () => {
   try {
-    assertAddress(profileAddress)
-    assertAddress(props.asset.collectionAddress)
-    navigateTo(collectibleRoute(profileAddress, props.asset.collectionAddress))
+    assertAddress(profile.address, 'profile')
+    assertAddress(props.asset.collectionAddress, 'asset')
+    navigateTo(collectibleRoute(profile.address, props.asset.collectionAddress))
   } catch (error) {
     console.error(error)
   }
@@ -51,9 +52,14 @@ const handleShowAsset = () => {
             1 <span class="text-neutral-60">{{ asset.collectionIcon }}</span>
           </div>
           <div class="flex justify-end w-full">
-            <lukso-button size="small" variant="secondary">{{
-              $formatMessage('button_send')
-            }}</lukso-button>
+            <lukso-button
+              v-if="
+                status.isConnected && viewedProfile.address === profile.address
+              "
+              size="small"
+              variant="secondary"
+              >{{ $formatMessage('button_send') }}</lukso-button
+            >
           </div>
         </div>
       </div>

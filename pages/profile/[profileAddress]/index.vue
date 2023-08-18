@@ -8,7 +8,7 @@ enum AssetFilter {
 }
 
 const assetFilter = ref<AssetFilter>(AssetFilter.owned)
-const { setLsp7Assets, setLsp8Assets } = useAssetsStore()
+const { setLsp7Assets, setLsp8Assets } = useProfileStore()
 
 try {
   setLsp7Assets(fetchLSP7Assets())

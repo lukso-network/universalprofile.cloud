@@ -10,7 +10,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint:fix": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:*:fix\"",
-    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:{eslint,css,fmt}\"",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:{eslint,css,fmt,types}\"",
     "lint:eslint": "eslint --ext '.js,.vue,.ts' .",
     "lint:eslint:fix": "eslint --ext '.js,.vue,.ts' . --fix",
     "lint:css": "stylelint \"**/*.{scss,css,vue}\"",

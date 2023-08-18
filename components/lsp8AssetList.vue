@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { lsp8Assets } = useAssetsStore()
+const { assets } = useProfileStore()
 </script>
 
 <template>
@@ -9,7 +9,7 @@ const { lsp8Assets } = useAssetsStore()
     </h3>
     <div class="grid gap-6 grid-col grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
       <Lsp8AssetCard
-        v-for="(asset, index) in lsp8Assets"
+        v-for="(asset, index) in assets.lsp8Assets"
         :key="index"
         :asset="asset"
         :has-address="true"

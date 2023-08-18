@@ -24,8 +24,28 @@ export default function useWeb3(providerName: string) {
       const web3 = getWeb3()
       return new web3.eth.Contract(jsonInterface, address, options)
     },
-    requestAccounts: async (): Promise<string[]> => {
-      return await getWeb3().eth.requestAccounts()
+    requestAccounts: async (): Promise<Address[]> => {
+      const addresses = await getWeb3().eth.requestAccounts()
+      try {
+        assertAddresses(addresses, 'profiles')
+        return addresses
+      } catch {
+        return []
+      }
+    },
+    accounts: async () => {
+      try {
+        const [account] = await getWeb3().eth.getAccounts()
+        assertAddress(account, 'profile')
+        return account
+      } catch {
+        return
+      }
+    },
+    isEoA: async (address: string) => {
+      const result = await getWeb3().eth.getCode(address)
+
+      return result === '0x'
     },
   }
 }
