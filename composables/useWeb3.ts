@@ -16,6 +16,7 @@ export default function useWeb3(providerName: string) {
   }
 
   return {
+    getWeb3,
     contract: (
       jsonInterface: AbiItem[],
       address?: string,
@@ -46,6 +47,9 @@ export default function useWeb3(providerName: string) {
       const result = await getWeb3().eth.getCode(address)
 
       return result === '0x'
+    },
+    getBalance: async (address: Address) => {
+      return await getWeb3().eth.getBalance(address)
     },
   }
 }

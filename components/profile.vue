@@ -12,8 +12,8 @@ const { profile, status } = useProfileStore()
       is-full-width
       custom-class="rounded-24 shadow-neutral-drop-shadow"
       :class="{
-        'opacity-0': status.isLoading,
-        'opacity-100': !status.isLoading,
+        'opacity-0': status.isProfileLoading,
+        'opacity-100': !status.isProfileLoading,
       }"
       class="transition-opacity duration-300"
     >

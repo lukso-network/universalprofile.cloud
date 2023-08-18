@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { fromWei } from 'web3-utils'
+
 import { tokenRoute } from '@/shared/routes'
+import { Token, StandardsAbbreviations } from '@/types/assets'
 
 type Props = {
-  asset: Lsp7AssetType
+  asset: Token
   hasAddress?: boolean
 }
 
@@ -26,15 +29,20 @@ const handleShowAsset = () => {
   <lukso-card size="small" is-hoverable is-full-width @click="handleShowAsset"
     ><div slot="content" class="p-4">
       <div class="h-7 flex justify-end items-start">
-        <lukso-tag size="x-small" background-color="lukso-90">LSP7</lukso-tag>
+        <lukso-tag
+          v-if="asset.standard"
+          size="x-small"
+          background-color="lukso-90"
+          >{{ StandardsAbbreviations[asset.standard] }}</lukso-tag
+        >
       </div>
       <div class="flex gap-6">
         <div class="pl-4 flex flex-col items-center">
           <lukso-profile
-            profile-url=""
             size="medium"
             :profile-address="asset.address"
-            :has-identicon="hasAddress"
+            :profile-url="'icon' in asset.data ? asset.data.icon : undefined"
+            :has-identicon="hasAddress ? 'true' : undefined"
           ></lukso-profile>
           <div
             v-if="hasAddress"
@@ -44,11 +52,14 @@ const handleShowAsset = () => {
           </div>
         </div>
         <div class="flex flex-col w-full">
-          <div class="heading-inter-14-bold pb-1">{{ asset.name }}</div>
+          <div class="heading-inter-14-bold pb-1">{{ asset.data.name }}</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
-            {{ $formatNumber(asset.amount)
-            }}<span class="paragraph-inter-14-semi-bold text-neutral-60 ml-2">{{
-              asset.symbol
+            <span v-if="asset.data.amount">{{
+              $formatNumber(fromWei(asset.data.amount, 'ether'))
+            }}</span>
+            <span v-else>0</span>
+            <span class="paragraph-inter-14-semi-bold text-neutral-60 ml-2">{{
+              asset.data.symbol
             }}</span>
           </div>
           <div class="paragraph-inter-12-regular pb-4">$ 123.24</div>

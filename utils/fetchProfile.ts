@@ -1,8 +1,8 @@
 import { INTERFACE_IDS, SupportedStandards } from '@lukso/lsp-smart-contracts'
 
-import { eip165ABI } from '@/shared/abis/eip165ABI'
 import { PROVIDERS } from '@/types/enums'
 import { getDataABI } from '@/shared/abis/getDataABI'
+import { checkInterface } from '@/utils/checkInterface'
 
 export const fetchProfile = async (profileAddress: Address) => {
   const { contract, isEoA } = useWeb3(PROVIDERS.RPC)
@@ -13,10 +13,11 @@ export const fetchProfile = async (profileAddress: Address) => {
   }
 
   // interface check
-  const eip165Contract = contract(eip165ABI as any, profileAddress)
-  await eip165Contract.methods
-    .supportsInterface(INTERFACE_IDS.LSP0ERC725Account)
-    .call()
+  if (!checkInterface(profileAddress, INTERFACE_IDS.LSP0ERC725Account)) {
+    throw new Error(
+      `This profile contract doesn't support LSP0ERC725Account interface`
+    )
+  }
 
   // standard check
   const supportedStandard = await contract(getDataABI, profileAddress)

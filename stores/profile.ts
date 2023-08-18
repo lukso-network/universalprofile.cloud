@@ -1,3 +1,13 @@
+import {
+  AssetFilter,
+  InterfaceId,
+  Nft,
+  SupportedAssets,
+  Token,
+  nftStandards,
+  tokenStandards,
+} from '@/types/assets'
+
 /**
  * Profile store
  * Keeps the information about viewed profile
@@ -5,13 +15,68 @@
  */
 export const useProfileStore = defineStore('profile', () => {
   const profile = reactive<Profile>({} as Profile)
-  const status = reactive({ isLoading: true })
-  const assets = reactive<{
-    lsp7Assets: Lsp7AssetType[]
-    lsp8Assets: Lsp8AssetType[]
-  }>({ lsp7Assets: [], lsp8Assets: [] })
+  const status = reactive({ isProfileLoading: true, isAssetLoading: true })
+  const assetFilter = ref<AssetFilter>(AssetFilter.owned)
+  const ownedAssets = ref<SupportedAssets[]>()
+  const createdAssets = ref<SupportedAssets[]>()
+
+  // --- getters
+
+  const tokens = computed(() => {
+    return (assetFilter: AssetFilter) => {
+      let assets: SupportedAssets[] = []
+
+      switch (assetFilter) {
+        case AssetFilter.owned:
+          assets = ownedAssets.value || []
+          break
+        case AssetFilter.created:
+          assets = createdAssets.value || []
+          break
+        default:
+          return []
+      }
+
+      return (
+        (assets?.filter(asset =>
+          tokenStandards.includes(asset.standard as InterfaceId)
+        ) as Token[]) || []
+      )
+    }
+  })
+
+  const nfts = computed(() => {
+    return (assetFilter: AssetFilter) => {
+      let assets: SupportedAssets[] = []
+
+      switch (assetFilter) {
+        case AssetFilter.owned:
+          assets = ownedAssets.value || []
+          break
+        case AssetFilter.created:
+          assets = createdAssets.value || []
+          break
+        default:
+          return []
+      }
+
+      return (
+        (assets?.filter(nft =>
+          nftStandards.includes(nft.standard as InterfaceId)
+        ) as Nft[]) || []
+      )
+    }
+  })
 
   // --- actions
+
+  const setOwnedAssets = (assets: SupportedAssets[]) => {
+    ownedAssets.value = assets
+  }
+
+  const setCreatedAssets = (assets: SupportedAssets[]) => {
+    createdAssets.value = assets
+  }
 
   const setAddress = (newAddress: Address) => {
     profile.address = newAddress
@@ -21,8 +86,8 @@ export const useProfileStore = defineStore('profile', () => {
     Object.assign(profile, newProfile)
   }
 
-  const setLoading = (newLoading: boolean) => {
-    status.isLoading = newLoading
+  const setStatus = (statusName: keyof typeof status, newStatus: boolean) => {
+    status[statusName] = newStatus
   }
 
   const clearProfile = () => {
@@ -35,24 +100,20 @@ export const useProfileStore = defineStore('profile', () => {
     setProfile(profile)
   }
 
-  const setLsp7Assets = (newAssets: Lsp7AssetType[]) => {
-    assets.lsp7Assets = newAssets
-  }
-
-  const setLsp8Assets = (newAssets: Lsp8AssetType[]) => {
-    assets.lsp8Assets = newAssets
-  }
-
   return {
     setAddress,
     profile,
     setProfile,
     status,
-    setLoading,
     clearProfile,
     reloadProfile,
-    assets,
-    setLsp7Assets,
-    setLsp8Assets,
+    ownedAssets,
+    setOwnedAssets,
+    tokens,
+    assetFilter,
+    createdAssets,
+    nfts,
+    setStatus,
+    setCreatedAssets,
   }
 })

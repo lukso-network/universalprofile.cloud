@@ -5,11 +5,7 @@
  */
 export const useConnectionStore = defineStore('connection', () => {
   const profile = reactive<Profile>({} as Profile)
-  const status = reactive({ isLoading: true, isConnected: false })
-  const assets = reactive<{
-    lsp7Assets: Lsp7AssetType[]
-    lsp8Assets: Lsp8AssetType[]
-  }>({ lsp7Assets: [], lsp8Assets: [] })
+  const status = reactive({ isConnected: false })
 
   // --- actions
 
@@ -19,10 +15,6 @@ export const useConnectionStore = defineStore('connection', () => {
 
   const setConnectedProfile = (newProfile: Profile) => {
     Object.assign(profile, newProfile)
-  }
-
-  const setLoading = (newLoading: boolean) => {
-    status.isLoading = newLoading
   }
 
   const clearConnectedProfile = () => {
@@ -39,25 +31,13 @@ export const useConnectionStore = defineStore('connection', () => {
     setConnectedProfile(profile)
   }
 
-  const setLsp7Assets = (newAssets: Lsp7AssetType[]) => {
-    assets.lsp7Assets = newAssets
-  }
-
-  const setLsp8Assets = (newAssets: Lsp8AssetType[]) => {
-    assets.lsp8Assets = newAssets
-  }
-
   return {
     setConnectedAddress,
     profile,
     setConnectedProfile,
     status,
-    setLoading,
     clearConnectedProfile,
     setIsConnected,
     reloadConnectedProfile,
-    assets,
-    setLsp7Assets,
-    setLsp8Assets,
   }
 })
