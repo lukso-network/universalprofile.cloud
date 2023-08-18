@@ -28,7 +28,7 @@ export default function useWeb3(providerName: string) {
     requestAccounts: async (): Promise<Address[]> => {
       const addresses = await getWeb3().eth.requestAccounts()
       try {
-        assertAddresses(addresses)
+        assertAddresses(addresses, 'profile')
         return addresses
       } catch {
         return []
@@ -37,7 +37,7 @@ export default function useWeb3(providerName: string) {
     accounts: async () => {
       const [account] = await getWeb3().eth.getAccounts()
       try {
-        assertAddress(account)
+        assertAddress(account, 'profile')
         return account
       } catch {
         return

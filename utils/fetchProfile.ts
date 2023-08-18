@@ -31,7 +31,6 @@ export const fetchProfile = async (profileAddress: Address) => {
 
   const { fetchProfile } = useErc725()
   const profile = await fetchProfile(profileAddress)
-  console.log('profile', profile)
 
   return profile
 }

@@ -6,15 +6,19 @@ const { isAddress } = web3utils // need to import like this due to CommonJS modu
  * otherwise throws an error.
  *
  * @param value - the value to check
+ * @param name - the name of the value
  * @returns - throws an error if the value is not an address
  */
-export function assertAddress(value?: string): asserts value is Address {
+export function assertAddress(
+  value?: string,
+  name = ''
+): asserts value is Address {
   if (!value) {
-    throw Error(`missing address`)
+    throw Error(`missing ${name} address`)
   }
 
   if (!isAddress(value)) {
-    throw Error(`${value} is not an address`)
+    throw Error(`${value} is not an ${name} address`)
   }
 }
 
@@ -23,18 +27,22 @@ export function assertAddress(value?: string): asserts value is Address {
  * otherwise throws an error.
  *
  * @param value - the value to check
+ * @param name - the name of the value
  * @returns - throws an error if the value is not an array of addresses
  */
-export function assertAddresses(value?: string[]): asserts value is Address[] {
+export function assertAddresses(
+  value?: string[],
+  name = ''
+): asserts value is Address[] {
   if (!value) {
     throw Error(`missing addresses`)
   }
 
   if (!Array.isArray(value)) {
-    throw Error(`value is not an array`)
+    throw Error(`is not an ${name} array`)
   }
 
-  return value.forEach(value => assertAddress(value))
+  return value.forEach(value => assertAddress(value, name))
 }
 
 /**

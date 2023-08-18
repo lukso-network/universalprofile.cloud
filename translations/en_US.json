@@ -1,9 +1,10 @@
 {
-  "web3_connect_no_extension": "You don't have Universal Profile browser extension installed.",
+  "web3_eoa_error_message": "Please use Universal Profile Extension. ",
+  "web3_connect_no_extension": "You don't have the Universal Profile browser extension installed.",
   "web3_connect_error_title": "Can't connect",
   "web3_connect_error_rejected_request": "User rejected the request.",
   "web3_connect_error_pending_request": "You have pending request. Check your browser extension.",
-  "web3_connect_error": "There was error while connecting to the browser extension.",
+  "web3_connect_error": "There was an error while connecting to the browser extension.",
   "tokens_title": "Tokens",
   "modal_default_title": "Something went wrong...",
   "modal_default_confirm": "Ok",

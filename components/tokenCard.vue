@@ -16,8 +16,8 @@ const { profile: viewedProfile } = useProfileStore()
 
 const handleShowAsset = () => {
   try {
-    assertAddress(profile.address)
-    assertAddress(props.asset.address)
+    assertAddress(profile.address, 'profile')
+    assertAddress(props.asset.address, 'asset')
     navigateTo(tokenRoute(profile.address, props.asset.address))
   } catch (error) {
     console.error(error)

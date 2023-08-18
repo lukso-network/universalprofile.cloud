@@ -8,9 +8,11 @@ import {
 test.describe('assertAddress', () => {
   test('throw when address is invalid', async ({ page }) => {
     try {
-      assertAddress('0x0')
+      assertAddress('0x0', 'profile')
     } catch (error) {
-      expect((error as unknown as Error).message).toBe(`0x0 is not an address`)
+      expect((error as unknown as Error).message).toBe(
+        `0x0 is not an profile address`
+      )
     }
   })
 
@@ -18,7 +20,7 @@ test.describe('assertAddress', () => {
     try {
       assertAddress()
     } catch (error) {
-      expect((error as unknown as Error).message).toBe(`missing address`)
+      expect((error as unknown as Error).message).toBe(`missing  address`)
     }
   })
 
@@ -32,9 +34,14 @@ test.describe('assertAddress', () => {
 test.describe('assertAddresses', () => {
   test('throw when address is invalid', async ({ page }) => {
     try {
-      assertAddresses(['0x4440a406E00ECfe15a833119D20B848a31c80116', '0x0'])
+      assertAddresses(
+        ['0x4440a406E00ECfe15a833119D20B848a31c80116', '0x0'],
+        'profile'
+      )
     } catch (error) {
-      expect((error as unknown as Error).message).toBe(`0x0 is not an address`)
+      expect((error as unknown as Error).message).toBe(
+        `0x0 is not an profile address`
+      )
     }
   })
 
