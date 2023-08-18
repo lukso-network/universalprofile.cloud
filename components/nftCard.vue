@@ -14,7 +14,7 @@ const { profile: viewedProfile } = useProfileStore()
 
 const handleShowAsset = () => {
   try {
-    assertAddress(profile.address)
+    assertAddress(profile.address, 'profile')
     assertAddress(props.asset.data.collectionAddress)
     navigateTo(
       collectibleRoute(profile.address, props.asset.data.collectionAddress)

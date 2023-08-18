@@ -73,7 +73,7 @@ const fetchAssets = async (profileAddress: Address, schema: string) => {
 
       switch (standard) {
         case 'LSP8IdentifiableDigitalAsset': {
-          assertAddress(profile.address)
+          assertAddress(profile.address, 'profile')
           data = await fetchLSP8Assets(address, profile.address)
 
           const assets =
@@ -86,7 +86,7 @@ const fetchAssets = async (profileAddress: Address, schema: string) => {
           return assets
         }
         case 'LSP7DigitalAsset': {
-          assertAddress(profile.address)
+          assertAddress(profile.address, 'profile')
           data = await fetchLSP7Assets(address, profile.address)
         }
         default:
@@ -220,7 +220,7 @@ const fetchLSP4Creator = async (
       .methods['getData(bytes32)'](ERC725YDataKeys.LSP4['LSP4Creators[]'].index)
 
       .call()) as Address
-    assertAddress(creator)
+    assertAddress(creator, 'creator')
     const erc725 = getInstance(
       creator,
       LSP3UniversalProfileMetadata as ERC725JSONSchema[]

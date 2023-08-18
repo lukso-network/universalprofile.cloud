@@ -17,7 +17,7 @@ const handleNavigateProfile = async () => {
 
 const handleNavigateSend = () => {
   try {
-    assertAddress(profile.address)
+    assertAddress(profile.address, 'profile')
     navigateTo(sendRoute(profile.address))
   } catch (error) {
     console.error(error)
