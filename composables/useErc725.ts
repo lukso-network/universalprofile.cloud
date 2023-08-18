@@ -5,6 +5,7 @@ import { LSP3Profile } from '@lukso/lsp-factory.js'
 import Web3 from 'web3'
 import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
 import { URLDataWithHash } from '@erc725/erc725.js/build/main/src/types'
+import { ERC725YDataKeys } from '@lukso/lsp-smart-contracts'
 
 import { SupportedAssets, TokenIdType } from '@/types/assets'
 import { getImageUrlBySize } from '@/utils/getProfileImages'
@@ -216,10 +217,8 @@ const fetchLSP4Creator = async (
 
   try {
     const creator = (await contract(getDataABI, assetAddress)
-      // .methods['getData(bytes32)'](ERC725YDataKeys.LSP4['LSP4Creators[]'].index)
-      .methods['getData(bytes32)'](
-        '0x114bd03b3a46d48759680d81ebb2b41400000000000000000000000000000000'
-      )
+      .methods['getData(bytes32)'](ERC725YDataKeys.LSP4['LSP4Creators[]'].index)
+
       .call()) as Address
     assertAddress(creator)
     const erc725 = getInstance(

@@ -110,7 +110,7 @@ const providerEvents = async (provider: any) => {
   const handleAccountsChanged = async (accounts: string[]) => {
     if (accounts.length) {
       const address = accounts[0]
-      assertAddress(address)
+      assertAddress(address, 'profile')
 
       // if user is already connected we need to update Local Storage key
       if (status.isConnected) {
