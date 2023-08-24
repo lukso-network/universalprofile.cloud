@@ -14,9 +14,16 @@ const { profile: viewedProfile } = useProfileStore()
 
 const handleShowAsset = () => {
   try {
-    assertAddress(profile.address, 'profile')
+    assertAddress(viewedProfile.address, 'profile')
     assertAddress(props.asset.data.collectionAddress)
-    navigateTo(nftRoute(profile.address, props.asset.data.collectionAddress))
+    assertString(props.asset.data.tokenId)
+    navigateTo(
+      nftRoute(
+        viewedProfile.address,
+        props.asset.data.collectionAddress,
+        props.asset.data.tokenId
+      )
+    )
   } catch (error) {
     console.error(error)
   }

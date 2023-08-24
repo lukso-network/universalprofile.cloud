@@ -61,10 +61,11 @@ export interface LSP8Asset {
   description: string
   collectionName: string
   collectionDescription: string
-  collectionImage: string
+  collectionImages: ImageMetadata[][]
   collectionIcon: string
   collectionAddress: string
   collectionSymbol: string
+  collectionLinks: LinkMetadata[]
   creatorName?: string
   creatorAddress?: Address
   creatorProfileImage?: string
