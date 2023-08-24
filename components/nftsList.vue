@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const { assets } = useProfileStore()
+import { storeToRefs } from 'pinia'
+
+const { nfts, assetFilter } = storeToRefs(useProfileStore())
 </script>
 
 <template>
@@ -8,8 +10,8 @@ const { assets } = useProfileStore()
       {{ $formatMessage('collectibles_title') }}
     </h3>
     <div class="grid gap-6 grid-col grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-      <Lsp8AssetCard
-        v-for="(asset, index) in assets.lsp8Assets"
+      <NftCard
+        v-for="(asset, index) in nfts(assetFilter)"
         :key="index"
         :asset="asset"
         :has-address="true"

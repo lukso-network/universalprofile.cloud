@@ -1,21 +1,51 @@
-export const fetchLSP7Assets = (/*profileAddress: Address*/) => {
-  // TODO replace this with real asset fetching logic
-  const lsp7Assets = [
-    {
-      name: 'LUKSO',
-      symbol: 'LYX',
-      amount: '10.000',
-      icon: '',
-      address: '0x463306b7D641FDff5D3E30947aC96074b705d4E8',
-    },
-    {
-      name: 'LUKSO',
-      symbol: 'LYX',
-      amount: '10.000',
-      icon: '',
-      address: '0x463306b7D641FDff5D3E30947aC96074b705d4E8',
-    },
-  ] as Lsp7AssetType[]
+import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
+import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
 
-  return lsp7Assets
+import { PROVIDERS } from '@/types/enums'
+import { LSP7Asset } from '@/types/assets'
+import { ASSET_ICON_PLACEHOLDER_URL } from '@/shared/config'
+
+const fetchLSP7Assets = async (
+  assetAddress: Address,
+  profileAddress: Address
+): Promise<LSP7Asset | undefined> => {
+  const { fetchLSP4Metadata } = useErc725()
+  const lsp4Metadata = await fetchLSP4Metadata(assetAddress)
+
+  // fetch amount of tokens received
+  const tokenBalance = await fetchLSP7Balance(assetAddress, profileAddress)
+
+  const lsp7Object = createLSP7Object(lsp4Metadata, tokenBalance, assetAddress)
+  return lsp7Object
 }
+
+const fetchLSP7Balance = async (
+  contractAddress: Address,
+  profileAddress: Address
+): Promise<number> => {
+  const { contract } = useWeb3(PROVIDERS.RPC)
+  const lsp7Contract = contract(LSP7DigitalAsset.abi as any, contractAddress)
+  const balance = await lsp7Contract.methods.balanceOf(profileAddress).call()
+
+  return balance
+}
+
+const createLSP7Object = (
+  lsp4DigitalAssetJSON: [string, string, LSP4DigitalAssetJSON],
+  tokenBalance: number,
+  assetAddress: Address
+): LSP7Asset => {
+  const [name, symbol, lsp4MetadataJSON] = lsp4DigitalAssetJSON
+  const lsp7AssetObject = {
+    name,
+    symbol,
+    amount: tokenBalance.toString(),
+    icon: lsp4MetadataJSON.LSP4Metadata.icon[0]?.url
+      ? lsp4MetadataJSON.LSP4Metadata.icon[0]?.url
+      : ASSET_ICON_PLACEHOLDER_URL,
+    address: assetAddress,
+  }
+  return lsp7AssetObject
+}
+
+export default fetchLSP7Assets

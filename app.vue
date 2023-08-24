@@ -17,7 +17,7 @@ if (typeof window !== 'undefined') {
 const web3Store = useWeb3Store()
 const appStore = useAppStore()
 const { providerEvents, disconnect } = useBrowserExtension()
-const { setLoading, setAddress, setProfile, reloadProfile } = useProfileStore()
+const { setStatus, setAddress, setProfile, reloadProfile } = useProfileStore()
 const { setIsConnected, setConnectedAddress, setConnectedProfile } =
   useConnectionStore()
 const router = useRouter()
@@ -60,7 +60,7 @@ const setupWalletProfile = async () => {
   try {
     const profileAddress = useRouter().currentRoute.value.params?.profileAddress
 
-    setLoading(true)
+    setStatus('isProfileLoading', true)
     assertAddress(profileAddress, 'wallet')
     setAddress(profileAddress)
     const profile = await fetchProfile(profileAddress)
@@ -69,7 +69,7 @@ const setupWalletProfile = async () => {
     console.error(error)
     // TODO redirect to 404 page once it's added
   } finally {
-    setLoading(false)
+    setStatus('isProfileLoading', false)
   }
 }
 
@@ -125,8 +125,8 @@ onMounted(async () => {
   setupTranslations()
   setupWeb3Instances()
   checkConnectionExpiry()
-  await setupConnectedProfile()
   await setupWalletProfile()
+  await setupConnectedProfile()
   await routerBackProfileLoad()
 })
 </script>

@@ -16,6 +16,7 @@ export default function useWeb3(providerName: string) {
   }
 
   return {
+    getWeb3,
     contract: (
       jsonInterface: AbiItem[],
       address?: string,
@@ -27,15 +28,15 @@ export default function useWeb3(providerName: string) {
     requestAccounts: async (): Promise<Address[]> => {
       const addresses = await getWeb3().eth.requestAccounts()
       try {
-        assertAddresses(addresses, 'profiles')
+        assertAddresses(addresses, 'profile')
         return addresses
       } catch {
         return []
       }
     },
     accounts: async () => {
+      const [account] = await getWeb3().eth.getAccounts()
       try {
-        const [account] = await getWeb3().eth.getAccounts()
         assertAddress(account, 'profile')
         return account
       } catch {
@@ -46,6 +47,9 @@ export default function useWeb3(providerName: string) {
       const result = await getWeb3().eth.getCode(address)
 
       return result === '0x'
+    },
+    getBalance: async (address: Address) => {
+      return await getWeb3().eth.getBalance(address)
     },
   }
 }

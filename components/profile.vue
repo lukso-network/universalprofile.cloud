@@ -3,7 +3,7 @@ const { profile, status } = useProfileStore()
 </script>
 
 <template>
-  <div>
+  <div class="relative">
     <lukso-card
       variant="profile"
       :background-url="profile.backgroundImageUrl"
@@ -12,8 +12,8 @@ const { profile, status } = useProfileStore()
       is-full-width
       custom-class="rounded-24 shadow-neutral-drop-shadow"
       :class="{
-        'opacity-0': status.isLoading,
-        'opacity-100': !status.isLoading,
+        'opacity-0': status.isProfileLoading,
+        'opacity-100': !status.isProfileLoading,
       }"
       class="transition-opacity duration-300"
     >
@@ -30,5 +30,11 @@ const { profile, status } = useProfileStore()
         ></lukso-username>
       </div>
     </lukso-card>
+    <lukso-icon
+      name="progress-indicator-alt"
+      size="x-large"
+      v-if="status.isProfileLoading"
+      class="absolute top-1/2 left-1/2 transform"
+    ></lukso-icon>
   </div>
 </template>
