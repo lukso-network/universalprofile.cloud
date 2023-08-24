@@ -5,19 +5,23 @@ import { InterfaceId } from '@/types/assets'
 export const detectStandard = async (
   contractAddress: Address
 ): Promise<InterfaceId | undefined> => {
+  const { supportInterface } = useErc725()
+
   // LSP0
-  if (await checkInterface(contractAddress, INTERFACE_IDS.LSP0ERC725Account)) {
+  if (
+    await supportInterface(contractAddress, INTERFACE_IDS.LSP0ERC725Account)
+  ) {
     return 'LSP0ERC725Account'
   }
 
   // LSP7
-  if (await checkInterface(contractAddress, INTERFACE_IDS.LSP7DigitalAsset)) {
+  if (await supportInterface(contractAddress, INTERFACE_IDS.LSP7DigitalAsset)) {
     return 'LSP7DigitalAsset'
   }
 
   // LSP8
   if (
-    await checkInterface(
+    await supportInterface(
       contractAddress,
       INTERFACE_IDS.LSP8IdentifiableDigitalAsset
     )
@@ -26,7 +30,7 @@ export const detectStandard = async (
   }
 
   // LSP9
-  if (await checkInterface(contractAddress, INTERFACE_IDS.LSP9Vault)) {
+  if (await supportInterface(contractAddress, INTERFACE_IDS.LSP9Vault)) {
     return 'LSP9Vault'
   }
 

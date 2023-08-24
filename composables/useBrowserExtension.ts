@@ -1,7 +1,7 @@
 import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
 import { profileRoute } from '@/shared/routes'
 import { INJECTED_PROVIDER, CONNECTION_EXPIRY_TIME_MS } from '@/shared/config'
-import { EoAError } from '@/shared/errors'
+import { EoAError, InterfaceError } from '@/shared/errors'
 
 const openStoreLink = () => {
   const { currentNetwork } = useAppStore()
@@ -60,6 +60,13 @@ const connect = async () => {
       return showModal({
         title: formatMessage('web3_connect_error_title'),
         message: formatMessage('web3_eoa_error_message'),
+      })
+    }
+
+    if (error instanceof InterfaceError) {
+      return showModal({
+        title: formatMessage('web3_connect_error_title'),
+        message: formatMessage('web3_interface_error_message'),
       })
     }
 
