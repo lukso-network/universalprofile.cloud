@@ -20,7 +20,6 @@ declare global {
     name: string
     rpcHttp: string
     chainId: ChainIdHex
-    ipfsUrl: string
     storeUrls?: { [key in BrowserName]: string }
   }
 

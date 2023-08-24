@@ -30,6 +30,7 @@
   "modal_default_confirm": "Ok",
   "token_details_own": "You own this token",
   "footer_need_help_url": "mailto:support@lukso.network",
+  "web3_interface_error_message": "You try to connect to legacy profile that is no longer supported.",
   "header_connect": "Connect",
   "web3_connect_error": "There was an error while connecting to the browser extension.",
   "footer_privacy_policy_text": "Privacy Policy",

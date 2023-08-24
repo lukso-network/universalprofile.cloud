@@ -13,7 +13,6 @@ const token = ref<Token>()
 
 watchEffect(() => {
   token.value = getToken(tokenAddress)
-  console.log(token.value)
 })
 </script>
 

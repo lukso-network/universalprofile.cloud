@@ -2,10 +2,11 @@ import { INTERFACE_IDS, SupportedStandards } from '@lukso/lsp-smart-contracts'
 
 import { PROVIDERS } from '@/types/enums'
 import { getDataABI } from '@/shared/abis/getDataABI'
-import { checkInterface } from '@/utils/checkInterface'
+import { InterfaceError } from '@/shared/errors'
 
 export const fetchProfile = async (profileAddress: Address) => {
   const { contract, isEoA } = useWeb3(PROVIDERS.RPC)
+  const { supportInterface } = useErc725()
 
   // EoA check
   if (await isEoA(profileAddress)) {
@@ -13,10 +14,10 @@ export const fetchProfile = async (profileAddress: Address) => {
   }
 
   // interface check
-  if (!checkInterface(profileAddress, INTERFACE_IDS.LSP0ERC725Account)) {
-    throw new Error(
-      `This profile contract doesn't support LSP0ERC725Account interface`
-    )
+  if (
+    !(await supportInterface(profileAddress, INTERFACE_IDS.LSP0ERC725Account))
+  ) {
+    throw new InterfaceError('LSP0ERC725Account')
   }
 
   // standard check

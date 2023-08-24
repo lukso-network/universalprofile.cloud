@@ -27,7 +27,7 @@ const nftsCount = computed(() => {
 
 <template>
   <div>
-    <div class="max-w-[835px] py-20 px-4 mx-auto">
+    <div class="max-w-[835px] py-20 px-4 mx-auto relative">
       <Profile />
       <div class="relative">
         <div

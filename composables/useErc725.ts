@@ -12,6 +12,7 @@ import { getImageUrlBySize } from '@/utils/getProfileImages'
 import LSP8IdentifiableDigitalAsset from '@/shared/schemas/LSP8IdentifiableDigitalAsset.json'
 import { PROVIDERS } from '@/types/enums'
 import { getDataABI } from '@/shared/abis/getDataABI'
+import { IPFS_URL } from '@/shared/config'
 
 export interface LSP3ProfileJSON {
   LSP3Profile: LSP3Profile
@@ -20,7 +21,7 @@ export interface LSP3ProfileJSON {
 const getInstance = (address: string, schema: ERC725JSONSchema[]) => {
   const { currentNetwork } = useAppStore()
   const config = {
-    ipfsGateway: currentNetwork.ipfsUrl,
+    ipfsGateway: IPFS_URL,
   }
   const provider = new Web3.providers.HttpProvider(currentNetwork.rpcHttp)
   const erc725 = new ERC725(schema, address, provider, config)
@@ -64,7 +65,6 @@ const fetchAssets = async (profileAddress: Address, schema: string) => {
   const result = await erc725.fetchData(schema)
   const assetAddresses = result.value as Address[]
   const { profile } = useProfileStore()
-  console.log(schema, assetAddresses)
 
   const assets = Promise.all(
     assetAddresses.map(async address => {
@@ -73,7 +73,7 @@ const fetchAssets = async (profileAddress: Address, schema: string) => {
 
       switch (standard) {
         case 'LSP8IdentifiableDigitalAsset': {
-          assertAddress(profile.address, 'profile')
+          assertAddress(profile.address)
           data = await fetchLSP8Assets(address, profile.address)
 
           const assets =
@@ -86,7 +86,7 @@ const fetchAssets = async (profileAddress: Address, schema: string) => {
           return assets
         }
         case 'LSP7DigitalAsset': {
-          assertAddress(profile.address, 'profile')
+          assertAddress(profile.address)
           data = await fetchLSP7Assets(address, profile.address)
         }
         default:
@@ -174,27 +174,28 @@ const fetchLSP8Metadata = async (
     const lsp8DigitalAsset = await erc725.fetchData(['LSP8TokenIdType'])
     const tokenIdType = lsp8DigitalAsset[0].value.toString()
 
-    //fetch LSP8MetadataJSON depending on tokenIdType
-    if (tokenIdType === TokenIdType.address) {
-      return lsp8MetadataGetter(
-        'address',
-        // ethers.utils.hexDataSlice(tokenId.toString(), 12)
-        tokenId.toString()
-      )
-    } else if (tokenIdType === TokenIdType.number) {
-      return lsp8MetadataGetter('uint256', parseInt(tokenId).toString())
-    } else if (tokenIdType === TokenIdType.bytes32) {
-      return lsp8MetadataGetter('bytes32', tokenId.toString())
-    } else {
-      return {
-        LSP4Metadata: {
-          description: '',
-          links: [],
-          images: [[]],
-          icon: [],
-          assets: [],
-        },
-      }
+    // fetch LSP8MetadataJSON depending on tokenIdType
+    switch (tokenIdType) {
+      case TokenIdType.address:
+        return lsp8MetadataGetter(
+          'address',
+          // ethers.utils.hexDataSlice(tokenId.toString(), 12)
+          tokenId.toString()
+        )
+      case TokenIdType.number:
+        return lsp8MetadataGetter('uint256', parseInt(tokenId).toString())
+      case TokenIdType.bytes32:
+        return lsp8MetadataGetter('bytes32', tokenId.toString())
+      default:
+        return {
+          LSP4Metadata: {
+            description: '',
+            links: [],
+            images: [[]],
+            icon: [],
+            assets: [],
+          },
+        }
     }
   } catch (error) {
     console.log(error)
@@ -220,7 +221,7 @@ const fetchLSP4Creator = async (
       .methods['getData(bytes32)'](ERC725YDataKeys.LSP4['LSP4Creators[]'].index)
 
       .call()) as Address
-    assertAddress(creator, 'creator')
+    assertAddress(creator)
     const erc725 = getInstance(
       creator,
       LSP3UniversalProfileMetadata as ERC725JSONSchema[]
@@ -242,6 +243,18 @@ const fetchLSP4Creator = async (
   }
 }
 
+const supportInterface = async (
+  address: Address,
+  interfaceId: string
+): Promise<boolean> => {
+  const { currentNetwork } = useAppStore()
+
+  return ERC725.supportsInterface(interfaceId, {
+    address,
+    rpcUrl: currentNetwork.rpcHttp,
+  })
+}
+
 const useErc725 = () => {
   return {
     fetchProfile,
@@ -249,6 +262,7 @@ const useErc725 = () => {
     fetchLSP4Metadata,
     fetchLSP8Metadata,
     fetchLSP4Creator,
+    supportInterface,
   }
 }
 
