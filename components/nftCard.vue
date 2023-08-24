@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { collectibleRoute } from '@/shared/routes'
+import { nftRoute } from '@/shared/routes'
 import { Nft } from '@/types/assets'
 
 type Props = {
@@ -16,9 +16,7 @@ const handleShowAsset = () => {
   try {
     assertAddress(profile.address, 'profile')
     assertAddress(props.asset.data.collectionAddress)
-    navigateTo(
-      collectibleRoute(profile.address, props.asset.data.collectionAddress)
-    )
+    navigateTo(nftRoute(profile.address, props.asset.data.collectionAddress))
   } catch (error) {
     console.error(error)
   }

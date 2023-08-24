@@ -73,6 +73,24 @@ const setupWalletProfile = async () => {
   }
 }
 
+const setupWalletAssets = async () => {
+  try {
+    const { profile, setOwnedAssets, setStatus, setCreatedAssets } =
+      useProfileStore()
+    const { fetchAssets } = useErc725()
+
+    setStatus('isAssetLoading', true)
+    assertNotUndefined(profile.address)
+
+    setOwnedAssets(await fetchAssets(profile.address, 'LSP5ReceivedAssets[]'))
+    setCreatedAssets(await fetchAssets(profile.address, 'LSP12IssuedAssets[]'))
+  } catch (error) {
+    console.error(error)
+  } finally {
+    setStatus('isAssetLoading', false)
+  }
+}
+
 const routerBackProfileLoad = async () => {
   router.beforeEach(
     async (
@@ -126,6 +144,7 @@ onMounted(async () => {
   setupWeb3Instances()
   checkConnectionExpiry()
   await setupWalletProfile()
+  await setupWalletAssets()
   await setupConnectedProfile()
   await routerBackProfileLoad()
 })

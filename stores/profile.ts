@@ -68,6 +68,14 @@ export const useProfileStore = defineStore('profile', () => {
     }
   })
 
+  const getToken = computed(() => {
+    return (tokenAddress: Address) => {
+      const assets = ownedAssets.value?.concat(createdAssets.value || [])
+
+      return assets?.find(asset => asset.address === tokenAddress) as Token
+    }
+  })
+
   // --- actions
 
   const setOwnedAssets = (assets: SupportedAssets[]) => {
@@ -115,5 +123,6 @@ export const useProfileStore = defineStore('profile', () => {
     nfts,
     setStatus,
     setCreatedAssets,
+    getToken,
   }
 })

@@ -44,6 +44,9 @@ const createLSP7Object = (
       ? lsp4MetadataJSON.LSP4Metadata.icon[0]?.url
       : ASSET_ICON_PLACEHOLDER_URL,
     address: assetAddress,
+    links: lsp4MetadataJSON.LSP4Metadata.links,
+    description: lsp4MetadataJSON.LSP4Metadata.description,
+    images: lsp4MetadataJSON.LSP4Metadata.images,
   }
   return lsp7AssetObject
 }

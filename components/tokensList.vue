@@ -25,12 +25,17 @@ const lyxAsset = computed<Token>(() => {
       {{ $formatMessage('tokens_title') }}
     </h3>
     <div class="grid gap-6 grid-col grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-      <TokenCard v-if="assetFilter === AssetFilter.owned" :asset="lyxAsset" />
+      <TokenCard
+        v-if="assetFilter === AssetFilter.owned"
+        :asset="lyxAsset"
+        :is-openable="false"
+      />
       <TokenCard
         v-for="(asset, index) in tokens(assetFilter)"
         :key="index"
         :asset="asset"
         :has-address="true"
+        :is-openable="true"
       />
     </div>
   </div>
