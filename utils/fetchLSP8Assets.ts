@@ -10,7 +10,6 @@ export const fetchLSP8Assets = async (
 ) => {
   // profile can have few ids of same LSP8 asset
   const tokensIds = await fetchLSP8TokensIds(assetAddress, profileAddress)
-  console.log('tokensIds', tokensIds)
 
   if (!tokensIds.length) {
     return
@@ -71,8 +70,9 @@ const createLSP8Object = (
   const { description, images, icon } = nftMetadata.LSP4Metadata
   const {
     description: collectionDescription,
-    images: collectionImage,
+    images: collectionImages,
     icon: collectionIcon,
+    links: collectionLinks,
   } = collectionMetadata.LSP4Metadata
   const {
     name: creatorName,
@@ -89,9 +89,8 @@ const createLSP8Object = (
     collectionSymbol,
     collectionAddress: assetAddress,
     collectionDescription,
-    collectionImage: collectionImage[0][0]?.url
-      ? formatUrl(collectionImage[0][0]?.url)
-      : '',
+    collectionImages,
+    collectionLinks,
     collectionIcon: formatUrl(collectionIcon[0]?.url)
       ? collectionIcon[0]?.url
       : '',

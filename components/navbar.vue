@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { profileRoute, sendRoute } from '@/shared/routes'
 
-const { profile, status } = useConnectionStore()
+const { profile: connectedProfile, status } = useConnectionStore()
 const { connect, disconnect } = useBrowserExtension()
-const { reloadProfile } = useProfileStore()
+const { reloadProfile, profile } = useProfileStore()
 
 const handleNavigateProfile = async () => {
   try {
@@ -17,8 +17,8 @@ const handleNavigateProfile = async () => {
 
 const handleNavigateSend = () => {
   try {
-    assertAddress(profile.address)
-    navigateTo(sendRoute(profile.address))
+    assertAddress(connectedProfile.address, 'profile')
+    navigateTo(sendRoute(connectedProfile.address))
   } catch (error) {
     console.error(error)
   }

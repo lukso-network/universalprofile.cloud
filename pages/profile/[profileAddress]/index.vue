@@ -2,13 +2,10 @@
 import { storeToRefs } from 'pinia'
 
 import { AssetFilter } from '@/types/assets'
-import { assertNotUndefined } from '@/utils/validators'
 
-const { profile, setOwnedAssets, setStatus, status, setCreatedAssets } =
-  useProfileStore()
+const { status } = useProfileStore()
 
 const { assetFilter, tokens, nfts } = storeToRefs(useProfileStore())
-const { fetchAssets } = useErc725()
 
 const tokensCount = computed(() => {
   const count =
@@ -25,20 +22,6 @@ const nftsCount = computed(() => {
     nfts.value(AssetFilter.created)?.length
 
   return count
-})
-
-onMounted(async () => {
-  try {
-    setStatus('isAssetLoading', true)
-    assertNotUndefined(profile.address)
-
-    setOwnedAssets(await fetchAssets(profile.address, 'LSP5ReceivedAssets[]'))
-    setCreatedAssets(await fetchAssets(profile.address, 'LSP12IssuedAssets[]'))
-  } catch (error) {
-    console.error(error)
-  } finally {
-    setStatus('isAssetLoading', false)
-  }
 })
 </script>
 

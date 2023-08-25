@@ -1,3 +1,4 @@
+import { ImageMetadata, LinkMetadata } from '@lukso/lsp-factory.js'
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
 
 export type InterfaceId = keyof typeof INTERFACE_IDS
@@ -41,6 +42,9 @@ export interface LSP7Asset {
   amount: string
   icon: string
   address: string
+  links: LinkMetadata[]
+  description: string
+  images: ImageMetadata[][]
 }
 
 export interface ERC20Asset {
@@ -57,10 +61,11 @@ export interface LSP8Asset {
   description: string
   collectionName: string
   collectionDescription: string
-  collectionImage: string
+  collectionImages: ImageMetadata[][]
   collectionIcon: string
   collectionAddress: string
   collectionSymbol: string
+  collectionLinks: LinkMetadata[]
   creatorName?: string
   creatorAddress?: Address
   creatorProfileImage?: string
