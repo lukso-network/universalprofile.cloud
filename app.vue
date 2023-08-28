@@ -8,6 +8,7 @@ import {
   INJECTED_PROVIDER,
 } from '@/shared/config'
 import { assertString } from '@/utils/validators'
+import { notFoundRoute } from './shared/routes'
 
 if (typeof window !== 'undefined') {
   // @ts-ignore
@@ -67,7 +68,7 @@ const setupWalletProfile = async () => {
     setProfile(profile)
   } catch (error) {
     console.error(error)
-    // TODO redirect to 404 page once it's added
+    navigateTo(notFoundRoute())
   } finally {
     setStatus('isProfileLoading', false)
   }
