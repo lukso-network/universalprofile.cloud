@@ -8,7 +8,6 @@ import {
   INJECTED_PROVIDER,
 } from '@/shared/config'
 import { assertString } from '@/utils/validators'
-import { notFoundRoute } from './shared/routes'
 
 if (typeof window !== 'undefined') {
   // @ts-ignore
@@ -66,9 +65,6 @@ const setupWalletProfile = async () => {
     setAddress(profileAddress)
     const profile = await fetchProfile(profileAddress)
     setProfile(profile)
-  } catch (error) {
-    console.error(error)
-    navigateTo(notFoundRoute())
   } finally {
     setStatus('isProfileLoading', false)
   }
@@ -122,6 +118,8 @@ const routerBackProfileLoad = async () => {
   )
 }
 
+let expiryInterval: NodeJS.Timer | undefined = undefined
+
 const checkConnectionExpiry = () => {
   const expiryCheck = () => {
     const expiryDate = getItem(STORAGE_KEY.CONNECTION_EXPIRY)
@@ -132,22 +130,32 @@ const checkConnectionExpiry = () => {
 
       if (expiryDateParsed < Date.now()) {
         disconnect()
+        clearInterval(expiryInterval)
+        expiryInterval = undefined
       }
-    } catch (error) {}
+    } catch (error) {
+      clearInterval(expiryInterval)
+      expiryInterval = undefined
+    }
   }
 
   expiryCheck() // initial check on app load
-  setInterval(expiryCheck, CONNECTION_EXPIRY_CHECK_INTERVAL_MS)
+  if (expiryInterval) {
+    clearInterval(expiryInterval)
+  }
+  expiryInterval = setInterval(expiryCheck, CONNECTION_EXPIRY_CHECK_INTERVAL_MS)
 }
 
 onMounted(async () => {
   setupTranslations()
   setupWeb3Instances()
   checkConnectionExpiry()
-  await setupWalletProfile()
-  await setupWalletAssets()
-  await setupConnectedProfile()
-  await routerBackProfileLoad()
+  try {
+    await setupWalletProfile()
+    await setupWalletAssets()
+    await setupConnectedProfile()
+    await routerBackProfileLoad()
+  } catch (error) {}
 })
 </script>
 
