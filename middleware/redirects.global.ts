@@ -12,6 +12,9 @@ if (
   value = false
 }
 export const isWallet = useCookie('isWallet', { default: () => value })
+
+provide('isWallet', isWallet)
+
 watch(
   () => value,
   (value, oldValue) => {
