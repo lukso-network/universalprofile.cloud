@@ -84,14 +84,15 @@ const handleSearchInput = value => {
   display: grid;
   width: 100%;
   align-items: center;
-  grid-template-areas: '. search refresh';
-  grid-template-columns: 1fr 8fr 1fr;
-  grid-template-rows: auto;
+
+  // grid-template-areas: '. search refresh';
+  // grid-template-columns: 1fr 8fr 1fr;
+  // grid-template-rows: auto;
   justify-items: center;
 
-  @media (max-width: 768px) {
-    grid-template-areas: '. search .';
-  }
+  // @media (max-width: 768px) {
+  //   grid-template-areas: '. search .';
+  // }
 }
 
 .position-search {
