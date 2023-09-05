@@ -8,7 +8,6 @@ import {
   INJECTED_PROVIDER,
 } from '@/shared/config'
 import { assertString } from '@/utils/validators'
-import { notFoundRoute } from './shared/routes'
 
 if (typeof window !== 'undefined') {
   // @ts-ignore
@@ -18,7 +17,7 @@ if (typeof window !== 'undefined') {
 const web3Store = useWeb3Store()
 const appStore = useAppStore()
 const { providerEvents, disconnect } = useBrowserExtension()
-const { setStatus, setAddress, setProfile, reloadProfile } = useProfileStore()
+const { reloadProfile } = useProfileStore()
 const { setIsConnected, setConnectedAddress, setConnectedProfile } =
   useConnectionStore()
 const router = useRouter()
@@ -54,41 +53,6 @@ const setupConnectedProfile = async () => {
     const profile = await fetchProfile(connectedAddress)
     setConnectedAddress(connectedAddress)
     setConnectedProfile(profile)
-  }
-}
-
-const setupWalletProfile = async () => {
-  try {
-    const profileAddress = useRouter().currentRoute.value.params?.profileAddress
-
-    setStatus('isProfileLoading', true)
-    assertAddress(profileAddress, 'wallet')
-    setAddress(profileAddress)
-    const profile = await fetchProfile(profileAddress)
-    setProfile(profile)
-  } catch (error) {
-    console.error(error)
-    navigateTo(notFoundRoute())
-  } finally {
-    setStatus('isProfileLoading', false)
-  }
-}
-
-const setupWalletAssets = async () => {
-  try {
-    const { profile, setOwnedAssets, setStatus, setCreatedAssets } =
-      useProfileStore()
-    const { fetchAssets } = useErc725()
-
-    setStatus('isAssetLoading', true)
-    assertNotUndefined(profile.address)
-
-    setOwnedAssets(await fetchAssets(profile.address, 'LSP5ReceivedAssets[]'))
-    setCreatedAssets(await fetchAssets(profile.address, 'LSP12IssuedAssets[]'))
-  } catch (error) {
-    console.error(error)
-  } finally {
-    setStatus('isAssetLoading', false)
   }
 }
 
@@ -144,8 +108,6 @@ onMounted(async () => {
   setupTranslations()
   setupWeb3Instances()
   checkConnectionExpiry()
-  await setupWalletProfile()
-  await setupWalletAssets()
   await setupConnectedProfile()
   await routerBackProfileLoad()
 })

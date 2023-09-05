@@ -53,3 +53,6 @@ export const ASSET_ICON_PLACEHOLDER_URL = '/images/token-default.svg'
 
 // url of the ipfs gateway
 export const IPFS_URL = 'https://2eff.lukso.dev/ipfs/'
+
+// testnet flag for the app
+export const IS_TESTNET = true

@@ -1656,14 +1656,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@npm:^1.30.0":
-  version: 1.30.0
-  resolution: "@lukso/web-components@npm:1.30.0"
+"@lukso/web-components@portal:/Users/dominik/www/lukso/tools-web-components/package::locator=wallet.universalprofile.cloud%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@lukso/web-components@portal:/Users/dominik/www/lukso/tools-web-components/package::locator=wallet.universalprofile.cloud%40workspace%3A."
   dependencies:
     ethereum-blockies-base64: ^1.0.2
-  checksum: 9deba99faf50032cabad7e027214f5991e9cd1e099a84b06fd56958ef8fdb51d202f0d6f095565169674d460fd7cfde3691c679f1e6b27e7a55e80c43dc8cac3
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@mapbox/node-pre-gyp@npm:^1.0.5":
   version: 1.0.11
