@@ -11,12 +11,6 @@ const isProduction = process.env.NODE_ENV === 'production'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: !isProduction },
-  app: {
-    head: {
-      link: [{ rel: 'icon', type: 'image/png', href: '/images/favicon.png' }],
-      title: 'LUKSO Wallet',
-    },
-  },
   modules: [
     '@nuxtjs/tailwindcss',
     [
