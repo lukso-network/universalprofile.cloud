@@ -26,7 +26,7 @@
     "pages:build": "cross-env NODE_ENV=production NITRO_PRESET=cloudflare_pages nuxt build --standalone"
   },
   "devDependencies": {
-    "@erc725/erc725.js": "~0.17.1",
+    "@erc725/erc725.js": "0.18.0",
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.0",
     "@lukso/lsp-factory.js": "^2.5.1",
