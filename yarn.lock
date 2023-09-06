@@ -494,7 +494,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@erc725/erc725.js@npm:0.18.0":
+"@erc725/erc725.js@npm:0.18.0, @erc725/erc725.js@npm:^0.18.0":
   version: 0.18.0
   resolution: "@erc725/erc725.js@npm:0.18.0"
   dependencies:
@@ -503,29 +503,6 @@ __metadata:
     web3-providers-http: ^1.10.0
     web3-utils: ^1.10.0
   checksum: 2a03510bfb6a6a134a4522ccf366c44016389d380c7ebff39bf26158a23c523e2c1be0010837814aea7877ac533b63d419af4f0494cd639809b000b1f1ab419c
-  languageName: node
-  linkType: hard
-
-"@erc725/erc725.js@npm:^0.17.2":
-  version: 0.17.2
-  resolution: "@erc725/erc725.js@npm:0.17.2"
-  dependencies:
-    ethereumjs-util: ^7.1.5
-    web3-eth-abi: ^1.8.2
-    web3-providers-http: ^1.8.0
-    web3-utils: ^1.8.2
-  checksum: af0acd5aed2665928b5e534c207953b45c8efa6d334cedd9b73e1307c831abb1c6b08bc89c0e00c749425218870d67be9819a83d918033170559fabe0bd50e0d
-  languageName: node
-  linkType: hard
-
-"@erc725/smart-contracts@npm:^4.1.1":
-  version: 4.2.0
-  resolution: "@erc725/smart-contracts@npm:4.2.0"
-  dependencies:
-    "@openzeppelin/contracts": ^4.7.3
-    "@openzeppelin/contracts-upgradeable": ^4.7.3
-    solidity-bytes-utils: 0.8.0
-  checksum: 2ab49a98210d9c3ff67296e47fd446ef575fb2b2659743f146823126ee98f23b04e6e9e1412e240d06859b81d41c4247729e812576f09e6b5b8d3348f48df963
   languageName: node
   linkType: hard
 
@@ -1646,21 +1623,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/lsp-factory.js@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "@lukso/lsp-factory.js@npm:2.5.1"
+"@lukso/lsp-factory.js@npm:3.0.0":
+  version: 3.0.0
+  resolution: "@lukso/lsp-factory.js@npm:3.0.0"
   dependencies:
-    "@erc725/erc725.js": ^0.17.2
+    "@erc725/erc725.js": ^0.18.0
     "@ethersproject/abi": ^5.7.0
     "@ethersproject/experimental": ^5.7.0
-    "@lukso/lsp-smart-contracts": ^0.8.2
+    "@lukso/lsp-smart-contracts": ^0.10.3
     axios: ^0.23.0
     browser-image-compression: ^2.0.0
     ethers: ^5.7.0
     ipfs-http-client: 52.0.3
     ipfs-utils: 8.1.6
     rxjs: ^7.8.0
-  checksum: 6750376d771343e78408b5d456d3348ab7dfcca89a465a6bf9967639d79bff79d0770915de4f31bf3cea7fb31a3471828cc147b7616564c64926391d9ec17005
+  checksum: c1d93a38f0445438fc85629d70c7d5eb7e322ead34a50668b7a65c81ba5f8cf0cea8341f702b2e7539b64c6a1874f96bc50599f048ef6a01b2b1f5ccfd35f910
+  languageName: node
+  linkType: hard
+
+"@lukso/lsp-smart-contracts@npm:^0.10.3":
+  version: 0.10.3
+  resolution: "@lukso/lsp-smart-contracts@npm:0.10.3"
+  dependencies:
+    "@erc725/smart-contracts": ^5.1.0
+    "@openzeppelin/contracts": ^4.9.2
+    "@openzeppelin/contracts-upgradeable": ^4.9.2
+    solidity-bytes-utils: 0.8.0
+  checksum: d3ca0b776c79260d49fc9314131d8a5a871df26b84cf49e72e5765e80c84fb0410260669c7d5b0f84260219cb8782f8a5850c2c133db1dec89a47b8ef41af39a
   languageName: node
   linkType: hard
 
@@ -1673,18 +1662,6 @@ __metadata:
     "@openzeppelin/contracts-upgradeable": ^4.9.2
     solidity-bytes-utils: 0.8.0
   checksum: 3acf90d2d356d992337e84b8a96765a0591b30855ac76f71f3d0ce838d3e99736d0b4b31882689e853652101deb080d27111b3a79abaa51394e567000059b893
-  languageName: node
-  linkType: hard
-
-"@lukso/lsp-smart-contracts@npm:^0.8.2":
-  version: 0.8.2
-  resolution: "@lukso/lsp-smart-contracts@npm:0.8.2"
-  dependencies:
-    "@erc725/smart-contracts": ^4.1.1
-    "@openzeppelin/contracts": ^4.8.0
-    "@openzeppelin/contracts-upgradeable": ^4.8.0
-    solidity-bytes-utils: 0.8.0
-  checksum: 906adbf614d71e3de1202a9296d5edcdaccce15236478a332caa859faa583b34bf26b62b77848ec3b711cfb2a74d967595387ea7b6d8011f1483d7d6bfed4e28
   languageName: node
   linkType: hard
 
@@ -2161,14 +2138,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openzeppelin/contracts-upgradeable@npm:^4.7.3, @openzeppelin/contracts-upgradeable@npm:^4.8.0, @openzeppelin/contracts-upgradeable@npm:^4.9.2":
+"@openzeppelin/contracts-upgradeable@npm:^4.9.2":
   version: 4.9.3
   resolution: "@openzeppelin/contracts-upgradeable@npm:4.9.3"
   checksum: bda0240b1d44c913ec5a4e109c622f216c2bbd7b468d210822f75782a5f7fe0609d08bf03b78b253333625e99e507cf2f75212f1de3b274bd9fc64ae967aeec3
   languageName: node
   linkType: hard
 
-"@openzeppelin/contracts@npm:^4.7.3, @openzeppelin/contracts@npm:^4.8.0, @openzeppelin/contracts@npm:^4.9.2":
+"@openzeppelin/contracts@npm:^4.9.2":
   version: 4.9.3
   resolution: "@openzeppelin/contracts@npm:4.9.3"
   checksum: 4932063e733b35fa7669b9fe2053f69b062366c5c208b0c6cfa1ac451712100c78acff98120c3a4b88d94154c802be05d160d71f37e7d74cadbe150964458838
@@ -4270,6 +4247,15 @@ __metadata:
     inherits: ^2.0.1
     safe-buffer: ^5.0.1
   checksum: 4a17c3eb55a2aa61c934c286f34921933086bf6d67f02d4adb09fcc6f2fc93977b47d9d884c25619144fccd47b3b3a399e1ad8b3ff5a346be47270114bcf7104
+  languageName: node
+  linkType: hard
+
+"browserify-zlib@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "browserify-zlib@npm:0.2.0"
+  dependencies:
+    pako: ~1.0.5
+  checksum: 5cd9d6a665190fedb4a97dfbad8dabc8698d8a507298a03f42c734e96d58ca35d3c7d4085e283440bbca1cd1938cff85031728079bedb3345310c58ab1ec92d6
   languageName: node
   linkType: hard
 
@@ -11799,6 +11785,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pako@npm:~1.0.5":
+  version: 1.0.11
+  resolution: "pako@npm:1.0.11"
+  checksum: 1be2bfa1f807608c7538afa15d6f25baa523c30ec870a3228a89579e474a4d992f4293859524e46d5d87fd30fa17c5edf34dbef0671251d9749820b488660b16
+  languageName: node
+  linkType: hard
+
 "parent-module@npm:^1.0.0":
   version: 1.0.1
   resolution: "parent-module@npm:1.0.1"
@@ -15963,7 +15956,7 @@ __metadata:
     "@erc725/erc725.js": 0.18.0
     "@esbuild-plugins/node-globals-polyfill": 0.2.3
     "@formatjs/intl": ^2.9.0
-    "@lukso/lsp-factory.js": ^2.5.1
+    "@lukso/lsp-factory.js": 3.0.0
     "@lukso/lsp-smart-contracts": ^0.11.0-rc.1
     "@lukso/web-components": ^1.30.0
     "@nuxt/devtools": ^0.7.4
@@ -15977,6 +15970,7 @@ __metadata:
     "@types/randombytes": 2.0.0
     "@typescript-eslint/eslint-plugin": 6.2.1
     "@typescript-eslint/parser": 6.2.1
+    browserify-zlib: ^0.2.0
     buffer: 6.0.3
     cross-env: ^7.0.3
     dotenv-cli: 7.2.1
@@ -16113,7 +16107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-eth-abi@npm:1.10.0, web3-eth-abi@npm:^1.8.2":
+"web3-eth-abi@npm:1.10.0":
   version: 1.10.0
   resolution: "web3-eth-abi@npm:1.10.0"
   dependencies:
@@ -16278,7 +16272,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-providers-http@npm:1.10.0, web3-providers-http@npm:^1.8.0":
+"web3-providers-http@npm:1.10.0":
   version: 1.10.0
   resolution: "web3-providers-http@npm:1.10.0"
   dependencies:
@@ -16335,7 +16329,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-utils@npm:1.10.0, web3-utils@npm:^1.8.2, web3-utils@npm:~1.10.0":
+"web3-utils@npm:1.10.0, web3-utils@npm:~1.10.0":
   version: 1.10.0
   resolution: "web3-utils@npm:1.10.0"
   dependencies:
