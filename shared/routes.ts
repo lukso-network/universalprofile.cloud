@@ -13,8 +13,6 @@ export const profileRoute = (profileAddress: Address) =>
 export const sendRoute = (profileAddress: Address) =>
   `/profile/${profileAddress}/send`
 
-export const termsRoute = () => '/terms'
-
 export const homeRoute = () => '/'
 
 export const notFoundRoute = () => '/404'

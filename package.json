@@ -31,7 +31,7 @@
     "@formatjs/intl": "^2.9.0",
     "@lukso/lsp-factory.js": "^2.5.1",
     "@lukso/lsp-smart-contracts": "^0.11.0-rc.1",
-    "@lukso/web-components": "^1.30.0",
+    "@lukso/web-components": "^1.31.0",
     "@nuxt/devtools": "^0.7.4",
     "@nuxtjs/device": "^3.1.0",
     "@nuxtjs/plausible": "^0.2.1",

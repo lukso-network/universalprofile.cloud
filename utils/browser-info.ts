@@ -1,3 +1,5 @@
+import { EXTENSION_STORE_LINKS } from '@/shared/config'
+
 const detectBrowser = (): BrowserInfo | undefined => {
   const { isChrome, isBrave, isFirefox, isSafari, isEdge, isOpera } =
     useDevice() as DeviceExtended
@@ -7,6 +9,7 @@ const detectBrowser = (): BrowserInfo | undefined => {
       id: 'brave',
       name: 'Brave',
       icon: 'logo-brave',
+      storeLink: EXTENSION_STORE_LINKS['brave'],
     }
   }
 
@@ -15,6 +18,7 @@ const detectBrowser = (): BrowserInfo | undefined => {
       id: 'edge',
       name: 'Edge',
       icon: 'logo-edge',
+      storeLink: EXTENSION_STORE_LINKS['edge'],
     }
   }
 
@@ -23,6 +27,7 @@ const detectBrowser = (): BrowserInfo | undefined => {
       id: 'opera',
       name: 'Opera',
       icon: 'logo-opera',
+      storeLink: EXTENSION_STORE_LINKS['opera'],
     }
   }
 
@@ -31,6 +36,7 @@ const detectBrowser = (): BrowserInfo | undefined => {
       id: 'chrome',
       name: 'Chrome',
       icon: 'logo-chrome',
+      storeLink: EXTENSION_STORE_LINKS['chrome'],
     }
   }
 
@@ -39,6 +45,7 @@ const detectBrowser = (): BrowserInfo | undefined => {
       id: 'firefox',
       name: 'Firefox',
       icon: 'logo-firefox',
+      storeLink: EXTENSION_STORE_LINKS['firefox'],
     }
   }
 
@@ -47,6 +54,7 @@ const detectBrowser = (): BrowserInfo | undefined => {
       id: 'safari',
       name: 'Safari',
       icon: 'logo-safari',
+      storeLink: EXTENSION_STORE_LINKS['safari'],
     }
   }
 }
