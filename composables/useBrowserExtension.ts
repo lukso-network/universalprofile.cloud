@@ -4,10 +4,7 @@ import { INJECTED_PROVIDER, CONNECTION_EXPIRY_TIME_MS } from '@/shared/config'
 import { EoAError, InterfaceError } from '@/shared/errors'
 
 const openStoreLink = () => {
-  const { currentNetwork } = useAppStore()
-  const browserName = browserInfo().id
-  const storeLink =
-    currentNetwork.storeUrls && currentNetwork.storeUrls[browserName]
+  const storeLink = browserInfo().storeLink
 
   window.open(storeLink, '_blank')
 }

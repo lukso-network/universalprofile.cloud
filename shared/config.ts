@@ -8,31 +8,12 @@ export const NETWORKS: NetworkInfo[] = [
     name: 'LUKSO Testnet',
     chainId: '0x1069',
     rpcHttp: 'https://rpc.testnet.lukso.gateway.fm',
-    storeUrls: {
-      chrome:
-        'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
-      brave:
-        'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
-      edge: 'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
-      opera:
-        'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
-      safari: '',
-      firefox: '',
-    },
   },
   {
     id: 'mainnet',
     name: 'LUKSO Mainnet',
     chainId: '0x2a',
     rpcHttp: 'https://rpc.lukso.gateway.fm',
-    storeUrls: {
-      chrome: '',
-      brave: '',
-      edge: '',
-      opera: '',
-      safari: '',
-      firefox: '',
-    },
   },
 ]
 
@@ -53,3 +34,19 @@ export const ASSET_ICON_PLACEHOLDER_URL = '/images/token-default.svg'
 
 // url of the ipfs gateway
 export const IPFS_URL = 'https://2eff.lukso.dev/ipfs/'
+
+// testnet flag for the app
+export const IS_TESTNET = true
+
+// extension store links
+export const EXTENSION_STORE_LINKS = {
+  chrome:
+    'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
+  brave:
+    'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
+  edge: 'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
+  opera:
+    'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
+  safari: '',
+  firefox: '',
+}

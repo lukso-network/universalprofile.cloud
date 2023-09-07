@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { profileRoute, sendRoute } from '@/shared/routes'
+import { IS_TESTNET } from '@/shared/config'
 
 const { profile: connectedProfile, status } = useConnectionStore()
 const { connect, disconnect } = useBrowserExtension()
@@ -37,6 +38,8 @@ const handleDisconnect = async () => {
   <lukso-navbar
     is-sticky
     :title="$formatMessage('header_title')"
+    :is-testnet="IS_TESTNET"
+    icon="wallet-outline"
     @on-brand-click="handleNavigateProfile"
   >
     <div class="w-full flex items-center justify-end" slot="desktop">

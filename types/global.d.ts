@@ -56,6 +56,7 @@ declare global {
     id: BrowserName
     name: string
     icon: string
+    storeLink: string
   }
 }
 
