@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { EXTENSION_STORE_LINKS } from '@/shared/config'
+import { profileRoute } from '@/shared/routes'
 
 definePageMeta({
   layout: 'landing',
@@ -8,12 +9,30 @@ definePageMeta({
 const supportedBrowsers = Object.entries(EXTENSION_STORE_LINKS)
   .filter(entry => entry[1] !== '')
   .map(browser => browser[0])
+
+const { status, profile } = useConnectionStore()
+const { isUniversalProfileExtension } = useBrowserExtension()
+
+watchEffect(() => {
+  if (status.isConnected) {
+    try {
+      assertAddress(profile.address, 'profile')
+      navigateTo(profileRoute(profile.address))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+})
 </script>
 
 <template>
-  <div>
+  <div class="relative">
     <div
-      class="max-w-[950px] py-20 sm:pt-24 px-4 mx-auto relative grid grid-cols-1 gap-7 h-full sm:items-center sm:grid-cols-2"
+      :class="{
+        'opacity-0': status.isProfileLoading,
+        'opacity-100': !status.isProfileLoading,
+      }"
+      class="max-w-[950px] py-20 px-4 mx-auto relative grid grid-cols-1 gap-7 h-full transition-opacity duration-300 delay-500 sm:items-center sm:grid-cols-2 sm:pt-24"
     >
       <div class="hidden sm:block">
         <img
@@ -35,7 +54,16 @@ const supportedBrowsers = Object.entries(EXTENSION_STORE_LINKS)
             </div>
             <div class="paragraph-inter-16-regular pt-6">
               <lukso-sanitize
-                :html-content="$formatMessage('landing_hero_description')"
+                v-if="isUniversalProfileExtension()"
+                :html-content="
+                  $formatMessage('landing_hero_description_not_connected')
+                "
+              ></lukso-sanitize>
+              <lukso-sanitize
+                v-else
+                :html-content="
+                  $formatMessage('landing_hero_description_no_extension')
+                "
               ></lukso-sanitize>
             </div>
             <ConnectOrInstallButton />
@@ -55,5 +83,11 @@ const supportedBrowsers = Object.entries(EXTENSION_STORE_LINKS)
         </div>
       </div>
     </div>
+    <lukso-icon
+      v-if="status.isProfileLoading"
+      name="progress-indicator-alt"
+      size="x-large"
+      class="absolute top-1/2 left-1/2 transform"
+    ></lukso-icon>
   </div>
 </template>

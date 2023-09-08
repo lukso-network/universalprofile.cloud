@@ -18,7 +18,7 @@ const web3Store = useWeb3Store()
 const appStore = useAppStore()
 const { providerEvents, disconnect } = useBrowserExtension()
 const { reloadProfile } = useProfileStore()
-const { setIsConnected, setConnectedAddress, setConnectedProfile } =
+const { setIsConnected, setConnectedAddress, setConnectedProfile, setStatus } =
   useConnectionStore()
 const router = useRouter()
 
@@ -45,14 +45,21 @@ const setupWeb3Instances = () => {
 }
 
 const setupConnectedProfile = async () => {
-  const connectedAddress = getItem(STORAGE_KEY.CONNECTED_ADDRESS)
+  try {
+    const connectedAddress = getItem(STORAGE_KEY.CONNECTED_ADDRESS)
 
-  if (connectedAddress) {
-    assertAddress(connectedAddress, 'profile')
-    setIsConnected(true)
-    const profile = await fetchProfile(connectedAddress)
-    setConnectedAddress(connectedAddress)
-    setConnectedProfile(profile)
+    if (connectedAddress) {
+      assertAddress(connectedAddress, 'profile')
+      setIsConnected(true)
+      setStatus('isProfileLoading', true)
+      const profile = await fetchProfile(connectedAddress)
+      setConnectedAddress(connectedAddress)
+      setConnectedProfile(profile)
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    setStatus('isProfileLoading', false)
   }
 }
 
@@ -76,7 +83,7 @@ const routerBackProfileLoad = async () => {
           toProfileAddress !== fromProfileAddress
         ) {
           const profile = await fetchProfile(toProfileAddress)
-          reloadProfile(toProfileAddress, profile)
+          reloadProfile(profile)
         }
       } catch (error) {
         console.error(error)

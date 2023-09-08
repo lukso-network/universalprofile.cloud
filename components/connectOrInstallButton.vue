@@ -1,6 +1,5 @@
 <script setup lang="ts">
-const { status } = useConnectionStore()
-const { connect } = useBrowserExtension()
+const { connect, isUniversalProfileExtension } = useBrowserExtension()
 
 const handleConnect = async () => {
   connect()
@@ -17,12 +16,12 @@ const extensionStoreData = () => {
 }
 
 const extensionStore = extensionStoreData()
-const hasExtension = extensionStore.url !== ''
+const browserSupportExtension = extensionStore.url !== ''
 </script>
 
 <template>
   <lukso-button
-    v-if="status.isConnected"
+    v-if="isUniversalProfileExtension()"
     @click="handleConnect"
     variant="landing"
     custom-class="mt-6"
@@ -35,9 +34,9 @@ const hasExtension = extensionStore.url !== ''
     variant="landing"
     custom-class="mt-6"
     is-full-width
-    :is-link="hasExtension ? 'true' : undefined"
+    :is-link="browserSupportExtension ? 'true' : undefined"
     :href="extensionStore.url"
-    :disabled="!hasExtension ? 'true' : undefined"
+    :disabled="!browserSupportExtension ? 'true' : undefined"
   >
     <lukso-icon
       :name="extensionStore.icon"
@@ -45,7 +44,7 @@ const hasExtension = extensionStore.url !== ''
       secondary-color="purple-51"
       class="mr-2"
     />
-    <span v-if="hasExtension">
+    <span v-if="browserSupportExtension">
       {{ $formatMessage('connect_or_install_button_install') }}
     </span>
     <span v-else>

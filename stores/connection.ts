@@ -5,7 +5,7 @@
  */
 export const useConnectionStore = defineStore('connection', () => {
   const profile = reactive<Profile>({} as Profile)
-  const status = reactive({ isConnected: false })
+  const status = reactive({ isConnected: false, isProfileLoading: false })
 
   // --- actions
 
@@ -22,7 +22,11 @@ export const useConnectionStore = defineStore('connection', () => {
   }
 
   const setIsConnected = (value: boolean) => {
-    status.isConnected = value
+    setStatus('isConnected', value)
+  }
+
+  const setStatus = (statusName: keyof typeof status, newStatus: boolean) => {
+    status[statusName] = newStatus
   }
 
   const reloadConnectedProfile = (address: Address, profile: Profile) => {
@@ -39,5 +43,6 @@ export const useConnectionStore = defineStore('connection', () => {
     clearConnectedProfile,
     setIsConnected,
     reloadConnectedProfile,
+    setStatus,
   }
 })
