@@ -9,9 +9,10 @@ const { reloadProfile, profile: viewedProfile } = useProfileStore()
 
 const handleNavigateProfile = async () => {
   try {
-    assertAddress(connectedProfile.address, 'profile')
-    reloadProfile(connectedProfile)
-    navigateTo(profileRoute(connectedProfile.address))
+    const profile = status.isConnected ? connectedProfile : viewedProfile
+    assertAddress(profile.address, 'profile')
+    reloadProfile(profile)
+    navigateTo(profileRoute(profile.address))
   } catch (error) {
     console.error(error)
   }
