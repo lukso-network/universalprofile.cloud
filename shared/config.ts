@@ -8,12 +8,14 @@ export const NETWORKS: NetworkInfo[] = [
     name: 'LUKSO Testnet',
     chainId: '0x1069',
     rpcHttp: 'https://rpc.testnet.lukso.gateway.fm',
+    token: 'LYXt',
   },
   {
     id: 'mainnet',
     name: 'LUKSO Mainnet',
     chainId: '0x2a',
     rpcHttp: 'https://rpc.lukso.gateway.fm',
+    token: 'LYX',
   },
 ]
 
