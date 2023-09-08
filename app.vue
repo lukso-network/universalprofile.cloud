@@ -73,15 +73,15 @@ const routerBackProfileLoad = async () => {
       const fromProfileAddress = from.params?.profileAddress
       const toProfileAddress = to.params?.profileAddress
 
+      if (!fromProfileAddress || !toProfileAddress) {
+        return next()
+      }
+
       try {
         assertString(toProfileAddress)
         assertAddress(toProfileAddress, 'profile')
 
-        if (
-          fromProfileAddress &&
-          toProfileAddress &&
-          toProfileAddress !== fromProfileAddress
-        ) {
+        if (toProfileAddress !== fromProfileAddress) {
           const profile = await fetchProfile(toProfileAddress)
           reloadProfile(profile)
         }

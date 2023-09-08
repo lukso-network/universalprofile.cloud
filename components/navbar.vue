@@ -13,8 +13,8 @@ const handleNavigateProfile = async () => {
       assertAddress(connectedProfile.address, 'profile')
       reloadProfile(connectedProfile)
       navigateTo(profileRoute(connectedProfile.address))
-      navigateTo(homeRoute())
     } else {
+      navigateTo(homeRoute())
     }
   } catch (error) {
     console.error(error)
