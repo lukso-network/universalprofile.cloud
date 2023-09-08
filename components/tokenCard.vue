@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { fromWei } from 'web3-utils'
 
-import { tokenRoute } from '@/shared/routes'
+import { sendRoute, tokenRoute } from '@/shared/routes'
 import { Token, StandardsAbbreviations } from '@/types/assets'
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { profile, status } = useConnectionStore()
+const { profile: connectedProfile, status } = useConnectionStore()
 const { profile: viewedProfile } = useProfileStore()
 
 const handleShowAsset = () => {
@@ -24,6 +24,20 @@ const handleShowAsset = () => {
     assertAddress(viewedProfile.address, 'profile')
     assertAddress(props.asset.address, 'asset')
     navigateTo(tokenRoute(viewedProfile.address, props.asset.address))
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const handleSendAsset = () => {
+  try {
+    assertAddress(connectedProfile.address, 'profile')
+    navigateTo({
+      path: sendRoute(connectedProfile.address),
+      query: {
+        token: props.asset.address,
+      },
+    })
   } catch (error) {
     console.error(error)
   }
@@ -71,14 +85,17 @@ const handleShowAsset = () => {
               asset.data.symbol
             }}</span>
           </div>
-          <div class="paragraph-inter-12-regular pb-4">$ 123.24</div>
+          <div class="paragraph-inter-12-regular hidden">$ 123.24</div>
           <div class="flex justify-end w-full">
             <lukso-button
               v-if="
-                status.isConnected && viewedProfile.address === profile.address
+                status.isConnected &&
+                viewedProfile.address === connectedProfile.address
               "
               size="small"
               variant="secondary"
+              @click="handleSendAsset"
+              class="mt-4"
               >{{ $formatMessage('button_send') }}</lukso-button
             >
           </div>

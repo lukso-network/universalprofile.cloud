@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nftRoute } from '@/shared/routes'
+import { nftRoute, sendRoute } from '@/shared/routes'
 import { Nft } from '@/types/assets'
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { profile, status } = useConnectionStore()
+const { profile: connectedProfile, status } = useConnectionStore()
 const { profile: viewedProfile } = useProfileStore()
 
 const handleShowAsset = () => {
@@ -24,6 +24,20 @@ const handleShowAsset = () => {
         props.asset.data.tokenId
       )
     )
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const handleSendAsset = () => {
+  try {
+    assertAddress(connectedProfile.address, 'profile')
+    navigateTo({
+      path: sendRoute(connectedProfile.address),
+      query: {
+        nft: props.asset.address,
+      },
+    })
   } catch (error) {
     console.error(error)
   }
@@ -72,10 +86,12 @@ const handleShowAsset = () => {
           <div class="flex justify-end w-full">
             <lukso-button
               v-if="
-                status.isConnected && viewedProfile.address === profile.address
+                status.isConnected &&
+                viewedProfile.address === connectedProfile.address
               "
               size="small"
               variant="secondary"
+              @click="handleSendAsset"
               >{{ $formatMessage('button_send') }}</lukso-button
             >
           </div>
