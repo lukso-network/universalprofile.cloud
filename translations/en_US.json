@@ -7,7 +7,7 @@
   "token_details_contract_address": "Contract Address",
   "landing_hero_description_no_extension": "Looks like you don’t have the <span class=\"paragraph-inter-16-semi-bold\">Universal Profile browser extension</span> installed. You’ll need it before you can log in to our wallet service.",
   "web3_connect_no_extension": "You don't have the Universal Profile browser extension installed.",
-  "header_install_extension": "InstalL Extension",
+  "header_install_extension": "Install Extension",
   "asset_standard_info_legacy_details": "Info about the standard goes here....",
   "asset_standard_info_LSP7_details": "Info about the standard goes here....",
   "web3_connect_error_title": "Can't connect",
@@ -16,7 +16,6 @@
   "not_found_get_help_url": "https://lukso.network/faq",
   "web3_connect_error_pending_request": "You have pending request. Check your browser extension.",
   "token_details_send": "Send {token}",
-  "landing_hero_description_connected": "Looks like you are already connected with your <span class=\"paragraph-inter-16-semi-bold\">Universal Profile</span>.",
   "token_details_token_id": "Token ID",
   "not_found_text": "We can’t seem to find the page you’re looking for!",
   "app_meta_title": "LUKSO Universal Profile Wallet",
@@ -51,6 +50,5 @@
   "header_connect": "Connect",
   "web3_connect_error": "There was an error while connecting to the browser extension.",
   "footer_privacy_policy_text": "Privacy Policy",
-  "token_details_images": "Token Images",
-  "connect_or_install_button_connected": "See my profile"
+  "token_details_images": "Token Images"
 }
