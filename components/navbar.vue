@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { profileRoute, sendRoute } from '@/shared/routes'
+import { homeRoute, profileRoute, sendRoute } from '@/shared/routes'
 import { IS_TESTNET } from '@/shared/config'
 
 const { profile: connectedProfile, status } = useConnectionStore()
@@ -9,10 +9,13 @@ const { reloadProfile, profile: viewedProfile } = useProfileStore()
 
 const handleNavigateProfile = async () => {
   try {
-    const profile = status.isConnected ? connectedProfile : viewedProfile
-    assertAddress(profile.address, 'profile')
-    reloadProfile(profile)
-    navigateTo(profileRoute(profile.address))
+    if (status.isConnected) {
+      assertAddress(connectedProfile.address, 'profile')
+      reloadProfile(connectedProfile)
+      navigateTo(profileRoute(connectedProfile.address))
+      navigateTo(homeRoute())
+    } else {
+    }
   } catch (error) {
     console.error(error)
   }
