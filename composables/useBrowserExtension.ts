@@ -141,7 +141,7 @@ const providerEvents = async (provider: any) => {
 }
 
 const isUniversalProfileExtension = () => {
-  return !!window?.ethereum?.isUniversalProfileExtension
+  return !!INJECTED_PROVIDER
 }
 
 export const useBrowserExtension = () => {
