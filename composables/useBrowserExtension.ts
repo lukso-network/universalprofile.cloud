@@ -43,7 +43,7 @@ const connect = async () => {
 
     setItem(STORAGE_KEY.CONNECTED_ADDRESS, address)
     const profile = await fetchProfile(address)
-    reloadProfile(address, profile)
+    reloadProfile(profile)
     reloadConnectedProfile(address, profile)
     setIsConnected(true)
     setConnectionExpiry()
@@ -123,7 +123,7 @@ const providerEvents = async (provider: any) => {
 
       await navigateTo(profileRoute(address))
       const profile = await fetchProfile(address)
-      reloadProfile(address, profile)
+      reloadProfile(profile)
       reloadConnectedProfile(address, profile)
     } else {
       // when user remove connection with dApp we disconnect
@@ -140,10 +140,15 @@ const providerEvents = async (provider: any) => {
   })
 }
 
+const isUniversalProfileExtension = () => {
+  return !!window?.ethereum?.isUniversalProfileExtension
+}
+
 export const useBrowserExtension = () => {
   return {
     connect,
     disconnect,
     providerEvents,
+    isUniversalProfileExtension,
   }
 }

@@ -115,9 +115,10 @@ export const useProfileStore = defineStore('profile', () => {
     Object.assign(profile, {})
   }
 
-  const reloadProfile = (address: Address, profile: Profile) => {
+  const reloadProfile = (profile: Profile) => {
     clearProfile()
-    setAddress(address)
+    assertAddress(profile.address, 'profile')
+    setAddress(profile.address)
     setProfile(profile)
   }
 

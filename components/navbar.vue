@@ -3,14 +3,15 @@ import { profileRoute, sendRoute } from '@/shared/routes'
 import { IS_TESTNET } from '@/shared/config'
 
 const { profile: connectedProfile, status } = useConnectionStore()
-const { connect, disconnect } = useBrowserExtension()
-const { reloadProfile, profile } = useProfileStore()
+const { connect, disconnect, isUniversalProfileExtension } =
+  useBrowserExtension()
+const { reloadProfile, profile: viewedProfile } = useProfileStore()
 
 const handleNavigateProfile = async () => {
   try {
-    assertAddress(profile.address, 'profile')
-    reloadProfile(profile.address, profile)
-    navigateTo(profileRoute(profile.address))
+    assertAddress(connectedProfile.address, 'profile')
+    reloadProfile(connectedProfile)
+    navigateTo(profileRoute(connectedProfile.address))
   } catch (error) {
     console.error(error)
   }
@@ -32,6 +33,19 @@ const handleConnect = async () => {
 const handleDisconnect = async () => {
   disconnect()
 }
+
+const extensionStoreData = () => {
+  const url = browserInfo().storeLink
+  const icon = `logo-${browserInfo().id}`
+
+  return {
+    icon,
+    url,
+  }
+}
+
+const extensionStore = extensionStoreData()
+const browserSupportExtension = extensionStore.url !== ''
 </script>
 
 <template>
@@ -40,6 +54,7 @@ const handleDisconnect = async () => {
     :title="$formatMessage('header_title')"
     :is-testnet="IS_TESTNET"
     icon="wallet-outline"
+    has-menu
     @on-brand-click="handleNavigateProfile"
   >
     <div class="w-full flex items-center justify-end" slot="desktop">
@@ -52,7 +67,10 @@ const handleDisconnect = async () => {
         {{ $formatMessage('header_send') }}
       </lukso-button>
       <lukso-button
-        v-if="status.isConnected"
+        v-if="
+          status.isConnected &&
+          connectedProfile.address !== viewedProfile.address
+        "
         variant="text"
         custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
         @click="handleNavigateProfile"
@@ -61,12 +79,21 @@ const handleDisconnect = async () => {
       </lukso-button>
       <ProfileDropdown v-if="status.isConnected" />
       <lukso-button
-        v-else
+        v-else-if="isUniversalProfileExtension()"
         variant="secondary"
         custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
         @click="handleConnect"
       >
         {{ $formatMessage('header_connect') }}
+      </lukso-button>
+      <lukso-button
+        v-else-if="browserSupportExtension"
+        variant="secondary"
+        is-link
+        custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+        :href="extensionStore.url"
+      >
+        {{ $formatMessage('header_install_extension') }}
       </lukso-button>
     </div>
     <div slot="mobile">
@@ -96,12 +123,21 @@ const handleDisconnect = async () => {
           {{ $formatMessage('header_disconnect') }}
         </lukso-button>
         <lukso-button
-          v-else
+          v-else-if="isUniversalProfileExtension()"
           variant="text"
           custom-class="text-purple-51 text-12 hover:text-purple-41 uppercase nav-apax-12-medium-uppercase font-apax font-500"
           @click="handleConnect"
         >
           {{ $formatMessage('header_connect') }}
+        </lukso-button>
+        <lukso-button
+          v-else-if="browserSupportExtension"
+          variant="text"
+          is-link
+          custom-class="text-purple-51 text-12 hover:text-purple-41 uppercase nav-apax-12-medium-uppercase font-apax font-500"
+          :href="extensionStore.url"
+        >
+          {{ $formatMessage('header_install_extension') }}
         </lukso-button>
       </div>
     </div>
