@@ -22,9 +22,9 @@ export const fetchProfile = async (profileAddress: Address) => {
 
   // standard check
   const supportedStandard = await contract(getDataABI, profileAddress)
-    .methods['getData(bytes32)'](SupportedStandards.LSP3UniversalProfile.key)
+    .methods['getData(bytes32)'](SupportedStandards.LSP3Profile.key)
     .call()
-  if (supportedStandard !== SupportedStandards.LSP3UniversalProfile.value) {
+  if (supportedStandard !== SupportedStandards.LSP3Profile.value) {
     throw new Error(
       `This profile contract doesn't support LSP3UniversalProfile standard`
     )

@@ -51,7 +51,7 @@ watchEffect(() => {
             :symbol="token?.data.symbol"
           />
 
-          <lukso-button is-full-width class="mt-4">{{
+          <lukso-button is-full-width class="mt-4 hidden">{{
             $formatMessage('token_details_send', {
               token: token?.data.symbol || '',
             })
