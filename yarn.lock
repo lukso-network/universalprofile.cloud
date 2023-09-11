@@ -1666,11 +1666,11 @@ __metadata:
   linkType: hard
 
 "@lukso/web-components@npm:^1.31.0":
-  version: 1.31.0
-  resolution: "@lukso/web-components@npm:1.31.0"
+  version: 1.31.1
+  resolution: "@lukso/web-components@npm:1.31.1"
   dependencies:
     ethereum-blockies-base64: ^1.0.2
-  checksum: 4468a93db65f8e9d464b09862130b58b1cb0525c41db0caf2567e6d8b59f601e1def3af93287cda9cc7e83a2b40c5bef8174c6b5bda022da60afbe225e00a456
+  checksum: 9f13a7770ee9645fa319dc33975ecf456f3eadeacd5bda238e5ebd173edcdef916fe87b3e454ef38974e3172719d7dbf36fbc25578614c8c0b055430bf177fc3
   languageName: node
   linkType: hard
 

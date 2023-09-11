@@ -5,7 +5,7 @@ import { IS_TESTNET } from '@/shared/config'
 const { profile: connectedProfile, status } = useConnectionStore()
 const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
-const { reloadProfile, profile: viewedProfile } = useProfileStore()
+const { reloadProfile } = useProfileStore()
 
 const handleNavigateProfile = async () => {
   try {
@@ -71,10 +71,7 @@ const browserSupportExtension = extensionStore.url !== ''
         {{ $formatMessage('header_send') }}
       </lukso-button>
       <lukso-button
-        v-if="
-          status.isConnected &&
-          connectedProfile.address !== viewedProfile.address
-        "
+        v-if="status.isConnected"
         variant="text"
         custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
         @click="handleNavigateProfile"

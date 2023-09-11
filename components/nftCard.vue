@@ -83,7 +83,7 @@ const handleSendAsset = () => {
               asset.data.collectionSymbol
             }}</span>
           </div>
-          <div class="flex justify-end w-full">
+          <div class="flex justify-end w-full hidden">
             <lukso-button
               v-if="
                 status.isConnected &&

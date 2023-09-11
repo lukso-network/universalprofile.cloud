@@ -10,12 +10,7 @@ const appStore = useAppStore()
 const handleSendAsset = () => {
   try {
     assertAddress(connectedProfile.address, 'profile')
-    navigateTo({
-      path: sendRoute(connectedProfile.address),
-      query: {
-        lyx: 'true',
-      },
-    })
+    navigateTo(sendRoute(connectedProfile.address))
   } catch (error) {
     console.error(error)
   }
@@ -27,10 +22,12 @@ const handleSendAsset = () => {
     ><div slot="content" class="p-4">
       <div class="flex gap-6 pt-4">
         <div class="pl-4 flex flex-col items-center">
-          <lukso-profile
-            size="medium"
-            profile-url="/images/lyx-token.jpg"
-          ></lukso-profile>
+          <div class="border border-neutral-90 rounded-full p-0.5">
+            <lukso-profile
+              size="medium"
+              profile-url="/images/lyx-token.png"
+            ></lukso-profile>
+          </div>
         </div>
         <div class="flex flex-col w-full">
           <div class="heading-inter-14-bold pb-1">LUKSO</div>

@@ -86,7 +86,7 @@ const handleSendAsset = () => {
             }}</span>
           </div>
           <div class="paragraph-inter-12-regular hidden">$ 123.24</div>
-          <div class="flex justify-end w-full">
+          <div class="flex justify-end w-full hidden">
             <lukso-button
               v-if="
                 status.isConnected &&
