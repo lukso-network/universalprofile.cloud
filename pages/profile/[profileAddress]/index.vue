@@ -58,7 +58,7 @@ const nftsCount = computed(() => {
             >
           </div>
           <TokensList />
-          <NftsList />
+          <NftList />
         </div>
       </div>
     </div>
