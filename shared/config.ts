@@ -23,7 +23,7 @@ export const NETWORKS: NetworkInfo[] = [
 export const MODAL_DEFAULT_TEMPLATE = 'default'
 
 // global provider object injected by browser extension
-export const INJECTED_PROVIDER = window.ethereum
+export const INJECTED_PROVIDER = window?.lukso
 
 // connection expiry time
 export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 30 // 30 minutes
