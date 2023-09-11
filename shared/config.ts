@@ -8,12 +8,14 @@ export const NETWORKS: NetworkInfo[] = [
     name: 'LUKSO Testnet',
     chainId: '0x1069',
     rpcHttp: 'https://rpc.testnet.lukso.gateway.fm',
+    token: 'LYXt',
   },
   {
     id: 'mainnet',
     name: 'LUKSO Mainnet',
     chainId: '0x2a',
     rpcHttp: 'https://rpc.lukso.gateway.fm',
+    token: 'LYX',
   },
 ]
 
@@ -44,9 +46,12 @@ export const EXTENSION_STORE_LINKS = {
     'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
   brave:
     'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
-  edge: 'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
-  opera:
-    'https://chrome.google.com/webstore/detail/universal-profiles-testin/abpickdkkbnbcoepogfhkhennhfhehfn',
+  edge: '',
+  opera: '',
   safari: '',
   firefox: '',
 }
+
+// transaction default gas values
+export const DEFAULT_GAS = 5_000_000
+export const DEFAULT_GAS_PRICE = '10000000000'

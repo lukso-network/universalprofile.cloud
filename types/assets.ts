@@ -30,6 +30,13 @@ export type SupportedNfts = keyof NftApi
 export type Token = Asset<Partial<SupportedTokens>>
 export type Nft = Asset<Partial<SupportedNfts>>
 
+export interface NativeToken {
+  name: string
+  symbol: string
+  icon: string
+  amount: string
+}
+
 export interface NftApi {
   LSP8IdentifiableDigitalAsset: LSP8Asset
 }
@@ -80,4 +87,11 @@ export enum TokenIdType {
   address = '1',
   number = '2',
   bytes32 = '3',
+}
+
+export type SendAsset = {
+  name?: string
+  amount?: string
+  symbol?: string
+  icon?: string
 }

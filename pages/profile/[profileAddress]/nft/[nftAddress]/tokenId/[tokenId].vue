@@ -83,7 +83,7 @@ watchEffect(() => {
             :symbol="nft?.data.collectionSymbol"
           />
 
-          <lukso-button is-full-width class="mt-4">{{
+          <lukso-button is-full-width class="mt-4 hidden">{{
             $formatMessage('token_details_send', {
               token: nft?.data.collectionSymbol || '',
             })

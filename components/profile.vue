@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { profile, status } = useProfileStore()
+const { profile } = useProfileStore()
 </script>
 
 <template>
@@ -11,11 +11,6 @@ const { profile, status } = useProfileStore()
       :profile-address="profile.address"
       is-full-width
       custom-class="rounded-24 shadow-neutral-drop-shadow"
-      :class="{
-        'opacity-0': status.isProfileLoading,
-        'opacity-100': !status.isProfileLoading,
-      }"
-      class="transition-opacity duration-300"
     >
       <div slot="content" class="px-6 pb-6 flex flex-col items-center">
         <lukso-username
@@ -30,11 +25,5 @@ const { profile, status } = useProfileStore()
         ></lukso-username>
       </div>
     </lukso-card>
-    <lukso-icon
-      name="progress-indicator-alt"
-      size="x-large"
-      v-if="status.isProfileLoading"
-      class="absolute top-1/2 left-1/2 transform"
-    ></lukso-icon>
   </div>
 </template>

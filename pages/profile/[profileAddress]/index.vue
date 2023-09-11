@@ -26,17 +26,17 @@ const nftsCount = computed(() => {
 </script>
 
 <template>
-  <div>
-    <div class="max-w-[835px] py-20 px-4 mx-auto relative">
+  <div class="relative">
+    <div
+      class="max-w-[835px] py-20 px-4 mx-auto relative transition-opacity duration-300"
+      :class="{
+        'opacity-0': status.isAssetLoading || status.isProfileLoading,
+        'opacity-100': !status.isAssetLoading && !status.isProfileLoading,
+      }"
+    >
       <Profile />
-      <div class="relative">
-        <div
-          :class="{
-            'opacity-0': status.isAssetLoading,
-            'opacity-100': !status.isAssetLoading,
-          }"
-          class="transition-opacity duration-300"
-        >
+      <div>
+        <div>
           <div class="pt-10 gap-4 flex">
             <lukso-button
               size="small"
@@ -58,15 +58,15 @@ const nftsCount = computed(() => {
             >
           </div>
           <TokensList />
-          <NftsList />
+          <NftList />
         </div>
-        <lukso-icon
-          name="progress-indicator-alt"
-          size="x-large"
-          v-if="status.isAssetLoading"
-          class="absolute top-1/2 left-1/2 transform"
-        ></lukso-icon>
       </div>
     </div>
+    <lukso-icon
+      name="progress-indicator-alt"
+      size="x-large"
+      v-if="status.isAssetLoading || status.isProfileLoading"
+      class="absolute top-1/2 left-1/2 transform"
+    ></lukso-icon>
   </div>
 </template>
