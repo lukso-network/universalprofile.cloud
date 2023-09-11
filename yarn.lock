@@ -517,6 +517,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@erc725/smart-contracts@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "@erc725/smart-contracts@npm:5.2.0"
+  dependencies:
+    "@openzeppelin/contracts": ^4.9.3
+    "@openzeppelin/contracts-upgradeable": ^4.9.3
+    solidity-bytes-utils: 0.8.0
+  checksum: 35a99b14bbdb7d1f1363ef382811c05454cc4b2191162964bdaf82b2f5d7c85eeedea5f73042cff2a119bb61f8fbb20a684e2be301e0dd683615e0f6e932cbec
+  languageName: node
+  linkType: hard
+
 "@esbuild-kit/cjs-loader@npm:^2.4.2":
   version: 2.4.2
   resolution: "@esbuild-kit/cjs-loader@npm:2.4.2"
@@ -1653,15 +1664,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/lsp-smart-contracts@npm:^0.11.0-rc.1":
-  version: 0.11.0-rc.1
-  resolution: "@lukso/lsp-smart-contracts@npm:0.11.0-rc.1"
+"@lukso/lsp-smart-contracts@npm:^0.11.1":
+  version: 0.11.1
+  resolution: "@lukso/lsp-smart-contracts@npm:0.11.1"
   dependencies:
-    "@erc725/smart-contracts": ^5.1.0
+    "@erc725/smart-contracts": ^5.2.0
     "@openzeppelin/contracts": ^4.9.2
     "@openzeppelin/contracts-upgradeable": ^4.9.2
     solidity-bytes-utils: 0.8.0
-  checksum: 3acf90d2d356d992337e84b8a96765a0591b30855ac76f71f3d0ce838d3e99736d0b4b31882689e853652101deb080d27111b3a79abaa51394e567000059b893
+  checksum: 1cd2cc22d6c6776b46c409884ecefbf0df041c07c421522b9c99780b41c7819f1bea8b3df6377f8d8d9ad428e6ade6f7f11e9dc3f01593d2d5863651bed085ba
   languageName: node
   linkType: hard
 
@@ -2138,14 +2149,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openzeppelin/contracts-upgradeable@npm:^4.9.2":
+"@openzeppelin/contracts-upgradeable@npm:^4.9.2, @openzeppelin/contracts-upgradeable@npm:^4.9.3":
   version: 4.9.3
   resolution: "@openzeppelin/contracts-upgradeable@npm:4.9.3"
   checksum: bda0240b1d44c913ec5a4e109c622f216c2bbd7b468d210822f75782a5f7fe0609d08bf03b78b253333625e99e507cf2f75212f1de3b274bd9fc64ae967aeec3
   languageName: node
   linkType: hard
 
-"@openzeppelin/contracts@npm:^4.9.2":
+"@openzeppelin/contracts@npm:^4.9.2, @openzeppelin/contracts@npm:^4.9.3":
   version: 4.9.3
   resolution: "@openzeppelin/contracts@npm:4.9.3"
   checksum: 4932063e733b35fa7669b9fe2053f69b062366c5c208b0c6cfa1ac451712100c78acff98120c3a4b88d94154c802be05d160d71f37e7d74cadbe150964458838
@@ -15957,7 +15968,7 @@ __metadata:
     "@esbuild-plugins/node-globals-polyfill": 0.2.3
     "@formatjs/intl": ^2.9.0
     "@lukso/lsp-factory.js": 3.0.0
-    "@lukso/lsp-smart-contracts": ^0.11.0-rc.1
+    "@lukso/lsp-smart-contracts": ^0.11.1
     "@lukso/web-components": ^1.32.0
     "@nuxt/devtools": ^0.7.4
     "@nuxtjs/device": ^3.1.0
