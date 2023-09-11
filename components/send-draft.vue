@@ -60,7 +60,7 @@ const handleSend = () => {
             ></lukso-profile>
           </div>
         </div>
-        <div class="flex flex-col w-full cursor-pointer">
+        <div class="flex flex-col w-full">
           <div
             class="border-b border-b-neutral-90 border-l border-l-neutral-90 paragraph-inter-14-semi-bold px-4 py-3 flex justify-between items-center"
           >
