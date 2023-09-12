@@ -62,7 +62,9 @@ watchEffect(() => {
         <div class="heading-apax-24-medium pb-8">{{ token?.data.name }}</div>
         <AssetAddress v-if="token?.address" :address="token.address" />
         <AssetLinks
-          v-if="token?.data && 'links' in token?.data"
+          v-if="
+            token?.data && 'links' in token?.data && token.data.links.length > 0
+          "
           :links="token.data.links"
         />
         <AssetDescription
