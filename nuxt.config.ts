@@ -107,4 +107,5 @@ export default defineNuxtConfig({
     public: {},
   },
   ssr: false,
+  spaLoadingTemplate: 'public/loading-template.html',
 })
