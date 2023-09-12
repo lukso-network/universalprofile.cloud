@@ -18,7 +18,7 @@ const web3Store = useWeb3Store()
 const appStore = useAppStore()
 const { providerEvents, disconnect } = useBrowserExtension()
 const { reloadProfile } = useProfileStore()
-const { setIsConnected, setConnectedAddress, setConnectedProfile, setStatus } =
+const { setConnectedAddress, setConnectedProfile, setStatus } =
   useConnectionStore()
 const router = useRouter()
 
@@ -50,7 +50,7 @@ const setupConnectedProfile = async () => {
 
     if (connectedAddress) {
       assertAddress(connectedAddress, 'profile')
-      setIsConnected(true)
+      setStatus('isConnected', true)
       setStatus('isProfileLoading', true)
       const profile = await fetchProfile(connectedAddress)
       setConnectedAddress(connectedAddress)

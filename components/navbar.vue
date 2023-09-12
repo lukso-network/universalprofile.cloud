@@ -84,6 +84,8 @@ const browserSupportExtension = extensionStore.url !== ''
         variant="secondary"
         custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
         @click="handleConnect"
+        :is-loading="status.isConnecting ? true : undefined"
+        :loading-text="$formatMessage('header_connect')"
       >
         {{ $formatMessage('header_connect') }}
       </lukso-button>
