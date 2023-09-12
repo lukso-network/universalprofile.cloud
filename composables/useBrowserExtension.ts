@@ -20,7 +20,7 @@ const connect = async () => {
   const { showModal } = useModal()
   const { formatMessage } = useIntl()
   const { reloadProfile } = useProfileStore()
-  const { setIsConnected, reloadConnectedProfile } = useConnectionStore()
+  const { setStatus, reloadConnectedProfile } = useConnectionStore()
 
   // when no extension installed we show modal
   if (!INJECTED_PROVIDER) {
@@ -31,6 +31,8 @@ const connect = async () => {
       message: formatMessage('web3_connect_no_extension'),
     })
   }
+
+  setStatus('isConnecting', true)
 
   try {
     const { accounts, requestAccounts } = useWeb3(PROVIDERS.INJECTED)
@@ -45,7 +47,7 @@ const connect = async () => {
     const profile = await fetchProfile(address)
     reloadProfile(profile)
     reloadConnectedProfile(address, profile)
-    setIsConnected(true)
+    setStatus('isConnected', true)
     setConnectionExpiry()
     await navigateTo(profileRoute(address))
   } catch (error: any) {
@@ -94,14 +96,16 @@ const connect = async () => {
       title: formatMessage('web3_connect_error_title'),
       message: formatMessage('web3_connect_error'),
     })
+  } finally {
+    setStatus('isConnecting', false)
   }
 }
 
 const disconnect = () => {
-  const { setIsConnected } = useConnectionStore()
+  const { setStatus } = useConnectionStore()
   const { removeItem } = useLocalStorage()
 
-  setIsConnected(false)
+  setStatus('isConnected', false)
   removeItem(STORAGE_KEY.CONNECTED_ADDRESS)
   removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
 }
