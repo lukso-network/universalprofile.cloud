@@ -7,20 +7,16 @@ import { homeRoute } from '@/shared/routes'
 import { DEFAULT_GAS, DEFAULT_GAS_PRICE } from '@/shared/config'
 import { PROVIDERS } from '@/types/enums'
 
-const { profile: connectedProfile, status } = useConnectionStore()
+const { profile: connectedProfile, status, setBalance } = useConnectionStore()
 const { currentNetwork } = useAppStore()
 const { asset, onSend, receiverAddress, amount } = storeToRefs(useSendStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
-const { sendTransaction } = useWeb3(PROVIDERS.INJECTED)
+const { sendTransaction, getBalance } = useWeb3(PROVIDERS.INJECTED)
 
 onMounted(() => {
   clearSend()
-
-  if (!status.isConnected) {
-    navigateTo(homeRoute())
-  }
 
   asset.value = {
     name: 'LUKSO',
@@ -41,6 +37,10 @@ watchEffect(() => {
     ...asset.value,
     amount: connectedProfile.balance,
   }
+
+  if (!status.isConnected) {
+    navigateTo(homeRoute())
+  }
 })
 
 const handleSend = async () => {
@@ -57,6 +57,8 @@ const handleSend = async () => {
     console.log(transaction)
 
     await sendTransaction(transaction)
+    assertString(connectedProfile.address)
+    setBalance(await getBalance(connectedProfile.address))
     setStatus('success')
   } catch (error: any) {
     console.error(error)
