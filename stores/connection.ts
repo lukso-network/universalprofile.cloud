@@ -35,6 +35,10 @@ export const useConnectionStore = defineStore('connection', () => {
     setConnectedProfile(profile)
   }
 
+  const setBalance = (balance: string) => {
+    profile.balance = balance
+  }
+
   return {
     setConnectedAddress,
     profile,
@@ -43,5 +47,6 @@ export const useConnectionStore = defineStore('connection', () => {
     clearConnectedProfile,
     reloadConnectedProfile,
     setStatus,
+    setBalance,
   }
 })
