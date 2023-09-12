@@ -4,6 +4,8 @@ import { copyAssets } from '@lukso/web-components/tools/copy-assets'
 import { assets } from '@lukso/web-components/tools/assets'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 
+import siteMeta from './site.meta.json'
+
 copyAssets('./public', assets)
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -11,6 +13,9 @@ const isProduction = process.env.NODE_ENV === 'production'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: false },
+  app: {
+    head: siteMeta,
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     [
@@ -23,7 +28,7 @@ export default defineNuxtConfig({
     '@nuxtjs/plausible',
   ],
   plausible: {
-    domain: 'wallet.lukso.network',
+    domain: 'wallet.universalprofile.cloud',
   },
   device: {
     refreshOnResize: true,
