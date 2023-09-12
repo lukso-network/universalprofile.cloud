@@ -135,8 +135,13 @@ const providerEvents = async (provider: any) => {
     }
   }
 
+  const handleDisconnect = () => {
+    location.reload()
+  }
+
   onMounted(async () => {
     provider?.on?.('accountsChanged', handleAccountsChanged)
+    provider?.on?.('disconnect', handleDisconnect)
   })
 
   onUnmounted(() => {
