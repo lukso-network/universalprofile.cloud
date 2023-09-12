@@ -1,5 +1,14 @@
 <script setup lang="ts">
 const { profile } = useProfileStore()
+
+const handleCopyAddress = () => {
+  try {
+    assertAddress(profile.address)
+    navigator.clipboard.writeText(profile.address)
+  } catch (error) {
+    console.error(error)
+  }
+}
 </script>
 
 <template>
@@ -30,6 +39,8 @@ const { profile } = useProfileStore()
           slice-by="40"
           address-color="neutral-100"
           name-color="neutral-100"
+          class="cursor-pointer"
+          @click="handleCopyAddress"
         ></lukso-username>
       </div>
     </lukso-card>
