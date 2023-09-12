@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     '@nuxtjs/plausible',
   ],
   plausible: {
-    domain: 'wallet.lukso.network',
+    domain: 'wallet.universalprofile.cloud',
   },
   device: {
     refreshOnResize: true,
