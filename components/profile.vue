@@ -24,6 +24,7 @@ const handleCopyAddress = () => {
           :profile-url="profile.profileImageUrl"
           :profile-address="profile.address"
           class="mb-4"
+          has-identicon
         >
         </lukso-profile>
         <lukso-username
