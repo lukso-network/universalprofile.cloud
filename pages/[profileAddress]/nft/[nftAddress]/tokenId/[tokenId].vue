@@ -112,7 +112,11 @@ watchEffect(() => {
           "
           :images="nft.data.collectionImages"
         />
-        <AssetStandardInfo v-if="nft?.standard" :standard="nft.standard" />
+        <AssetStandardInfo
+          v-if="nft?.standard"
+          :standard="nft.standard"
+          class="hidden"
+        />
       </div>
     </div>
     <lukso-icon
