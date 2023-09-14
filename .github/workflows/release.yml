@@ -1,0 +1,83 @@
+on:
+  push:
+    branches:
+      - main
+      - patch/*
+  pull_request:
+    branches:
+      - main
+      - patch/*
+
+env:
+  PACKAGE_TYPE: node
+
+concurrency:
+  group: compile-${{ github.ref }}
+  cancel-in-progress: true
+
+name: github release
+jobs:
+  release-please:
+    outputs:
+      tag_name: ${{ steps.version.outputs.tag_name }}
+      sha: ${{ steps.version.outputs.sha }}
+      release_created: ${{ steps.version.outputs.release_created }}
+      pr_number: ${{ steps.version.outputs.pr_number }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+      - name: Please release
+        if: ${{ github.event.number == '' }}
+        uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          release-type: ${{ env.PACKAGE_TYPE }}
+          default-branch: main
+      - id: version
+        name: Detect final version info
+        run: |
+          if [ "${{ steps.release.outputs.release_created }}" != "true" ]
+          then
+            SHA="${{ github.sha }}"
+            RELEASE_CREATED="false"
+            # For the extension we cannot use - but must use . for the PR number.
+            DESCRIBE=$(git describe --tags --always)
+            echo "describe: $DESCRIBE"
+            OFFSET=$(echo $DESCRIBE | sed -n 's#.*-\([0-9]*\)-.*#\1#p')
+            if [ -n "$OFFSET" ]
+            then
+              OFFSET=".${OFFSET}"
+            fi
+            if [ -z "${{ github.event.number }}" ]
+            then
+              TAG_NAME="v$(node -pe 'require("./.release-please-manifest.json")["."]')${OFFSET}"
+            else
+              TAG_NAME="v$(node -pe 'require("./.release-please-manifest.json")["."]').10000.${{ github.event.number }}"
+            fi
+            echo "PR: ${{ github.event.number }}"
+          else
+            SHA="${{ steps.release.outputs.sha }}"
+            RELEASE_CREATED="true"
+            TAG_NAME="${{ steps.release.outputs.tag_name }}"
+          fi
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "pr_number=${{ github.event.number }}" >> $GITHUB_OUTPUT
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
+          echo "release_created=$RELEASE_CREATED" >> $GITHUB_OUTPUT
+          echo "Tag: $TAG_NAME"
+          echo "Sha: $SHA"
+          echo "Release: $RELEASE_CREATED"
+
+  artifacts-job:
+    needs: release-please
+    uses: ./.github/workflows/artifacts.yml
+    secrets: inherit
+    with:
+      sha: ${{ needs.release-please.outputs.sha }}
+      ref: ${{ github.ref }}
+      tag_name: ${{ needs.release-please.outputs.tag_name }}
+      release_created: ${{ needs.release-please.outputs.release_created }}
+      pr_number: ${{ needs.release-please.outputs.pr_number }}
