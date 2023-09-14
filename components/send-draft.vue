@@ -182,11 +182,7 @@ const handleSend = () => {
         is-full-width
         >{{
           $formatMessage('send_button', {
-            amount: !!Number(amount)
-              ? $formatNumber(amount || '', {
-                  maximumFractionDigits: 6,
-                })
-              : '',
+            amount: !!Number(amount) ? $formatNumber(amount || '') : '',
             symbol: asset?.symbol || '',
           })
         }}</lukso-button
