@@ -1,11 +1,11 @@
 on:
   push:
     branches:
-      - main
+      - develop
       - patch/*
   pull_request:
     branches:
-      - main
+      - develop
       - patch/*
 
 env:
