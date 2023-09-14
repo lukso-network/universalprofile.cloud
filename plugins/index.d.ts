@@ -1,7 +1,9 @@
+import { FormatNumberOptions } from '@formatjs/intl'
+
 declare module '#app' {
   interface NuxtApp {
     $formatMessage(key: string, options?: Record<string, string>): string
-    $formatNumber(value: string | number): string
+    $formatNumber(value: string | number, options?: FormatNumberOptions): string
     $formatDate(date?: string | number | Date): string
     $formatTime(date?: string | number | Date): string
   }
@@ -10,7 +12,7 @@ declare module '#app' {
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $formatMessage(key: string, options?: Record<string, string>): string
-    $formatNumber(value: string | number): string
+    $formatNumber(value: string | number, options?: FormatNumberOptions): string
     $formatDate(date?: string | number | Date): string
     $formatTime(date?: string | number | Date): string
   }

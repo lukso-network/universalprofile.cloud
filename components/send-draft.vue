@@ -174,13 +174,19 @@ const handleSend = () => {
         class="w-full mt-4"
         :loading="isReceiverLoading"
         :disabled="
-          !receiverAddress || receiverError || !amount ? true : undefined
+          !receiverAddress || receiverError || !Number(amount)
+            ? true
+            : undefined
         "
         @click="handleSend"
         is-full-width
         >{{
           $formatMessage('send_button', {
-            amount: $formatNumber(amount || '0'),
+            amount: !!Number(amount)
+              ? $formatNumber(amount || '', {
+                  maximumFractionDigits: 6,
+                })
+              : '',
             symbol: asset?.symbol || '',
           })
         }}</lukso-button
