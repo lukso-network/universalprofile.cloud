@@ -6,9 +6,9 @@ const {
   getToken,
   status: profileStatus,
   profile: viewedProfile,
-} = useProfileStore()
+} = useViewedProfileStore()
 const { status: connectionStatus, profile: connectedProfile } =
-  useConnectionStore()
+  useConnectedProfileStore()
 const token = ref<Token>()
 
 watchEffect(() => {

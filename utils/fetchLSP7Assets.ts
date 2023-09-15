@@ -3,7 +3,6 @@ import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/i
 
 import { PROVIDERS } from '@/types/enums'
 import { LSP7Asset } from '@/types/assets'
-import { ASSET_ICON_PLACEHOLDER_URL } from '@/shared/config'
 
 const fetchLSP7Assets = async (
   assetAddress: Address,

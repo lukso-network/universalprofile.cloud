@@ -1,5 +1,3 @@
-import { DEFAULT_NETWORK_ID, NETWORKS } from '@/shared/config'
-
 /**
  * Connection store
  * Keeps the information about connected profile and it's status

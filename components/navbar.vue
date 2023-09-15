@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { homeRoute, profileRoute, sendRoute } from '@/shared/routes'
-import { IS_TESTNET } from '@/shared/config'
-
-const { profile: connectedProfile, status } = useConnectionStore()
+const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
-const { reloadProfile } = useProfileStore()
+const { reloadProfile } = useViewedProfileStore()
 
 const handleNavigateProfile = async () => {
   try {

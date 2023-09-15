@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 
-const { nfts, assetFilter } = storeToRefs(useProfileStore())
+const { nfts, assetFilter } = storeToRefs(useViewedProfileStore())
 </script>
 
 <template>
