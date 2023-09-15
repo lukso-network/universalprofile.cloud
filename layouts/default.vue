@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { notFoundRoute } from '@/shared/routes'
-const { setStatus, setAddress, setProfile } = useProfileStore()
+const {
+  setStatus,
+  profile: viewedProfile,
+  setProfile,
+} = useViewedProfileStore()
 
-const setupWalletProfile = async () => {
+const setupViewedProfile = async () => {
   try {
     const profileAddress = useRouter().currentRoute.value.params?.profileAddress
 
     setStatus('isProfileLoading', true)
     assertAddress(profileAddress, 'wallet')
-    setAddress(profileAddress)
+    viewedProfile.address = profileAddress
     const profile = await fetchProfile(profileAddress)
     setProfile(profile)
   } catch (error) {
@@ -19,10 +22,10 @@ const setupWalletProfile = async () => {
   }
 }
 
-const setupWalletAssets = async () => {
+const setupViewedAssets = async () => {
   try {
     const { profile, setOwnedAssets, setStatus, setCreatedAssets } =
-      useProfileStore()
+      useViewedProfileStore()
     const { fetchAssets } = useErc725()
 
     setStatus('isAssetLoading', true)
@@ -38,8 +41,8 @@ const setupWalletAssets = async () => {
 }
 
 onMounted(async () => {
-  await setupWalletProfile()
-  await setupWalletAssets()
+  await setupViewedProfile()
+  await setupViewedAssets()
 })
 </script>
 

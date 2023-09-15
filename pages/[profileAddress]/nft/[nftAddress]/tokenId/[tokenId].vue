@@ -8,9 +8,9 @@ const {
   getNft,
   status: profileStatus,
   profile: viewedProfile,
-} = useProfileStore()
+} = useViewedProfileStore()
 const { status: connectionStatus, profile: connectedProfile } =
-  useConnectionStore()
+  useConnectedProfileStore()
 const nft = ref<Nft>()
 
 watchEffect(() => {

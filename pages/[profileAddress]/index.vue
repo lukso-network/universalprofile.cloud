@@ -3,9 +3,9 @@ import { storeToRefs } from 'pinia'
 
 import { AssetFilter } from '@/types/assets'
 
-const { status } = useProfileStore()
+const { status } = useViewedProfileStore()
 
-const { assetFilter, tokens, nfts } = storeToRefs(useProfileStore())
+const { assetFilter, tokens, nfts } = storeToRefs(useViewedProfileStore())
 
 const ownedTokensCount = computed(
   () => tokens.value(AssetFilter.owned)?.length + 1 // we +1 for LYX token that we show even with 0 balance

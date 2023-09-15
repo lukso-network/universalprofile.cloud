@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { fromWei } from 'web3-utils'
 
-import { sendRoute } from '@/shared/routes'
-
-const { profile: connectedProfile, status } = useConnectionStore()
-const { profile: viewedProfile } = useProfileStore()
+const { profile: connectedProfile, status } = useConnectedProfileStore()
+const { profile: viewedProfile } = useViewedProfileStore()
 const appStore = useAppStore()
 
 const handleSendAsset = () => {

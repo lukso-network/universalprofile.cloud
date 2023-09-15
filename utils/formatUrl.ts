@@ -1,5 +1,3 @@
-import { IPFS_URL } from '@/shared/config'
-
 /**
  * Replaces protocol in the given URL with their respective gateway URLs.
  * If the URL does not contain either protocol, returns the original URL.

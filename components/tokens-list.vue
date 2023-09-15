@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 
 import { AssetFilter } from '@/types/assets'
 
-const { tokens, assetFilter } = storeToRefs(useProfileStore())
+const { tokens, assetFilter } = storeToRefs(useViewedProfileStore())
 </script>
 
 <template>

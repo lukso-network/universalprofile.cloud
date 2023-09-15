@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { MODAL_DEFAULT_TEMPLATE } from '@/shared/config'
-
 const appStore = useAppStore()
 const modalTemplateComponent = shallowRef()
 

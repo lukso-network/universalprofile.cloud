@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { profile } = useProfileStore()
+const { profile } = useViewedProfileStore()
 
 const handleCopyAddress = () => {
   try {

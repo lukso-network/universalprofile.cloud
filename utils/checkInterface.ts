@@ -1,4 +1,3 @@
-import { eip165ABI } from '@/shared/abis/eip165ABI'
 import { PROVIDERS } from '@/types/enums'
 
 /**

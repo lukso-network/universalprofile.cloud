@@ -3,10 +3,6 @@ import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 
 import { fetchProfile } from '@/utils/fetchProfile'
 import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
-import {
-  CONNECTION_EXPIRY_CHECK_INTERVAL_MS,
-  INJECTED_PROVIDER,
-} from '@/shared/config'
 import { assertString } from '@/utils/validators'
 
 if (typeof window !== 'undefined') {
@@ -17,9 +13,12 @@ if (typeof window !== 'undefined') {
 const web3Store = useWeb3Store()
 const appStore = useAppStore()
 const { providerEvents, disconnect } = useBrowserExtension()
-const { reloadProfile } = useProfileStore()
-const { setConnectedAddress, setConnectedProfile, setStatus } =
-  useConnectionStore()
+const { reloadProfile } = useViewedProfileStore()
+const {
+  setProfile: setConnectedProfile,
+  setStatus,
+  profile: connectedProfile,
+} = useConnectedProfileStore()
 const router = useRouter()
 
 const setupTranslations = () => {
@@ -53,7 +52,7 @@ const setupConnectedProfile = async () => {
       setStatus('isConnected', true)
       setStatus('isProfileLoading', true)
       const profile = await fetchProfile(connectedAddress)
-      setConnectedAddress(connectedAddress)
+      connectedProfile.address = connectedAddress
       setConnectedProfile(profile)
     }
   } catch (error) {

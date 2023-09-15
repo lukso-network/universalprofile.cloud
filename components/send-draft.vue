@@ -3,7 +3,7 @@ import { fromWei, isAddress } from 'web3-utils'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 
-const { profile: connectedProfile } = useConnectionStore()
+const { profile: connectedProfile } = useConnectedProfileStore()
 const { asset, receiverAddress, receiver, receiverError, amount, onSend } =
   storeToRefs(useSendStore())
 const isReceiverLoading = ref<boolean>(false)
