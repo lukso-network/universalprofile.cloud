@@ -506,17 +506,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@erc725/smart-contracts@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "@erc725/smart-contracts@npm:5.1.0"
-  dependencies:
-    "@openzeppelin/contracts": ^4.9.2
-    "@openzeppelin/contracts-upgradeable": ^4.9.2
-    solidity-bytes-utils: 0.8.0
-  checksum: 63748c8b6af72de0e87a7e015a2dae6926876705c3798f72da4b57d37e05d7eb67cd8ff527e3f5f1e85425035d5ca811577b11a1ec4a8030968bac206738dcee
-  languageName: node
-  linkType: hard
-
 "@erc725/smart-contracts@npm:^5.2.0":
   version: 5.2.0
   resolution: "@erc725/smart-contracts@npm:5.2.0"
@@ -1634,25 +1623,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/lsp-factory.js@npm:3.0.0":
-  version: 3.0.0
-  resolution: "@lukso/lsp-factory.js@npm:3.0.0"
+"@lukso/lsp-factory.js@npm:3.1.1":
+  version: 3.1.1
+  resolution: "@lukso/lsp-factory.js@npm:3.1.1"
   dependencies:
     "@erc725/erc725.js": ^0.18.0
     "@ethersproject/abi": ^5.7.0
     "@ethersproject/experimental": ^5.7.0
-    "@lukso/lsp-smart-contracts": ^0.10.3
+    "@lukso/lsp-smart-contracts": ^0.11.1
     axios: ^0.23.0
     browser-image-compression: ^2.0.0
     ethers: ^5.7.0
     ipfs-http-client: 52.0.3
     ipfs-utils: 8.1.6
     rxjs: ^7.8.0
-  checksum: c1d93a38f0445438fc85629d70c7d5eb7e322ead34a50668b7a65c81ba5f8cf0cea8341f702b2e7539b64c6a1874f96bc50599f048ef6a01b2b1f5ccfd35f910
+  checksum: c39e57118350e45c351b9d1204941de36754422988c0f2ce38ab158fae6c272fbe5adef67d2454a6ef0808385c44c9eec16a5fad60a2f551bab9353a40b0a6f0
   languageName: node
   linkType: hard
 
-"@lukso/lsp-smart-contracts@npm:0.11.1":
+"@lukso/lsp-smart-contracts@npm:0.11.1, @lukso/lsp-smart-contracts@npm:^0.11.1":
   version: 0.11.1
   resolution: "@lukso/lsp-smart-contracts@npm:0.11.1"
   dependencies:
@@ -1664,24 +1653,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/lsp-smart-contracts@npm:^0.10.3":
-  version: 0.10.3
-  resolution: "@lukso/lsp-smart-contracts@npm:0.10.3"
-  dependencies:
-    "@erc725/smart-contracts": ^5.1.0
-    "@openzeppelin/contracts": ^4.9.2
-    "@openzeppelin/contracts-upgradeable": ^4.9.2
-    solidity-bytes-utils: 0.8.0
-  checksum: d3ca0b776c79260d49fc9314131d8a5a871df26b84cf49e72e5765e80c84fb0410260669c7d5b0f84260219cb8782f8a5850c2c133db1dec89a47b8ef41af39a
-  languageName: node
-  linkType: hard
-
-"@lukso/web-components@npm:1.34.0":
-  version: 1.34.0
-  resolution: "@lukso/web-components@npm:1.34.0"
+"@lukso/web-components@npm:1.34.1":
+  version: 1.34.1
+  resolution: "@lukso/web-components@npm:1.34.1"
   dependencies:
     ethereum-blockies-base64: ^1.0.2
-  checksum: 68509d4002ce1235e31d466c91e6520302ed86dea09d8587e3cc1e03d98f5a88b68a9f41975860b3dc733408db18725813d24670cb1c2e9f5036be32f2226022
+  checksum: e233bd5eaec440f8d6a92eb402dfe3e264c474ed788b7d4dba9f4c9af9503fb8ba0ce4b240fb0caaa612fb1476238c26a58196e3518b1751f79ca14448b0e29a
   languageName: node
   linkType: hard
 
@@ -15967,9 +15944,9 @@ __metadata:
     "@erc725/erc725.js": 0.18.0
     "@esbuild-plugins/node-globals-polyfill": 0.2.3
     "@formatjs/intl": ^2.9.0
-    "@lukso/lsp-factory.js": 3.0.0
+    "@lukso/lsp-factory.js": 3.1.1
     "@lukso/lsp-smart-contracts": 0.11.1
-    "@lukso/web-components": 1.34.0
+    "@lukso/web-components": 1.34.1
     "@nuxt/devtools": ^0.7.4
     "@nuxtjs/device": ^3.1.0
     "@nuxtjs/plausible": ^0.2.1
