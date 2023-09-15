@@ -124,6 +124,6 @@ onMounted(async () => {
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-    <Modal />
+    <AppModal />
   </div>
 </template>

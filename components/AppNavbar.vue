@@ -75,7 +75,7 @@ const browserSupportExtension = extensionStore.url !== ''
       >
         {{ $formatMessage('header_my_profile') }}
       </lukso-button>
-      <NavbarProfileDropdown v-if="status.isConnected" />
+      <AppNavbarProfileDropdown v-if="status.isConnected" />
       <lukso-button
         v-else-if="isUniversalProfileExtension()"
         variant="secondary"
