@@ -48,8 +48,8 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen grid grid-rows-[max-content,auto,max-content]">
-    <Navbar />
+    <AppNavbar />
     <slot />
-    <Footer />
+    <AppFooter />
   </div>
 </template>

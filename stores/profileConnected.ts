@@ -4,7 +4,7 @@
  * Keeps the information about connected profile
  *
  */
-export const useConnectedProfileStore = defineStore('connectedProfile', () => {
+export const useConnectedProfileStore = defineStore('profileConnected', () => {
   const profile = reactive<Profile>({} as Profile)
   const status = reactive({
     isConnected: false,
@@ -19,7 +19,7 @@ export const useConnectedProfileStore = defineStore('connectedProfile', () => {
   }
 
   return {
-    ...useBaseProfile(profile),
+    ...useProfileBase(profile),
     profile,
     status,
     setStatus,

@@ -4,7 +4,7 @@
  * @param profile - Profile object
  * @returns - methods
  */
-export const useBaseProfile = (profile: Profile) => {
+export const useProfileBase = (profile: Profile) => {
   return {
     setProfile(newProfile: Profile) {
       Object.assign(profile, newProfile)

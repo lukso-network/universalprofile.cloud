@@ -20,7 +20,7 @@ export const NETWORKS: NetworkInfo[] = [
 ]
 
 // name of default modal component name
-export const MODAL_DEFAULT_TEMPLATE = 'default'
+export const MODAL_DEFAULT_TEMPLATE = 'Default'
 
 // global provider object injected by browser extension
 export const INJECTED_PROVIDER = window?.lukso
