@@ -17,9 +17,9 @@ const handleSendAsset = () => {
 
 <template>
   <lukso-card size="small" is-full-width
-    ><div slot="content" class="p-4">
-      <div class="flex gap-6 pt-4">
-        <div class="pl-4 flex flex-col items-center">
+    ><div slot="content" class="p-4 pt-11 flex flex-col justify-center">
+      <div class="flex gap-6">
+        <div class="flex flex-col items-center">
           <div class="border border-neutral-90 rounded-full p-0.5">
             <lukso-profile
               size="medium"
@@ -39,19 +39,19 @@ const handleSendAsset = () => {
             }}</span>
           </div>
           <div class="paragraph-inter-12-regular pb-4 hidden">$ 123.24</div>
-          <div class="flex justify-end w-full pt-4">
-            <lukso-button
-              v-if="
-                status.isConnected &&
-                viewedProfile.address === connectedProfile.address
-              "
-              size="small"
-              variant="secondary"
-              @click="handleSendAsset"
-              >{{ $formatMessage('button_send') }}</lukso-button
-            >
-          </div>
         </div>
+      </div>
+      <div class="flex justify-end w-full pt-4">
+        <lukso-button
+          v-if="
+            status.isConnected &&
+            viewedProfile.address === connectedProfile.address
+          "
+          size="small"
+          variant="secondary"
+          @click="handleSendAsset"
+          >{{ $formatMessage('button_send') }}</lukso-button
+        >
       </div>
     </div>
   </lukso-card>
