@@ -13,7 +13,6 @@ if (typeof window !== 'undefined') {
 const web3Store = useWeb3Store()
 const appStore = useAppStore()
 const { providerEvents, disconnect } = useBrowserExtension()
-const { reloadProfile } = useViewedProfileStore()
 const {
   setProfile: setConnectedProfile,
   setStatus,
@@ -81,8 +80,8 @@ const routerBackProfileLoad = async () => {
         assertAddress(toProfileAddress, 'profile')
 
         if (toProfileAddress !== fromProfileAddress) {
-          const profile = await fetchProfile(toProfileAddress)
-          reloadProfile(profile)
+          await setupViewedProfile()
+          await setupViewedAssets()
         }
       } catch (error) {
         console.error(error)
