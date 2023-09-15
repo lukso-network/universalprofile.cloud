@@ -10,6 +10,11 @@ import defaultMessages from '@/translations/en_US.json'
 const intl = ref<IntlShape>()
 const messages = defaultMessages as unknown as Record<string, string>
 
+// For more options check https://github.com/formatjs/formatjs/blob/main/packages/ecma402-abstract/types/number.ts#L38-L45
+const formatNumberDefaultOptions = {
+  maximumFractionDigits: 6,
+}
+
 export const defaultConfig: IntlConfig = {
   locale: 'en-US',
   messages,
@@ -54,7 +59,12 @@ const formatNumber = (
     return '0'
   }
 
-  return intl.value?.formatNumber(Number(value), options) || ''
+  const mergedOptions = {
+    ...formatNumberDefaultOptions,
+    ...options,
+  }
+
+  return intl.value?.formatNumber(Number(value), mergedOptions) || ''
 }
 
 /**
