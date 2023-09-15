@@ -26,7 +26,7 @@ env:
 name: build artifacts
 jobs:
   install:
-    name: Install and Lint
+    name: Install
     outputs:
       node_version: ${{ steps.nodeversion.outputs.content }}
     runs-on: ubuntu-latest
