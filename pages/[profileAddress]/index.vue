@@ -89,7 +89,7 @@ const hasEmptyNfts = computed(
             ></lukso-sanitize>
           </div>
           <div v-else>
-            <TokensList v-if="hasEmptyTokens" />
+            <TokenList v-if="hasEmptyTokens" />
             <NftList v-if="hasEmptyNfts" />
           </div>
         </div>

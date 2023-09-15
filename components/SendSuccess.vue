@@ -10,7 +10,7 @@ const handleSendMore = () => {
 <template>
   <lukso-card variant="with-header" is-full-width>
     <div slot="header" class="px-6 py-10 flex flex-col">
-      <ProfileHeader />
+      <SendProfileHeader />
     </div>
     <div slot="content" class="p-8 flex flex-col items-center">
       <div class="heading-inter-17-semi-bold">

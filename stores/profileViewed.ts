@@ -14,7 +14,7 @@ import {
  * Keeps the information about currently viewed profile
  *
  */
-export const useViewedProfileStore = defineStore('viewedProfile', () => {
+export const useViewedProfileStore = defineStore('profileViewed', () => {
   const profile = reactive<Profile>({} as Profile)
   const status = reactive({ isProfileLoading: true, isAssetLoading: true })
   const assetFilter = ref<AssetFilter>(AssetFilter.owned)
@@ -105,7 +105,7 @@ export const useViewedProfileStore = defineStore('viewedProfile', () => {
   }
 
   return {
-    ...useBaseProfile(profile),
+    ...useProfileBase(profile),
     profile,
     status,
     setStatus,

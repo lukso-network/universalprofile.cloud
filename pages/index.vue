@@ -63,7 +63,7 @@ watchEffect(() => {
                 "
               ></lukso-sanitize>
             </div>
-            <ConnectOrInstallButton />
+            <AppButtonConnectOrInstall />
           </div>
         </lukso-card>
         <div
