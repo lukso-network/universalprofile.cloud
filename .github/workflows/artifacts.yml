@@ -26,7 +26,7 @@ env:
 name: build artifacts
 jobs:
   install:
-    name: Install and Lint
+    name: Install
     outputs:
       node_version: ${{ steps.nodeversion.outputs.content }}
     runs-on: ubuntu-latest
@@ -49,10 +49,12 @@ jobs:
       - name: ⚙️ Install
         run: yarn
 
-  build:
+  lint:
     runs-on: ubuntu-latest
     needs: install
     if: ${{ inputs.release_created != 'true' }}
+    name: Lint
+
     steps:
       - name: 🛎️ Checkout
         uses: actions/checkout@v3
@@ -69,14 +71,10 @@ jobs:
       - name: 🎨 Lint JS
         run: yarn lint
 
-      # - name: 🏗️ Build (for publish)
-      #   if: ${{ inputs.release_created == 'true' }}
-      #   run: yarn build
-
   test:
     runs-on: ubuntu-latest
     needs: install
-    name: App Unit Tests
+    name: Tests
 
     steps:
       - name: Checkout ${{ inputs.sha }}
@@ -109,6 +107,8 @@ jobs:
       - test
       - install
     runs-on: ubuntu-latest
+    name: Deploy
+
     steps:
       - name: Extract branch name
         shell: bash
