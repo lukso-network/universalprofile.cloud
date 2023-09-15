@@ -17,9 +17,9 @@ const handleSendAsset = () => {
 
 <template>
   <lukso-card size="small" is-full-width
-    ><div slot="content" class="p-4">
-      <div class="flex gap-6 pt-4">
-        <div class="pl-4 flex flex-col items-center">
+    ><div slot="content" class="p-4 pt-11 flex justify-center">
+      <div class="flex gap-6">
+        <div class="flex flex-col items-center">
           <div class="border border-neutral-90 rounded-full p-0.5">
             <lukso-profile
               size="medium"
