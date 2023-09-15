@@ -1,16 +1,14 @@
-export const setupViewedAssets = async () => {
+export const setupViewedAssets = async (profileAddress: Address) => {
   const { setStatus } = useViewedProfileStore()
 
   try {
-    const { profile, setOwnedAssets, setStatus, setCreatedAssets } =
+    const { setOwnedAssets, setStatus, setCreatedAssets } =
       useViewedProfileStore()
     const { fetchAssets } = useErc725()
 
     setStatus('isAssetLoading', true)
-    assertNotUndefined(profile.address)
-
-    setOwnedAssets(await fetchAssets(profile.address, 'LSP5ReceivedAssets[]'))
-    setCreatedAssets(await fetchAssets(profile.address, 'LSP12IssuedAssets[]'))
+    setOwnedAssets(await fetchAssets(profileAddress, 'LSP5ReceivedAssets[]'))
+    setCreatedAssets(await fetchAssets(profileAddress, 'LSP12IssuedAssets[]'))
   } catch (error) {
     console.error(error)
   } finally {

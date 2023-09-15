@@ -1,4 +1,4 @@
-export const setupViewedProfile = async () => {
+export const setupViewedProfile = async (profileAddress: Address) => {
   const {
     setStatus,
     profile: viewedProfile,
@@ -6,10 +6,7 @@ export const setupViewedProfile = async () => {
   } = useViewedProfileStore()
 
   try {
-    const profileAddress = useRouter().currentRoute.value.params?.profileAddress
-
     setStatus('isProfileLoading', true)
-    assertAddress(profileAddress, 'wallet')
     viewedProfile.address = profileAddress
     const profile = await fetchProfile(profileAddress)
     setProfile(profile)

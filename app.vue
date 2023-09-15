@@ -80,8 +80,8 @@ const routerBackProfileLoad = async () => {
         assertAddress(toProfileAddress, 'profile')
 
         if (toProfileAddress !== fromProfileAddress) {
-          await setupViewedProfile()
-          await setupViewedAssets()
+          await setupViewedProfile(toProfileAddress)
+          await setupViewedAssets(toProfileAddress)
         }
       } catch (error) {
         console.error(error)
