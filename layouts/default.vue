@@ -1,7 +1,9 @@
 <script setup lang="ts">
 onMounted(async () => {
-  await setupViewedProfile()
-  await setupViewedAssets()
+  const profileAddress = useRouter().currentRoute.value.params?.profileAddress
+
+  await setupViewedProfile(profileAddress)
+  await setupViewedAssets(profileAddress)
 })
 </script>
 
