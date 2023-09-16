@@ -35,7 +35,7 @@ jobs:
         id: release
         with:
           release-type: ${{ env.PACKAGE_TYPE }}
-          default-branch: main
+          default-branch: develop
       - id: version
         name: Detect final version info
         run: |
