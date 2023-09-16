@@ -1,5 +1,3 @@
-import { EXTENSION_STORE_LINKS } from '@/shared/config'
-
 const detectBrowser = (): BrowserInfo | undefined => {
   const { isChrome, isBrave, isFirefox, isSafari, isEdge, isOpera } =
     useDevice() as DeviceExtended

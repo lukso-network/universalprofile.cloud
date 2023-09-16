@@ -11,8 +11,6 @@ import { SupportedAssets, TokenIdType } from '@/types/assets'
 import { getImageUrlBySize } from '@/utils/getProfileImages'
 import LSP8IdentifiableDigitalAsset from '@/shared/schemas/LSP8IdentifiableDigitalAsset.json'
 import { PROVIDERS } from '@/types/enums'
-import { getDataABI } from '@/shared/abis/getDataABI'
-import { IPFS_URL } from '@/shared/config'
 
 export interface LSP3ProfileJSON {
   LSP3Profile: LSP3Profile
@@ -64,7 +62,7 @@ const fetchAssets = async (profileAddress: Address, schema: string) => {
   )
   const result = await erc725.fetchData(schema)
   const assetAddresses = result.value as Address[]
-  const { profile } = useProfileStore()
+  const { profile } = useViewedProfileStore()
 
   const assets = Promise.all(
     assetAddresses.map(async address => {

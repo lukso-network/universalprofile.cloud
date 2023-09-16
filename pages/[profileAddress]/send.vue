@@ -3,11 +3,9 @@ import { storeToRefs } from 'pinia'
 import { toWei } from 'web3-utils'
 import { TransactionConfig } from 'web3-core'
 
-import { homeRoute } from '@/shared/routes'
-import { DEFAULT_GAS, DEFAULT_GAS_PRICE } from '@/shared/config'
 import { PROVIDERS } from '@/types/enums'
 
-const { profile: connectedProfile, status, setBalance } = useConnectionStore()
+const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { currentNetwork } = useAppStore()
 const { asset, onSend, receiverAddress, amount } = storeToRefs(useSendStore())
 const { setStatus, clearSend } = useSendStore()
@@ -58,7 +56,7 @@ const handleSend = async () => {
 
     await sendTransaction(transaction)
     assertString(connectedProfile.address)
-    setBalance(await getBalance(connectedProfile.address))
+    connectedProfile.balance = await getBalance(connectedProfile.address)
     setStatus('success')
   } catch (error: any) {
     console.error(error)

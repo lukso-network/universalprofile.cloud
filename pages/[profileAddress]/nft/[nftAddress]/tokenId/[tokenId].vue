@@ -8,9 +8,9 @@ const {
   getNft,
   status: profileStatus,
   profile: viewedProfile,
-} = useProfileStore()
+} = useViewedProfileStore()
 const { status: connectionStatus, profile: connectedProfile } =
-  useConnectionStore()
+  useConnectedProfileStore()
 const nft = ref<Nft>()
 
 watchEffect(() => {
@@ -112,7 +112,11 @@ watchEffect(() => {
           "
           :images="nft.data.collectionImages"
         />
-        <AssetStandardInfo v-if="nft?.standard" :standard="nft.standard" />
+        <AssetStandardInfo
+          v-if="nft?.standard"
+          :standard="nft.standard"
+          class="hidden"
+        />
       </div>
     </div>
     <lukso-icon

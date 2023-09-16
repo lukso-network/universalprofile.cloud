@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 
-const { profile: connectedProfile } = useConnectionStore()
+const { profile: connectedProfile } = useConnectedProfileStore()
 const { receiver } = storeToRefs(useSendStore())
 </script>
 

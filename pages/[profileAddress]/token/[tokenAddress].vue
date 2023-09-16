@@ -6,9 +6,9 @@ const {
   getToken,
   status: profileStatus,
   profile: viewedProfile,
-} = useProfileStore()
+} = useViewedProfileStore()
 const { status: connectionStatus, profile: connectedProfile } =
-  useConnectionStore()
+  useConnectedProfileStore()
 const token = ref<Token>()
 
 watchEffect(() => {
@@ -77,7 +77,11 @@ watchEffect(() => {
           v-if="token?.data && 'images' in token.data && token.data.images"
           :images="token.data.images"
         />
-        <AssetStandardInfo v-if="token?.standard" :standard="token.standard" />
+        <AssetStandardInfo
+          v-if="token?.standard"
+          :standard="token.standard"
+          class="hidden"
+        />
       </div>
     </div>
     <lukso-icon

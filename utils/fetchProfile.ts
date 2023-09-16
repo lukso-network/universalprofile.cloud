@@ -1,8 +1,6 @@
 import { INTERFACE_IDS, SupportedStandards } from '@lukso/lsp-smart-contracts'
 
 import { PROVIDERS } from '@/types/enums'
-import { getDataABI } from '@/shared/abis/getDataABI'
-import { InterfaceError } from '@/shared/errors'
 
 export const fetchProfile = async (profileAddress: Address) => {
   const { contract, isEoA } = useWeb3(PROVIDERS.RPC)

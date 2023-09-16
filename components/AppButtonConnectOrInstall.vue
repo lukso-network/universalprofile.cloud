@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { connect, isUniversalProfileExtension } = useBrowserExtension()
-const { status } = useConnectionStore()
+const { status } = useConnectedProfileStore()
 
 const handleConnect = async () => {
   connect()

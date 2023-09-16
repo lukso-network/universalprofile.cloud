@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { nftRoute, sendRoute } from '@/shared/routes'
 import { Nft } from '@/types/assets'
 
 type Props = {
@@ -9,8 +8,8 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { profile: connectedProfile, status } = useConnectionStore()
-const { profile: viewedProfile } = useProfileStore()
+const { profile: connectedProfile, status } = useConnectedProfileStore()
+const { profile: viewedProfile } = useViewedProfileStore()
 
 const handleShowAsset = () => {
   try {

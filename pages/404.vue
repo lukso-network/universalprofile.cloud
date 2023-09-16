@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { homeRoute } from '@/shared/routes'
-
 const { formatMessage } = useIntl()
 
 const handleVisitHomepage = () => {

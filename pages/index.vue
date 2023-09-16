@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { EXTENSION_STORE_LINKS } from '@/shared/config'
-import { profileRoute } from '@/shared/routes'
-
 definePageMeta({
   layout: 'landing',
 })
@@ -10,7 +7,7 @@ const supportedBrowsers = Object.entries(EXTENSION_STORE_LINKS)
   .filter(entry => entry[1] !== '')
   .map(browser => browser[0])
 
-const { status, profile } = useConnectionStore()
+const { status, profile } = useConnectedProfileStore()
 const { isUniversalProfileExtension } = useBrowserExtension()
 
 watchEffect(() => {
@@ -66,7 +63,7 @@ watchEffect(() => {
                 "
               ></lukso-sanitize>
             </div>
-            <ConnectOrInstallButton />
+            <AppButtonConnectOrInstall />
           </div>
         </lukso-card>
         <div

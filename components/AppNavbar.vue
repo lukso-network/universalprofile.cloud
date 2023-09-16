@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { homeRoute, profileRoute, sendRoute } from '@/shared/routes'
-import { IS_TESTNET } from '@/shared/config'
-
-const { profile: connectedProfile, status } = useConnectionStore()
+const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
-const { reloadProfile } = useProfileStore()
+const { reloadProfile } = useViewedProfileStore()
 
 const handleNavigateProfile = async () => {
   try {
@@ -78,7 +75,7 @@ const browserSupportExtension = extensionStore.url !== ''
       >
         {{ $formatMessage('header_my_profile') }}
       </lukso-button>
-      <ProfileDropdown v-if="status.isConnected" />
+      <AppNavbarProfileDropdown v-if="status.isConnected" />
       <lukso-button
         v-else-if="isUniversalProfileExtension()"
         variant="secondary"

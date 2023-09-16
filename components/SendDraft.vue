@@ -3,7 +3,7 @@ import { fromWei, isAddress } from 'web3-utils'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 
-const { profile: connectedProfile } = useConnectionStore()
+const { profile: connectedProfile } = useConnectedProfileStore()
 const { asset, receiverAddress, receiver, receiverError, amount, onSend } =
   storeToRefs(useSendStore())
 const isReceiverLoading = ref<boolean>(false)
@@ -174,13 +174,15 @@ const handleSend = () => {
         class="w-full mt-4"
         :loading="isReceiverLoading"
         :disabled="
-          !receiverAddress || receiverError || !amount ? true : undefined
+          !receiverAddress || receiverError || !Number(amount)
+            ? true
+            : undefined
         "
         @click="handleSend"
         is-full-width
         >{{
           $formatMessage('send_button', {
-            amount: $formatNumber(amount || '0'),
+            amount: !!Number(amount) ? $formatNumber(amount || '') : '',
             symbol: asset?.symbol || '',
           })
         }}</lukso-button

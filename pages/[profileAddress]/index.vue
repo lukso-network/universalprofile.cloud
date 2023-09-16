@@ -3,26 +3,48 @@ import { storeToRefs } from 'pinia'
 
 import { AssetFilter } from '@/types/assets'
 
-const { status } = useProfileStore()
+const { status } = useViewedProfileStore()
 
-const { assetFilter, tokens, nfts } = storeToRefs(useProfileStore())
+const { assetFilter, tokens, nfts } = storeToRefs(useViewedProfileStore())
 
-const tokensCount = computed(() => {
-  const count =
-    tokens.value(AssetFilter.owned)?.length +
-    nfts.value(AssetFilter.owned)?.length +
-    1 // we +1 for LYX token that we show even with 0 balance
+const ownedTokensCount = computed(
+  () => tokens.value(AssetFilter.owned)?.length + 1 // we +1 for LYX token that we show even with 0 balance
+)
 
-  return count
-})
+const ownedNftsCount = computed(() => nfts.value(AssetFilter.owned)?.length)
 
-const nftsCount = computed(() => {
-  const count =
-    tokens.value(AssetFilter.created)?.length +
-    nfts.value(AssetFilter.created)?.length
+const ownedAssetsCount = computed(
+  () => ownedTokensCount.value + ownedNftsCount.value
+)
 
-  return count
-})
+const createdTokensCount = computed(
+  () => tokens.value(AssetFilter.created)?.length
+)
+
+const createdNftsCount = computed(() => nfts.value(AssetFilter.created)?.length)
+
+const createdAssetsCount = computed(
+  () => createdTokensCount.value + createdNftsCount.value
+)
+
+const hasEmptyCreators = computed(
+  () =>
+    assetFilter.value === AssetFilter.created &&
+    !createdNftsCount.value &&
+    !createdTokensCount.value
+)
+
+const hasEmptyTokens = computed(
+  () =>
+    assetFilter.value === AssetFilter.owned ||
+    (assetFilter.value === AssetFilter.created && createdTokensCount.value)
+)
+
+const hasEmptyNfts = computed(
+  () =>
+    (assetFilter.value === AssetFilter.owned && ownedNftsCount.value) ||
+    (assetFilter.value === AssetFilter.created && createdNftsCount.value)
+)
 </script>
 
 <template>
@@ -42,7 +64,7 @@ const nftsCount = computed(() => {
               size="small"
               variant="secondary"
               :is-active="assetFilter === AssetFilter.owned ? true : undefined"
-              :count="tokensCount"
+              :count="ownedAssetsCount"
               @click="assetFilter = AssetFilter.owned"
               >{{ $formatMessage('asset_filter_owned_assets') }}</lukso-button
             >
@@ -52,13 +74,24 @@ const nftsCount = computed(() => {
               :is-active="
                 assetFilter === AssetFilter.created ? true : undefined
               "
-              :count="nftsCount"
+              :count="createdAssetsCount"
               @click="assetFilter = AssetFilter.created"
               >{{ $formatMessage('asset_filter_created_assets') }}</lukso-button
             >
           </div>
-          <TokensList />
-          <NftList />
+
+          <div v-if="hasEmptyCreators" class="pt-8">
+            <h3 class="heading-inter-17-semi-bold pb-2">
+              {{ $formatMessage('assets_empty_state_title') }}
+            </h3>
+            <lukso-sanitize
+              :html-content="$formatMessage('assets_empty_state_description')"
+            ></lukso-sanitize>
+          </div>
+          <div v-else>
+            <TokenList v-if="hasEmptyTokens" />
+            <NftList v-if="hasEmptyNfts" />
+          </div>
         </div>
       </div>
     </div>

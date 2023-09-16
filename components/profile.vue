@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { profile } = useProfileStore()
+const { profile } = useViewedProfileStore()
 
 const handleCopyAddress = () => {
   try {
@@ -24,21 +24,23 @@ const handleCopyAddress = () => {
           :profile-url="profile.profileImageUrl"
           :profile-address="profile.address"
           class="mb-4"
+          has-identicon
         >
         </lukso-profile>
         <lukso-username
-          v-if="profile.name"
-          :name="profile.name"
+          :name="profile.name || $formatMessage('profile_default_name')"
           size="large"
           address-color="neutral-100"
-          name-color="neutral-100"
+          max-width="350"
+          :name-color="profile.backgroundImageUrl ? 'neutral-100' : ''"
         ></lukso-username>
         <lukso-username
           :address="profile.address"
-          :size="profile.name ? 'small' : 'large'"
+          size="small"
           slice-by="40"
-          address-color="neutral-100"
-          name-color="neutral-100"
+          :address-color="
+            profile.backgroundImageUrl ? 'neutral-100' : 'neutral-20'
+          "
           class="cursor-pointer"
           @click="handleCopyAddress"
         ></lukso-username>

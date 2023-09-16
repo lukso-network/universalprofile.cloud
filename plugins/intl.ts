@@ -1,3 +1,5 @@
+import { FormatNumberOptions } from '@formatjs/intl'
+
 /**
  * Expose intl based functions to the app so they can be used without importing
  *
@@ -10,9 +12,10 @@ export default defineNuxtPlugin(() => {
     provide: {
       formatMessage: (key: string, options?: Record<string, string>) =>
         formatMessage(key, options),
-      formatNumber: (value: string | number) => formatNumber(value),
-      formatDate: (date: string | number) => formatDate(date),
-      formatTime: (date: string | number) => formatTime(date),
+      formatNumber: (value: string | number, options?: FormatNumberOptions) =>
+        formatNumber(value, options),
+      formatDate: (date?: string | number | Date) => formatDate(date),
+      formatTime: (date?: string | number | Date) => formatTime(date),
     },
   }
 })

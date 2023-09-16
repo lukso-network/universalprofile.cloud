@@ -6,11 +6,11 @@ Wallet that will let you see the Tokens ([LSP7](https://docs.lukso.tech/standard
 
 ## 🚀 Deployments
 
-### Preview:
+### Preview
 
 When you create a PR, a preview URL will be appended to the PR discussion.
 
-### Staging:
+### Staging
 
 Branch: `develop`
 
@@ -78,3 +78,8 @@ yarn unlink ../tools-web-components/package
 ```
 
 > Make sure you remove link before pushing, otherwise it won't build in Cloudflare.
+
+### Releasing
+
+We use [Release Please](https://github.com/googleapis/release-please) to automate release process. Just merge your feature PR into `develop` branch and new release PR with changelog will be created. You can stack multiple PRs into release.
+Once you are ready to release just merge release PR into `main` branch.

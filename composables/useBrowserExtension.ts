@@ -1,7 +1,4 @@
 import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
-import { profileRoute } from '@/shared/routes'
-import { INJECTED_PROVIDER, CONNECTION_EXPIRY_TIME_MS } from '@/shared/config'
-import { EoAError, InterfaceError } from '@/shared/errors'
 
 const openStoreLink = () => {
   const storeLink = browserInfo().storeLink
@@ -19,8 +16,9 @@ const setConnectionExpiry = () => {
 const connect = async () => {
   const { showModal } = useModal()
   const { formatMessage } = useIntl()
-  const { reloadProfile } = useProfileStore()
-  const { setStatus, reloadConnectedProfile } = useConnectionStore()
+  const { reloadProfile } = useViewedProfileStore()
+  const { setStatus, reloadProfile: reloadConnectedProfile } =
+    useConnectedProfileStore()
 
   // when no extension installed we show modal
   if (!INJECTED_PROVIDER) {
@@ -46,7 +44,7 @@ const connect = async () => {
     setItem(STORAGE_KEY.CONNECTED_ADDRESS, address)
     const profile = await fetchProfile(address)
     reloadProfile(profile)
-    reloadConnectedProfile(address, profile)
+    reloadConnectedProfile(profile)
     setStatus('isConnected', true)
     setConnectionExpiry()
     await navigateTo(profileRoute(address))
@@ -102,7 +100,7 @@ const connect = async () => {
 }
 
 const disconnect = () => {
-  const { setStatus } = useConnectionStore()
+  const { setStatus } = useConnectedProfileStore()
   const { removeItem } = useLocalStorage()
 
   setStatus('isConnected', false)
@@ -112,8 +110,9 @@ const disconnect = () => {
 
 const providerEvents = async (provider: any) => {
   const { disconnect } = useBrowserExtension()
-  const { reloadProfile } = useProfileStore()
-  const { status, reloadConnectedProfile } = useConnectionStore()
+  const { reloadProfile } = useViewedProfileStore()
+  const { status, reloadProfile: reloadConnectedProfile } =
+    useConnectedProfileStore()
 
   const handleAccountsChanged = async (accounts: string[]) => {
     if (accounts.length) {
@@ -128,7 +127,7 @@ const providerEvents = async (provider: any) => {
       await navigateTo(profileRoute(address))
       const profile = await fetchProfile(address)
       reloadProfile(profile)
-      reloadConnectedProfile(address, profile)
+      reloadConnectedProfile(profile)
     } else {
       // when user remove connection with dApp we disconnect
       disconnect()

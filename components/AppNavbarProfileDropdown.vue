@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { profile } = useConnectionStore()
+const { profile } = useConnectedProfileStore()
 const { disconnect } = useBrowserExtension()
 
 const DROPDOWN_TRIGGER_TAG_NAME = 'LUKSO-PROFILE'

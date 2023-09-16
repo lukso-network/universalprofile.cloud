@@ -9,11 +9,12 @@ import {
 } from '@/types/assets'
 
 /**
- * Profile store
- * Keeps the information about viewed profile
+ * Viewed profile store
+ *
+ * Keeps the information about currently viewed profile
  *
  */
-export const useProfileStore = defineStore('profile', () => {
+export const useViewedProfileStore = defineStore('profileViewed', () => {
   const profile = reactive<Profile>({} as Profile)
   const status = reactive({ isProfileLoading: true, isAssetLoading: true })
   const assetFilter = ref<AssetFilter>(AssetFilter.owned)
@@ -99,43 +100,21 @@ export const useProfileStore = defineStore('profile', () => {
     createdAssets.value = assets
   }
 
-  const setAddress = (newAddress: Address) => {
-    profile.address = newAddress
-  }
-
-  const setProfile = (newProfile: Profile) => {
-    Object.assign(profile, newProfile)
-  }
-
   const setStatus = (statusName: keyof typeof status, newStatus: boolean) => {
     status[statusName] = newStatus
   }
 
-  const clearProfile = () => {
-    Object.assign(profile, {})
-  }
-
-  const reloadProfile = (profile: Profile) => {
-    clearProfile()
-    assertAddress(profile.address, 'profile')
-    setAddress(profile.address)
-    setProfile(profile)
-  }
-
   return {
-    setAddress,
+    ...useProfileBase(profile),
     profile,
-    setProfile,
     status,
-    clearProfile,
-    reloadProfile,
+    setStatus,
     ownedAssets,
     setOwnedAssets,
     tokens,
     assetFilter,
     createdAssets,
     nfts,
-    setStatus,
     setCreatedAssets,
     getToken,
     getNft,

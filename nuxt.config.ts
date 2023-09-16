@@ -101,7 +101,7 @@ export default defineNuxtConfig({
     },
   },
   imports: {
-    dirs: ['stores'],
+    dirs: ['stores/**', 'shared/**'],
   },
   runtimeConfig: {
     public: {},
