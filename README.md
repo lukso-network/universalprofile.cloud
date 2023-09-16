@@ -6,11 +6,11 @@ Wallet that will let you see the Tokens ([LSP7](https://docs.lukso.tech/standard
 
 ## 🚀 Deployments
 
-### Preview:
+### Preview
 
 When you create a PR, a preview URL will be appended to the PR discussion.
 
-### Staging:
+### Staging
 
 Branch: `develop`
 
