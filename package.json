@@ -91,5 +91,6 @@
       "prettier --list-different",
       "stylelint"
     ]
-  }
+  },
+  "version": "1.0.0"
 }
