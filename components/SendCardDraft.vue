@@ -4,28 +4,33 @@ import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 
 const { profile: connectedProfile } = useConnectedProfileStore()
-const { asset, receiverAddress, receiver, receiverError, amount, onSend } =
-  storeToRefs(useSendStore())
+const { asset, receiver, receiverError, amount, onSend } = storeToRefs(
+  useSendStore()
+)
 const isReceiverLoading = ref<boolean>(false)
 
 const handleReceiverChange = async (event: CustomEvent) => {
   const address = event.detail.value
-  receiverAddress.value = address
+  receiver.value = { address }
 
+  // check if address is valid
   if (!isAddress(address)) {
     receiverError.value = 'Invalid address'
-    receiver.value = undefined
     return
   } else {
     receiverError.value = ''
   }
 
-  const { fetchProfile } = useErc725()
-
   try {
     isReceiverLoading.value = true
     receiver.value = await fetchProfile(address)
   } catch (error) {
+    if (error instanceof EoAError) {
+      receiver.value.isEoa = true
+    } else {
+      receiver.value.isEoa = false
+    }
+
     console.error(error)
   } finally {
     isReceiverLoading.value = false
@@ -139,31 +144,16 @@ const handleSend = () => {
       </div>
     </div>
     <div slot="bottom" class="p-6 flex flex-col items-center">
-      <div class="relative">
-        <lukso-profile
-          v-if="!isReceiverLoading"
-          size="large"
-          :profile-url="receiver?.profileImageUrl"
-          :profile-address="receiverAddress"
-          :has-identicon="receiverError ? undefined : 'true'"
-          class="mb-2"
-        ></lukso-profile>
-        <div
-          v-else
-          class="w-20 h-20 bg-neutral-100 rounded-full flex items-center justify-center"
-        >
-          <lukso-icon name="progress-indicator" size="x-large"></lukso-icon>
-        </div>
-      </div>
-      <lukso-username
-        v-if="receiver?.name || isReceiverLoading"
-        :name="receiver?.name"
-        size="small"
-      ></lukso-username>
-      <div v-else>- -</div>
+      <AppAvatar
+        :is-loading="isReceiverLoading"
+        :is-eoa="receiver?.isEoa"
+        :is-error="!!receiverError"
+        :address="receiver?.address"
+        :profile="receiver"
+      />
       <lukso-input
         name="receiver"
-        :value="receiverAddress"
+        :value="receiver?.address"
         :placeholder="$formatMessage('send_input_placeholder')"
         is-full-width
         class="w-full mt-4"
@@ -174,7 +164,7 @@ const handleSend = () => {
         class="w-full mt-4"
         :loading="isReceiverLoading"
         :disabled="
-          !receiverAddress || receiverError || !Number(amount)
+          !receiver?.address || receiverError || !Number(amount)
             ? true
             : undefined
         "
