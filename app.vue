@@ -102,6 +102,9 @@ const checkConnectionExpiry = () => {
 
       if (expiryDateParsed < Date.now()) {
         disconnect()
+        // we store address as this is "soft" disconnect that won't trigger request account on connection
+        connectedProfile.address &&
+          setItem(STORAGE_KEY.RECONNECT_ADDRESS, connectedProfile.address)
       }
     } catch (error) {}
   }
