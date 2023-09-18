@@ -4,8 +4,7 @@ type SendStatus = 'draft' | 'pending' | 'success'
 
 export const useSendStore = defineStore('send', () => {
   const asset = ref<SendAsset>()
-  const receiverAddress = ref<Address>()
-  const receiver = ref<Profile>()
+  const receiver = ref<Receiver>()
   const receiverError = ref<string>()
   const amount = ref<string>()
   const status = ref<SendStatus>('draft')
@@ -22,7 +21,6 @@ export const useSendStore = defineStore('send', () => {
   const setStatus = (newStatus: SendStatus) => (status.value = newStatus)
 
   const clearSend = () => {
-    receiverAddress.value = undefined
     receiver.value = undefined
     amount.value = undefined
     receiverError.value = undefined
@@ -30,7 +28,6 @@ export const useSendStore = defineStore('send', () => {
 
   return {
     asset,
-    receiverAddress,
     receiver,
     receiverError,
     amount,
