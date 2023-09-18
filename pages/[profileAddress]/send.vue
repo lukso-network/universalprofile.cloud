@@ -7,7 +7,7 @@ import { PROVIDERS } from '@/types/enums'
 
 const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { currentNetwork } = useAppStore()
-const { asset, onSend, receiverAddress, amount } = storeToRefs(useSendStore())
+const { asset, onSend, amount, receiver } = storeToRefs(useSendStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
@@ -47,7 +47,7 @@ const handleSend = async () => {
 
     let transaction = {
       from: connectedProfile.address,
-      to: receiverAddress.value as unknown as string,
+      to: receiver.value?.address as unknown as string,
       value: toWei(amount.value || '0'),
       gas: DEFAULT_GAS,
       gasPrice: DEFAULT_GAS_PRICE,

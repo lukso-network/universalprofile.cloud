@@ -1,6 +1,6 @@
 export class EoAError extends Error {
   constructor() {
-    super('The profile is an EoA')
+    super('The address is an EoA')
   }
 }
 
