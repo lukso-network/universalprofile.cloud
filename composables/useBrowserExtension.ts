@@ -108,44 +108,43 @@ const disconnect = () => {
   removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
 }
 
-const providerEvents = async (provider: any) => {
-  const { disconnect } = useBrowserExtension()
-  const { reloadProfile } = useViewedProfileStore()
-  const { status, reloadProfile: reloadConnectedProfile } =
-    useConnectedProfileStore()
+const handleAccountsChanged = async (accounts: string[]) => {
+  const { status } = useConnectedProfileStore()
 
-  const handleAccountsChanged = async (accounts: string[]) => {
-    if (accounts.length) {
-      const address = accounts[0]
-      assertAddress(address, 'profile')
+  if (accounts.length) {
+    const address = accounts[0]
+    assertAddress(address, 'profile')
 
-      // if user is already connected we need to update Local Storage key
-      if (status.isConnected) {
-        setItem(STORAGE_KEY.CONNECTED_ADDRESS, address)
-      }
-
-      await navigateTo(profileRoute(address))
-      const profile = await fetchProfile(address)
-      reloadProfile(profile)
-      reloadConnectedProfile(profile)
-    } else {
-      // when user remove connection with dApp we disconnect
-      disconnect()
+    // if user is already connected we need to update Local Storage key
+    if (status.isConnected) {
+      setItem(STORAGE_KEY.CONNECTED_ADDRESS, address)
     }
+
+    try {
+      await navigateTo(profileRoute(address))
+      await setupViewedProfile(address)
+      await setupViewedAssets(address)
+    } catch (error) {
+      console.error(error)
+    }
+  } else {
+    // when user remove connection with dApp we disconnect
+    disconnect()
   }
+}
 
-  const handleDisconnect = () => {
-    location.reload()
-  }
+const handleDisconnect = () => {
+  location.reload()
+}
 
-  onMounted(async () => {
-    provider?.on?.('accountsChanged', handleAccountsChanged)
-    provider?.on?.('disconnect', handleDisconnect)
-  })
+const addProviderEvents = async (provider: any) => {
+  provider?.on?.('accountsChanged', handleAccountsChanged)
+  provider?.on?.('disconnect', handleDisconnect)
+}
 
-  onUnmounted(() => {
-    provider?.removeListener?.('accountsChanged', handleAccountsChanged)
-  })
+const removeProviderEvents = async (provider: any) => {
+  provider?.removeListener?.('accountsChanged', handleAccountsChanged)
+  provider?.removeListener?.('disconnect', handleAccountsChanged)
 }
 
 const isUniversalProfileExtension = () => {
@@ -156,7 +155,8 @@ export const useBrowserExtension = () => {
   return {
     connect,
     disconnect,
-    providerEvents,
+    addProviderEvents,
+    removeProviderEvents,
     isUniversalProfileExtension,
   }
 }

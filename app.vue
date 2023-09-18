@@ -12,7 +12,8 @@ if (typeof window !== 'undefined') {
 
 const web3Store = useWeb3Store()
 const appStore = useAppStore()
-const { providerEvents, disconnect } = useBrowserExtension()
+const { addProviderEvents, removeProviderEvents, disconnect } =
+  useBrowserExtension()
 const {
   setProfile: setConnectedProfile,
   setStatus,
@@ -30,7 +31,7 @@ const setupWeb3Instances = () => {
   if (provider) {
     // for chain interactions through wallet
     web3Store.addWeb3(PROVIDERS.INJECTED, provider)
-    providerEvents(provider)
+    addProviderEvents(provider)
   } else {
     console.error('No browser extension provider found')
   }
@@ -115,6 +116,11 @@ onMounted(async () => {
   checkConnectionExpiry()
   await setupConnectedProfile()
   await routerBackProfileLoad()
+})
+
+onUnmounted(() => {
+  const provider = INJECTED_PROVIDER
+  removeProviderEvents(provider)
 })
 </script>
 
