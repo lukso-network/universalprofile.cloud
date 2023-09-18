@@ -6,6 +6,7 @@ import { TransactionConfig } from 'web3-core'
 import { PROVIDERS } from '@/types/enums'
 
 const { profile: connectedProfile, status } = useConnectedProfileStore()
+const { profile: viewedProfile } = useViewedProfileStore()
 const { currentNetwork } = useAppStore()
 const { asset, onSend, receiverAddress, amount } = storeToRefs(useSendStore())
 const { setStatus, clearSend } = useSendStore()
@@ -55,8 +56,7 @@ const handleSend = async () => {
     console.log(transaction)
 
     await sendTransaction(transaction)
-    assertString(connectedProfile.address)
-    connectedProfile.balance = await getBalance(connectedProfile.address)
+    await updateBalance()
     setStatus('success')
   } catch (error: any) {
     console.error(error)
@@ -83,6 +83,15 @@ const handleSend = async () => {
       title: formatMessage('send_error_title'),
       message: formatMessage('send_error_message'),
     })
+  }
+}
+
+const updateBalance = async () => {
+  assertString(connectedProfile.address)
+  connectedProfile.balance = await getBalance(connectedProfile.address)
+
+  if (viewedProfile.address === connectedProfile.address) {
+    viewedProfile.balance = connectedProfile.balance
   }
 }
 </script>
