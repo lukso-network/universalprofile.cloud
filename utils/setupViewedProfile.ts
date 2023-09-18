@@ -1,3 +1,5 @@
+import { SetupViewedProfileError } from '@/shared/errors'
+
 export const setupViewedProfile = async (profileAddress: Address) => {
   const {
     setStatus,
