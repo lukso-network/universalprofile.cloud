@@ -15,6 +15,7 @@ const { formatMessage } = useIntl()
 const { sendTransaction, getBalance } = useWeb3(PROVIDERS.INJECTED)
 
 onMounted(() => {
+  setStatus('draft')
   clearSend()
 
   asset.value = {
