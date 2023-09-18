@@ -23,7 +23,7 @@ const handleSendAsset = () => {
           <div class="border border-neutral-90 rounded-full p-0.5">
             <lukso-profile
               size="medium"
-              profile-url="/images/lyx-token.png"
+              profile-url="/images/lyx-token.svg"
             ></lukso-profile>
           </div>
         </div>
