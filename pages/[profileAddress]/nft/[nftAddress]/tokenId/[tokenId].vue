@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Nft } from '@/types/assets'
 import { toWei } from 'web3-utils'
+
+import { Nft } from '@/types/assets'
 
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
