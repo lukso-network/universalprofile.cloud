@@ -34,13 +34,17 @@ const connect = async () => {
 
   try {
     const { accounts, requestAccounts } = useWeb3(PROVIDERS.INJECTED)
+    const reconnectAddress = getItem(STORAGE_KEY.RECONNECT_ADDRESS)
 
-    let address = await accounts()
+    let address: Address | undefined
 
-    if (!address) {
+    if (reconnectAddress) {
+      address = await accounts()
+    } else {
       ;[address] = await requestAccounts()
     }
 
+    assertAddress(address, 'connection')
     setItem(STORAGE_KEY.CONNECTED_ADDRESS, address)
     const profile = await fetchProfile(address)
     reloadProfile(profile)
@@ -106,6 +110,7 @@ const disconnect = () => {
   setStatus('isConnected', false)
   removeItem(STORAGE_KEY.CONNECTED_ADDRESS)
   removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
+  removeItem(STORAGE_KEY.RECONNECT_ADDRESS)
 }
 
 const providerEvents = async (provider: any) => {
