@@ -1,29 +1,28 @@
 <script setup lang="ts">
-const { setStatus, clearSend } = useSendStore()
+import { storeToRefs } from 'pinia'
 
-const handleSendMore = () => {
-  clearSend()
-  setStatus('draft')
-}
+const { amount, asset } = storeToRefs(useSendStore())
 </script>
 
 <template>
   <lukso-card variant="with-header" is-full-width>
     <div slot="header" class="px-6 py-10 flex flex-col">
-      <SendProfileHeader />
+      <SendCardHeader />
     </div>
     <div slot="content" class="p-8 flex flex-col items-center">
       <div class="heading-inter-17-semi-bold">
-        {{ $formatMessage('send_success_title') }}
+        {{
+          $formatMessage('send_pending_title', {
+            amount: amount || '0',
+            symbol: asset?.symbol || '',
+          })
+        }}
       </div>
       <lukso-icon
-        name="progress-complete"
+        name="progress-indicator"
         size="x-large"
-        class="my-6"
+        class="mt-6"
       ></lukso-icon>
-      <lukso-button variant="secondary" @click="handleSendMore">{{
-        $formatMessage('send_success_button')
-      }}</lukso-button>
     </div>
   </lukso-card>
 </template>

@@ -10,6 +10,8 @@ declare global {
     balance: string
   }
 
+  type Receiver = Partial<Profile> & { isEoa?: boolean }
+
   type Creator = Partial<Pick<Profile, 'address' | 'profileImageUrl' | 'name'>>
 
   type NetworkId = string
