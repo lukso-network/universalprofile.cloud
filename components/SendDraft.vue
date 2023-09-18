@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js'
 const { profile: connectedProfile } = useConnectedProfileStore()
 const { asset, receiverAddress, receiver, receiverError, amount, onSend } =
   storeToRefs(useSendStore())
+const { formatMessage } = useIntl()
 const isReceiverLoading = ref<boolean>(false)
 
 const handleReceiverChange = async (event: CustomEvent) => {
@@ -13,7 +14,7 @@ const handleReceiverChange = async (event: CustomEvent) => {
   receiverAddress.value = address
 
   if (!isAddress(address)) {
-    receiverError.value = 'Invalid address'
+    receiverError.value = formatMessage('errors_invalid_address')
     receiver.value = undefined
     return
   } else {
