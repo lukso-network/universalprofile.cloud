@@ -6,20 +6,22 @@ import { TransactionConfig } from 'web3-core'
 import { PROVIDERS } from '@/types/enums'
 
 const { profile: connectedProfile, status } = useConnectedProfileStore()
+const { profile: viewedProfile } = useViewedProfileStore()
 const { currentNetwork } = useAppStore()
-const { asset, onSend, receiverAddress, amount } = storeToRefs(useSendStore())
+const { asset, onSend, amount, receiver } = storeToRefs(useSendStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
 const { sendTransaction, getBalance } = useWeb3(PROVIDERS.INJECTED)
 
 onMounted(() => {
+  setStatus('draft')
   clearSend()
 
   asset.value = {
     name: 'LUKSO',
     symbol: currentNetwork.token,
-    icon: '/images/lyx-token.png',
+    icon: '/images/lyx-token.svg',
   }
 
   onSend.value = handleSend
@@ -47,7 +49,7 @@ const handleSend = async () => {
 
     let transaction = {
       from: connectedProfile.address,
-      to: receiverAddress.value as unknown as string,
+      to: receiver.value?.address as unknown as string,
       value: toWei(amount.value || '0'),
       gas: DEFAULT_GAS,
       gasPrice: DEFAULT_GAS_PRICE,
@@ -55,8 +57,7 @@ const handleSend = async () => {
     console.log(transaction)
 
     await sendTransaction(transaction)
-    assertString(connectedProfile.address)
-    connectedProfile.balance = await getBalance(connectedProfile.address)
+    await updateBalance()
     setStatus('success')
   } catch (error: any) {
     console.error(error)
@@ -83,6 +84,15 @@ const handleSend = async () => {
       title: formatMessage('send_error_title'),
       message: formatMessage('send_error_message'),
     })
+  }
+}
+
+const updateBalance = async () => {
+  assertString(connectedProfile.address)
+  connectedProfile.balance = await getBalance(connectedProfile.address)
+
+  if (viewedProfile.address === connectedProfile.address) {
+    viewedProfile.balance = connectedProfile.balance
   }
 }
 </script>

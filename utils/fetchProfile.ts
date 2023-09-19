@@ -8,7 +8,7 @@ export const fetchProfile = async (profileAddress: Address) => {
 
   // EoA check
   if (await isEoA(profileAddress)) {
-    throw new Error('The profile is an EoA')
+    throw new EoAError()
   }
 
   // interface check

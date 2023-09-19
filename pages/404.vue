@@ -11,7 +11,9 @@ const handleGetHelp = () => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-full px-6">
+  <div
+    class="flex flex-col items-center justify-center h-full px-6 transition-opacity animate-fade-in"
+  >
     <img
       src="/images/up-error-large.png"
       alt=""
