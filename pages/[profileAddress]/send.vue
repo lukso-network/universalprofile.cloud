@@ -21,7 +21,7 @@ onMounted(() => {
   asset.value = {
     name: 'LUKSO',
     symbol: currentNetwork.token,
-    icon: '/images/lyx-token.png',
+    icon: '/images/lyx-token.svg',
   }
 
   onSend.value = handleSend
