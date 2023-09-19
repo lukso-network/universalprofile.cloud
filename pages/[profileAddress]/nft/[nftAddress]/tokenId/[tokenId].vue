@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { toWei } from 'web3-utils'
+
 import { Nft } from '@/types/assets'
 
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
@@ -35,10 +37,10 @@ watchEffect(() => {
               class="min-h-[260px] bg-neutral-90 w-100 rounded-t-12 bg-center bg-cover"
               :style="`background-image: url(${nft?.data.image});`"
             ></div>
-            <div class="p-4">
+            <div class="p-4 pt-8 relative">
               <div
                 v-if="nft?.data.creatorAddress"
-                class="shadow-neutral-drop-shadow p-2 pr-6 rounded-4 inline-flex -top-6 relative bg-neutral-100"
+                class="shadow-neutral-drop-shadow p-2 pr-6 rounded-4 inline-flex -top-6 absolute bg-neutral-100"
               >
                 <lukso-profile
                   size="x-small"
@@ -61,12 +63,6 @@ watchEffect(() => {
                 <div class="paragraph-inter-14-semi-bold">
                   {{ nft?.data.collectionName }}
                 </div>
-                <div class="paragraph-inter-12-semi-bold pb-2">
-                  1
-                  <span class="text-neutral-60">{{
-                    nft?.data.collectionSymbol
-                  }}</span>
-                </div>
               </div>
             </div>
           </div>
@@ -79,7 +75,7 @@ watchEffect(() => {
         >
           <AssetOwnInfo
             :profile="connectedProfile"
-            :amount="'1'"
+            :amount="toWei('1')"
             :symbol="nft?.data.collectionSymbol"
           />
 
