@@ -1,3 +1,5 @@
+import { SetupViewedProfileError } from '@/shared/errors'
+
 export const setupViewedProfile = async (profileAddress: Address) => {
   const {
     setStatus,
@@ -12,7 +14,12 @@ export const setupViewedProfile = async (profileAddress: Address) => {
     setProfile(profile)
   } catch (error) {
     console.error(error)
-    navigateTo(notFoundRoute())
+
+    if (error instanceof InterfaceError) {
+      navigateTo(notFoundRoute())
+    }
+
+    throw new SetupViewedProfileError()
   } finally {
     setStatus('isProfileLoading', false)
   }
