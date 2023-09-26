@@ -15,7 +15,6 @@ const nft = ref<Nft>()
 
 watchEffect(() => {
   nft.value = getNft(nftAddress, tokenId)
-  console.log(nft.value)
 })
 </script>
 
