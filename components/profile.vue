@@ -29,7 +29,7 @@ const handleCopyAddress = () => {
         </lukso-profile>
         <lukso-username
           v-if="profile.name"
-          :name="profile.name"
+          :name="profile.name.toLowerCase()"
           size="large"
           address-color="neutral-100"
           max-width="350"
