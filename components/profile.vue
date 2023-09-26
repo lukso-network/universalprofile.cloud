@@ -28,11 +28,21 @@ const handleCopyAddress = () => {
         >
         </lukso-profile>
         <lukso-username
-          :name="profile.name || $formatMessage('profile_default_name')"
+          v-if="profile.name"
+          :name="profile.name"
           size="large"
           address-color="neutral-100"
           max-width="350"
           :name-color="profile.backgroundImageUrl ? 'neutral-100' : ''"
+        ></lukso-username>
+        <lukso-username
+          v-else
+          :name="$formatMessage('profile_default_name')"
+          size="large"
+          address-color="neutral-100"
+          max-width="350"
+          :name-color="profile.backgroundImageUrl ? 'neutral-100' : ''"
+          hide-prefix
         ></lukso-username>
         <lukso-username
           :address="profile.address"
@@ -41,7 +51,7 @@ const handleCopyAddress = () => {
           :address-color="
             profile.backgroundImageUrl ? 'neutral-100' : 'neutral-20'
           "
-          class="cursor-pointer"
+          class="cursor-pointer mt-2"
           @click="handleCopyAddress"
         ></lukso-username>
       </div>

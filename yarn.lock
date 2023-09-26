@@ -1653,12 +1653,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@npm:1.34.1":
-  version: 1.34.1
-  resolution: "@lukso/web-components@npm:1.34.1"
+"@lukso/web-components@npm:1.36.0":
+  version: 1.36.0
+  resolution: "@lukso/web-components@npm:1.36.0"
   dependencies:
     ethereum-blockies-base64: ^1.0.2
-  checksum: e233bd5eaec440f8d6a92eb402dfe3e264c474ed788b7d4dba9f4c9af9503fb8ba0ce4b240fb0caaa612fb1476238c26a58196e3518b1751f79ca14448b0e29a
+  checksum: b53aaf3b6c44cfdf3825ba3cc0eefbffd168dd662f98fbd00d4f81ced8144a315772d1e42c8a571cbcdd34c5ce561b8c9f92769ada9b01d9dec58dbc4eb983db
   languageName: node
   linkType: hard
 
@@ -15946,7 +15946,7 @@ __metadata:
     "@formatjs/intl": ^2.9.0
     "@lukso/lsp-factory.js": 3.1.1
     "@lukso/lsp-smart-contracts": 0.11.1
-    "@lukso/web-components": 1.34.1
+    "@lukso/web-components": 1.36.0
     "@nuxt/devtools": ^0.7.4
     "@nuxtjs/device": ^3.1.0
     "@nuxtjs/plausible": ^0.2.1

@@ -41,7 +41,7 @@
   "header_my_profile": "My profile",
   "send_success_button": "Send another token",
   "send_success_title": "Sending complete!",
-  "profile_default_name": "anonymous account",
+  "profile_default_name": "anonymous-profile",
   "footer_terms_text": "Terms & Conditions",
   "assets_empty_state_description": "To find out how to create your own assets such as Tokens and NFT’s on <span class=\"paragraph-inter-16-semi-bold\">LUKSO</span> head over to our <a href=\"https://docs.lukso.tech/guides/digital-assets/create-lsp7-digital-asset/\" target=\"_blank\" class=\"text-purple-51 hover:text-purple-41 underline paragraph-inter-16-semi-bold\">documentation</a>. ",
   "connect_or_install_button_coming_soon": "Coming soon...",
