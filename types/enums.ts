@@ -8,3 +8,7 @@ export enum STORAGE_KEY {
   CONNECTION_EXPIRY = 'LUKSO_WALLET:connectionExpiry',
   RECONNECT_ADDRESS = 'LUKSO_WALLET:reconnectAddress',
 }
+
+export enum REFERRERS {
+  INDEXER = 'indexer',
+}

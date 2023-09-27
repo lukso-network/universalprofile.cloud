@@ -2,6 +2,7 @@
 import { storeToRefs } from 'pinia'
 
 import { AssetFilter } from '@/types/assets'
+import { REFERRERS } from '@/types/enums'
 
 const { status } = useViewedProfileStore()
 
@@ -45,6 +46,10 @@ const hasEmptyNfts = computed(
     (assetFilter.value === AssetFilter.owned && ownedNftsCount.value) ||
     (assetFilter.value === AssetFilter.created && createdNftsCount.value)
 )
+
+const showProfileDetails = computed(
+  () => useRouter().currentRoute.value.query.referrer === REFERRERS.INDEXER
+)
 </script>
 
 <template>
@@ -57,6 +62,7 @@ const hasEmptyNfts = computed(
       }"
     >
       <Profile />
+      <ProfileDetails v-if="showProfileDetails" />
       <div>
         <div>
           <div class="pt-10 gap-4 flex">
