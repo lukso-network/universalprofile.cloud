@@ -71,7 +71,7 @@ const handleSendLyx = () => {
         </div>
         <AssetAddress :address="currentNetwork.token.address" />
         <AssetSupply
-          :supply="currentNetwork.token.supply"
+          :supply="currentNetwork.token.supply.toString()"
           :symbol="currentNetwork.token.symbol"
         />
         <AssetLinks :links="links" />

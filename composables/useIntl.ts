@@ -51,11 +51,8 @@ const formatMessage = (key: string, options?: Record<string, string>) => {
  * @param options - options for formatNumber, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#parameters
  * @returns - formatted number
  */
-const formatNumber = (
-  value: string | number,
-  options: FormatNumberOptions = {}
-) => {
-  if (value === null || value === undefined || value === '') {
+const formatNumber = (value: number, options: FormatNumberOptions = {}) => {
+  if (value === null || value === undefined) {
     return '0'
   }
 
@@ -64,7 +61,7 @@ const formatNumber = (
     ...options,
   }
 
-  return intl.value?.formatNumber(Number(value), mergedOptions) || ''
+  return intl.value?.formatNumber(value, mergedOptions) || ''
 }
 
 /**
