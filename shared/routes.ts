@@ -14,3 +14,5 @@ export const sendRoute = (profileAddress: Address) => `/${profileAddress}/send`
 export const homeRoute = () => '/'
 
 export const notFoundRoute = () => '/404'
+
+export const lyxDetailsRoute = () => '/lyx-details'

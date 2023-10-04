@@ -13,10 +13,18 @@ const handleSendAsset = () => {
     console.error(error)
   }
 }
+
+const handleShowLyxDetails = () => {
+  navigateTo(lyxDetailsRoute())
+}
 </script>
 
 <template>
-  <lukso-card size="small" is-full-width
+  <lukso-card
+    size="small"
+    is-hoverable
+    is-full-width
+    @click="handleShowLyxDetails"
     ><div slot="content" class="p-4 pt-11 flex flex-col justify-center">
       <div class="flex gap-6">
         <div class="flex flex-col items-center">
