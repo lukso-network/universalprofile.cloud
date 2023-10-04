@@ -12,6 +12,13 @@ const providers: Provider[] = ['twitter', 'discord', 'github']
     >
       <div class="flex gap-10">
         <a
+          href="https://docs.lukso.tech/"
+          class="nav-apax-12-medium-uppercase text-purple-41 hover:underline hover:text-purple-31"
+          target="_blank"
+        >
+          {{ $formatMessage('footer_docs_text') }}
+        </a>
+        <a
           href="https://lukso.network/faq"
           class="nav-apax-12-medium-uppercase text-purple-41 hover:underline hover:text-purple-31"
           target="_blank"
