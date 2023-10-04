@@ -5,8 +5,9 @@ const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { profile: viewedProfile } = useViewedProfileStore()
 const appStore = useAppStore()
 
-const handleSendAsset = () => {
+const handleSendAsset = (event: Event) => {
   try {
+    event.preventDefault()
     assertAddress(connectedProfile.address, 'profile')
     navigateTo(sendRoute(connectedProfile.address))
   } catch (error) {
@@ -15,7 +16,12 @@ const handleSendAsset = () => {
 }
 
 const handleShowLyxDetails = () => {
-  navigateTo(lyxDetailsRoute())
+  try {
+    assertAddress(viewedProfile.address, 'profile')
+    navigateTo(lyxDetailsRoute(viewedProfile.address))
+  } catch (error) {
+    console.error(error)
+  }
 }
 </script>
 
@@ -31,7 +37,7 @@ const handleShowLyxDetails = () => {
           <div class="border border-neutral-90 rounded-full p-0.5">
             <lukso-profile
               size="medium"
-              profile-url="/images/lyx-token.svg"
+              :profile-url="ASSET_LYX_ICON_URL"
             ></lukso-profile>
           </div>
         </div>
@@ -43,7 +49,7 @@ const handleShowLyxDetails = () => {
             }}</span>
             <span v-else>0</span>
             <span class="paragraph-inter-14-semi-bold text-neutral-60 ml-2">{{
-              appStore.currentNetwork.token
+              appStore.currentNetwork.token.symbol
             }}</span>
           </div>
           <div class="paragraph-inter-12-regular pb-4 hidden">$ 123.24</div>

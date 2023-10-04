@@ -15,4 +15,5 @@ export const homeRoute = () => '/'
 
 export const notFoundRoute = () => '/404'
 
-export const lyxDetailsRoute = () => '/lyx-details'
+export const lyxDetailsRoute = (profileAddress: Address) =>
+  `/${profileAddress}/lyx-details`
