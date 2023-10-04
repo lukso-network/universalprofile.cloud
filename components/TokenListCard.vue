@@ -6,7 +6,6 @@ import { Token, StandardsAbbreviations } from '@/types/assets'
 type Props = {
   asset: Token
   hasAddress?: boolean
-  isOpenable?: boolean
 }
 
 const props = defineProps<Props>()
@@ -15,10 +14,6 @@ const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { profile: viewedProfile } = useViewedProfileStore()
 
 const handleShowAsset = () => {
-  if (!props.isOpenable) {
-    return
-  }
-
   try {
     assertAddress(viewedProfile.address, 'profile')
     assertAddress(props.asset.address, 'asset')
@@ -44,11 +39,7 @@ const handleSendAsset = () => {
 </script>
 
 <template>
-  <lukso-card
-    size="small"
-    :is-hoverable="isOpenable ? 'true' : undefined"
-    is-full-width
-    @click="handleShowAsset"
+  <lukso-card size="small" is-hoverable is-full-width @click="handleShowAsset"
     ><div slot="content" class="p-4">
       <div class="h-7 flex justify-end items-start">
         <lukso-tag
