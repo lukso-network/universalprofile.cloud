@@ -16,7 +16,6 @@ const setConnectionExpiry = () => {
 const connect = async () => {
   const { showModal } = useModal()
   const { formatMessage } = useIntl()
-  const { reloadProfile } = useViewedProfileStore()
   const { setStatus, reloadProfile: reloadConnectedProfile } =
     useConnectedProfileStore()
 
@@ -47,7 +46,8 @@ const connect = async () => {
     assertAddress(address, 'connection')
     setItem(STORAGE_KEY.CONNECTED_ADDRESS, address)
     const profile = await fetchProfile(address)
-    reloadProfile(profile)
+    await setupViewedProfile(address)
+    await setupViewedAssets(address)
     reloadConnectedProfile(profile)
     setStatus('isConnected', true)
     setConnectionExpiry()
