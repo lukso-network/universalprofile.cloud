@@ -70,6 +70,7 @@ export interface LSP8Asset {
   icon: string
   tokenId: string
   description: string
+  tokenSupply: string
   collectionName: string
   collectionDescription: string
   collectionImages: ImageMetadata[][]

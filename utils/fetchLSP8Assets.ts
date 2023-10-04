@@ -8,8 +8,18 @@ export const fetchLSP8Assets = async (
   assetAddress: Address,
   profileAddress: Address
 ) => {
+  const { contract } = useWeb3(PROVIDERS.RPC)
+
+  const lsp8Contract = contract(
+    LSP8IdentifiableDigitalAsset.abi as any,
+    assetAddress
+  )
+  const tokenSupply = await lsp8Contract.methods.totalSupply().call()
+
   // profile can have few ids of same LSP8 asset
-  const tokensIds = await fetchLSP8TokensIds(assetAddress, profileAddress)
+  const tokensIds = (await lsp8Contract.methods
+    .tokenIdsOf(profileAddress)
+    .call()) as string[]
 
   if (!tokensIds.length) {
     return
@@ -29,6 +39,7 @@ export const fetchLSP8Assets = async (
       const lsp8AssetObject: LSP8Asset = createLSP8Object(
         assetAddress,
         tokenId,
+        tokenSupply,
         collectionName,
         collectionSymbol,
         nftMetadata,
@@ -41,26 +52,10 @@ export const fetchLSP8Assets = async (
   return newLSP8Assets
 }
 
-const fetchLSP8TokensIds = async (
-  contractAddress: string,
-  profileAddress: string
-): Promise<string[]> => {
-  const { contract } = useWeb3(PROVIDERS.RPC)
-
-  const lsp8Contract = contract(
-    LSP8IdentifiableDigitalAsset.abi as any,
-    contractAddress
-  )
-
-  const tokensIds = (await lsp8Contract.methods
-    .tokenIdsOf(profileAddress)
-    .call()) as string[]
-  return tokensIds
-}
-
 const createLSP8Object = (
   assetAddress: Address,
   tokenId: string,
+  tokenSupply: string,
   collectionName: string,
   collectionSymbol: string,
   nftMetadata: LSP4DigitalAssetJSON,
@@ -97,6 +92,7 @@ const createLSP8Object = (
     creatorName,
     creatorAddress,
     creatorProfileImage,
+    tokenSupply,
   }
   return lsp8AssetObject as LSP8Asset
 }
