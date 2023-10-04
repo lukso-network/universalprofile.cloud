@@ -69,7 +69,6 @@ const handleSendLyx = () => {
         <div class="heading-apax-24-medium pb-8">
           {{ $formatMessage('lyx_details_title') }}
         </div>
-        <AssetAddress :address="currentNetwork.token.address" />
         <AssetSupply
           :supply="currentNetwork.token.supply.toString()"
           :symbol="currentNetwork.token.symbol"

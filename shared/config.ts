@@ -10,7 +10,6 @@ export const NETWORKS: NetworkInfo[] = [
     rpcHttp: 'https://rpc.testnet.lukso.network',
     token: {
       symbol: 'LYXt',
-      address: '0xb1122dFF096406F1FFF0E49455b344aE1AC4baC2',
       supply: 42_000_000,
     },
   },
@@ -21,7 +20,6 @@ export const NETWORKS: NetworkInfo[] = [
     rpcHttp: 'https://rpc.lukso.gateway.fm',
     token: {
       symbol: 'LYX',
-      address: '0xb1122dFF096406F1FFF0E49455b344aE1AC4baC2',
       supply: 42_000_000,
     },
   },
