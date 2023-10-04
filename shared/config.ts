@@ -8,14 +8,22 @@ export const NETWORKS: NetworkInfo[] = [
     name: 'LUKSO Testnet',
     chainId: '0x1069',
     rpcHttp: 'https://rpc.testnet.lukso.network',
-    token: 'LYXt',
+    token: {
+      symbol: 'LYXt',
+      address: '0xb1122dFF096406F1FFF0E49455b344aE1AC4baC2',
+      supply: 42_000_000,
+    },
   },
   {
     id: 'mainnet',
     name: 'LUKSO Mainnet',
     chainId: '0x2a',
     rpcHttp: 'https://rpc.lukso.gateway.fm',
-    token: 'LYX',
+    token: {
+      symbol: 'LYX',
+      address: '0xb1122dFF096406F1FFF0E49455b344aE1AC4baC2',
+      supply: 42_000_000,
+    },
   },
 ]
 
@@ -33,6 +41,9 @@ export const CONNECTION_EXPIRY_CHECK_INTERVAL_MS = 1000 * 10 // 10 seconds
 
 // placeholder icon if asset icon is not available
 export const ASSET_ICON_PLACEHOLDER_URL = '/images/token-default.svg'
+
+// lyx token icon
+export const ASSET_LYX_ICON_URL = '/images/lyx-token.svg'
 
 // url of the ipfs gateway
 export const IPFS_URL = 'https://2eff.lukso.dev/ipfs/'

@@ -23,7 +23,11 @@ declare global {
     rpcHttp: string
     chainId: ChainIdHex
     storeUrls?: { [key in BrowserName]: string }
-    token: string
+    token: {
+      symbol: string
+      address: Address
+      supply: number
+    }
   }
 
   interface Window {
