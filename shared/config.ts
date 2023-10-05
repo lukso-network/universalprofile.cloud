@@ -66,3 +66,6 @@ export const EXTENSION_STORE_LINKS = {
 // transaction default gas values
 export const DEFAULT_GAS = 5_000_000
 export const DEFAULT_GAS_PRICE = '10000000000'
+
+// base my universalprofile address
+export const BASE_MY_UP_CLOUD_URL = 'https://my.universalprofile.cloud/'
