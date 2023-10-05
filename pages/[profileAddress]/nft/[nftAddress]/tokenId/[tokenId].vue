@@ -91,6 +91,10 @@ watchEffect(() => {
         </div>
         <AssetAddress v-if="nft?.address" :address="nft.address" />
         <AssetTokenId v-if="nft?.data.tokenId" :token-id="nft.data.tokenId" />
+        <AssetSupply
+          :supply="nft?.data.tokenSupply || '1'"
+          :symbol="nft?.data.collectionSymbol || ''"
+        />
         <AssetLinks
           v-if="nft?.data && 'collectionLinks' in nft?.data"
           :links="nft.data.collectionLinks"

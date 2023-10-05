@@ -52,6 +52,8 @@ export interface LSP7Asset {
   links: LinkMetadata[]
   description: string
   images: ImageMetadata[][]
+  tokenSupply: string
+  decimals: string
 }
 
 export interface ERC20Asset {
@@ -59,6 +61,8 @@ export interface ERC20Asset {
   symbol: string
   amount: string
   address: string
+  tokenSupply: string
+  decimals: string
 }
 
 export interface LSP8Asset {
@@ -66,6 +70,7 @@ export interface LSP8Asset {
   icon: string
   tokenId: string
   description: string
+  tokenSupply: string
   collectionName: string
   collectionDescription: string
   collectionImages: ImageMetadata[][]

@@ -11,28 +11,31 @@ const fetchLSP7Assets = async (
   const { fetchLSP4Metadata } = useErc725()
   const lsp4Metadata = await fetchLSP4Metadata(assetAddress)
 
-  // fetch amount of tokens received
-  const tokenBalance = await fetchLSP7Balance(assetAddress, profileAddress)
-
-  const lsp7Object = createLSP7Object(lsp4Metadata, tokenBalance, assetAddress)
-  return lsp7Object
-}
-
-const fetchLSP7Balance = async (
-  contractAddress: Address,
-  profileAddress: Address
-): Promise<number> => {
   const { contract } = useWeb3(PROVIDERS.RPC)
-  const lsp7Contract = contract(LSP7DigitalAsset.abi as any, contractAddress)
-  const balance = await lsp7Contract.methods.balanceOf(profileAddress).call()
+  const lsp7Contract = contract(LSP7DigitalAsset.abi as any, assetAddress)
 
-  return balance
+  const tokenBalance = await lsp7Contract.methods
+    .balanceOf(profileAddress)
+    .call()
+  const tokenSupply = await lsp7Contract.methods.totalSupply().call()
+  const decimals = await lsp7Contract.methods.decimals().call()
+
+  const lsp7Object = createLSP7Object(
+    lsp4Metadata,
+    tokenBalance,
+    assetAddress,
+    tokenSupply,
+    decimals
+  )
+  return lsp7Object
 }
 
 const createLSP7Object = (
   lsp4DigitalAssetJSON: [string, string, LSP4DigitalAssetJSON],
   tokenBalance: number,
-  assetAddress: Address
+  assetAddress: Address,
+  tokenSupply: string,
+  decimals: string
 ): LSP7Asset => {
   const [name, symbol, lsp4MetadataJSON] = lsp4DigitalAssetJSON
   const lsp7AssetObject = {
@@ -46,6 +49,8 @@ const createLSP7Object = (
     links: lsp4MetadataJSON.LSP4Metadata.links,
     description: lsp4MetadataJSON.LSP4Metadata.description,
     images: lsp4MetadataJSON.LSP4Metadata.images,
+    tokenSupply,
+    decimals,
   }
   return lsp7AssetObject
 }

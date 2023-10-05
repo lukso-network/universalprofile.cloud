@@ -25,7 +25,6 @@ declare global {
     storeUrls?: { [key in BrowserName]: string }
     token: {
       symbol: string
-      address: Address
       supply: number
     }
   }

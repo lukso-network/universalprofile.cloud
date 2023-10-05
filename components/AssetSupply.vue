@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type Props = {
-  supply: number
+  supply: string
   symbol: string
 }
 
@@ -15,7 +15,7 @@ defineProps<Props>()
     class="bg-neutral-100 border border-neutral-90 py-3 px-4 rounded-12 mb-8"
   >
     <div class="flex items-center justify-between paragraph-inter-14-regular">
-      {{ $formatNumber(supply) }}
+      {{ $formatNumber(supply, { maximumFractionDigits: 20 }) }}
       <div
         class="paragraph-inter-12-regular text-neutral-60 border-l border-l-neutral-90 pl-3 ml-3"
       >

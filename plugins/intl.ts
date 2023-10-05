@@ -12,7 +12,7 @@ export default defineNuxtPlugin(() => {
     provide: {
       formatMessage: (key: string, options?: Record<string, string>) =>
         formatMessage(key, options),
-      formatNumber: (value: string | number, options?: FormatNumberOptions) =>
+      formatNumber: (value: number, options?: FormatNumberOptions) =>
         formatNumber(value, options),
       formatDate: (date?: string | number | Date) => formatDate(date),
       formatTime: (date?: string | number | Date) => formatTime(date),

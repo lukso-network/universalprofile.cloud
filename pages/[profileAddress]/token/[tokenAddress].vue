@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { fromWei } from 'web3-utils'
+
 import { Token } from '@/types/assets'
 
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
@@ -13,6 +15,10 @@ const token = ref<Token>()
 
 watchEffect(() => {
   token.value = getToken(tokenAddress)
+})
+
+const tokenSupply = computed(() => {
+  return fromWei(token.value?.data.tokenSupply || '0', 'ether')
 })
 </script>
 
@@ -61,6 +67,7 @@ watchEffect(() => {
       <div>
         <div class="heading-apax-24-medium pb-8">{{ token?.data.name }}</div>
         <AssetAddress v-if="token?.address" :address="token.address" />
+        <AssetSupply :supply="tokenSupply" :symbol="token?.data.symbol || ''" />
         <AssetLinks
           v-if="
             token?.data && 'links' in token?.data && token.data.links.length > 0
