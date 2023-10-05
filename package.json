@@ -33,6 +33,7 @@
     "@lukso/lsp-smart-contracts": "0.11.1",
     "@lukso/web-components": "1.42.0",
     "@nuxt/devtools": "^0.7.4",
+    "@nuxtjs/algolia": "^1.9.0",
     "@nuxtjs/device": "^3.1.0",
     "@nuxtjs/plausible": "^0.2.1",
     "@nuxtjs/tailwindcss": "^6.8.0",
@@ -92,5 +93,8 @@
       "stylelint"
     ]
   },
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "resolutions": {
+    "@lukso/web-components": "portal:/Users/dominik/www/lukso/tools-web-components/package"
+  }
 }
