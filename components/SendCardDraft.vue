@@ -2,41 +2,94 @@
 import { fromWei, isAddress } from 'web3-utils'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
+import { SearchProfileResult } from '@lukso/web-components/dist/components/lukso-search'
+
+import { IndexedProfile } from '@/types/profile'
 
 const { profile: connectedProfile } = useConnectedProfileStore()
 const { asset, receiver, receiverError, amount, onSend } = storeToRefs(
   useSendStore()
 )
-const { formatMessage } = useIntl()
-const isReceiverLoading = ref<boolean>(false)
+const { search } = useAlgoliaSearch<IndexedProfile>(INDEX_NAME)
+const isSearchingReceiver = ref<boolean>(false)
+const searchTerm = ref<string>()
+const hasNoResults = ref<boolean>(false)
+const results = ref<SearchProfileResult[]>()
 
-const handleReceiverChange = async (event: CustomEvent) => {
-  const address = event.detail.value
-  receiver.value = { address }
+onMounted(() => {
+  window.addEventListener('click', handleOutsideSearchClick)
+})
 
-  // check if address is valid
-  if (!isAddress(address)) {
-    receiverError.value = formatMessage('errors_invalid_address')
+onUnmounted(() => {
+  window.removeEventListener('click', handleOutsideSearchClick)
+})
+
+const handleOutsideSearchClick = async () => {
+  hasNoResults.value = false
+  results.value = undefined
+}
+
+const handleReceiverSearch = async (event: CustomEvent) => {
+  searchTerm.value = event.detail.value
+  results.value = undefined
+
+  if (!searchTerm.value) {
+    isSearchingReceiver.value = false
+    hasNoResults.value = false
+    results.value = undefined
     receiver.value = undefined
     return
-  } else {
-    receiverError.value = ''
   }
 
-  try {
-    isReceiverLoading.value = true
-    receiver.value = await fetchProfile(address)
-  } catch (error) {
-    if (error instanceof EoAError) {
-      receiver.value.isEoa = true
-    } else {
-      receiver.value.isEoa = false
+  isSearchingReceiver.value = true
+
+  // in user paste address, which might be EoA, we load profile right away
+  if (isAddress(searchTerm.value)) {
+    assertAddress(searchTerm.value)
+
+    try {
+      // isLoadingReceiver.value = true
+      await fetchProfile(searchTerm.value)
+    } catch (error) {
+      if (error instanceof EoAError) {
+        receiver.value = { address: searchTerm.value }
+        receiver.value.isEoa = true
+        receiver.value.address = searchTerm.value
+      }
+
+      console.error(error)
     }
-
-    console.error(error)
-  } finally {
-    isReceiverLoading.value = false
+  } else {
+    receiver.value = undefined
   }
+
+  await searchResults()
+  isSearchingReceiver.value = false
+}
+
+const searchResults = async () => {
+  const searchResults = await search({
+    query: searchTerm.value,
+    requestOptions: {
+      hitsPerPage: SEARCH_RESULTS_LIMIT,
+      page: 0,
+    },
+  })
+
+  if (searchResults.hits.length === 0) {
+    hasNoResults.value = true
+    return
+  } else {
+    hasNoResults.value = false
+  }
+
+  results.value = searchResults.hits.map(hit => {
+    return {
+      name: hit.LSP3Profile?.name,
+      address: hit.address,
+      image: hit.profileImageUrl,
+    }
+  })
 }
 
 const handleKeyDown = (customEvent: CustomEvent) => {
@@ -49,8 +102,8 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   const assetBalanceBN = new BigNumber(`${fromWei(asset.value?.amount || '0')}`)
   const maxDecimalPlaces = 6
 
-  // check for allowed keys
-  if (allowedKeys.includes(key)) {
+  // check for allowed keys or if user press CMD+A
+  if (allowedKeys.includes(key) || (event.metaKey && key === 'a')) {
     return
   }
 
@@ -93,6 +146,29 @@ const handleUnitClick = (event: CustomEvent) => {
 
 const handleSend = () => {
   onSend.value && onSend.value()
+}
+
+const handleSelect = async (event: CustomEvent) => {
+  const selection = event.detail.value
+  const { address, name, image } = selection
+  results.value = undefined
+  searchTerm.value = address
+  receiver.value = { address, name, profileImageUrl: image }
+  receiverError.value = ''
+}
+
+const handleBlur = (event: CustomEvent) => {
+  const address = event.detail.value
+  const { formatMessage } = useIntl()
+
+  // we add slight delay to allow `on-select` to be triggered first
+  setTimeout(() => {
+    if (address && !isAddress(address)) {
+      receiverError.value = formatMessage('errors_invalid_address')
+    } else {
+      receiverError.value = ''
+    }
+  }, 50)
 }
 </script>
 
@@ -147,24 +223,29 @@ const handleSend = () => {
     </div>
     <div slot="bottom" class="p-6 flex flex-col items-center">
       <AppAvatar
-        :is-loading="isReceiverLoading"
         :is-eoa="receiver?.isEoa"
         :is-error="!!receiverError"
         :address="receiver?.address"
         :profile="receiver"
       />
-      <lukso-input
+      <lukso-search
         name="receiver"
-        :value="receiver?.address"
+        :value="searchTerm"
         :placeholder="$formatMessage('send_input_placeholder')"
+        :error="receiverError"
+        :results="JSON.stringify(results)"
+        :is-searching="isSearchingReceiver ? 'true' : undefined"
+        :show-no-results="hasNoResults ? 'true' : undefined"
+        :no-results-text="$formatMessage('profile_search_no_results')"
         is-full-width
         class="w-full mt-4"
-        :error="receiverError"
-        @on-input="handleReceiverChange"
-      ></lukso-input>
+        custom-class="paragraph-ptmono-14-regular"
+        @on-search="handleReceiverSearch"
+        @on-select="handleSelect"
+        @on-blur="handleBlur"
+      ></lukso-search>
       <lukso-button
         class="w-full mt-4"
-        :loading="isReceiverLoading"
         :disabled="
           !receiver?.address || receiverError || !Number(amount)
             ? true
