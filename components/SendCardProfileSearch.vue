@@ -70,7 +70,6 @@ const handleReceiverSearch = async (event: CustomEvent) => {
     assertAddress(searchTerm.value)
 
     try {
-      // isLoadingReceiver.value = true
       await fetchProfile(searchTerm.value)
     } catch (error) {
       if (error instanceof EoAError) {
