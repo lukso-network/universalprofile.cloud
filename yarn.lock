@@ -2028,13 +2028,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@portal:/Users/dominik/www/lukso/tools-web-components/package::locator=wallet.universalprofile.cloud%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@lukso/web-components@portal:/Users/dominik/www/lukso/tools-web-components/package::locator=wallet.universalprofile.cloud%40workspace%3A."
+"@lukso/web-components@npm:1.43.0":
+  version: 1.43.0
+  resolution: "@lukso/web-components@npm:1.43.0"
   dependencies:
     ethereum-blockies-base64: ^1.0.2
+  checksum: 2b7e92ae56a7f10685f5d2b51f243296c7cc6712807fc0b5aa598830803e30adfb0992a416e8e6de9b14075fde34d395da7d6cda76331100fc3d95ec49792ebf
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "@mapbox/node-pre-gyp@npm:^1.0.5":
   version: 1.0.11
@@ -16804,7 +16805,7 @@ __metadata:
     "@formatjs/intl": ^2.9.0
     "@lukso/lsp-factory.js": 3.1.1
     "@lukso/lsp-smart-contracts": 0.11.1
-    "@lukso/web-components": 1.42.0
+    "@lukso/web-components": 1.43.0
     "@nuxt/devtools": ^0.7.4
     "@nuxtjs/algolia": ^1.9.0
     "@nuxtjs/device": ^3.1.0
