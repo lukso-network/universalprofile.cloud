@@ -129,7 +129,7 @@ const fetchLSP4Metadata = async (
     )
     return [LSP4TokenName, LSP4TokenSymbol, LSP4Metadata]
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return [
       '',
       '',
@@ -196,7 +196,7 @@ const fetchLSP8Metadata = async (
         }
     }
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return {
       LSP4Metadata: {
         description: '',
