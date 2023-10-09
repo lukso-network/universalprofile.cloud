@@ -35,6 +35,10 @@ const handleDisconnect = async () => {
   disconnect()
 }
 
+const handleBrandClick = () => {
+  window.open(BASE_MY_UP_CLOUD_URL, '_self')
+}
+
 const extensionStoreData = () => {
   const url = browserInfo().storeLink
   const icon = `logo-${browserInfo().id}`
@@ -56,7 +60,7 @@ const browserSupportExtension = extensionStore.url !== ''
     :is-testnet="IS_TESTNET"
     icon="wallet-outline"
     has-menu
-    @on-brand-click="handleNavigateProfile"
+    @on-brand-click="handleBrandClick"
   >
     <div class="w-full flex items-center justify-end" slot="desktop">
       <lukso-button
