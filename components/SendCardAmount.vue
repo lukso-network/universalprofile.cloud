@@ -10,7 +10,7 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   const event = customEvent.detail.event
   const input = event.target as HTMLInputElement
   const key = event.key
-  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight']
+  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab']
   const realValueBN = new BigNumber(`${input.value}${key}`)
   const assetBalanceBN = new BigNumber(`${fromWei(asset.value?.amount || '0')}`)
   const maxDecimalPlaces = 6
