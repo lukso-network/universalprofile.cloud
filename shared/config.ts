@@ -73,3 +73,6 @@ export const SEARCH_RESULTS_LIMIT = 100
 
 // base my universalprofile address
 export const BASE_MY_UP_CLOUD_URL = 'https://my.universalprofile.cloud/'
+
+// base universalprofile address
+export const BASE_UP_CLOUD_URL = 'https://universalprofile.cloud/'

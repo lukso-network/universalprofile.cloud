@@ -36,7 +36,7 @@ const handleDisconnect = async () => {
 }
 
 const handleBrandClick = () => {
-  window.open(BASE_MY_UP_CLOUD_URL, '_self')
+  window.open(BASE_UP_CLOUD_URL, '_self')
 }
 
 const extensionStoreData = () => {
