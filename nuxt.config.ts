@@ -26,6 +26,7 @@ export default defineNuxtConfig({
     ],
     '@nuxtjs/device',
     '@nuxtjs/plausible',
+    '@nuxtjs/algolia',
   ],
   plausible: {
     domain: 'wallet.universalprofile.cloud',

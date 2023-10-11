@@ -3,10 +3,6 @@ import { storeToRefs } from 'pinia'
 
 const { profile: connectedProfile } = useConnectedProfileStore()
 const { receiver } = storeToRefs(useSendStore())
-
-onMounted(() => {
-  console.log('mounted')
-})
 </script>
 
 <template>

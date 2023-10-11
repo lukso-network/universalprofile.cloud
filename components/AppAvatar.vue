@@ -19,11 +19,11 @@ defineProps<Props>()
     >
       <lukso-icon name="progress-indicator" size="x-large"></lukso-icon>
     </div>
-    <div>- -</div>
+    <lukso-username name="--" size="small" hide-prefix></lukso-username>
   </div>
   <div v-else-if="isError" class="flex flex-col items-center">
     <lukso-profile size="large" class="mb-2"></lukso-profile>
-    <div>- -</div>
+    <lukso-username name="--" size="small" hide-prefix></lukso-username>
   </div>
   <div v-else-if="isEoa" class="flex flex-col items-center">
     <lukso-profile
@@ -57,6 +57,6 @@ defineProps<Props>()
       size="small"
       slice-by="4"
     ></lukso-username>
-    <div v-else>- -</div>
+    <lukso-username v-else name="--" size="small" hide-prefix></lukso-username>
   </div>
 </template>

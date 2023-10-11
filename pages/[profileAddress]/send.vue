@@ -54,7 +54,6 @@ const handleSend = async () => {
       gas: DEFAULT_GAS,
       gasPrice: DEFAULT_GAS_PRICE,
     } as TransactionConfig
-    console.log(transaction)
 
     await sendTransaction(transaction)
     await updateBalance()

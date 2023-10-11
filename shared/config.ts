@@ -65,5 +65,11 @@ export const EXTENSION_STORE_LINKS = {
 export const DEFAULT_GAS = 5_000_000
 export const DEFAULT_GAS_PRICE = '10000000000'
 
+// indexer params
+export const INDEX_NAME = 'prod_testnet_universal_profiles'
+
+// search params
+export const SEARCH_RESULTS_LIMIT = 100
+
 // base my universalprofile address
 export const BASE_MY_UP_CLOUD_URL = 'https://my.universalprofile.cloud/'

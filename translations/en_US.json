@@ -61,9 +61,10 @@
   "token_details_own": "You own this token",
   "footer_need_help_url": "mailto:support@lukso.network",
   "web3_interface_error_message": "You tried to connect with a legacy profile that is no longer supported.",
-  "errors_invalid_address": "This is an invalid Universal Profile address",
+  "errors_invalid_address": "This is an invalid address",
   "header_connect": "Connect",
   "web3_connect_error": "There was an error while connecting to the browser extension.",
   "footer_privacy_policy_text": "Privacy Policy",
-  "token_details_images": "Token Images"
+  "token_details_images": "Token Images",
+  "profile_search_no_results": "No profile found"
 }
