@@ -77,7 +77,7 @@ To unlink please run
 yarn unlink ../tools-web-components/package
 ```
 
-> Make sure you remove link before pushing, otherwise it won't build in Cloudflare
+> Make sure you remove link before pushing, otherwise it won't build in Cloudflare.
 
 ### Releasing
 
