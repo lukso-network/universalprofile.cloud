@@ -13,6 +13,8 @@ on:
 env:
   CF_PROJECT_NAME: wallet-universalprofile-cloud
   CF_BASE_URL: wallet-universalprofile-cloud
+  ALGOLIA_API_KEY: '${{ secrets.ALGOLIA_API_KEY }}'
+  ALGOLIA_APPLICATION_ID: '${{ secrets.ALGOLIA_APPLICATION_ID }}'
 
 jobs:
   test:
