@@ -27,10 +27,6 @@ const handleNavigateSend = () => {
   }
 }
 
-const handleNavigationDiscovery = () => {
-  window.open(BASE_UP_CLOUD_URL, '_self')
-}
-
 const handleConnect = async () => {
   connect()
 }
@@ -39,8 +35,8 @@ const handleDisconnect = async () => {
   disconnect()
 }
 
-const handleBrandClick = () => {
-  window.open(BASE_MY_UP_CLOUD_URL, '_self')
+const handleNavigationDiscovery = () => {
+  window.open(BASE_UP_CLOUD_URL, '_self')
 }
 
 const extensionStoreData = () => {
@@ -64,7 +60,7 @@ const browserSupportExtension = extensionStore.url !== ''
     :is-testnet="IS_TESTNET"
     icon="wallet-outline"
     has-menu
-    @on-brand-click="handleBrandClick"
+    @on-brand-click="handleNavigationDiscovery"
   >
     <div class="w-full flex items-center justify-end" slot="desktop">
       <lukso-button
