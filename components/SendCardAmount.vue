@@ -70,6 +70,7 @@ const handleUnitClick = (event: CustomEvent) => {
     "
     borderless
     is-full-width
+    autofocus
     @on-key-down="handleKeyDown"
     @on-key-up="handleKeyUp"
     @on-unit-click="handleUnitClick"
