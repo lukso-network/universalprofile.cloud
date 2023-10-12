@@ -5,9 +5,16 @@ const { profile: connectedProfile } = useConnectedProfileStore()
 const { asset, receiver, receiverError, amount, onSend } = storeToRefs(
   useSendStore()
 )
+const { showModal } = useModal()
 
 const handleSend = () => {
   onSend.value && onSend.value()
+}
+
+const handleSelectAssets = () => {
+  showModal({
+    template: 'SelectAssets',
+  })
 }
 </script>
 
@@ -20,10 +27,10 @@ const handleSend = () => {
     is-full-width
   >
     <div slot="content" class="p-6 pt-0">
-      <div
-        class="border border-neutral-90 rounded-12 flex justify-center items-center"
-      >
-        <div class="p-4">
+      <div class="grid grid-rows-1 grid-cols-[max-content,auto]">
+        <div
+          class="p-4 border border-neutral-90 border-r-0 rounded-[12px_0_0_12px] flex justify-center items-center"
+        >
           <div class="shadow-neutral-above-shadow-1xl rounded-full">
             <lukso-profile
               size="small"
@@ -33,12 +40,13 @@ const handleSend = () => {
         </div>
         <div class="flex flex-col w-full">
           <div
-            class="border-b border-b-neutral-90 border-l border-l-neutral-90 paragraph-inter-14-semi-bold px-4 py-3 flex justify-between items-center"
+            class="border border-neutral-90 rounded-[0_12px_0_0] cursor-pointer paragraph-inter-14-semi-bold px-4 py-3 flex justify-between items-center transition hover:border-neutral-35"
+            @click="handleSelectAssets"
           >
             {{ asset?.name }}
-            <lukso-icon name="arrow-down-lg" class="hidden"></lukso-icon>
+            <lukso-icon name="arrow-down-lg"></lukso-icon>
           </div>
-          <div class="border-l border-l-neutral-90">
+          <div class="border border-neutral-90 border-t-0 rounded-[0_0_12px_0]">
             <SendCardAmount />
           </div>
         </div>
