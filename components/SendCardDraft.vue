@@ -35,6 +35,9 @@ const handleSelectAssets = () => {
             <lukso-profile
               size="small"
               :profile-url="asset?.icon"
+              :profile-address="asset?.address"
+              :has-identicon="isLyx(asset) ? undefined : true"
+              :is-square="isNft(asset) ? true : undefined"
             ></lukso-profile>
           </div>
         </div>

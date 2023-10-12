@@ -11,6 +11,7 @@ export const NETWORKS: NetworkInfo[] = [
     token: {
       symbol: 'LYXt',
       supply: 42_000_000,
+      name: 'LUKSO',
     },
   },
   {
@@ -21,6 +22,7 @@ export const NETWORKS: NetworkInfo[] = [
     token: {
       symbol: 'LYX',
       supply: 42_000_000,
+      name: 'LUKSO',
     },
   },
 ]

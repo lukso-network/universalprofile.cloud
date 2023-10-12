@@ -19,9 +19,11 @@ onMounted(() => {
   clearSend()
 
   asset.value = {
-    name: 'LUKSO',
+    name: currentNetwork.token.name,
     symbol: currentNetwork.token.symbol,
     icon: ASSET_LYX_ICON_URL,
+    isNativeToken: true,
+    amount: connectedProfile.balance,
   }
 
   onSend.value = handleSend
@@ -35,7 +37,7 @@ watchEffect(() => {
   // since balance is not avail in onMounted hook
   asset.value = {
     ...asset.value,
-    amount: connectedProfile.balance,
+    amount: isLyx(asset.value) ? connectedProfile.balance : asset.value.amount,
   }
 
   if (!status.isConnected) {

@@ -95,8 +95,11 @@ export enum TokenIdType {
 }
 
 export type SendAsset = {
+  address?: string
   name?: string
   amount?: string
   symbol?: string
   icon?: string
+  standard?: InterfaceId
+  isNativeToken?: boolean
 }

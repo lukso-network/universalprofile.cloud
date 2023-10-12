@@ -26,6 +26,7 @@ declare global {
     token: {
       symbol: string
       supply: number
+      name: string
     }
   }
 
