@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { fromWei } from 'web3-utils'
 
-import { Token } from '@/types/assets'
+import { Asset } from '@/types/assets'
 
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
 const {
@@ -11,14 +11,14 @@ const {
 } = useViewedProfileStore()
 const { status: connectionStatus, profile: connectedProfile } =
   useConnectedProfileStore()
-const token = ref<Token>()
+const token = ref<Asset>()
 
 watchEffect(() => {
   token.value = getToken(tokenAddress)
 })
 
 const tokenSupply = computed(() => {
-  return fromWei(token.value?.data.tokenSupply || '0', 'ether')
+  return fromWei(token.value?.tokenSupply || '0', 'ether')
 })
 </script>
 
@@ -40,7 +40,7 @@ const tokenSupply = computed(() => {
             <lukso-profile
               v-if="token"
               size="large"
-              :profile-url="'icon' in token.data ? token.data.icon : undefined"
+              :profile-url="token.icon"
               class="shadow-neutral-above-shadow-1xl rounded-full"
             ></lukso-profile>
           </div>
@@ -53,37 +53,30 @@ const tokenSupply = computed(() => {
         >
           <AssetOwnInfo
             :profile="connectedProfile"
-            :amount="token?.data.amount"
-            :symbol="token?.data.symbol"
+            :amount="token?.amount"
+            :symbol="token?.symbol"
           />
 
           <lukso-button is-full-width class="mt-4 hidden">{{
             $formatMessage('token_details_send', {
-              token: token?.data.symbol || '',
+              token: token?.symbol || '',
             })
           }}</lukso-button>
         </div>
       </div>
       <div>
-        <div class="heading-apax-24-medium pb-8">{{ token?.data.name }}</div>
+        <div class="heading-apax-24-medium pb-8">{{ token?.name }}</div>
         <AssetAddress v-if="token?.address" :address="token.address" />
-        <AssetSupply :supply="tokenSupply" :symbol="token?.data.symbol || ''" />
+        <AssetSupply :supply="tokenSupply" :symbol="token?.symbol || ''" />
         <AssetLinks
-          v-if="
-            token?.data && 'links' in token?.data && token.data.links.length > 0
-          "
-          :links="token.data.links"
+          v-if="token?.links && token.links.length > 0"
+          :links="token.links"
         />
         <AssetDescription
-          v-if="
-            token?.data && 'description' in token.data && token.data.description
-          "
-          :description="token.data.description"
+          v-if="token?.description"
+          :description="token.description"
         />
-        <AssetImages
-          v-if="token?.data && 'images' in token.data && token.data.images"
-          :images="token.data.images"
-        />
+        <AssetImages v-if="token?.images" :images="token.images" />
         <AssetStandardInfo
           v-if="token?.standard"
           :standard="token.standard"

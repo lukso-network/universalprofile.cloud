@@ -1,13 +1,11 @@
 import { ERC725, ERC725JSONSchema } from '@erc725/erc725.js'
 import LSP3UniversalProfileMetadata from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json'
-import LSP4DigitalAsset from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json'
 import { LSP3Profile } from '@lukso/lsp-factory.js'
 import Web3 from 'web3'
 import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
-import { URLDataWithHash } from '@erc725/erc725.js/build/main/src/types'
 import { ERC725YDataKeys } from '@lukso/lsp-smart-contracts'
 
-import { SupportedAssets, TokenIdType } from '@/types/assets'
+import { Lsp8TokenIdType } from '@/types/assets'
 import { getImageUrlBySize } from '@/utils/getProfileImages'
 import LSP8IdentifiableDigitalAsset from '@/shared/schemas/LSP8IdentifiableDigitalAsset.json'
 import { PROVIDERS } from '@/types/enums'
@@ -64,89 +62,30 @@ const fetchAssets = async (profileAddress: Address, schema: string) => {
   const assetAddresses = result.value as Address[]
   const { profile } = useViewedProfileStore()
 
-  const assets = Promise.all(
+  const assets = await Promise.all(
     assetAddresses.map(async address => {
       const standard = await detectStandard(address)
-      let data
 
       switch (standard) {
         case 'LSP8IdentifiableDigitalAsset': {
           assertAddress(profile.address)
-          data = await fetchLSP8Assets(address, profile.address)
-
-          const assets =
-            data?.map(asset => ({
-              address,
-              standard,
-              data: asset,
-            })) || []
-
-          return assets
+          return await fetchLsp8Assets(address, profile.address)
         }
         case 'LSP7DigitalAsset': {
           assertAddress(profile.address)
-          data = await fetchLSP7Assets(address, profile.address)
+          return await fetchLsp7Assets(address, profile.address)
         }
+
         default:
-          return [
-            {
-              address,
-              standard,
-              data,
-            },
-          ]
+          return []
       }
     })
   )
 
-  return (await assets).flat() as SupportedAssets[]
+  return assets.flat()
 }
 
-const fetchLSP4Metadata = async (
-  assetAddress: Address
-): Promise<[string, string, LSP4DigitalAssetJSON]> => {
-  const erc725 = getInstance(
-    assetAddress,
-    LSP4DigitalAsset as ERC725JSONSchema[]
-  )
-
-  try {
-    const lsp4DigitalAsset = await erc725.fetchData([
-      'LSP4TokenName',
-      'LSP4TokenSymbol',
-      'LSP4Metadata',
-    ])
-    const LSP4TokenName =
-      typeof lsp4DigitalAsset[0]?.value === 'string'
-        ? lsp4DigitalAsset[0]?.value
-        : ''
-    const LSP4TokenSymbol =
-      typeof lsp4DigitalAsset[1]?.value == 'string'
-        ? lsp4DigitalAsset[1]?.value
-        : ''
-    const LSP4Metadata = validateLSP4MetaData(
-      lsp4DigitalAsset[2].value as URLDataWithHash
-    )
-    return [LSP4TokenName, LSP4TokenSymbol, LSP4Metadata]
-  } catch (error) {
-    console.error(error)
-    return [
-      '',
-      '',
-      {
-        LSP4Metadata: {
-          description: '',
-          links: [],
-          images: [[]],
-          icon: [],
-          assets: [],
-        },
-      },
-    ]
-  }
-}
-
-const fetchLSP8Metadata = async (
+const fetchLsp8Metadata = async (
   tokenId: string,
   assetAddress: Address
 ): Promise<LSP4DigitalAssetJSON> => {
@@ -174,15 +113,15 @@ const fetchLSP8Metadata = async (
 
     // fetch LSP8MetadataJSON depending on tokenIdType
     switch (tokenIdType) {
-      case TokenIdType.address:
+      case Lsp8TokenIdType.address:
         return lsp8MetadataGetter(
           'address',
           // ethers.utils.hexDataSlice(tokenId.toString(), 12)
           tokenId.toString()
         )
-      case TokenIdType.number:
+      case Lsp8TokenIdType.number:
         return lsp8MetadataGetter('uint256', parseInt(tokenId).toString())
-      case TokenIdType.bytes32:
+      case Lsp8TokenIdType.bytes32:
         return lsp8MetadataGetter('bytes32', tokenId.toString())
       default:
         return {
@@ -255,10 +194,10 @@ const supportInterface = async (
 
 const useErc725 = () => {
   return {
+    getInstance,
     fetchProfile,
     fetchAssets,
-    fetchLSP4Metadata,
-    fetchLSP8Metadata,
+    fetchLsp8Metadata,
     fetchLSP4Creator,
     supportInterface,
   }

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { toWei } from 'web3-utils'
 
-import { SupportedAssets } from '@/types/assets'
+import { Asset } from '@/types/assets'
 
 const { currentNetwork } = useAppStore()
 const { ownedAssets } = storeToRefs(useViewedProfileStore())
@@ -27,29 +26,8 @@ const handleSelectLyx = () => {
   props.closeModal()
 }
 
-const handleSelectLsp7Asset = (asset: SupportedAssets) => {
-  selectedAsset.value = {
-    address: asset.address,
-    name: 'name' in asset.data ? asset.data.name : '',
-    symbol: 'symbol' in asset.data ? asset.data.symbol : '',
-    icon: 'icon' in asset.data ? asset.data.icon : '',
-    isNativeToken: false,
-    standard: asset.standard,
-    amount: 'amount' in asset.data ? asset.data.amount : '',
-  }
-  props.closeModal()
-}
-
-const handleSelectLsp8Asset = (asset: SupportedAssets) => {
-  selectedAsset.value = {
-    address: asset.address,
-    name: 'collectionName' in asset.data ? asset.data.collectionName : '',
-    symbol: 'collectionSymbol' in asset.data ? asset.data.collectionSymbol : '',
-    icon: 'image' in asset.data ? asset.data.image : '',
-    isNativeToken: false,
-    standard: asset.standard,
-    amount: toWei('1'),
-  }
+const handleSelectAsset = (asset: Asset) => {
+  selectedAsset.value = asset
   props.closeModal()
 }
 </script>
@@ -79,33 +57,24 @@ const handleSelectLsp8Asset = (asset: SupportedAssets) => {
       <li v-for="asset in ownedAssets" :key="asset.address">
         <AssetListItem
           v-if="asset.standard === 'LSP7DigitalAsset'"
-          :icon="'icon' in asset.data ? asset.data.icon : ''"
-          :name="'name' in asset.data ? asset.data.name : ''"
-          :symbol="'symbol' in asset.data ? asset.data.symbol : ''"
+          :icon="asset.icon"
+          :name="asset.name"
+          :symbol="asset.symbol"
           :address="asset.address"
           :has-identicon="true"
-          :is-selected="
-            'name' in asset.data && selectedAsset?.name === asset.data.name
-          "
-          @click="handleSelectLsp7Asset(asset)"
+          :is-selected="selectedAsset?.name === asset.name"
+          @click="handleSelectAsset(asset)"
         />
         <AssetListItem
           v-if="asset.standard === 'LSP8IdentifiableDigitalAsset'"
-          :icon="'image' in asset.data ? asset.data.image : ''"
-          :name="
-            'collectionName' in asset.data ? asset.data.collectionName : ''
-          "
-          :symbol="
-            'collectionSymbol' in asset.data ? asset.data.collectionSymbol : ''
-          "
+          :icon="asset.icon"
+          :name="asset.name"
+          :symbol="asset.symbol"
           :address="asset.address"
           :has-identicon="true"
           :has-square-icon="true"
-          :is-selected="
-            'collectionName' in asset.data &&
-            selectedAsset?.name === asset.data.collectionName
-          "
-          @click="handleSelectLsp8Asset(asset)"
+          :is-selected="selectedAsset?.name === asset.name"
+          @click="handleSelectAsset(asset)"
         />
       </li>
     </ul>

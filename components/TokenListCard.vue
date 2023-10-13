@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { fromWei } from 'web3-utils'
 
-import { Token, StandardsAbbreviations } from '@/types/assets'
+import { Asset, StandardsAbbreviations } from '@/types/assets'
 
 type Props = {
-  asset: Token
+  asset: Asset
   hasAddress?: boolean
 }
 
@@ -54,25 +54,25 @@ const handleSendAsset = () => {
           <lukso-profile
             size="medium"
             :profile-address="asset.address"
-            :profile-url="'icon' in asset.data ? asset.data.icon : undefined"
+            :profile-url="asset.icon"
             :has-identicon="hasAddress ? 'true' : undefined"
           ></lukso-profile>
           <div
             v-if="hasAddress"
             class="paragraph-ptmono-10-bold text-neutral-60 pt-2"
           >
-            #{{ asset.address.slice(2, 8) }}
+            #{{ asset.address?.slice(2, 8) }}
           </div>
         </div>
         <div class="flex flex-col w-full">
-          <div class="heading-inter-14-bold pb-1">{{ asset.data.name }}</div>
+          <div class="heading-inter-14-bold pb-1">{{ asset.name }}</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
-            <span v-if="asset.data.amount">{{
-              $formatNumber(fromWei(asset.data.amount, 'ether'))
+            <span v-if="asset.amount">{{
+              $formatNumber(fromWei(asset.amount, 'ether'))
             }}</span>
             <span v-else>0</span>
             <span class="paragraph-inter-14-semi-bold text-neutral-60 ml-2">{{
-              asset.data.symbol
+              asset.symbol
             }}</span>
           </div>
           <div class="paragraph-inter-12-regular hidden">$ 123.24</div>

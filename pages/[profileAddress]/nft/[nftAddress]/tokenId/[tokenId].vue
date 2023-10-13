@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { toWei } from 'web3-utils'
-
-import { Nft } from '@/types/assets'
+import { Asset } from '@/types/assets'
 
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
@@ -13,7 +11,7 @@ const {
 } = useViewedProfileStore()
 const { status: connectionStatus, profile: connectedProfile } =
   useConnectedProfileStore()
-const nft = ref<Nft>()
+const nft = ref<Asset>()
 
 watchEffect(() => {
   nft.value = getNft(nftAddress, tokenId)
@@ -34,24 +32,24 @@ watchEffect(() => {
           ><div slot="content">
             <div
               class="min-h-[260px] bg-neutral-90 w-100 rounded-t-12 bg-center bg-cover"
-              :style="`background-image: url(${nft?.data.image});`"
+              :style="`background-image: url(${nft?.icon});`"
             ></div>
             <div class="p-4 pt-8 relative">
               <div
-                v-if="nft?.data.creatorAddress"
+                v-if="nft?.creatorAddress"
                 class="shadow-neutral-drop-shadow p-2 pr-6 rounded-4 inline-flex -top-6 absolute bg-neutral-100"
               >
                 <lukso-profile
                   size="x-small"
-                  :profile-url="nft.data.creatorProfileImage"
+                  :profile-url="nft.creatorProfileImage"
                 ></lukso-profile>
                 <div class="pl-1">
                   <div class="text-neutral-60 paragraph-inter-10-semi-bold">
                     {{ $formatMessage('asset_created_by') }}
                   </div>
                   <lukso-username
-                    :name="nft.data.creatorName"
-                    :address="nft.data.creatorAddress"
+                    :name="nft.creatorName"
+                    :address="nft.creatorAddress"
                     size="x-small"
                     class="flex"
                     name-color="neutral-20"
@@ -60,7 +58,7 @@ watchEffect(() => {
               </div>
               <div>
                 <div class="paragraph-inter-14-semi-bold">
-                  {{ nft?.data.collectionName }}
+                  {{ nft?.name }}
                 </div>
               </div>
             </div>
@@ -74,43 +72,33 @@ watchEffect(() => {
         >
           <AssetOwnInfo
             :profile="connectedProfile"
-            :amount="toWei('1')"
-            :symbol="nft?.data.collectionSymbol"
+            :amount="nft?.amount"
+            :symbol="nft?.symbol"
           />
 
           <lukso-button is-full-width class="mt-4 hidden">{{
             $formatMessage('token_details_send', {
-              token: nft?.data.collectionSymbol || '',
+              token: nft?.symbol || '',
             })
           }}</lukso-button>
         </div>
       </div>
       <div>
         <div class="heading-apax-24-medium pb-8">
-          {{ nft?.data.collectionName }}
+          {{ nft?.name }}
         </div>
         <AssetAddress v-if="nft?.address" :address="nft.address" />
-        <AssetTokenId v-if="nft?.data.tokenId" :token-id="nft.data.tokenId" />
+        <AssetTokenId v-if="nft?.tokenId" :token-id="nft.tokenId" />
         <AssetSupply
-          :supply="nft?.data.tokenSupply || '1'"
-          :symbol="nft?.data.collectionSymbol || ''"
+          :supply="nft?.tokenSupply || '1'"
+          :symbol="nft?.symbol || ''"
         />
-        <AssetLinks
-          v-if="nft?.data && 'collectionLinks' in nft?.data"
-          :links="nft.data.collectionLinks"
-        />
+        <AssetLinks v-if="nft?.links" :links="nft.links" />
         <AssetDescription
-          v-if="nft?.data && 'description' in nft.data && nft.data.description"
-          :description="nft.data.description"
+          v-if="nft?.description"
+          :description="nft.description"
         />
-        <AssetImages
-          v-if="
-            nft?.data &&
-            'collectionImages' in nft.data &&
-            nft.data.collectionImages
-          "
-          :images="nft.data.collectionImages"
-        />
+        <AssetImages v-if="nft?.images" :images="nft.images" />
         <AssetStandardInfo
           v-if="nft?.standard"
           :standard="nft.standard"

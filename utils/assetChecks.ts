@@ -1,6 +1,6 @@
-import { SendAsset } from '@/types/assets'
+import { Asset } from '@/types/assets'
 
-export const isLyx = (asset?: SendAsset) => asset?.isNativeToken
+export const isLyx = (asset?: Asset) => asset?.isNativeToken
 
-export const isNft = (asset?: SendAsset) =>
+export const isNft = (asset?: Asset) =>
   asset?.standard === 'LSP8IdentifiableDigitalAsset'

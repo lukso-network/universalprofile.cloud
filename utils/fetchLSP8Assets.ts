@@ -1,14 +1,15 @@
-import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
 import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
+import { toWei } from 'web3-utils'
 
-import { LSP8Asset } from '@/types/assets'
 import { PROVIDERS } from '@/types/enums'
+import { Asset } from '@/types/assets'
 
-export const fetchLSP8Assets = async (
+export const fetchLsp8Assets = async (
   assetAddress: Address,
   profileAddress: Address
 ) => {
   const { contract } = useWeb3(PROVIDERS.RPC)
+  const assets: Asset[] = []
 
   const lsp8Contract = contract(
     LSP8IdentifiableDigitalAsset.abi as any,
@@ -22,77 +23,47 @@ export const fetchLSP8Assets = async (
     .call()) as string[]
 
   if (!tokensIds.length) {
-    return
+    return assets
   }
 
-  const { fetchLSP4Metadata, fetchLSP8Metadata, fetchLSP4Creator } = useErc725()
-  const [collectionName, collectionSymbol, collectionLSP4Metadata] =
-    await fetchLSP4Metadata(assetAddress)
-
-  const newLSP8Assets: LSP8Asset[] = []
+  const { fetchLsp8Metadata, fetchLSP4Creator } = useErc725() // TODO move to utils
+  // nft metadata is the same for all tokens of same asset
+  const [name, symbol, nftMetadata] = await fetchLsp4Metadata(assetAddress)
 
   await Promise.all(
     tokensIds.map(async tokenId => {
-      const nftMetadata = await fetchLSP8Metadata(tokenId, assetAddress)
+      const collectionMetadata = (
+        await fetchLsp8Metadata(tokenId, assetAddress)
+      ).LSP4Metadata
+      const { description, images, icon, links } = collectionMetadata
       const creatorMetadata = await fetchLSP4Creator(assetAddress)
+      const {
+        name: creatorName,
+        address: creatorAddress,
+        profileImageUrl: creatorProfileImage,
+      } = creatorMetadata || {}
 
-      const lsp8AssetObject: LSP8Asset = createLSP8Object(
-        assetAddress,
-        tokenId,
+      assets.push({
+        address: assetAddress,
+        name,
+        symbol,
+        amount: toWei('1'), // NFT is always 1
         tokenSupply,
-        collectionName,
-        collectionSymbol,
-        nftMetadata,
-        collectionLSP4Metadata,
-        creatorMetadata
-      )
-      newLSP8Assets.push(lsp8AssetObject)
+        icon: icon[0]?.url ? formatUrl(icon[0].url) : '', // TODO fetch optimal size, check existence, fallback to default
+        links,
+        description,
+        images: images.map(image => image[2]), // TODO fetch optimal size, check for existence etc
+        creatorName,
+        creatorAddress,
+        creatorProfileImage,
+        metadata: {
+          nft: nftMetadata.LSP4Metadata,
+          collection: collectionMetadata,
+        },
+        standard: 'LSP8IdentifiableDigitalAsset',
+        tokenId,
+      })
     })
   )
-  return newLSP8Assets
-}
-
-const createLSP8Object = (
-  assetAddress: Address,
-  tokenId: string,
-  tokenSupply: string,
-  collectionName: string,
-  collectionSymbol: string,
-  nftMetadata: LSP4DigitalAssetJSON,
-  collectionMetadata: LSP4DigitalAssetJSON,
-  creatorMetadata?: Creator
-): LSP8Asset => {
-  const { description, images, icon } = nftMetadata.LSP4Metadata
-  const {
-    description: collectionDescription,
-    images: collectionImages,
-    icon: collectionIcon,
-    links: collectionLinks,
-  } = collectionMetadata.LSP4Metadata
-  const {
-    name: creatorName,
-    address: creatorAddress,
-    profileImageUrl: creatorProfileImage,
-  } = creatorMetadata || {}
-
-  const lsp8AssetObject = {
-    tokenId,
-    description,
-    image: images[0][0]?.url ? formatUrl(images[0][0].url) : '',
-    icon: icon[0]?.url ? formatUrl(icon[0].url) : '',
-    collectionName,
-    collectionSymbol,
-    collectionAddress: assetAddress,
-    collectionDescription,
-    collectionImages,
-    collectionLinks,
-    collectionIcon: formatUrl(collectionIcon[0]?.url)
-      ? collectionIcon[0]?.url
-      : '',
-    creatorName,
-    creatorAddress,
-    creatorProfileImage,
-    tokenSupply,
-  }
-  return lsp8AssetObject as LSP8Asset
+  return assets
 }
