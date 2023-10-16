@@ -99,6 +99,18 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
     status[statusName] = newStatus
   }
 
+  const setBalance = (assetAddress: Address, balance: string) => {
+    const ownedAssetsUpdated = ownedAssets.value?.map(asset => {
+      if (asset.address === assetAddress) {
+        asset.amount = balance
+      }
+
+      return asset
+    })
+
+    ownedAssetsUpdated && setOwnedAssets(ownedAssetsUpdated)
+  }
+
   return {
     ...useProfileBase(profile),
     profile,
@@ -113,5 +125,6 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
     setCreatedAssets,
     getToken,
     getNft,
+    setBalance,
   }
 })
