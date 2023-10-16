@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
+import { isAddress } from 'web3-utils'
 
 import { fetchProfile } from '@/utils/fetchProfile'
 import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
@@ -119,6 +120,21 @@ onMounted(async () => {
   checkConnectionExpiry()
   await setupConnectedProfile()
   await routerBackProfileLoad()
+
+  try {
+    const profileAddress = useRouter().currentRoute.value.params?.profileAddress
+
+    if (!isAddress(profileAddress)) {
+      navigateTo(notFoundRoute())
+    }
+
+    await setupViewedProfile(profileAddress)
+    await setupViewedAssets(profileAddress)
+  } catch (error) {
+    console.error(error)
+  }
+
+  setStatus('isProfileLoaded', true)
 })
 
 onUnmounted(() => {

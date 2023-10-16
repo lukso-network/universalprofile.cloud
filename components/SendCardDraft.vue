@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 
-const { profile: connectedProfile } = useConnectedProfileStore()
+const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { asset, receiver, receiverError, amount, onSend } = storeToRefs(
   useSendStore()
 )
@@ -26,8 +26,14 @@ const handleSelectAssets = () => {
     :profile-address="connectedProfile.address"
     is-full-width
   >
-    <div slot="content" class="p-6 pt-0">
-      <div class="grid grid-rows-1 grid-cols-[max-content,auto]">
+    <div slot="content" class="p-6 pt-0 relative">
+      <div
+        class="grid grid-rows-1 grid-cols-[max-content,auto] transition relative z-[1]"
+        :class="{
+          'opacity-0 invisible': !status.isProfileLoaded,
+          'opacity-100 visible': status.isProfileLoaded,
+        }"
+      >
         <div
           class="p-4 border border-neutral-90 border-r-0 rounded-[12px_0_0_12px] flex justify-center items-center"
         >
@@ -53,6 +59,16 @@ const handleSelectAssets = () => {
             <SendCardAmount />
           </div>
         </div>
+      </div>
+      <div
+        class="gap-2 grid grid-rows-2 absolute top-0 left-0 right-0 bottom-0 m-6 mt-0 transition"
+        :class="{
+          'opacity-0': status.isProfileLoaded,
+          'opacity-100 animate-pulse': !status.isProfileLoaded,
+        }"
+      >
+        <div class="bg-neutral-95 rounded-12"></div>
+        <div class="bg-neutral-95 rounded-12"></div>
       </div>
     </div>
     <div slot="bottom" class="p-6 flex flex-col items-center">

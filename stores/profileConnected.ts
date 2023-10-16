@@ -9,6 +9,7 @@ export const useConnectedProfileStore = defineStore('profileConnected', () => {
   const status = reactive({
     isConnected: false,
     isProfileLoading: false,
+    isProfileLoaded: false,
     isConnecting: false,
   })
 
