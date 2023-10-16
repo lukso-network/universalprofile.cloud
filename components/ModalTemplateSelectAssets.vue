@@ -5,7 +5,7 @@ import { Asset } from '@/types/assets'
 
 const { currentNetwork } = useAppStore()
 const { ownedAssets } = storeToRefs(useViewedProfileStore())
-const { profile: viewedProfile } = useViewedProfileStore()
+const { profile: connectedProfile } = useConnectedProfileStore()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
 
 type Props = {
@@ -15,19 +15,19 @@ type Props = {
 const props = defineProps<Props>()
 
 const handleSelectLyx = () => {
-  console.log(viewedProfile.balance)
-  selectedAsset.value = {
-    name: currentNetwork.token.name,
-    symbol: currentNetwork.token.symbol,
-    icon: ASSET_LYX_ICON_URL,
-    isNativeToken: true,
-    amount: viewedProfile.balance,
-  }
+  assertAddress(connectedProfile.address, 'profile')
+  navigateTo(sendRoute(connectedProfile.address))
   props.closeModal()
 }
 
 const handleSelectAsset = (asset: Asset) => {
-  selectedAsset.value = asset
+  assertAddress(connectedProfile.address, 'profile')
+  navigateTo({
+    path: sendRoute(connectedProfile.address),
+    query: {
+      asset: asset.address,
+    },
+  })
   props.closeModal()
 }
 </script>
@@ -56,23 +56,12 @@ const handleSelectAsset = (asset: Asset) => {
       </li>
       <li v-for="asset in ownedAssets" :key="asset.address">
         <AssetListItem
-          v-if="asset.standard === 'LSP7DigitalAsset'"
           :icon="asset.icon"
           :name="asset.name"
           :symbol="asset.symbol"
           :address="asset.address"
           :has-identicon="true"
-          :is-selected="selectedAsset?.name === asset.name"
-          @click="handleSelectAsset(asset)"
-        />
-        <AssetListItem
-          v-if="asset.standard === 'LSP8IdentifiableDigitalAsset'"
-          :icon="asset.icon"
-          :name="asset.name"
-          :symbol="asset.symbol"
-          :address="asset.address"
-          :has-identicon="true"
-          :has-square-icon="true"
+          :has-square-icon="isLsp8(asset)"
           :is-selected="selectedAsset?.name === asset.name"
           @click="handleSelectAsset(asset)"
         />
