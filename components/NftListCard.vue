@@ -24,13 +24,14 @@ const handleShowAsset = () => {
   }
 }
 
-const handleSendAsset = () => {
+const handleSendAsset = (event: Event) => {
   try {
+    event.stopPropagation()
     assertAddress(connectedProfile.address, 'profile')
     navigateTo({
       path: sendRoute(connectedProfile.address),
       query: {
-        nft: props.asset.address,
+        asset: props.asset.address,
       },
     })
   } catch (error) {
@@ -76,7 +77,7 @@ const handleSendAsset = () => {
             1
             <span class="text-neutral-60">{{ asset.symbol }}</span>
           </div>
-          <div class="flex justify-end w-full hidden">
+          <div class="flex justify-end w-full">
             <lukso-button
               v-if="
                 status.isConnected &&
