@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-
 import { AssetFilter } from '@/types/assets'
 
 const { tokens, assetFilter } = storeToRefs(useViewedProfileStore())

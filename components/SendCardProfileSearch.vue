@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { isAddress } from 'web3-utils'
 import { SearchProfileResult } from '@lukso/web-components/dist/components/lukso-search'
-import { storeToRefs } from 'pinia'
 
 import { IndexedProfile } from '@/types/profile'
 

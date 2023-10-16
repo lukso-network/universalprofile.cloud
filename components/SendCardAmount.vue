@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { fromWei } from 'web3-utils'
 import BigNumber from 'bignumber.js'
-import { storeToRefs } from 'pinia'
 
 const { asset, receiverError, amount } = storeToRefs(useSendStore())
 

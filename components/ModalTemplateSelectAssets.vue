@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-
 import { Asset } from '@/types/assets'
 
 const { currentNetwork } = useAppStore()

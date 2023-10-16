@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-
 import { AssetFilter } from '@/types/assets'
 import { REFERRERS } from '@/types/enums'
 

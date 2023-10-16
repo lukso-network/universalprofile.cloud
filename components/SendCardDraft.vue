@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-
 const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { asset, receiver, receiverError, amount, onSend } = storeToRefs(
   useSendStore()

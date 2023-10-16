@@ -103,6 +103,12 @@ export default defineNuxtConfig({
   },
   imports: {
     dirs: ['stores/**', 'shared/**'],
+    presets: [
+      {
+        from: 'pinia',
+        imports: ['storeToRefs'],
+      },
+    ],
   },
   runtimeConfig: {
     public: {},

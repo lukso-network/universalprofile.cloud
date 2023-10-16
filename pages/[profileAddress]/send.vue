@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
 import { toWei } from 'web3-utils'
 import { TransactionConfig } from 'web3-core'
 import { Contract } from 'web3-eth-contract'

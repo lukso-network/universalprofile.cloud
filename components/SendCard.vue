@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-
 const { isDraft, isPending, isSuccess } = storeToRefs(useSendStore())
 </script>
 
