@@ -61,8 +61,9 @@ const browserSupportExtension = extensionStore.url !== ''
     icon="wallet-outline"
     has-menu
     @on-brand-click="handleBrandClick"
+    @on-icon-click="handleNavigateProfile"
   >
-    <div class="w-full flex items-center justify-end" slot="desktop">
+    <div class="flex items-center justify-end" slot="desktop">
       <lukso-button
         v-if="status.isConnected"
         variant="text"
