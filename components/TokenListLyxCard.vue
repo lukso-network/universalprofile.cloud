@@ -7,7 +7,7 @@ const appStore = useAppStore()
 
 const handleSendAsset = (event: Event) => {
   try {
-    event.preventDefault()
+    event.stopPropagation()
     assertAddress(connectedProfile.address, 'profile')
     navigateTo(sendRoute(connectedProfile.address))
   } catch (error) {
