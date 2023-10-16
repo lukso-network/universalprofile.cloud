@@ -62,7 +62,9 @@ const handleUnitClick = () => {
     :value="amount"
     :unit="
       $formatMessage('profile_balance_of', {
-        balance: $formatNumber(fromWei(asset?.amount || '0', 'ether')),
+        balance: $formatNumber(fromWei(asset?.amount || '0', 'ether') || '', {
+          maximumFractionDigits: 20,
+        }),
         symbol: asset?.symbol || '',
       })
     "
