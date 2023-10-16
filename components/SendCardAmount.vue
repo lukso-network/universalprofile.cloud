@@ -30,7 +30,7 @@ const handleKeyDown = (customEvent: CustomEvent) => {
 
   // when value is more then balance we set to max value
   if (realValueBN.gt(assetBalanceBN)) {
-    input.value = fromWei(asset.value?.amount?.toString() || '0')
+    amount.value = fromWei(asset.value?.amount?.toString() || '0')
     event.preventDefault()
   }
 
@@ -50,10 +50,8 @@ const handleKeyUp = (event: CustomEvent) => {
   amount.value = input.value
 }
 
-const handleUnitClick = (event: CustomEvent) => {
-  const input = event.detail.input
+const handleUnitClick = () => {
   const total = fromWei(asset.value?.amount?.toString() || '0')
-  input.value = total
   amount.value = total
 }
 </script>
