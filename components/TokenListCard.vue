@@ -10,6 +10,10 @@ const props = defineProps<Props>()
 
 const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { profile: viewedProfile } = useViewedProfileStore()
+const contentRef = ref()
+const logoRef = ref()
+const symbolRef = ref()
+const balanceWidthPx = ref(0)
 
 const handleShowAsset = () => {
   try {
@@ -35,6 +39,19 @@ const handleSendAsset = (event: Event) => {
     console.error(error)
   }
 }
+
+onMounted(async () => {
+  const resizeObserver = new ResizeObserver(() => {
+    const GAP = 24
+
+    balanceWidthPx.value =
+      contentRef.value?.clientWidth -
+      logoRef.value?.clientWidth -
+      symbolRef.value?.clientWidth -
+      GAP
+  })
+  resizeObserver.observe(contentRef.value)
+})
 </script>
 
 <template>
@@ -48,8 +65,8 @@ const handleSendAsset = (event: Event) => {
           >{{ StandardsAbbreviations[asset.standard] }}</lukso-tag
         >
       </div>
-      <div class="flex gap-6">
-        <div class="pl-4 flex flex-col items-center">
+      <div ref="contentRef" class="flex gap-6">
+        <div ref="logoRef" class="pl-2 flex flex-col items-center">
           <lukso-profile
             size="medium"
             :profile-address="asset.address"
@@ -66,13 +83,25 @@ const handleSendAsset = (event: Event) => {
         <div class="flex flex-col w-full">
           <div class="heading-inter-14-bold pb-1">{{ asset.name }}</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
-            <span v-if="asset.amount">{{
-              $formatNumber(fromWeiWithDecimals(asset.amount, asset.decimals))
-            }}</span>
+            <span
+              v-if="asset.amount"
+              class="truncate"
+              :style="{
+                'max-width': `${balanceWidthPx}px`,
+              }"
+              :title="
+                $formatNumber(fromWeiWithDecimals(asset.amount, asset.decimals))
+              "
+              >{{
+                $formatNumber(fromWeiWithDecimals(asset.amount, asset.decimals))
+              }}</span
+            >
             <span v-else>0</span>
-            <span class="paragraph-inter-14-semi-bold text-neutral-60 ml-2">{{
-              asset.symbol
-            }}</span>
+            <span
+              ref="symbolRef"
+              class="paragraph-inter-14-semi-bold text-neutral-60 pl-2"
+              >{{ asset.symbol }}</span
+            >
           </div>
           <div class="paragraph-inter-12-regular hidden">$ 123.24</div>
           <div class="flex justify-end w-full">
