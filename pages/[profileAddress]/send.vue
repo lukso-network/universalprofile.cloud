@@ -5,7 +5,10 @@ import LSP7Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP7Mintable.json
 import LSP8Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json'
 
 import { PROVIDERS } from '@/types/enums'
-import { Lsp7Contract, Lsp8Contract } from '@/types/contract'
+import {
+  LSP7DigitalAsset,
+  LSP8IdentifiableDigitalAsset,
+} from '@/types/contracts'
 
 const { profile: connectedProfile, status } = useConnectedProfileStore()
 const {
@@ -91,7 +94,7 @@ const handleSend = async () => {
       // custom token transfer
       switch (asset.value?.standard) {
         case 'LSP7DigitalAsset':
-          const tokenContract = contract<Lsp7Contract>(
+          const tokenContract = contract<LSP7DigitalAsset>(
             LSP7Mintable.abi as AbiItem[],
             asset.value?.address
           )
@@ -114,7 +117,7 @@ const handleSend = async () => {
           setBalance(asset.value.address, balance)
           break
         case 'LSP8IdentifiableDigitalAsset':
-          const nftContract = contract<Lsp8Contract>(
+          const nftContract = contract<LSP8IdentifiableDigitalAsset>(
             LSP8Mintable.abi as AbiItem[],
             asset.value?.address
           )
