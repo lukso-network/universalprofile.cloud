@@ -27,7 +27,7 @@ export const fetchLsp7Assets = async (
     name,
     symbol,
     amount: tokenBalance.toString(),
-    decimals,
+    decimals: Number(decimals),
     tokenSupply,
     icon: metadata.LSP4Metadata.icon[2]?.url
       ? metadata.LSP4Metadata.icon[2]?.url

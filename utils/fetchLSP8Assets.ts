@@ -46,7 +46,7 @@ export const fetchLsp8Assets = async (
         name,
         symbol,
         amount: '1', // NFT is always 1
-        decimals: '0', // NFT decimals are always 0
+        decimals: 0, // NFT decimals are always 0
         tokenSupply,
         icon: icon[0]?.url ? formatUrl(icon[0].url) : '', // TODO fetch optimal size, check existence, fallback to default
         links,
