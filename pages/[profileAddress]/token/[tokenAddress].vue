@@ -14,13 +14,6 @@ const token = ref<Asset>()
 watchEffect(() => {
   token.value = getToken(tokenAddress)
 })
-
-const tokenSupply = computed(() => {
-  return fromWeiWithDecimals(
-    token.value?.tokenSupply || '0',
-    token.value?.decimals
-  )
-})
 </script>
 
 <template>
@@ -69,12 +62,18 @@ const tokenSupply = computed(() => {
       <div>
         <div class="heading-apax-24-medium pb-8">{{ token?.name }}</div>
         <AssetAddress v-if="token?.address" :address="token.address" />
-        <AssetSupply
+        <AssetBalance
           v-if="token?.amount"
-          :supply="token.amount"
-          :symbol="token?.symbol || ''"
+          :balance="token.amount"
+          :symbol="token?.symbol"
+          :decimals="token?.decimals"
         />
-        <AssetSupply :supply="tokenSupply" :symbol="token?.symbol || ''" />
+        <AssetSupply
+          v-if="token?.tokenSupply"
+          :token-supply="token?.tokenSupply"
+          :symbol="token?.symbol"
+          :decimals="token?.decimals"
+        />
         <AssetLinks
           v-if="token?.links && token.links.length > 0"
           :links="token.links"

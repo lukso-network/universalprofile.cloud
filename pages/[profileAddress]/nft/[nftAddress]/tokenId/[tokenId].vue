@@ -74,7 +74,7 @@ watchEffect(() => {
             :profile="connectedProfile"
             :amount="nft?.amount"
             :symbol="nft?.symbol"
-            decimals="0"
+            :decimals="0"
           />
 
           <lukso-button is-full-width class="mt-4 hidden">{{
@@ -91,8 +91,10 @@ watchEffect(() => {
         <AssetAddress v-if="nft?.address" :address="nft.address" />
         <AssetTokenId v-if="nft?.tokenId" :token-id="nft.tokenId" />
         <AssetSupply
-          :supply="nft?.tokenSupply || '1'"
-          :symbol="nft?.symbol || ''"
+          v-if="nft?.tokenSupply"
+          :token-supply="nft?.tokenSupply"
+          :symbol="nft?.symbol"
+          :decimals="nft.decimals"
         />
         <AssetLinks v-if="nft?.links" :links="nft.links" />
         <AssetDescription

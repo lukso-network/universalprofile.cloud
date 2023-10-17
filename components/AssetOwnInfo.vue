@@ -3,7 +3,7 @@ type Props = {
   profile: Profile
   amount?: string
   symbol?: string
-  decimals?: string
+  decimals?: number
 }
 
 defineProps<Props>()
@@ -24,7 +24,9 @@ defineProps<Props>()
         </div>
         <div class="paragraph-inter-12-semi-bold">
           <span v-if="amount">{{
-            $formatNumber(fromWeiWithDecimals(amount, decimals))
+            $formatNumber(fromWeiWithDecimals(amount, decimals), {
+              maximumFractionDigits: decimals,
+            })
           }}</span>
           <span v-else>0</span>
           <span class="text-neutral-60 ml-1">{{ symbol }}</span>
