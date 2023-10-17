@@ -111,6 +111,14 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
     ownedAssetsUpdated && setOwnedAssets(ownedAssetsUpdated)
   }
 
+  const removeNft = (assetAddress: Address, tokenId: string) => {
+    const ownedAssetsUpdated = ownedAssets.value?.filter(
+      asset => asset.tokenId !== tokenId && asset.address !== assetAddress
+    )
+
+    ownedAssetsUpdated && setOwnedAssets(ownedAssetsUpdated)
+  }
+
   return {
     ...useProfileBase(profile),
     profile,
@@ -126,5 +134,6 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
     getToken,
     getNft,
     setBalance,
+    removeNft,
   }
 })

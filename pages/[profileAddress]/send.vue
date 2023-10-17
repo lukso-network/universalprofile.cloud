@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { toWei } from 'web3-utils'
+import { AbiItem, toWei } from 'web3-utils'
 import { TransactionConfig } from 'web3-core'
-import { Contract } from 'web3-eth-contract'
 import LSP7Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP7Mintable.json'
+import LSP8Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json'
 
 import { PROVIDERS } from '@/types/enums'
+import { Lsp7Contract, Lsp8Contract } from '@/types/contract'
 
 const { profile: connectedProfile, status } = useConnectedProfileStore()
-const { profile: viewedProfile, setBalance } = useViewedProfileStore()
+const {
+  profile: viewedProfile,
+  setBalance,
+  removeNft,
+} = useViewedProfileStore()
 const { ownedAssets } = storeToRefs(useViewedProfileStore())
 const { currentNetwork } = useAppStore()
 const { asset, onSend, amount, receiver } = storeToRefs(useSendStore())
@@ -20,6 +25,11 @@ onMounted(() => {
   setStatus('draft')
 
   onSend.value = handleSend
+
+  // for nft's we prefill amount
+  if (isNft(asset.value)) {
+    amount.value = '1'
+  }
 })
 
 onUnmounted(() => {
@@ -81,11 +91,13 @@ const handleSend = async () => {
       // custom token transfer
       switch (asset.value?.standard) {
         case 'LSP7DigitalAsset':
-          const tokenContract = contract(
-            LSP7Mintable.abi as any,
+          const tokenContract = contract<Lsp7Contract>(
+            LSP7Mintable.abi as AbiItem[],
             asset.value?.address
           )
 
+          assertAddress(connectedProfile.address)
+          assertAddress(receiver.value?.address)
           await tokenContract.methods
             .transfer(
               connectedProfile.address,
@@ -95,13 +107,32 @@ const handleSend = async () => {
               '0x'
             )
             .send({ from: connectedProfile.address })
-            .on('receipt', function (receipt: any) {
-              console.log(receipt)
-            })
-            .once('sending', (payload: any) => {
-              console.log(JSON.stringify(payload, null, 2))
-            })
-          await updateAssetBalance(tokenContract)
+          const balance = (await tokenContract.methods
+            .balanceOf(connectedProfile.address)
+            .call()) as string
+          assertAddress(asset.value?.address, 'asset')
+          setBalance(asset.value.address, balance)
+          break
+        case 'LSP8IdentifiableDigitalAsset':
+          const nftContract = contract<Lsp8Contract>(
+            LSP8Mintable.abi as AbiItem[],
+            asset.value?.address
+          )
+
+          assertAddress(connectedProfile.address)
+          assertAddress(receiver.value?.address)
+          assertString(asset.value.tokenId)
+          await nftContract.methods
+            .transfer(
+              connectedProfile.address,
+              receiver.value?.address,
+              asset.value.tokenId,
+              false,
+              '0x'
+            )
+            .send({ from: connectedProfile.address })
+          assertNotUndefined(asset.value.address, 'asset')
+          removeNft(asset.value.address, asset.value.tokenId)
           break
         default:
           console.error('Unknown token type')
@@ -145,14 +176,6 @@ const updateLyxBalance = async () => {
   if (viewedProfile.address === connectedProfile.address) {
     viewedProfile.balance = connectedProfile.balance
   }
-}
-
-const updateAssetBalance = async (assetContract: Contract) => {
-  const balance = (await assetContract.methods['balanceOf'](
-    connectedProfile.address
-  ).call()) as string
-  assertAddress(asset.value?.address, 'asset')
-  setBalance(asset.value.address, balance)
 }
 </script>
 
