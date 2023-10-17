@@ -31,7 +31,7 @@ const handleSendLyx = () => {
         'opacity-0': profileStatus.isAssetLoading,
         'opacity-100': !profileStatus.isAssetLoading,
       }"
-      class="max-w-[835px] py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
+      class="max-w-content py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
     >
       <div>
         <lukso-card is-full-width size="small">
@@ -56,7 +56,7 @@ const handleSendLyx = () => {
             :profile="connectedProfile"
             :amount="viewedProfile.balance"
             :symbol="currentNetwork.token.symbol"
-            :decimals="18"
+            :decimals="ASSET_LYX_DECIMALS"
           />
 
           <lukso-button is-full-width class="mt-4" @click="handleSendLyx">{{

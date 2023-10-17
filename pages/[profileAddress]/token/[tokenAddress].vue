@@ -30,7 +30,7 @@ const tokenSupply = computed(() => {
         'opacity-0': profileStatus.isAssetLoading,
         'opacity-100': !profileStatus.isAssetLoading,
       }"
-      class="max-w-[835px] py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
+      class="max-w-content py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
     >
       <div>
         <lukso-card is-full-width size="small">
@@ -69,6 +69,11 @@ const tokenSupply = computed(() => {
       <div>
         <div class="heading-apax-24-medium pb-8">{{ token?.name }}</div>
         <AssetAddress v-if="token?.address" :address="token.address" />
+        <AssetSupply
+          v-if="token?.amount"
+          :supply="token.amount"
+          :symbol="token?.symbol || ''"
+        />
         <AssetSupply :supply="tokenSupply" :symbol="token?.symbol || ''" />
         <AssetLinks
           v-if="token?.links && token.links.length > 0"

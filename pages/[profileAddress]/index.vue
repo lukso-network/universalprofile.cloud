@@ -53,7 +53,7 @@ const showProfileDetails = computed(
 <template>
   <div class="relative">
     <div
-      class="max-w-[835px] py-20 px-4 mx-auto relative transition-opacity duration-300"
+      class="max-w-content py-20 px-4 mx-auto relative transition-opacity duration-300"
       :class="{
         'opacity-0': status.isAssetLoading || status.isProfileLoading,
         'opacity-100': !status.isAssetLoading && !status.isProfileLoading,

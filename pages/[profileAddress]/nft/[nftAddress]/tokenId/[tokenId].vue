@@ -25,7 +25,7 @@ watchEffect(() => {
         'opacity-0': profileStatus.isAssetLoading,
         'opacity-100': !profileStatus.isAssetLoading,
       }"
-      class="max-w-[835px] py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
+      class="max-w-content py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
     >
       <div>
         <lukso-card size="small" is-full-width
