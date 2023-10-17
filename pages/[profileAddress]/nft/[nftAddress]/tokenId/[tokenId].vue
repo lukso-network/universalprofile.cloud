@@ -74,6 +74,7 @@ watchEffect(() => {
             :profile="connectedProfile"
             :amount="nft?.amount"
             :symbol="nft?.symbol"
+            :decimals="0"
           />
 
           <lukso-button is-full-width class="mt-4 hidden">{{

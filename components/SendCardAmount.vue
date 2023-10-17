@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { fromWei } from 'web3-utils'
 import BigNumber from 'bignumber.js'
 
 const { asset, receiverError, amount } = storeToRefs(useSendStore())
@@ -11,7 +10,9 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   const key = event.key
   const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab']
   const realValueBN = new BigNumber(`${input.value}${key}`)
-  const assetBalanceBN = new BigNumber(`${fromWei(asset.value?.amount || '0')}`)
+  const assetBalanceBN = new BigNumber(
+    `${fromWeiWithDecimals(asset.value?.amount || '0', asset.value?.decimals)}`
+  )
   const maxDecimalPlaces = 6
 
   // check for allowed keys or if user press CMD+A
@@ -29,7 +30,10 @@ const handleKeyDown = (customEvent: CustomEvent) => {
 
   // when value is more then balance we set to max value
   if (realValueBN.gt(assetBalanceBN)) {
-    amount.value = fromWei(asset.value?.amount?.toString() || '0')
+    amount.value = fromWeiWithDecimals(
+      asset.value?.amount?.toString() || '0',
+      asset.value?.decimals
+    )
     event.preventDefault()
   }
 
@@ -50,7 +54,10 @@ const handleKeyUp = (event: CustomEvent) => {
 }
 
 const handleUnitClick = () => {
-  const total = fromWei(asset.value?.amount?.toString() || '0')
+  const total = fromWeiWithDecimals(
+    asset.value?.amount?.toString() || '0',
+    asset.value?.decimals
+  )
   amount.value = total
 }
 </script>
@@ -61,9 +68,12 @@ const handleUnitClick = () => {
     :value="amount"
     :unit="
       $formatMessage('profile_balance_of', {
-        balance: $formatNumber(fromWei(asset?.amount || '0', 'ether') || '', {
-          maximumFractionDigits: 20,
-        }),
+        balance: $formatNumber(
+          fromWeiWithDecimals(asset?.amount || '0', asset?.decimals) || '',
+          {
+            maximumFractionDigits: 20,
+          }
+        ),
         symbol: asset?.symbol || '',
       })
     "

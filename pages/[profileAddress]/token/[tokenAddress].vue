@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { fromWei } from 'web3-utils'
-
 import { Asset } from '@/types/assets'
 
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
@@ -18,7 +16,10 @@ watchEffect(() => {
 })
 
 const tokenSupply = computed(() => {
-  return fromWei(token.value?.tokenSupply || '0', 'ether')
+  return fromWeiWithDecimals(
+    token.value?.tokenSupply || '0',
+    token.value?.decimals
+  )
 })
 </script>
 
@@ -55,6 +56,7 @@ const tokenSupply = computed(() => {
             :profile="connectedProfile"
             :amount="token?.amount"
             :symbol="token?.symbol"
+            :decimals="token?.decimals"
           />
 
           <lukso-button is-full-width class="mt-4 hidden">{{

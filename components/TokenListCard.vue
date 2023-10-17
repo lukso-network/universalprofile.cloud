@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { fromWei } from 'web3-utils'
-
 import { Asset, StandardsAbbreviations } from '@/types/assets'
 
 type Props = {
@@ -69,7 +67,7 @@ const handleSendAsset = (event: Event) => {
           <div class="heading-inter-14-bold pb-1">{{ asset.name }}</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
             <span v-if="asset.amount">{{
-              $formatNumber(fromWei(asset.amount, 'ether'))
+              $formatNumber(fromWeiWithDecimals(asset.amount, asset.decimals))
             }}</span>
             <span v-else>0</span>
             <span class="paragraph-inter-14-semi-bold text-neutral-60 ml-2">{{

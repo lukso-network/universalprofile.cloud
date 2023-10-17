@@ -56,6 +56,7 @@ const handleSendLyx = () => {
             :profile="connectedProfile"
             :amount="viewedProfile.balance"
             :symbol="currentNetwork.token.symbol"
+            :decimals="18"
           />
 
           <lukso-button is-full-width class="mt-4" @click="handleSendLyx">{{

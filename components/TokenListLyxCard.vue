@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { fromWei } from 'web3-utils'
-
 const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { profile: viewedProfile } = useViewedProfileStore()
 const appStore = useAppStore()
@@ -45,7 +43,7 @@ const handleShowLyxDetails = () => {
           <div class="heading-inter-14-bold pb-1">LUKSO</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
             <span v-if="viewedProfile.balance">{{
-              $formatNumber(fromWei(viewedProfile.balance, 'ether'))
+              $formatNumber(fromWeiWithDecimals(viewedProfile.balance, 18))
             }}</span>
             <span v-else>0</span>
             <span class="paragraph-inter-14-semi-bold text-neutral-60 ml-2">{{
