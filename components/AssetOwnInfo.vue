@@ -3,7 +3,7 @@ type Props = {
   profile: Profile
   amount?: string
   symbol?: string
-  decimals?: number
+  decimals?: string
 }
 
 defineProps<Props>()

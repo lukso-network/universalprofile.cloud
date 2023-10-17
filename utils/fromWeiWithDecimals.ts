@@ -15,24 +15,24 @@ type Unit =
   | 'tether'
 
 type Units = {
-  [key: number]: Unit
+  [key: string]: Unit
 }
 
 const DEFAULT_UNIT: Unit = 'ether'
 
-export const fromWeiWithDecimals = (amount: string, decimals = 18) => {
+export const fromWeiWithDecimals = (amount: string, decimals = '18') => {
   const units: Units = {
-    0: 'wei',
-    3: 'kwei',
-    6: 'mwei',
-    9: 'gwei',
-    12: 'microether',
-    15: 'milliether',
-    18: 'ether',
-    21: 'kether',
-    24: 'mether',
-    27: 'gether',
-    30: 'tether',
+    '0': 'wei',
+    '3': 'kwei',
+    '6': 'mwei',
+    '9': 'gwei',
+    '12': 'microether',
+    '15': 'milliether',
+    '18': 'ether',
+    '21': 'kether',
+    '24': 'mether',
+    '27': 'gether',
+    '30': 'tether',
   }
 
   const unit: Unit = units[decimals] || DEFAULT_UNIT

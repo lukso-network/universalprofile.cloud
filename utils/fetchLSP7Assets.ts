@@ -1,8 +1,8 @@
 import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
-// import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
 
 import { PROVIDERS } from '@/types/enums'
 import { Asset } from '@/types/assets'
+import { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
 
 export const fetchLsp7Assets = async (
   assetAddress: Address,
@@ -11,7 +11,10 @@ export const fetchLsp7Assets = async (
   const [name, symbol, metadata] = await fetchLsp4Metadata(assetAddress)
 
   const { contract } = useWeb3(PROVIDERS.RPC)
-  const lsp7Contract = contract(LSP7DigitalAsset.abi as any, assetAddress)
+  const lsp7Contract = contract<LSP7DigitalAssetInterface>(
+    LSP7DigitalAsset.abi as any,
+    assetAddress
+  )
 
   const tokenBalance = await lsp7Contract.methods
     .balanceOf(profileAddress)

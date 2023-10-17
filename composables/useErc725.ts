@@ -5,6 +5,7 @@ import Web3 from 'web3'
 import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
 import { ERC725YDataKeys } from '@lukso/lsp-smart-contracts'
 
+import { LSP0ERC725Account } from '@/types/contracts/LSP0ERC725Account'
 import { Lsp8TokenIdType } from '@/types/assets'
 import { getImageUrlBySize } from '@/utils/getProfileImages'
 import LSP8IdentifiableDigitalAsset from '@/shared/schemas/LSP8IdentifiableDigitalAsset.json'
@@ -154,10 +155,9 @@ const fetchLSP4Creator = async (
   const { contract } = useWeb3(PROVIDERS.RPC)
 
   try {
-    const creator = (await contract(getDataABI, assetAddress)
-      .methods['getData(bytes32)'](ERC725YDataKeys.LSP4['LSP4Creators[]'].index)
-
-      .call()) as Address
+    const creator = await contract<LSP0ERC725Account>(getDataABI, assetAddress)
+      .methods.getData(ERC725YDataKeys.LSP4['LSP4Creators[]'].index)
+      .call()
     assertAddress(creator)
     const erc725 = getInstance(
       creator,

@@ -19,6 +19,7 @@ logs
 /public/assets/*
 # tailwind config is used just for vs code extension intelisense
 tailwind.config.js
+types/contracts
 
 # Local env files
 .env

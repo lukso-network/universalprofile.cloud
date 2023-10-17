@@ -1,8 +1,8 @@
 import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
-import { toWei } from 'web3-utils'
 
 import { PROVIDERS } from '@/types/enums'
 import { Asset } from '@/types/assets'
+import { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
 
 export const fetchLsp8Assets = async (
   assetAddress: Address,
@@ -11,16 +11,14 @@ export const fetchLsp8Assets = async (
   const { contract } = useWeb3(PROVIDERS.RPC)
   const assets: Asset[] = []
 
-  const lsp8Contract = contract(
+  const lsp8Contract = contract<LSP8IdentifiableDigitalAssetInterface>(
     LSP8IdentifiableDigitalAsset.abi as any,
     assetAddress
   )
   const tokenSupply = await lsp8Contract.methods.totalSupply().call()
 
   // profile can have few ids of same LSP8 asset
-  const tokensIds = (await lsp8Contract.methods
-    .tokenIdsOf(profileAddress)
-    .call()) as string[]
+  const tokensIds = await lsp8Contract.methods.tokenIdsOf(profileAddress).call()
 
   if (!tokensIds.length) {
     return assets
@@ -47,7 +45,8 @@ export const fetchLsp8Assets = async (
         address: assetAddress,
         name,
         symbol,
-        amount: toWei('1'), // NFT is always 1
+        amount: '1', // NFT is always 1
+        decimals: '0', // NFT decimals are always 0
         tokenSupply,
         icon: icon[0]?.url ? formatUrl(icon[0].url) : '', // TODO fetch optimal size, check existence, fallback to default
         links,

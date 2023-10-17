@@ -1,5 +1,6 @@
 import { INTERFACE_IDS, SupportedStandards } from '@lukso/lsp-smart-contracts'
 
+import { LSP0ERC725Account } from '@/types/contracts/LSP0ERC725Account'
 import { PROVIDERS } from '@/types/enums'
 
 export const fetchProfile = async (profileAddress: Address) => {
@@ -19,8 +20,11 @@ export const fetchProfile = async (profileAddress: Address) => {
   }
 
   // standard check
-  const supportedStandard = await contract(getDataABI, profileAddress)
-    .methods['getData(bytes32)'](SupportedStandards.LSP3Profile.key)
+  const supportedStandard = await contract<LSP0ERC725Account>(
+    getDataABI,
+    profileAddress
+  )
+    .methods.getData(SupportedStandards.LSP3Profile.key)
     .call()
   if (supportedStandard !== SupportedStandards.LSP3Profile.value) {
     throw new Error(

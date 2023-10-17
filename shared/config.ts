@@ -46,7 +46,7 @@ export const ASSET_ICON_PLACEHOLDER_URL = '/images/token-default.svg'
 export const ASSET_LYX_ICON_URL = '/images/lyx-token.svg'
 
 // number of decimal places for LYX token
-export const ASSET_LYX_DECIMALS = 18
+export const ASSET_LYX_DECIMALS = '18'
 
 // url of the ipfs gateway
 export const IPFS_URL = 'https://2eff.lukso.dev/ipfs/'

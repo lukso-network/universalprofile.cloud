@@ -29,7 +29,7 @@ export type Asset = {
   name?: string
   symbol?: string
   amount?: string
-  decimals?: number
+  decimals?: string
   tokenSupply?: string
 
   // LSP7/LSP8
