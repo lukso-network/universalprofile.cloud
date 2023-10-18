@@ -6,7 +6,6 @@ import { fetchProfile } from '@/utils/fetchProfile'
 import { assertString } from '@/utils/validators'
 
 if (typeof window !== 'undefined') {
-  // @ts-ignore
   import('@lukso/web-components')
 }
 
