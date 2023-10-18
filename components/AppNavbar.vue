@@ -36,8 +36,8 @@ const handleDisconnect = async () => {
   disconnect()
 }
 
-const handleBrandClick = () => {
-  window.open(BASE_MY_UP_CLOUD_URL, '_self')
+const handleNavigationDiscovery = () => {
+  window.open(BASE_UP_CLOUD_URL, '_self')
 }
 
 const extensionStoreData = () => {
@@ -61,10 +61,17 @@ const browserSupportExtension = extensionStore.url !== ''
     :is-testnet="IS_TESTNET"
     icon="wallet-outline"
     has-menu
-    @on-brand-click="handleBrandClick"
+    @on-brand-click="handleNavigationDiscovery"
     @on-icon-click="handleNavigateProfile"
   >
     <div class="flex items-center justify-end" slot="desktop">
+      <lukso-button
+        variant="text"
+        custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+        @click="handleNavigationDiscovery"
+      >
+        {{ $formatMessage('header_discovery') }}
+      </lukso-button>
       <lukso-button
         v-if="status.isConnected"
         variant="text"
@@ -104,6 +111,13 @@ const browserSupportExtension = extensionStore.url !== ''
     </div>
     <div slot="mobile">
       <div className="flex flex-col items-center justify-center h-screen pb-32">
+        <lukso-button
+          variant="text"
+          custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+          @click="handleNavigationDiscovery"
+        >
+          {{ $formatMessage('header_discovery') }}
+        </lukso-button>
         <lukso-button
           v-if="status.isConnected"
           variant="text"
