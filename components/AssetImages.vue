@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { ImageMetadata } from '@lukso/lsp-factory.js'
-
 type Props = {
-  images: ImageMetadata[]
+  images: string[]
 }
 
 defineProps<Props>()
@@ -19,7 +17,7 @@ defineProps<Props>()
         :key="index"
         class="w-14 h-14 rounded-8 bg-cover bg-position-center bg-neutral-90"
         :style="{
-          backgroundImage: `url(${formatUrl(image?.url)})`,
+          backgroundImage: `url(${image})`,
         }"
       ></div>
     </div>

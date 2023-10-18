@@ -5,7 +5,7 @@ import { Asset } from '@/types/assets'
 import { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
 
 export const fetchLsp8Assets = async (
-  assetAddress: Address,
+  address: Address,
   profileAddress: Address
 ) => {
   const { contract } = useWeb3(PROVIDERS.RPC)
@@ -13,7 +13,7 @@ export const fetchLsp8Assets = async (
 
   const lsp8Contract = contract<LSP8IdentifiableDigitalAssetInterface>(
     LSP8IdentifiableDigitalAsset.abi as any,
-    assetAddress
+    address
   )
   const tokenSupply = await lsp8Contract.methods.totalSupply().call()
 
@@ -26,32 +26,45 @@ export const fetchLsp8Assets = async (
 
   const { fetchLsp8Metadata, fetchLSP4Creator } = useErc725() // TODO move to utils
   // nft metadata is the same for all tokens of same asset
-  const [name, symbol, nftMetadata] = await fetchLsp4Metadata(assetAddress)
+  const [name, symbol, nftMetadata] = await fetchLsp4Metadata(address)
 
   await Promise.all(
     tokensIds.map(async tokenId => {
-      const collectionMetadata = (
-        await fetchLsp8Metadata(tokenId, assetAddress)
-      ).LSP4Metadata
-      const { description, images, icon, links } = collectionMetadata
-      const creatorMetadata = await fetchLSP4Creator(assetAddress)
+      const collectionMetadata = (await fetchLsp8Metadata(tokenId, address))
+        .LSP4Metadata
+      const {
+        description,
+        images: metadataImages,
+        icon: metadataIcon,
+        links,
+      } = collectionMetadata
+      const creatorMetadata = await fetchLSP4Creator(address)
       const {
         name: creatorName,
         address: creatorAddress,
         profileImageUrl: creatorProfileImage,
       } = creatorMetadata || {}
+      const icon = await getAndConvertImage(metadataIcon, 200)
+      const images: Base64EncodedImage[] = []
+
+      for await (const image of metadataImages) {
+        const convertedImage = await getAndConvertImage(image, 400)
+        if (convertedImage) {
+          images.push(convertedImage)
+        }
+      }
 
       assets.push({
-        address: assetAddress,
+        address,
         name,
         symbol,
         amount: '1', // NFT is always 1
         decimals: 0, // NFT decimals are always 0
         tokenSupply,
-        icon: icon[0]?.url ? formatUrl(icon[0].url) : '', // TODO fetch optimal size, check existence, fallback to default
+        icon,
         links,
         description,
-        images: images.map(image => image[2]), // TODO fetch optimal size, check for existence etc
+        images,
         creatorName,
         creatorAddress,
         creatorProfileImage,

@@ -4,8 +4,8 @@ declare global {
   type Address = `0x${string}`
 
   type Profile = LSP3Profile & {
-    backgroundImageUrl?: string
-    profileImageUrl?: string
+    backgroundImageUrl?: Base64EncodedImage
+    profileImageUrl?: Base64EncodedImage
     address?: Address
     balance: string
   }
@@ -65,6 +65,8 @@ declare global {
     icon: string
     storeLink: string
   }
+
+  type Base64EncodedImage = `data:image/jpeg;base64${string}`
 }
 
 export {}

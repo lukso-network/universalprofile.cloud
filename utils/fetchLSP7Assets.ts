@@ -5,36 +5,44 @@ import { Asset } from '@/types/assets'
 import { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
 
 export const fetchLsp7Assets = async (
-  assetAddress: Address,
+  address: Address,
   profileAddress: Address
 ): Promise<Asset> => {
-  const [name, symbol, metadata] = await fetchLsp4Metadata(assetAddress)
+  const [name, symbol, metadata] = await fetchLsp4Metadata(address)
 
   const { contract } = useWeb3(PROVIDERS.RPC)
   const lsp7Contract = contract<LSP7DigitalAssetInterface>(
     LSP7DigitalAsset.abi as any,
-    assetAddress
+    address
   )
 
-  const tokenBalance = await lsp7Contract.methods
-    .balanceOf(profileAddress)
-    .call()
+  const balance = await lsp7Contract.methods.balanceOf(profileAddress).call()
   const tokenSupply = await lsp7Contract.methods.totalSupply().call()
-  const decimals = await lsp7Contract.methods.decimals().call()
+  const decimals = Number(await lsp7Contract.methods.decimals().call())
+  const icon =
+    (await getAndConvertImage(metadata.LSP4Metadata.icon, 200)) ||
+    ASSET_ICON_PLACEHOLDER_URL
+  const { links, description } = metadata.LSP4Metadata
+  const images: Base64EncodedImage[] = []
+
+  for await (const image of metadata.LSP4Metadata.images) {
+    const convertedImage = await getAndConvertImage(image, 400)
+    if (convertedImage) {
+      images.push(convertedImage)
+    }
+  }
 
   return {
-    address: assetAddress,
+    address,
     name,
     symbol,
-    amount: tokenBalance.toString(),
-    decimals: Number(decimals),
+    amount: balance,
+    decimals: decimals,
     tokenSupply,
-    icon: metadata.LSP4Metadata.icon[2]?.url
-      ? metadata.LSP4Metadata.icon[2]?.url
-      : ASSET_ICON_PLACEHOLDER_URL, // TODO fetch optimal size, check existence, fallback to default
-    links: metadata.LSP4Metadata.links,
-    description: metadata.LSP4Metadata.description,
-    images: metadata.LSP4Metadata.images.map(image => image[2]), // TODO fetch optimal size, check for existence etc
+    icon,
+    links,
+    description,
+    images,
     metadata: metadata.LSP4Metadata,
     standard: 'LSP7DigitalAsset',
   }

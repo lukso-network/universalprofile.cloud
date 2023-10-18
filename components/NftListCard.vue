@@ -45,7 +45,7 @@ const handleSendAsset = (event: Event) => {
     ><div slot="content">
       <div
         class="min-h-[260px] bg-neutral-90 w-100 rounded-t-12 bg-center bg-cover"
-        :style="`background-image: url(${asset.icon});`"
+        :style="`background-image: url(${getAssetThumb(asset)});`"
       ></div>
       <div class="p-4">
         <div

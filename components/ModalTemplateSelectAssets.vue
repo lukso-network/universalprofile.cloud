@@ -54,7 +54,7 @@ const handleSelectAsset = (asset: Asset) => {
       </li>
       <li v-for="asset in ownedAssets" :key="asset.address" class="mr-4">
         <AssetListItem
-          :icon="asset.icon"
+          :icon="getAssetThumb(asset)"
           :name="asset.name"
           :symbol="asset.symbol"
           :address="asset.address"

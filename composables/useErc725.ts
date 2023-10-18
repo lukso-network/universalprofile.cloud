@@ -7,7 +7,6 @@ import { ERC725YDataKeys } from '@lukso/lsp-smart-contracts'
 
 import { LSP0ERC725Account } from '@/types/contracts/LSP0ERC725Account'
 import { Lsp8TokenIdType } from '@/types/assets'
-import { getImageUrlBySize } from '@/utils/getProfileImages'
 import LSP8IdentifiableDigitalAsset from '@/shared/schemas/LSP8IdentifiableDigitalAsset.json'
 import { PROVIDERS } from '@/types/enums'
 
@@ -32,15 +31,14 @@ const fetchProfile = async (profileAddress: Address): Promise<Profile> => {
     LSP3ProfileMetadata as ERC725JSONSchema[]
   )
   const fetchedProfile = await erc725.fetchData('LSP3Profile')
+  console.log(fetchedProfile)
   const lsp3Profile = validateLSP3(fetchedProfile)
-
-  // we get only optimal profile images that will be later used in UI
-  const optimalProfileImage = lsp3Profile.profileImage
-    ? getImageUrlBySize(lsp3Profile.profileImage, 200, 200)
-    : ''
-  const optimalBackgroundImage = lsp3Profile.backgroundImage
-    ? getImageUrlBySize(lsp3Profile.backgroundImage, 800, 400)
-    : ''
+  const profileImageUrl =
+    lsp3Profile.profileImage &&
+    (await getAndConvertImage(lsp3Profile.profileImage, 200))
+  const backgroundImageUrl =
+    lsp3Profile.backgroundImage &&
+    (await getAndConvertImage(lsp3Profile.backgroundImage, 800))
 
   const { getBalance } = useWeb3(PROVIDERS.RPC)
   const balance = await getBalance(profileAddress)
@@ -48,8 +46,8 @@ const fetchProfile = async (profileAddress: Address): Promise<Profile> => {
   return {
     ...lsp3Profile,
     address: profileAddress,
-    profileImageUrl: optimalProfileImage || '',
-    backgroundImageUrl: optimalBackgroundImage || '',
+    profileImageUrl,
+    backgroundImageUrl,
     balance,
   }
 }
@@ -165,15 +163,14 @@ const fetchLSP4Creator = async (
     )
     const fetchedProfile = await erc725.fetchData('LSP3Profile')
     const lsp3Profile = validateLSP3(fetchedProfile)
+    const profileImageUrl =
+      lsp3Profile.profileImage &&
+      (await getAndConvertImage(lsp3Profile.profileImage, 200))
 
-    // we get only optimal profile images that will be later used in UI
-    const optimalProfileImage = lsp3Profile.profileImage
-      ? getImageUrlBySize(lsp3Profile.profileImage, 200, 200)
-      : ''
     return {
       address: creator,
       name: lsp3Profile.name,
-      profileImageUrl: optimalProfileImage,
+      profileImageUrl,
     }
   } catch (error) {
     console.error(error)

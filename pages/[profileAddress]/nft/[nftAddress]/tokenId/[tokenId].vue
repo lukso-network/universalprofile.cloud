@@ -48,7 +48,7 @@ const handleSendAsset = (event: Event) => {
           ><div slot="content">
             <div
               class="min-h-[260px] bg-neutral-90 w-100 rounded-t-12 bg-center bg-cover"
-              :style="`background-image: url(${nft?.icon});`"
+              :style="`background-image: url(${getAssetThumb(nft)});`"
             ></div>
             <div class="p-4 pt-8 relative">
               <div
