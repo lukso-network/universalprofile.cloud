@@ -12,6 +12,7 @@ export const useProfileBase = (profile: Profile) => {
   return {
     setProfile(newProfile: Profile) {
       assertAddress(newProfile.address, 'profile')
+      // we need to make conversion since ext uses checksum addresses
       const checksumAddress = toChecksumAddress(newProfile.address)
       assertAddress(checksumAddress, 'profile')
       newProfile.address = checksumAddress
