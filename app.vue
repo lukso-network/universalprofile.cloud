@@ -141,6 +141,18 @@ onUnmounted(() => {
   const provider = INJECTED_PROVIDER
   removeProviderEvents(provider)
 })
+
+useHead({
+  bodyAttrs: {
+    class: computed(() => {
+      if (appStore.modal?.isOpen) {
+        return 'overflow-hidden'
+      }
+
+      return ''
+    }),
+  },
+})
 </script>
 
 <template>
