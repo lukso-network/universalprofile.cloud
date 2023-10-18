@@ -79,7 +79,7 @@ const handleUnitClick = () => {
         balance: $formatNumber(
           fromWeiWithDecimals(asset?.amount || '0', asset?.decimals) || '',
           {
-            maximumFractionDigits: 20,
+            maximumFractionDigits: asset?.decimals,
           }
         ),
         symbol: asset?.symbol || '',
