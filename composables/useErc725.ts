@@ -1,5 +1,5 @@
 import { ERC725, ERC725JSONSchema } from '@erc725/erc725.js'
-import LSP3UniversalProfileMetadata from '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json'
+import LSP3ProfileMetadata from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
 import { LSP3Profile } from '@lukso/lsp-factory.js'
 import Web3 from 'web3'
 import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
@@ -29,7 +29,7 @@ const getInstance = (address: string, schema: ERC725JSONSchema[]) => {
 const fetchProfile = async (profileAddress: Address): Promise<Profile> => {
   const erc725 = getInstance(
     profileAddress,
-    LSP3UniversalProfileMetadata as ERC725JSONSchema[]
+    LSP3ProfileMetadata as ERC725JSONSchema[]
   )
   const fetchedProfile = await erc725.fetchData('LSP3Profile')
   const lsp3Profile = validateLSP3(fetchedProfile)
@@ -57,7 +57,7 @@ const fetchProfile = async (profileAddress: Address): Promise<Profile> => {
 const fetchAssets = async (profileAddress: Address, schema: string) => {
   const erc725 = getInstance(
     profileAddress,
-    LSP3UniversalProfileMetadata as ERC725JSONSchema[]
+    LSP3ProfileMetadata as ERC725JSONSchema[]
   )
   const result = await erc725.fetchData(schema)
   const assetAddresses = result.value as Address[]
@@ -161,7 +161,7 @@ const fetchLSP4Creator = async (
     assertAddress(creator)
     const erc725 = getInstance(
       creator,
-      LSP3UniversalProfileMetadata as ERC725JSONSchema[]
+      LSP3ProfileMetadata as ERC725JSONSchema[]
     )
     const fetchedProfile = await erc725.fetchData('LSP3Profile')
     const lsp3Profile = validateLSP3(fetchedProfile)

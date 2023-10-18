@@ -869,7 +869,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@erc725/erc725.js@npm:0.18.0, @erc725/erc725.js@npm:^0.18.0":
+"@erc725/erc725.js@npm:0.19.0":
+  version: 0.19.0
+  resolution: "@erc725/erc725.js@npm:0.19.0"
+  dependencies:
+    ethereumjs-util: ^7.1.5
+    web3-eth-abi: ^1.10.0
+    web3-providers-http: ^1.10.0
+    web3-utils: ^1.10.0
+  checksum: c0eb34ffac80bd98825b3ab79fe1278fbc240cd3cd91fec02be37f3020926b71100ddd8c1ef954f901084352741633d0c718f6796fa9a1728e9ff9cbe818d941
+  languageName: node
+  linkType: hard
+
+"@erc725/erc725.js@npm:^0.18.0":
   version: 0.18.0
   resolution: "@erc725/erc725.js@npm:0.18.0"
   dependencies:
@@ -17002,7 +17014,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wallet.universalprofile.cloud@workspace:."
   dependencies:
-    "@erc725/erc725.js": 0.18.0
+    "@erc725/erc725.js": 0.19.0
     "@esbuild-plugins/node-globals-polyfill": 0.2.3
     "@formatjs/intl": ^2.9.0
     "@lukso/lsp-factory.js": 3.1.1
