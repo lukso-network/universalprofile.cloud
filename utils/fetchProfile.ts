@@ -5,7 +5,6 @@ import { PROVIDERS } from '@/types/enums'
 
 export const fetchProfile = async (profileAddress: Address) => {
   const { contract, isEoA } = useWeb3(PROVIDERS.RPC)
-  const { supportInterface } = useErc725()
 
   // EoA check
   if (await isEoA(profileAddress)) {

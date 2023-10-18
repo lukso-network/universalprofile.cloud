@@ -180,18 +180,6 @@ const fetchLSP4Creator = async (
   }
 }
 
-const supportInterface = async (
-  address: Address,
-  interfaceId: string
-): Promise<boolean> => {
-  const { currentNetwork } = useAppStore()
-
-  return ERC725.supportsInterface(interfaceId, {
-    address,
-    rpcUrl: currentNetwork.rpcHttp,
-  })
-}
-
 const useErc725 = () => {
   return {
     getInstance,
@@ -199,7 +187,6 @@ const useErc725 = () => {
     fetchAssets,
     fetchLsp8Metadata,
     fetchLSP4Creator,
-    supportInterface,
   }
 }
 

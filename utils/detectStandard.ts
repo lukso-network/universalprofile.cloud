@@ -5,8 +5,6 @@ import { InterfaceId } from '@/types/assets'
 export const detectStandard = async (
   contractAddress: Address
 ): Promise<InterfaceId | undefined> => {
-  const { supportInterface } = useErc725()
-
   // LSP0
   if (
     await supportInterface(contractAddress, INTERFACE_IDS.LSP0ERC725Account)
