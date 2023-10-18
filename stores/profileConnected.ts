@@ -1,3 +1,5 @@
+import { Profile } from '@/types/profile'
+
 /**
  * Connected profile store
  *

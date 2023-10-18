@@ -1,3 +1,5 @@
+import { Profile } from '@/types/profile'
+
 /**
  * Set of methods shared across profile stores
  *

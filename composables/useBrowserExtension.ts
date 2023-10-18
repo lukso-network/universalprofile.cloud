@@ -1,5 +1,3 @@
-import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
-
 const openStoreLink = () => {
   const storeLink = browserInfo().storeLink
 

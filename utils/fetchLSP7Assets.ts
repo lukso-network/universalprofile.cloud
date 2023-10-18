@@ -1,6 +1,5 @@
 import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
 
-import { PROVIDERS } from '@/types/enums'
 import { Asset } from '@/types/assets'
 import { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
 

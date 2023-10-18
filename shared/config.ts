@@ -1,3 +1,5 @@
+import { NetworkInfo } from '@/types/network'
+
 // id of the network to use by default
 export const DEFAULT_NETWORK_ID = 'testnet'
 

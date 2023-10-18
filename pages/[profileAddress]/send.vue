@@ -4,7 +4,6 @@ import { TransactionConfig } from 'web3-core'
 import LSP7Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP7Mintable.json'
 import LSP8Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json'
 
-import { PROVIDERS } from '@/types/enums'
 import {
   LSP7DigitalAsset,
   LSP8IdentifiableDigitalAsset,

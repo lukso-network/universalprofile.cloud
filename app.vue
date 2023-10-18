@@ -3,7 +3,6 @@ import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { isAddress } from 'web3-utils'
 
 import { fetchProfile } from '@/utils/fetchProfile'
-import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
 import { assertString } from '@/utils/validators'
 
 if (typeof window !== 'undefined') {

@@ -1,7 +1,6 @@
 import { INTERFACE_IDS, SupportedStandards } from '@lukso/lsp-smart-contracts'
 
 import { LSP0ERC725Account } from '@/types/contracts/LSP0ERC725Account'
-import { PROVIDERS } from '@/types/enums'
 
 export const fetchProfile = async (profileAddress: Address) => {
   const { contract, isEoA } = useWeb3(PROVIDERS.RPC)

@@ -1,5 +1,4 @@
 import { LSP0ERC725Account } from '@/types/contracts'
-import { PROVIDERS } from '@/types/enums'
 
 /**
  * Checks if a smart contract supports a given interface.

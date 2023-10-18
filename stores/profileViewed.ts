@@ -5,6 +5,7 @@ import {
   nftStandards,
   tokenStandards,
 } from '@/types/assets'
+import { Profile } from '@/types/profile'
 
 /**
  * Viewed profile store

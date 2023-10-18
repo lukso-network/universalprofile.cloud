@@ -1,4 +1,5 @@
 import { Asset } from '@/types/assets'
+import { Receiver } from '@/types/profile'
 
 type SendStatus = 'draft' | 'pending' | 'success'
 

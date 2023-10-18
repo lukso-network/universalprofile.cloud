@@ -8,7 +8,7 @@ import { ERC725YDataKeys } from '@lukso/lsp-smart-contracts'
 import { LSP0ERC725Account } from '@/types/contracts/LSP0ERC725Account'
 import { Lsp8TokenIdType } from '@/types/assets'
 import LSP8IdentifiableDigitalAsset from '@/shared/schemas/LSP8IdentifiableDigitalAsset.json'
-import { PROVIDERS } from '@/types/enums'
+import { Creator, Profile } from '@/types/profile'
 
 export interface LSP3ProfileJSON {
   LSP3Profile: LSP3Profile
