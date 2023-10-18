@@ -37,6 +37,14 @@ const handleKeyDown = (customEvent: CustomEvent) => {
     event.preventDefault()
   }
 
+  // when asset use 0 decimals we should only allow integers
+  if (
+    asset.value?.decimals === 0 &&
+    (key === '.' || (key === '0' && input.value === ''))
+  ) {
+    event.preventDefault()
+  }
+
   // allow only one dot in the value, but not as first character
   if (key === '.' && (input.value.includes('.') || input.value === '')) {
     event.preventDefault()
