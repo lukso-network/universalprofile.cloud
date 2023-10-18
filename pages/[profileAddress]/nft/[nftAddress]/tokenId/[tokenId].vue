@@ -51,27 +51,7 @@ const handleSendAsset = (event: Event) => {
               :style="`background-image: url(${getAssetThumb(nft)});`"
             ></div>
             <div class="p-4 pt-8 relative">
-              <div
-                v-if="nft?.creatorAddress"
-                class="shadow-neutral-drop-shadow p-2 pr-6 rounded-4 inline-flex -top-6 absolute bg-neutral-100"
-              >
-                <lukso-profile
-                  size="x-small"
-                  :profile-url="nft.creatorProfileImage"
-                ></lukso-profile>
-                <div class="pl-1">
-                  <div class="text-neutral-60 paragraph-inter-10-semi-bold">
-                    {{ $formatMessage('asset_created_by') }}
-                  </div>
-                  <lukso-username
-                    :name="nft.creatorName"
-                    :address="nft.creatorAddress"
-                    size="x-small"
-                    class="flex"
-                    name-color="neutral-20"
-                  ></lukso-username>
-                </div>
-              </div>
+              <AssetCreator v-if="nft" :asset="nft" class="absolute -top-5" />
               <div>
                 <div class="paragraph-inter-14-semi-bold">
                   {{ nft?.name }}

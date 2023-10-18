@@ -47,34 +47,14 @@ const handleSendAsset = (event: Event) => {
         class="min-h-[260px] bg-neutral-90 w-100 rounded-t-12 bg-center bg-cover"
         :style="`background-image: url(${getAssetThumb(asset)});`"
       ></div>
-      <div class="p-4">
-        <div
-          v-if="asset.creatorAddress"
-          class="shadow-neutral-drop-shadow p-2 pr-6 rounded-4 inline-flex -top-6 relative bg-neutral-100"
-        >
-          <lukso-profile
-            size="x-small"
-            :profile-url="asset.creatorProfileImage"
-          ></lukso-profile>
-          <div class="pl-1">
-            <div class="text-neutral-60 paragraph-inter-10-semi-bold">
-              {{ $formatMessage('asset_created_by') }}
-            </div>
-            <lukso-username
-              :name="asset.creatorName"
-              :address="asset.creatorAddress"
-              size="x-small"
-              class="flex"
-              name-color="neutral-20"
-            ></lukso-username>
-          </div>
-        </div>
+      <div class="p-4 pt-8 relative">
+        <AssetCreator :asset="asset" class="absolute -top-5" />
         <div>
           <div class="paragraph-inter-14-semi-bold">
             {{ asset.name }}
           </div>
           <div class="paragraph-inter-12-semi-bold pb-2">
-            1
+            {{ asset.amount }}
             <span class="text-neutral-60">{{ asset.symbol }}</span>
           </div>
           <div class="flex justify-end w-full">
@@ -86,6 +66,7 @@ const handleSendAsset = (event: Event) => {
               size="small"
               variant="secondary"
               @click="handleSendAsset"
+              class="transition-opacity hover:opacity-70"
               >{{ $formatMessage('button_send') }}</lukso-button
             >
           </div>

@@ -113,7 +113,7 @@ onMounted(async () => {
               size="small"
               variant="secondary"
               @click="handleSendAsset"
-              class="mt-4"
+              class="mt-4 transition-opacity hover:opacity-70"
               >{{ $formatMessage('button_send') }}</lukso-button
             >
           </div>
