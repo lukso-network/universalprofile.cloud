@@ -14,6 +14,22 @@ const token = ref<Asset>()
 watchEffect(() => {
   token.value = getToken(tokenAddress)
 })
+
+const handleSendAsset = (event: Event) => {
+  try {
+    event.stopPropagation()
+    assertAddress(connectedProfile.address, 'profile')
+    assertAddress(token.value?.address, 'token')
+    navigateTo({
+      path: sendRoute(connectedProfile.address),
+      query: {
+        asset: token.value.address,
+      },
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
 </script>
 
 <template>
@@ -52,7 +68,7 @@ watchEffect(() => {
             :decimals="token?.decimals"
           />
 
-          <lukso-button is-full-width class="mt-4 hidden">{{
+          <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{
             $formatMessage('token_details_send', {
               token: token?.symbol || '',
             })

@@ -16,6 +16,22 @@ const nft = ref<Asset>()
 watchEffect(() => {
   nft.value = getNft(nftAddress, tokenId)
 })
+
+const handleSendAsset = (event: Event) => {
+  try {
+    event.stopPropagation()
+    assertAddress(connectedProfile.address, 'profile')
+    assertAddress(nft.value?.address, 'nft')
+    navigateTo({
+      path: sendRoute(connectedProfile.address),
+      query: {
+        asset: nft.value.address,
+      },
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
 </script>
 
 <template>
@@ -77,7 +93,7 @@ watchEffect(() => {
             :decimals="0"
           />
 
-          <lukso-button is-full-width class="mt-4 hidden">{{
+          <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{
             $formatMessage('token_details_send', {
               token: nft?.symbol || '',
             })
