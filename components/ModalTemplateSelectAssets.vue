@@ -42,8 +42,8 @@ const handleSelectAsset = (asset: Asset) => {
         @click="closeModal"
       ></lukso-icon>
     </div>
-    <ul class="space-y-2">
-      <li>
+    <ul class="space-y-2 max-h-72 overflow-y-auto -mr-4">
+      <li class="mr-4">
         <AssetListItem
           :icon="ASSET_LYX_ICON_URL"
           :name="currentNetwork.token.name"
@@ -52,7 +52,7 @@ const handleSelectAsset = (asset: Asset) => {
           @click="handleSelectLyx"
         />
       </li>
-      <li v-for="asset in ownedAssets" :key="asset.address">
+      <li v-for="asset in ownedAssets" :key="asset.address" class="mr-4">
         <AssetListItem
           :icon="asset.icon"
           :name="asset.name"
