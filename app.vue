@@ -112,6 +112,15 @@ const checkConnectionExpiry = () => {
   setInterval(expiryCheck, CONNECTION_EXPIRY_CHECK_INTERVAL_MS)
 }
 
+const setupCurrencies = async () => {
+  // try {
+  //   const currencies = await getCurrencies()
+  //   appStore.setCurrencies(currencies)
+  // } catch (error) {
+  //   console.error(error)
+  // }
+}
+
 onMounted(async () => {
   setupTranslations()
   setupWeb3Instances()
@@ -133,6 +142,8 @@ onMounted(async () => {
   }
 
   setStatus('isProfileLoaded', true)
+
+  await setupCurrencies()
 })
 
 onUnmounted(() => {
