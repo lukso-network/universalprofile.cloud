@@ -2,10 +2,10 @@ import { CurrencyCache, CurrencyList } from '@/types/currency'
 
 const fetchCurrencies = async () => {
   const cache = await caches.open(CACHE_KEY.CURRENCY_CACHE)
-  const compareTokens = [CRYPTO_COMPARE_LYX_TOKEN_NAME] // we can add more tokens here if needed
+  const compareTokens = [CURRENCY_API_LYX_TOKEN_NAME] // we can add more tokens here if needed
   const url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${compareTokens.join(
     ','
-  )}&tsyms=${CURRENCY_TO_FETCH_FROM_API.join(`,`)}`
+  )}&tsyms=${CURRENCY_API_SYMBOLS.join(`,`)}`
   const cacheData = await cache.match(url)
 
   if (cacheData) {

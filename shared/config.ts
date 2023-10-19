@@ -77,14 +77,14 @@ export const SEARCH_RESULTS_LIMIT = 100
 // base universalprofile address
 export const BASE_UP_CLOUD_URL = 'https://universalprofile.cloud/'
 
-// atm cryptocompare only supports LYXE token, swap to LYX when got avail
-export const CRYPTO_COMPARE_LYX_TOKEN_NAME = 'LYXE'
-
 // default currency symbol
 export const DEFAULT_CURRENCY_SYMBOL = 'USD'
 
 // list of currencies to fetch from the api
-export const CURRENCY_TO_FETCH_FROM_API = ['USD', 'EUR', 'GBP', 'PLN']
+export const CURRENCY_API_SYMBOLS = ['USD', 'EUR', 'GBP', 'PLN']
+
+// atm cryptocompare only supports LYXE token, swap to LYX when got avail
+export const CURRENCY_API_LYX_TOKEN_NAME = 'LYXE'
 
 // currency cache expiry time in minutes
 export const CURRENCY_CACHE_EXPIRY_IN_MINUTES = 60
