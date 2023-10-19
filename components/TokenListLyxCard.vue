@@ -87,7 +87,7 @@ onMounted(async () => {
             {{
               $formatCurrency(
                 viewedProfile.balance,
-                CRYPTO_COMPARE_LYX_TOKEN_NAME
+                CURRENCY_API_LYX_TOKEN_NAME
               )
             }}
           </div>
