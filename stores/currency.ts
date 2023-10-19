@@ -1,8 +1,8 @@
 import { CurrencyList, CurrencySymbol } from '@/types/currency'
 
 /**
- * Settings store
- * Keeps the information about app settings
+ * Currency store
+ * Keeps the information about currency settings
  * Data is stored in local storage
  *
  */
