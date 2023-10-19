@@ -225,7 +225,7 @@ const fetchLSP4Creator = async (
       LSP3UniversalProfileMetadata as ERC725JSONSchema[]
     )
     const fetchedProfile = await erc725.fetchData('LSP3Profile')
-    const lsp3Profile = validateLsp3(fetchedProfile)
+    const lsp3Profile = validateLsp3Metadata(fetchedProfile)
 
     // we get only optimal profile images that will be later used in UI
     const optimalProfileImage = lsp3Profile.profileImage
