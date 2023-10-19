@@ -33,7 +33,7 @@ const fetchProfile = async (profileAddress: Address): Promise<Profile> => {
     LSP3UniversalProfileMetadata as ERC725JSONSchema[]
   )
   const fetchedProfile = await erc725.fetchData('LSP3Profile')
-  const lsp3Profile = validateLSP3(fetchedProfile)
+  const lsp3Profile = validateLsp3Metadata(fetchedProfile)
 
   // we get only optimal profile images that will be later used in UI
   const optimalProfileImage = lsp3Profile.profileImage
@@ -225,7 +225,7 @@ const fetchLSP4Creator = async (
       LSP3UniversalProfileMetadata as ERC725JSONSchema[]
     )
     const fetchedProfile = await erc725.fetchData('LSP3Profile')
-    const lsp3Profile = validateLSP3(fetchedProfile)
+    const lsp3Profile = validateLsp3(fetchedProfile)
 
     // we get only optimal profile images that will be later used in UI
     const optimalProfileImage = lsp3Profile.profileImage
