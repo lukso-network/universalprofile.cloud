@@ -48,7 +48,7 @@ const handleSelectAsset = (asset: Asset) => {
           :icon="ASSET_LYX_ICON_URL"
           :name="currentNetwork.token.name"
           :symbol="currentNetwork.token.symbol"
-          :is-selected="selectedAsset?.name === currentNetwork.token.name"
+          :is-selected="selectedAsset?.isNativeToken"
           @click="handleSelectLyx"
         />
       </li>
@@ -60,7 +60,10 @@ const handleSelectAsset = (asset: Asset) => {
           :address="asset.address"
           :has-identicon="true"
           :has-square-icon="isLsp8(asset)"
-          :is-selected="selectedAsset?.name === asset.name"
+          :is-selected="
+            selectedAsset?.address === asset.address &&
+            selectedAsset?.tokenId === asset.tokenId
+          "
           @click="handleSelectAsset(asset)"
         />
       </li>
