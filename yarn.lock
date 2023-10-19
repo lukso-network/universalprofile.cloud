@@ -2348,7 +2348,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxt/kit@npm:^3.4.0":
+"@nuxt/kit@npm:^3.4.0, @nuxt/kit@npm:^3.7.3":
   version: 3.7.4
   resolution: "@nuxt/kit@npm:3.7.4"
   dependencies:
@@ -2586,6 +2586,19 @@ __metadata:
   version: 4.9.3
   resolution: "@openzeppelin/contracts@npm:4.9.3"
   checksum: 4932063e733b35fa7669b9fe2053f69b062366c5c208b0c6cfa1ac451712100c78acff98120c3a4b88d94154c802be05d160d71f37e7d74cadbe150964458838
+  languageName: node
+  linkType: hard
+
+"@pinia-plugin-persistedstate/nuxt@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@pinia-plugin-persistedstate/nuxt@npm:1.1.2"
+  dependencies:
+    "@nuxt/kit": ^3.7.3
+    defu: ^6.1.2
+    pinia-plugin-persistedstate: ">=3.2.0"
+  peerDependencies:
+    "@pinia/nuxt": ^0.4.4
+  checksum: 49911f7098e3ed34a58b4a36af86b95d772909839d06506337047de1572a28e0f58ad8d0a61e2ccffe4ba5af123ce6377aa09f7f2d96069bd0fde38456989d9e
   languageName: node
   linkType: hard
 
@@ -12844,6 +12857,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pinia-plugin-persistedstate@npm:>=3.2.0":
+  version: 3.2.0
+  resolution: "pinia-plugin-persistedstate@npm:3.2.0"
+  peerDependencies:
+    pinia: ^2.0.0
+  checksum: c558b83cdd59e45956f328c34f0b067471dda122ed26555646107ebca5201d94c035ffaf3b400cae26020ad1be8978716f1f538653d6b90f23760c2f7ccbce82
+  languageName: node
+  linkType: hard
+
 "pinia@npm:>=2.1.0":
   version: 2.1.6
   resolution: "pinia@npm:2.1.6"
@@ -12860,6 +12882,25 @@ __metadata:
     typescript:
       optional: true
   checksum: 4e881e590c4f6ec9c2dc6174cf7ecc71a48bff1f3a5be878669b3b2fd32994fa64c3cbf499d138bc4e0f222ac6ad1d07935b0a592791acdaf8c9f2a12c98f042
+  languageName: node
+  linkType: hard
+
+"pinia@npm:^2.1.7":
+  version: 2.1.7
+  resolution: "pinia@npm:2.1.7"
+  dependencies:
+    "@vue/devtools-api": ^6.5.0
+    vue-demi: ">=0.14.5"
+  peerDependencies:
+    "@vue/composition-api": ^1.4.0
+    typescript: ">=4.4.4"
+    vue: ^2.6.14 || ^3.3.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+    typescript:
+      optional: true
+  checksum: 1b7882aab2828ad209d3e76e06918c8811d04699c9308d372094cde6df485d7e7785f25a3bb5c6a3724aeaee3fb0082fae03c41a6657acd3486c7965a0a09d34
   languageName: node
   linkType: hard
 
@@ -17025,6 +17066,7 @@ __metadata:
     "@nuxtjs/device": ^3.1.0
     "@nuxtjs/plausible": ^0.2.1
     "@nuxtjs/tailwindcss": ^6.8.0
+    "@pinia-plugin-persistedstate/nuxt": ^1.1.2
     "@pinia/nuxt": ^0.4.11
     "@playwright/test": 1.36.2
     "@typechain/web3-v1": ^6.0.7
@@ -17052,6 +17094,7 @@ __metadata:
     lint-staged: 13.2.3
     npm-run-all: 4.1.5
     nuxt: ^3.6.5
+    pinia: ^2.1.7
     postcss-html: ^1.5.0
     prettier: 3.0.1
     rollup-plugin-polyfill-node: ^0.12.0

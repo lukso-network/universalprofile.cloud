@@ -113,12 +113,10 @@ const checkConnectionExpiry = () => {
 }
 
 const setupCurrencies = async () => {
-  // try {
-  //   const currencies = await getCurrencies()
-  //   appStore.setCurrencies(currencies)
-  // } catch (error) {
-  //   console.error(error)
-  // }
+  const { currencyList } = storeToRefs(useCurrencyStore())
+  const { fetchCurrencies } = useCurrency()
+
+  currencyList.value = await fetchCurrencies()
 }
 
 onMounted(async () => {

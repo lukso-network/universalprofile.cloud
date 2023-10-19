@@ -48,7 +48,7 @@ export const ASSET_ICON_PLACEHOLDER_URL = '/images/token-default.svg'
 export const ASSET_LYX_ICON_URL = '/images/lyx-token.svg'
 
 // number of decimal places for LYX token
-export const ASSET_LYX_DECIMALS = '18'
+export const ASSET_LYX_DECIMALS = 18
 
 // url of the ipfs gateway
 export const IPFS_URL = 'https://2eff.lukso.dev/ipfs/'
@@ -76,3 +76,15 @@ export const SEARCH_RESULTS_LIMIT = 100
 
 // base universalprofile address
 export const BASE_UP_CLOUD_URL = 'https://universalprofile.cloud/'
+
+// atm cryptocompare only supports LYXE token, swap to LYX when got avail
+export const CRYPTO_COMPARE_LYX_TOKEN_NAME = 'LYXE'
+
+// default currency symbol
+export const DEFAULT_CURRENCY_SYMBOL = 'USD'
+
+// list of currencies to fetch from the api
+export const CURRENCY_TO_FETCH_FROM_API = ['USD', 'EUR', 'GBP', 'PLN']
+
+// currency cache expiry time in minutes
+export const CURRENCY_CACHE_EXPIRY_IN_MINUTES = 60

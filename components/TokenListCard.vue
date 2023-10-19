@@ -56,7 +56,7 @@ onMounted(async () => {
 
 <template>
   <lukso-card size="small" is-hoverable is-full-width @click="handleShowAsset"
-    ><div slot="content" class="p-4">
+    ><div slot="content" class="p-4 h-full grid grid-rows-[max-content,auto]">
       <div class="h-7 flex justify-end items-start">
         <lukso-tag
           v-if="asset.standard"
@@ -80,7 +80,7 @@ onMounted(async () => {
             #{{ asset.address?.slice(2, 8) }}
           </div>
         </div>
-        <div class="flex flex-col w-full">
+        <div class="grid w-full grid-rows-[max-content,max-content,auto]">
           <div class="heading-inter-14-bold pb-1">{{ asset.name }}</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
             <span
@@ -103,8 +103,13 @@ onMounted(async () => {
               >{{ asset.symbol }}</span
             >
           </div>
-          <div class="paragraph-inter-12-regular hidden">$ 123.24</div>
-          <div class="flex justify-end w-full">
+          <div
+            v-if="asset.amount && asset.symbol"
+            class="paragraph-inter-12-regular"
+          >
+            {{ $formatCurrency(asset.amount, asset.symbol) }}
+          </div>
+          <div class="flex justify-end w-full items-end">
             <lukso-button
               v-if="
                 status.isConnected &&

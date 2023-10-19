@@ -6,6 +6,7 @@ declare module '#app' {
     $formatNumber(value: string | number, options?: FormatNumberOptions): string
     $formatDate(date?: string | number | Date): string
     $formatTime(date?: string | number | Date): string
+    $formatCurrency(value: string, symbol: string): string
   }
 }
 
@@ -15,6 +16,7 @@ declare module '@vue/runtime-core' {
     $formatNumber(value: string | number, options?: FormatNumberOptions): string
     $formatDate(date?: string | number | Date): string
     $formatTime(date?: string | number | Date): string
+    $formatCurrency(value: string, symbol: string): string
   }
 }
 

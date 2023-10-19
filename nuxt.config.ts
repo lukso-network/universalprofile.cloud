@@ -18,12 +18,8 @@ export default defineNuxtConfig({
   },
   modules: [
     '@nuxtjs/tailwindcss',
-    [
-      '@pinia/nuxt',
-      {
-        autoImports: ['defineStore', 'acceptHMRUpdate'],
-      },
-    ],
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/device',
     '@nuxtjs/plausible',
     '@nuxtjs/algolia',
@@ -106,7 +102,7 @@ export default defineNuxtConfig({
     presets: [
       {
         from: 'pinia',
-        imports: ['storeToRefs'],
+        imports: ['storeToRefs', 'defineStore', 'acceptHMRUpdate'],
       },
     ],
   },
@@ -115,4 +111,7 @@ export default defineNuxtConfig({
   },
   ssr: false,
   spaLoadingTemplate: 'public/loading-template.html',
+  piniaPersistedstate: {
+    storage: 'localStorage',
+  },
 })
