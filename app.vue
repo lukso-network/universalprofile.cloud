@@ -10,7 +10,7 @@ if (typeof window !== 'undefined') {
 }
 
 const web3Store = useWeb3Store()
-const appStore = useAppStore()
+const { getNetwork, selectedNetwork, modal } = useAppStore()
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
 const {
@@ -36,10 +36,7 @@ const setupWeb3Instances = () => {
   }
 
   // for chain interactions through RPC endpoint
-  web3Store.addWeb3(
-    PROVIDERS.RPC,
-    appStore.getNetwork(appStore.selectedNetwork).rpcHttp
-  )
+  web3Store.addWeb3(PROVIDERS.RPC, getNetwork(selectedNetwork).rpcHttp)
 }
 
 const setupConnectedProfile = async () => {
@@ -80,8 +77,8 @@ const routerBackProfileLoad = async () => {
         assertAddress(toProfileAddress, 'profile')
 
         if (toProfileAddress !== fromProfileAddress) {
-          await setupViewedProfile(toProfileAddress)
-          await setupViewedAssets(toProfileAddress)
+          await loadViewedProfile(toProfileAddress)
+          await loadViewedAssets(toProfileAddress)
         }
       } catch (error) {
         console.error(error)
@@ -119,20 +116,14 @@ const setupCurrencies = async () => {
   currencyList.value = await fetchCurrencies()
 }
 
-onMounted(async () => {
-  setupTranslations()
-  setupWeb3Instances()
-  checkConnectionExpiry()
-  await setupConnectedProfile()
-  await routerBackProfileLoad()
-
+const setupViewedProfile = async () => {
   try {
     const profileAddress = useRouter().currentRoute.value.params?.profileAddress
 
     if (profileAddress) {
       if (isAddress(profileAddress)) {
-        await setupViewedProfile(profileAddress)
-        await setupViewedAssets(profileAddress)
+        await loadViewedProfile(profileAddress)
+        await loadViewedAssets(profileAddress)
       } else {
         navigateTo(notFoundRoute())
       }
@@ -140,6 +131,15 @@ onMounted(async () => {
   } catch (error) {
     console.error(error)
   }
+}
+
+onMounted(async () => {
+  setupTranslations()
+  setupWeb3Instances()
+  checkConnectionExpiry()
+  await setupConnectedProfile()
+  await setupViewedProfile()
+  await routerBackProfileLoad()
 
   setStatus('isProfileLoaded', true)
 
@@ -154,7 +154,7 @@ onUnmounted(() => {
 useHead({
   bodyAttrs: {
     class: computed(() => {
-      if (appStore.modal?.isOpen) {
+      if (modal?.isOpen) {
         return 'overflow-hidden'
       }
 

@@ -1,6 +1,6 @@
 import { SetupViewedProfileError } from '@/shared/errors'
 
-export const setupViewedProfile = async (profileAddress: Address) => {
+export const loadViewedProfile = async (profileAddress: Address) => {
   const { setStatus, setProfile } = useViewedProfileStore()
 
   try {
