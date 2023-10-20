@@ -4,6 +4,7 @@ import {
   IntlConfig,
   IntlShape,
 } from '@formatjs/intl'
+import { fromWei } from 'web3-utils'
 
 import defaultMessages from '@/translations/en_US.json'
 
@@ -74,8 +75,38 @@ const formatDate = (date?: string | number | Date) => {
   return intl.value?.formatDate(date)
 }
 
+/**
+ * Time formatting based on the locale
+ *
+ * @param date - date to format
+ * @returns - formatted time
+ */
 const formatTime = (date?: string | number | Date) => {
   return intl.value?.formatTime(date)
+}
+
+/**
+ * Currency formatting based on the locale
+ *
+ * @param value - number to format
+ * @param symbol - currency symbol
+ * @returns - formatted string
+ */
+const formatCurrency = (value: string, symbol: string) => {
+  const { getCurrencyMultiplier, currentCurrencySymbol } = useCurrencyStore()
+  const currencyMultiplier = getCurrencyMultiplier()(symbol)
+
+  if (!value || !currencyMultiplier) {
+    return ''
+  }
+
+  const currencyValue = parseFloat(fromWei(value)) * currencyMultiplier
+
+  return formatNumber(currencyValue, {
+    maximumFractionDigits: 2,
+    style: 'currency',
+    currency: currentCurrencySymbol,
+  })
 }
 
 export const useIntl = () => {
@@ -85,5 +116,6 @@ export const useIntl = () => {
     formatNumber,
     formatDate,
     formatTime,
+    formatCurrency,
   }
 }

@@ -83,10 +83,17 @@ onMounted(async () => {
               >{{ appStore.currentNetwork.token.symbol }}</span
             >
           </div>
-          <div class="paragraph-inter-12-regular pb-4 hidden">$ 123.24</div>
+          <div class="paragraph-inter-12-regular pb-4">
+            {{
+              $formatCurrency(
+                viewedProfile.balance,
+                CURRENCY_API_LYX_TOKEN_NAME
+              )
+            }}
+          </div>
         </div>
       </div>
-      <div class="flex justify-end w-full pt-4">
+      <div class="flex justify-end w-full">
         <lukso-button
           v-if="
             status.isConnected &&
@@ -95,6 +102,7 @@ onMounted(async () => {
           size="small"
           variant="secondary"
           @click="handleSendAsset"
+          class="transition-opacity hover:opacity-70"
           >{{ $formatMessage('button_send') }}</lukso-button
         >
       </div>

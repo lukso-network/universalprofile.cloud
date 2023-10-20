@@ -2,8 +2,8 @@ import { Modal } from '@/types/modal'
 import { NetworkInfo, NetworkId } from '@/types/network'
 
 /**
- * Connection store
- * Keeps the information about connected profile and it's status
+ * App store
+ * Keeps the information about app non persistent state
  *
  */
 export const useAppStore = defineStore('app', () => {

@@ -8,7 +8,6 @@ export const fetchLsp8Assets = async (
   profileAddress: Address
 ) => {
   const { contract } = useWeb3(PROVIDERS.RPC)
-
   const lsp8Contract = contract<LSP8IdentifiableDigitalAssetInterface>(
     LSP8IdentifiableDigitalAsset.abi as any,
     address
