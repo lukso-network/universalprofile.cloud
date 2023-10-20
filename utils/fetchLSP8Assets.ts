@@ -8,8 +8,6 @@ export const fetchLsp8Assets = async (
   profileAddress: Address
 ) => {
   const { contract } = useWeb3(PROVIDERS.RPC)
-  const assets: Asset[] = []
-
   const lsp8Contract = contract<LSP8IdentifiableDigitalAssetInterface>(
     LSP8IdentifiableDigitalAsset.abi as any,
     address
@@ -20,14 +18,14 @@ export const fetchLsp8Assets = async (
   const tokensIds = await lsp8Contract.methods.tokenIdsOf(profileAddress).call()
 
   if (!tokensIds.length) {
-    return assets
+    return []
   }
 
   const { fetchLsp8Metadata, fetchLSP4Creator } = useErc725() // TODO move to utils
   // nft metadata is the same for all tokens of same asset
   const [name, symbol, nftMetadata] = await fetchLsp4Metadata(address)
 
-  await Promise.all(
+  const assets = await Promise.all(
     tokensIds.map(async tokenId => {
       const collectionMetadata = (await fetchLsp8Metadata(tokenId, address))
         .LSP4Metadata
@@ -53,7 +51,7 @@ export const fetchLsp8Assets = async (
         }
       }
 
-      assets.push({
+      return {
         address,
         name,
         symbol,
@@ -73,7 +71,7 @@ export const fetchLsp8Assets = async (
         },
         standard: 'LSP8IdentifiableDigitalAsset',
         tokenId,
-      })
+      } as Asset
     })
   )
   return assets
