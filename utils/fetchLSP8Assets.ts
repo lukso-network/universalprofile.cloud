@@ -39,7 +39,7 @@ export const fetchLsp8Assets = async (
       const {
         name: creatorName,
         address: creatorAddress,
-        profileImageUrl: creatorProfileImage,
+        profileImage: creatorProfileImage,
       } = creatorMetadata || {}
       const icon = await getAndConvertImage(metadataIcon, 200)
       const images: Base64EncodedImage[] = []

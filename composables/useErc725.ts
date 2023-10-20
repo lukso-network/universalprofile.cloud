@@ -32,10 +32,10 @@ const fetchProfile = async (profileAddress: Address): Promise<Profile> => {
   )
   const fetchedProfile = await erc725.fetchData('LSP3Profile')
   const lsp3Profile = validateLsp3Metadata(fetchedProfile)
-  const profileImageUrl =
+  const profileImage =
     lsp3Profile.profileImage &&
     (await getAndConvertImage(lsp3Profile.profileImage, 200))
-  const backgroundImageUrl =
+  const backgroundImage =
     lsp3Profile.backgroundImage &&
     (await getAndConvertImage(lsp3Profile.backgroundImage, 800))
 
@@ -45,9 +45,10 @@ const fetchProfile = async (profileAddress: Address): Promise<Profile> => {
   return {
     ...lsp3Profile,
     address: profileAddress,
-    profileImageUrl,
-    backgroundImageUrl,
+    profileImage,
+    backgroundImage,
     balance,
+    metadata: lsp3Profile,
   }
 }
 
@@ -162,14 +163,14 @@ const fetchLSP4Creator = async (
     )
     const fetchedProfile = await erc725.fetchData('LSP3Profile')
     const lsp3Profile = validateLsp3Metadata(fetchedProfile)
-    const profileImageUrl =
+    const profileImage =
       lsp3Profile.profileImage &&
       (await getAndConvertImage(lsp3Profile.profileImage, 200))
 
     return {
       address: creator,
       name: lsp3Profile.name,
-      profileImageUrl,
+      profileImage,
     }
   } catch (error) {
     console.error(error)
