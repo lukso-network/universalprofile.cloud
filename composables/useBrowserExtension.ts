@@ -114,6 +114,11 @@ const disconnect = () => {
 const handleAccountsChanged = async (accounts: string[]) => {
   const { status } = useConnectedProfileStore()
 
+  // handle account change only for connected users
+  if (!status.isConnected) {
+    return
+  }
+
   if (accounts.length) {
     const address = accounts[0]
     assertAddress(address, 'profile')
