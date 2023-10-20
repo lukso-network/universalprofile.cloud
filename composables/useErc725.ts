@@ -31,7 +31,7 @@ const fetchProfile = async (profileAddress: Address): Promise<Profile> => {
     LSP3ProfileMetadata as ERC725JSONSchema[]
   )
   const fetchedProfile = await erc725.fetchData('LSP3Profile')
-  const lsp3Profile = validateLSP3(fetchedProfile)
+  const lsp3Profile = validateLsp3Metadata(fetchedProfile)
   const profileImageUrl =
     lsp3Profile.profileImage &&
     (await getAndConvertImage(lsp3Profile.profileImage, 200))
@@ -161,7 +161,7 @@ const fetchLSP4Creator = async (
       LSP3ProfileMetadata as ERC725JSONSchema[]
     )
     const fetchedProfile = await erc725.fetchData('LSP3Profile')
-    const lsp3Profile = validateLSP3(fetchedProfile)
+    const lsp3Profile = validateLsp3Metadata(fetchedProfile)
     const profileImageUrl =
       lsp3Profile.profileImage &&
       (await getAndConvertImage(lsp3Profile.profileImage, 200))
