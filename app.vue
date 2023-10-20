@@ -129,15 +129,13 @@ onMounted(async () => {
   try {
     const profileAddress = useRouter().currentRoute.value.params?.profileAddress
 
-    if (!profileAddress) {
-      return
-    }
-
-    if (isAddress(profileAddress)) {
-      await setupViewedProfile(profileAddress)
-      await setupViewedAssets(profileAddress)
-    } else {
-      navigateTo(notFoundRoute())
+    if (profileAddress) {
+      if (isAddress(profileAddress)) {
+        await setupViewedProfile(profileAddress)
+        await setupViewedAssets(profileAddress)
+      } else {
+        navigateTo(notFoundRoute())
+      }
     }
   } catch (error) {
     console.error(error)
