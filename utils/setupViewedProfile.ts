@@ -1,15 +1,10 @@
 import { SetupViewedProfileError } from '@/shared/errors'
 
 export const setupViewedProfile = async (profileAddress: Address) => {
-  const {
-    setStatus,
-    profile: viewedProfile,
-    setProfile,
-  } = useViewedProfileStore()
+  const { setStatus, setProfile } = useViewedProfileStore()
 
   try {
     setStatus('isProfileLoading', true)
-    viewedProfile.address = profileAddress
     const profile = await fetchProfile(profileAddress)
     setProfile(profile)
   } catch (error) {

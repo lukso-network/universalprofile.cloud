@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { fromWei } from 'web3-utils'
-
 type Props = {
   profile: Profile
   amount?: string
   symbol?: string
+  decimals?: number
 }
 
 defineProps<Props>()
@@ -25,7 +24,9 @@ defineProps<Props>()
         </div>
         <div class="paragraph-inter-12-semi-bold">
           <span v-if="amount">{{
-            $formatNumber(fromWei(amount, 'ether'))
+            $formatNumber(fromWeiWithDecimals(amount, decimals), {
+              maximumFractionDigits: decimals,
+            })
           }}</span>
           <span v-else>0</span>
           <span class="text-neutral-60 ml-1">{{ symbol }}</span>

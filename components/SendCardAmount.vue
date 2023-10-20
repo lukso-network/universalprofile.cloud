@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { fromWei } from 'web3-utils'
 import BigNumber from 'bignumber.js'
-import { storeToRefs } from 'pinia'
 
 const { asset, receiverError, amount } = storeToRefs(useSendStore())
 
@@ -12,7 +10,9 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   const key = event.key
   const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab']
   const realValueBN = new BigNumber(`${input.value}${key}`)
-  const assetBalanceBN = new BigNumber(`${fromWei(asset.value?.amount || '0')}`)
+  const assetBalanceBN = new BigNumber(
+    `${fromWeiWithDecimals(asset.value?.amount || '0', asset.value?.decimals)}`
+  )
   const maxDecimalPlaces = 6
 
   // check for allowed keys or if user press CMD+A
@@ -30,7 +30,18 @@ const handleKeyDown = (customEvent: CustomEvent) => {
 
   // when value is more then balance we set to max value
   if (realValueBN.gt(assetBalanceBN)) {
-    input.value = fromWei(asset.value?.amount?.toString() || '0')
+    amount.value = fromWeiWithDecimals(
+      asset.value?.amount?.toString() || '0',
+      asset.value?.decimals
+    )
+    event.preventDefault()
+  }
+
+  // when asset use 0 decimals we should only allow integers
+  if (
+    asset.value?.decimals === 0 &&
+    (key === '.' || (key === '0' && input.value === ''))
+  ) {
     event.preventDefault()
   }
 
@@ -50,10 +61,11 @@ const handleKeyUp = (event: CustomEvent) => {
   amount.value = input.value
 }
 
-const handleUnitClick = (event: CustomEvent) => {
-  const input = event.detail.input
-  const total = fromWei(asset.value?.amount?.toString() || '0')
-  input.value = total
+const handleUnitClick = () => {
+  const total = fromWeiWithDecimals(
+    asset.value?.amount?.toString() || '0',
+    asset.value?.decimals
+  )
   amount.value = total
 }
 </script>
@@ -64,12 +76,18 @@ const handleUnitClick = (event: CustomEvent) => {
     :value="amount"
     :unit="
       $formatMessage('profile_balance_of', {
-        balance: $formatNumber(fromWei(asset?.amount || '0', 'ether')),
+        balance: $formatNumber(
+          fromWeiWithDecimals(asset?.amount || '0', asset?.decimals) || '',
+          {
+            maximumFractionDigits: asset?.decimals,
+          }
+        ),
         symbol: asset?.symbol || '',
       })
     "
     borderless
     is-full-width
+    autofocus
     @on-key-down="handleKeyDown"
     @on-key-up="handleKeyUp"
     @on-unit-click="handleUnitClick"

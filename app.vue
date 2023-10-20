@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
+import { isAddress } from 'web3-utils'
 
 import { fetchProfile } from '@/utils/fetchProfile'
-import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
 import { assertString } from '@/utils/validators'
 
 if (typeof window !== 'undefined') {
-  // @ts-ignore
   import('@lukso/web-components')
 }
 
@@ -119,11 +118,42 @@ onMounted(async () => {
   checkConnectionExpiry()
   await setupConnectedProfile()
   await routerBackProfileLoad()
+
+  try {
+    const profileAddress = useRouter().currentRoute.value.params?.profileAddress
+
+    if (!profileAddress) {
+      return
+    }
+
+    if (isAddress(profileAddress)) {
+      await setupViewedProfile(profileAddress)
+      await setupViewedAssets(profileAddress)
+    } else {
+      navigateTo(notFoundRoute())
+    }
+  } catch (error) {
+    console.error(error)
+  }
+
+  setStatus('isProfileLoaded', true)
 })
 
 onUnmounted(() => {
   const provider = INJECTED_PROVIDER
   removeProviderEvents(provider)
+})
+
+useHead({
+  bodyAttrs: {
+    class: computed(() => {
+      if (appStore.modal?.isOpen) {
+        return 'overflow-hidden'
+      }
+
+      return ''
+    }),
+  },
 })
 </script>
 

@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { fromWei } from 'web3-utils'
-
-import { Token, StandardsAbbreviations } from '@/types/assets'
+import { Asset, StandardsAbbreviations } from '@/types/assets'
 
 type Props = {
-  asset: Token
+  asset: Asset
   hasAddress?: boolean
 }
 
@@ -12,6 +10,10 @@ const props = defineProps<Props>()
 
 const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { profile: viewedProfile } = useViewedProfileStore()
+const contentRef = ref()
+const logoRef = ref()
+const symbolRef = ref()
+const balanceWidthPx = ref(0)
 
 const handleShowAsset = () => {
   try {
@@ -23,19 +25,33 @@ const handleShowAsset = () => {
   }
 }
 
-const handleSendAsset = () => {
+const handleSendAsset = (event: Event) => {
   try {
+    event.stopPropagation()
     assertAddress(connectedProfile.address, 'profile')
     navigateTo({
       path: sendRoute(connectedProfile.address),
       query: {
-        token: props.asset.address,
+        asset: props.asset.address,
       },
     })
   } catch (error) {
     console.error(error)
   }
 }
+
+onMounted(async () => {
+  const resizeObserver = new ResizeObserver(() => {
+    const GAP = 24
+
+    balanceWidthPx.value =
+      contentRef.value?.clientWidth -
+      logoRef.value?.clientWidth -
+      symbolRef.value?.clientWidth -
+      GAP
+  })
+  resizeObserver.observe(contentRef.value)
+})
 </script>
 
 <template>
@@ -49,34 +65,46 @@ const handleSendAsset = () => {
           >{{ StandardsAbbreviations[asset.standard] }}</lukso-tag
         >
       </div>
-      <div class="flex gap-6">
-        <div class="pl-4 flex flex-col items-center">
+      <div ref="contentRef" class="flex gap-6">
+        <div ref="logoRef" class="pl-2 flex flex-col items-center">
           <lukso-profile
             size="medium"
             :profile-address="asset.address"
-            :profile-url="'icon' in asset.data ? asset.data.icon : undefined"
+            :profile-url="asset.icon"
             :has-identicon="hasAddress ? 'true' : undefined"
           ></lukso-profile>
           <div
             v-if="hasAddress"
             class="paragraph-ptmono-10-bold text-neutral-60 pt-2"
           >
-            #{{ asset.address.slice(2, 8) }}
+            #{{ asset.address?.slice(2, 8) }}
           </div>
         </div>
         <div class="flex flex-col w-full">
-          <div class="heading-inter-14-bold pb-1">{{ asset.data.name }}</div>
+          <div class="heading-inter-14-bold pb-1">{{ asset.name }}</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
-            <span v-if="asset.data.amount">{{
-              $formatNumber(fromWei(asset.data.amount, 'ether'))
-            }}</span>
+            <span
+              v-if="asset.amount"
+              class="truncate"
+              :style="{
+                'max-width': `${balanceWidthPx}px`,
+              }"
+              :title="
+                $formatNumber(fromWeiWithDecimals(asset.amount, asset.decimals))
+              "
+              >{{
+                $formatNumber(fromWeiWithDecimals(asset.amount, asset.decimals))
+              }}</span
+            >
             <span v-else>0</span>
-            <span class="paragraph-inter-14-semi-bold text-neutral-60 ml-2">{{
-              asset.data.symbol
-            }}</span>
+            <span
+              ref="symbolRef"
+              class="paragraph-inter-14-semi-bold text-neutral-60 pl-2"
+              >{{ asset.symbol }}</span
+            >
           </div>
           <div class="paragraph-inter-12-regular hidden">$ 123.24</div>
-          <div class="flex justify-end w-full hidden">
+          <div class="flex justify-end w-full">
             <lukso-button
               v-if="
                 status.isConnected &&
@@ -85,7 +113,7 @@ const handleSendAsset = () => {
               size="small"
               variant="secondary"
               @click="handleSendAsset"
-              class="mt-4"
+              class="mt-4 transition-opacity hover:opacity-70"
               >{{ $formatMessage('button_send') }}</lukso-button
             >
           </div>

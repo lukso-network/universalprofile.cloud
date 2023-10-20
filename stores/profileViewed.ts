@@ -1,12 +1,11 @@
 import {
+  Asset,
   AssetFilter,
   InterfaceId,
-  Nft,
-  SupportedAssets,
-  Token,
   nftStandards,
   tokenStandards,
 } from '@/types/assets'
+import { Profile } from '@/types/profile'
 
 /**
  * Viewed profile store
@@ -18,14 +17,14 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
   const profile = reactive<Profile>({} as Profile)
   const status = reactive({ isProfileLoading: true, isAssetLoading: true })
   const assetFilter = ref<AssetFilter>(AssetFilter.owned)
-  const ownedAssets = ref<SupportedAssets[]>()
-  const createdAssets = ref<SupportedAssets[]>()
+  const ownedAssets = ref<Asset[]>()
+  const createdAssets = ref<Asset[]>()
 
   // --- getters
 
   const tokens = computed(() => {
     return (assetFilter: AssetFilter) => {
-      let assets: SupportedAssets[] = []
+      let assets: Asset[] = []
 
       switch (assetFilter) {
         case AssetFilter.owned:
@@ -39,16 +38,16 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
       }
 
       return (
-        (assets?.filter(asset =>
+        assets?.filter(asset =>
           tokenStandards.includes(asset.standard as InterfaceId)
-        ) as Token[]) || []
+        ) || []
       )
     }
   })
 
   const nfts = computed(() => {
     return (assetFilter: AssetFilter) => {
-      let assets: SupportedAssets[] = []
+      let assets: Asset[] = []
 
       switch (assetFilter) {
         case AssetFilter.owned:
@@ -62,9 +61,9 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
       }
 
       return (
-        (assets?.filter(nft =>
+        assets?.filter(nft =>
           nftStandards.includes(nft.standard as InterfaceId)
-        ) as Nft[]) || []
+        ) || []
       )
     }
   })
@@ -73,7 +72,7 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
     return (tokenAddress: Address) => {
       const assets = ownedAssets.value?.concat(createdAssets.value || [])
 
-      return assets?.find(asset => asset.address === tokenAddress) as Token
+      return assets?.find(asset => asset.address === tokenAddress)
     }
   })
 
@@ -82,26 +81,43 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
       const assets = ownedAssets.value?.concat(createdAssets.value || [])
 
       return assets?.find(
-        asset =>
-          asset.address === nftAddress &&
-          'tokenId' in asset.data &&
-          asset.data.tokenId === tokenId
-      ) as Nft
+        asset => asset.address === nftAddress && asset.tokenId === tokenId
+      )
     }
   })
 
   // --- actions
 
-  const setOwnedAssets = (assets: SupportedAssets[]) => {
+  const setOwnedAssets = (assets: Asset[]) => {
     ownedAssets.value = assets
   }
 
-  const setCreatedAssets = (assets: SupportedAssets[]) => {
+  const setCreatedAssets = (assets: Asset[]) => {
     createdAssets.value = assets
   }
 
   const setStatus = (statusName: keyof typeof status, newStatus: boolean) => {
     status[statusName] = newStatus
+  }
+
+  const setBalance = (assetAddress: Address, balance: string) => {
+    const ownedAssetsUpdated = ownedAssets.value?.map(asset => {
+      if (asset.address === assetAddress) {
+        asset.amount = balance
+      }
+
+      return asset
+    })
+
+    ownedAssetsUpdated && setOwnedAssets(ownedAssetsUpdated)
+  }
+
+  const removeNft = (assetAddress: Address, tokenId: string) => {
+    const ownedAssetsUpdated = ownedAssets.value?.filter(
+      asset => asset.tokenId !== tokenId && asset.address !== assetAddress
+    )
+
+    ownedAssetsUpdated && setOwnedAssets(ownedAssetsUpdated)
   }
 
   return {
@@ -118,5 +134,7 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
     setCreatedAssets,
     getToken,
     getNft,
+    setBalance,
+    removeNft,
   }
 })

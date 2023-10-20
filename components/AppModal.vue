@@ -7,7 +7,7 @@ const loadModalTemplate = () => {
     const templateName = appStore.modal?.template
       ? appStore.modal.template
       : MODAL_DEFAULT_TEMPLATE
-    return import(`./AppModalTemplate${templateName}.vue`)
+    return import(`./ModalTemplate${templateName}.vue`)
   })
 }
 

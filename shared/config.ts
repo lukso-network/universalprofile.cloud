@@ -1,3 +1,5 @@
+import { NetworkInfo } from '@/types/network'
+
 // id of the network to use by default
 export const DEFAULT_NETWORK_ID = 'testnet'
 
@@ -11,6 +13,7 @@ export const NETWORKS: NetworkInfo[] = [
     token: {
       symbol: 'LYXt',
       supply: 42_000_000,
+      name: 'LUKSO',
     },
   },
   {
@@ -21,6 +24,7 @@ export const NETWORKS: NetworkInfo[] = [
     token: {
       symbol: 'LYX',
       supply: 42_000_000,
+      name: 'LUKSO',
     },
   },
 ]
@@ -32,7 +36,7 @@ export const MODAL_DEFAULT_TEMPLATE = 'Default'
 export const INJECTED_PROVIDER = window?.lukso
 
 // connection expiry time
-export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 30 // 30 minutes
+export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 60 * 2 // 2 hours
 
 // interval to check if the user is still connected
 export const CONNECTION_EXPIRY_CHECK_INTERVAL_MS = 1000 * 10 // 10 seconds
@@ -42,6 +46,9 @@ export const ASSET_ICON_PLACEHOLDER_URL = '/images/token-default.svg'
 
 // lyx token icon
 export const ASSET_LYX_ICON_URL = '/images/lyx-token.svg'
+
+// number of decimal places for LYX token
+export const ASSET_LYX_DECIMALS = '18'
 
 // url of the ipfs gateway
 export const IPFS_URL = 'https://2eff.lukso.dev/ipfs/'
@@ -60,10 +67,6 @@ export const EXTENSION_STORE_LINKS = {
   safari: '',
   firefox: '',
 }
-
-// transaction default gas values
-export const DEFAULT_GAS = 5_000_000
-export const DEFAULT_GAS_PRICE = '10000000000'
 
 // indexer params
 export const INDEX_NAME = 'prod_testnet_universal_profiles'

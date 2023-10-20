@@ -2,7 +2,7 @@
 const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
-const { reloadProfile } = useViewedProfileStore()
+const { profile: viewedProfile, reloadProfile } = useViewedProfileStore()
 
 const handleNavigateProfile = async () => {
   try {
@@ -11,7 +11,8 @@ const handleNavigateProfile = async () => {
       reloadProfile(connectedProfile)
       navigateTo(profileRoute(connectedProfile.address))
     } else {
-      navigateTo(homeRoute())
+      assertAddress(viewedProfile.address, 'profile')
+      navigateTo(profileRoute(viewedProfile.address))
     }
   } catch (error) {
     console.error(error)
@@ -61,8 +62,9 @@ const browserSupportExtension = extensionStore.url !== ''
     icon="wallet-outline"
     has-menu
     @on-brand-click="handleNavigationDiscovery"
+    @on-icon-click="handleNavigateProfile"
   >
-    <div class="w-full flex items-center justify-end" slot="desktop">
+    <div class="flex items-center justify-end" slot="desktop">
       <lukso-button
         variant="text"
         custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"

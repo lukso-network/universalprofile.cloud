@@ -1,5 +1,3 @@
-import { PROVIDERS, STORAGE_KEY } from '@/types/enums'
-
 const openStoreLink = () => {
   const storeLink = browserInfo().storeLink
 
@@ -115,6 +113,11 @@ const disconnect = () => {
 
 const handleAccountsChanged = async (accounts: string[]) => {
   const { status } = useConnectedProfileStore()
+
+  // handle account change only for connected users
+  if (!status.isConnected) {
+    return
+  }
 
   if (accounts.length) {
     const address = accounts[0]

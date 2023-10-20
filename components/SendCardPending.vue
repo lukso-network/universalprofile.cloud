@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-
 const { amount, asset } = storeToRefs(useSendStore())
 </script>
 

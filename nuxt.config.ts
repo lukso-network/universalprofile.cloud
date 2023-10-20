@@ -36,7 +36,7 @@ export default defineNuxtConfig({
   },
   tailwindcss: {
     config: {
-      presets: [require('@lukso/web-components/tailwind.config')],
+      presets: [require('./tailwind.config')],
       content: [], // it already merges with nuxt default config https://tailwindcss.nuxt.dev/tailwind/config#merging-strategy
     },
     cssPath: '~/assets/styles/main.scss',
@@ -103,6 +103,12 @@ export default defineNuxtConfig({
   },
   imports: {
     dirs: ['stores/**', 'shared/**'],
+    presets: [
+      {
+        from: 'pinia',
+        imports: ['storeToRefs'],
+      },
+    ],
   },
   runtimeConfig: {
     public: {},

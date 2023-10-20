@@ -1,11 +1,9 @@
-import { ImageMetadata, LinkMetadata } from '@lukso/lsp-factory.js'
+import { LinkMetadata } from '@lukso/lsp-factory.js'
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
 
 export type InterfaceId = keyof typeof INTERFACE_IDS
-export type SupportedStandards = keyof AssetApi
-export type SupportedAssets = Asset<SupportedStandards>
 
-export const tokenStandards: InterfaceId[] = ['LSP7DigitalAsset', 'ERC20']
+export const tokenStandards: InterfaceId[] = ['LSP7DigitalAsset']
 export const nftStandards: InterfaceId[] = ['LSP8IdentifiableDigitalAsset']
 
 export const StandardsAbbreviations: { [K in InterfaceId]?: string } = {
@@ -14,89 +12,40 @@ export const StandardsAbbreviations: { [K in InterfaceId]?: string } = {
   LSP8IdentifiableDigitalAsset: 'LSP8',
 }
 
-export interface Asset<T extends keyof AssetApi> {
-  address: Address
-  standard?: InterfaceId
-  data: AssetApi[T]
-}
-
-export interface TokenApi {
-  LSP7DigitalAsset: LSP7Asset
-  ERC20: ERC20Asset
-}
-
-export type SupportedTokens = keyof TokenApi
-export type SupportedNfts = keyof NftApi
-export type Token = Asset<Partial<SupportedTokens>>
-export type Nft = Asset<Partial<SupportedNfts>>
-
-export interface NativeToken {
-  name: string
-  symbol: string
-  icon: string
-  amount: string
-}
-
-export interface NftApi {
-  LSP8IdentifiableDigitalAsset: LSP8Asset
-}
-
-export type AssetApi = TokenApi & NftApi
-
-export interface LSP7Asset {
-  name: string
-  symbol: string
-  amount: string
-  icon: string
-  address: string
-  links: LinkMetadata[]
-  description: string
-  images: ImageMetadata[][]
-  tokenSupply: string
-  decimals: string
-}
-
-export interface ERC20Asset {
-  name: string
-  symbol: string
-  amount: string
-  address: string
-  tokenSupply: string
-  decimals: string
-}
-
-export interface LSP8Asset {
-  image: string
-  icon: string
-  tokenId: string
-  description: string
-  tokenSupply: string
-  collectionName: string
-  collectionDescription: string
-  collectionImages: ImageMetadata[][]
-  collectionIcon: string
-  collectionAddress: string
-  collectionSymbol: string
-  collectionLinks: LinkMetadata[]
-  creatorName?: string
-  creatorAddress?: Address
-  creatorProfileImage?: string
-}
-
 export enum AssetFilter {
   owned = 'owned',
   created = 'created',
 }
 
-export enum TokenIdType {
+export enum Lsp8TokenIdType {
   address = '1',
   number = '2',
   bytes32 = '3',
 }
 
-export type SendAsset = {
+export type Base64EncodedImage = `data:image/jpeg;base64${string}`
+
+export type Asset = {
+  // generic (ERC20)
+  address?: Address
   name?: string
-  amount?: string
   symbol?: string
-  icon?: string
+  amount?: string
+  decimals?: number
+  tokenSupply?: string
+
+  // LSP7/LSP8
+  icon?: string | Base64EncodedImage
+  standard?: InterfaceId
+  description?: string
+  images?: Base64EncodedImage[]
+  links?: LinkMetadata[]
+  creatorName?: string
+  creatorAddress?: Address
+  creatorProfileImage?: Base64EncodedImage
+  tokenId?: string
+
+  // custom
+  isNativeToken?: boolean
+  metadata?: any
 }

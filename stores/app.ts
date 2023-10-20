@@ -1,3 +1,6 @@
+import { Modal } from '@/types/modal'
+import { NetworkInfo, NetworkId } from '@/types/network'
+
 /**
  * Connection store
  * Keeps the information about connected profile and it's status

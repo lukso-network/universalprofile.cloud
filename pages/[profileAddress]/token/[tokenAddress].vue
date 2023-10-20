@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { fromWei } from 'web3-utils'
-
-import { Token } from '@/types/assets'
+import { Asset } from '@/types/assets'
 
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
 const {
@@ -11,15 +9,27 @@ const {
 } = useViewedProfileStore()
 const { status: connectionStatus, profile: connectedProfile } =
   useConnectedProfileStore()
-const token = ref<Token>()
+const token = ref<Asset>()
 
 watchEffect(() => {
   token.value = getToken(tokenAddress)
 })
 
-const tokenSupply = computed(() => {
-  return fromWei(token.value?.data.tokenSupply || '0', 'ether')
-})
+const handleSendAsset = (event: Event) => {
+  try {
+    event.stopPropagation()
+    assertAddress(connectedProfile.address, 'profile')
+    assertAddress(token.value?.address, 'token')
+    navigateTo({
+      path: sendRoute(connectedProfile.address),
+      query: {
+        asset: token.value.address,
+      },
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
 </script>
 
 <template>
@@ -29,7 +39,7 @@ const tokenSupply = computed(() => {
         'opacity-0': profileStatus.isAssetLoading,
         'opacity-100': !profileStatus.isAssetLoading,
       }"
-      class="max-w-[835px] py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
+      class="max-w-content py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
     >
       <div>
         <lukso-card is-full-width size="small">
@@ -40,7 +50,7 @@ const tokenSupply = computed(() => {
             <lukso-profile
               v-if="token"
               size="large"
-              :profile-url="'icon' in token.data ? token.data.icon : undefined"
+              :profile-url="token.icon"
               class="shadow-neutral-above-shadow-1xl rounded-full"
             ></lukso-profile>
           </div>
@@ -53,37 +63,42 @@ const tokenSupply = computed(() => {
         >
           <AssetOwnInfo
             :profile="connectedProfile"
-            :amount="token?.data.amount"
-            :symbol="token?.data.symbol"
+            :amount="token?.amount"
+            :symbol="token?.symbol"
+            :decimals="token?.decimals"
           />
 
-          <lukso-button is-full-width class="mt-4 hidden">{{
+          <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{
             $formatMessage('token_details_send', {
-              token: token?.data.symbol || '',
+              token: token?.symbol || '',
             })
           }}</lukso-button>
         </div>
       </div>
       <div>
-        <div class="heading-apax-24-medium pb-8">{{ token?.data.name }}</div>
+        <div class="heading-apax-24-medium pb-8">{{ token?.name }}</div>
         <AssetAddress v-if="token?.address" :address="token.address" />
-        <AssetSupply :supply="tokenSupply" :symbol="token?.data.symbol || ''" />
+        <AssetBalance
+          v-if="token?.amount"
+          :balance="token.amount"
+          :symbol="token?.symbol"
+          :decimals="token?.decimals"
+        />
+        <AssetSupply
+          v-if="token?.tokenSupply"
+          :token-supply="token?.tokenSupply"
+          :symbol="token?.symbol"
+          :decimals="token?.decimals"
+        />
         <AssetLinks
-          v-if="
-            token?.data && 'links' in token?.data && token.data.links.length > 0
-          "
-          :links="token.data.links"
+          v-if="token?.links && token.links.length > 0"
+          :links="token.links"
         />
         <AssetDescription
-          v-if="
-            token?.data && 'description' in token.data && token.data.description
-          "
-          :description="token.data.description"
+          v-if="token?.description"
+          :description="token.description"
         />
-        <AssetImages
-          v-if="token?.data && 'images' in token.data && token.data.images"
-          :images="token.data.images"
-        />
+        <AssetImages v-if="token?.images" :images="token.images" />
         <AssetStandardInfo
           v-if="token?.standard"
           :standard="token.standard"

@@ -1,3 +1,7 @@
+import { toChecksumAddress } from 'web3-utils'
+
+import { Profile } from '@/types/profile'
+
 /**
  * Set of methods shared across profile stores
  *
@@ -7,6 +11,11 @@
 export const useProfileBase = (profile: Profile) => {
   return {
     setProfile(newProfile: Profile) {
+      assertAddress(newProfile.address, 'profile')
+      // we need to make conversion since ext uses checksum addresses
+      const checksumAddress = toChecksumAddress(newProfile.address)
+      assertAddress(checksumAddress, 'profile')
+      newProfile.address = checksumAddress
       Object.assign(profile, newProfile)
     },
 
@@ -16,8 +25,6 @@ export const useProfileBase = (profile: Profile) => {
 
     reloadProfile(newProfile: Profile) {
       this.clearProfile()
-      assertAddress(newProfile.address, 'profile')
-      profile.address = newProfile.address
       this.setProfile(newProfile)
     },
   }

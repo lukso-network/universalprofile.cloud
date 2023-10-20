@@ -12,7 +12,7 @@ const messages = defaultMessages as unknown as Record<string, string>
 
 // For more options check https://github.com/formatjs/formatjs/blob/main/packages/ecma402-abstract/types/number.ts#L38-L45
 const formatNumberDefaultOptions = {
-  maximumFractionDigits: 6,
+  maximumFractionDigits: 18,
 }
 
 export const defaultConfig: IntlConfig = {

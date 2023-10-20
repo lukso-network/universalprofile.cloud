@@ -6,10 +6,12 @@
  * @returns {string} The formatted URL.
  */
 export function formatUrl(url: string): string {
-  // IPFS
-  if (url && url.includes('ipfs://')) {
-    return url.replace('ipfs://', IPFS_URL)
+  if (!url) {
+    return ''
   }
 
-  return url
+  const encodedUrl = encodeURI(url.replace(/(^\w+:|^)\/\//, ''))
+  const formattedUrl = `${IPFS_URL}${encodedUrl}`
+
+  return formattedUrl
 }

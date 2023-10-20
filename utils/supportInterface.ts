@@ -1,4 +1,4 @@
-import { PROVIDERS } from '@/types/enums'
+import { LSP0ERC725Account } from '@/types/contracts'
 
 /**
  * Checks if a smart contract supports a given interface.
@@ -8,14 +8,17 @@ import { PROVIDERS } from '@/types/enums'
  * @param string interfaceId - an interfaceId to check
  * @returns true/false whether the transaction supports the interface or not
  */
-export const checkInterface = async (
+export const supportInterface = async (
   address: Address,
   interfaceId: string
 ): Promise<boolean> => {
   const { contract } = useWeb3(PROVIDERS.RPC)
 
   try {
-    const eip165Contract = contract(eip165ABI as any, address)
+    const eip165Contract = contract<LSP0ERC725Account>(
+      eip165ABI as any,
+      address
+    )
     return await eip165Contract.methods.supportsInterface(interfaceId).call()
   } catch (error: unknown) {
     console.error(error)

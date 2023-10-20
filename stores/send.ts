@@ -1,9 +1,10 @@
-import { SendAsset } from '@/types/assets'
+import { Asset } from '@/types/assets'
+import { Receiver } from '@/types/profile'
 
 type SendStatus = 'draft' | 'pending' | 'success'
 
 export const useSendStore = defineStore('send', () => {
-  const asset = ref<SendAsset>()
+  const asset = ref<Asset>()
   const receiver = ref<Receiver>()
   const receiverError = ref<string>()
   const amount = ref<string>()

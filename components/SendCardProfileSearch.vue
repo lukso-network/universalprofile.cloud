@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { isAddress } from 'web3-utils'
 import { SearchProfileResult } from '@lukso/web-components/dist/components/lukso-search'
-import { storeToRefs } from 'pinia'
 
 import { IndexedProfile } from '@/types/profile'
 
@@ -10,7 +9,7 @@ const SEARCH_COMPONENT_TAG_NAME = 'LUKSO-SEARCH'
 const { search } = useAlgoliaSearch<IndexedProfile>(INDEX_NAME)
 const { receiver, receiverError } = storeToRefs(useSendStore())
 const isSearchingReceiver = ref<boolean>(false)
-const searchTerm = ref<Address | undefined>(receiver.value?.address)
+const searchTerm = ref<string | Address | undefined>(receiver.value?.address)
 const hasNoResults = ref<boolean>(false)
 const results = ref<SearchProfileResult[]>()
 const selectedResultNumber = ref<number>()
