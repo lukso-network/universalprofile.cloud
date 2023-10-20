@@ -44,8 +44,8 @@ const connect = async () => {
     assertAddress(address, 'connection')
     setItem(STORAGE_KEY.CONNECTED_ADDRESS, address)
     const profile = await fetchProfile(address)
-    await setupViewedProfile(address)
-    await setupViewedAssets(address)
+    await loadViewedProfile(address)
+    await loadViewedAssets(address)
     reloadConnectedProfile(profile)
     setStatus('isConnected', true)
     setConnectionExpiry()
@@ -130,8 +130,8 @@ const handleAccountsChanged = async (accounts: string[]) => {
 
     try {
       await navigateTo(profileRoute(address))
-      await setupViewedProfile(address)
-      await setupViewedAssets(address)
+      await loadViewedProfile(address)
+      await loadViewedAssets(address)
     } catch (error) {
       console.error(error)
     }

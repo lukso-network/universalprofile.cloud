@@ -1,4 +1,4 @@
-export const setupViewedAssets = async (profileAddress: Address) => {
+export const loadViewedAssets = async (profileAddress: Address) => {
   const { setStatus } = useViewedProfileStore()
 
   try {
