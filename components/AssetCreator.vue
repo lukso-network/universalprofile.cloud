@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { Asset } from '@/types/assets'
+import { Creator } from '@/types/profile'
 
 type Props = {
-  asset: Asset
+  creator: Creator | undefined
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
-const handleOpenCreator = (event: Event) => {
+const handleOpenCreator = (event: Event, creator?: Creator) => {
   try {
     event.stopPropagation()
-    assertAddress(props.asset.creatorAddress)
-    navigateTo(profileRoute(props.asset.creatorAddress))
+    assertAddress(creator?.address)
+    navigateTo(profileRoute(creator.address))
   } catch (error) {
     console.error(error)
   }
@@ -20,21 +20,21 @@ const handleOpenCreator = (event: Event) => {
 
 <template>
   <div
-    v-if="asset.creatorAddress"
+    v-if="creator"
     class="cursor-pointer shadow-neutral-drop-shadow p-2 pr-6 rounded-4 inline-flex bg-neutral-100 transition hover:scale-105"
-    @click="handleOpenCreator"
+    @click="event => handleOpenCreator(event, creator)"
   >
     <lukso-profile
       size="x-small"
-      :profile-url="asset.creatorProfileImage"
+      :profile-url="creator.profileImage"
     ></lukso-profile>
     <div class="pl-1">
       <div class="text-neutral-60 paragraph-inter-10-semi-bold">
         {{ $formatMessage('asset_created_by') }}
       </div>
       <lukso-username
-        :name="asset.creatorName"
-        :address="asset.creatorAddress"
+        :name="creator.name"
+        :address="creator.address"
         size="x-small"
         class="flex"
         name-color="neutral-20"

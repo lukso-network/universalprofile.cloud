@@ -16,7 +16,9 @@ export type Receiver = Pick<
   'address' | 'backgroundImage' | 'profileImage'
 > & { isEoa?: boolean }
 
-export type Creator = Pick<Profile, 'address' | 'profileImage' | 'name'>
+export type Creator = Pick<Profile, 'address' | 'profileImage' | 'name'> & {
+  isVerified?: boolean
+}
 
 export type IndexedProfile = {
   address: Address
