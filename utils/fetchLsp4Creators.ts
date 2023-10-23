@@ -40,21 +40,21 @@ export const fetchLsp4Creators = async (
         creatorAddress,
         LSP3ProfileMetadata.concat() as ERC725JSONSchema[]
       )
-      const fetchedProfile = await erc725.fetchData([
+      const creatorProfileMetadata = await erc725.fetchData([
         'LSP3Profile',
         'LSP12IssuedAssets[]',
       ])
-      const lsp3Profile = validateLsp3Metadata(fetchedProfile[0])
+      const lsp3Profile = validateLsp3Metadata(creatorProfileMetadata[0])
       const profileImage =
         lsp3Profile.profileImage &&
         (await getAndConvertImage(lsp3Profile.profileImage, 200))
-      const issuedAssets = (fetchedProfile[1].value as Address[]).filter(
-        address => {
-          if (isAddress(address)) {
-            return toChecksumAddress(address)
-          }
+      const issuedAssets = (
+        creatorProfileMetadata[1].value as Address[]
+      ).filter(address => {
+        if (isAddress(address)) {
+          return toChecksumAddress(address)
         }
-      )
+      })
       const isVerified = issuedAssets.includes(assetAddress)
       creators.push({
         address: creatorAddress,
