@@ -2,7 +2,7 @@
 import { Creator } from '@/types/profile'
 
 type Props = {
-  creator: Creator | undefined
+  creator?: Creator
 }
 
 defineProps<Props>()
