@@ -143,30 +143,13 @@ const handleSend = async () => {
     }
 
     setStatus('success')
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error)
     setStatus('draft')
 
-    // errors that have a code or message
-    if (error && error.code) {
-      switch (error.code) {
-        case 4001:
-          return showModal({
-            title: formatMessage('send_error_title'),
-            message: formatMessage('send_error_rejected_request'),
-          })
-        default:
-          showModal({
-            title: formatMessage('send_error_title'),
-            message: formatMessage('send_error_message'),
-          })
-      }
-    }
-
-    // unknowns errors
     showModal({
-      title: formatMessage('send_error_title'),
-      message: formatMessage('send_error_message'),
+      title: formatMessage('web3_connect_error_title'),
+      message: getSendErrorMessage(error),
     })
   }
 }
