@@ -105,11 +105,6 @@ const handleSendAsset = (event: Event) => {
         />
       </div>
     </div>
-    <lukso-icon
-      name="progress-indicator-alt"
-      size="x-large"
-      v-if="profileStatus.isAssetLoading"
-      class="absolute top-1/2 left-1/2 transform"
-    ></lukso-icon>
+    <AppLoader v-if="profileStatus.isAssetLoading" />
   </div>
 </template>
