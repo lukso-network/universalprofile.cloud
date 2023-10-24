@@ -19,8 +19,8 @@ const handleSelectAssets = () => {
 <template>
   <lukso-card
     variant="profile-2"
-    :background-url="connectedProfile.backgroundImageUrl"
-    :profile-url="connectedProfile.profileImageUrl"
+    :background-url="connectedProfile.backgroundImage"
+    :profile-url="connectedProfile.profileImage"
     :profile-address="connectedProfile.address"
     is-full-width
   >

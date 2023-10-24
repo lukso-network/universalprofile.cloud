@@ -3,12 +3,10 @@ import LSP3ProfileMetadata from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.j
 import { LSP3Profile } from '@lukso/lsp-factory.js'
 import Web3 from 'web3'
 import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
-import { ERC725YDataKeys } from '@lukso/lsp-smart-contracts'
 
-import { LSP0ERC725Account } from '@/types/contracts/LSP0ERC725Account'
 import { Lsp8TokenIdType } from '@/types/assets'
 import LSP8IdentifiableDigitalAsset from '@/shared/schemas/LSP8IdentifiableDigitalAsset.json'
-import { Creator, Profile } from '@/types/profile'
+import { Profile } from '@/types/profile'
 
 export interface LSP3ProfileJSON {
   LSP3Profile: LSP3Profile
@@ -30,12 +28,12 @@ const fetchProfile = async (profileAddress: Address): Promise<Profile> => {
     profileAddress,
     LSP3ProfileMetadata as ERC725JSONSchema[]
   )
-  const fetchedProfile = await erc725.fetchData('LSP3Profile')
-  const lsp3Profile = validateLsp3Metadata(fetchedProfile)
-  const profileImageUrl =
+  const profileMetadata = await erc725.fetchData('LSP3Profile')
+  const lsp3Profile = validateLsp3Metadata(profileMetadata)
+  const profileImage =
     lsp3Profile.profileImage &&
     (await getAndConvertImage(lsp3Profile.profileImage, 200))
-  const backgroundImageUrl =
+  const backgroundImage =
     lsp3Profile.backgroundImage &&
     (await getAndConvertImage(lsp3Profile.backgroundImage, 800))
 
@@ -45,9 +43,10 @@ const fetchProfile = async (profileAddress: Address): Promise<Profile> => {
   return {
     ...lsp3Profile,
     address: profileAddress,
-    profileImageUrl,
-    backgroundImageUrl,
+    profileImage,
+    backgroundImage,
     balance,
+    metadata: lsp3Profile,
   }
 }
 
@@ -146,43 +145,12 @@ const fetchLsp8Metadata = async (
   }
 }
 
-const fetchLSP4Creator = async (
-  assetAddress: Address
-): Promise<Creator | undefined> => {
-  const { contract } = useWeb3(PROVIDERS.RPC)
-
-  try {
-    const creator = await contract<LSP0ERC725Account>(getDataABI, assetAddress)
-      .methods.getData(ERC725YDataKeys.LSP4['LSP4Creators[]'].index)
-      .call()
-    assertAddress(creator)
-    const erc725 = getInstance(
-      creator,
-      LSP3ProfileMetadata as ERC725JSONSchema[]
-    )
-    const fetchedProfile = await erc725.fetchData('LSP3Profile')
-    const lsp3Profile = validateLsp3Metadata(fetchedProfile)
-    const profileImageUrl =
-      lsp3Profile.profileImage &&
-      (await getAndConvertImage(lsp3Profile.profileImage, 200))
-
-    return {
-      address: creator,
-      name: lsp3Profile.name,
-      profileImageUrl,
-    }
-  } catch (error) {
-    console.error(error)
-  }
-}
-
 const useErc725 = () => {
   return {
     getInstance,
     fetchProfile,
     fetchAssets,
     fetchLsp8Metadata,
-    fetchLSP4Creator,
   }
 }
 

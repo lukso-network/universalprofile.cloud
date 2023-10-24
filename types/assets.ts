@@ -1,6 +1,8 @@
 import { LinkMetadata } from '@lukso/lsp-factory.js'
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
 
+import { Creator } from './profile'
+
 export type InterfaceId = keyof typeof INTERFACE_IDS
 
 export const tokenStandards: InterfaceId[] = ['LSP7DigitalAsset']
@@ -40,9 +42,7 @@ export type Asset = {
   description?: string
   images?: Base64EncodedImage[]
   links?: LinkMetadata[]
-  creatorName?: string
-  creatorAddress?: Address
-  creatorProfileImage?: Base64EncodedImage
+  creators?: Creator[]
   tokenId?: string
 
   // custom

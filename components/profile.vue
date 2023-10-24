@@ -15,13 +15,13 @@ const handleCopyAddress = () => {
   <div class="relative">
     <lukso-card
       variant="hero"
-      :background-url="profile.backgroundImageUrl"
+      :background-url="profile.backgroundImage"
       is-full-width
       custom-class="rounded-24 shadow-neutral-drop-shadow"
     >
       <div slot="content" class="flex flex-col items-center">
         <lukso-profile
-          :profile-url="profile.profileImageUrl"
+          :profile-url="profile.profileImage"
           :profile-address="profile.address"
           class="mb-4"
           has-identicon
@@ -33,7 +33,7 @@ const handleCopyAddress = () => {
           size="large"
           address-color="neutral-100"
           max-width="350"
-          :name-color="profile.backgroundImageUrl ? 'neutral-100' : ''"
+          :name-color="profile.backgroundImage ? 'neutral-100' : ''"
         ></lukso-username>
         <lukso-username
           v-else
@@ -41,7 +41,7 @@ const handleCopyAddress = () => {
           size="large"
           address-color="neutral-100"
           max-width="350"
-          :name-color="profile.backgroundImageUrl ? 'neutral-100' : ''"
+          :name-color="profile.backgroundImage ? 'neutral-100' : ''"
           hide-prefix
         ></lukso-username>
         <lukso-username
@@ -49,7 +49,7 @@ const handleCopyAddress = () => {
           size="small"
           slice-by="40"
           :address-color="
-            profile.backgroundImageUrl ? 'neutral-100' : 'neutral-20'
+            profile.backgroundImage ? 'neutral-100' : 'neutral-20'
           "
           class="cursor-pointer mt-2"
           @click="handleCopyAddress"

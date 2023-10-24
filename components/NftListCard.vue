@@ -11,6 +11,10 @@ const props = defineProps<Props>()
 const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { profile: viewedProfile } = useViewedProfileStore()
 
+const verifiedCreator = computed(() => {
+  return props.asset.creators?.find(creator => creator.isVerified)
+})
+
 const handleShowAsset = () => {
   try {
     assertAddress(viewedProfile.address, 'profile')
@@ -47,8 +51,11 @@ const handleSendAsset = (event: Event) => {
         class="min-h-[260px] bg-neutral-90 w-100 rounded-t-12 bg-center bg-cover"
         :style="`background-image: url(${getAssetThumb(asset)});`"
       ></div>
-      <div class="p-4 pt-8 relative">
-        <AssetCreator :asset="asset" class="absolute -top-5" />
+      <div class="p-4 relative">
+        <AssetCreator
+          :creator="verifiedCreator"
+          class="relative -mt-4 -top-4"
+        />
         <div>
           <div class="paragraph-inter-14-semi-bold">
             {{ asset.name }}

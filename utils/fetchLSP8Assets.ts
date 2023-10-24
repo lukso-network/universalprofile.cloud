@@ -21,7 +21,7 @@ export const fetchLsp8Assets = async (
     return []
   }
 
-  const { fetchLsp8Metadata, fetchLSP4Creator } = useErc725() // TODO move to utils
+  const { fetchLsp8Metadata } = useErc725() // TODO move to utils
   // nft metadata is the same for all tokens of same asset
   const [name, symbol, nftMetadata] = await fetchLsp4Metadata(address)
 
@@ -35,12 +35,7 @@ export const fetchLsp8Assets = async (
         icon: metadataIcon,
         links,
       } = collectionMetadata
-      const creatorMetadata = await fetchLSP4Creator(address)
-      const {
-        name: creatorName,
-        address: creatorAddress,
-        profileImageUrl: creatorProfileImage,
-      } = creatorMetadata || {}
+      const creators = await fetchLsp4Creators(address)
       const icon = await getAndConvertImage(metadataIcon, 200)
       const images: Base64EncodedImage[] = []
 
@@ -62,9 +57,7 @@ export const fetchLsp8Assets = async (
         links,
         description,
         images,
-        creatorName,
-        creatorAddress,
-        creatorProfileImage,
+        creators,
         metadata: {
           nft: nftMetadata.LSP4Metadata,
           collection: collectionMetadata,

@@ -1,19 +1,26 @@
 import { LSP3Profile } from '@lukso/lsp-factory.js'
 
-export interface Profile extends LSP3Profile {
-  backgroundImageUrl?: Base64EncodedImage
-  profileImageUrl?: Base64EncodedImage
+export type Profile = {
   address?: Address
+  name?: string
+  backgroundImage?: Base64EncodedImage
+  profileImage?: Base64EncodedImage
   balance: string
+  issuedAssets?: Address[] // LSP12
+  receivedAssets?: Address[] // LSP5
+  metadata?: LSP3Profile // LSP3
 }
 
-export type Receiver = Partial<Profile> & { isEoa?: boolean }
+export type Receiver = Pick<
+  Profile,
+  'address' | 'backgroundImage' | 'profileImage'
+> & { isEoa?: boolean }
 
-export type Creator = Partial<
-  Pick<Profile, 'address' | 'profileImageUrl' | 'name'>
->
+export type Creator = Pick<Profile, 'address' | 'profileImage' | 'name'> & {
+  isVerified?: boolean
+}
 
-export interface IndexedProfile {
+export type IndexedProfile = {
   address: Address
   profileURL?: string
   profileHash?: string
