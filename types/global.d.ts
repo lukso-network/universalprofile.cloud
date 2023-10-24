@@ -6,6 +6,7 @@ declare global {
   interface Window {
     lukso: any
     ethereum: any
+    web3: any
   }
 }
 
