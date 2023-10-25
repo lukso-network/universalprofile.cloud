@@ -2,7 +2,7 @@
 import { isAddress } from 'web3-utils'
 import { SearchProfileResult } from '@lukso/web-components/dist/components/lukso-search'
 
-import { IndexedProfile } from '@/types/profile'
+import { IndexedProfile } from '@/models/profile'
 
 const SEARCH_COMPONENT_TAG_NAME = 'LUKSO-SEARCH'
 

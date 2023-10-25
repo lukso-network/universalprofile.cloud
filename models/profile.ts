@@ -1,5 +1,5 @@
 import { Item, Model } from 'pinia-orm'
-import { LinkMetadata } from '@lukso/lsp-factory.js'
+import { LSP3Profile, LinkMetadata } from '@lukso/lsp-factory.js'
 
 import { ImageMetadataEncoded } from '@/types/assets'
 
@@ -51,3 +51,20 @@ export class ProfileModel extends Model {
 }
 
 export type ProfileItem = Item<ProfileModel>
+
+export type IndexedProfile = {
+  address: Address
+  profileURL?: string
+  profileHash?: string
+  profileHashFunction?: string
+  LSP3Profile?: LSP3Profile
+  hasProfileName?: boolean
+  hasProfileDescription?: boolean
+  backgroundImageUrl?: string
+  hasBackgroundImage?: boolean
+  profileImageUrl?: string
+  hasProfileImage?: boolean
+  updatedAtBlock: number
+  network: string
+  objectID: string
+}
