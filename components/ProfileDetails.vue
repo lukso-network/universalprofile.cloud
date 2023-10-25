@@ -1,22 +1,15 @@
 <script setup lang="ts">
-import { ProfileItem } from '@/models/profile'
-
-const profileRepo = useRepo(ProfileModel)
-const profile = ref<ProfileItem>()
-const profileAddress = getCurrentProfileAddress()
-
-watchEffect(() => {
-  profile.value = profileRepo.find(profileAddress)
-})
+const { viewedProfile } = useViewedProfile()
 
 const hasLinks = computed(
-  () => profile.value?.links && profile.value.links?.length > 0
+  () => viewedProfile.value?.links && viewedProfile.value.links?.length > 0
 )
 const hasDescription = computed(
-  () => profile.value?.description && profile.value.description !== ''
+  () =>
+    viewedProfile.value?.description && viewedProfile.value.description !== ''
 )
 const hasTags = computed(
-  () => profile.value?.tags && profile.value.tags?.length > 0
+  () => viewedProfile.value?.tags && viewedProfile.value.tags?.length > 0
 )
 </script>
 
@@ -27,7 +20,7 @@ const hasTags = computed(
       class="gap-x-4 gap-y-2 mb-3 flex justify-center flex-wrap"
     >
       <li
-        v-for="(tag, index) in profile?.tags"
+        v-for="(tag, index) in viewedProfile?.tags"
         :key="index"
         class="inline-flex"
       >
@@ -35,14 +28,14 @@ const hasTags = computed(
       </li>
     </ul>
     <div v-if="hasDescription" class="paragraph-inter-12-medium text-center">
-      {{ profile?.description }}
+      {{ viewedProfile?.description }}
     </div>
     <ul
       v-if="hasLinks"
       class="gap-x-4 gap-y-2 mt-3 flex justify-center flex-wrap"
     >
       <li
-        v-for="(link, index) in profile?.links"
+        v-for="(link, index) in viewedProfile?.links"
         :key="index"
         class="inline-flex"
       >

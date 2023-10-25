@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { LinkMetadata } from '@lukso/lsp-factory.js'
 
-const { status: profileStatus, profile: viewedProfile } =
-  useViewedProfileStore()
+const { status: profileStatus } = useViewedProfileStore()
 const { status: connectionStatus, profile: connectedProfile } =
   useConnectedProfileStore()
 const { currentNetwork } = useAppStore()
+const { viewedProfile } = useViewedProfile()
 
 const links: LinkMetadata[] = [
   {
@@ -49,12 +49,12 @@ const handleSendLyx = () => {
         <div
           v-if="
             connectionStatus.isConnected &&
-            viewedProfile.address === connectedProfile.address
+            viewedProfile?.address === connectedProfile.address
           "
         >
           <AssetOwnInfo
             :profile="connectedProfile"
-            :amount="viewedProfile.balance"
+            :amount="viewedProfile?.balance"
             :symbol="currentNetwork.token.symbol"
             :decimals="ASSET_LYX_DECIMALS"
           />
@@ -71,7 +71,7 @@ const handleSendLyx = () => {
           {{ $formatMessage('lyx_details_title') }}
         </div>
         <AssetBalance
-          :balance="viewedProfile.balance"
+          :balance="viewedProfile?.balance"
           :symbol="currentNetwork.token.symbol"
           :decimals="ASSET_LYX_DECIMALS"
         />

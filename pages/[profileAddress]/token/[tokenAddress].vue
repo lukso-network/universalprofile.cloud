@@ -2,11 +2,8 @@
 import { Asset } from '@/types/assets'
 
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
-const {
-  getToken,
-  status: profileStatus,
-  profile: viewedProfile,
-} = useViewedProfileStore()
+const { getToken, status: profileStatus } = useViewedProfileStore()
+const { viewedProfile } = useViewedProfile()
 const { status: connectionStatus, profile: connectedProfile } =
   useConnectedProfileStore()
 const token = ref<Asset>()
@@ -58,7 +55,7 @@ const handleSendAsset = (event: Event) => {
         <div
           v-if="
             connectionStatus.isConnected &&
-            viewedProfile.address === connectedProfile.address
+            viewedProfile?.address === connectedProfile.address
           "
         >
           <AssetOwnInfo

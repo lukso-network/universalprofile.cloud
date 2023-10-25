@@ -29,20 +29,19 @@ const fetchAssets = async (profileAddress: Address, schema: string) => {
   )
   const result = await erc725.fetchData(schema)
   const assetAddresses = result.value as Address[]
-  const { profile } = useViewedProfileStore()
 
   const assets = await Promise.all(
     assetAddresses.map(async address => {
       const standard = await detectStandard(address)
+      const { viewedProfile } = useViewedProfile()
+      assertAddress(viewedProfile.value?.address)
 
       switch (standard) {
         case 'LSP8IdentifiableDigitalAsset': {
-          assertAddress(profile.address)
-          return await fetchLsp8Assets(address, profile.address)
+          return await fetchLsp8Assets(address, viewedProfile.value.address)
         }
         case 'LSP7DigitalAsset': {
-          assertAddress(profile.address)
-          return await fetchLsp7Assets(address, profile.address)
+          return await fetchLsp7Assets(address, viewedProfile.value.address)
         }
 
         default:

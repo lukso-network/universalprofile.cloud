@@ -5,7 +5,6 @@ import {
   nftStandards,
   tokenStandards,
 } from '@/types/assets'
-import { Profile } from '@/types/profile'
 
 /**
  * Viewed profile store
@@ -14,7 +13,6 @@ import { Profile } from '@/types/profile'
  *
  */
 export const useViewedProfileStore = defineStore('profileViewed', () => {
-  const profile = reactive<Profile>({} as Profile)
   const status = reactive({ isProfileLoading: true, isAssetLoading: true })
   const assetFilter = ref<AssetFilter>(AssetFilter.owned)
   const ownedAssets = ref<Asset[]>()
@@ -121,8 +119,6 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
   }
 
   return {
-    ...useProfileBase(profile),
-    profile,
     status,
     setStatus,
     ownedAssets,

@@ -9,7 +9,7 @@ type Props = {
 const props = defineProps<Props>()
 
 const { profile: connectedProfile, status } = useConnectedProfileStore()
-const { profile: viewedProfile } = useViewedProfileStore()
+const { viewedProfile } = useViewedProfile()
 const contentRef = ref()
 const logoRef = ref()
 const symbolRef = ref()
@@ -17,9 +17,9 @@ const balanceWidthPx = ref(0)
 
 const handleShowAsset = () => {
   try {
-    assertAddress(viewedProfile.address, 'profile')
+    assertAddress(viewedProfile.value?.address, 'profile')
     assertAddress(props.asset.address, 'asset')
-    navigateTo(tokenRoute(viewedProfile.address, props.asset.address))
+    navigateTo(tokenRoute(viewedProfile.value.address, props.asset.address))
   } catch (error) {
     console.error(error)
   }
@@ -113,7 +113,7 @@ onMounted(async () => {
             <lukso-button
               v-if="
                 status.isConnected &&
-                viewedProfile.address === connectedProfile.address
+                viewedProfile?.address === connectedProfile.address
               "
               size="small"
               variant="secondary"

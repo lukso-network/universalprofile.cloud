@@ -10,11 +10,8 @@ import {
 } from '@/types/contracts'
 
 const { profile: connectedProfile, status } = useConnectedProfileStore()
-const {
-  profile: viewedProfile,
-  setBalance,
-  removeNft,
-} = useViewedProfileStore()
+const { setBalance, removeNft } = useViewedProfileStore()
+const { viewedProfile } = useViewedProfile()
 const { ownedAssets } = storeToRefs(useViewedProfileStore())
 const { currentNetwork } = useAppStore()
 const { asset, onSend, amount, receiver } = storeToRefs(useSendStore())
@@ -175,8 +172,11 @@ const updateLyxBalance = async () => {
   assertString(connectedProfile.address)
   connectedProfile.balance = await getBalance(connectedProfile.address)
 
-  if (viewedProfile.address === connectedProfile.address) {
-    viewedProfile.balance = connectedProfile.balance
+  if (viewedProfile.value?.address === connectedProfile.address) {
+    useRepo(ProfileModel)
+      .where('address', connectedProfile.address)
+      .update({ balance: connectedProfile.balance })
+    // TODO check if this update is needed
   }
 }
 </script>

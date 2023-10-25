@@ -2,17 +2,16 @@
 const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
-const { profile: viewedProfile, reloadProfile } = useViewedProfileStore()
+const { viewedProfile } = useViewedProfile()
 
 const handleNavigateProfile = async () => {
   try {
     if (status.isConnected) {
       assertAddress(connectedProfile.address, 'profile')
-      reloadProfile(connectedProfile)
       navigateTo(profileRoute(connectedProfile.address))
     } else {
-      assertAddress(viewedProfile.address, 'profile')
-      navigateTo(profileRoute(viewedProfile.address))
+      assertAddress(viewedProfile.value?.address, 'profile')
+      navigateTo(profileRoute(viewedProfile.value.address))
     }
   } catch (error) {
     console.error(error)

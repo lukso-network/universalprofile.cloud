@@ -9,7 +9,7 @@ type Props = {
 const props = defineProps<Props>()
 
 const { profile: connectedProfile, status } = useConnectedProfileStore()
-const { profile: viewedProfile } = useViewedProfileStore()
+const { viewedProfile } = useViewedProfile()
 
 const verifiedCreator = computed(() => {
   return props.asset.creators?.find(creator => creator.isVerified)
@@ -17,11 +17,15 @@ const verifiedCreator = computed(() => {
 
 const handleShowAsset = () => {
   try {
-    assertAddress(viewedProfile.address, 'profile')
+    assertAddress(viewedProfile.value?.address, 'profile')
     assertAddress(props.asset.address)
     assertString(props.asset.tokenId)
     navigateTo(
-      nftRoute(viewedProfile.address, props.asset.address, props.asset.tokenId)
+      nftRoute(
+        viewedProfile.value.address,
+        props.asset.address,
+        props.asset.tokenId
+      )
     )
   } catch (error) {
     console.error(error)
@@ -68,7 +72,7 @@ const handleSendAsset = (event: Event) => {
             <lukso-button
               v-if="
                 status.isConnected &&
-                viewedProfile.address === connectedProfile.address
+                viewedProfile?.address === connectedProfile.address
               "
               size="small"
               variant="secondary"

@@ -4,11 +4,8 @@ import { Asset } from '@/types/assets'
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 
-const {
-  getNft,
-  status: profileStatus,
-  profile: viewedProfile,
-} = useViewedProfileStore()
+const { getNft, status: profileStatus } = useViewedProfileStore()
+const { viewedProfile } = useViewedProfile()
 const { status: connectionStatus, profile: connectedProfile } =
   useConnectedProfileStore()
 const nft = ref<Asset>()
@@ -70,7 +67,7 @@ const handleSendAsset = (event: Event) => {
         <div
           v-if="
             connectionStatus.isConnected &&
-            viewedProfile.address === connectedProfile.address
+            viewedProfile?.address === connectedProfile.address
           "
         >
           <AssetOwnInfo
