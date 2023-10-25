@@ -131,7 +131,7 @@ const handleSelect = async (event: CustomEvent) => {
   const selection = event.detail.value
   const { address, name, image } = selection
   searchTerm.value = address
-  receiver.value = { address, name, profileImageUrl: image }
+  receiver.value = { address, name, profileImage: image }
   receiverError.value = ''
   results.value = undefined
 }

@@ -1,7 +1,5 @@
 import { Item, Model } from 'pinia-orm'
 
-import { Profile } from './profile'
-
 export class ImageModel extends Model {
   static entity = 'images'
   static primaryKey = 'hash'
@@ -18,8 +16,6 @@ export class ImageModel extends Model {
       // foreign keys
       profileImageId: this.attr(null),
       profileBackgroundId: this.attr(null),
-      // assetIconImageId: this.attr(null),
-      // assetImageIds: this.attr([]),
     }
   }
 
@@ -32,7 +28,6 @@ export class ImageModel extends Model {
   declare base64?: Base64EncodedImage
   declare profileImageId?: Address
   declare backgroundImageId?: Address
-  declare profile?: Profile
 
   static piniaOptions = {
     persist: {

@@ -2,7 +2,6 @@
 import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { isAddress } from 'web3-utils'
 
-import { fetchProfile } from '@/utils/fetchProfile'
 import { assertString } from '@/utils/validators'
 
 if (typeof window !== 'undefined') {
@@ -11,13 +10,9 @@ if (typeof window !== 'undefined') {
 
 const web3Store = useWeb3Store()
 const { getNetwork, selectedNetwork, modal } = useAppStore()
+const { isLoadedApp } = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
-const {
-  setProfile: setConnectedProfile,
-  setStatus,
-  profile: connectedProfile,
-} = useConnectedProfileStore()
 const router = useRouter()
 
 const setupTranslations = () => {
@@ -41,25 +36,6 @@ const setupWeb3Instances = () => {
   web3Store.addWeb3(PROVIDERS.RPC, getNetwork(selectedNetwork).rpcHttp)
 }
 
-const setupConnectedProfile = async () => {
-  try {
-    const connectedAddress = getItem(STORAGE_KEY.CONNECTED_ADDRESS)
-
-    if (connectedAddress) {
-      assertAddress(connectedAddress, 'profile')
-      setStatus('isConnected', true)
-      setStatus('isProfileLoading', true)
-      const profile = await fetchProfile(connectedAddress)
-      connectedProfile.address = connectedAddress
-      setConnectedProfile(profile)
-    }
-  } catch (error) {
-    console.error(error)
-  } finally {
-    setStatus('isProfileLoading', false)
-  }
-}
-
 const routerBackProfileLoad = async () => {
   router.beforeEach(
     async (
@@ -77,11 +53,11 @@ const routerBackProfileLoad = async () => {
       try {
         assertString(toProfileAddress)
         assertAddress(toProfileAddress, 'profile')
-
-        if (toProfileAddress !== fromProfileAddress) {
-          await loadViewedProfile(toProfileAddress)
-          await loadViewedAssets(toProfileAddress)
-        }
+        // TODO check how back button works
+        // if (toProfileAddress !== fromProfileAddress) {
+        //   await loadViewedProfile(toProfileAddress)
+        //   await loadViewedAssets(toProfileAddress)
+        // }
       } catch (error) {
         console.error(error)
       }
@@ -100,9 +76,6 @@ const checkConnectionExpiry = () => {
 
       if (expiryDateParsed < Date.now()) {
         disconnect()
-        // we store address as this is "soft" disconnect that won't trigger request account on connection
-        connectedProfile.address &&
-          setItem(STORAGE_KEY.RECONNECT_ADDRESS, connectedProfile.address)
       }
     } catch (error) {}
   }
@@ -124,7 +97,6 @@ const setupViewedProfile = async () => {
 
     if (profileAddress) {
       if (isAddress(profileAddress)) {
-        await loadViewedProfile(profileAddress)
         await loadViewedAssets(profileAddress)
       } else {
         navigateTo(notFoundRoute())
@@ -139,11 +111,10 @@ onMounted(async () => {
   setupTranslations()
   setupWeb3Instances()
   checkConnectionExpiry()
-  await setupConnectedProfile()
   await setupViewedProfile()
   await routerBackProfileLoad()
 
-  setStatus('isProfileLoaded', true)
+  isLoadedApp.value = true
 
   await setupCurrencies()
 })

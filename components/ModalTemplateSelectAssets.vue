@@ -3,7 +3,7 @@ import { Asset } from '@/types/assets'
 
 const { currentNetwork } = useAppStore()
 const { ownedAssets } = storeToRefs(useViewedProfileStore())
-const { profile: connectedProfile } = useConnectedProfileStore()
+const { connectedProfile } = useConnectedProfile()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
 
 type Props = {
@@ -13,15 +13,15 @@ type Props = {
 const props = defineProps<Props>()
 
 const handleSelectLyx = () => {
-  assertAddress(connectedProfile.address, 'profile')
-  navigateTo(sendRoute(connectedProfile.address))
+  assertAddress(connectedProfile.value?.address, 'profile')
+  navigateTo(sendRoute(connectedProfile.value.address))
   props.closeModal()
 }
 
 const handleSelectAsset = (asset: Asset) => {
-  assertAddress(connectedProfile.address, 'profile')
+  assertAddress(connectedProfile.value?.address, 'profile')
   navigateTo({
-    path: sendRoute(connectedProfile.address),
+    path: sendRoute(connectedProfile.value.address),
     query: {
       asset: asset.address,
     },

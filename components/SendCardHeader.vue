@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { profile: connectedProfile } = useConnectedProfileStore()
+const { connectedProfile } = useConnectedProfile()
 const { receiver } = storeToRefs(useSendStore())
 </script>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const { profile: connectedProfile, status } = useConnectedProfileStore()
-const appStore = useAppStore()
+const { connectedProfile } = useConnectedProfile()
+const { currentNetwork, isConnected } = useAppStore()
 const { viewedProfile } = useViewedProfile()
 const contentRef = ref()
 const logoRef = ref()
@@ -10,8 +10,8 @@ const balanceWidthPx = ref(0)
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
-    assertAddress(connectedProfile.address, 'profile')
-    navigateTo(sendRoute(connectedProfile.address))
+    assertAddress(connectedProfile.value?.address, 'profile')
+    navigateTo(sendRoute(connectedProfile.value.address))
   } catch (error) {
     console.error(error)
   }
@@ -80,7 +80,7 @@ onMounted(async () => {
             <span
               ref="symbolRef"
               class="paragraph-inter-14-semi-bold text-neutral-60 pl-2"
-              >{{ appStore.currentNetwork.token.symbol }}</span
+              >{{ currentNetwork.token.symbol }}</span
             >
           </div>
           <div class="paragraph-inter-12-regular pb-4">
@@ -96,8 +96,7 @@ onMounted(async () => {
       <div class="flex justify-end w-full">
         <lukso-button
           v-if="
-            status.isConnected &&
-            viewedProfile?.address === connectedProfile.address
+            isConnected && viewedProfile?.address === connectedProfile?.address
           "
           size="small"
           variant="secondary"

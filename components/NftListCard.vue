@@ -8,7 +8,8 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { profile: connectedProfile, status } = useConnectedProfileStore()
+const { isConnected } = useAppStore()
+const { connectedProfile } = useConnectedProfile()
 const { viewedProfile } = useViewedProfile()
 
 const verifiedCreator = computed(() => {
@@ -35,9 +36,9 @@ const handleShowAsset = () => {
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
-    assertAddress(connectedProfile.address, 'profile')
+    assertAddress(connectedProfile.value?.address, 'profile')
     navigateTo({
-      path: sendRoute(connectedProfile.address),
+      path: sendRoute(connectedProfile.value.address),
       query: {
         asset: props.asset.address,
       },
@@ -71,8 +72,8 @@ const handleSendAsset = (event: Event) => {
           <div class="flex justify-end w-full">
             <lukso-button
               v-if="
-                status.isConnected &&
-                viewedProfile?.address === connectedProfile.address
+                isConnected &&
+                viewedProfile?.address === connectedProfile?.address
               "
               size="small"
               variant="secondary"

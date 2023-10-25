@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { LinkMetadata } from '@lukso/lsp-factory.js'
 
-const { status: profileStatus } = useViewedProfileStore()
-const { status: connectionStatus, profile: connectedProfile } =
-  useConnectedProfileStore()
-const { currentNetwork } = useAppStore()
+const { connectedProfile } = useConnectedProfile()
+const { currentNetwork, isLoadingAssets } = storeToRefs(useAppStore())
 const { viewedProfile } = useViewedProfile()
+const { isConnected } = storeToRefs(useAppStore())
 
 const links: LinkMetadata[] = [
   {
@@ -16,8 +15,8 @@ const links: LinkMetadata[] = [
 
 const handleSendLyx = () => {
   try {
-    assertAddress(connectedProfile.address, 'profile')
-    navigateTo(sendRoute(connectedProfile.address))
+    assertAddress(connectedProfile.value?.address, 'profile')
+    navigateTo(sendRoute(connectedProfile.value.address))
   } catch (error) {
     console.error(error)
   }
@@ -28,8 +27,8 @@ const handleSendLyx = () => {
   <div class="relative">
     <div
       :class="{
-        'opacity-0': profileStatus.isAssetLoading,
-        'opacity-100': !profileStatus.isAssetLoading,
+        'opacity-0': isLoadingAssets,
+        'opacity-100': !isLoadingAssets,
       }"
       class="max-w-content py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
     >
@@ -48,8 +47,9 @@ const handleSendLyx = () => {
         </lukso-card>
         <div
           v-if="
-            connectionStatus.isConnected &&
-            viewedProfile?.address === connectedProfile.address
+            isConnected &&
+            viewedProfile?.address === connectedProfile?.address &&
+            connectedProfile
           "
         >
           <AssetOwnInfo
@@ -86,6 +86,6 @@ const handleSendLyx = () => {
         />
       </div>
     </div>
-    <AppLoader v-if="profileStatus.isAssetLoading" />
+    <AppLoader v-if="isLoadingAssets" />
   </div>
 </template>

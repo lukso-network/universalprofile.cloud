@@ -14,8 +14,7 @@ const setConnectionExpiry = () => {
 const connect = async () => {
   const { showModal } = useModal()
   const { formatMessage } = useIntl()
-  const { setStatus, reloadProfile: reloadConnectedProfile } =
-    useConnectedProfileStore()
+  const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
 
   // when no extension installed we show modal
   if (!INJECTED_PROVIDER) {
@@ -27,7 +26,7 @@ const connect = async () => {
     })
   }
 
-  setStatus('isConnecting', true)
+  isConnecting.value = true
 
   try {
     const { accounts, requestAccounts } = useWeb3(PROVIDERS.INJECTED)
@@ -42,15 +41,9 @@ const connect = async () => {
     }
 
     assertAddress(address, 'connection')
-    setItem(STORAGE_KEY.CONNECTED_ADDRESS, address)
-    const profile = await fetchProfile(address)
-    await loadViewedProfile(address)
-    await loadViewedAssets(address)
-    reloadConnectedProfile(profile)
-    setStatus('isConnected', true)
+    connectedProfileAddress.value = address
     setConnectionExpiry()
-    await navigateTo(profileRoute(address))
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error(error)
     disconnect()
 
@@ -59,25 +52,25 @@ const connect = async () => {
       message: getConnectionErrorMessage(error),
     })
   } finally {
-    setStatus('isConnecting', false)
+    isConnecting.value = false
   }
 }
 
 const disconnect = () => {
-  const { setStatus } = useConnectedProfileStore()
   const { removeItem } = useLocalStorage()
+  const { connectedProfileAddress } = storeToRefs(useAppStore())
 
-  setStatus('isConnected', false)
-  removeItem(STORAGE_KEY.CONNECTED_ADDRESS)
+  connectedProfileAddress.value = undefined
   removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
   removeItem(STORAGE_KEY.RECONNECT_ADDRESS)
 }
 
 const handleAccountsChanged = async (accounts: string[]) => {
-  const { status } = useConnectedProfileStore()
+  const { connectedProfileAddress } = storeToRefs(useAppStore())
+  const isConnected = useAppStore()
 
   // handle account change only for connected users
-  if (!status.isConnected) {
+  if (!isConnected) {
     return
   }
 
@@ -86,17 +79,16 @@ const handleAccountsChanged = async (accounts: string[]) => {
     assertAddress(address, 'profile')
 
     // if user is already connected we need to update Local Storage key
-    if (status.isConnected) {
-      setItem(STORAGE_KEY.CONNECTED_ADDRESS, address)
+    if (isConnected) {
+      connectedProfileAddress.value = address
     }
 
-    try {
-      await navigateTo(profileRoute(address))
-      await loadViewedProfile(address)
-      await loadViewedAssets(address)
-    } catch (error) {
-      console.error(error)
-    }
+    // TODO check how changing accounts work on different pages if redirect is needed
+    // try {
+    //   await navigateTo(profileRoute(address))
+    // } catch (error) {
+    //   console.error(error)
+    // }
   } else {
     // when user remove connection with dApp we disconnect
     disconnect()

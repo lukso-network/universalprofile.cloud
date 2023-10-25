@@ -1,14 +1,14 @@
 import LSP3ProfileMetadata from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
 import { ERC725YDataKeys } from '@lukso/lsp-smart-contracts'
-import { isAddress, padLeft, toChecksumAddress } from 'web3-utils'
+import { /*isAddress,*/ padLeft /*, toChecksumAddress*/ } from 'web3-utils'
 import { ERC725JSONSchema } from '@erc725/erc725.js'
 
 import { LSP0ERC725Account } from '@/types/contracts'
-import { Creator } from '@/types/profile'
+import { ProfileModel } from '@/models/profile'
 
 export const fetchLsp4Creators = async (
   assetAddress: Address
-): Promise<Creator[] | undefined> => {
+): Promise<Partial<ProfileModel>[] | undefined> => {
   const { contract } = useWeb3(PROVIDERS.RPC)
   const { getInstance } = useErc725()
 
@@ -23,7 +23,7 @@ export const fetchLsp4Creators = async (
       return []
     }
 
-    const creators: Creator[] = []
+    const creators: Partial<ProfileModel>[] = []
     for (let i = 1; i <= creatorsNumber; i++) {
       const creatorAddress = await contract<LSP0ERC725Account>(
         getDataABI,
@@ -48,19 +48,20 @@ export const fetchLsp4Creators = async (
       const profileImage =
         lsp3Profile.profileImage &&
         (await getAndConvertImage(lsp3Profile.profileImage, 200))
-      const issuedAssets = (
-        creatorProfileMetadata[1].value as Address[]
-      ).filter(address => {
-        if (isAddress(address)) {
-          return toChecksumAddress(address)
-        }
-      })
-      const isVerified = issuedAssets.includes(assetAddress)
+      //TODO properly check for verified creators, very likely this need a separate table to store inrormation as profile is now singleton
+      // const issuedAssets = (
+      //   creatorProfileMetadata[1].value as Address[]
+      // ).filter(address => {
+      //   if (isAddress(address)) {
+      //     return toChecksumAddress(address)
+      //   }
+      // })
+      // const isVerified = issuedAssets.includes(assetAddress)
       creators.push({
         address: creatorAddress,
         profileImage,
         name: lsp3Profile.name,
-        isVerified,
+        // isVerified,
       })
     }
 

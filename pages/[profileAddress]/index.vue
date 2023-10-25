@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { AssetFilter } from '@/types/assets'
 
-const { status } = useViewedProfileStore()
-
+const { isLoadingProfile, isLoadingAssets } = storeToRefs(useAppStore())
 const { assetFilter, tokens, nfts } = storeToRefs(useViewedProfileStore())
 
 const ownedTokensCount = computed(
@@ -54,8 +53,8 @@ const showProfileDetails = computed(
     <div
       class="max-w-content py-20 px-4 mx-auto relative transition-opacity duration-300"
       :class="{
-        'opacity-0': status.isAssetLoading || status.isProfileLoading,
-        'opacity-100': !status.isAssetLoading && !status.isProfileLoading,
+        'opacity-0': isLoadingAssets || isLoadingProfile,
+        'opacity-100': !isLoadingAssets && !isLoadingProfile,
       }"
     >
       <ProfileCard />
@@ -98,6 +97,6 @@ const showProfileDetails = computed(
         </div>
       </div>
     </div>
-    <AppLoader v-if="status.isAssetLoading || status.isProfileLoading" />
+    <AppLoader v-if="isLoadingAssets || isLoadingProfile" />
   </div>
 </template>

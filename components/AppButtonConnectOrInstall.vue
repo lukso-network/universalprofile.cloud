@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { connect, isUniversalProfileExtension } = useBrowserExtension()
-const { status } = useConnectedProfileStore()
+const { isConnecting } = storeToRefs(useAppStore())
 
 const handleConnect = async () => {
   connect()
@@ -27,7 +27,7 @@ const browserSupportExtension = extensionStore.url !== ''
     variant="landing"
     custom-class="mt-6"
     is-full-width
-    :disabled="status.isConnecting ? true : undefined"
+    :disabled="isConnecting ? true : undefined"
   >
     {{ $formatMessage('connect_or_install_button_connect') }}
   </lukso-button>

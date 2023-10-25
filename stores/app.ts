@@ -3,43 +3,65 @@ import { NetworkInfo, NetworkId } from '@/types/network'
 
 /**
  * App store
- * Keeps the information about app non persistent state
+ * Keeps the information about app
  *
  */
-export const useAppStore = defineStore('app', () => {
-  const networks = ref<NetworkInfo[]>(NETWORKS)
-  const selectedNetwork = ref<NetworkId>(DEFAULT_NETWORK_ID)
-  const modal = ref<Modal>()
+export const useAppStore = defineStore(
+  'app',
+  () => {
+    const networks = ref<NetworkInfo[]>(NETWORKS)
+    const selectedNetwork = ref<NetworkId>(DEFAULT_NETWORK_ID)
+    const modal = ref<Modal>()
+    const connectedProfileAddress = ref<Address>()
+    const isConnecting = ref(false)
+    const isLoadingProfile = ref(false)
+    const isLoadingAssets = ref(false)
+    const isLoadedApp = ref(false)
 
-  // --- getters
+    // --- getters
 
-  const getNetwork = (networkId: NetworkId): NetworkInfo => {
-    const network = networks.value.find(network => network.id === networkId)
+    const getNetwork = (networkId: NetworkId): NetworkInfo => {
+      const network = networks.value.find(network => network.id === networkId)
 
-    // fallback to default network
-    if (!network) {
-      return networks.value.find(
-        network => network.id === DEFAULT_NETWORK_ID
-      ) as NetworkInfo
+      // fallback to default network
+      if (!network) {
+        return networks.value.find(
+          network => network.id === DEFAULT_NETWORK_ID
+        ) as NetworkInfo
+      }
+
+      return network
     }
 
-    return network
+    const currentNetwork = computed(() => getNetwork(selectedNetwork.value))
+
+    const isConnected = computed(() => !!connectedProfileAddress.value)
+
+    // --- actions
+
+    const setModal = (newModal: Modal) => {
+      modal.value = newModal
+    }
+
+    return {
+      networks,
+      selectedNetwork,
+      getNetwork,
+      modal,
+      setModal,
+      currentNetwork,
+      connectedProfileAddress,
+      isConnected,
+      isConnecting,
+      isLoadingProfile,
+      isLoadingAssets,
+      isLoadedApp,
+    }
+  },
+  {
+    persist: {
+      paths: ['connectedProfileAddress'],
+      key: STORAGE_KEY.APP_STORE,
+    },
   }
-
-  const currentNetwork = computed(() => getNetwork(selectedNetwork.value))
-
-  // --- actions
-
-  const setModal = (newModal: Modal) => {
-    modal.value = newModal
-  }
-
-  return {
-    networks,
-    selectedNetwork,
-    getNetwork,
-    modal,
-    setModal,
-    currentNetwork,
-  }
-})
+)

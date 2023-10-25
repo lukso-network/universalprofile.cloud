@@ -1,8 +1,9 @@
 <script setup lang="ts">
-const { profile: connectedProfile, status } = useConnectedProfileStore()
+const { connectedProfile } = useConnectedProfile()
 const { asset, receiver, receiverError, amount, onSend } = storeToRefs(
   useSendStore()
 )
+const { isLoadedApp } = storeToRefs(useAppStore())
 const { showModal } = useModal()
 
 const handleSend = () => {
@@ -19,17 +20,17 @@ const handleSelectAssets = () => {
 <template>
   <lukso-card
     variant="profile-2"
-    :background-url="connectedProfile.backgroundImage"
-    :profile-url="connectedProfile.profileImage"
-    :profile-address="connectedProfile.address"
+    :background-url="connectedProfile?.backgroundImage?.base64"
+    :profile-url="connectedProfile?.profileImage?.base64"
+    :profile-address="connectedProfile?.address"
     is-full-width
   >
     <div slot="content" class="p-6 pt-0 relative">
       <div
         class="grid grid-rows-1 grid-cols-[max-content,auto] transition relative z-[1]"
         :class="{
-          'opacity-0 invisible': !status.isProfileLoaded,
-          'opacity-100 visible': status.isProfileLoaded,
+          'opacity-0 invisible': !isLoadedApp,
+          'opacity-100 visible': isLoadedApp,
         }"
       >
         <div
@@ -61,8 +62,8 @@ const handleSelectAssets = () => {
       <div
         class="gap-2 grid grid-rows-2 absolute top-0 left-0 right-0 bottom-0 m-6 mt-0 transition"
         :class="{
-          'opacity-0': status.isProfileLoaded,
-          'opacity-100 animate-pulse': !status.isProfileLoaded,
+          'opacity-0': isLoadedApp,
+          'opacity-100 animate-pulse': !isLoadedApp,
         }"
       >
         <div class="bg-neutral-95 rounded-12"></div>

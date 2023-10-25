@@ -1,6 +1,6 @@
 import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
 
-import { Asset } from '@/types/assets'
+import { Asset, ImageMetadataEncoded } from '@/types/assets'
 import { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
 
 export const fetchLsp7Assets = async (
@@ -22,7 +22,7 @@ export const fetchLsp7Assets = async (
     (await getAndConvertImage(metadata.LSP4Metadata.icon, 200)) ||
     ASSET_ICON_PLACEHOLDER_URL
   const { links, description } = metadata.LSP4Metadata
-  const images: Base64EncodedImage[] = []
+  const images: ImageMetadataEncoded[] = []
 
   for await (const image of metadata.LSP4Metadata.images) {
     const convertedImage = await getAndConvertImage(image, 400)

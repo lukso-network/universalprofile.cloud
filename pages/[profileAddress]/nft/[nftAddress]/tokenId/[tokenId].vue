@@ -4,10 +4,10 @@ import { Asset } from '@/types/assets'
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 
-const { getNft, status: profileStatus } = useViewedProfileStore()
+const { getNft } = useViewedProfileStore()
 const { viewedProfile } = useViewedProfile()
-const { status: connectionStatus, profile: connectedProfile } =
-  useConnectedProfileStore()
+const { connectedProfile } = useConnectedProfile()
+const { isConnected, isLoadingAssets } = storeToRefs(useAppStore())
 const nft = ref<Asset>()
 
 watchEffect(() => {
@@ -21,10 +21,10 @@ const verifiedCreator = computed(() => {
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
-    assertAddress(connectedProfile.address, 'profile')
+    assertAddress(connectedProfile.value?.address, 'profile')
     assertAddress(nft.value?.address, 'nft')
     navigateTo({
-      path: sendRoute(connectedProfile.address),
+      path: sendRoute(connectedProfile.value.address),
       query: {
         asset: nft.value.address,
       },
@@ -39,8 +39,8 @@ const handleSendAsset = (event: Event) => {
   <div class="relative">
     <div
       :class="{
-        'opacity-0': profileStatus.isAssetLoading,
-        'opacity-100': !profileStatus.isAssetLoading,
+        'opacity-0': isLoadingAssets,
+        'opacity-100': !isLoadingAssets,
       }"
       class="max-w-content py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
     >
@@ -66,8 +66,9 @@ const handleSendAsset = (event: Event) => {
         </lukso-card>
         <div
           v-if="
-            connectionStatus.isConnected &&
-            viewedProfile?.address === connectedProfile.address
+            isConnected &&
+            viewedProfile?.address === connectedProfile?.address &&
+            connectedProfile
           "
         >
           <AssetOwnInfo
@@ -109,6 +110,6 @@ const handleSendAsset = (event: Event) => {
         />
       </div>
     </div>
-    <AppLoader v-if="profileStatus.isAssetLoading" />
+    <AppLoader v-if="isLoadingAssets" />
   </div>
 </template>

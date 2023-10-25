@@ -7,7 +7,7 @@ type Props = {
   isLoading?: boolean
   isEoa?: boolean
   isError?: boolean
-  profile?: ProfileItem
+  profile?: Partial<ProfileItem>
 }
 
 defineProps<Props>()

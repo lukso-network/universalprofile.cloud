@@ -13,7 +13,6 @@ import {
  *
  */
 export const useViewedProfileStore = defineStore('profileViewed', () => {
-  const status = reactive({ isProfileLoading: true, isAssetLoading: true })
   const assetFilter = ref<AssetFilter>(AssetFilter.owned)
   const ownedAssets = ref<Asset[]>()
   const createdAssets = ref<Asset[]>()
@@ -94,10 +93,6 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
     createdAssets.value = assets
   }
 
-  const setStatus = (statusName: keyof typeof status, newStatus: boolean) => {
-    status[statusName] = newStatus
-  }
-
   const setBalance = (assetAddress: Address, balance: string) => {
     const ownedAssetsUpdated = ownedAssets.value?.map(asset => {
       if (asset.address === assetAddress) {
@@ -119,8 +114,6 @@ export const useViewedProfileStore = defineStore('profileViewed', () => {
   }
 
   return {
-    status,
-    setStatus,
     ownedAssets,
     setOwnedAssets,
     tokens,
