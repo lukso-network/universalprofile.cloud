@@ -1,6 +1,6 @@
 import { ImageMetadata } from '@lukso/lsp-factory.js'
 
-import { Asset } from '@/types/assets'
+import { Asset, ImageMetadataEncoded } from '@/types/assets'
 import { formatUrl } from '@/utils/formatUrl'
 
 const convertBlobToBase64 = (blob: Blob) =>
@@ -22,7 +22,7 @@ const fetchBlobAndConvertToBase64 = async (
 }
 
 export const fetchAndConvertImage = async (imageUrl: string) => {
-  const request = new Request(imageUrl)
+  const request = new Request(formatUrl(imageUrl))
   return (await fetchBlobAndConvertToBase64(request)) as Base64EncodedImage
 }
 
@@ -38,13 +38,13 @@ export const fetchAndConvertImage = async (imageUrl: string) => {
 export const getImageBySize = (
   images: ImageMetadata[],
   maxHeight: number
-): string | undefined => {
+): ImageMetadata | undefined => {
   for (const image of images) {
     if (image.height <= maxHeight) {
-      return formatUrl(image.url)
+      return image
     }
   }
-  return images.length > 0 ? formatUrl(images[0].url) : undefined
+  return images.length > 0 ? images[0] : undefined
 }
 
 /**
@@ -76,9 +76,12 @@ export const getAndConvertImage = async (
   image: ImageMetadata[],
   maxHeight: number
 ) => {
-  const optimalIcon = getImageBySize(image, maxHeight)
+  const optimalImage = getImageBySize(image, maxHeight)
 
-  if (optimalIcon) {
-    return await fetchAndConvertImage(optimalIcon)
+  if (optimalImage) {
+    return {
+      ...optimalImage,
+      base64: await fetchAndConvertImage(optimalImage.url),
+    } as ImageMetadataEncoded
   }
 }

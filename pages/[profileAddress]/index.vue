@@ -58,7 +58,7 @@ const showProfileDetails = computed(
         'opacity-100': !status.isAssetLoading && !status.isProfileLoading,
       }"
     >
-      <Profile />
+      <ProfileCard />
       <ProfileDetails v-if="showProfileDetails" />
       <div>
         <div>

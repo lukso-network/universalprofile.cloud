@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { ProfileItem } from '@/models/profile'
+
 type Props = {
-  profile: Profile
+  profile: ProfileItem
   amount?: string
   symbol?: string
   decimals?: number
@@ -14,8 +16,8 @@ defineProps<Props>()
     <div slot="content" class="px-4 py-2 flex">
       <lukso-profile
         size="small"
-        :profile-address="profile.address"
-        :profile-url="profile.profileImageUrl"
+        :profile-address="profile?.address"
+        :profile-url="profile?.profileImage?.base64"
         has-identicon
       ></lukso-profile>
       <div class="pl-4 flex flex-col justify-center">

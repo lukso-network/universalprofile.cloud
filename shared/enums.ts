@@ -8,6 +8,9 @@ export enum STORAGE_KEY {
   CONNECTION_EXPIRY = 'LUKSO_WALLET:connectionExpiry',
   RECONNECT_ADDRESS = 'LUKSO_WALLET:reconnectAddress',
   CURRENCY_STORE = 'LUKSO_WALLET:currencyStore',
+  ASSET_STORE = 'LUKSO_WALLET:assetStore',
+  PROFILE_STORE = 'LUKSO_WALLET:profileStore',
+  IMAGE_STORE = 'LUKSO_WALLET:imageStore',
 }
 
 export enum CACHE_KEY {

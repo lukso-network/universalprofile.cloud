@@ -49,3 +49,7 @@ export type Asset = {
   isNativeToken?: boolean
   metadata?: any
 }
+
+export type ImageMetadataEncoded = ImageMetadata & {
+  base64: Base64EncodedImage
+}

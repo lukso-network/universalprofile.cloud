@@ -1,12 +1,13 @@
 import { SetupViewedProfileError } from '@/shared/errors'
 
 export const loadViewedProfile = async (profileAddress: Address) => {
-  const { setStatus, setProfile } = useViewedProfileStore()
+  const { setStatus } = useViewedProfileStore()
+  const profileRepo = useRepo(ProfileModel)
 
   try {
     setStatus('isProfileLoading', true)
     const profile = await fetchProfile(profileAddress)
-    setProfile(profile)
+    profileRepo.save(profile)
   } catch (error) {
     console.error(error)
 

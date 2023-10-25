@@ -30,8 +30,7 @@ export const fetchProfile = async (profileAddress: Address) => {
     )
   }
 
-  const { fetchProfile } = useErc725()
-  const profile = await fetchProfile(profileAddress)
+  const profile = await fetchLsp3Profile(profileAddress)
 
   return profile
 }

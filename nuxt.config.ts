@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@nuxtjs/plausible',
     '@nuxtjs/algolia',
+    '@pinia-orm/nuxt',
   ],
   plausible: {
     domain: 'wallet.universalprofile.cloud',
@@ -98,7 +99,7 @@ export default defineNuxtConfig({
     },
   },
   imports: {
-    dirs: ['stores/**', 'shared/**'],
+    dirs: ['stores/**', 'shared/**', 'models/**'],
     presets: [
       {
         from: 'pinia',

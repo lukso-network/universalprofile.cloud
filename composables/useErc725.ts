@@ -6,7 +6,6 @@ import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/i
 
 import { Lsp8TokenIdType } from '@/types/assets'
 import LSP8IdentifiableDigitalAsset from '@/shared/schemas/LSP8IdentifiableDigitalAsset.json'
-import { Profile } from '@/types/profile'
 
 export interface LSP3ProfileJSON {
   LSP3Profile: LSP3Profile
@@ -21,33 +20,6 @@ const getInstance = (address: string, schema: ERC725JSONSchema[]) => {
   const erc725 = new ERC725(schema, address, provider, config)
 
   return erc725
-}
-
-const fetchProfile = async (profileAddress: Address): Promise<Profile> => {
-  const erc725 = getInstance(
-    profileAddress,
-    LSP3ProfileMetadata as ERC725JSONSchema[]
-  )
-  const profileMetadata = await erc725.fetchData('LSP3Profile')
-  const lsp3Profile = validateLsp3Metadata(profileMetadata)
-  const profileImage =
-    lsp3Profile.profileImage &&
-    (await getAndConvertImage(lsp3Profile.profileImage, 200))
-  const backgroundImage =
-    lsp3Profile.backgroundImage &&
-    (await getAndConvertImage(lsp3Profile.backgroundImage, 800))
-
-  const { getBalance } = useWeb3(PROVIDERS.RPC)
-  const balance = await getBalance(profileAddress)
-
-  return {
-    ...lsp3Profile,
-    address: profileAddress,
-    profileImage,
-    backgroundImage,
-    balance,
-    metadata: lsp3Profile,
-  }
 }
 
 const fetchAssets = async (profileAddress: Address, schema: string) => {
@@ -148,7 +120,6 @@ const fetchLsp8Metadata = async (
 const useErc725 = () => {
   return {
     getInstance,
-    fetchProfile,
     fetchAssets,
     fetchLsp8Metadata,
   }

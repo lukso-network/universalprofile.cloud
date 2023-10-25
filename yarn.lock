@@ -2589,6 +2589,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pinia-orm/normalizr@npm:>=1.7.0":
+  version: 1.7.0
+  resolution: "@pinia-orm/normalizr@npm:1.7.0"
+  checksum: d3fe4ac473b68b4b694d9e03497210a2fc24e53466aacfd23028150cca3593fa3278425a4abc104d12cf58e8a0e92bd031b7aa2cdcba7c6127c4edbe7c5d6352
+  languageName: node
+  linkType: hard
+
+"@pinia-orm/nuxt@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "@pinia-orm/nuxt@npm:1.7.0"
+  dependencies:
+    "@nuxt/kit": ^3.7.3
+    pinia-orm: ">=1.7.0"
+  peerDependencies:
+    "@pinia/nuxt": ^0.4.11
+  checksum: ec1aea12fee96302997b88da6e541589735d653acdc15b4adea7678fca65d275f5ec82c6ac6c7c63bf23df3932f1d0659e4bd319c180690a76bc6c6bb810a3a8
+  languageName: node
+  linkType: hard
+
 "@pinia-plugin-persistedstate/nuxt@npm:^1.1.2":
   version: 1.1.2
   resolution: "@pinia-plugin-persistedstate/nuxt@npm:1.1.2"
@@ -12857,6 +12876,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pinia-orm@npm:>=1.7.0, pinia-orm@npm:^1.7.2":
+  version: 1.7.2
+  resolution: "pinia-orm@npm:1.7.2"
+  dependencies:
+    "@pinia-orm/normalizr": ">=1.7.0"
+  peerDependencies:
+    pinia: ^2.1.6
+  checksum: e2ecdf2ef15899eb05bb5a2ea8682f3095d1f287db65a5c2e01be1f7553cb304a09e9e65f52caf5f16c59c315d99ca5061f848faba1b0d101099bfb4d9f35659
+  languageName: node
+  linkType: hard
+
 "pinia-plugin-persistedstate@npm:>=3.2.0":
   version: 3.2.0
   resolution: "pinia-plugin-persistedstate@npm:3.2.0"
@@ -16160,23 +16190,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.1.6":
-  version: 5.1.6
-  resolution: "typescript@npm:5.1.6"
+"typescript@npm:5.2.2":
+  version: 5.2.2
+  resolution: "typescript@npm:5.2.2"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: b2f2c35096035fe1f5facd1e38922ccb8558996331405eb00a5111cc948b2e733163cc22fab5db46992aba7dd520fff637f2c1df4996ff0e134e77d3249a7350
+  checksum: 7912821dac4d962d315c36800fe387cdc0a6298dba7ec171b350b4a6e988b51d7b8f051317786db1094bd7431d526b648aba7da8236607febb26cf5b871d2d3c
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@5.1.6#~builtin<compat/typescript>":
-  version: 5.1.6
-  resolution: "typescript@patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"
+"typescript@patch:typescript@5.2.2#~builtin<compat/typescript>":
+  version: 5.2.2
+  resolution: "typescript@patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=14eedb"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: f53bfe97f7c8b2b6d23cf572750d4e7d1e0c5fff1c36d859d0ec84556a827b8785077bc27676bf7e71fae538e517c3ecc0f37e7f593be913d884805d931bc8be
+  checksum: 07106822b4305de3f22835cbba949a2b35451cad50888759b6818421290ff95d522b38ef7919e70fb381c5fe9c1c643d7dea22c8b31652a717ddbd57b7f4d554
   languageName: node
   linkType: hard
 
@@ -17066,6 +17096,7 @@ __metadata:
     "@nuxtjs/device": ^3.1.0
     "@nuxtjs/plausible": ^0.2.1
     "@nuxtjs/tailwindcss": ^6.8.0
+    "@pinia-orm/nuxt": ^1.7.0
     "@pinia-plugin-persistedstate/nuxt": ^1.1.2
     "@pinia/nuxt": ^0.4.11
     "@playwright/test": 1.36.2
@@ -17095,6 +17126,7 @@ __metadata:
     npm-run-all: 4.1.5
     nuxt: ^3.6.5
     pinia: ^2.1.7
+    pinia-orm: ^1.7.2
     postcss-html: ^1.5.0
     prettier: 3.0.1
     rollup-plugin-polyfill-node: ^0.12.0
@@ -17108,7 +17140,7 @@ __metadata:
     stylelint-prettier: 4.0.2
     stylelint-scss: 5.0.1
     typechain: ^8.3.2
-    typescript: 5.1.6
+    typescript: 5.2.2
     util: 0.12.5
     web3: ~1.10.0
     web3-utils: ~1.10.0
