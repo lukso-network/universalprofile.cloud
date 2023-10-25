@@ -24,6 +24,7 @@
   "token_details_token_id": "Token ID",
   "send_button": "Send {amount} {symbol}",
   "asset_supply_title": "Total Token Supply",
+  "send_error_same_address": "You cannot send {lyxSymbol} to yourself",
   "header_discovery": "Discovery",
   "not_found_text": "We can’t seem to find the page you’re looking for!",
   "asset_filter_owned_assets": "Owned assets",

@@ -80,11 +80,6 @@ watchEffect(() => {
         </div>
       </div>
     </div>
-    <lukso-icon
-      v-if="status.isProfileLoading"
-      name="progress-indicator-alt"
-      size="x-large"
-      class="absolute top-1/2 left-1/2 transform"
-    ></lukso-icon>
+    <AppLoader v-if="status.isProfileLoading" />
   </div>
 </template>

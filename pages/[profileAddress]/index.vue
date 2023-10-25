@@ -98,11 +98,6 @@ const showProfileDetails = computed(
         </div>
       </div>
     </div>
-    <lukso-icon
-      name="progress-indicator-alt"
-      size="x-large"
-      v-if="status.isAssetLoading || status.isProfileLoading"
-      class="absolute top-1/2 left-1/2 transform"
-    ></lukso-icon>
+    <AppLoader v-if="status.isAssetLoading || status.isProfileLoading" />
   </div>
 </template>

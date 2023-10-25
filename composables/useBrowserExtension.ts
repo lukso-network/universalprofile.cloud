@@ -50,51 +50,13 @@ const connect = async () => {
     setStatus('isConnected', true)
     setConnectionExpiry()
     await navigateTo(profileRoute(address))
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error)
     disconnect()
 
-    // known errors
-    if (error instanceof EoAError) {
-      return showModal({
-        title: formatMessage('web3_connect_error_title'),
-        message: formatMessage('web3_eoa_error_message'),
-      })
-    }
-
-    if (error instanceof InterfaceError) {
-      return showModal({
-        title: formatMessage('web3_connect_error_title'),
-        message: formatMessage('web3_interface_error_message'),
-      })
-    }
-
-    // errors that have a code or message
-    if (error && error.code) {
-      switch (error.code) {
-        case 4001:
-          return showModal({
-            title: formatMessage('web3_connect_error_title'),
-            message: formatMessage('web3_connect_error_rejected_request'),
-          })
-
-        case -32005:
-          return showModal({
-            title: formatMessage('web3_connect_error_title'),
-            message: formatMessage('web3_connect_error_pending_request'),
-          })
-        default:
-          return showModal({
-            title: formatMessage('web3_connect_error_title'),
-            message: error.message,
-          })
-      }
-    }
-
-    // unknowns errors
-    return showModal({
+    showModal({
       title: formatMessage('web3_connect_error_title'),
-      message: formatMessage('web3_connect_error'),
+      message: getConnectionErrorMessage(error),
     })
   } finally {
     setStatus('isConnecting', false)

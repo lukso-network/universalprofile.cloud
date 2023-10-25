@@ -31,6 +31,8 @@ const setupWeb3Instances = () => {
     // for chain interactions through wallet
     web3Store.addWeb3(PROVIDERS.INJECTED, provider)
     addProviderEvents(provider)
+    // expose web3 instance to global scope for console access
+    window.web3 = web3Store.getWeb3(PROVIDERS.INJECTED)
   } else {
     console.error('No browser extension provider found')
   }

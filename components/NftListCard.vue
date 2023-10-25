@@ -15,6 +15,10 @@ const verifiedCreator = computed(() => {
   return props.asset.creators?.find(creator => creator.isVerified)
 })
 
+const verifiedCreator = computed(() => {
+  return props.asset.creators?.find(creator => creator.isVerified)
+})
+
 const handleShowAsset = () => {
   try {
     assertAddress(viewedProfile.value?.address, 'profile')
