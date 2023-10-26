@@ -66,11 +66,10 @@ const disconnect = () => {
 }
 
 const handleAccountsChanged = async (accounts: string[]) => {
-  const { connectedProfileAddress } = storeToRefs(useAppStore())
-  const isConnected = useAppStore()
+  const { connectedProfileAddress, isConnected } = storeToRefs(useAppStore())
 
   // handle account change only for connected users
-  if (!isConnected) {
+  if (!isConnected.value) {
     return
   }
 
@@ -79,7 +78,7 @@ const handleAccountsChanged = async (accounts: string[]) => {
     assertAddress(address, 'profile')
 
     // if user is already connected we need to update Local Storage key
-    if (isConnected) {
+    if (isConnected.value) {
       connectedProfileAddress.value = address
     }
 

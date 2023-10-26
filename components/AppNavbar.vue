@@ -7,7 +7,7 @@ const { isConnecting, isConnected } = storeToRefs(useAppStore())
 
 const handleNavigateProfile = async () => {
   try {
-    if (isConnected) {
+    if (isConnected.value) {
       assertAddress(connectedProfile.value?.address, 'profile')
       navigateTo(profileRoute(connectedProfile.value.address))
     } else {
