@@ -30,7 +30,16 @@ export const fetchProfile = async (profileAddress: Address) => {
     )
   }
 
-  const profile = await fetchLsp3Profile(profileAddress)
+  const [profile, profileImage, backgroundImage] = await fetchLsp3Profile(
+    profileAddress
+  )
+  const profileRepo = useRepo(ProfileModel)
+  const imageRepo = useRepo(ImageModel)
+
+  // save into store
+  profile && profileRepo.save(profile)
+  profileImage && imageRepo.save(profileImage)
+  backgroundImage && imageRepo.save(backgroundImage)
 
   return profile
 }

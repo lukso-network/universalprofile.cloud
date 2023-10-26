@@ -59,7 +59,7 @@ export const fetchLsp4Creators = async (
       // const isVerified = issuedAssets.includes(assetAddress)
       creators.push({
         address: creatorAddress,
-        profileImage,
+        profileImage: profileImage?.hash,
         name: lsp3Profile.name,
         // isVerified,
       })

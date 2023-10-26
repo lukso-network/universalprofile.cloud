@@ -12,10 +12,6 @@ export class ImageModel extends Model {
       hash: this.string(''),
       url: this.string(''),
       base64: this.string(''),
-
-      // foreign keys
-      profileImageId: this.attr(null),
-      profileBackgroundId: this.attr(null),
     }
   }
 
@@ -26,8 +22,6 @@ export class ImageModel extends Model {
   declare hashFunction?: string
   declare url?: string
   declare base64?: Base64EncodedImage
-  declare profileImageId?: Address
-  declare backgroundImageId?: Address
 
   static piniaOptions = {
     persist: {

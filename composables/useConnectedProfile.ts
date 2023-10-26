@@ -1,25 +1,25 @@
+import { ProfileRepository } from '@/repositories/profile'
 import { ProfileItem } from '@/models/profile'
 
 export const useConnectedProfile = () => {
-  const profileRepo = useRepo(ProfileModel)
-  const { connectedProfileAddress } = useAppStore()
+  const profileRepo = useRepo(ProfileRepository)
+  const { connectedProfileAddress } = storeToRefs(useAppStore())
   const connectedProfile = ref<ProfileItem>()
 
   watchEffect(async () => {
-    if (!connectedProfileAddress) {
+    if (!connectedProfileAddress.value) {
       return
     }
 
-    let storeProfile = profileRepo
-      .with('profileImage')
-      .find(connectedProfileAddress)
+    let storeProfile = profileRepo.getProfileAndImages(
+      connectedProfileAddress.value
+    )
 
     if (!storeProfile) {
-      const fetchedProfile = await fetchProfile(connectedProfileAddress)
-      profileRepo.save(fetchedProfile)
-      storeProfile = profileRepo
-        .with('profileImage')
-        .find(connectedProfileAddress)
+      await fetchProfile(connectedProfileAddress.value)
+      storeProfile = profileRepo.getProfileAndImages(
+        connectedProfileAddress.value
+      )
     }
 
     connectedProfile.value = storeProfile

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import makeBlockie from 'ethereum-blockies-base64'
 
-import { ProfileItem } from '@/models/profile'
+import { ProfileWithImagesItem } from '@/models/profile'
 
 type Props = {
   isLoading?: boolean
   isEoa?: boolean
   isError?: boolean
-  profile?: Partial<ProfileItem>
+  profile?: Partial<ProfileWithImagesItem>
 }
 
 defineProps<Props>()

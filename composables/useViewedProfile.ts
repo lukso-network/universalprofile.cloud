@@ -1,9 +1,10 @@
-import { ProfileItem } from '@/models/profile'
+import { ProfileWithImagesItem } from '@/models/profile'
+import { ProfileRepository } from '@/repositories/profile'
 
 export const useViewedProfile = () => {
-  const profileRepo = useRepo(ProfileModel)
+  const profileRepo = useRepo(ProfileRepository)
   const viewedProfileAddress = getCurrentProfileAddress()
-  const viewedProfile = ref<ProfileItem>()
+  const viewedProfile = ref<ProfileWithImagesItem>()
   const { isLoadingProfile } = storeToRefs(useAppStore())
 
   watchEffect(async () => {
@@ -11,22 +12,16 @@ export const useViewedProfile = () => {
       return
     }
 
-    let storeProfile = profileRepo
-      .with('backgroundImage')
-      .with('profileImage')
-      .find(viewedProfileAddress)
+    let storeProfile = profileRepo.getProfileAndImages(viewedProfileAddress)
 
-    if (!storeProfile) {
+    if (!storeProfile.address) {
       isLoadingProfile.value = true // TODO check how works loading profile for first time
-      const fetchedProfile = await fetchProfile(viewedProfileAddress)
-      profileRepo.save(fetchedProfile)
-      storeProfile = profileRepo
-        .with('backgroundImage')
-        .with('profileImage')
-        .find(viewedProfileAddress)
+      await fetchProfile(viewedProfileAddress)
+      storeProfile = profileRepo.getProfileAndImages(viewedProfileAddress)
       isLoadingProfile.value = false
     }
     viewedProfile.value = storeProfile
+    console.log(storeProfile)
   })
 
   return {
