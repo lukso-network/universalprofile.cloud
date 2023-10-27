@@ -82,12 +82,12 @@ const handleAccountsChanged = async (accounts: string[]) => {
       connectedProfileAddress.value = address
     }
 
-    // TODO check how changing accounts work on different pages if redirect is needed
-    // try {
-    //   await navigateTo(profileRoute(address))
-    // } catch (error) {
-    //   console.error(error)
-    // }
+    try {
+      // TODO try to refresh current page based on router params
+      await navigateTo(profileRoute(address))
+    } catch (error) {
+      console.error(error)
+    }
   } else {
     // when user remove connection with dApp we disconnect
     disconnect()
