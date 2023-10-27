@@ -1,3 +1,5 @@
+import { Profile } from '@/models/profile'
+import { Image } from '@/models/image'
 import { ImageRepository } from '@/repositories/image'
 
 export const useProfile = (
@@ -15,16 +17,14 @@ export const useProfile = (
     }
   }
 
-  const profile = computed(() => {
-    return address && profileRepo.find(address)
-  })
+  const profile = ref<Profile>()
+  const backgroundImage = ref<Image>()
+  const profileImage = ref<Image>()
 
-  const backgroundImage = computed(() => {
-    return imageRepo.getImage(profile.value?.backgroundImageId)
-  })
-
-  const profileImage = computed(() => {
-    return imageRepo.getImage(profile.value?.profileImageId)
+  watchEffect(() => {
+    profile.value = address && profileRepo.find(address)
+    backgroundImage.value = imageRepo.getImage(profile.value?.backgroundImageId)
+    profileImage.value = imageRepo.getImage(profile.value?.profileImageId)
   })
 
   return {
