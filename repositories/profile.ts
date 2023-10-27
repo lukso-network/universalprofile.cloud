@@ -21,15 +21,17 @@ export class ProfileRepository extends Repository<ProfileModel> {
   }
 
   saveProfile(profile?: Profile) {
-    if (profile) {
-      const { profileImage, backgroundImage, ...plainProfile } = profile
-
-      // save profile
-      this.repo(ProfileModel).save(plainProfile)
-
-      // save profile images
-      profileImage && this.repo(ImageModel).save(profileImage)
-      backgroundImage && this.repo(ImageModel).save(backgroundImage)
+    if (!profile) {
+      return
     }
+
+    const { profileImage, backgroundImage, ...plainProfile } = profile
+
+    // save profile
+    this.repo(ProfileModel).save(plainProfile)
+
+    // save profile images
+    profileImage && this.repo(ImageModel).save(profileImage)
+    backgroundImage && this.repo(ImageModel).save(backgroundImage)
   }
 }

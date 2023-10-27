@@ -7,7 +7,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { profileImage } = useProfile(props)
+const { profile } = useProfile(props)
 </script>
 
 <template>
@@ -16,7 +16,7 @@ const { profileImage } = useProfile(props)
       <lukso-profile
         size="small"
         :profile-address="address"
-        :profile-url="profileImage?.base64"
+        :profile-url="profile?.profileImage?.base64"
         has-identicon
       ></lukso-profile>
       <div class="pl-4 flex flex-col justify-center">

@@ -10,7 +10,7 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { profileImage, profile } = useProfile(props)
+const { profile } = useProfile(props)
 </script>
 
 <template>
@@ -42,7 +42,7 @@ const { profileImage, profile } = useProfile(props)
   <div v-else class="flex flex-col items-center">
     <lukso-profile
       size="large"
-      :profile-url="profileImage?.base64"
+      :profile-url="profile?.profileImage?.base64"
       :profile-address="address"
       has-identicon
       class="mb-2"

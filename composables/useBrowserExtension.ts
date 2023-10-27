@@ -42,6 +42,10 @@ const connect = async () => {
 
     assertAddress(address, 'connection')
     connectedProfileAddress.value = address
+    // TODO try to refresh current page based on router params
+    await navigateTo(profileRoute(address))
+    await fetchProfile(address)
+    await fetchAssets(address)
     setConnectionExpiry()
   } catch (error: any) {
     console.error(error)
@@ -85,6 +89,8 @@ const handleAccountsChanged = async (accounts: string[]) => {
     try {
       // TODO try to refresh current page based on router params
       await navigateTo(profileRoute(address))
+      await fetchProfile(address)
+      await fetchAssets(address)
     } catch (error) {
       console.error(error)
     }

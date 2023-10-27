@@ -1,35 +1,32 @@
 import { Profile } from '@/models/profile'
-import { Image } from '@/models/image'
-import { ImageRepository } from '@/repositories/image'
+import { ProfileRepository } from '@/repositories/profile'
 
 export const useProfile = (
   profileAddress?: Address | { address?: Address }
 ) => {
-  const imageRepo = useRepo(ImageRepository)
-  const profileRepo = useRepo(ProfileModel)
+  const profileRepo = useRepo(ProfileRepository)
   let address: Address | undefined
 
-  if (profileAddress) {
-    if (typeof profileAddress === 'string') {
-      address = profileAddress
-    } else {
-      address = profileAddress?.address
-    }
-  }
-
   const profile = ref<Profile>()
-  const backgroundImage = ref<Image>()
-  const profileImage = ref<Image>()
 
-  watchEffect(() => {
-    profile.value = address && profileRepo.find(address)
-    backgroundImage.value = imageRepo.getImage(profile.value?.backgroundImageId)
-    profileImage.value = imageRepo.getImage(profile.value?.profileImageId)
+  watchEffect(async () => {
+    if (profileAddress) {
+      if (typeof profileAddress === 'string') {
+        address = profileAddress
+      } else {
+        address = profileAddress?.address
+      }
+    }
+
+    if (!address) {
+      return
+    }
+
+    const storeProfile = profileRepo.getProfileAndImages(address)
+    profile.value = storeProfile
   })
 
   return {
     profile,
-    backgroundImage,
-    profileImage,
   }
 }

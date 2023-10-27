@@ -54,10 +54,10 @@ const routerBackProfileLoad = async () => {
         assertString(toProfileAddress)
         assertAddress(toProfileAddress, 'profile')
         // TODO check how back button works
-        // if (toProfileAddress !== fromProfileAddress) {
-        //   await loadViewedProfile(toProfileAddress)
-        //   await loadViewedAssets(toProfileAddress)
-        // }
+        if (toProfileAddress !== fromProfileAddress) {
+          await fetchProfile(toProfileAddress)
+          await fetchAssets(toProfileAddress)
+        }
       } catch (error) {
         console.error(error)
       }
@@ -97,7 +97,8 @@ const setupViewedProfile = async () => {
 
     if (profileAddress) {
       if (isAddress(profileAddress)) {
-        await loadViewedAssets(profileAddress)
+        await fetchProfile(profileAddress)
+        await fetchAssets(profileAddress)
       } else {
         navigateTo(notFoundRoute())
       }

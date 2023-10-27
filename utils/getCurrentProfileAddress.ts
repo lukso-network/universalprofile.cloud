@@ -1,4 +1,4 @@
-export const getCurrentProfileAddress = (): Address | void => {
+export const getCurrentProfileAddress = () => {
   const profileAddress = useRouter().currentRoute.value.params?.profileAddress
 
   try {

@@ -11,17 +11,9 @@ export const useConnectedProfile = () => {
       return
     }
 
-    let storeProfile = profileRepo.getProfileAndImages(
+    const storeProfile = profileRepo.getProfileAndImages(
       connectedProfileAddress.value
     )
-
-    if (!storeProfile) {
-      await fetchProfile(connectedProfileAddress.value)
-      storeProfile = profileRepo.getProfileAndImages(
-        connectedProfileAddress.value
-      )
-    }
-
     connectedProfile.value = storeProfile
   })
 
