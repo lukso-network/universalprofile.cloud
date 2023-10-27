@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { ProfileItem } from '@/models/profile'
-
 type Props = {
-  profile: ProfileItem
+  address?: Address
   amount?: string
   symbol?: string
   decimals?: number
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const { profileImage } = useProfile(props)
 </script>
 
 <template>
@@ -16,8 +15,8 @@ defineProps<Props>()
     <div slot="content" class="px-4 py-2 flex">
       <lukso-profile
         size="small"
-        :profile-address="profile?.address"
-        :profile-url="profile?.profileImage?.base64"
+        :profile-address="address"
+        :profile-url="profileImage?.base64"
         has-identicon
       ></lukso-profile>
       <div class="pl-4 flex flex-col justify-center">

@@ -4,11 +4,11 @@ import { /*isAddress,*/ padLeft /*, toChecksumAddress*/ } from 'web3-utils'
 import { ERC725JSONSchema } from '@erc725/erc725.js'
 
 import { LSP0ERC725Account } from '@/types/contracts'
-import { ProfileModel } from '@/models/profile'
+import { Profile, ProfileModel } from '@/models/profile'
 
 export const fetchLsp4Creators = async (
   assetAddress: Address
-): Promise<Partial<ProfileModel>[] | undefined> => {
+): Promise<Profile[] | undefined> => {
   const { contract } = useWeb3(PROVIDERS.RPC)
   const { getInstance } = useErc725()
 
@@ -59,7 +59,7 @@ export const fetchLsp4Creators = async (
       // const isVerified = issuedAssets.includes(assetAddress)
       creators.push({
         address: creatorAddress,
-        profileImage: profileImage?.hash,
+        profileImageId: profileImage?.hash,
         name: lsp3Profile.name,
         // isVerified,
       })

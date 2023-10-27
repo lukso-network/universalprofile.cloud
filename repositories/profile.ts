@@ -1,21 +1,35 @@
 import { Repository } from 'pinia-orm'
 
-import { ProfileModel, ProfileWithImagesItem } from '@/models/profile'
+import { Profile, ProfileModel } from '@/models/profile'
 import { ImageModel } from '@/models/image'
 
 export class ProfileRepository extends Repository<ProfileModel> {
   getProfileAndImages(address: Address) {
     const profile = this.repo(ProfileModel).find(address)
     const profileImage =
-      profile?.profileImage && this.repo(ImageModel).find(profile.profileImage)
+      profile?.profileImageId &&
+      this.repo(ImageModel).find(profile.profileImageId)
     const backgroundImage =
-      profile?.backgroundImage &&
-      this.repo(ImageModel).find(profile.backgroundImage)
+      profile?.backgroundImageId &&
+      this.repo(ImageModel).find(profile.backgroundImageId)
 
     return {
       ...profile,
       profileImage,
       backgroundImage,
-    } as ProfileWithImagesItem
+    } as Profile
+  }
+
+  saveProfile(profile?: Profile) {
+    if (profile) {
+      const { profileImage, backgroundImage, ...plainProfile } = profile
+
+      // save profile
+      this.repo(ProfileModel).save(plainProfile)
+
+      // save profile images
+      profileImage && this.repo(ImageModel).save(profileImage)
+      backgroundImage && this.repo(ImageModel).save(backgroundImage)
+    }
   }
 }

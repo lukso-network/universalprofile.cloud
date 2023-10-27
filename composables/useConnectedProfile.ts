@@ -1,10 +1,10 @@
 import { ProfileRepository } from '@/repositories/profile'
-import { ProfileItem } from '@/models/profile'
+import { Profile } from '@/models/profile'
 
 export const useConnectedProfile = () => {
   const profileRepo = useRepo(ProfileRepository)
   const { connectedProfileAddress } = storeToRefs(useAppStore())
-  const connectedProfile = ref<ProfileItem>()
+  const connectedProfile = ref<Profile>()
 
   watchEffect(async () => {
     if (!connectedProfileAddress.value) {

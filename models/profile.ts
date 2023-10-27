@@ -1,8 +1,6 @@
 import { Item, Model } from 'pinia-orm'
 import { LSP3Profile, LinkMetadata } from '@lukso/lsp-factory.js'
 
-import { ImageModel } from '@/models/image'
-
 export class ProfileModel extends Model {
   static entity = 'profiles'
   static primaryKey = 'address'
@@ -17,17 +15,11 @@ export class ProfileModel extends Model {
       description: this.string(''),
       isEoa: this.boolean(false),
 
-      // relationships
-      backgroundImage: this.attr(null),
-      profileImage: this.attr(null),
-      // issuedAssets: this.hasMany(AssetModel, 'issuedAssetsId', 'address'),
-      // receivedAssets: this.hasMany(AssetModel, 'receivedAssetIds', 'address'),
-
       // foreign keys
-      // assetCreatorIds: this.attr([]),
+      profileImageId: this.attr(null),
+      backgroundImageId: this.attr(null),
       issuedAssetIds: this.attr(null),
       receivedAssetIds: this.attr(null),
-      modelType: this.string(''),
     }
   }
 
@@ -39,14 +31,11 @@ export class ProfileModel extends Model {
   declare tags?: string[]
   declare description?: string
   declare isEoa?: boolean
-  declare backgroundImage?: string
-  declare profileImage?: string
-  // declare issuedAssets?: AssetItem[]
-  // declare receivedAssets?: AssetItem[]
-  // declare assetCreatorIds?: Address[]
-  declare receivedAssetIds?: Address[]
+
+  declare profileImageId?: string
+  declare backgroundImageId?: string
   declare issuedAssetIds?: Address[]
-  declare modelType?: string
+  declare receivedAssetIds?: Address[]
 
   static piniaOptions = {
     persist: {
@@ -55,11 +44,7 @@ export class ProfileModel extends Model {
   }
 }
 
-export type ProfileItem = Item<ProfileModel>
-export type ProfileWithImagesItem = ProfileItem & {
-  profileImage?: Item<ImageModel>
-  backgroundImage?: Item<ImageModel>
-}
+export type Profile = Partial<Item<ProfileModel>>
 
 export type IndexedProfile = {
   address: Address

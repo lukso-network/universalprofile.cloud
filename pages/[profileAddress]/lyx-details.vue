@@ -53,7 +53,7 @@ const handleSendLyx = () => {
           "
         >
           <AssetOwnInfo
-            :profile="connectedProfile"
+            :address="connectedProfile.address"
             :amount="viewedProfile?.balance"
             :symbol="currentNetwork.token.symbol"
             :decimals="ASSET_LYX_DECIMALS"

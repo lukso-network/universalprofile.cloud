@@ -1,6 +1,7 @@
 import { INTERFACE_IDS, SupportedStandards } from '@lukso/lsp-smart-contracts'
 
 import { LSP0ERC725Account } from '@/types/contracts/LSP0ERC725Account'
+import { ProfileRepository } from '@/repositories/profile'
 
 export const fetchProfile = async (profileAddress: Address) => {
   const { contract, isEoA } = useWeb3(PROVIDERS.RPC)
@@ -30,16 +31,7 @@ export const fetchProfile = async (profileAddress: Address) => {
     )
   }
 
-  const [profile, profileImage, backgroundImage] = await fetchLsp3Profile(
-    profileAddress
-  )
-  const profileRepo = useRepo(ProfileModel)
-  const imageRepo = useRepo(ImageModel)
-
-  // save into store
-  profile && profileRepo.save(profile)
-  profileImage && imageRepo.save(profileImage)
-  backgroundImage && imageRepo.save(backgroundImage)
-
-  return profile
+  const profile = await fetchLsp3Profile(profileAddress)
+  const profileRepo = useRepo(ProfileRepository)
+  profileRepo.saveProfile(profile)
 }

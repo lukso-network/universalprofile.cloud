@@ -1,10 +1,10 @@
-import { ProfileWithImagesItem } from '@/models/profile'
+import { Profile } from '@/models/profile'
 import { ProfileRepository } from '@/repositories/profile'
 
 export const useViewedProfile = () => {
   const profileRepo = useRepo(ProfileRepository)
   const viewedProfileAddress = getCurrentProfileAddress()
-  const viewedProfile = ref<ProfileWithImagesItem>()
+  const viewedProfile = ref<Profile>()
   const { isLoadingProfile } = storeToRefs(useAppStore())
 
   watchEffect(async () => {
@@ -14,7 +14,7 @@ export const useViewedProfile = () => {
 
     let storeProfile = profileRepo.getProfileAndImages(viewedProfileAddress)
 
-    if (!storeProfile.address) {
+    if (!storeProfile?.address) {
       isLoadingProfile.value = true // TODO check how works loading profile for first time
       await fetchProfile(viewedProfileAddress)
       storeProfile = profileRepo.getProfileAndImages(viewedProfileAddress)

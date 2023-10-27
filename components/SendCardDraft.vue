@@ -1,5 +1,8 @@
 <script setup lang="ts">
 const { connectedProfile } = useConnectedProfile()
+const { profileImage, backgroundImage } = useProfile(
+  connectedProfile.value?.address
+)
 const { asset, receiver, receiverError, amount, onSend } = storeToRefs(
   useSendStore()
 )
@@ -20,8 +23,8 @@ const handleSelectAssets = () => {
 <template>
   <lukso-card
     variant="profile-2"
-    :background-url="connectedProfile?.backgroundImage?.base64"
-    :profile-url="connectedProfile?.profileImage?.base64"
+    :background-url="backgroundImage?.base64"
+    :profile-url="profileImage?.base64"
     :profile-address="connectedProfile?.address"
     is-full-width
   >
@@ -39,7 +42,7 @@ const handleSelectAssets = () => {
           <div class="shadow-neutral-above-shadow-1xl rounded-full">
             <lukso-profile
               size="small"
-              :profile-url="getAssetThumb(asset)"
+              :profile-url="getAssetThumb(asset, isToken(asset))"
               :profile-address="asset?.address"
               :has-identicon="isLyx(asset) ? undefined : true"
               :is-square="isNft(asset) ? true : undefined"
@@ -74,7 +77,7 @@ const handleSelectAssets = () => {
       <AppAvatar
         :is-eoa="receiver?.isEoa"
         :is-error="!!receiverError"
-        :profile="receiver"
+        :address="receiver?.address"
       />
       <SendCardProfileSearch />
       <lukso-button
