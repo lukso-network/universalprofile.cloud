@@ -1,7 +1,6 @@
 import { Repository } from 'pinia-orm'
 
 import { Asset, AssetModel } from '@/models/asset'
-import { InterfaceId } from '@/types/assets'
 
 export class AssetRepository extends Repository<AssetModel> {
   async loadAssets(addresses: Address[]) {
@@ -22,41 +21,6 @@ export class AssetRepository extends Repository<AssetModel> {
         }
       })
     )
-  }
-
-  async getAssets(addresses: Address[], standard: InterfaceId) {
-    console.log('AssetAddresses', addresses)
-
-    const assets: Asset[] = []
-
-    await Promise.all(
-      addresses.map(async assetAddress => {
-        const storageAsset = this.repo(AssetModel).find(assetAddress)
-
-        if (storageAsset) {
-          if (storageAsset.standard === standard) {
-            return assets.push(storageAsset)
-          } else {
-            // there is an asset in store but it is not the same standard
-            return []
-          }
-        }
-
-        const fetchedAsset = await fetchAsset(assetAddress)
-
-        if (fetchedAsset?.length) {
-          fetchedAsset && fetchedAsset.length && this.saveAssets(fetchedAsset)
-          return assets.push(
-            this.repo(AssetModel).where('standard', standard).find(assetAddress)
-          )
-        } else {
-          console.log('Asset not found', assetAddress)
-        }
-      })
-    )
-
-    console.log('AssetResult', assets)
-    return assets
   }
 
   async getOwnedTokens() {
