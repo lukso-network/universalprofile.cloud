@@ -16,7 +16,7 @@ export const fetchLsp7Assets = async (
     address
   )
 
-  const balance = await lsp7Contract.methods.balanceOf(profileAddress).call()
+  const balance = await fetchLsp7Balance(address, profileAddress)
   const tokenSupply = await lsp7Contract.methods.totalSupply().call()
   const decimals = Number(await lsp7Contract.methods.decimals().call())
   const icon = await getAndConvertImage(metadata.LSP4Metadata.icon, 200)

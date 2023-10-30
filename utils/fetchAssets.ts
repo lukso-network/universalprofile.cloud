@@ -9,8 +9,10 @@ export const fetchAssets = async (profileAddress: Address) => {
   try {
     isLoadingAssets.value = true
 
-    receivedAssetIds && (await assetRepo.loadAssets(receivedAssetIds))
-    issuedAssetIds && (await assetRepo.loadAssets(issuedAssetIds))
+    receivedAssetIds &&
+      (await assetRepo.loadAssets(receivedAssetIds, profileAddress))
+    issuedAssetIds &&
+      (await assetRepo.loadAssets(issuedAssetIds, profileAddress))
   } catch (error) {
     console.error(error)
   } finally {

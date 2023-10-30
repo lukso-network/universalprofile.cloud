@@ -111,11 +111,11 @@ const handleSend = async () => {
             )
             .send({ from: connectedProfile.value.address })
           // TODO update asset balance after sending token
-          // const balance = (await tokenContract.methods
-          //   .balanceOf(connectedProfile.value.address)
-          //   .call()) as string
-          // assertAddress(asset.value?.address, 'asset')
-          // setBalance(asset.value.address, balance)
+          const balance = (await tokenContract.methods
+            .balanceOf(connectedProfile.value.address)
+            .call()) as string
+          assertAddress(asset.value?.address, 'asset')
+          assetRepository.setBalance(asset.value.address, balance)
 
           break
         case 'LSP8IdentifiableDigitalAsset':

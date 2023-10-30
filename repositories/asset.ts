@@ -3,12 +3,18 @@ import { Repository } from 'pinia-orm'
 import { Asset, AssetModel } from '@/models/asset'
 
 export class AssetRepository extends Repository<AssetModel> {
-  async loadAssets(addresses: Address[]) {
+  async loadAssets(addresses: Address[], profileAddress: Address) {
     await Promise.all(
       addresses.map(async assetAddress => {
         const storageAsset = this.repo(AssetModel).find(assetAddress)
 
         if (storageAsset) {
+          // fetch token balances every time
+          if (storageAsset.standard === 'LSP7DigitalAsset') {
+            const balance = await fetchLsp7Balance(assetAddress, profileAddress)
+            this.setBalance(assetAddress, balance)
+          }
+
           return
         }
 
@@ -119,5 +125,9 @@ export class AssetRepository extends Repository<AssetModel> {
       icon,
       images,
     } as Asset
+  }
+
+  setBalance(address: Address, balance: string) {
+    this.repo(AssetModel).where('address', address).update({ balance })
   }
 }
