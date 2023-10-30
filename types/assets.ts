@@ -1,8 +1,6 @@
 import { ImageMetadata } from '@lukso/lsp-factory.js'
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
 
-// import { ProfileModel } from '@/models/profile'
-
 export type InterfaceId = keyof typeof INTERFACE_IDS
 
 export const tokenStandards: InterfaceId[] = ['LSP7DigitalAsset']
