@@ -73,7 +73,7 @@ const showProfileDetails = computed(
   () => useRouter().currentRoute.value.query.referrer === REFERRERS.INDEXER
 )
 
-onMounted(async () => {
+watchEffect(async () => {
   tokensOwned.value = await assetRepository.getOwnedTokens()
   tokensCreated.value = await assetRepository.getIssuedTokens()
   nftsOwned.value = await assetRepository.getOwnedNfts()
