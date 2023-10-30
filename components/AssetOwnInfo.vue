@@ -7,7 +7,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { profile } = useProfile(props)
+const profile = computed(() => useProfile(props.address).profile.value)
 </script>
 
 <template>

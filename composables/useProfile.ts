@@ -1,27 +1,16 @@
 import { Profile } from '@/models/profile'
 import { ProfileRepository } from '@/repositories/profile'
 
-export const useProfile = (
-  profileAddress?: Address | { address?: Address }
-) => {
+export const useProfile = (profileAddress?: Address) => {
   const profileRepo = useRepo(ProfileRepository)
-  let address: Address | undefined
   const profile = ref<Profile>()
 
   watchEffect(async () => {
-    if (profileAddress) {
-      if (typeof profileAddress === 'string') {
-        address = profileAddress
-      } else {
-        address = profileAddress?.address
-      }
-    }
-
-    if (!address) {
+    if (!profileAddress) {
       return
     }
 
-    const storeProfile = profileRepo.getProfileAndImages(address)
+    const storeProfile = profileRepo.getProfileAndImages(profileAddress)
     profile.value = storeProfile
   })
 
