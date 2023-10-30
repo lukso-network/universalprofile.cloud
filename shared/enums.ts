@@ -11,6 +11,7 @@ export enum STORAGE_KEY {
   ASSET_STORE = 'LW:assets',
   PROFILE_STORE = 'LW:profiles',
   IMAGE_STORE = 'LW:images',
+  CREATOR_STORE = 'LW:creators',
 }
 
 export enum CACHE_KEY {

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { CreatorRepository } from '@/repositories/creator'
+
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 
@@ -6,9 +8,12 @@ const { viewedProfile } = useViewedProfile()
 const { connectedProfile } = useConnectedProfile()
 const { isConnected, isLoadingAssets } = storeToRefs(useAppStore())
 const { asset } = useAsset(nftAddress, tokenId)
+const creatorsRepository = useRepo(CreatorRepository)
 
 const verifiedCreator = computed(() => {
-  return asset.value?.creators?.find(creator => creator?.isVerified)
+  return creatorsRepository
+    .getAssetCreators(nftAddress, tokenId)
+    .find(creator => creator?.isVerified)
 })
 
 const handleSendAsset = (event: Event) => {

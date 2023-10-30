@@ -22,6 +22,7 @@ export const fetchLsp7Assets = async (
   const icon = await getAndConvertImage(metadata.LSP4Metadata.icon, 200)
   const { links, description } = metadata.LSP4Metadata
   const images: ImageMetadataEncoded[] = []
+  const creators = await fetchLsp4Creators(address, '')
 
   for await (const image of metadata.LSP4Metadata.images) {
     const convertedImage = await getAndConvertImage(image, 400)
@@ -33,6 +34,11 @@ export const fetchLsp7Assets = async (
   const imageIds: string[] = []
   images.forEach(image => {
     image?.hash && imageIds.push(image.hash)
+  })
+
+  const creatorIds: string[] = []
+  creators?.forEach(creator => {
+    creator?.address && creatorIds.push(creator.address)
   })
 
   return {
@@ -47,8 +53,10 @@ export const fetchLsp7Assets = async (
     metadata: metadata.LSP4Metadata,
     standard: 'LSP7DigitalAsset',
     icon,
-    images,
     iconId: icon?.hash,
+    images,
     imageIds,
+    creators,
+    creatorIds,
   }
 }

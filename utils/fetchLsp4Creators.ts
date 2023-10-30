@@ -1,16 +1,19 @@
-import LSP3ProfileMetadata from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
 import { ERC725YDataKeys } from '@lukso/lsp-smart-contracts'
-import { /*isAddress,*/ padLeft /*, toChecksumAddress*/ } from 'web3-utils'
-import { ERC725JSONSchema } from '@erc725/erc725.js'
+import {
+  isAddress,
+  /*isAddress,*/ padLeft /*, toChecksumAddress*/,
+  toChecksumAddress,
+} from 'web3-utils'
 
 import { LSP0ERC725Account } from '@/types/contracts'
-import { Profile, ProfileModel } from '@/models/profile'
+import { Profile } from '@/models/profile'
+import { Creator } from '@/models/creator'
 
 export const fetchLsp4Creators = async (
-  assetAddress: Address
+  assetAddress: Address,
+  tokenId?: string
 ): Promise<Profile[] | undefined> => {
   const { contract } = useWeb3(PROVIDERS.RPC)
-  const { getInstance } = useErc725()
 
   try {
     const creatorsNumber = Number(
@@ -23,7 +26,7 @@ export const fetchLsp4Creators = async (
       return []
     }
 
-    const creators: Partial<ProfileModel>[] = []
+    const creators: Creator[] = []
     for (let i = 1; i <= creatorsNumber; i++) {
       const creatorAddress = await contract<LSP0ERC725Account>(
         getDataABI,
@@ -36,32 +39,34 @@ export const fetchLsp4Creators = async (
         .call()
 
       assertAddress(creatorAddress)
-      const erc725 = getInstance(
-        creatorAddress,
-        LSP3ProfileMetadata.concat() as ERC725JSONSchema[]
-      )
-      const creatorProfileMetadata = await erc725.fetchData([
-        'LSP3Profile',
-        'LSP12IssuedAssets[]',
-      ])
-      const lsp3Profile = validateLsp3Metadata(creatorProfileMetadata[0])
-      const profileImage =
-        lsp3Profile.profileImage &&
-        (await getAndConvertImage(lsp3Profile.profileImage, 200))
-      //TODO properly check for verified creators, very likely this need a separate table to store inrormation as profile is now singleton
-      // const issuedAssets = (
-      //   creatorProfileMetadata[1].value as Address[]
-      // ).filter(address => {
-      //   if (isAddress(address)) {
-      //     return toChecksumAddress(address)
-      //   }
-      // })
-      // const isVerified = issuedAssets.includes(assetAddress)
+      let profile: Profile = {
+        address: toChecksumAddress(creatorAddress) as Address,
+      }
+
+      try {
+        profile = {
+          ...(await fetchLsp3Profile(creatorAddress)),
+          ...profile,
+        }
+      } catch (error) {
+        console.warn(`Failed to fetch creator ${creatorAddress}`)
+      }
+      const issuedAssets =
+        (profile?.issuedAssetIds &&
+          profile.issuedAssetIds.filter(address => {
+            if (isAddress(address)) {
+              return toChecksumAddress(address)
+            }
+          })) ||
+        []
+      const isVerified = issuedAssets.includes(assetAddress)
+
       creators.push({
-        address: creatorAddress,
-        profileImageId: profileImage?.hash,
-        name: lsp3Profile.name,
-        // isVerified,
+        profileId: toChecksumAddress(creatorAddress) as Address,
+        profile,
+        assetId: assetAddress,
+        tokenId,
+        isVerified,
       })
     }
 

@@ -35,9 +35,9 @@ export const fetchLsp8Assets = async (
         icon: metadataIcon,
         links,
       } = collectionMetadata
-      const creators = await fetchLsp4Creators(address)
       const icon = await getAndConvertImage(metadataIcon, 200)
       const images: ImageMetadataEncoded[] = []
+      const creators = await fetchLsp4Creators(address, tokenId)
 
       for await (const image of metadataImages) {
         const convertedImage = await getAndConvertImage(image, 400)
@@ -51,6 +51,11 @@ export const fetchLsp8Assets = async (
         image?.hash && imageIds.push(image.hash)
       })
 
+      const creatorIds: string[] = []
+      creators?.forEach(creator => {
+        creator?.address && creatorIds.push(creator.address)
+      })
+
       return {
         address,
         name,
@@ -60,17 +65,18 @@ export const fetchLsp8Assets = async (
         tokenSupply,
         links,
         description,
-        creators,
         metadata: {
           nft: nftMetadata.LSP4Metadata,
           collection: collectionMetadata,
         },
         standard: 'LSP8IdentifiableDigitalAsset',
-        icon,
-        images,
         tokenId,
+        icon,
         iconId: icon?.hash,
+        images,
         imageIds,
+        creators,
+        creatorIds,
       }
     })
   )

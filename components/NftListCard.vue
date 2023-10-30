@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Asset } from '@/models/asset'
+import { CreatorRepository } from '@/repositories/creator'
 
 type Props = {
   asset: Asset
@@ -11,9 +12,12 @@ const props = defineProps<Props>()
 const { isConnected } = useAppStore()
 const { connectedProfile } = useConnectedProfile()
 const { viewedProfile } = useViewedProfile()
+const creatorsRepository = useRepo(CreatorRepository)
 
 const verifiedCreator = computed(() => {
-  return props.asset?.creators?.find(creator => creator?.isVerified)
+  return creatorsRepository
+    .getAssetCreators(props.asset?.address, props.asset?.tokenId)
+    .find(creator => creator?.isVerified)
 })
 
 const handleShowAsset = () => {

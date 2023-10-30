@@ -87,7 +87,7 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     assets?.forEach(asset => {
-      const { icon, images, ...plainAsset } = asset || {}
+      const { icon, images, creators, ...plainAsset } = asset || {}
 
       // save asset
       this.repo(AssetModel).save(plainAsset)
@@ -95,6 +95,7 @@ export class AssetRepository extends Repository<AssetModel> {
       // save asset images
       icon && this.repo(ImageModel).save(icon)
       images && images.length && this.repo(ImageModel).save(images)
+      creators && creators.length && this.repo(CreatorModel).save(creators)
     })
   }
 
