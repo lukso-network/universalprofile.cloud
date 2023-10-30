@@ -67,7 +67,7 @@ watchEffect(() => {
     ...asset.value,
     amount: isLyx(asset.value)
       ? connectedProfile.value?.balance
-      : asset.value?.amount,
+      : asset.value?.balance,
   }
 
   // when logout

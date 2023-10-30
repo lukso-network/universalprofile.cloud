@@ -1,7 +1,7 @@
 <script setup lang="ts">
 type Props = {
   address?: Address
-  amount?: string
+  balance?: string
   symbol?: string
   decimals?: number
 }
@@ -24,8 +24,8 @@ const { profile } = useProfile(props)
           {{ $formatMessage('token_details_own') }}
         </div>
         <div class="paragraph-inter-12-semi-bold">
-          <span v-if="amount">{{
-            $formatNumber(fromWeiWithDecimals(amount, decimals), {
+          <span v-if="balance">{{
+            $formatNumber(fromWeiWithDecimals(balance, decimals), {
               maximumFractionDigits: decimals,
             })
           }}</span>

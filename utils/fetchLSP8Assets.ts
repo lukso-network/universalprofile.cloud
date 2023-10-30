@@ -60,7 +60,7 @@ export const fetchLsp8Assets = async (
         address,
         name,
         symbol,
-        amount: '1', // NFT is always 1
+        balance: '1', // NFT is always 1
         decimals: 0, // NFT decimals are always 0
         tokenSupply,
         links,

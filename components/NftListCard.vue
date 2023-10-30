@@ -70,7 +70,7 @@ const handleSendAsset = (event: Event) => {
             {{ asset?.name }}
           </div>
           <div class="paragraph-inter-12-semi-bold pb-2">
-            {{ asset?.amount }}
+            {{ asset?.balance }}
             <span class="text-neutral-60">{{ asset?.symbol }}</span>
           </div>
           <div class="flex justify-end w-full">

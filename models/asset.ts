@@ -14,7 +14,7 @@ export class AssetModel extends Model {
       address: this.attr(null),
       name: this.string(''),
       symbol: this.string(''),
-      amount: this.string(''),
+      balance: this.string(''),
       decimals: this.number(0),
       tokenSupply: this.string(''),
       standard: this.string(''),
@@ -34,7 +34,7 @@ export class AssetModel extends Model {
   declare address: Address
   declare name?: string
   declare symbol?: string
-  declare amount?: string
+  declare balance?: string
   declare decimals?: number
   declare tokenSupply?: string
   declare standard?: InterfaceId

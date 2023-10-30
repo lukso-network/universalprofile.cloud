@@ -45,7 +45,7 @@ export const fetchLsp7Assets = async (
     address,
     name,
     symbol,
-    amount: balance,
+    balance,
     decimals: decimals,
     tokenSupply,
     links,

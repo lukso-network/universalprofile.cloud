@@ -54,7 +54,7 @@ const handleSendAsset = (event: Event) => {
         >
           <AssetOwnInfo
             :address="connectedProfile.address"
-            :amount="asset?.amount"
+            :balance="asset?.balance"
             :symbol="asset?.symbol"
             :decimals="asset?.decimals"
           />
@@ -70,8 +70,8 @@ const handleSendAsset = (event: Event) => {
         <div class="heading-apax-24-medium pb-8">{{ asset?.name }}</div>
         <AssetAddress v-if="asset?.address" :address="asset.address" />
         <AssetBalance
-          v-if="asset?.amount"
-          :balance="asset.amount"
+          v-if="asset?.balance"
+          :balance="asset.balance"
           :symbol="asset?.symbol"
           :decimals="asset?.decimals"
         />

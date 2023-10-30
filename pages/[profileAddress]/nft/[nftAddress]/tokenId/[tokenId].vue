@@ -71,7 +71,7 @@ const handleSendAsset = (event: Event) => {
         >
           <AssetOwnInfo
             :address="connectedProfile.address"
-            :amount="asset?.amount"
+            :balance="asset?.balance"
             :symbol="asset?.symbol"
             :decimals="0"
           />

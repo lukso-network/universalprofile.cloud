@@ -86,16 +86,20 @@ onMounted(async () => {
           <div class="heading-inter-14-bold pb-1">{{ asset?.name }}</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
             <span
-              v-if="asset?.amount"
+              v-if="asset?.balance"
               class="truncate"
               :style="{
                 'max-width': `${balanceWidthPx}px`,
               }"
               :title="
-                $formatNumber(fromWeiWithDecimals(asset.amount, asset.decimals))
+                $formatNumber(
+                  fromWeiWithDecimals(asset.balance, asset.decimals)
+                )
               "
               >{{
-                $formatNumber(fromWeiWithDecimals(asset.amount, asset.decimals))
+                $formatNumber(
+                  fromWeiWithDecimals(asset.balance, asset.decimals)
+                )
               }}</span
             >
             <span v-else>0</span>
@@ -106,10 +110,10 @@ onMounted(async () => {
             >
           </div>
           <div
-            v-if="asset?.amount && asset.symbol"
+            v-if="asset?.balance && asset.symbol"
             class="paragraph-inter-12-regular"
           >
-            {{ $formatCurrency(asset.amount, asset.symbol) }}
+            {{ $formatCurrency(asset.balance, asset.symbol) }}
           </div>
           <div class="flex justify-end w-full items-end">
             <lukso-button
