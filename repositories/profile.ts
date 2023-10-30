@@ -6,6 +6,11 @@ import { ImageModel } from '@/models/image'
 export class ProfileRepository extends Repository<ProfileModel> {
   getProfileAndImages(address: Address) {
     const profile = this.repo(ProfileModel).find(address)
+
+    if (!profile) {
+      return
+    }
+
     const profileImage =
       profile?.profileImageId &&
       this.repo(ImageModel).find(profile.profileImageId)

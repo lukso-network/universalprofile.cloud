@@ -5,6 +5,13 @@ import { ProfileRepository } from '@/repositories/profile'
 
 export const fetchProfile = async (profileAddress: Address) => {
   const { isLoadingProfile } = storeToRefs(useAppStore())
+  const profileRepo = useRepo(ProfileRepository)
+
+  const storeProfile = profileRepo.getProfileAndImages(profileAddress)
+
+  if (storeProfile) {
+    return
+  }
 
   try {
     isLoadingProfile.value = true
@@ -36,7 +43,7 @@ export const fetchProfile = async (profileAddress: Address) => {
     }
 
     const profile = await fetchLsp3Profile(profileAddress)
-    const profileRepo = useRepo(ProfileRepository)
+
     profileRepo.saveProfile(profile)
   } catch (error) {
     console.error(error)
