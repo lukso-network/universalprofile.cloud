@@ -75,7 +75,7 @@ const handleSelectAssets = () => {
       <AppAvatar
         :is-eoa="receiver?.isEoa"
         :is-error="!!receiverError"
-        :address="receiver?.address"
+        :profile="receiver"
       />
       <SendCardProfileSearch />
       <lukso-button

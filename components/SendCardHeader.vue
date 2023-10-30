@@ -6,7 +6,7 @@ const { receiver } = storeToRefs(useSendStore())
 <template>
   <div class="grid grid-cols-[1fr,min-content,1fr] w-full">
     <div class="flex flex-col items-center">
-      <AppAvatar :address="connectedProfile?.address" />
+      <AppAvatar :profile="connectedProfile" />
     </div>
     <div class="flex items-center">
       <div class="w-[20px] h-[92px] bg-neutral-100 z-[1]"></div>
@@ -15,7 +15,7 @@ const { receiver } = storeToRefs(useSendStore())
       ></div>
     </div>
     <div class="flex flex-col items-center">
-      <AppAvatar :address="receiver?.address" :is-eoa="receiver?.isEoa" />
+      <AppAvatar :profile="receiver" :is-eoa="receiver?.isEoa" />
     </div>
   </div>
 </template>
