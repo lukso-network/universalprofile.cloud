@@ -116,6 +116,11 @@ export class AssetRepository extends Repository<AssetModel> {
   getAssetAndImages(address: Address, tokenId = '') {
     const primaryKey = this.primaryKey(address, tokenId)
     const asset = this.repo(AssetModel).find(primaryKey)
+
+    if (!asset) {
+      return
+    }
+
     const icon = asset?.iconId && this.repo(ImageModel).find(asset.iconId)
     const images =
       asset?.imageIds &&

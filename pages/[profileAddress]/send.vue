@@ -47,7 +47,14 @@ watchEffect(() => {
     const assetAddress = useRouter().currentRoute.value.query.asset
     const tokenId = useRouter().currentRoute.value.query.tokenId
     assertAddress(assetAddress, 'asset')
-    asset.value = assetRepository.getAssetAndImages(assetAddress, tokenId)
+    const storeAsset = assetRepository.getAssetAndImages(assetAddress, tokenId)
+
+    if (!storeAsset) {
+      assertAddress(connectedProfile.value?.address, 'profile')
+      navigateTo(sendRoute(connectedProfile.value?.address))
+    } else {
+      asset.value = storeAsset
+    }
   } catch (error) {
     // fallback to native token
     asset.value = {
