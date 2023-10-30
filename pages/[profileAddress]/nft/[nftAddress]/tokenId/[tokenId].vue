@@ -1,32 +1,25 @@
 <script setup lang="ts">
-import { Asset } from '@/types/assets'
-
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 
-const { getNft } = useViewedProfileStore()
 const { viewedProfile } = useViewedProfile()
 const { connectedProfile } = useConnectedProfile()
 const { isConnected, isLoadingAssets } = storeToRefs(useAppStore())
-const nft = ref<Asset>()
-
-watchEffect(() => {
-  nft.value = getNft(nftAddress, tokenId)
-})
+const { asset } = useAsset(nftAddress, tokenId)
 
 const verifiedCreator = computed(() => {
-  return nft.value?.creators?.find(creator => creator.isVerified)
+  return asset.value?.creators?.find(creator => creator?.isVerified)
 })
 
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
     assertAddress(connectedProfile.value?.address, 'profile')
-    assertAddress(nft.value?.address, 'nft')
+    assertAddress(asset.value?.address, 'nft')
     navigateTo({
       path: sendRoute(connectedProfile.value.address),
       query: {
-        asset: nft.value.address,
+        asset: asset.value.address,
       },
     })
   } catch (error) {
@@ -49,7 +42,7 @@ const handleSendAsset = (event: Event) => {
           ><div slot="content">
             <div
               class="min-h-[260px] bg-neutral-90 w-100 rounded-t-12 bg-center bg-cover"
-              :style="`background-image: url(${getAssetThumb(nft)});`"
+              :style="`background-image: url(${getAssetThumb(asset)});`"
             ></div>
             <div class="p-4 relative">
               <AssetCreator
@@ -58,7 +51,7 @@ const handleSendAsset = (event: Event) => {
               />
               <div>
                 <div class="paragraph-inter-14-semi-bold">
-                  {{ nft?.name }}
+                  {{ asset?.name }}
                 </div>
               </div>
             </div>
@@ -72,40 +65,40 @@ const handleSendAsset = (event: Event) => {
           "
         >
           <AssetOwnInfo
-            :profile="connectedProfile"
-            :amount="nft?.amount"
-            :symbol="nft?.symbol"
+            :address="connectedProfile.address"
+            :amount="asset?.amount"
+            :symbol="asset?.symbol"
             :decimals="0"
           />
 
           <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{
             $formatMessage('token_details_send', {
-              token: nft?.symbol || '',
+              token: asset?.symbol || '',
             })
           }}</lukso-button>
         </div>
       </div>
       <div>
         <div class="heading-apax-24-medium pb-8">
-          {{ nft?.name }}
+          {{ asset?.name }}
         </div>
-        <AssetAddress v-if="nft?.address" :address="nft.address" />
-        <AssetTokenId v-if="nft?.tokenId" :token-id="nft.tokenId" />
+        <AssetAddress v-if="asset?.address" :address="asset.address" />
+        <AssetTokenId v-if="asset?.tokenId" :token-id="asset.tokenId" />
         <AssetSupply
-          v-if="nft?.tokenSupply"
-          :token-supply="nft?.tokenSupply"
-          :symbol="nft?.symbol"
-          :decimals="nft.decimals"
+          v-if="asset?.tokenSupply"
+          :token-supply="asset?.tokenSupply"
+          :symbol="asset?.symbol"
+          :decimals="asset.decimals"
         />
-        <AssetLinks v-if="nft?.links" :links="nft.links" />
+        <AssetLinks v-if="asset?.links" :links="asset.links" />
         <AssetDescription
-          v-if="nft?.description"
-          :description="nft.description"
+          v-if="asset?.description"
+          :description="asset.description"
         />
-        <AssetImages v-if="nft?.images" :images="nft.images" />
+        <AssetImages v-if="asset?.images?.length" :images="asset.images" />
         <AssetStandardInfo
-          v-if="nft?.standard"
-          :standard="nft.standard"
+          v-if="asset?.standard"
+          :standard="asset.standard"
           class="hidden"
         />
       </div>

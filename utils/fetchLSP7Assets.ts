@@ -1,7 +1,8 @@
 import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
 
-import { Asset, ImageMetadataEncoded } from '@/types/assets'
+import { ImageMetadataEncoded } from '@/types/assets'
 import { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
+import { Asset } from '@/models/asset'
 
 export const fetchLsp7Assets = async (
   address: Address,
@@ -18,9 +19,7 @@ export const fetchLsp7Assets = async (
   const balance = await lsp7Contract.methods.balanceOf(profileAddress).call()
   const tokenSupply = await lsp7Contract.methods.totalSupply().call()
   const decimals = Number(await lsp7Contract.methods.decimals().call())
-  const icon =
-    (await getAndConvertImage(metadata.LSP4Metadata.icon, 200)) ||
-    ASSET_ICON_PLACEHOLDER_URL
+  const icon = await getAndConvertImage(metadata.LSP4Metadata.icon, 200)
   const { links, description } = metadata.LSP4Metadata
   const images: ImageMetadataEncoded[] = []
 
@@ -31,6 +30,11 @@ export const fetchLsp7Assets = async (
     }
   }
 
+  const imageIds: string[] = []
+  images.forEach(image => {
+    image?.hash && imageIds.push(image.hash)
+  })
+
   return {
     address,
     name,
@@ -38,11 +42,13 @@ export const fetchLsp7Assets = async (
     amount: balance,
     decimals: decimals,
     tokenSupply,
-    icon,
     links,
     description,
-    images,
     metadata: metadata.LSP4Metadata,
     standard: 'LSP7DigitalAsset',
+    icon,
+    images,
+    iconId: icon?.hash,
+    imageIds,
   }
 }

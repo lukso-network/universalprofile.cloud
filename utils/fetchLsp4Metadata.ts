@@ -28,7 +28,7 @@ export const fetchLsp4Metadata = async (
       typeof lsp4DigitalAsset[1]?.value == 'string'
         ? lsp4DigitalAsset[1]?.value
         : ''
-    const metadata = validateLSP4MetaData(
+    const metadata = validateLsp4MetaData(
       lsp4DigitalAsset[2].value as URLDataWithHash
     )
     return [name, symbol, metadata]

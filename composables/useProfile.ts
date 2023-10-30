@@ -6,7 +6,6 @@ export const useProfile = (
 ) => {
   const profileRepo = useRepo(ProfileRepository)
   let address: Address | undefined
-
   const profile = ref<Profile>()
 
   watchEffect(async () => {

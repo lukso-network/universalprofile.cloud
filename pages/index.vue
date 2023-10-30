@@ -13,7 +13,7 @@ const supportedBrowsers = Object.entries(EXTENSION_STORE_LINKS)
   .map(browser => browser[0])
 
 watchEffect(() => {
-  if (isConnected) {
+  if (isConnected.value) {
     try {
       assertAddress(connectedProfileAddress.value, 'profile')
       navigateTo(profileRoute(connectedProfileAddress.value))

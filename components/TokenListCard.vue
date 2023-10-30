@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Asset, StandardsAbbreviations } from '@/types/assets'
+import { Asset } from '@/models/asset'
+import { StandardsAbbreviations } from '@/types/assets'
 
 type Props = {
   asset: Asset
@@ -19,7 +20,7 @@ const balanceWidthPx = ref(0)
 const handleShowAsset = () => {
   try {
     assertAddress(viewedProfile.value?.address, 'profile')
-    assertAddress(props.asset.address, 'asset')
+    assertAddress(props.asset?.address, 'asset')
     navigateTo(tokenRoute(viewedProfile.value.address, props.asset.address))
   } catch (error) {
     console.error(error)
@@ -33,7 +34,7 @@ const handleSendAsset = (event: Event) => {
     navigateTo({
       path: sendRoute(connectedProfile.value.address),
       query: {
-        asset: props.asset.address,
+        asset: props.asset?.address,
       },
     })
   } catch (error) {
@@ -60,7 +61,7 @@ onMounted(async () => {
     ><div slot="content" class="p-4 h-full grid grid-rows-[max-content,auto]">
       <div class="h-7 flex justify-end items-start">
         <lukso-tag
-          v-if="asset.standard"
+          v-if="asset?.standard"
           size="x-small"
           background-color="lukso-90"
           >{{ StandardsAbbreviations[asset.standard] }}</lukso-tag
@@ -70,22 +71,22 @@ onMounted(async () => {
         <div ref="logoRef" class="pl-2 flex flex-col items-center">
           <lukso-profile
             size="medium"
-            :profile-address="asset.address"
-            :profile-url="asset.icon"
+            :profile-address="asset?.address"
+            :profile-url="asset?.icon || ASSET_ICON_PLACEHOLDER_URL"
             :has-identicon="hasAddress ? 'true' : undefined"
           ></lukso-profile>
           <div
             v-if="hasAddress"
             class="paragraph-ptmono-10-bold text-neutral-60 pt-2"
           >
-            #{{ asset.address?.slice(2, 8) }}
+            #{{ asset?.address?.slice(2, 8) }}
           </div>
         </div>
         <div class="grid w-full grid-rows-[max-content,max-content,auto]">
-          <div class="heading-inter-14-bold pb-1">{{ asset.name }}</div>
+          <div class="heading-inter-14-bold pb-1">{{ asset?.name }}</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
             <span
-              v-if="asset.amount"
+              v-if="asset?.amount"
               class="truncate"
               :style="{
                 'max-width': `${balanceWidthPx}px`,
@@ -101,11 +102,11 @@ onMounted(async () => {
             <span
               ref="symbolRef"
               class="paragraph-inter-14-semi-bold text-neutral-60 pl-2"
-              >{{ asset.symbol }}</span
+              >{{ asset?.symbol }}</span
             >
           </div>
           <div
-            v-if="asset.amount && asset.symbol"
+            v-if="asset?.amount && asset.symbol"
             class="paragraph-inter-12-regular"
           >
             {{ $formatCurrency(asset.amount, asset.symbol) }}

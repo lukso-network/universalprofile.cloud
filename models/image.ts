@@ -30,4 +30,4 @@ export class ImageModel extends Model {
   }
 }
 
-export type Image = Item<ImageModel>
+export type Image = Partial<Item<ImageModel>>

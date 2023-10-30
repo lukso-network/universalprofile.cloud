@@ -1,7 +1,5 @@
 import { ImageMetadata, LSP3Profile, LinkMetadata } from '@lukso/lsp-factory.js'
 
-import { validateImage } from './validateLSP4Metadata'
-
 export const validateLsp3Metadata = (LSP3Metadata: any): LSP3Profile => {
   let profileImage: ImageMetadata[] = []
   let backgroundImage: ImageMetadata[] = []

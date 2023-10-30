@@ -1,12 +1,13 @@
 import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 
-import { Asset, ImageMetadataEncoded } from '@/types/assets'
+import { ImageMetadataEncoded } from '@/types/assets'
 import { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
+import { Asset } from '@/models/asset'
 
 export const fetchLsp8Assets = async (
   address: Address,
   profileAddress: Address
-) => {
+): Promise<Asset[]> => {
   const { contract } = useWeb3(PROVIDERS.RPC)
   const lsp8Contract = contract<LSP8IdentifiableDigitalAssetInterface>(
     LSP8IdentifiableDigitalAsset.abi as any,
@@ -21,11 +22,10 @@ export const fetchLsp8Assets = async (
     return []
   }
 
-  const { fetchLsp8Metadata } = useErc725() // TODO move to utils
   // nft metadata is the same for all tokens of same asset
   const [name, symbol, nftMetadata] = await fetchLsp4Metadata(address)
 
-  const assets = await Promise.all(
+  const assets: Asset[] = await Promise.all(
     tokensIds.map(async tokenId => {
       const collectionMetadata = (await fetchLsp8Metadata(tokenId, address))
         .LSP4Metadata
@@ -46,6 +46,11 @@ export const fetchLsp8Assets = async (
         }
       }
 
+      const imageIds: string[] = []
+      images.forEach(image => {
+        image?.hash && imageIds.push(image.hash)
+      })
+
       return {
         address,
         name,
@@ -53,18 +58,20 @@ export const fetchLsp8Assets = async (
         amount: '1', // NFT is always 1
         decimals: 0, // NFT decimals are always 0
         tokenSupply,
-        icon,
         links,
         description,
-        images,
         creators,
         metadata: {
           nft: nftMetadata.LSP4Metadata,
           collection: collectionMetadata,
         },
         standard: 'LSP8IdentifiableDigitalAsset',
+        icon,
+        images,
         tokenId,
-      } as Asset
+        iconId: icon?.hash,
+        imageIds,
+      }
     })
   )
   return assets

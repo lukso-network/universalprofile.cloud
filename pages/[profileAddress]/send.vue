@@ -8,10 +8,10 @@ import {
   LSP7DigitalAsset,
   LSP8IdentifiableDigitalAsset,
 } from '@/types/contracts'
+import { Asset } from '@/models/asset'
+import { AssetRepository } from '@/repositories/asset'
 
 const { connectedProfile } = useConnectedProfile()
-const { setBalance, removeNft } = useViewedProfileStore()
-const { ownedAssets } = storeToRefs(useViewedProfileStore())
 const { currentNetwork } = useAppStore()
 const { asset, onSend, amount, receiver } = storeToRefs(useSendStore())
 const { isLoadedApp, isConnected } = storeToRefs(useAppStore())
@@ -19,11 +19,14 @@ const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
 const { sendTransaction, getBalance, contract } = useWeb3(PROVIDERS.INJECTED)
+const ownedAssets = ref<Asset[]>()
+const assetRepository = useRepo(AssetRepository)
 
 onMounted(() => {
   setStatus('draft')
 
   onSend.value = handleSend
+  ownedAssets.value = assetRepository.getOwnedAssets()
 
   // for nft's we prefill amount
   if (isNft(asset.value)) {
@@ -47,7 +50,7 @@ watchEffect(() => {
     const assetAddress = useRouter().currentRoute.value.query.asset
     assertAddress(assetAddress, 'asset')
     asset.value = ownedAssets.value?.find(
-      asset => asset.address === assetAddress
+      asset => asset?.address === assetAddress
     )
     assertAddress(asset.value?.address, 'asset')
   } catch (error) {
@@ -55,7 +58,6 @@ watchEffect(() => {
     asset.value = {
       name: currentNetwork.token.name,
       symbol: currentNetwork.token.symbol,
-      icon: ASSET_LYX_ICON_URL,
       isNativeToken: true,
     }
   }
@@ -65,7 +67,7 @@ watchEffect(() => {
     ...asset.value,
     amount: isLyx(asset.value)
       ? connectedProfile.value?.balance
-      : asset.value.amount,
+      : asset.value?.amount,
   }
 
   // when logout
@@ -108,11 +110,13 @@ const handleSend = async () => {
               '0x'
             )
             .send({ from: connectedProfile.value.address })
-          const balance = (await tokenContract.methods
-            .balanceOf(connectedProfile.value.address)
-            .call()) as string
-          assertAddress(asset.value?.address, 'asset')
-          setBalance(asset.value.address, balance)
+          // TODO update asset balance after sending token
+          // const balance = (await tokenContract.methods
+          //   .balanceOf(connectedProfile.value.address)
+          //   .call()) as string
+          // assertAddress(asset.value?.address, 'asset')
+          // setBalance(asset.value.address, balance)
+
           break
         case 'LSP8IdentifiableDigitalAsset':
           const nftContract = contract<LSP8IdentifiableDigitalAsset>(
@@ -133,7 +137,8 @@ const handleSend = async () => {
             )
             .send({ from: connectedProfile.value.address })
           assertNotUndefined(asset.value.address, 'asset')
-          removeNft(asset.value.address, asset.value.tokenId)
+          // TODO remove nft
+          // removeNft(asset.value.address, asset.value.tokenId)
           break
         default:
           console.error('Unknown token type')

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ImageMetadataEncoded } from '@/types/assets'
+import { Image } from '@/models/image'
 
 type Props = {
-  images: ImageMetadataEncoded[]
+  images: Image[]
 }
 
 defineProps<Props>()
@@ -19,7 +19,7 @@ defineProps<Props>()
         :key="index"
         class="w-14 h-14 rounded-8 bg-cover bg-position-center bg-neutral-90"
         :style="{
-          backgroundImage: `url(${image.base64})`,
+          backgroundImage: `url(${image?.base64})`,
         }"
       ></div>
     </div>

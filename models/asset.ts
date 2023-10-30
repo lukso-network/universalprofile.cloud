@@ -1,0 +1,60 @@
+import { Item, Model } from 'pinia-orm'
+import { LinkMetadata } from '@lukso/lsp-factory.js'
+
+import { Profile } from '@/models/profile'
+import { InterfaceId } from '@/types/assets'
+import { Image } from '@/models/image'
+
+export class AssetModel extends Model {
+  static entity = 'assets'
+  static primaryKey = 'address'
+
+  static fields() {
+    return {
+      address: this.attr(null),
+      name: this.string(''),
+      symbol: this.string(''),
+      amount: this.string(''),
+      decimals: this.number(0),
+      tokenSupply: this.string(''),
+      standard: this.string(''),
+      description: this.string(''),
+      links: this.attr([]),
+      tokenId: this.string(''),
+      isNativeToken: this.boolean(false),
+
+      // foreign keys
+      iconId: this.attr(null),
+      imageIds: this.attr(null),
+      creatorIds: this.attr(null),
+    }
+  }
+
+  // types
+  declare address: Address
+  declare name?: string
+  declare symbol?: string
+  declare amount?: string
+  declare decimals?: number
+  declare tokenSupply?: string
+  declare standard?: InterfaceId
+  declare description?: string
+  declare links?: LinkMetadata[]
+  declare tokenId?: string
+  declare isNativeToken?: boolean
+
+  declare iconId?: string
+  declare imageIds?: string[]
+
+  declare icon?: Image
+  declare images?: Image[]
+  declare creators?: Profile[]
+
+  static piniaOptions = {
+    persist: {
+      key: STORAGE_KEY.ASSET_STORE,
+    },
+  }
+}
+
+export type Asset = Partial<Item<AssetModel>>

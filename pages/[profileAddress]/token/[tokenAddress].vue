@@ -1,26 +1,19 @@
 <script setup lang="ts">
-import { Asset } from '@/types/assets'
-
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
-const { getToken } = useViewedProfileStore()
 const { viewedProfile } = useViewedProfile()
 const { connectedProfile } = useConnectedProfile()
 const { isConnected, isLoadingAssets } = storeToRefs(useAppStore())
-const token = ref<Asset>()
-
-watchEffect(() => {
-  token.value = getToken(tokenAddress)
-})
+const { asset } = useAsset(tokenAddress)
 
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
     assertAddress(connectedProfile.value?.address, 'profile')
-    assertAddress(token.value?.address, 'token')
+    assertAddress(asset.value?.address, 'token')
     navigateTo({
       path: sendRoute(connectedProfile.value.address),
       query: {
-        asset: token.value.address,
+        asset: asset.value.address,
       },
     })
   } catch (error) {
@@ -45,9 +38,9 @@ const handleSendAsset = (event: Event) => {
             class="p-6 flex items-center justify-center sm:py-10 md:py-20"
           >
             <lukso-profile
-              v-if="token"
+              v-if="asset"
               size="large"
-              :profile-url="token.icon"
+              :profile-url="asset.icon"
               class="shadow-neutral-above-shadow-1xl rounded-full"
             ></lukso-profile>
           </div>
@@ -60,46 +53,46 @@ const handleSendAsset = (event: Event) => {
           "
         >
           <AssetOwnInfo
-            :profile="connectedProfile"
-            :amount="token?.amount"
-            :symbol="token?.symbol"
-            :decimals="token?.decimals"
+            :address="connectedProfile.address"
+            :amount="asset?.amount"
+            :symbol="asset?.symbol"
+            :decimals="asset?.decimals"
           />
 
           <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{
             $formatMessage('token_details_send', {
-              token: token?.symbol || '',
+              token: asset?.symbol || '',
             })
           }}</lukso-button>
         </div>
       </div>
       <div>
-        <div class="heading-apax-24-medium pb-8">{{ token?.name }}</div>
-        <AssetAddress v-if="token?.address" :address="token.address" />
+        <div class="heading-apax-24-medium pb-8">{{ asset?.name }}</div>
+        <AssetAddress v-if="asset?.address" :address="asset.address" />
         <AssetBalance
-          v-if="token?.amount"
-          :balance="token.amount"
-          :symbol="token?.symbol"
-          :decimals="token?.decimals"
+          v-if="asset?.amount"
+          :balance="asset.amount"
+          :symbol="asset?.symbol"
+          :decimals="asset?.decimals"
         />
         <AssetSupply
-          v-if="token?.tokenSupply"
-          :token-supply="token?.tokenSupply"
-          :symbol="token?.symbol"
-          :decimals="token?.decimals"
+          v-if="asset?.tokenSupply"
+          :token-supply="asset?.tokenSupply"
+          :symbol="asset?.symbol"
+          :decimals="asset?.decimals"
         />
         <AssetLinks
-          v-if="token?.links && token.links.length > 0"
-          :links="token.links"
+          v-if="asset?.links && asset.links.length > 0"
+          :links="asset.links"
         />
         <AssetDescription
-          v-if="token?.description"
-          :description="token.description"
+          v-if="asset?.description"
+          :description="asset.description"
         />
-        <AssetImages v-if="token?.images" :images="token.images" />
+        <AssetImages v-if="asset?.images?.length" :images="asset.images" />
         <AssetStandardInfo
-          v-if="token?.standard"
-          :standard="token.standard"
+          v-if="asset?.standard"
+          :standard="asset.standard"
           class="hidden"
         />
       </div>

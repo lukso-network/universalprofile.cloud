@@ -1,6 +1,6 @@
 import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
 
-export const validateLSP4MetaData = (
+export const validateLsp4MetaData = (
   LSP4MetadataJSON: any
 ): LSP4DigitalAssetJSON => {
   let images = [[]]

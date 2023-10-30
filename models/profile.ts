@@ -1,6 +1,8 @@
 import { Item, Model } from 'pinia-orm'
 import { LSP3Profile, LinkMetadata } from '@lukso/lsp-factory.js'
 
+import { Image } from '@/models/image'
+
 export class ProfileModel extends Model {
   static entity = 'profiles'
   static primaryKey = 'address'
@@ -36,6 +38,9 @@ export class ProfileModel extends Model {
   declare backgroundImageId?: string
   declare issuedAssetIds?: Address[]
   declare receivedAssetIds?: Address[]
+
+  declare profileImage?: Image
+  declare backgroundImage?: Image
 
   static piniaOptions = {
     persist: {

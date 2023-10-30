@@ -1,29 +1,55 @@
 <script setup lang="ts">
 import { AssetFilter } from '@/types/assets'
+import { AssetRepository } from '@/repositories/asset'
+import { Asset } from '@/models/asset'
 
-const { isLoadingProfile, isLoadingAssets } = storeToRefs(useAppStore())
-const { assetFilter, tokens, nfts } = storeToRefs(useViewedProfileStore())
+const { isLoadingProfile, isLoadingAssets, assetFilter } = storeToRefs(
+  useAppStore()
+)
+const assetRepository = useRepo(AssetRepository)
+const tokensOwned = ref<Asset[]>()
+const tokensCreated = ref<Asset[]>()
+const nftsOwned = ref<Asset[]>()
+const nftsCreated = ref<Asset[]>()
 
+// tokens
 const ownedTokensCount = computed(
-  () => tokens.value(AssetFilter.owned)?.length + 1 // we +1 for LYX token that we show even with 0 balance
+  () => (tokensOwned.value?.length || 0) + 1 // we +1 for LYX token that we show even with 0 balance
 )
 
-const ownedNftsCount = computed(() => nfts.value(AssetFilter.owned)?.length)
+const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
 
+const tokens = computed(() => {
+  if (assetFilter.value === AssetFilter.owned) {
+    return tokensOwned.value
+  } else {
+    return tokensCreated.value
+  }
+})
+
+// NFTs
+const ownedNftsCount = computed(() => nftsOwned.value?.length || 0)
+
+const createdNftsCount = computed(() => nftsCreated.value?.length || 0)
+
+const nfts = computed(() => {
+  if (assetFilter.value === AssetFilter.owned) {
+    return nftsOwned.value
+  } else {
+    return nftsCreated.value
+  }
+})
+
+// assets (tokens + NFTs)
 const ownedAssetsCount = computed(
   () => ownedTokensCount.value + ownedNftsCount.value
 )
-
-const createdTokensCount = computed(
-  () => tokens.value(AssetFilter.created)?.length
-)
-
-const createdNftsCount = computed(() => nfts.value(AssetFilter.created)?.length)
 
 const createdAssetsCount = computed(
   () => createdTokensCount.value + createdNftsCount.value
 )
 
+// empty states
 const hasEmptyCreators = computed(
   () =>
     assetFilter.value === AssetFilter.created &&
@@ -46,6 +72,13 @@ const hasEmptyNfts = computed(
 const showProfileDetails = computed(
   () => useRouter().currentRoute.value.query.referrer === REFERRERS.INDEXER
 )
+
+onMounted(async () => {
+  tokensOwned.value = await assetRepository.getOwnedTokens()
+  tokensCreated.value = await assetRepository.getIssuedTokens()
+  nftsOwned.value = await assetRepository.getOwnedNfts()
+  nftsCreated.value = await assetRepository.getIssuedNfts()
+})
 </script>
 
 <template>
@@ -91,8 +124,8 @@ const showProfileDetails = computed(
             ></lukso-sanitize>
           </div>
           <div v-else>
-            <TokenList v-if="hasEmptyTokens" />
-            <NftList v-if="hasEmptyNfts" />
+            <TokenList v-if="hasEmptyTokens" :tokens="tokens" />
+            <NftList v-if="hasEmptyNfts" :nfts="nfts" />
           </div>
         </div>
       </div>

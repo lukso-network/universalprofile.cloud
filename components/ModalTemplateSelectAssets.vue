@@ -1,16 +1,22 @@
 <script setup lang="ts">
-import { Asset } from '@/types/assets'
+import { Asset } from '@/models/asset'
+import { AssetRepository } from '@/repositories/asset'
 
 const { currentNetwork } = useAppStore()
-const { ownedAssets } = storeToRefs(useViewedProfileStore())
 const { connectedProfile } = useConnectedProfile()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
+const assetRepository = useRepo(AssetRepository)
+const ownedAssets = ref<Asset[]>()
 
 type Props = {
   closeModal: () => void
 }
 
 const props = defineProps<Props>()
+
+onMounted(() => {
+  ownedAssets.value = assetRepository.getOwnedAssets()
+})
 
 const handleSelectLyx = () => {
   assertAddress(connectedProfile.value?.address, 'profile')
@@ -23,7 +29,7 @@ const handleSelectAsset = (asset: Asset) => {
   navigateTo({
     path: sendRoute(connectedProfile.value.address),
     query: {
-      asset: asset.address,
+      asset: asset?.address,
     },
   })
   props.closeModal()
@@ -52,17 +58,17 @@ const handleSelectAsset = (asset: Asset) => {
           @click="handleSelectLyx"
         />
       </li>
-      <li v-for="asset in ownedAssets" :key="asset.address" class="mr-4">
+      <li v-for="asset in ownedAssets" :key="asset?.address" class="mr-4">
         <AssetListItem
-          :icon="getAssetThumb(asset)"
-          :name="asset.name"
-          :symbol="asset.symbol"
-          :address="asset.address"
+          :icon="getAssetThumb(asset, isLsp7(asset))"
+          :name="asset?.name"
+          :symbol="asset?.symbol"
+          :address="asset?.address"
           :has-identicon="true"
           :has-square-icon="isLsp8(asset)"
           :is-selected="
-            selectedAsset?.address === asset.address &&
-            selectedAsset?.tokenId === asset.tokenId
+            selectedAsset?.address === asset?.address &&
+            selectedAsset?.tokenId === asset?.tokenId
           "
           @click="handleSelectAsset(asset)"
         />

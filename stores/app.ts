@@ -1,3 +1,4 @@
+import { AssetFilter } from '@/types/assets'
 import { Modal } from '@/types/modal'
 import { NetworkInfo, NetworkId } from '@/types/network'
 
@@ -13,6 +14,9 @@ export const useAppStore = defineStore(
     const selectedNetwork = ref<NetworkId>(DEFAULT_NETWORK_ID)
     const modal = ref<Modal>()
     const connectedProfileAddress = ref<Address>()
+    const assetFilter = ref<AssetFilter>(AssetFilter.owned)
+
+    // statuses
     const isConnecting = ref(false)
     const isLoadingProfile = ref(false)
     const isLoadingAssets = ref(false)
@@ -56,11 +60,12 @@ export const useAppStore = defineStore(
       isLoadingProfile,
       isLoadingAssets,
       isLoadedApp,
+      assetFilter,
     }
   },
   {
     persist: {
-      paths: ['connectedProfileAddress'],
+      paths: ['connectedProfileAddress', 'assetFilter'],
       key: STORAGE_KEY.APP_STORE,
     },
   }

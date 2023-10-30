@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Asset } from '@/types/assets'
+import { Asset } from '@/models/asset'
 
 type Props = {
   asset: Asset
@@ -13,13 +13,13 @@ const { connectedProfile } = useConnectedProfile()
 const { viewedProfile } = useViewedProfile()
 
 const verifiedCreator = computed(() => {
-  return props.asset.creators?.find(creator => creator.isVerified)
+  return props.asset?.creators?.find(creator => creator?.isVerified)
 })
 
 const handleShowAsset = () => {
   try {
     assertAddress(viewedProfile.value?.address, 'profile')
-    assertAddress(props.asset.address)
+    assertAddress(props.asset?.address)
     assertString(props.asset.tokenId)
     navigateTo(
       nftRoute(
@@ -40,7 +40,7 @@ const handleSendAsset = (event: Event) => {
     navigateTo({
       path: sendRoute(connectedProfile.value.address),
       query: {
-        asset: props.asset.address,
+        asset: props.asset?.address,
       },
     })
   } catch (error) {
@@ -63,11 +63,11 @@ const handleSendAsset = (event: Event) => {
         />
         <div>
           <div class="paragraph-inter-14-semi-bold">
-            {{ asset.name }}
+            {{ asset?.name }}
           </div>
           <div class="paragraph-inter-12-semi-bold pb-2">
-            {{ asset.amount }}
-            <span class="text-neutral-60">{{ asset.symbol }}</span>
+            {{ asset?.amount }}
+            <span class="text-neutral-60">{{ asset?.symbol }}</span>
           </div>
           <div class="flex justify-end w-full">
             <lukso-button
