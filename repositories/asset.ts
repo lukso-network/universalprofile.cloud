@@ -114,7 +114,8 @@ export class AssetRepository extends Repository<AssetModel> {
   }
 
   getAssetAndImages(address: Address, tokenId = '') {
-    const asset = this.repo(AssetModel).find(`["${address}","${tokenId}"]`)
+    const primaryKey = this.primaryKey(address, tokenId)
+    const asset = this.repo(AssetModel).find(primaryKey)
     const icon = asset?.iconId && this.repo(ImageModel).find(asset.iconId)
     const images =
       asset?.imageIds &&
@@ -130,5 +131,14 @@ export class AssetRepository extends Repository<AssetModel> {
 
   setBalance(address: Address, balance: string) {
     this.repo(AssetModel).where('address', address).update({ balance })
+  }
+
+  removeAsset(address: Address, tokenId = '') {
+    const primaryKey = this.primaryKey(address, tokenId)
+    this.repo(AssetModel).destroy(primaryKey)
+  }
+
+  private primaryKey(address: Address, tokenId = '') {
+    return `["${address}","${tokenId}"]`
   }
 }

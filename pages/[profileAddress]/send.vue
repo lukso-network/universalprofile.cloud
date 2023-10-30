@@ -48,7 +48,6 @@ watchEffect(() => {
     const tokenId = useRouter().currentRoute.value.query.tokenId
     assertAddress(assetAddress, 'asset')
     asset.value = assetRepository.getAssetAndImages(assetAddress, tokenId)
-    console.log('asset', asset.value)
   } catch (error) {
     // fallback to native token
     asset.value = {
@@ -107,7 +106,6 @@ const handleSend = async () => {
               '0x'
             )
             .send({ from: connectedProfile.value.address })
-          // TODO update asset balance after sending token
           const balance = (await tokenContract.methods
             .balanceOf(connectedProfile.value.address)
             .call()) as string
@@ -134,8 +132,7 @@ const handleSend = async () => {
             )
             .send({ from: connectedProfile.value.address })
           assertNotUndefined(asset.value.address, 'asset')
-          // TODO remove nft
-          // removeNft(asset.value.address, asset.value.tokenId)
+          assetRepository.removeAsset(asset.value.address, asset.value.tokenId)
           break
         default:
           console.error('Unknown token type')
