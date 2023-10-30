@@ -53,7 +53,6 @@ const routerBackProfileLoad = async () => {
       try {
         assertString(toProfileAddress)
         assertAddress(toProfileAddress, 'profile')
-        // TODO check how back button works
         if (toProfileAddress !== fromProfileAddress) {
           await fetchProfile(toProfileAddress)
           await fetchAssets(toProfileAddress)
