@@ -11,10 +11,11 @@ export class AssetRepository extends Repository<AssetModel> {
           .get()
 
         if (storageAsset && storageAsset.length > 0) {
-          // fetch token balances every time
+          // asynchronously fetch token balances
           if (storageAsset[0].standard === 'LSP7DigitalAsset') {
-            const balance = await fetchLsp7Balance(assetAddress, profileAddress)
-            this.setBalance(assetAddress, balance)
+            fetchLsp7Balance(assetAddress, profileAddress).then(balance => {
+              this.setBalance(assetAddress, balance)
+            })
           }
 
           return
@@ -26,6 +27,13 @@ export class AssetRepository extends Repository<AssetModel> {
           fetchedAsset && fetchedAsset.length && this.saveAssets(fetchedAsset)
         } else {
           console.warn('Asset not found', assetAddress)
+          // we store the asset although it can't be detected so we don't repeat interface check
+          this.saveAssets([
+            {
+              address: assetAddress,
+              tokenId: '',
+            },
+          ])
         }
       })
     )
