@@ -58,5 +58,6 @@ export const fetchLsp7Assets = async (
     imageIds,
     creators,
     creatorIds,
+    tokenId: '',
   }
 }

@@ -45,6 +45,7 @@ const handleSendAsset = (event: Event) => {
       path: sendRoute(connectedProfile.value.address),
       query: {
         asset: props.asset?.address,
+        tokenId: props.asset?.tokenId,
       },
     })
   } catch (error) {

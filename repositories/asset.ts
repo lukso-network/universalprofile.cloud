@@ -6,11 +6,13 @@ export class AssetRepository extends Repository<AssetModel> {
   async loadAssets(addresses: Address[], profileAddress: Address) {
     await Promise.all(
       addresses.map(async assetAddress => {
-        const storageAsset = this.repo(AssetModel).find(assetAddress)
+        const storageAsset = this.repo(AssetModel)
+          .where('address', assetAddress)
+          .get()
 
-        if (storageAsset) {
+        if (storageAsset && storageAsset.length > 0) {
           // fetch token balances every time
-          if (storageAsset.standard === 'LSP7DigitalAsset') {
+          if (storageAsset[0].standard === 'LSP7DigitalAsset') {
             const balance = await fetchLsp7Balance(assetAddress, profileAddress)
             this.setBalance(assetAddress, balance)
           }
@@ -38,7 +40,8 @@ export class AssetRepository extends Repository<AssetModel> {
 
     return this.repo(AssetModel)
       .where('standard', 'LSP7DigitalAsset')
-      .find(viewedProfile.value.receivedAssetIds)
+      .where('address', viewedProfile.value.receivedAssetIds)
+      .get()
   }
 
   async getIssuedTokens() {
@@ -50,7 +53,8 @@ export class AssetRepository extends Repository<AssetModel> {
 
     return this.repo(AssetModel)
       .where('standard', 'LSP7DigitalAsset')
-      .find(viewedProfile.value.issuedAssetIds)
+      .where('address', viewedProfile.value.issuedAssetIds)
+      .get()
   }
 
   async getOwnedNfts() {
@@ -62,7 +66,8 @@ export class AssetRepository extends Repository<AssetModel> {
 
     return this.repo(AssetModel)
       .where('standard', 'LSP8IdentifiableDigitalAsset')
-      .find(viewedProfile.value.receivedAssetIds)
+      .where('address', viewedProfile.value.receivedAssetIds)
+      .get()
   }
 
   async getIssuedNfts() {
@@ -74,7 +79,8 @@ export class AssetRepository extends Repository<AssetModel> {
 
     return this.repo(AssetModel)
       .where('standard', 'LSP8IdentifiableDigitalAsset')
-      .find(viewedProfile.value.issuedAssetIds)
+      .where('address', viewedProfile.value.issuedAssetIds)
+      .get()
   }
 
   getOwnedAssets() {
@@ -84,7 +90,9 @@ export class AssetRepository extends Repository<AssetModel> {
       return []
     }
 
-    return this.repo(AssetModel).find(viewedProfile.value.receivedAssetIds)
+    return this.repo(AssetModel)
+      .where('address', viewedProfile.value.receivedAssetIds)
+      .get()
   }
 
   saveAssets(assets?: Asset[]) {
@@ -105,15 +113,8 @@ export class AssetRepository extends Repository<AssetModel> {
     })
   }
 
-  getAssetAndImages(address: Address, tokenId?: string) {
-    let asset: Asset
-
-    if (tokenId) {
-      asset = this.repo(AssetModel).where('tokenId', tokenId).find(address)
-    } else {
-      asset = this.repo(AssetModel).find(address)
-    }
-
+  getAssetAndImages(address: Address, tokenId = '') {
+    const asset = this.repo(AssetModel).find(`["${address}","${tokenId}"]`)
     const icon = asset?.iconId && this.repo(ImageModel).find(asset.iconId)
     const images =
       asset?.imageIds &&

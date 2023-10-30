@@ -25,6 +25,7 @@ const handleSendAsset = (event: Event) => {
       path: sendRoute(connectedProfile.value.address),
       query: {
         asset: asset.value.address,
+        tokenId: asset.value.tokenId,
       },
     })
   } catch (error) {

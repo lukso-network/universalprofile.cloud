@@ -30,6 +30,7 @@ const handleSelectAsset = (asset: Asset) => {
     path: sendRoute(connectedProfile.value.address),
     query: {
       asset: asset?.address,
+      tokenId: asset?.tokenId ? asset?.tokenId : undefined,
     },
   })
   props.closeModal()

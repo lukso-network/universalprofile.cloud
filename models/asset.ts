@@ -7,7 +7,7 @@ import { Image } from '@/models/image'
 
 export class AssetModel extends Model {
   static entity = 'assets'
-  static primaryKey = 'address'
+  static primaryKey = ['address', 'tokenId']
 
   static fields() {
     return {
