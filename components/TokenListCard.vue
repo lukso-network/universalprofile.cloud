@@ -9,7 +9,7 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { isConnected } = useAppStore()
+const { isConnected } = storeToRefs(useAppStore())
 const { connectedProfile } = useConnectedProfile()
 const { viewedProfile } = useViewedProfile()
 const contentRef = ref()

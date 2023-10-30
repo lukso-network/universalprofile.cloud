@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { connectedProfile } = useConnectedProfile()
-const { currentNetwork, isConnected } = useAppStore()
+const { currentNetwork, isConnected } = storeToRefs(useAppStore())
 const { viewedProfile } = useViewedProfile()
 const contentRef = ref()
 const logoRef = ref()
