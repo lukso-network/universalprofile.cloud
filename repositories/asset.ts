@@ -1,6 +1,7 @@
 import { Repository } from 'pinia-orm'
 
 import { Asset, AssetModel } from '@/models/asset'
+import { InterfaceId } from '@/types/assets'
 
 export class AssetRepository extends Repository<AssetModel> {
   async loadAssets(addresses: Address[], profileAddress: Address) {
@@ -100,6 +101,7 @@ export class AssetRepository extends Repository<AssetModel> {
 
     return this.repo(AssetModel)
       .where('address', viewedProfile.value.receivedAssetIds)
+      .where('standard', (standard: InterfaceId) => standard)
       .get()
   }
 
