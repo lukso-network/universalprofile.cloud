@@ -8,6 +8,7 @@ const SEARCH_COMPONENT_TAG_NAME = 'LUKSO-SEARCH'
 
 const { search } = useAlgoliaSearch<IndexedProfile>(INDEX_NAME)
 const { receiver, receiverError } = storeToRefs(useSendStore())
+const { isEoA } = useWeb3(PROVIDERS.RPC)
 const isSearchingReceiver = ref<boolean>(false)
 const searchTerm = ref<string | Address | undefined>(receiver.value?.address)
 const hasNoResults = ref<boolean>(false)
@@ -108,16 +109,11 @@ const handleReceiverSearch = async (event: CustomEvent) => {
   if (isAddress(searchTerm.value)) {
     assertAddress(searchTerm.value)
 
-    try {
-      await fetchProfile(searchTerm.value)
-    } catch (error) {
-      if (error instanceof EoAError) {
-        receiver.value = { address: searchTerm.value }
-        receiver.value.isEoa = true
-        receiver.value.address = searchTerm.value
+    if (await isEoA(searchTerm.value)) {
+      receiver.value = {
+        address: searchTerm.value,
+        isEoa: true,
       }
-
-      console.error(error)
     }
   } else {
     receiver.value = undefined
@@ -131,7 +127,13 @@ const handleSelect = async (event: CustomEvent) => {
   const selection = event.detail.value
   const { address, name, image } = selection
   searchTerm.value = address
-  receiver.value = { address, name, profileImage: image }
+  receiver.value = {
+    address,
+    name,
+    profileImage: {
+      base64: image,
+    },
+  }
   receiverError.value = ''
   results.value = undefined
 }
