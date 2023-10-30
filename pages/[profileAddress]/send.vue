@@ -8,7 +8,6 @@ import {
   LSP7DigitalAsset,
   LSP8IdentifiableDigitalAsset,
 } from '@/types/contracts'
-import { Asset } from '@/models/asset'
 import { AssetRepository } from '@/repositories/asset'
 
 const { connectedProfile } = useConnectedProfile()
@@ -19,14 +18,12 @@ const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
 const { sendTransaction, getBalance, contract } = useWeb3(PROVIDERS.INJECTED)
-const ownedAssets = ref<Asset[]>()
 const assetRepository = useRepo(AssetRepository)
 
 onMounted(() => {
   setStatus('draft')
 
   onSend.value = handleSend
-  ownedAssets.value = assetRepository.getOwnedAssets()
 
   // for nft's we prefill amount
   if (isNft(asset.value)) {
@@ -48,24 +45,24 @@ watchEffect(() => {
   try {
     amount.value = undefined
     const assetAddress = useRouter().currentRoute.value.query.asset
+    const tokenId = useRouter().currentRoute.value.query.tokenId
     assertAddress(assetAddress, 'asset')
-    asset.value = ownedAssets.value?.find(
-      asset => asset?.address === assetAddress
-    )
-    assertAddress(asset.value?.address, 'asset')
+    asset.value = assetRepository.getAssetAndImages(assetAddress, tokenId)
+    console.log('asset', asset.value)
   } catch (error) {
     // fallback to native token
     asset.value = {
       name: currentNetwork.token.name,
       symbol: currentNetwork.token.symbol,
       isNativeToken: true,
+      decimals: ASSET_LYX_DECIMALS,
     }
   }
 
   // since balance is not avail in onMounted hook
   asset.value = {
     ...asset.value,
-    amount: isLyx(asset.value)
+    balance: isLyx(asset.value)
       ? connectedProfile.value?.balance
       : asset.value?.balance,
   }
