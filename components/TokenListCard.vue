@@ -19,9 +19,8 @@ const balanceWidthPx = ref(0)
 
 const handleShowAsset = () => {
   try {
-    assertAddress(viewedProfile.value?.address, 'profile')
     assertAddress(props.asset?.address, 'asset')
-    navigateTo(tokenRoute(viewedProfile.value.address, props.asset.address))
+    navigateTo(tokenRoute(props.asset.address))
   } catch (error) {
     console.error(error)
   }

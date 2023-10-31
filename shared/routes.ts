@@ -1,11 +1,7 @@
-export const tokenRoute = (profileAddress: Address, tokenAddress: Address) =>
-  `/${profileAddress}/token/${tokenAddress}`
+export const tokenRoute = (tokenAddress: Address) => `/asset/${tokenAddress}`
 
-export const nftRoute = (
-  profileAddress: Address,
-  nftAddress: Address,
-  tokenId: string
-) => `/${profileAddress}/nft/${nftAddress}/tokenId/${tokenId}`
+export const nftRoute = (nftAddress: Address, tokenId: string) =>
+  `/asset/${nftAddress}/tokenId/${tokenId}`
 
 export const profileRoute = (profileAddress: Address) => `/${profileAddress}`
 

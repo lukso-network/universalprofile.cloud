@@ -6,7 +6,7 @@ import { Asset } from '@/models/asset'
 
 export const fetchLsp7Assets = async (
   address: Address,
-  profileAddress: Address
+  profileAddress?: Address
 ): Promise<Asset> => {
   const [name, symbol, metadata] = await fetchLsp4Metadata(address)
 
@@ -15,8 +15,12 @@ export const fetchLsp7Assets = async (
     LSP7DigitalAsset.abi as any,
     address
   )
+  let balance = ''
 
-  const balance = await fetchLsp7Balance(address, profileAddress)
+  if (profileAddress) {
+    balance = await fetchLsp7Balance(address, profileAddress)
+  }
+
   const tokenSupply = await lsp7Contract.methods.totalSupply().call()
   const decimals = Number(await lsp7Contract.methods.decimals().call())
   const icon = await getAndConvertImage(metadata.LSP4Metadata.icon, 200)

@@ -22,7 +22,7 @@ export class AssetRepository extends Repository<AssetModel> {
           return
         }
 
-        const fetchedAsset = await fetchAsset(assetAddress)
+        const fetchedAsset = await fetchAsset(assetAddress, profileAddress)
 
         if (fetchedAsset?.length) {
           fetchedAsset && fetchedAsset.length && this.saveAssets(fetchedAsset)

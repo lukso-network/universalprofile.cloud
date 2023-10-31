@@ -1,12 +1,13 @@
 import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 
-import { ImageMetadataEncoded } from '@/types/assets'
 import { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
 import { Asset } from '@/models/asset'
+import { ImageMetadataEncoded } from '@/types/assets'
 
 export const fetchLsp8Assets = async (
   address: Address,
-  profileAddress: Address
+  profileAddress?: Address,
+  tokensId?: string[]
 ): Promise<Asset[]> => {
   const { contract } = useWeb3(PROVIDERS.RPC)
   const lsp8Contract = contract<LSP8IdentifiableDigitalAssetInterface>(
@@ -15,10 +16,14 @@ export const fetchLsp8Assets = async (
   )
   const tokenSupply = await lsp8Contract.methods.totalSupply().call()
 
-  // profile can have few ids of same LSP8 asset
-  const tokensIds = await lsp8Contract.methods.tokenIdsOf(profileAddress).call()
+  let tokensIds = tokensId
 
-  if (!tokensIds.length) {
+  if (profileAddress) {
+    // profile can have few ids of same LSP8 asset
+    tokensIds = await lsp8Contract.methods.tokenIdsOf(profileAddress).call()
+  }
+
+  if (!tokensIds || !tokensIds.length) {
     return []
   }
 

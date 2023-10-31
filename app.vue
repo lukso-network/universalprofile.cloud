@@ -46,19 +46,17 @@ const routerBackProfileLoad = async () => {
       const fromProfileAddress = from.params?.profileAddress
       const toProfileAddress = to.params?.profileAddress
 
-      if (!fromProfileAddress || !toProfileAddress) {
-        return next()
-      }
-
-      try {
-        assertString(toProfileAddress)
-        assertAddress(toProfileAddress, 'profile')
-        if (toProfileAddress !== fromProfileAddress) {
-          await fetchProfile(toProfileAddress)
-          await fetchAssets(toProfileAddress)
+      if (toProfileAddress) {
+        try {
+          assertString(toProfileAddress)
+          assertAddress(toProfileAddress, 'profile')
+          if (toProfileAddress !== fromProfileAddress) {
+            await fetchProfile(toProfileAddress)
+            await fetchAssets(toProfileAddress)
+          }
+        } catch (error) {
+          console.error(error)
         }
-      } catch (error) {
-        console.error(error)
       }
       next()
     }
@@ -111,8 +109,8 @@ onMounted(async () => {
   setupTranslations()
   setupWeb3Instances()
   checkConnectionExpiry()
-  await setupViewedProfile()
   await routerBackProfileLoad()
+  await setupViewedProfile()
 
   isLoadedApp.value = true
 

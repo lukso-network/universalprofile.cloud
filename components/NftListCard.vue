@@ -22,16 +22,9 @@ const verifiedCreator = computed(() => {
 
 const handleShowAsset = () => {
   try {
-    assertAddress(viewedProfile.value?.address, 'profile')
     assertAddress(props.asset?.address)
     assertString(props.asset.tokenId)
-    navigateTo(
-      nftRoute(
-        viewedProfile.value.address,
-        props.asset.address,
-        props.asset.tokenId
-      )
-    )
+    navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
   } catch (error) {
     console.error(error)
   }
