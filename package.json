@@ -31,7 +31,6 @@
     "@erc725/erc725.js": "0.20.0",
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.0",
-    "@lukso/lsp-factory.js": "3.1.1",
     "@lukso/lsp-smart-contracts": "0.12.0-rc.0",
     "@lukso/web-components": "1.47.1",
     "@nuxt/devtools": "^0.7.4",

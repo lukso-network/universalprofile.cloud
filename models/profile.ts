@@ -1,5 +1,5 @@
 import { Item, Model } from 'pinia-orm'
-import { LSP3Profile, LinkMetadata } from '@lukso/lsp-factory.js'
+import { LSP3ProfileMetadata, LinkMetadata } from '@lukso/lsp-smart-contracts'
 
 import { Image } from '@/models/image'
 
@@ -56,7 +56,7 @@ export type IndexedProfile = {
   profileURL?: string
   profileHash?: string
   profileHashFunction?: string
-  LSP3Profile?: LSP3Profile
+  LSP3Profile?: LSP3ProfileMetadata
   hasProfileName?: boolean
   hasProfileDescription?: boolean
   backgroundImageUrl?: string

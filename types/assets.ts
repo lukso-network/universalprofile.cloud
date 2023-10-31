@@ -1,5 +1,4 @@
-import { ImageMetadata } from '@lukso/lsp-factory.js'
-import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
+import { INTERFACE_IDS, ImageMetadata } from '@lukso/lsp-smart-contracts'
 
 export type InterfaceId = keyof typeof INTERFACE_IDS
 

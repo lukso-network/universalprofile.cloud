@@ -1,4 +1,4 @@
-import { ImageMetadata } from '@lukso/lsp-factory.js'
+import { ImageMetadata } from '@lukso/lsp-smart-contracts'
 
 import { ImageMetadataEncoded } from '@/types/assets'
 import { formatUrl } from '@/utils/formatUrl'

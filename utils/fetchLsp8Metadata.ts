@@ -1,4 +1,4 @@
-import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
+import { LSP4DigitalAssetMetadataJSON } from '@lukso/lsp-smart-contracts'
 import { ERC725JSONSchema } from '@erc725/erc725.js'
 
 import { Lsp8TokenIdType } from '@/types/assets'
@@ -7,11 +7,11 @@ import LSP8IdentifiableDigitalAsset from '@/shared/schemas/LSP8IdentifiableDigit
 export const fetchLsp8Metadata = async (
   tokenId: string,
   assetAddress: Address
-): Promise<LSP4DigitalAssetJSON> => {
+): Promise<LSP4DigitalAssetMetadataJSON> => {
   const lsp8MetadataGetter = async (
     tokenIdType: string,
     tokenId: string
-  ): Promise<LSP4DigitalAssetJSON> => {
+  ): Promise<LSP4DigitalAssetMetadataJSON> => {
     const lsp8Metadata = await erc725.fetchData([
       {
         keyName: `LSP8MetadataJSON:<${tokenIdType}>`,

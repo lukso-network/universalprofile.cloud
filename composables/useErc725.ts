@@ -1,10 +1,5 @@
 import { ERC725, ERC725JSONSchema } from '@erc725/erc725.js'
-import { LSP3Profile } from '@lukso/lsp-factory.js'
 import Web3 from 'web3'
-
-export interface LSP3ProfileJSON {
-  LSP3Profile: LSP3Profile
-}
 
 const getInstance = (address: string, schema: ERC725JSONSchema[]) => {
   const { currentNetwork } = useAppStore()

@@ -1,5 +1,5 @@
 import { Item, Model } from 'pinia-orm'
-import { LinkMetadata } from '@lukso/lsp-factory.js'
+import { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
 import { Profile } from '@/models/profile'
 import { InterfaceId } from '@/types/assets'

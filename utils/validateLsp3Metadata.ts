@@ -1,10 +1,16 @@
-import { ImageMetadata, LSP3Profile, LinkMetadata } from '@lukso/lsp-factory.js'
+import {
+  ImageMetadata,
+  LSP3ProfileMetadata,
+  LinkMetadata,
+} from '@lukso/lsp-smart-contracts'
 
-export const validateLsp3Metadata = (LSP3Metadata: any): LSP3Profile => {
+export const validateLsp3Metadata = (
+  LSP3Metadata: any
+): LSP3ProfileMetadata => {
   let profileImage: ImageMetadata[] = []
   let backgroundImage: ImageMetadata[] = []
 
-  const lsp3Profile = LSP3Metadata?.value?.LSP3Profile as LSP3Profile
+  const lsp3Profile = LSP3Metadata?.value?.LSP3Profile as LSP3ProfileMetadata
   const name = validateName(lsp3Profile.name)
   const tags = validateTags(lsp3Profile.tags)
   const links = validateLinks(lsp3Profile.links)
