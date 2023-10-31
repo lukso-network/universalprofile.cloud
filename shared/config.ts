@@ -1,9 +1,9 @@
 import { NetworkInfo } from '@/types/network'
 
-// chain id of the network to use by default
-export const DEFAULT_NETWORK_CHAIN_ID = '0x1069'
+// chain id's
 export const TESTNET_CHAIN_ID = '0x1069'
 export const MAINNET_CHAIN_ID = '0x2a'
+export const DEFAULT_NETWORK_CHAIN_ID = MAINNET_CHAIN_ID
 
 // list of supported networks
 export const NETWORKS: NetworkInfo[] = [
