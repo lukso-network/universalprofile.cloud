@@ -16,6 +16,7 @@ const handleNavigateProfile = async () => {
     }
   } catch (error) {
     console.error(error)
+    navigateTo(homeRoute())
   }
 }
 
