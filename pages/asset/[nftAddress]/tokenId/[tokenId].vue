@@ -4,7 +4,6 @@ import { CreatorRepository } from '@/repositories/creator'
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 
-const { viewedProfile } = useViewedProfile()
 const { connectedProfile } = useConnectedProfile()
 const { isConnected, isLoadingAssets } = storeToRefs(useAppStore())
 const { asset } = useAsset(nftAddress, tokenId)
@@ -66,8 +65,9 @@ const handleSendAsset = (event: Event) => {
         <div
           v-if="
             isConnected &&
-            viewedProfile?.address === connectedProfile?.address &&
-            connectedProfile
+            connectedProfile &&
+            asset?.address &&
+            connectedProfile?.receivedAssetIds?.includes(asset?.address)
           "
         >
           <AssetOwnInfo

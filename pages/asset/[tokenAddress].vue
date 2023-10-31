@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
-const { viewedProfile } = useViewedProfile()
 const { connectedProfile } = useConnectedProfile()
 const { isConnected, isLoadingAssets } = storeToRefs(useAppStore())
 const { asset } = useAsset(tokenAddress)
@@ -48,8 +47,9 @@ const handleSendAsset = (event: Event) => {
         <div
           v-if="
             isConnected &&
-            viewedProfile?.address === connectedProfile?.address &&
-            connectedProfile
+            connectedProfile &&
+            asset?.address &&
+            connectedProfile?.receivedAssetIds?.includes(asset?.address)
           "
         >
           <AssetOwnInfo
