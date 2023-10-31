@@ -1,3 +1,5 @@
+import { ProviderAPI } from '@/types/provider'
+
 const openStoreLink = () => {
   const storeLink = browserInfo().storeLink
 
@@ -112,16 +114,16 @@ const handleDisconnect = () => {
   location.reload()
 }
 
-const addProviderEvents = async (provider: any) => {
+const addProviderEvents = async (provider: ProviderAPI) => {
   provider?.on?.('accountsChanged', handleAccountsChanged)
   provider?.on?.('disconnect', handleDisconnect)
   provider?.on?.('chainChanged', handleChainChanged)
 }
 
-const removeProviderEvents = async (provider: any) => {
-  provider?.removeListener?.('accountsChanged', handleAccountsChanged)
-  provider?.removeListener?.('disconnect', handleAccountsChanged)
-  provider?.removeListener?.('chainChanged', handleChainChanged)
+const removeProviderEvents = async (provider: ProviderAPI) => {
+  provider?.off?.('accountsChanged', handleAccountsChanged)
+  provider?.off?.('disconnect', handleDisconnect)
+  provider?.off?.('chainChanged', handleChainChanged)
 }
 
 const isUniversalProfileExtension = () => {
