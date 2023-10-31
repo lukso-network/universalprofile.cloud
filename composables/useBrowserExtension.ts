@@ -100,7 +100,7 @@ const handleAccountsChanged = async (accounts: string[]) => {
   }
 }
 
-const handleChainChanged = async (network: { chainId: string }) => {
+const handleChainChanged = (network: { chainId: string }) => {
   const { selectedChainId } = storeToRefs(useAppStore())
 
   selectedChainId.value = network.chainId
