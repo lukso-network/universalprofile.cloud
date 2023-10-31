@@ -10,4 +10,5 @@ export interface NetworkInfo {
     supply: number
     name: string
   }
+  indexName: string
 }

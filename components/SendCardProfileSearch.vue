@@ -6,7 +6,10 @@ import { IndexedProfile } from '@/models/profile'
 
 const SEARCH_COMPONENT_TAG_NAME = 'LUKSO-SEARCH'
 
-const { search } = useAlgoliaSearch<IndexedProfile>(INDEX_NAME)
+const { currentNetwork } = storeToRefs(useAppStore())
+const { search } = useAlgoliaSearch<IndexedProfile>(
+  currentNetwork.value.indexName
+)
 const { receiver, receiverError } = storeToRefs(useSendStore())
 const { isEoA } = useWeb3(PROVIDERS.RPC)
 const isSearchingReceiver = ref<boolean>(false)

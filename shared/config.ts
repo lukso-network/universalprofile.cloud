@@ -16,6 +16,7 @@ export const NETWORKS: NetworkInfo[] = [
       supply: 42_000_000,
       name: 'LUKSO',
     },
+    indexName: 'prod_testnet_universal_profiles',
   },
   {
     name: 'LUKSO Mainnet',
@@ -26,6 +27,7 @@ export const NETWORKS: NetworkInfo[] = [
       supply: 42_000_000,
       name: 'LUKSO',
     },
+    indexName: 'prod_mainnet_universal_profiles',
   },
 ]
 
@@ -64,9 +66,6 @@ export const EXTENSION_STORE_LINKS = {
   safari: '',
   firefox: '',
 }
-
-// indexer params
-export const INDEX_NAME = 'prod_testnet_universal_profiles'
 
 // search params
 export const SEARCH_RESULTS_LIMIT = 100
