@@ -3,7 +3,7 @@ const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
 const { viewedProfile } = useViewedProfile()
 const { connectedProfile } = useConnectedProfile()
-const { isConnecting, isConnected } = storeToRefs(useAppStore())
+const { isConnecting, isConnected, isTestnet } = storeToRefs(useAppStore())
 
 const handleNavigateProfile = async () => {
   try {
@@ -59,7 +59,7 @@ const browserSupportExtension = extensionStore.url !== ''
   <lukso-navbar
     is-sticky
     :title="$formatMessage('header_title')"
-    :is-testnet="IS_TESTNET"
+    :is-testnet="isTestnet ? true : undefined"
     icon="wallet-outline"
     has-menu
     @on-brand-click="handleNavigationDiscovery"

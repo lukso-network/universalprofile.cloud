@@ -1,16 +1,18 @@
-import { Item, Model } from 'pinia-orm'
+import { Item } from 'pinia-orm'
 import { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
 import { Profile } from '@/models/profile'
 import { InterfaceId } from '@/types/assets'
 import { Image } from '@/models/image'
+import { BaseModel } from '@/models/base'
 
-export class AssetModel extends Model {
+export class AssetModel extends BaseModel {
   static entity = 'assets'
   static primaryKey = ['address', 'tokenId']
 
   static fields() {
     return {
+      ...super.fields(),
       address: this.attr(null),
       name: this.string(''),
       symbol: this.string(''),

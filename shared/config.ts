@@ -1,14 +1,15 @@
 import { NetworkInfo } from '@/types/network'
 
-// id of the network to use by default
-export const DEFAULT_NETWORK_ID = 'testnet'
+// chain id of the network to use by default
+export const DEFAULT_NETWORK_CHAIN_ID = '0x1069'
+export const TESTNET_CHAIN_ID = '0x1069'
+export const MAINNET_CHAIN_ID = '0x2a'
 
 // list of supported networks
 export const NETWORKS: NetworkInfo[] = [
   {
-    id: 'testnet',
     name: 'LUKSO Testnet',
-    chainId: '0x1069',
+    chainId: TESTNET_CHAIN_ID,
     rpcHttp: 'https://rpc.testnet.lukso.network',
     token: {
       symbol: 'LYXt',
@@ -17,10 +18,9 @@ export const NETWORKS: NetworkInfo[] = [
     },
   },
   {
-    id: 'mainnet',
     name: 'LUKSO Mainnet',
-    chainId: '0x2a',
-    rpcHttp: 'https://rpc.lukso.gateway.fm',
+    chainId: MAINNET_CHAIN_ID,
+    rpcHttp: 'https://rpc.mainnet.lukso.network',
     token: {
       symbol: 'LYX',
       supply: 42_000_000,
@@ -52,9 +52,6 @@ export const ASSET_LYX_DECIMALS = 18
 
 // url of the ipfs gateway
 export const IPFS_URL = 'https://2eff.lukso.dev/ipfs/'
-
-// testnet flag for the app
-export const IS_TESTNET = true
 
 // extension store links
 export const EXTENSION_STORE_LINKS = {

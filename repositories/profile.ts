@@ -5,7 +5,10 @@ import { ImageModel } from '@/models/image'
 
 export class ProfileRepository extends Repository<ProfileModel> {
   getProfileAndImages(address: Address) {
-    const profile = this.repo(ProfileModel).find(address)
+    const { selectedChainId } = storeToRefs(useAppStore())
+    const profile = this.repo(ProfileModel)
+      .where('chainId', selectedChainId.value)
+      .find(address)
 
     if (!profile) {
       return
@@ -13,10 +16,14 @@ export class ProfileRepository extends Repository<ProfileModel> {
 
     const profileImage =
       profile?.profileImageId &&
-      this.repo(ImageModel).find(profile.profileImageId)
+      this.repo(ImageModel)
+        .where('chainId', selectedChainId.value)
+        .find(profile.profileImageId)
     const backgroundImage =
       profile?.backgroundImageId &&
-      this.repo(ImageModel).find(profile.backgroundImageId)
+      this.repo(ImageModel)
+        .where('chainId', selectedChainId.value)
+        .find(profile.backgroundImageId)
 
     return {
       ...profile,

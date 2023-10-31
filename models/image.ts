@@ -1,11 +1,14 @@
-import { Item, Model } from 'pinia-orm'
+import { Item } from 'pinia-orm'
 
-export class ImageModel extends Model {
+import { BaseModel } from '@/models/base'
+
+export class ImageModel extends BaseModel {
   static entity = 'images'
   static primaryKey = 'hash'
 
   static fields() {
     return {
+      ...super.fields(),
       width: this.number(0),
       height: this.number(0),
       hashFunction: this.string(''),

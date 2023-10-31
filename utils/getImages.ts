@@ -3,6 +3,7 @@ import { ImageMetadata } from '@lukso/lsp-smart-contracts'
 import { ImageMetadataEncoded } from '@/types/assets'
 import { formatUrl } from '@/utils/formatUrl'
 import { Asset } from '@/models/asset'
+import { ImageRepository } from '@/repositories/image'
 
 const convertBlobToBase64 = (blob: Blob) =>
   new Promise((resolve, reject) => {
@@ -65,13 +66,15 @@ export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
     return ASSET_LYX_ICON_URL
   }
 
+  const imageRepo = useRepo(ImageRepository)
+
   if (asset.iconId && useIcon) {
-    const icon = useRepo(ImageModel).find(asset.iconId)
+    const icon = imageRepo.getImage(asset.iconId)
     return icon?.base64
   }
 
   if (asset.imageIds && asset.imageIds.length > 0) {
-    const image = useRepo(ImageModel).find(asset.imageIds[0])
+    const image = imageRepo.getImage(asset.imageIds[0])
     return image?.base64
   }
 

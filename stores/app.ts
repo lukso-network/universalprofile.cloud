@@ -1,6 +1,6 @@
 import { AssetFilter } from '@/types/assets'
 import { Modal } from '@/types/modal'
-import { NetworkInfo, NetworkId } from '@/types/network'
+import { NetworkInfo } from '@/types/network'
 
 /**
  * App store
@@ -11,7 +11,7 @@ export const useAppStore = defineStore(
   'app',
   () => {
     const networks = ref<NetworkInfo[]>(NETWORKS)
-    const selectedNetwork = ref<NetworkId>(DEFAULT_NETWORK_ID)
+    const selectedChainId = ref<string>(DEFAULT_NETWORK_CHAIN_ID)
     const modal = ref<Modal>()
     const connectedProfileAddress = ref<Address>()
     const assetFilter = ref<AssetFilter>(AssetFilter.owned)
@@ -24,22 +24,26 @@ export const useAppStore = defineStore(
 
     // --- getters
 
-    const getNetwork = (networkId: NetworkId): NetworkInfo => {
-      const network = networks.value.find(network => network.id === networkId)
+    const getNetwork = (chainId: string): NetworkInfo => {
+      const network = networks.value.find(
+        network => network.chainId === chainId
+      )
 
       // fallback to default network
       if (!network) {
         return networks.value.find(
-          network => network.id === DEFAULT_NETWORK_ID
+          network => network.chainId === DEFAULT_NETWORK_CHAIN_ID
         ) as NetworkInfo
       }
 
       return network
     }
 
-    const currentNetwork = computed(() => getNetwork(selectedNetwork.value))
+    const currentNetwork = computed(() => getNetwork(selectedChainId.value))
 
     const isConnected = computed(() => !!connectedProfileAddress.value)
+
+    const isTestnet = computed(() => selectedChainId.value === TESTNET_CHAIN_ID)
 
     // --- actions
 
@@ -49,7 +53,7 @@ export const useAppStore = defineStore(
 
     return {
       networks,
-      selectedNetwork,
+      selectedChainId,
       getNetwork,
       modal,
       setModal,
@@ -61,11 +65,12 @@ export const useAppStore = defineStore(
       isLoadingAssets,
       isLoadedApp,
       assetFilter,
+      isTestnet,
     }
   },
   {
     persist: {
-      paths: ['connectedProfileAddress', 'assetFilter'],
+      paths: ['connectedProfileAddress', 'assetFilter', 'selectedChainId'],
       key: STORAGE_KEY.APP_STORE,
     },
   }

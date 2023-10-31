@@ -5,10 +5,13 @@ import { InterfaceId } from '@/types/assets'
 
 export class AssetRepository extends Repository<AssetModel> {
   async loadAssets(addresses: Address[], profileAddress: Address) {
+    const { selectedChainId } = storeToRefs(useAppStore())
+
     await Promise.all(
       addresses.map(async assetAddress => {
         const storageAsset = this.repo(AssetModel)
           .where('address', assetAddress)
+          .where('chainId', selectedChainId.value)
           .get()
 
         if (storageAsset && storageAsset.length > 0) {
@@ -42,6 +45,7 @@ export class AssetRepository extends Repository<AssetModel> {
 
   async getOwnedTokens() {
     const { viewedProfile } = useViewedProfile()
+    const { selectedChainId } = storeToRefs(useAppStore())
 
     if (!viewedProfile.value?.receivedAssetIds) {
       return []
@@ -50,11 +54,13 @@ export class AssetRepository extends Repository<AssetModel> {
     return this.repo(AssetModel)
       .where('standard', 'LSP7DigitalAsset')
       .where('address', viewedProfile.value.receivedAssetIds)
+      .where('chainId', selectedChainId.value)
       .get()
   }
 
   async getIssuedTokens() {
     const { viewedProfile } = useViewedProfile()
+    const { selectedChainId } = storeToRefs(useAppStore())
 
     if (!viewedProfile.value?.issuedAssetIds) {
       return []
@@ -63,11 +69,13 @@ export class AssetRepository extends Repository<AssetModel> {
     return this.repo(AssetModel)
       .where('standard', 'LSP7DigitalAsset')
       .where('address', viewedProfile.value.issuedAssetIds)
+      .where('chainId', selectedChainId.value)
       .get()
   }
 
   async getOwnedNfts() {
     const { viewedProfile } = useViewedProfile()
+    const { selectedChainId } = storeToRefs(useAppStore())
 
     if (!viewedProfile.value?.receivedAssetIds) {
       return []
@@ -76,11 +84,13 @@ export class AssetRepository extends Repository<AssetModel> {
     return this.repo(AssetModel)
       .where('standard', 'LSP8IdentifiableDigitalAsset')
       .where('address', viewedProfile.value.receivedAssetIds)
+      .where('chainId', selectedChainId.value)
       .get()
   }
 
   async getIssuedNfts() {
     const { viewedProfile } = useViewedProfile()
+    const { selectedChainId } = storeToRefs(useAppStore())
 
     if (!viewedProfile.value?.issuedAssetIds) {
       return []
@@ -89,11 +99,13 @@ export class AssetRepository extends Repository<AssetModel> {
     return this.repo(AssetModel)
       .where('standard', 'LSP8IdentifiableDigitalAsset')
       .where('address', viewedProfile.value.issuedAssetIds)
+      .where('chainId', selectedChainId.value)
       .get()
   }
 
   getOwnedAssets() {
     const { viewedProfile } = useViewedProfile()
+    const { selectedChainId } = storeToRefs(useAppStore())
 
     if (!viewedProfile.value?.receivedAssetIds) {
       return []
@@ -102,6 +114,7 @@ export class AssetRepository extends Repository<AssetModel> {
     return this.repo(AssetModel)
       .where('address', viewedProfile.value.receivedAssetIds)
       .where('standard', (standard: InterfaceId) => standard)
+      .where('chainId', selectedChainId.value)
       .get()
   }
 
@@ -124,18 +137,27 @@ export class AssetRepository extends Repository<AssetModel> {
   }
 
   getAssetAndImages(address: Address, tokenId = '') {
+    const { selectedChainId } = storeToRefs(useAppStore())
     const primaryKey = this.primaryKey(address, tokenId)
-    const asset = this.repo(AssetModel).find(primaryKey)
+    const asset = this.repo(AssetModel)
+      .where('chainId', selectedChainId.value)
+      .find(primaryKey)
 
     if (!asset) {
       return
     }
 
-    const icon = asset?.iconId && this.repo(ImageModel).find(asset.iconId)
+    const icon =
+      asset?.iconId &&
+      this.repo(ImageModel)
+        .where('chainId', selectedChainId.value)
+        .find(asset.iconId)
     const images =
       asset?.imageIds &&
       asset.imageIds.length &&
-      this.repo(ImageModel).find(asset.imageIds)
+      this.repo(ImageModel)
+        .where('chainId', selectedChainId.value)
+        .find(asset.imageIds)
 
     return {
       ...asset,
@@ -145,12 +167,21 @@ export class AssetRepository extends Repository<AssetModel> {
   }
 
   setBalance(address: Address, balance: string) {
-    this.repo(AssetModel).where('address', address).update({ balance })
+    const { selectedChainId } = storeToRefs(useAppStore())
+
+    this.repo(AssetModel)
+      .where('address', address)
+      .where('chainId', selectedChainId.value)
+      .update({ balance })
   }
 
   removeAsset(address: Address, tokenId = '') {
+    const { selectedChainId } = storeToRefs(useAppStore())
     const primaryKey = this.primaryKey(address, tokenId)
-    this.repo(AssetModel).destroy(primaryKey)
+
+    this.repo(AssetModel)
+      .where('chainId', selectedChainId.value)
+      .destroy(primaryKey)
   }
 
   private primaryKey(address: Address, tokenId = '') {

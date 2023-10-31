@@ -100,6 +100,14 @@ const handleAccountsChanged = async (accounts: string[]) => {
   }
 }
 
+const handleChainChanged = async (network: { chainId: string }) => {
+  const { selectedChainId } = storeToRefs(useAppStore())
+
+  selectedChainId.value = network.chainId
+  disconnect()
+  navigateTo(homeRoute())
+}
+
 const handleDisconnect = () => {
   location.reload()
 }
@@ -107,11 +115,13 @@ const handleDisconnect = () => {
 const addProviderEvents = async (provider: any) => {
   provider?.on?.('accountsChanged', handleAccountsChanged)
   provider?.on?.('disconnect', handleDisconnect)
+  provider?.on?.('chainChanged', handleChainChanged)
 }
 
 const removeProviderEvents = async (provider: any) => {
   provider?.removeListener?.('accountsChanged', handleAccountsChanged)
   provider?.removeListener?.('disconnect', handleAccountsChanged)
+  provider?.removeListener?.('chainChanged', handleChainChanged)
 }
 
 const isUniversalProfileExtension = () => {
