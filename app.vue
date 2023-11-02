@@ -96,13 +96,15 @@ const setupViewedProfile = async () => {
       if (isAddress(profileAddress)) {
         await fetchProfile(profileAddress)
         await fetchAssets(profileAddress)
+      } else {
+        navigateTo(notFoundRoute())
       }
     }
   } catch (error: unknown) {
     console.error(error)
 
     if (error instanceof EoAError) {
-      navigateTo(notFoundRoute())
+      navigateTo(notFoundRoute()) // TODO we might want to inform user about EoA instead showing 404
     }
   }
 }
