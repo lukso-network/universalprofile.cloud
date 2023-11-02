@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
-import { isAddress, numberToHex } from 'web3-utils'
+import { isAddress } from 'web3-utils'
 
 import { assertString } from '@/utils/validators'
 
@@ -19,13 +19,13 @@ const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
 }
 
-const setupWeb3Instances = () => {
+const setupWeb3Instances = async () => {
   const provider = INJECTED_PROVIDER
 
   if (provider) {
     // for chain interactions through wallet
     web3Store.addWeb3(PROVIDERS.INJECTED, provider)
-    addProviderEvents(provider)
+    await addProviderEvents(provider)
     // expose web3 instance to global scope for console access
     window.web3 = web3Store.getWeb3(PROVIDERS.INJECTED)
   } else {
@@ -110,16 +110,18 @@ const setupViewedProfile = async () => {
 }
 
 const setupNetwork = async () => {
-  const { getChainId } = useWeb3(PROVIDERS.INJECTED)
+  const chainId = (await window.ethereum.request({
+    method: 'eth_chainId',
+  })) as string
 
-  selectedChainId.value = numberToHex(await getChainId()) as string
+  selectedChainId.value = chainId
 }
 
 onMounted(async () => {
   setupTranslations()
-  setupWeb3Instances()
-  checkConnectionExpiry()
   await setupNetwork()
+  await setupWeb3Instances()
+  checkConnectionExpiry()
   await routerBackProfileLoad()
   await setupViewedProfile()
 
