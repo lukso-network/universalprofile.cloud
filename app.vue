@@ -110,7 +110,7 @@ const setupViewedProfile = async () => {
 }
 
 const setupNetwork = async () => {
-  const chainId = (await window.ethereum.request({
+  const chainId = (await INJECTED_PROVIDER?.request({
     method: 'eth_chainId',
   })) as string
 
