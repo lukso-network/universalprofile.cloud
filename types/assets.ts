@@ -1,7 +1,4 @@
-import { LinkMetadata } from '@lukso/lsp-factory.js'
-import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
-
-import { Creator } from './profile'
+import { INTERFACE_IDS, ImageMetadata } from '@lukso/lsp-smart-contracts'
 
 export type InterfaceId = keyof typeof INTERFACE_IDS
 
@@ -27,25 +24,8 @@ export enum Lsp8TokenIdType {
 
 export type Base64EncodedImage = `data:image/jpeg;base64${string}`
 
-export type Asset = {
-  // generic (ERC20)
-  address?: Address
-  name?: string
-  symbol?: string
-  amount?: string
-  decimals?: number
-  tokenSupply?: string
-
-  // LSP7/LSP8
-  icon?: string | Base64EncodedImage
-  standard?: InterfaceId
-  description?: string
-  images?: Base64EncodedImage[]
-  links?: LinkMetadata[]
-  creators?: Creator[]
-  tokenId?: string
-
-  // custom
-  isNativeToken?: boolean
-  metadata?: any
+export type ImageMetadataEncoded = Partial<ImageMetadata> & {
+  base64?: Base64EncodedImage
+  profileId?: Address
+  assetId?: Address
 }

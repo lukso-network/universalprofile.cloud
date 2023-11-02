@@ -4,10 +4,14 @@ export enum PROVIDERS {
 }
 
 export enum STORAGE_KEY {
-  CONNECTED_ADDRESS = 'LUKSO_WALLET:connectedAddress',
-  CONNECTION_EXPIRY = 'LUKSO_WALLET:connectionExpiry',
-  RECONNECT_ADDRESS = 'LUKSO_WALLET:reconnectAddress',
-  CURRENCY_STORE = 'LUKSO_WALLET:currencyStore',
+  CONNECTION_EXPIRY = 'LW:connectionExpiry',
+  RECONNECT_ADDRESS = 'LW:reconnectAddress',
+  CURRENCY_STORE = 'LW:currency',
+  APP_STORE = 'LW:app',
+  ASSET_STORE = 'LW:assets',
+  PROFILE_STORE = 'LW:profiles',
+  IMAGE_STORE = 'LW:images',
+  CREATOR_STORE = 'LW:creators',
 }
 
 export enum CACHE_KEY {

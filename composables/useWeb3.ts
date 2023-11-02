@@ -62,5 +62,8 @@ export default function useWeb3(providerName: string) {
           console.log(JSON.stringify(payload, null, 2))
         })
     },
+    getChainId: async () => {
+      return await getWeb3().eth.getChainId()
+    },
   }
 }

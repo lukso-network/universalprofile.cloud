@@ -17,6 +17,8 @@ export const getConnectionErrorMessage = (error: unknown) => {
         return formatMessage('web3_connect_error_rejected_request')
       case -32005:
         return formatMessage('web3_connect_error_pending_request')
+      case -32001:
+        return formatMessage('web3_connect_error_no_profiles')
       default:
         break
     }

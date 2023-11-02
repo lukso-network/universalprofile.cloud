@@ -69,6 +69,7 @@
   "header_connect": "Connect",
   "web3_connect_error": "There was an error while connecting to the browser extension.",
   "footer_privacy_policy_text": "Privacy Policy",
+  "web3_connect_error_no_profiles": "You don't have any profiles.",
   "token_details_images": "Token Images",
   "profile_search_no_results": "No profile found"
 }

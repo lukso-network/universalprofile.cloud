@@ -3,18 +3,20 @@ definePageMeta({
   layout: 'landing',
 })
 
+const { isConnected, isLoadedApp, connectedProfileAddress } = storeToRefs(
+  useAppStore()
+)
+const { isUniversalProfileExtension } = useBrowserExtension()
+
 const supportedBrowsers = Object.entries(EXTENSION_STORE_LINKS)
   .filter(entry => entry[1] !== '')
   .map(browser => browser[0])
 
-const { status, profile } = useConnectedProfileStore()
-const { isUniversalProfileExtension } = useBrowserExtension()
-
 watchEffect(() => {
-  if (status.isConnected) {
+  if (isConnected.value) {
     try {
-      assertAddress(profile.address, 'profile')
-      navigateTo(profileRoute(profile.address))
+      assertAddress(connectedProfileAddress.value, 'profile')
+      navigateTo(profileRoute(connectedProfileAddress.value))
     } catch (error) {
       console.error(error)
     }
@@ -26,8 +28,8 @@ watchEffect(() => {
   <div class="relative">
     <div
       :class="{
-        'opacity-0': status.isProfileLoading,
-        'opacity-100': !status.isProfileLoading,
+        'opacity-0': !isLoadedApp,
+        'opacity-100': isLoadedApp,
       }"
       class="max-w-[950px] py-20 px-4 mx-auto relative grid grid-cols-1 gap-7 h-full transition-opacity duration-300 delay-500 sm:items-center sm:grid-cols-2 sm:pt-24"
     >
@@ -80,6 +82,6 @@ watchEffect(() => {
         </div>
       </div>
     </div>
-    <AppLoader v-if="status.isProfileLoading" />
+    <AppLoader v-if="!isLoadedApp" />
   </div>
 </template>

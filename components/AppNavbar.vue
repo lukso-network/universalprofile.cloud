@@ -1,28 +1,29 @@
 <script setup lang="ts">
-const { profile: connectedProfile, status } = useConnectedProfileStore()
 const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
-const { profile: viewedProfile, reloadProfile } = useViewedProfileStore()
+const { viewedProfile } = useViewedProfile()
+const { connectedProfile } = useConnectedProfile()
+const { isConnecting, isConnected, isTestnet } = storeToRefs(useAppStore())
 
 const handleNavigateProfile = async () => {
   try {
-    if (status.isConnected) {
-      assertAddress(connectedProfile.address, 'profile')
-      reloadProfile(connectedProfile)
-      navigateTo(profileRoute(connectedProfile.address))
+    if (isConnected.value) {
+      assertAddress(connectedProfile.value?.address, 'profile')
+      navigateTo(profileRoute(connectedProfile.value.address))
     } else {
-      assertAddress(viewedProfile.address, 'profile')
-      navigateTo(profileRoute(viewedProfile.address))
+      assertAddress(viewedProfile.value?.address, 'profile')
+      navigateTo(profileRoute(viewedProfile.value.address))
     }
   } catch (error) {
     console.error(error)
+    navigateTo(homeRoute())
   }
 }
 
 const handleNavigateSend = () => {
   try {
-    assertAddress(connectedProfile.address, 'profile')
-    navigateTo(sendRoute(connectedProfile.address))
+    assertAddress(connectedProfile.value?.address, 'profile')
+    navigateTo(sendRoute(connectedProfile.value.address))
   } catch (error) {
     console.error(error)
   }
@@ -58,7 +59,7 @@ const browserSupportExtension = extensionStore.url !== ''
   <lukso-navbar
     is-sticky
     :title="$formatMessage('header_title')"
-    :is-testnet="IS_TESTNET"
+    :is-testnet="isTestnet ? true : undefined"
     icon="wallet-outline"
     has-menu
     @on-brand-click="handleNavigationDiscovery"
@@ -73,7 +74,7 @@ const browserSupportExtension = extensionStore.url !== ''
         {{ $formatMessage('header_discovery') }}
       </lukso-button>
       <lukso-button
-        v-if="status.isConnected"
+        v-if="isConnected"
         variant="text"
         custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
         @click="handleNavigateSend"
@@ -81,20 +82,20 @@ const browserSupportExtension = extensionStore.url !== ''
         {{ $formatMessage('header_send') }}
       </lukso-button>
       <lukso-button
-        v-if="status.isConnected"
+        v-if="isConnected"
         variant="text"
         custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
         @click="handleNavigateProfile"
       >
         {{ $formatMessage('header_my_profile') }}
       </lukso-button>
-      <AppNavbarProfileDropdown v-if="status.isConnected" />
+      <AppNavbarProfileDropdown v-if="isConnected" />
       <lukso-button
         v-else-if="isUniversalProfileExtension()"
         variant="secondary"
         custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
         @click="handleConnect"
-        :is-loading="status.isConnecting ? true : undefined"
+        :is-loading="isConnecting ? true : undefined"
         :loading-text="$formatMessage('header_connect')"
       >
         {{ $formatMessage('header_connect') }}
@@ -119,7 +120,7 @@ const browserSupportExtension = extensionStore.url !== ''
           {{ $formatMessage('header_discovery') }}
         </lukso-button>
         <lukso-button
-          v-if="status.isConnected"
+          v-if="isConnected"
           variant="text"
           custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
           @click="handleNavigateSend"
@@ -127,7 +128,7 @@ const browserSupportExtension = extensionStore.url !== ''
           {{ $formatMessage('header_send') }}
         </lukso-button>
         <lukso-button
-          v-if="status.isConnected"
+          v-if="isConnected"
           variant="text"
           custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
           @click="handleNavigateProfile"
@@ -135,7 +136,7 @@ const browserSupportExtension = extensionStore.url !== ''
           {{ $formatMessage('header_my_profile') }}
         </lukso-button>
         <lukso-button
-          v-if="status.isConnected"
+          v-if="isConnected"
           variant="text"
           custom-class="text-purple-51 text-12 hover:text-purple-41 uppercase nav-apax-12-medium-uppercase font-apax font-500"
           @click="handleDisconnect"

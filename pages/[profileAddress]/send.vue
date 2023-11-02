@@ -8,20 +8,17 @@ import {
   LSP7DigitalAsset,
   LSP8IdentifiableDigitalAsset,
 } from '@/types/contracts'
+import { AssetRepository } from '@/repositories/asset'
 
-const { profile: connectedProfile, status } = useConnectedProfileStore()
-const {
-  profile: viewedProfile,
-  setBalance,
-  removeNft,
-} = useViewedProfileStore()
-const { ownedAssets } = storeToRefs(useViewedProfileStore())
+const { connectedProfile } = useConnectedProfile()
 const { currentNetwork } = useAppStore()
 const { asset, onSend, amount, receiver } = storeToRefs(useSendStore())
+const { isLoadedApp, isConnected } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
 const { sendTransaction, getBalance, contract } = useWeb3(PROVIDERS.INJECTED)
+const assetRepository = useRepo(AssetRepository)
 
 onMounted(() => {
   setStatus('draft')
@@ -41,36 +38,43 @@ onUnmounted(() => {
 
 watchEffect(() => {
   // until everything is loaded we skip this effect
-  if (!status.isProfileLoaded) {
+  if (!isLoadedApp) {
     return
   }
 
   try {
     amount.value = undefined
     const assetAddress = useRouter().currentRoute.value.query.asset
+    const tokenId = useRouter().currentRoute.value.query.tokenId
     assertAddress(assetAddress, 'asset')
-    asset.value = ownedAssets.value?.find(
-      asset => asset.address === assetAddress
-    )
-    assertAddress(asset.value?.address, 'asset')
+    const storeAsset = assetRepository.getAssetAndImages(assetAddress, tokenId)
+
+    if (!storeAsset) {
+      assertAddress(connectedProfile.value?.address, 'profile')
+      navigateTo(sendRoute(connectedProfile.value?.address))
+    } else {
+      asset.value = storeAsset
+    }
   } catch (error) {
     // fallback to native token
     asset.value = {
       name: currentNetwork.token.name,
       symbol: currentNetwork.token.symbol,
-      icon: ASSET_LYX_ICON_URL,
       isNativeToken: true,
+      decimals: ASSET_LYX_DECIMALS,
     }
   }
 
   // since balance is not avail in onMounted hook
   asset.value = {
     ...asset.value,
-    amount: isLyx(asset.value) ? connectedProfile.balance : asset.value.amount,
+    balance: isLyx(asset.value)
+      ? connectedProfile.value?.balance
+      : asset.value?.balance,
   }
 
   // when logout
-  if (!status.isConnected) {
+  if (!isConnected) {
     navigateTo(homeRoute())
   }
 })
@@ -82,7 +86,7 @@ const handleSend = async () => {
     // native token transfer
     if (isLyx(asset.value)) {
       const transaction = {
-        from: connectedProfile.address,
+        from: connectedProfile.value?.address,
         to: receiver.value?.address as unknown as string,
         value: toWei(amount.value || '0'),
       } as TransactionConfig
@@ -98,22 +102,23 @@ const handleSend = async () => {
             asset.value?.address
           )
 
-          assertAddress(connectedProfile.address)
+          assertAddress(connectedProfile.value?.address)
           assertAddress(receiver.value?.address)
           await tokenContract.methods
             .transfer(
-              connectedProfile.address,
+              connectedProfile.value.address,
               receiver.value?.address,
               toWei(amount.value || '0'),
               false,
               '0x'
             )
-            .send({ from: connectedProfile.address })
+            .send({ from: connectedProfile.value.address })
           const balance = (await tokenContract.methods
-            .balanceOf(connectedProfile.address)
+            .balanceOf(connectedProfile.value.address)
             .call()) as string
           assertAddress(asset.value?.address, 'asset')
-          setBalance(asset.value.address, balance)
+          assetRepository.setBalance(asset.value.address, balance)
+
           break
         case 'LSP8IdentifiableDigitalAsset':
           const nftContract = contract<LSP8IdentifiableDigitalAsset>(
@@ -121,20 +126,20 @@ const handleSend = async () => {
             asset.value?.address
           )
 
-          assertAddress(connectedProfile.address)
+          assertAddress(connectedProfile.value?.address)
           assertAddress(receiver.value?.address)
           assertString(asset.value.tokenId)
           await nftContract.methods
             .transfer(
-              connectedProfile.address,
+              connectedProfile.value.address,
               receiver.value?.address,
               asset.value.tokenId,
               false,
               '0x'
             )
-            .send({ from: connectedProfile.address })
+            .send({ from: connectedProfile.value.address })
           assertNotUndefined(asset.value.address, 'asset')
-          removeNft(asset.value.address, asset.value.tokenId)
+          assetRepository.removeAsset(asset.value.address, asset.value.tokenId)
           break
         default:
           console.error('Unknown token type')
@@ -155,12 +160,12 @@ const handleSend = async () => {
 }
 
 const updateLyxBalance = async () => {
-  assertString(connectedProfile.address)
-  connectedProfile.balance = await getBalance(connectedProfile.address)
+  assertString(connectedProfile.value?.address)
+  const balance = await getBalance(connectedProfile.value.address)
 
-  if (viewedProfile.address === connectedProfile.address) {
-    viewedProfile.balance = connectedProfile.balance
-  }
+  useRepo(ProfileModel)
+    .where('address', connectedProfile.value.address)
+    .update({ balance })
 }
 </script>
 

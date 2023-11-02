@@ -1,12 +1,14 @@
 import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 
-import { Asset } from '@/types/assets'
 import { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
+import { Asset } from '@/models/asset'
+import { ImageMetadataEncoded } from '@/types/assets'
 
 export const fetchLsp8Assets = async (
   address: Address,
-  profileAddress: Address
-) => {
+  profileAddress?: Address,
+  tokensId?: string[]
+): Promise<Asset[]> => {
   const { contract } = useWeb3(PROVIDERS.RPC)
   const lsp8Contract = contract<LSP8IdentifiableDigitalAssetInterface>(
     LSP8IdentifiableDigitalAsset.abi as any,
@@ -14,18 +16,21 @@ export const fetchLsp8Assets = async (
   )
   const tokenSupply = await lsp8Contract.methods.totalSupply().call()
 
-  // profile can have few ids of same LSP8 asset
-  const tokensIds = await lsp8Contract.methods.tokenIdsOf(profileAddress).call()
+  let tokensIds = tokensId
 
-  if (!tokensIds.length) {
+  if (profileAddress) {
+    // profile can have few ids of same LSP8 asset
+    tokensIds = await lsp8Contract.methods.tokenIdsOf(profileAddress).call()
+  }
+
+  if (!tokensIds || !tokensIds.length) {
     return []
   }
 
-  const { fetchLsp8Metadata } = useErc725() // TODO move to utils
   // nft metadata is the same for all tokens of same asset
   const [name, symbol, nftMetadata] = await fetchLsp4Metadata(address)
 
-  const assets = await Promise.all(
+  const assets: Asset[] = await Promise.all(
     tokensIds.map(async tokenId => {
       const collectionMetadata = (await fetchLsp8Metadata(tokenId, address))
         .LSP4Metadata
@@ -35,9 +40,9 @@ export const fetchLsp8Assets = async (
         icon: metadataIcon,
         links,
       } = collectionMetadata
-      const creators = await fetchLsp4Creators(address)
       const icon = await getAndConvertImage(metadataIcon, 200)
-      const images: Base64EncodedImage[] = []
+      const images: ImageMetadataEncoded[] = []
+      const creators = await fetchLsp4Creators(address, tokenId)
 
       for await (const image of metadataImages) {
         const convertedImage = await getAndConvertImage(image, 400)
@@ -46,25 +51,38 @@ export const fetchLsp8Assets = async (
         }
       }
 
+      const imageIds: string[] = []
+      images.forEach(image => {
+        image?.hash && imageIds.push(image.hash)
+      })
+
+      const creatorIds: string[] = []
+      creators?.forEach(creator => {
+        creator?.address && creatorIds.push(creator.address)
+      })
+
       return {
         address,
         name,
         symbol,
-        amount: '1', // NFT is always 1
+        balance: '1', // NFT is always 1
         decimals: 0, // NFT decimals are always 0
         tokenSupply,
-        icon,
         links,
         description,
-        images,
-        creators,
         metadata: {
           nft: nftMetadata.LSP4Metadata,
           collection: collectionMetadata,
         },
         standard: 'LSP8IdentifiableDigitalAsset',
         tokenId,
-      } as Asset
+        icon,
+        iconId: icon?.hash,
+        images,
+        imageIds,
+        creators,
+        creatorIds,
+      }
     })
   )
   return assets

@@ -11,7 +11,7 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab']
   const realValueBN = new BigNumber(`${input.value}${key}`)
   const assetBalanceBN = new BigNumber(
-    `${fromWeiWithDecimals(asset.value?.amount || '0', asset.value?.decimals)}`
+    `${fromWeiWithDecimals(asset.value?.balance || '0', asset.value?.decimals)}`
   )
   const maxDecimalPlaces = 6
 
@@ -31,7 +31,7 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   // when value is more then balance we set to max value
   if (realValueBN.gt(assetBalanceBN)) {
     amount.value = fromWeiWithDecimals(
-      asset.value?.amount?.toString() || '0',
+      asset.value?.balance?.toString() || '0',
       asset.value?.decimals
     )
     event.preventDefault()
@@ -63,7 +63,7 @@ const handleKeyUp = (event: CustomEvent) => {
 
 const handleUnitClick = () => {
   const total = fromWeiWithDecimals(
-    asset.value?.amount?.toString() || '0',
+    asset.value?.balance?.toString() || '0',
     asset.value?.decimals
   )
   amount.value = total
@@ -77,7 +77,7 @@ const handleUnitClick = () => {
     :unit="
       $formatMessage('profile_balance_of', {
         balance: $formatNumber(
-          fromWeiWithDecimals(asset?.amount || '0', asset?.decimals) || '',
+          fromWeiWithDecimals(asset?.balance || '0', asset?.decimals) || '',
           {
             maximumFractionDigits: asset?.decimals,
           }

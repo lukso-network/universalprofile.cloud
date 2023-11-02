@@ -1,7 +1,9 @@
-import { ImageMetadata } from '@lukso/lsp-factory.js'
+import { ImageMetadata } from '@lukso/lsp-smart-contracts'
 
-import { Asset } from '@/types/assets'
+import { ImageMetadataEncoded } from '@/types/assets'
 import { formatUrl } from '@/utils/formatUrl'
+import { Asset } from '@/models/asset'
+import { ImageRepository } from '@/repositories/image'
 
 const convertBlobToBase64 = (blob: Blob) =>
   new Promise((resolve, reject) => {
@@ -22,7 +24,7 @@ const fetchBlobAndConvertToBase64 = async (
 }
 
 export const fetchAndConvertImage = async (imageUrl: string) => {
-  const request = new Request(imageUrl)
+  const request = new Request(formatUrl(imageUrl))
   return (await fetchBlobAndConvertToBase64(request)) as Base64EncodedImage
 }
 
@@ -38,35 +40,42 @@ export const fetchAndConvertImage = async (imageUrl: string) => {
 export const getImageBySize = (
   images: ImageMetadata[],
   maxHeight: number
-): string | undefined => {
+): ImageMetadata | undefined => {
   for (const image of images) {
     if (image.height <= maxHeight) {
-      return formatUrl(image.url)
+      return image
     }
   }
-  return images.length > 0 ? formatUrl(images[0].url) : undefined
+  return images.length > 0 ? images[0] : undefined
 }
 
 /**
  * Return asset thumb image for given sizes.
- * It first look into icon and if not found take first image from collection
  *
  * @param asset
  * @param minWidth
  * @param minHeight
  * @returns
  */
-export const getAssetThumb = (asset?: Asset) => {
+export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
   if (!asset) {
     return ''
   }
 
-  if (asset.icon) {
-    return asset.icon
+  if (asset.isNativeToken) {
+    return ASSET_LYX_ICON_URL
   }
 
-  if (asset.images && asset.images.length > 0) {
-    return asset.images[0]
+  const imageRepo = useRepo(ImageRepository)
+
+  if (asset.iconId && useIcon) {
+    const icon = imageRepo.getImage(asset.iconId)
+    return icon?.base64
+  }
+
+  if (asset.imageIds && asset.imageIds.length > 0) {
+    const image = imageRepo.getImage(asset.imageIds[0])
+    return image?.base64
   }
 
   return ''
@@ -76,9 +85,13 @@ export const getAndConvertImage = async (
   image: ImageMetadata[],
   maxHeight: number
 ) => {
-  const optimalIcon = getImageBySize(image, maxHeight)
+  const optimalImage = getImageBySize(image, maxHeight)
 
-  if (optimalIcon) {
-    return await fetchAndConvertImage(optimalIcon)
+  if (optimalImage) {
+    return {
+      ...optimalImage,
+      base64: formatUrl(optimalImage.url),
+      // base64: await fetchAndConvertImage(optimalImage.url), // TODO add base when cache storage is added
+    } as ImageMetadataEncoded
   }
 }

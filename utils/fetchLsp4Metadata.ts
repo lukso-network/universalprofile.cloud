@@ -1,11 +1,11 @@
 import { ERC725JSONSchema } from '@erc725/erc725.js'
-import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
+import { LSP4DigitalAssetMetadataJSON } from '@lukso/lsp-smart-contracts'
 import LSP4DigitalAsset from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json'
 import { URLDataWithHash } from '@erc725/erc725.js/build/main/src/types'
 
 export const fetchLsp4Metadata = async (
   assetAddress: Address
-): Promise<[string, string, LSP4DigitalAssetJSON]> => {
+): Promise<[string, string, LSP4DigitalAssetMetadataJSON]> => {
   const { getInstance } = useErc725()
 
   const erc725 = getInstance(
@@ -28,7 +28,7 @@ export const fetchLsp4Metadata = async (
       typeof lsp4DigitalAsset[1]?.value == 'string'
         ? lsp4DigitalAsset[1]?.value
         : ''
-    const metadata = validateLSP4MetaData(
+    const metadata = validateLsp4MetaData(
       lsp4DigitalAsset[2].value as URLDataWithHash
     )
     return [name, symbol, metadata]

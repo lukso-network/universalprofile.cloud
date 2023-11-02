@@ -27,7 +27,6 @@ export const useCurrencyStore = defineStore(
   },
   {
     persist: {
-      storage: persistedState.localStorage,
       key: STORAGE_KEY.CURRENCY_STORE,
     },
   }

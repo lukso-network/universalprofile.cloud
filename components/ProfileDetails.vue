@@ -1,11 +1,16 @@
 <script setup lang="ts">
-const { profile } = useViewedProfileStore()
+const { viewedProfile } = useViewedProfile()
 
-const hasLinks = computed(() => profile?.links && profile.links?.length > 0)
-const hasDescription = computed(
-  () => profile?.description && profile.description !== ''
+const hasLinks = computed(
+  () => viewedProfile.value?.links && viewedProfile.value.links?.length > 0
 )
-const hasTags = computed(() => profile?.tags && profile.tags?.length > 0)
+const hasDescription = computed(
+  () =>
+    viewedProfile.value?.description && viewedProfile.value.description !== ''
+)
+const hasTags = computed(
+  () => viewedProfile.value?.tags && viewedProfile.value.tags?.length > 0
+)
 </script>
 
 <template>
@@ -14,19 +19,23 @@ const hasTags = computed(() => profile?.tags && profile.tags?.length > 0)
       v-if="hasTags"
       class="gap-x-4 gap-y-2 mb-3 flex justify-center flex-wrap"
     >
-      <li v-for="(tag, index) in profile.tags" :key="index" class="inline-flex">
+      <li
+        v-for="(tag, index) in viewedProfile?.tags"
+        :key="index"
+        class="inline-flex"
+      >
         <lukso-tag is-rounded>{{ tag }}</lukso-tag>
       </li>
     </ul>
     <div v-if="hasDescription" class="paragraph-inter-12-medium text-center">
-      {{ profile.description }}
+      {{ viewedProfile?.description }}
     </div>
     <ul
       v-if="hasLinks"
       class="gap-x-4 gap-y-2 mt-3 flex justify-center flex-wrap"
     >
       <li
-        v-for="(link, index) in profile.links"
+        v-for="(link, index) in viewedProfile?.links"
         :key="index"
         class="inline-flex"
       >

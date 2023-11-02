@@ -1,6 +1,6 @@
 export class EoAError extends Error {
-  constructor() {
-    super('The address is an EoA')
+  constructor(address: string) {
+    super(`The ${address} address is an EoA`)
   }
 }
 

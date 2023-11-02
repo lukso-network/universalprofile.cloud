@@ -1,3 +1,5 @@
+import { ProviderAPI } from '@/types/provider'
+
 const openStoreLink = () => {
   const storeLink = browserInfo().storeLink
 
@@ -14,8 +16,7 @@ const setConnectionExpiry = () => {
 const connect = async () => {
   const { showModal } = useModal()
   const { formatMessage } = useIntl()
-  const { setStatus, reloadProfile: reloadConnectedProfile } =
-    useConnectedProfileStore()
+  const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
 
   // when no extension installed we show modal
   if (!INJECTED_PROVIDER) {
@@ -27,7 +28,7 @@ const connect = async () => {
     })
   }
 
-  setStatus('isConnecting', true)
+  isConnecting.value = true
 
   try {
     const { accounts, requestAccounts } = useWeb3(PROVIDERS.INJECTED)
@@ -42,15 +43,13 @@ const connect = async () => {
     }
 
     assertAddress(address, 'connection')
-    setItem(STORAGE_KEY.CONNECTED_ADDRESS, address)
-    const profile = await fetchProfile(address)
-    await loadViewedProfile(address)
-    await loadViewedAssets(address)
-    reloadConnectedProfile(profile)
-    setStatus('isConnected', true)
-    setConnectionExpiry()
+    connectedProfileAddress.value = address
+    // TODO try to refresh current page based on router params
     await navigateTo(profileRoute(address))
-  } catch (error: unknown) {
+    await fetchProfile(address)
+    await fetchAssets(address)
+    setConnectionExpiry()
+  } catch (error: any) {
     console.error(error)
     disconnect()
 
@@ -59,25 +58,24 @@ const connect = async () => {
       message: getConnectionErrorMessage(error),
     })
   } finally {
-    setStatus('isConnecting', false)
+    isConnecting.value = false
   }
 }
 
 const disconnect = () => {
-  const { setStatus } = useConnectedProfileStore()
   const { removeItem } = useLocalStorage()
+  const { connectedProfileAddress } = storeToRefs(useAppStore())
 
-  setStatus('isConnected', false)
-  removeItem(STORAGE_KEY.CONNECTED_ADDRESS)
+  connectedProfileAddress.value = undefined
   removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
   removeItem(STORAGE_KEY.RECONNECT_ADDRESS)
 }
 
 const handleAccountsChanged = async (accounts: string[]) => {
-  const { status } = useConnectedProfileStore()
+  const { connectedProfileAddress, isConnected } = storeToRefs(useAppStore())
 
   // handle account change only for connected users
-  if (!status.isConnected) {
+  if (!isConnected.value) {
     return
   }
 
@@ -86,14 +84,15 @@ const handleAccountsChanged = async (accounts: string[]) => {
     assertAddress(address, 'profile')
 
     // if user is already connected we need to update Local Storage key
-    if (status.isConnected) {
-      setItem(STORAGE_KEY.CONNECTED_ADDRESS, address)
+    if (isConnected.value) {
+      connectedProfileAddress.value = address
     }
 
     try {
+      // TODO try to refresh current page based on router params
       await navigateTo(profileRoute(address))
-      await loadViewedProfile(address)
-      await loadViewedAssets(address)
+      await fetchProfile(address)
+      await fetchAssets(address)
     } catch (error) {
       console.error(error)
     }
@@ -103,18 +102,28 @@ const handleAccountsChanged = async (accounts: string[]) => {
   }
 }
 
+const handleChainChanged = (network: { chainId: string }) => {
+  const { selectedChainId } = storeToRefs(useAppStore())
+
+  selectedChainId.value = network.chainId
+  disconnect()
+  navigateTo(homeRoute())
+}
+
 const handleDisconnect = () => {
   location.reload()
 }
 
-const addProviderEvents = async (provider: any) => {
+const addProviderEvents = async (provider: ProviderAPI) => {
   provider?.on?.('accountsChanged', handleAccountsChanged)
   provider?.on?.('disconnect', handleDisconnect)
+  provider?.on?.('chainChanged', handleChainChanged)
 }
 
-const removeProviderEvents = async (provider: any) => {
-  provider?.removeListener?.('accountsChanged', handleAccountsChanged)
-  provider?.removeListener?.('disconnect', handleAccountsChanged)
+const removeProviderEvents = async (provider: ProviderAPI) => {
+  provider?.off?.('accountsChanged', handleAccountsChanged)
+  provider?.off?.('disconnect', handleDisconnect)
+  provider?.off?.('chainChanged', handleChainChanged)
 }
 
 const isUniversalProfileExtension = () => {

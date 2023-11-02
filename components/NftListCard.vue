@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Asset } from '@/types/assets'
+import { Asset } from '@/models/asset'
+import { CreatorRepository } from '@/repositories/creator'
 
 type Props = {
   asset: Asset
@@ -8,21 +9,22 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { profile: connectedProfile, status } = useConnectedProfileStore()
-const { profile: viewedProfile } = useViewedProfileStore()
+const { isConnected } = storeToRefs(useAppStore())
+const { connectedProfile } = useConnectedProfile()
+const { viewedProfile } = useViewedProfile()
+const creatorsRepository = useRepo(CreatorRepository)
 
 const verifiedCreator = computed(() => {
-  return props.asset.creators?.find(creator => creator.isVerified)
+  return creatorsRepository
+    .getAssetCreators(props.asset?.address, props.asset?.tokenId)
+    .find(creator => creator?.isVerified)
 })
 
 const handleShowAsset = () => {
   try {
-    assertAddress(viewedProfile.address, 'profile')
-    assertAddress(props.asset.address)
+    assertAddress(props.asset?.address)
     assertString(props.asset.tokenId)
-    navigateTo(
-      nftRoute(viewedProfile.address, props.asset.address, props.asset.tokenId)
-    )
+    navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
   } catch (error) {
     console.error(error)
   }
@@ -31,11 +33,12 @@ const handleShowAsset = () => {
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
-    assertAddress(connectedProfile.address, 'profile')
+    assertAddress(connectedProfile.value?.address, 'profile')
     navigateTo({
-      path: sendRoute(connectedProfile.address),
+      path: sendRoute(connectedProfile.value.address),
       query: {
-        asset: props.asset.address,
+        asset: props.asset?.address,
+        tokenId: props.asset?.tokenId,
       },
     })
   } catch (error) {
@@ -58,17 +61,17 @@ const handleSendAsset = (event: Event) => {
         />
         <div>
           <div class="paragraph-inter-14-semi-bold">
-            {{ asset.name }}
+            {{ asset?.name }}
           </div>
           <div class="paragraph-inter-12-semi-bold pb-2">
-            {{ asset.amount }}
-            <span class="text-neutral-60">{{ asset.symbol }}</span>
+            {{ asset?.balance }}
+            <span class="text-neutral-60">{{ asset?.symbol }}</span>
           </div>
           <div class="flex justify-end w-full">
             <lukso-button
               v-if="
-                status.isConnected &&
-                viewedProfile.address === connectedProfile.address
+                isConnected &&
+                viewedProfile?.address === connectedProfile?.address
               "
               size="small"
               variant="secondary"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LinkMetadata } from '@lukso/lsp-factory.js'
+import { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
 type Props = {
   links: LinkMetadata[]

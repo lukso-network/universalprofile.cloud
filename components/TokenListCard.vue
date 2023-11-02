@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Asset, StandardsAbbreviations } from '@/types/assets'
+import { Asset } from '@/models/asset'
+import { StandardsAbbreviations } from '@/types/assets'
 
 type Props = {
   asset: Asset
@@ -8,8 +9,9 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { profile: connectedProfile, status } = useConnectedProfileStore()
-const { profile: viewedProfile } = useViewedProfileStore()
+const { isConnected } = storeToRefs(useAppStore())
+const { connectedProfile } = useConnectedProfile()
+const { viewedProfile } = useViewedProfile()
 const contentRef = ref()
 const logoRef = ref()
 const symbolRef = ref()
@@ -17,9 +19,8 @@ const balanceWidthPx = ref(0)
 
 const handleShowAsset = () => {
   try {
-    assertAddress(viewedProfile.address, 'profile')
-    assertAddress(props.asset.address, 'asset')
-    navigateTo(tokenRoute(viewedProfile.address, props.asset.address))
+    assertAddress(props.asset?.address, 'asset')
+    navigateTo(tokenRoute(props.asset.address))
   } catch (error) {
     console.error(error)
   }
@@ -28,11 +29,11 @@ const handleShowAsset = () => {
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
-    assertAddress(connectedProfile.address, 'profile')
+    assertAddress(connectedProfile.value?.address, 'profile')
     navigateTo({
-      path: sendRoute(connectedProfile.address),
+      path: sendRoute(connectedProfile.value.address),
       query: {
-        asset: props.asset.address,
+        asset: props.asset?.address,
       },
     })
   } catch (error) {
@@ -59,7 +60,7 @@ onMounted(async () => {
     ><div slot="content" class="p-4 h-full grid grid-rows-[max-content,auto]">
       <div class="h-7 flex justify-end items-start">
         <lukso-tag
-          v-if="asset.standard"
+          v-if="asset?.standard"
           size="x-small"
           background-color="lukso-90"
           >{{ StandardsAbbreviations[asset.standard] }}</lukso-tag
@@ -69,51 +70,55 @@ onMounted(async () => {
         <div ref="logoRef" class="pl-2 flex flex-col items-center">
           <lukso-profile
             size="medium"
-            :profile-address="asset.address"
-            :profile-url="asset.icon"
+            :profile-address="asset?.address"
+            :profile-url="asset?.icon || ASSET_ICON_PLACEHOLDER_URL"
             :has-identicon="hasAddress ? 'true' : undefined"
           ></lukso-profile>
           <div
             v-if="hasAddress"
             class="paragraph-ptmono-10-bold text-neutral-60 pt-2"
           >
-            #{{ asset.address?.slice(2, 8) }}
+            #{{ asset?.address?.slice(2, 8) }}
           </div>
         </div>
         <div class="grid w-full grid-rows-[max-content,max-content,auto]">
-          <div class="heading-inter-14-bold pb-1">{{ asset.name }}</div>
+          <div class="heading-inter-14-bold pb-1">{{ asset?.name }}</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
             <span
-              v-if="asset.amount"
+              v-if="asset?.balance"
               class="truncate"
               :style="{
                 'max-width': `${balanceWidthPx}px`,
               }"
               :title="
-                $formatNumber(fromWeiWithDecimals(asset.amount, asset.decimals))
+                $formatNumber(
+                  fromWeiWithDecimals(asset.balance, asset.decimals)
+                )
               "
               >{{
-                $formatNumber(fromWeiWithDecimals(asset.amount, asset.decimals))
+                $formatNumber(
+                  fromWeiWithDecimals(asset.balance, asset.decimals)
+                )
               }}</span
             >
             <span v-else>0</span>
             <span
               ref="symbolRef"
               class="paragraph-inter-14-semi-bold text-neutral-60 pl-2"
-              >{{ asset.symbol }}</span
+              >{{ asset?.symbol }}</span
             >
           </div>
           <div
-            v-if="asset.amount && asset.symbol"
+            v-if="asset?.balance && asset.symbol"
             class="paragraph-inter-12-regular"
           >
-            {{ $formatCurrency(asset.amount, asset.symbol) }}
+            {{ $formatCurrency(asset.balance, asset.symbol) }}
           </div>
           <div class="flex justify-end w-full items-end">
             <lukso-button
               v-if="
-                status.isConnected &&
-                viewedProfile.address === connectedProfile.address
+                isConnected &&
+                viewedProfile?.address === connectedProfile?.address
               "
               size="small"
               variant="secondary"

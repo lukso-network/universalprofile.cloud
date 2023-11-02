@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const { profile: connectedProfile, status } = useConnectedProfileStore()
-const { profile: viewedProfile } = useViewedProfileStore()
-const appStore = useAppStore()
+const { connectedProfile } = useConnectedProfile()
+const { currentNetwork, isConnected } = storeToRefs(useAppStore())
+const { viewedProfile } = useViewedProfile()
 const contentRef = ref()
 const logoRef = ref()
 const symbolRef = ref()
@@ -10,8 +10,8 @@ const balanceWidthPx = ref(0)
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
-    assertAddress(connectedProfile.address, 'profile')
-    navigateTo(sendRoute(connectedProfile.address))
+    assertAddress(connectedProfile.value?.address, 'profile')
+    navigateTo(sendRoute(connectedProfile.value.address))
   } catch (error) {
     console.error(error)
   }
@@ -19,8 +19,8 @@ const handleSendAsset = (event: Event) => {
 
 const handleShowLyxDetails = () => {
   try {
-    assertAddress(viewedProfile.address, 'profile')
-    navigateTo(lyxDetailsRoute(viewedProfile.address))
+    assertAddress(viewedProfile.value?.address, 'profile')
+    navigateTo(lyxDetailsRoute(viewedProfile.value.address))
   } catch (error) {
     console.error(error)
   }
@@ -60,7 +60,7 @@ onMounted(async () => {
           <div class="heading-inter-14-bold pb-1">LUKSO</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
             <span
-              v-if="viewedProfile.balance"
+              v-if="viewedProfile?.balance"
               class="truncate"
               :style="{
                 'max-width': `${balanceWidthPx}px`,
@@ -80,13 +80,13 @@ onMounted(async () => {
             <span
               ref="symbolRef"
               class="paragraph-inter-14-semi-bold text-neutral-60 pl-2"
-              >{{ appStore.currentNetwork.token.symbol }}</span
+              >{{ currentNetwork.token.symbol }}</span
             >
           </div>
           <div class="paragraph-inter-12-regular pb-4">
             {{
               $formatCurrency(
-                viewedProfile.balance,
+                viewedProfile?.balance || '',
                 CURRENCY_API_LYX_TOKEN_NAME
               )
             }}
@@ -96,8 +96,7 @@ onMounted(async () => {
       <div class="flex justify-end w-full">
         <lukso-button
           v-if="
-            status.isConnected &&
-            viewedProfile.address === connectedProfile.address
+            isConnected && viewedProfile?.address === connectedProfile?.address
           "
           size="small"
           variant="secondary"

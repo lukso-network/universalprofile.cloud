@@ -20,7 +20,7 @@ type Units = {
 
 const DEFAULT_UNIT: Unit = 'ether'
 
-export const fromWeiWithDecimals = (amount: string, decimals = 18) => {
+export const fromWeiWithDecimals = (value: string, decimals = 18) => {
   const units: Units = {
     0: 'wei',
     3: 'kwei',
@@ -37,5 +37,5 @@ export const fromWeiWithDecimals = (amount: string, decimals = 18) => {
 
   const unit: Unit = units[decimals] || DEFAULT_UNIT
 
-  return fromWei(amount, unit)
+  return fromWei(value, unit)
 }

@@ -2,7 +2,6 @@
 import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { isAddress } from 'web3-utils'
 
-import { fetchProfile } from '@/utils/fetchProfile'
 import { assertString } from '@/utils/validators'
 
 if (typeof window !== 'undefined') {
@@ -10,27 +9,23 @@ if (typeof window !== 'undefined') {
 }
 
 const web3Store = useWeb3Store()
-const { getNetwork, selectedNetwork, modal } = useAppStore()
+const { getNetwork } = useAppStore()
+const { isLoadedApp, selectedChainId, modal } = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
-const {
-  setProfile: setConnectedProfile,
-  setStatus,
-  profile: connectedProfile,
-} = useConnectedProfileStore()
 const router = useRouter()
 
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
 }
 
-const setupWeb3Instances = () => {
+const setupWeb3Instances = async () => {
   const provider = INJECTED_PROVIDER
 
   if (provider) {
     // for chain interactions through wallet
     web3Store.addWeb3(PROVIDERS.INJECTED, provider)
-    addProviderEvents(provider)
+    await addProviderEvents(provider)
     // expose web3 instance to global scope for console access
     window.web3 = web3Store.getWeb3(PROVIDERS.INJECTED)
   } else {
@@ -38,26 +33,7 @@ const setupWeb3Instances = () => {
   }
 
   // for chain interactions through RPC endpoint
-  web3Store.addWeb3(PROVIDERS.RPC, getNetwork(selectedNetwork).rpcHttp)
-}
-
-const setupConnectedProfile = async () => {
-  try {
-    const connectedAddress = getItem(STORAGE_KEY.CONNECTED_ADDRESS)
-
-    if (connectedAddress) {
-      assertAddress(connectedAddress, 'profile')
-      setStatus('isConnected', true)
-      setStatus('isProfileLoading', true)
-      const profile = await fetchProfile(connectedAddress)
-      connectedProfile.address = connectedAddress
-      setConnectedProfile(profile)
-    }
-  } catch (error) {
-    console.error(error)
-  } finally {
-    setStatus('isProfileLoading', false)
-  }
+  web3Store.addWeb3(PROVIDERS.RPC, getNetwork(selectedChainId.value).rpcHttp)
 }
 
 const routerBackProfileLoad = async () => {
@@ -70,20 +46,17 @@ const routerBackProfileLoad = async () => {
       const fromProfileAddress = from.params?.profileAddress
       const toProfileAddress = to.params?.profileAddress
 
-      if (!fromProfileAddress || !toProfileAddress) {
-        return next()
-      }
-
-      try {
-        assertString(toProfileAddress)
-        assertAddress(toProfileAddress, 'profile')
-
-        if (toProfileAddress !== fromProfileAddress) {
-          await loadViewedProfile(toProfileAddress)
-          await loadViewedAssets(toProfileAddress)
+      if (toProfileAddress) {
+        try {
+          assertString(toProfileAddress)
+          assertAddress(toProfileAddress, 'profile')
+          if (toProfileAddress !== fromProfileAddress) {
+            await fetchProfile(toProfileAddress)
+            await fetchAssets(toProfileAddress)
+          }
+        } catch (error) {
+          console.error(error)
         }
-      } catch (error) {
-        console.error(error)
       }
       next()
     }
@@ -100,9 +73,6 @@ const checkConnectionExpiry = () => {
 
       if (expiryDateParsed < Date.now()) {
         disconnect()
-        // we store address as this is "soft" disconnect that won't trigger request account on connection
-        connectedProfile.address &&
-          setItem(STORAGE_KEY.RECONNECT_ADDRESS, connectedProfile.address)
       }
     } catch (error) {}
   }
@@ -124,26 +94,38 @@ const setupViewedProfile = async () => {
 
     if (profileAddress) {
       if (isAddress(profileAddress)) {
-        await loadViewedProfile(profileAddress)
-        await loadViewedAssets(profileAddress)
+        await fetchProfile(profileAddress)
+        await fetchAssets(profileAddress)
       } else {
         navigateTo(notFoundRoute())
       }
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error)
+
+    if (error instanceof EoAError) {
+      navigateTo(notFoundRoute()) // TODO we might want to inform user about EoA instead showing 404
+    }
   }
+}
+
+const setupNetwork = async () => {
+  const chainId = (await INJECTED_PROVIDER?.request({
+    method: 'eth_chainId',
+  })) as string
+
+  selectedChainId.value = chainId
 }
 
 onMounted(async () => {
   setupTranslations()
-  setupWeb3Instances()
+  await setupNetwork()
+  await setupWeb3Instances()
   checkConnectionExpiry()
-  await setupConnectedProfile()
-  await setupViewedProfile()
   await routerBackProfileLoad()
+  await setupViewedProfile()
 
-  setStatus('isProfileLoaded', true)
+  isLoadedApp.value = true
 
   await setupCurrencies()
 })
@@ -156,7 +138,7 @@ onUnmounted(() => {
 useHead({
   bodyAttrs: {
     class: computed(() => {
-      if (modal?.isOpen) {
+      if (modal.value?.isOpen) {
         return 'overflow-hidden'
       }
 
