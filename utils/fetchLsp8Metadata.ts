@@ -29,20 +29,19 @@ export const fetchLsp8Metadata = async (
 
   try {
     const lsp8DigitalAsset = await erc725.fetchData(['LSP8TokenIdType'])
-    const tokenIdType = lsp8DigitalAsset[0].value.toString()
+    const tokenIdType = Number(lsp8DigitalAsset[0].value)
 
     // fetch LSP8MetadataJSON depending on tokenIdType
     switch (tokenIdType) {
-      case Lsp8TokenIdType.address:
-        return lsp8MetadataGetter(
-          'address',
-          // ethers.utils.hexDataSlice(tokenId.toString(), 12)
-          tokenId.toString()
-        )
-      case Lsp8TokenIdType.number:
-        return lsp8MetadataGetter('uint256', parseInt(tokenId).toString())
-      case Lsp8TokenIdType.bytes32:
-        return lsp8MetadataGetter('bytes32', tokenId.toString())
+      case Lsp8TokenIdType.NUMBER:
+        return await lsp8MetadataGetter('uint256', parseInt(tokenId).toString())
+      case Lsp8TokenIdType.STRING:
+        return await lsp8MetadataGetter('string', tokenId.toString())
+      case Lsp8TokenIdType.UNIQUE_ID:
+      case Lsp8TokenIdType.HASH:
+        return await lsp8MetadataGetter('bytes32', tokenId.toString())
+      case Lsp8TokenIdType.ADDRESS:
+        return await lsp8MetadataGetter('address', tokenId.slice(0, 42))
       default:
         return {
           LSP4Metadata: {
