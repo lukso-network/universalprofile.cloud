@@ -3,9 +3,8 @@ import { AssetFilter } from '@/types/assets'
 import { AssetRepository } from '@/repositories/asset'
 import { Asset } from '@/models/asset'
 
-const { isLoadingProfile, isLoadingAssets, assetFilter } = storeToRefs(
-  useAppStore()
-)
+const { isLoadingProfile, isLoadingAssets, assetFilter, isLoadedApp } =
+  storeToRefs(useAppStore())
 const assetRepository = useRepo(AssetRepository)
 const tokensOwned = ref<Asset[]>()
 const tokensCreated = ref<Asset[]>()
@@ -86,8 +85,8 @@ watchEffect(async () => {
     <div
       class="max-w-content py-20 px-4 mx-auto relative transition-opacity duration-300"
       :class="{
-        'opacity-0': isLoadingAssets || isLoadingProfile,
-        'opacity-100': !isLoadingAssets && !isLoadingProfile,
+        'opacity-0': isLoadingAssets || isLoadingProfile || !isLoadedApp,
+        'opacity-100': !isLoadingAssets && !isLoadingProfile && isLoadedApp,
       }"
     >
       <ProfileCard />
@@ -130,6 +129,6 @@ watchEffect(async () => {
         </div>
       </div>
     </div>
-    <AppLoader v-if="isLoadingAssets || isLoadingProfile" />
+    <AppLoader v-if="isLoadingAssets || isLoadingProfile || !isLoadedApp" />
   </div>
 </template>

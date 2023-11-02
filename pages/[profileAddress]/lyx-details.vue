@@ -2,7 +2,7 @@
 import { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
 const { connectedProfile } = useConnectedProfile()
-const { currentNetwork, isLoadingAssets } = storeToRefs(useAppStore())
+const { currentNetwork, isLoadedApp } = storeToRefs(useAppStore())
 const { viewedProfile } = useViewedProfile()
 const { isConnected } = storeToRefs(useAppStore())
 
@@ -27,8 +27,8 @@ const handleSendLyx = () => {
   <div class="relative">
     <div
       :class="{
-        'opacity-0': isLoadingAssets,
-        'opacity-100': !isLoadingAssets,
+        'opacity-0': !isLoadedApp,
+        'opacity-100': isLoadedApp,
       }"
       class="max-w-content py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
     >
@@ -86,6 +86,6 @@ const handleSendLyx = () => {
         />
       </div>
     </div>
-    <AppLoader v-if="isLoadingAssets" />
+    <AppLoader v-if="!isLoadedApp" />
   </div>
 </template>

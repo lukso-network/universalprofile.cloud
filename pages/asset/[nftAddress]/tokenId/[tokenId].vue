@@ -5,7 +5,7 @@ const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 
 const { connectedProfile } = useConnectedProfile()
-const { isConnected, isLoadingAssets } = storeToRefs(useAppStore())
+const { isConnected, isLoadingAssets, isLoadedApp } = storeToRefs(useAppStore())
 const { asset } = useAsset(nftAddress, tokenId)
 const creatorsRepository = useRepo(CreatorRepository)
 
@@ -37,8 +37,8 @@ const handleSendAsset = (event: Event) => {
   <div class="relative">
     <div
       :class="{
-        'opacity-0': isLoadingAssets,
-        'opacity-100': !isLoadingAssets,
+        'opacity-0': isLoadingAssets || !isLoadedApp,
+        'opacity-100': !isLoadingAssets && isLoadedApp,
       }"
       class="max-w-content py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
     >
@@ -109,6 +109,6 @@ const handleSendAsset = (event: Event) => {
         />
       </div>
     </div>
-    <AppLoader v-if="isLoadingAssets" />
+    <AppLoader v-if="isLoadingAssets || !isLoadedApp" />
   </div>
 </template>

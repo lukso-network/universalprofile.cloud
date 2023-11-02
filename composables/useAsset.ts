@@ -5,11 +5,11 @@ import { AssetRepository } from '@/repositories/asset'
 export const useAsset = (assetAddress?: Address, tokenId?: string) => {
   const assetRepo = useRepo(AssetRepository)
   const asset = ref<Asset>()
-  const { isLoadingAssets } = storeToRefs(useAppStore())
+  const { isLoadingAssets, isLoadedApp } = storeToRefs(useAppStore())
   const { viewedProfile } = useViewedProfile()
 
   watchEffect(async () => {
-    if (!assetAddress) {
+    if (!assetAddress || !isLoadedApp.value) {
       return
     }
 
