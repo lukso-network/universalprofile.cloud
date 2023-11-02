@@ -43,15 +43,9 @@ export const fetchLsp8Metadata = async (
       case Lsp8TokenIdType.ADDRESS:
         return await lsp8MetadataGetter('address', tokenId.slice(0, 42))
       default:
-        return {
-          LSP4Metadata: {
-            description: '',
-            links: [],
-            images: [[]],
-            icon: [],
-            assets: [],
-          },
-        }
+        throw new Error(
+          `Unsupported LSP8 tokenIdType '${tokenIdType}' for '${assetAddress}' asset`
+        )
     }
   } catch (error) {
     console.error(error)
