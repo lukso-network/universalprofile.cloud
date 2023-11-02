@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
-import { isAddress } from 'web3-utils'
+import { isAddress, numberToHex } from 'web3-utils'
 
 import { assertString } from '@/utils/validators'
 
@@ -9,8 +9,8 @@ if (typeof window !== 'undefined') {
 }
 
 const web3Store = useWeb3Store()
-const { getNetwork, selectedNetwork, modal } = useAppStore()
-const { isLoadedApp } = storeToRefs(useAppStore())
+const { getNetwork } = useAppStore()
+const { isLoadedApp, selectedChainId, modal } = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
 const router = useRouter()
@@ -33,7 +33,7 @@ const setupWeb3Instances = () => {
   }
 
   // for chain interactions through RPC endpoint
-  web3Store.addWeb3(PROVIDERS.RPC, getNetwork(selectedNetwork).rpcHttp)
+  web3Store.addWeb3(PROVIDERS.RPC, getNetwork(selectedChainId.value).rpcHttp)
 }
 
 const routerBackProfileLoad = async () => {
@@ -96,19 +96,28 @@ const setupViewedProfile = async () => {
       if (isAddress(profileAddress)) {
         await fetchProfile(profileAddress)
         await fetchAssets(profileAddress)
-      } else {
-        navigateTo(notFoundRoute())
       }
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error)
+
+    if (error instanceof EoAError) {
+      navigateTo(notFoundRoute())
+    }
   }
+}
+
+const setupNetwork = async () => {
+  const { getChainId } = useWeb3(PROVIDERS.INJECTED)
+
+  selectedChainId.value = numberToHex(await getChainId()) as string
 }
 
 onMounted(async () => {
   setupTranslations()
   setupWeb3Instances()
   checkConnectionExpiry()
+  await setupNetwork()
   await routerBackProfileLoad()
   await setupViewedProfile()
 
@@ -125,7 +134,7 @@ onUnmounted(() => {
 useHead({
   bodyAttrs: {
     class: computed(() => {
-      if (modal?.isOpen) {
+      if (modal.value?.isOpen) {
         return 'overflow-hidden'
       }
 

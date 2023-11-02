@@ -166,7 +166,6 @@ const updateLyxBalance = async () => {
   useRepo(ProfileModel)
     .where('address', connectedProfile.value.address)
     .update({ balance })
-  // TODO check if this update is needed
 }
 </script>
 

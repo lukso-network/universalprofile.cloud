@@ -45,8 +45,8 @@ export const fetchProfile = async (profileAddress: Address) => {
     const profile = await fetchLsp3Profile(profileAddress)
 
     profileRepo.saveProfile(profile)
-  } catch (error) {
-    console.error(error)
+  } catch (error: unknown) {
+    throw error
   } finally {
     isLoadingProfile.value = false
   }
