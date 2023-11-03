@@ -53,7 +53,7 @@ export const ASSET_LYX_ICON_URL = '/images/lyx-token.svg'
 export const ASSET_LYX_DECIMALS = 18
 
 // url of the ipfs gateway
-export const IPFS_URL = 'https://2eff.lukso.dev/ipfs/'
+export const IPFS_URL = 'https://api.universalprofile.cloud/ipfs/'
 
 // extension store links
 export const EXTENSION_STORE_LINKS = {
