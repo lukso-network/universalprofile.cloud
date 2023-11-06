@@ -1020,15 +1020,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@erc725/erc725.js@npm:0.20.1":
-  version: 0.20.1
-  resolution: "@erc725/erc725.js@npm:0.20.1"
+"@erc725/erc725.js@npm:0.21.1":
+  version: 0.21.1
+  resolution: "@erc725/erc725.js@npm:0.21.1"
   dependencies:
     ethereumjs-util: ^7.1.5
     web3-eth-abi: ^1.10.0
     web3-providers-http: ^1.10.0
     web3-utils: ^1.10.0
-  checksum: 2fda8c3a1c3ed32a1806e4b532f64f601c431683dadf24b943a9784d8b588d0741ba3dff3b111f6b8486d887e36eb0b500216aa19e648e17942c02b9655abe5a
+  checksum: 61e291e0a0a49ed2fdfd3ced8477b3da48261ef42b66214370a5af463a69b25ddcf50652211b54e31c1f582d973707893f50b7111a35d42af81476be9e6c1706
   languageName: node
   linkType: hard
 
@@ -1900,16 +1900,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/lsp-smart-contracts@npm:0.12.0-rc.0":
-  version: 0.12.0-rc.0
-  resolution: "@lukso/lsp-smart-contracts@npm:0.12.0-rc.0"
+"@lukso/lsp-smart-contracts@npm:0.12.0":
+  version: 0.12.0
+  resolution: "@lukso/lsp-smart-contracts@npm:0.12.0"
   dependencies:
     "@account-abstraction/contracts": ^0.6.0
     "@erc725/smart-contracts": ^6.0.0
     "@openzeppelin/contracts": ^4.9.2
     "@openzeppelin/contracts-upgradeable": ^4.9.2
     solidity-bytes-utils: 0.8.0
-  checksum: c20dd21aee0c84e40e1b7f52fa20c503da3faaa269517170936140890742e3cd3ba0e1bddb258a72591bbb10f4de2bc23198ee472e7e2e2eb11588eeab23eb72
+  checksum: 15bce81eff163411330df08a801f91462f521be36f2b87789b82e1e428bb1ab6bc14b41deed220e04e44193539f5a14e9c5a91dab8a31d2fc9b707a60b7271f1
   languageName: node
   linkType: hard
 
@@ -16375,10 +16375,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wallet.universalprofile.cloud@workspace:."
   dependencies:
-    "@erc725/erc725.js": 0.20.1
+    "@erc725/erc725.js": 0.21.1
     "@esbuild-plugins/node-globals-polyfill": 0.2.3
     "@formatjs/intl": ^2.9.5
-    "@lukso/lsp-smart-contracts": 0.12.0-rc.0
+    "@lukso/lsp-smart-contracts": 0.12.0
     "@lukso/web-components": 1.47.1
     "@nuxt/devtools": ^0.7.6
     "@nuxtjs/algolia": ^1.9.0
