@@ -1,10 +1,8 @@
-import { Asset } from '@/models/asset'
-
 export const fetchAsset = async (
   address: Address,
   profileAddress?: Address,
   tokenIds?: string[]
-): Promise<Asset[]> => {
+) => {
   const standard = await detectStandard(address)
 
   switch (standard) {
@@ -16,6 +14,7 @@ export const fetchAsset = async (
     }
 
     default:
+      console.warn(`Asset ${address} standard is not supported`)
       return []
   }
 }
