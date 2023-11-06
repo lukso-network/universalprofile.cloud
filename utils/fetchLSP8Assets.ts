@@ -1,4 +1,5 @@
 import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
+import { AbiItem } from 'web3-utils'
 
 import { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
 import { Asset } from '@/models/asset'
@@ -11,7 +12,7 @@ export const fetchLsp8Assets = async (
 ): Promise<Asset[]> => {
   const { contract } = useWeb3(PROVIDERS.RPC)
   const lsp8Contract = contract<LSP8IdentifiableDigitalAssetInterface>(
-    LSP8IdentifiableDigitalAsset.abi as any,
+    LSP8IdentifiableDigitalAsset.abi as AbiItem[],
     address
   )
   const tokenSupply = await lsp8Contract.methods.totalSupply().call()

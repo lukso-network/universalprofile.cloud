@@ -1,4 +1,5 @@
 import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
+import { AbiItem } from 'web3-utils'
 
 import { ImageMetadataEncoded } from '@/types/assets'
 import { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
@@ -12,7 +13,7 @@ export const fetchLsp7Assets = async (
 
   const { contract } = useWeb3(PROVIDERS.RPC)
   const lsp7Contract = contract<LSP7DigitalAssetInterface>(
-    LSP7DigitalAsset.abi as any,
+    LSP7DigitalAsset.abi as AbiItem[],
     address
   )
   let balance = ''
