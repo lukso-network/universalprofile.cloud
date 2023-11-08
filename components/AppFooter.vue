@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { ProviderName } from '@lukso/web-components/dist/components/lukso-share'
 
-const providers: ProviderName[] = ['twitter', 'discord', 'github']
+const providers = ref<ProviderName[]>()
+
+onMounted(() => {
+  providers.value = ['twitter', 'discord', 'github']
+})
 </script>
 
 <template>
-  <lukso-footer :providers="providers">
+  <lukso-footer v-if="providers" :providers="providers">
     <div
       slot="links"
       class="grid gap-4 items-center grid-cols-1 grid-rows-3 xl:grid-cols-[repeat(4,max-content)] xl:gap-10 xl:grid-rows-1"
