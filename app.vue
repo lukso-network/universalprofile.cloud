@@ -109,17 +109,8 @@ const setupViewedProfile = async () => {
   }
 }
 
-const setupNetwork = async () => {
-  const chainId = (await INJECTED_PROVIDER?.request({
-    method: 'eth_chainId',
-  })) as string
-
-  selectedChainId.value = chainId
-}
-
 onMounted(async () => {
   setupTranslations()
-  await setupNetwork()
   await setupWeb3Instances()
   checkConnectionExpiry()
   await routerBackProfileLoad()
