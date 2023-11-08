@@ -35,8 +35,10 @@ export const fetchLsp3Profile = async (
     metadata: lsp3Profile,
     profileImage,
     backgroundImage,
-    profileImageId: profileImage?.hash,
-    backgroundImageId: backgroundImage?.hash,
+    profileImageId:
+      profileImage?.verification?.data || (profileImage as any).hash,
+    backgroundImageId:
+      backgroundImage?.verification?.data || (profileImage as any)?.hash,
     receivedAssetIds: receivedAssets.value as Address[],
     issuedAssetIds: issuedAssets.value as Address[],
   }

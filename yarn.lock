@@ -1020,15 +1020,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@erc725/erc725.js@npm:0.21.1":
-  version: 0.21.1
-  resolution: "@erc725/erc725.js@npm:0.21.1"
+"@erc725/erc725.js@npm:0.21.2":
+  version: 0.21.2
+  resolution: "@erc725/erc725.js@npm:0.21.2"
   dependencies:
+    add: ^2.0.6
     ethereumjs-util: ^7.1.5
     web3-eth-abi: ^1.10.0
     web3-providers-http: ^1.10.0
     web3-utils: ^1.10.0
-  checksum: 61e291e0a0a49ed2fdfd3ced8477b3da48261ef42b66214370a5af463a69b25ddcf50652211b54e31c1f582d973707893f50b7111a35d42af81476be9e6c1706
+  checksum: c046d71386dc6ca8639fdd7aa2863082096845e0bbf311b7c33ad4e14b935fe7ecbac8d3a0f72f9db3ac2cc652fb6423c52224fe5cf4e5552ecbb7fa541a0f7e
   languageName: node
   linkType: hard
 
@@ -1900,16 +1901,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/lsp-smart-contracts@npm:0.12.0":
-  version: 0.12.0
-  resolution: "@lukso/lsp-smart-contracts@npm:0.12.0"
+"@lukso/lsp-smart-contracts@npm:0.12.1":
+  version: 0.12.1
+  resolution: "@lukso/lsp-smart-contracts@npm:0.12.1"
   dependencies:
     "@account-abstraction/contracts": ^0.6.0
     "@erc725/smart-contracts": ^6.0.0
     "@openzeppelin/contracts": ^4.9.2
     "@openzeppelin/contracts-upgradeable": ^4.9.2
     solidity-bytes-utils: 0.8.0
-  checksum: 15bce81eff163411330df08a801f91462f521be36f2b87789b82e1e428bb1ab6bc14b41deed220e04e44193539f5a14e9c5a91dab8a31d2fc9b707a60b7271f1
+  checksum: dab9a972a2886789434bce8940b562bdd07fa5ac5287664a8f19cd41dd115ffa15d26a4fac8fc49448022c2b207feb84cd65a48cf0097963d1a0ff91b48fde40
   languageName: node
   linkType: hard
 
@@ -3722,6 +3723,13 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 538ba38af0cc9e5ef983aee196c4b8b4d87c0c94532334fa7e065b2c8a1f85863467bb774231aae91613fcda5e68740c15d97b1967ae3394d20faddddd8af61d
+  languageName: node
+  linkType: hard
+
+"add@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "add@npm:2.0.6"
+  checksum: e2d23d40494565dfed4acd65e478570c444db5ac6c053551ed429c39ea0f2c99d83df63e7befec936df601827d2254d06a2fb6f7dcfd2022e810b25eab818b8c
   languageName: node
   linkType: hard
 
@@ -16375,10 +16383,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wallet.universalprofile.cloud@workspace:."
   dependencies:
-    "@erc725/erc725.js": 0.21.1
+    "@erc725/erc725.js": 0.21.2
     "@esbuild-plugins/node-globals-polyfill": 0.2.3
     "@formatjs/intl": ^2.9.5
-    "@lukso/lsp-smart-contracts": 0.12.0
+    "@lukso/lsp-smart-contracts": 0.12.1
     "@lukso/web-components": 1.49.0
     "@nuxt/devtools": ^0.7.6
     "@nuxtjs/algolia": ^1.9.0
