@@ -1,15 +1,6 @@
-export const getErrorMessage = async (error: unknown) => {
+export const getErrorMessage = (error: unknown) => {
   const { formatMessage } = useIntl()
   const { currentNetwork } = useAppStore()
-  const chainId = (await INJECTED_PROVIDER?.request({
-    method: 'eth_chainId',
-  })) as string
-
-  if (currentNetwork.chainId !== chainId) {
-    return formatMessage('error_wrong_network', {
-      name: currentNetwork.name,
-    })
-  }
 
   // known error types
   if (error instanceof EoAError) {
