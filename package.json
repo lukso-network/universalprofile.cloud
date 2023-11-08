@@ -32,7 +32,7 @@
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.5",
     "@lukso/lsp-smart-contracts": "0.12.0",
-    "@lukso/web-components": "1.47.1",
+    "@lukso/web-components": "1.49.0",
     "@nuxt/devtools": "^0.7.6",
     "@nuxtjs/algolia": "^1.9.0",
     "@nuxtjs/device": "^3.1.1",
