@@ -29,7 +29,7 @@ export const fetchLsp8Metadata = async (
 
   try {
     const lsp8DigitalAsset = await erc725.fetchData(['LSP8TokenIdType'])
-    const tokenIdType = lsp8DigitalAsset[0].value.toString()
+    const tokenIdType = lsp8DigitalAsset[0].value?.toString()
 
     // fetch LSP8MetadataJSON depending on tokenIdType
     switch (tokenIdType) {
