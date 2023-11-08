@@ -1,53 +1,74 @@
 import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
-import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
 
-import { PROVIDERS } from '@/types/enums'
-import { LSP7Asset } from '@/types/assets'
+import { ImageMetadataEncoded } from '@/types/assets'
+import { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
+import { Asset } from '@/models/asset'
 
-const fetchLSP7Assets = async (
-  assetAddress: Address,
-  profileAddress: Address
-): Promise<LSP7Asset | undefined> => {
-  const { fetchLSP4Metadata } = useErc725()
-  const lsp4Metadata = await fetchLSP4Metadata(assetAddress)
+export const fetchLsp7Assets = async (
+  address: Address,
+  profileAddress?: Address
+): Promise<Asset> => {
+  const [name, symbol, metadata] = await fetchLsp4Metadata(address)
 
-  // fetch amount of tokens received
-  const tokenBalance = await fetchLSP7Balance(assetAddress, profileAddress)
-
-  const lsp7Object = createLSP7Object(lsp4Metadata, tokenBalance, assetAddress)
-  return lsp7Object
-}
-
-const fetchLSP7Balance = async (
-  contractAddress: Address,
-  profileAddress: Address
-): Promise<number> => {
   const { contract } = useWeb3(PROVIDERS.RPC)
-  const lsp7Contract = contract(LSP7DigitalAsset.abi as any, contractAddress)
-  const balance = await lsp7Contract.methods.balanceOf(profileAddress).call()
+  const lsp7Contract = contract<LSP7DigitalAssetInterface>(
+    LSP7DigitalAsset.abi as any,
+    address
+  )
+  let balance = ''
 
-  return balance
-}
+  if (profileAddress) {
+    balance = await fetchLsp7Balance(address, profileAddress)
+  }
 
-const createLSP7Object = (
-  lsp4DigitalAssetJSON: [string, string, LSP4DigitalAssetJSON],
-  tokenBalance: number,
-  assetAddress: Address
-): LSP7Asset => {
-  const [name, symbol, lsp4MetadataJSON] = lsp4DigitalAssetJSON
-  const lsp7AssetObject = {
+  const tokenSupply = await lsp7Contract.methods.totalSupply().call()
+  const decimals = Number(await lsp7Contract.methods.decimals().call())
+  const icon = await getAndConvertImage(metadata.LSP4Metadata.icon, 200)
+  const { links, description } = metadata.LSP4Metadata
+  const images: ImageMetadataEncoded[] = []
+  const creators = await fetchLsp4Creators(address, '')
+
+  for await (const image of metadata.LSP4Metadata.images) {
+    const convertedImage = await getAndConvertImage(image, 400)
+    if (convertedImage) {
+      images.push(convertedImage)
+    }
+  }
+
+  const imageIds: string[] = []
+  images.forEach(image => {
+    if ('hash' in image) {
+      image.hash && imageIds.push(image.hash as string)
+    } else {
+      image.verification?.data && imageIds.push(image.verification.data)
+    }
+  })
+
+  const iconId =
+    icon && ('hash' in icon ? (icon?.hash as string) : icon?.verification?.data)
+
+  const creatorIds: string[] = []
+  creators?.forEach(creator => {
+    creator?.address && creatorIds.push(creator.address)
+  })
+
+  return {
+    address,
     name,
     symbol,
-    amount: tokenBalance.toString(),
-    icon: lsp4MetadataJSON.LSP4Metadata.icon[0]?.url
-      ? lsp4MetadataJSON.LSP4Metadata.icon[0]?.url
-      : ASSET_ICON_PLACEHOLDER_URL,
-    address: assetAddress,
-    links: lsp4MetadataJSON.LSP4Metadata.links,
-    description: lsp4MetadataJSON.LSP4Metadata.description,
-    images: lsp4MetadataJSON.LSP4Metadata.images,
+    balance,
+    decimals: decimals,
+    tokenSupply,
+    links,
+    description,
+    metadata: metadata.LSP4Metadata,
+    standard: 'LSP7DigitalAsset',
+    icon,
+    iconId,
+    images,
+    imageIds,
+    creators,
+    creatorIds,
+    tokenId: '',
   }
-  return lsp7AssetObject
 }
-
-export default fetchLSP7Assets

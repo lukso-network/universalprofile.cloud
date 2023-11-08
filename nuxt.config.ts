@@ -18,14 +18,12 @@ export default defineNuxtConfig({
   },
   modules: [
     '@nuxtjs/tailwindcss',
-    [
-      '@pinia/nuxt',
-      {
-        autoImports: ['defineStore', 'acceptHMRUpdate'],
-      },
-    ],
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/device',
     '@nuxtjs/plausible',
+    '@nuxtjs/algolia',
+    '@pinia-orm/nuxt',
   ],
   plausible: {
     domain: 'wallet.universalprofile.cloud',
@@ -35,7 +33,7 @@ export default defineNuxtConfig({
   },
   tailwindcss: {
     config: {
-      presets: [require('@lukso/web-components/tailwind.config')],
+      presets: [require('./tailwind.config')],
       content: [], // it already merges with nuxt default config https://tailwindcss.nuxt.dev/tailwind/config#merging-strategy
     },
     cssPath: '~/assets/styles/main.scss',
@@ -101,11 +99,20 @@ export default defineNuxtConfig({
     },
   },
   imports: {
-    dirs: ['stores/**', 'shared/**'],
+    dirs: ['stores/**', 'shared/**', 'models/**'],
+    presets: [
+      {
+        from: 'pinia',
+        imports: ['storeToRefs', 'defineStore', 'acceptHMRUpdate'],
+      },
+    ],
   },
   runtimeConfig: {
     public: {},
   },
   ssr: false,
   spaLoadingTemplate: 'public/loading-template.html',
+  piniaPersistedstate: {
+    storage: 'localStorage',
+  },
 })

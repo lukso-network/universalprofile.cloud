@@ -1,102 +1,97 @@
-import { LSP4DigitalAssetJSON } from '@lukso/lsp-factory.js/build/main/src/lib/interfaces/lsp4-digital-asset'
 import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 
-import { LSP8Asset } from '@/types/assets'
-import { PROVIDERS } from '@/types/enums'
+import { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
+import { Asset } from '@/models/asset'
+import { ImageMetadataEncoded } from '@/types/assets'
 
-export const fetchLSP8Assets = async (
-  assetAddress: Address,
-  profileAddress: Address
-) => {
-  // profile can have few ids of same LSP8 asset
-  const tokensIds = await fetchLSP8TokensIds(assetAddress, profileAddress)
+export const fetchLsp8Assets = async (
+  address: Address,
+  profileAddress?: Address,
+  tokensId?: string[]
+): Promise<Asset[]> => {
+  const { contract } = useWeb3(PROVIDERS.RPC)
+  const lsp8Contract = contract<LSP8IdentifiableDigitalAssetInterface>(
+    LSP8IdentifiableDigitalAsset.abi as any,
+    address
+  )
+  const tokenSupply = await lsp8Contract.methods.totalSupply().call()
 
-  if (!tokensIds.length) {
-    return
+  let tokensIds = tokensId
+
+  if (profileAddress) {
+    // profile can have few ids of same LSP8 asset
+    tokensIds = await lsp8Contract.methods.tokenIdsOf(profileAddress).call()
   }
 
-  const { fetchLSP4Metadata, fetchLSP8Metadata, fetchLSP4Creator } = useErc725()
-  const [collectionName, collectionSymbol, collectionLSP4Metadata] =
-    await fetchLSP4Metadata(assetAddress)
+  if (!tokensIds || !tokensIds.length) {
+    return []
+  }
 
-  const newLSP8Assets: LSP8Asset[] = []
+  // nft metadata is the same for all tokens of same asset
+  const [name, symbol, nftMetadata] = await fetchLsp4Metadata(address)
 
-  await Promise.all(
+  const assets: Asset[] = await Promise.all(
     tokensIds.map(async tokenId => {
-      const nftMetadata = await fetchLSP8Metadata(tokenId, assetAddress)
-      const creatorMetadata = await fetchLSP4Creator(assetAddress)
+      const collectionMetadata = (await fetchLsp8Metadata(tokenId, address))
+        .LSP4Metadata
+      const {
+        description,
+        images: metadataImages,
+        icon: metadataIcon,
+        links,
+      } = collectionMetadata
+      const icon = await getAndConvertImage(metadataIcon, 200)
+      const images: ImageMetadataEncoded[] = []
+      const creators = await fetchLsp4Creators(address, tokenId)
 
-      const lsp8AssetObject: LSP8Asset = createLSP8Object(
-        assetAddress,
+      for await (const image of metadataImages) {
+        const convertedImage = await getAndConvertImage(image, 400)
+        if (convertedImage) {
+          images.push(convertedImage)
+        }
+      }
+
+      const imageIds: string[] = []
+      images.forEach(image => {
+        if ('hash' in image) {
+          image.hash && imageIds.push(image.hash as string)
+        } else {
+          image.verification?.data && imageIds.push(image.verification.data)
+        }
+      })
+
+      const iconId =
+        icon &&
+        ('hash' in icon ? (icon?.hash as string) : icon?.verification?.data)
+
+      const creatorIds: string[] = []
+      creators?.forEach(creator => {
+        creator?.address && creatorIds.push(creator.address)
+      })
+
+      return {
+        address,
+        name,
+        symbol,
+        balance: '1', // NFT is always 1
+        decimals: 0, // NFT decimals are always 0
+        tokenSupply,
+        links,
+        description,
+        metadata: {
+          nft: nftMetadata.LSP4Metadata,
+          collection: collectionMetadata,
+        },
+        standard: 'LSP8IdentifiableDigitalAsset',
         tokenId,
-        collectionName,
-        collectionSymbol,
-        nftMetadata,
-        collectionLSP4Metadata,
-        creatorMetadata
-      )
-      newLSP8Assets.push(lsp8AssetObject)
+        icon,
+        iconId,
+        images,
+        imageIds,
+        creators,
+        creatorIds,
+      }
     })
   )
-  return newLSP8Assets
-}
-
-const fetchLSP8TokensIds = async (
-  contractAddress: string,
-  profileAddress: string
-): Promise<string[]> => {
-  const { contract } = useWeb3(PROVIDERS.RPC)
-
-  const lsp8Contract = contract(
-    LSP8IdentifiableDigitalAsset.abi as any,
-    contractAddress
-  )
-
-  const tokensIds = (await lsp8Contract.methods
-    .tokenIdsOf(profileAddress)
-    .call()) as string[]
-  return tokensIds
-}
-
-const createLSP8Object = (
-  assetAddress: Address,
-  tokenId: string,
-  collectionName: string,
-  collectionSymbol: string,
-  nftMetadata: LSP4DigitalAssetJSON,
-  collectionMetadata: LSP4DigitalAssetJSON,
-  creatorMetadata?: Creator
-): LSP8Asset => {
-  const { description, images, icon } = nftMetadata.LSP4Metadata
-  const {
-    description: collectionDescription,
-    images: collectionImages,
-    icon: collectionIcon,
-    links: collectionLinks,
-  } = collectionMetadata.LSP4Metadata
-  const {
-    name: creatorName,
-    address: creatorAddress,
-    profileImageUrl: creatorProfileImage,
-  } = creatorMetadata || {}
-
-  const lsp8AssetObject = {
-    tokenId,
-    description,
-    image: images[0][0]?.url ? formatUrl(images[0][0].url) : '',
-    icon: icon[0]?.url ? formatUrl(icon[0].url) : '',
-    collectionName,
-    collectionSymbol,
-    collectionAddress: assetAddress,
-    collectionDescription,
-    collectionImages,
-    collectionLinks,
-    collectionIcon: formatUrl(collectionIcon[0]?.url)
-      ? collectionIcon[0]?.url
-      : '',
-    creatorName,
-    creatorAddress,
-    creatorProfileImage,
-  }
-  return lsp8AssetObject as LSP8Asset
+  return assets
 }

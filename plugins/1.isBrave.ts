@@ -1,3 +1,5 @@
+import { DeviceExtended, NavigatorExtended } from '@/types/device'
+
 /**
  * Detects if the browser is Brave
  *

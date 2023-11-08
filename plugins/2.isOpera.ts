@@ -1,3 +1,5 @@
+import { DeviceExtended } from '@/types/device'
+
 type OperaWindow = Window & {
   opera?: { addons?: unknown }
   opr?: { addons?: unknown }

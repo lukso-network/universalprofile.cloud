@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { fromWei } from 'web3-utils'
-
 type Props = {
-  profile: Profile
-  amount?: string
+  address?: Address
+  balance?: string
   symbol?: string
+  decimals?: number
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const profile = computed(() => useProfile(props.address).profile.value)
 </script>
 
 <template>
@@ -15,8 +15,8 @@ defineProps<Props>()
     <div slot="content" class="px-4 py-2 flex">
       <lukso-profile
         size="small"
-        :profile-address="profile.address"
-        :profile-url="profile.profileImageUrl"
+        :profile-address="address"
+        :profile-url="profile?.profileImage?.base64"
         has-identicon
       ></lukso-profile>
       <div class="pl-4 flex flex-col justify-center">
@@ -24,8 +24,10 @@ defineProps<Props>()
           {{ $formatMessage('token_details_own') }}
         </div>
         <div class="paragraph-inter-12-semi-bold">
-          <span v-if="amount">{{
-            $formatNumber(fromWei(amount, 'ether'))
+          <span v-if="balance">{{
+            $formatNumber(fromWeiWithDecimals(balance, decimals), {
+              maximumFractionDigits: decimals,
+            })
           }}</span>
           <span v-else>0</span>
           <span class="text-neutral-60 ml-1">{{ symbol }}</span>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { profile } = useConnectedProfileStore()
+const { connectedProfile } = useConnectedProfile()
 const { disconnect } = useBrowserExtension()
 
 const DROPDOWN_TRIGGER_TAG_NAME = 'LUKSO-PROFILE'
@@ -35,10 +35,10 @@ onMounted(() => {
   <div class="cursor-pointer relative">
     <lukso-profile
       size="small"
-      :profile-url="profile.profileImageUrl"
+      :profile-url="connectedProfile?.profileImage?.base64"
       @click="handleToggleDropdown"
-      :profile-address="profile.address"
-      :data-profile-address="profile.address"
+      :profile-address="connectedProfile?.address"
+      :data-profile-address="connectedProfile?.address"
       has-identicon
     ></lukso-profile>
 

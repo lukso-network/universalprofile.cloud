@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
+import { Asset } from '@/models/asset'
 
-const { nfts, assetFilter } = storeToRefs(useViewedProfileStore())
+type Props = {
+  nfts?: Asset[]
+}
+
+defineProps<Props>()
 </script>
 
 <template>
@@ -11,7 +15,7 @@ const { nfts, assetFilter } = storeToRefs(useViewedProfileStore())
     </h3>
     <div class="grid gap-6 grid-col grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
       <NftListCard
-        v-for="(asset, index) in nfts(assetFilter)"
+        v-for="(asset, index) in nfts"
         :key="index"
         :asset="asset"
         :has-address="true"

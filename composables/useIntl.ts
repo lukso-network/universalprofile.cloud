@@ -4,6 +4,7 @@ import {
   IntlConfig,
   IntlShape,
 } from '@formatjs/intl'
+import { fromWei } from 'web3-utils'
 
 import defaultMessages from '@/translations/en_US.json'
 
@@ -12,7 +13,7 @@ const messages = defaultMessages as unknown as Record<string, string>
 
 // For more options check https://github.com/formatjs/formatjs/blob/main/packages/ecma402-abstract/types/number.ts#L38-L45
 const formatNumberDefaultOptions = {
-  maximumFractionDigits: 6,
+  maximumFractionDigits: 18,
 }
 
 export const defaultConfig: IntlConfig = {
@@ -51,11 +52,8 @@ const formatMessage = (key: string, options?: Record<string, string>) => {
  * @param options - options for formatNumber, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#parameters
  * @returns - formatted number
  */
-const formatNumber = (
-  value: string | number,
-  options: FormatNumberOptions = {}
-) => {
-  if (value === null || value === undefined || value === '') {
+const formatNumber = (value: number, options: FormatNumberOptions = {}) => {
+  if (value === null || value === undefined) {
     return '0'
   }
 
@@ -64,7 +62,7 @@ const formatNumber = (
     ...options,
   }
 
-  return intl.value?.formatNumber(Number(value), mergedOptions) || ''
+  return intl.value?.formatNumber(value, mergedOptions) || ''
 }
 
 /**
@@ -77,8 +75,38 @@ const formatDate = (date?: string | number | Date) => {
   return intl.value?.formatDate(date)
 }
 
+/**
+ * Time formatting based on the locale
+ *
+ * @param date - date to format
+ * @returns - formatted time
+ */
 const formatTime = (date?: string | number | Date) => {
   return intl.value?.formatTime(date)
+}
+
+/**
+ * Currency formatting based on the locale
+ *
+ * @param value - number to format
+ * @param symbol - currency symbol
+ * @returns - formatted string
+ */
+const formatCurrency = (value: string, symbol: string) => {
+  const { getCurrencyMultiplier, currentCurrencySymbol } = useCurrencyStore()
+  const currencyMultiplier = getCurrencyMultiplier()(symbol)
+
+  if (!value || !currencyMultiplier) {
+    return ''
+  }
+
+  const currencyValue = parseFloat(fromWei(value)) * currencyMultiplier
+
+  return formatNumber(currencyValue, {
+    maximumFractionDigits: 2,
+    style: 'currency',
+    currency: currentCurrencySymbol,
+  })
 }
 
 export const useIntl = () => {
@@ -88,5 +116,6 @@ export const useIntl = () => {
     formatNumber,
     formatDate,
     formatTime,
+    formatCurrency,
   }
 }

@@ -1,21 +1,33 @@
-// id of the network to use by default
-export const DEFAULT_NETWORK_ID = 'testnet'
+import { NetworkInfo } from '@/types/network'
+
+// chain id's
+export const TESTNET_CHAIN_ID = '0x1069'
+export const MAINNET_CHAIN_ID = '0x2a'
+export const DEFAULT_NETWORK_CHAIN_ID = MAINNET_CHAIN_ID
 
 // list of supported networks
 export const NETWORKS: NetworkInfo[] = [
   {
-    id: 'testnet',
     name: 'LUKSO Testnet',
-    chainId: '0x1069',
-    rpcHttp: 'https://rpc.testnet.lukso.gateway.fm',
-    token: 'LYXt',
+    chainId: TESTNET_CHAIN_ID,
+    rpcHttp: 'https://rpc.testnet.lukso.network',
+    token: {
+      symbol: 'LYXt',
+      supply: 42_000_000,
+      name: 'LUKSO',
+    },
+    indexName: 'prod_testnet_universal_profiles',
   },
   {
-    id: 'mainnet',
     name: 'LUKSO Mainnet',
-    chainId: '0x2a',
-    rpcHttp: 'https://rpc.lukso.gateway.fm',
-    token: 'LYX',
+    chainId: MAINNET_CHAIN_ID,
+    rpcHttp: 'https://rpc.mainnet.lukso.network',
+    token: {
+      symbol: 'LYX',
+      supply: 42_000_000,
+      name: 'LUKSO',
+    },
+    indexName: 'prod_mainnet_universal_profiles',
   },
 ]
 
@@ -26,7 +38,7 @@ export const MODAL_DEFAULT_TEMPLATE = 'Default'
 export const INJECTED_PROVIDER = window?.lukso
 
 // connection expiry time
-export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 30 // 30 minutes
+export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 60 * 2 // 2 hours
 
 // interval to check if the user is still connected
 export const CONNECTION_EXPIRY_CHECK_INTERVAL_MS = 1000 * 10 // 10 seconds
@@ -34,11 +46,14 @@ export const CONNECTION_EXPIRY_CHECK_INTERVAL_MS = 1000 * 10 // 10 seconds
 // placeholder icon if asset icon is not available
 export const ASSET_ICON_PLACEHOLDER_URL = '/images/token-default.svg'
 
-// url of the ipfs gateway
-export const IPFS_URL = 'https://2eff.lukso.dev/ipfs/'
+// lyx token icon
+export const ASSET_LYX_ICON_URL = '/images/lyx-token.svg'
 
-// testnet flag for the app
-export const IS_TESTNET = true
+// number of decimal places for LYX token
+export const ASSET_LYX_DECIMALS = 18
+
+// url of the ipfs gateway
+export const IPFS_URL = 'https://api.universalprofile.cloud/ipfs/'
 
 // extension store links
 export const EXTENSION_STORE_LINKS = {
@@ -52,6 +67,20 @@ export const EXTENSION_STORE_LINKS = {
   firefox: '',
 }
 
-// transaction default gas values
-export const DEFAULT_GAS = 5_000_000
-export const DEFAULT_GAS_PRICE = '10000000000'
+// search params
+export const SEARCH_RESULTS_LIMIT = 100
+
+// base universalprofile address
+export const BASE_UP_CLOUD_URL = 'https://universalprofile.cloud/'
+
+// default currency symbol
+export const DEFAULT_CURRENCY_SYMBOL = 'USD'
+
+// list of currencies to fetch from the api
+export const CURRENCY_API_SYMBOLS = ['USD', 'EUR', 'GBP', 'PLN']
+
+// atm cryptocompare only supports LYXE token, swap to LYX when got avail
+export const CURRENCY_API_LYX_TOKEN_NAME = 'LYXE'
+
+// currency cache expiry time in minutes
+export const CURRENCY_CACHE_EXPIRY_IN_MINUTES = 60

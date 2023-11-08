@@ -1,35 +1,53 @@
 import { INTERFACE_IDS, SupportedStandards } from '@lukso/lsp-smart-contracts'
 
-import { PROVIDERS } from '@/types/enums'
+import { LSP0ERC725Account } from '@/types/contracts/LSP0ERC725Account'
+import { ProfileRepository } from '@/repositories/profile'
 
 export const fetchProfile = async (profileAddress: Address) => {
-  const { contract, isEoA } = useWeb3(PROVIDERS.RPC)
-  const { supportInterface } = useErc725()
+  const { isLoadingProfile } = storeToRefs(useAppStore())
+  const profileRepo = useRepo(ProfileRepository)
 
-  // EoA check
-  if (await isEoA(profileAddress)) {
-    throw new Error('The profile is an EoA')
+  const storeProfile = profileRepo.getProfileAndImages(profileAddress)
+
+  if (storeProfile) {
+    return
   }
 
-  // interface check
-  if (
-    !(await supportInterface(profileAddress, INTERFACE_IDS.LSP0ERC725Account))
-  ) {
-    throw new InterfaceError('LSP0ERC725Account')
-  }
+  try {
+    isLoadingProfile.value = true
+    const { contract, isEoA } = useWeb3(PROVIDERS.RPC)
 
-  // standard check
-  const supportedStandard = await contract(getDataABI, profileAddress)
-    .methods['getData(bytes32)'](SupportedStandards.LSP3Profile.key)
-    .call()
-  if (supportedStandard !== SupportedStandards.LSP3Profile.value) {
-    throw new Error(
-      `This profile contract doesn't support LSP3UniversalProfile standard`
+    // EoA check
+    if (await isEoA(profileAddress)) {
+      throw new EoAError(profileAddress)
+    }
+
+    // interface check
+    if (
+      !(await supportInterface(profileAddress, INTERFACE_IDS.LSP0ERC725Account))
+    ) {
+      throw new InterfaceError('LSP0ERC725Account')
+    }
+
+    // standard check
+    const supportedStandard = await contract<LSP0ERC725Account>(
+      getDataABI,
+      profileAddress
     )
+      .methods.getData(SupportedStandards.LSP3Profile.key)
+      .call()
+    if (supportedStandard !== SupportedStandards.LSP3Profile.value) {
+      throw new Error(
+        `This profile contract doesn't support LSP3UniversalProfile standard`
+      )
+    }
+
+    const profile = await fetchLsp3Profile(profileAddress)
+
+    profileRepo.saveProfile(profile)
+  } catch (error: unknown) {
+    throw error
+  } finally {
+    isLoadingProfile.value = false
   }
-
-  const { fetchProfile } = useErc725()
-  const profile = await fetchProfile(profileAddress)
-
-  return profile
 }

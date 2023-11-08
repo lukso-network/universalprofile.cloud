@@ -65,6 +65,8 @@ module.exports = {
       rules: {
         'import/order': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
+        'playwright/no-networkidle': 'off',
+        'playwright/no-skipped-test': 'off',
       },
     },
     {
