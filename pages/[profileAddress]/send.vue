@@ -154,7 +154,7 @@ const handleSend = async () => {
 
     showModal({
       title: formatMessage('web3_connect_error_title'),
-      message: getSendErrorMessage(error),
+      message: await getErrorMessage(error),
     })
   }
 }

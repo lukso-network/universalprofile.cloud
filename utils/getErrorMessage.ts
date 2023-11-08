@@ -1,45 +1,40 @@
-export const getConnectionErrorMessage = (error: unknown) => {
+export const getErrorMessage = async (error: unknown) => {
   const { formatMessage } = useIntl()
+  const { currentNetwork } = useAppStore()
+  const chainId = (await INJECTED_PROVIDER?.request({
+    method: 'eth_chainId',
+  })) as string
+
+  if (currentNetwork.chainId !== chainId) {
+    return formatMessage('error_wrong_network', {
+      name: currentNetwork.name,
+    })
+  }
 
   // known error types
   if (error instanceof EoAError) {
-    return formatMessage('web3_eoa_error_message')
+    return formatMessage('error_eoa')
   }
 
   if (error instanceof InterfaceError) {
-    return formatMessage('web3_interface_error_message')
+    return formatMessage('error_invalid_profile_interface')
   }
 
   // errors that have a code or message
   if (error && typeof error === 'object' && 'code' in error) {
     switch (error.code) {
       case 4001:
-        return formatMessage('web3_connect_error_rejected_request')
+        return formatMessage('error_rejected_request')
       case -32005:
-        return formatMessage('web3_connect_error_pending_request')
+        return formatMessage('error_pending_request')
       case -32001:
-        return formatMessage('web3_connect_error_no_profiles')
-      default:
-        break
-    }
-  }
-
-  // generic message for unknowns errors
-  return formatMessage('web3_connect_error')
-}
-
-export const getSendErrorMessage = (error: unknown): string => {
-  const { formatMessage } = useIntl()
-  const appStore = useAppStore()
-
-  // errors that have a code or message
-  if (error && typeof error === 'object' && 'code' in error) {
-    switch (error.code) {
-      case 4001:
-        return formatMessage('send_error_rejected_request')
+        return formatMessage('error_no_profiles')
+      case -32600:
+        return formatMessage('error_no_accounts')
+      case -32601:
       case -32602:
-        return formatMessage('send_error_same_address', {
-          lyxSymbol: appStore.currentNetwork.token.symbol,
+        return formatMessage('error_same_address', {
+          lyxSymbol: currentNetwork.token.symbol,
         })
       default:
         break
@@ -47,5 +42,5 @@ export const getSendErrorMessage = (error: unknown): string => {
   }
 
   // generic message for unknowns errors
-  return formatMessage('send_error_message')
+  return formatMessage('web3_connect_error')
 }

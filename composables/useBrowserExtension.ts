@@ -55,7 +55,7 @@ const connect = async () => {
 
     showModal({
       title: formatMessage('web3_connect_error_title'),
-      message: getConnectionErrorMessage(error),
+      message: await getErrorMessage(error),
     })
   } finally {
     isConnecting.value = false
