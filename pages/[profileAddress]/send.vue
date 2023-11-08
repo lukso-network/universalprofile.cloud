@@ -152,9 +152,11 @@ const handleSend = async () => {
     console.error(error)
     setStatus('draft')
 
+    await checkNetwork()
+
     showModal({
       title: formatMessage('web3_connect_error_title'),
-      message: getSendErrorMessage(error),
+      message: getErrorMessage(error),
     })
   }
 }
