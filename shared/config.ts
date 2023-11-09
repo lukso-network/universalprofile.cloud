@@ -13,7 +13,7 @@ export const NETWORKS: NetworkInfo[] = [
     rpcHttp: 'https://rpc.testnet.lukso.network',
     token: {
       symbol: 'LYXt',
-      supply: 42_000_000,
+      supply: '42000000000000000000000000',
       name: 'LUKSO',
     },
     indexName: 'prod_testnet_universal_profiles',
@@ -24,7 +24,7 @@ export const NETWORKS: NetworkInfo[] = [
     rpcHttp: 'https://rpc.mainnet.lukso.network',
     token: {
       symbol: 'LYX',
-      supply: 42_000_000,
+      supply: '42000000000000000000000000',
       name: 'LUKSO',
     },
     indexName: 'prod_mainnet_universal_profiles',

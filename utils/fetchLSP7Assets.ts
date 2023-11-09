@@ -37,15 +37,11 @@ export const fetchLsp7Assets = async (
 
   const imageIds: string[] = []
   images.forEach(image => {
-    if ('hash' in image) {
-      image.hash && imageIds.push(image.hash as string)
-    } else {
-      image.verification?.data && imageIds.push(image.verification.data)
-    }
+    const id = getImageId(image)
+    id && imageIds.push(id)
   })
 
-  const iconId =
-    icon && ('hash' in icon ? (icon?.hash as string) : icon?.verification?.data)
+  const iconId = getImageId(icon)
 
   const creatorIds: string[] = []
   creators?.forEach(creator => {

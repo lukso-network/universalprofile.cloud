@@ -25,20 +25,10 @@ export const fetchLsp3Profile = async (
     lsp3Profile.backgroundImage &&
     (await getAndConvertImage(lsp3Profile.backgroundImage, 800))
 
-  const { getBalance } = useWeb3(PROVIDERS.RPC) // TODO move balance out so it's always fetched
+  const { getBalance } = useWeb3(PROVIDERS.RPC)
   const balance = await getBalance(profileAddress)
-
-  const profileImageId =
-    profileImage &&
-    ('hash' in profileImage
-      ? (profileImage?.hash as string)
-      : profileImage?.verification?.data)
-
-  const backgroundImageId =
-    backgroundImage &&
-    ('hash' in backgroundImage
-      ? (backgroundImage?.hash as string)
-      : backgroundImage?.verification?.data)
+  const profileImageId = getImageId(profileImage)
+  const backgroundImageId = getImageId(backgroundImage)
 
   return {
     ...lsp3Profile,

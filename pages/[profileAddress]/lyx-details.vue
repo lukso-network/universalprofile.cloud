@@ -76,7 +76,7 @@ const handleSendLyx = () => {
           :decimals="ASSET_LYX_DECIMALS"
         />
         <AssetSupply
-          :token-supply="currentNetwork.token.supply.toString()"
+          :token-supply="currentNetwork.token.supply"
           :symbol="currentNetwork.token.symbol"
           :decimals="ASSET_LYX_DECIMALS"
         />
