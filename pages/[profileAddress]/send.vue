@@ -160,6 +160,15 @@ const handleSend = async () => {
     })
   }
 }
+
+const updateLyxBalance = async () => {
+  assertString(connectedProfile.value?.address)
+  const balance = await getBalance(connectedProfile.value.address)
+
+  useRepo(ProfileModel)
+    .where('address', connectedProfile.value.address)
+    .update({ balance })
+}
 </script>
 
 <template>
