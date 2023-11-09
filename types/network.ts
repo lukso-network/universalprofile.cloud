@@ -7,7 +7,7 @@ export interface NetworkInfo {
   storeUrls?: { [key in BrowserName]: string }
   token: {
     symbol: string
-    supply: number
+    supply: string
     name: string
   }
   indexName: string
