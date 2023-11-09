@@ -25,7 +25,7 @@ export const fetchLsp3Profile = async (
     lsp3Profile.backgroundImage &&
     (await getAndConvertImage(lsp3Profile.backgroundImage, 800))
 
-  const { getBalance } = useWeb3(PROVIDERS.RPC) // TODO move balance out so it's always fetched
+  const { getBalance } = useWeb3(PROVIDERS.RPC)
   const balance = await getBalance(profileAddress)
 
   const profileImageId =
