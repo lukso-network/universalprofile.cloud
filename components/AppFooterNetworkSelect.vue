@@ -6,7 +6,6 @@ const selectedNetwork = ref<SelectStringOption>()
 const { currentNetwork, selectedChainId } = storeToRefs(useAppStore())
 const { disconnect } = useBrowserExtension()
 const { isMobileOrTablet } = useDevice()
-const isOpen = ref(false)
 
 onMounted(() => {
   networks.value = NETWORKS.map(network => {
@@ -37,7 +36,6 @@ const handleNetworkChange = (event: CustomEvent) => {
     :value="JSON.stringify(selectedNetwork)"
     :options="JSON.stringify(networks)"
     :open-top="!isMobileOrTablet ? true : undefined"
-    :is-open="isOpen ? true : undefined"
     :is-full-width="isMobileOrTablet ? true : undefined"
     class="sm:w-40"
     @on-select="handleNetworkChange"
