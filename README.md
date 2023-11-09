@@ -1,7 +1,5 @@
 # 💳 wallet.universalprofile.cloud
 
-Web app built with [Nuxt.js](https://nuxt.com/).
-
 Wallet that will let you see the Tokens ([LSP7](https://docs.lukso.tech/standards/nft-2.0/LSP7-Digital-Asset)) and NFTs ([LSP8](https://docs.lukso.tech/standards/nft-2.0/LSP8-Identifiable-Digital-Asset)) associated to a specific LUKSO's address.
 
 ## 🚀 Deployments
