@@ -30,22 +30,33 @@ export const fetchAndConvertImage = async (imageUrl: string) => {
 
 /**
  * Gets a correct image url from an array of possible image
- * by checking the max height and min width of the image.
+ * by checking the height of the image.
  *
  * @param {ImageMetadata[]} images - an array of images to check
- * @param {number} minWidth - min width
- * @param {number} maxHeight - max height
+ * @param {number} height - the desired height of the image
  * @returns url of the image
  */
 export const getImageBySize = (
   images: ImageMetadata[],
-  maxHeight: number
+  height: number
 ): ImageMetadata | undefined => {
-  for (const image of images) {
-    if (image.height <= maxHeight) {
+  const retinaHeight = height * 2
+  const sortedImagesAscending = images.sort((a, b) => {
+    if (a.height < b.height) {
+      return -1
+    }
+    if (a.height > b.height) {
+      return 1
+    }
+    return 0
+  })
+
+  for (const image of sortedImagesAscending) {
+    if (image.height > retinaHeight) {
       return image
     }
   }
+
   return images.length > 0 ? images[0] : undefined
 }
 
@@ -83,9 +94,9 @@ export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
 
 export const getAndConvertImage = async (
   image: ImageMetadata[],
-  maxHeight: number
+  height: number
 ) => {
-  const optimalImage = getImageBySize(image, maxHeight)
+  const optimalImage = getImageBySize(image, height)
 
   if (optimalImage) {
     return {

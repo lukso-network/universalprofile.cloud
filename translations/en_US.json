@@ -27,7 +27,7 @@
   "token_details_token_id": "Token ID",
   "send_button": "Send {amount} {symbol}",
   "asset_supply_title": "Total Token Supply",
-  "header_discovery": "Discovery",
+  "header_discovery": "Discover",
   "not_found_text": "We can’t seem to find the page you’re looking for!",
   "asset_filter_owned_assets": "Owned assets",
   "asset_standard_info_LSP8_details": "Info about the standard goes here....",

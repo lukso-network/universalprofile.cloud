@@ -40,12 +40,12 @@ export const fetchLsp8Assets = async (
         icon: metadataIcon,
         links,
       } = collectionMetadata
-      const icon = await getAndConvertImage(metadataIcon, 200)
+      const icon = await getAndConvertImage(metadataIcon, 260)
       const images: ImageMetadataEncoded[] = []
       const creators = await fetchLsp4Creators(address, tokenId)
 
       for await (const image of metadataImages) {
-        const convertedImage = await getAndConvertImage(image, 400)
+        const convertedImage = await getAndConvertImage(image, 260)
         if (convertedImage) {
           images.push(convertedImage)
         }

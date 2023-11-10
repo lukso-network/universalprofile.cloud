@@ -23,13 +23,13 @@ export const fetchLsp7Assets = async (
 
   const tokenSupply = await lsp7Contract.methods.totalSupply().call()
   const decimals = Number(await lsp7Contract.methods.decimals().call())
-  const icon = await getAndConvertImage(metadata.LSP4Metadata.icon, 200)
+  const icon = await getAndConvertImage(metadata.LSP4Metadata.icon, 56)
   const { links, description } = metadata.LSP4Metadata
   const images: ImageMetadataEncoded[] = []
   const creators = await fetchLsp4Creators(address, '')
 
   for await (const image of metadata.LSP4Metadata.images) {
-    const convertedImage = await getAndConvertImage(image, 400)
+    const convertedImage = await getAndConvertImage(image, 100)
     if (convertedImage) {
       images.push(convertedImage)
     }
