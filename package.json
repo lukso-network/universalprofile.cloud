@@ -1,6 +1,6 @@
 {
   "name": "wallet.universalprofile.cloud",
-  "packageManager": "yarn@3.6.1",
+  "packageManager": "yarn@4.0.1",
   "private": true,
   "type": "module",
   "scripts": {
