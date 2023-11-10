@@ -88,6 +88,11 @@
     "web3-utils": "~1.10.3",
     "yata-fetch": "2.1.5"
   },
+  "resolutions": {
+    "web3-bzz": "~1.10.3",
+    "web3-shh": "~1.10.3",
+    "web3": "~1.10.3"
+  },
   "lint-staged": {
     "*.{ts,js,vue}": [
       "prettier --list-different",
