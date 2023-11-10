@@ -1,6 +1,6 @@
 {
   "name": "wallet.universalprofile.cloud",
-  "packageManager": "yarn@3.6.1",
+  "packageManager": "yarn@4.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,6 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "npm-run-all nuxt:prepare typechain",
     "lint:fix": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:*:fix\"",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:{eslint,css,fmt,types}\"",
     "lint:eslint": "eslint --ext '.js,.vue,.ts' .",
@@ -32,7 +31,7 @@
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.6",
     "@lukso/lsp-smart-contracts": "0.12.1",
-    "@lukso/web-components": "1.49.1",
+    "@lukso/web-components": "1.49.2",
     "@nuxt/devtools": "^0.7.6",
     "@nuxtjs/algolia": "^1.9.0",
     "@nuxtjs/device": "^3.1.1",

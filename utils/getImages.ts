@@ -1,7 +1,6 @@
 import { ImageMetadata } from '@lukso/lsp-smart-contracts'
 
 import { ImageMetadataEncoded } from '@/types/assets'
-import { formatUrl } from '@/utils/formatUrl'
 import { Asset } from '@/models/asset'
 import { ImageRepository } from '@/repositories/image'
 
@@ -24,13 +23,15 @@ const fetchBlobAndConvertToBase64 = async (
 }
 
 export const fetchAndConvertImage = async (imageUrl: string) => {
-  const request = new Request(formatUrl(imageUrl))
+  const request = new Request(resolveUrl(imageUrl))
   return (await fetchBlobAndConvertToBase64(request)) as Base64EncodedImage
 }
 
 /**
  * Gets a correct image url from an array of possible image
  * by checking the height of the image.
+ * It try to find retina version of the image first, then normal version of the image
+ * and lastly the biggest image available.
  *
  * @param {ImageMetadata[]} images - an array of images to check
  * @param {number} height - the desired height of the image
@@ -40,7 +41,6 @@ export const getImageBySize = (
   images: ImageMetadata[],
   height: number
 ): ImageMetadata | undefined => {
-  const retinaHeight = height * 2
   const sortedImagesAscending = images.sort((a, b) => {
     if (a.height < b.height) {
       return -1
@@ -51,13 +51,26 @@ export const getImageBySize = (
     return 0
   })
 
-  for (const image of sortedImagesAscending) {
-    if (image.height > retinaHeight) {
-      return image
-    }
+  // check if we can get retina size image
+  const retinaImage = sortedImagesAscending.find(
+    image => image.height > height * 2
+  )
+
+  if (retinaImage) {
+    return retinaImage
   }
 
-  return images.length > 0 ? images[0] : undefined
+  // check if we can get normal size image
+  const normalImage = sortedImagesAscending.find(image => image.height > height)
+
+  if (normalImage) {
+    return normalImage
+  }
+
+  // lastly return biggest image available
+  return sortedImagesAscending.length > 0
+    ? sortedImagesAscending.pop()
+    : undefined
 }
 
 /**
@@ -101,7 +114,7 @@ export const getAndConvertImage = async (
   if (optimalImage) {
     return {
       ...optimalImage,
-      base64: formatUrl(optimalImage.url),
+      base64: resolveUrl(optimalImage.url),
       // base64: await fetchAndConvertImage(optimalImage.url), // TODO add base when cache storage is added
       id: getImageId(optimalImage),
     } as ImageMetadataEncoded
