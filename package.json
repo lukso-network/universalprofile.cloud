@@ -18,7 +18,7 @@
     "lint:fmt": "prettier --check --log-level=warn .",
     "lint:fmt:fix": "prettier --write .",
     "lint:types": "tsc --noEmit --project tsconfig.json",
-    "prepare": "husky install",
+    "prepare": "npm-run-all nuxt:prepare typechain && husky install",
     "yata-fetch": "dotenv -- yata-fetch --config .yata.json",
     "test": "npx playwright test",
     "test:ui": "npx playwright test --ui",
