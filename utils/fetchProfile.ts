@@ -10,6 +10,8 @@ export const fetchProfile = async (profileAddress: Address) => {
   const storeProfile = profileRepo.getProfileAndImages(profileAddress)
 
   if (storeProfile) {
+    // refetch LYX balance for cached profile in case it has changed
+    await updateLyxBalance(profileAddress)
     return
   }
 

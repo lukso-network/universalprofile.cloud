@@ -17,12 +17,12 @@ export const validateLsp3Metadata = (
   const description = validateDescription(lsp3Profile.description)
 
   if (lsp3Profile?.profileImage?.length) {
-    const imageIsValid = validateImage(lsp3Profile?.profileImage)
+    const imageIsValid = validateImages(lsp3Profile?.profileImage)
     profileImage = imageIsValid ? lsp3Profile?.profileImage : []
   }
 
   if (lsp3Profile?.backgroundImage?.length) {
-    const imageIsValid = validateImage(lsp3Profile?.backgroundImage)
+    const imageIsValid = validateImages(lsp3Profile?.backgroundImage)
     backgroundImage = imageIsValid ? lsp3Profile?.backgroundImage : []
   }
 
