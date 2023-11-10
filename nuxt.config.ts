@@ -69,7 +69,7 @@ export default defineNuxtConfig({
       alias: {
         process: 'process/browser',
         stream: 'stream-browserify',
-        https: 'agent-base',
+        https: 'stream-http',
         zlib: 'browserify-zlib',
         util: 'util',
         buffer: 'buffer',
@@ -100,12 +100,6 @@ export default defineNuxtConfig({
   },
   imports: {
     dirs: ['stores/**', 'shared/**', 'models/**'],
-    presets: [
-      {
-        from: 'pinia',
-        imports: ['storeToRefs', 'defineStore', 'acceptHMRUpdate'],
-      },
-    ],
   },
   runtimeConfig: {
     public: {},

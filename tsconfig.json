@@ -5,11 +5,12 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
     },
     "types": [
       "node",
       "@nuxtjs/device"
     ],
-  }
+    "verbatimModuleSyntax": false,
+  },
 }
