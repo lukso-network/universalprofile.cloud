@@ -17,7 +17,7 @@ const hasTags = computed(
   <div v-if="hasDescription || hasLinks || hasTags" class="py-6 w-1/2 mx-auto">
     <ul
       v-if="hasTags"
-      class="gap-x-4 gap-y-2 mb-3 flex justify-center flex-wrap"
+      class="gap-x-4 gap-y-2 mb-6 flex justify-center flex-wrap"
     >
       <li
         v-for="(tag, index) in viewedProfile?.tags"
