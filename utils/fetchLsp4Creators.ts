@@ -12,7 +12,7 @@ import { Creator } from '@/models/creator'
 export const fetchLsp4Creators = async (
   assetAddress: Address,
   tokenId?: string
-): Promise<Profile[] | undefined> => {
+) => {
   const { contract } = useWeb3(PROVIDERS.RPC)
 
   try {
