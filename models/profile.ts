@@ -1,5 +1,9 @@
 import { Item } from 'pinia-orm'
-import { LSP3ProfileMetadata, LinkMetadata } from '@lukso/lsp-smart-contracts'
+import {
+  ImageMetadata,
+  LSP3ProfileMetadata,
+  LinkMetadata,
+} from '@lukso/lsp-smart-contracts'
 
 import { Image } from '@/models/image'
 import { BaseModel } from '@/models/base'
@@ -18,6 +22,8 @@ export class ProfileModel extends BaseModel {
       tags: this.attr([]),
       description: this.string(''),
       isEoa: this.boolean(false),
+      hash: this.string(''),
+      verification: this.attr({}),
 
       // foreign keys
       profileImageId: this.attr(null),
@@ -35,6 +41,8 @@ export class ProfileModel extends BaseModel {
   declare tags?: string[]
   declare description?: string
   declare isEoa?: boolean
+  declare hash: string
+  declare verification?: ImageMetadata['verification']
 
   declare profileImageId?: string
   declare backgroundImageId?: string

@@ -116,7 +116,7 @@ export const getAndConvertImage = async (
       ...optimalImage,
       base64: resolveUrl(optimalImage.url),
       // base64: await fetchAndConvertImage(optimalImage.url), // TODO add base when cache storage is added
-      id: getImageId(optimalImage),
+      id: getHash(optimalImage),
     } as ImageMetadataEncoded
   }
 }

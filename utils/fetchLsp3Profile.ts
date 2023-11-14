@@ -11,6 +11,7 @@ export const fetchLsp3Profile = async (
     profileAddress,
     LSP3ProfileMetadata as ERC725JSONSchema[]
   )
+  const getData = await fetchLsp3ProfileData(profileAddress)
   const profileData = await erc725.fetchData([
     'LSP3Profile',
     'LSP5ReceivedAssets[]',
@@ -27,8 +28,10 @@ export const fetchLsp3Profile = async (
 
   const { getBalance } = useWeb3(PROVIDERS.RPC)
   const balance = await getBalance(profileAddress)
-  const profileImageId = getImageId(profileImage)
-  const backgroundImageId = getImageId(backgroundImage)
+  const profileImageId = getHash(profileImage)
+  const backgroundImageId = getHash(backgroundImage)
+  const hash = validateHash(getData)
+  const verification = validateVerification(getData)
 
   return {
     ...lsp3Profile,
@@ -41,5 +44,18 @@ export const fetchLsp3Profile = async (
     backgroundImageId,
     receivedAssetIds: receivedAssets.value as Address[],
     issuedAssetIds: issuedAssets.value as Address[],
+    hash,
+    verification,
   }
+}
+
+export const fetchLsp3ProfileData = async (profileAddress: string) => {
+  const { getInstance } = useErc725()
+  const erc725 = getInstance(
+    profileAddress,
+    LSP3ProfileMetadata as ERC725JSONSchema[]
+  )
+  const profileData = await erc725.getData('LSP3Profile')
+
+  return profileData
 }
