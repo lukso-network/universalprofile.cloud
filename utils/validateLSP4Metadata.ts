@@ -1,3 +1,4 @@
+import { Verification } from '@erc725/erc725.js/build/main/src/types'
 import { LSP4DigitalAssetMetadataJSON } from '@lukso/lsp-smart-contracts'
 
 export const validateLsp4MetaData = (
@@ -76,19 +77,19 @@ export const validateImages = (images: any[]) => {
 }
 
 /**
- * Get image id from image object
+ * Get hash from metadata object
  * It checks for old format using `hash` property and
  * new format using `verification.data` property.
  *
- * @param image
+ * @param value
  * @returns
  */
-export const getImageId = (image: any): string | undefined => {
+export const getHash = (value: any): string | undefined => {
   return (
-    image &&
-    ('hash' in image && image.hash !== ''
-      ? image.hash
-      : image?.verification?.data)
+    value &&
+    ('hash' in value && value.hash !== ''
+      ? value.hash
+      : value?.verification?.data)
   )
 }
 
@@ -107,4 +108,40 @@ const validateAsset = (asset: any) => {
       asset.verification.data &&
       asset.verification.method)
   )
+}
+
+/**
+ * Validate if the given metadata object follows proper structure and contain `hash` property
+ * This is legacy format still used on Testnet.
+ *
+ * @param getDataObject - metadata object to be validated
+ * @returns - hash if validation passes, undefined otherwise
+ */
+export const validateHash = (getDataObject: any) => {
+  return typeof getDataObject === 'object' &&
+    typeof getDataObject?.value === 'object' &&
+    getDataObject?.value !== null &&
+    'hash' in getDataObject?.value &&
+    typeof getDataObject.value?.hash === 'string'
+    ? (getDataObject.value?.hash as string)
+    : undefined
+}
+
+/**
+ * Validates if the given metadata object follows proper structure and contain `verification` property
+ * This is new format used on Mainnet.
+ *
+ * @param getDataObject - metadata object to be validated
+ * @returns - verification object if validation passes, undefined otherwise
+ */
+export const validateVerification = (getDataObject: any) => {
+  return typeof getDataObject === 'object' &&
+    'value' in getDataObject &&
+    typeof getDataObject?.value === 'object' &&
+    getDataObject?.value !== null &&
+    'verification' in getDataObject?.value &&
+    'data' in getDataObject?.value?.verification &&
+    'method' in getDataObject?.value?.verification
+    ? (getDataObject.value?.verification as Verification)
+    : undefined
 }
