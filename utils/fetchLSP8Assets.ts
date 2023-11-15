@@ -53,11 +53,11 @@ export const fetchLsp8Assets = async (
 
       const imageIds: string[] = []
       images.forEach(image => {
-        const id = getImageId(image)
+        const id = getHash(image)
         id && imageIds.push(id)
       })
 
-      const iconId = getImageId(icon)
+      const iconId = getHash(icon)
 
       const creatorIds: string[] = []
       creators?.forEach(creator => {

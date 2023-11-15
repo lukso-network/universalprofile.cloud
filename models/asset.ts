@@ -1,10 +1,10 @@
 import { Item } from 'pinia-orm'
 import { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
-import { Profile } from '@/models/profile'
 import { InterfaceId } from '@/types/assets'
 import { Image } from '@/models/image'
 import { BaseModel } from '@/models/base'
+import { Creator } from './creator'
 
 export class AssetModel extends BaseModel {
   static entity = 'assets'
@@ -50,7 +50,7 @@ export class AssetModel extends BaseModel {
 
   declare icon?: Image
   declare images?: Image[]
-  declare creators?: Profile[]
+  declare creators?: Creator[]
 
   static piniaOptions = {
     persist: {

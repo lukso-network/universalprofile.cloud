@@ -16,6 +16,15 @@ const handleSelectAssets = () => {
     template: 'SelectAssets',
   })
 }
+
+const handleBack = () => {
+  try {
+    assertAddress(connectedProfile.value?.address, 'profile')
+    navigateTo(profileRoute(connectedProfile.value.address))
+  } catch (error) {
+    console.error(error)
+  }
+}
 </script>
 
 <template>
@@ -26,6 +35,13 @@ const handleSelectAssets = () => {
     :profile-address="connectedProfile?.address"
     is-full-width
   >
+    <div slot="header">
+      <lukso-icon
+        name="arrow-left-sm"
+        class="m-4 bg-neutral-100 z-[1] relative rounded-full cursor-pointer transition shadow-neutral-above-shadow hover:scale-105 hover:shadow-neutral-above-shadow-1xl active:scale-100 active:shadow-neutral-above-shadow"
+        @click="handleBack"
+      ></lukso-icon>
+    </div>
     <div slot="content" class="p-6 pt-0 relative">
       <div
         class="grid grid-rows-1 grid-cols-[max-content,auto] transition relative z-[1]"

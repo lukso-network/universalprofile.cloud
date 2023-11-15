@@ -10,9 +10,13 @@ export const fetchProfile = async (profileAddress: Address) => {
   const storeProfile = profileRepo.getProfileAndImages(profileAddress)
 
   if (storeProfile) {
-    // refetch LYX balance for cached profile in case it has changed
-    await updateLyxBalance(profileAddress)
-    return
+    const profileData = await fetchLsp3ProfileData(profileAddress)
+
+    // check if profile metadata hash has changed
+    if (getHash(profileData.value) === getHash(storeProfile)) {
+      await updateLyxBalance(profileAddress)
+      return
+    }
   }
 
   try {
