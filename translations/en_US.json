@@ -75,5 +75,6 @@
   "web3_connect_error": "There was an error while connecting to the browser extension.",
   "footer_privacy_policy_text": "Privacy Policy",
   "token_details_images": "Token Images",
-  "profile_search_no_results": "No profile found"
+  "profile_search_no_results": "No profile found",
+  "profile_card_copy_address": "UP address copied!"
 }

@@ -1,14 +1,5 @@
 <script setup lang="ts">
 const { viewedProfile } = useViewedProfile()
-
-const handleCopyAddress = () => {
-  try {
-    assertAddress(viewedProfile.value?.address)
-    navigator.clipboard.writeText(viewedProfile.value.address)
-  } catch (error) {
-    console.error(error)
-  }
-}
 </script>
 
 <template>
@@ -23,21 +14,27 @@ const handleCopyAddress = () => {
       <div slot="content" class="flex flex-col items-center">
         <div class="relative -bottom-[140px] text-center">
           <div class="group cursor-pointer flex flex-col items-center">
-            <lukso-profile
-              :profile-url="viewedProfile?.profileImage?.base64"
-              :profile-address="viewedProfile?.address"
-              size="x-large"
-              has-identicon
-              class="relative z-[1] flex outline outline-4 outline-neutral-100 rounded-full transition group-hover:scale-105"
-              @click="handleCopyAddress"
+            <lukso-tooltip
+              variant="light"
+              offset="15"
+              is-clipboard-copy
+              :copy-text="$formatMessage('profile_card_copy_address')"
+              :copy-value="viewedProfile?.address"
             >
-            </lukso-profile>
-            <div
-              class="relative -top-10 h-0 opacity-10 paragraph-ptmono-16-regular text-24 transition group-hover:opacity-30"
-              @click="handleCopyAddress"
-            >
-              {{ viewedProfile?.address }}
-            </div>
+              <lukso-profile
+                :profile-url="viewedProfile?.profileImage?.base64"
+                :profile-address="viewedProfile?.address"
+                size="x-large"
+                has-identicon
+                class="relative z-[1] inline-flex outline outline-4 outline-neutral-100 rounded-full transition group-hover:scale-105"
+              >
+              </lukso-profile>
+              <div
+                class="relative -top-10 h-0 opacity-10 paragraph-ptmono-16-regular text-24 transition group-hover:opacity-30"
+              >
+                {{ viewedProfile?.address }}
+              </div>
+            </lukso-tooltip>
           </div>
           <lukso-username
             v-if="viewedProfile?.name"
