@@ -2,6 +2,7 @@ import { Repository } from 'pinia-orm'
 
 import { Asset, AssetModel } from '@/models/asset'
 import { InterfaceId } from '@/types/assets'
+import { ImageRepository } from './image'
 
 export class AssetRepository extends Repository<AssetModel> {
   async loadAssets(addresses: Address[], profileAddress: Address) {
@@ -148,16 +149,11 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     const icon =
-      asset?.iconId &&
-      this.repo(ImageModel)
-        .where('chainId', selectedChainId.value)
-        .find(asset.iconId)
+      asset?.iconId && this.repo(ImageRepository).getImage(asset.iconId)
     const images =
       asset?.imageIds &&
       asset.imageIds.length &&
-      this.repo(ImageModel)
-        .where('chainId', selectedChainId.value)
-        .find(asset.imageIds)
+      this.repo(ImageRepository).getImages(asset.imageIds)
 
     return {
       ...asset,
