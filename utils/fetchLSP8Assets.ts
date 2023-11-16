@@ -37,7 +37,7 @@ export const fetchLsp8Assets = async (
         tokenId,
         address
       )
-      const getData = await fetchLsp8Data(address, tokenIdType, tokenId)
+      const getData = await getLsp8Data(address, tokenIdType, tokenId)
       const {
         description,
         images: metadataImages,
