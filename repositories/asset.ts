@@ -1,4 +1,5 @@
 import { Repository } from 'pinia-orm'
+import { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
 
 import { Asset, AssetModel } from '@/models/asset'
 import { InterfaceId } from '@/types/assets'
@@ -10,20 +11,36 @@ export class AssetRepository extends Repository<AssetModel> {
 
     await Promise.all(
       addresses.map(async assetAddress => {
-        const storageAsset = this.repo(AssetModel)
+        // we might get multiple assets since LSP8 share same contract
+        const [storageAsset] = this.repo(AssetModel)
           .where('address', assetAddress)
           .where('chainId', selectedChainId.value)
           .get()
 
-        if (storageAsset && storageAsset.length > 0) {
-          // asynchronously fetch token balances
-          if (storageAsset[0].standard === 'LSP7DigitalAsset') {
+        if (storageAsset) {
+          let assetData: DecodeDataOutput | undefined = undefined
+
+          if (storageAsset.standard === 'LSP7DigitalAsset') {
+            // asynchronously fetch token balances
             fetchLsp7Balance(assetAddress, profileAddress).then(balance => {
               this.setBalance(assetAddress, balance)
             })
+
+            assetData = await fetchLsp4Data(assetAddress)
           }
 
-          return
+          if (storageAsset.standard === 'LSP8IdentifiableDigitalAsset') {
+            assetData = await fetchLsp8Data(
+              assetAddress,
+              storageAsset?.tokenIdType,
+              storageAsset?.tokenId
+            )
+          }
+
+          // check if asset metadata has changed
+          if (getHash(assetData?.value) === getHash(storageAsset)) {
+            return
+          }
         }
 
         const fetchedAsset = await fetchAsset(assetAddress, profileAddress)

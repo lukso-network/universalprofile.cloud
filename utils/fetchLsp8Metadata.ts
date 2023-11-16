@@ -7,18 +7,16 @@ import LSP8IdentifiableDigitalAsset from '@/shared/schemas/LSP8IdentifiableDigit
 export const fetchLsp8Metadata = async (
   tokenId: string,
   assetAddress: Address
-): Promise<LSP4DigitalAssetMetadataJSON> => {
+): Promise<[LSP4DigitalAssetMetadataJSON, string]> => {
   const lsp8MetadataGetter = async (
     tokenIdType: string,
     tokenId: string
   ): Promise<LSP4DigitalAssetMetadataJSON> => {
-    const lsp8Metadata = await erc725.fetchData([
-      {
-        keyName: `LSP8MetadataJSON:<${tokenIdType}>`,
-        dynamicKeyParts: tokenId,
-      },
-    ])
-    return validateLsp4MetaData(lsp8Metadata[0].value)
+    const lsp8Metadata = await erc725.fetchData({
+      keyName: `LSP8MetadataJSON:<${tokenIdType}>`,
+      dynamicKeyParts: tokenId,
+    })
+    return validateLsp4MetaData(lsp8Metadata.value)
   }
 
   const { getInstance } = useErc725()
@@ -34,36 +32,73 @@ export const fetchLsp8Metadata = async (
     // fetch LSP8MetadataJSON depending on tokenIdType
     switch (tokenIdType) {
       case Lsp8TokenIdType.address:
-        return lsp8MetadataGetter(
-          'address',
-          // ethers.utils.hexDataSlice(tokenId.toString(), 12)
-          tokenId.toString()
-        )
+        return [
+          await lsp8MetadataGetter(
+            'address',
+            // ethers.utils.hexDataSlice(tokenId.toString(), 12)
+            tokenId.toString()
+          ),
+          tokenIdType,
+        ]
       case Lsp8TokenIdType.number:
-        return lsp8MetadataGetter('uint256', parseInt(tokenId).toString())
+        return [
+          await lsp8MetadataGetter('uint256', parseInt(tokenId).toString()),
+          tokenIdType,
+        ]
       case Lsp8TokenIdType.bytes32:
-        return lsp8MetadataGetter('bytes32', tokenId.toString())
+        return [
+          await lsp8MetadataGetter('bytes32', tokenId.toString()),
+          tokenIdType,
+        ]
       default:
-        return {
-          LSP4Metadata: {
-            description: '',
-            links: [],
-            images: [[]],
-            icon: [],
-            assets: [],
+        return [
+          {
+            LSP4Metadata: {
+              description: '',
+              links: [],
+              images: [[]],
+              icon: [],
+              assets: [],
+            },
           },
-        }
+          '',
+        ]
     }
   } catch (error) {
     console.error(error)
-    return {
-      LSP4Metadata: {
-        description: '',
-        links: [],
-        images: [[]],
-        icon: [],
-        assets: [],
+    return [
+      {
+        LSP4Metadata: {
+          description: '',
+          links: [],
+          images: [[]],
+          icon: [],
+          assets: [],
+        },
       },
-    }
+      '',
+    ]
   }
+}
+
+export const fetchLsp8Data = async (
+  assetAddress: string,
+  tokenIdType?: string,
+  tokenId?: string
+) => {
+  if (!tokenIdType || !tokenId) {
+    return
+  }
+
+  const { getInstance } = useErc725()
+  const erc725 = getInstance(
+    assetAddress,
+    LSP8IdentifiableDigitalAsset as ERC725JSONSchema[]
+  )
+  const metaData = await erc725.getData({
+    keyName: `LSP8MetadataJSON:<${tokenIdType}>`,
+    dynamicKeyParts: tokenId,
+  })
+
+  return metaData
 }
