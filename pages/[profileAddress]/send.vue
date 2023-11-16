@@ -13,7 +13,7 @@ import { AssetRepository } from '@/repositories/asset'
 const { connectedProfile } = useConnectedProfile()
 const { currentNetwork } = useAppStore()
 const { asset, onSend, amount, receiver } = storeToRefs(useSendStore())
-const { isLoadedApp, isConnected } = storeToRefs(useAppStore())
+const { isLoadedApp, isConnected, hasSimpleNavbar } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
@@ -33,12 +33,13 @@ onMounted(() => {
 
 onUnmounted(() => {
   setStatus('draft')
+  hasSimpleNavbar.value = false
   clearSend()
 })
 
 watchEffect(() => {
   // until everything is loaded we skip this effect
-  if (!isLoadedApp) {
+  if (!isLoadedApp.value) {
     return
   }
 
@@ -74,7 +75,7 @@ watchEffect(() => {
   }
 
   // when logout
-  if (!isConnected) {
+  if (!isConnected.value) {
     navigateTo(homeRoute())
   }
 })
@@ -82,6 +83,7 @@ watchEffect(() => {
 const handleSend = async () => {
   try {
     setStatus('pending')
+    hasSimpleNavbar.value = true
 
     // native token transfer
     if (isLyx(asset.value)) {
@@ -151,6 +153,7 @@ const handleSend = async () => {
   } catch (error: unknown) {
     console.error(error)
     setStatus('draft')
+    hasSimpleNavbar.value = false
 
     await checkNetwork()
 

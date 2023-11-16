@@ -1,9 +1,11 @@
 <script setup lang="ts">
 const { setStatus, clearSend } = useSendStore()
+const { hasSimpleNavbar } = storeToRefs(useAppStore())
 
 const handleSendMore = () => {
   clearSend()
   setStatus('draft')
+  hasSimpleNavbar.value = false
 }
 </script>
 
