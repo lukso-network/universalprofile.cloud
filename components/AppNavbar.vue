@@ -3,7 +3,9 @@ const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
 const { viewedProfile } = useViewedProfile()
 const { connectedProfile } = useConnectedProfile()
-const { isConnecting, isConnected, isTestnet } = storeToRefs(useAppStore())
+const { isConnecting, isConnected, isTestnet, hasSimpleNavbar } = storeToRefs(
+  useAppStore()
+)
 
 const handleNavigateProfile = async () => {
   try {
@@ -61,7 +63,8 @@ const browserSupportExtension = extensionStore.url !== ''
     :title="$formatMessage('header_title')"
     :is-testnet="isTestnet ? true : undefined"
     icon="wallet-outline"
-    has-menu
+    :has-menu="!hasSimpleNavbar ? true : undefined"
+    :is-center="hasSimpleNavbar ? true : undefined"
     @on-brand-click="handleNavigationDiscovery"
     @on-icon-click="handleNavigateProfile"
   >
