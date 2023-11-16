@@ -1,7 +1,9 @@
 import { Repository } from 'pinia-orm'
+import { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
 
 import { Asset, AssetModel } from '@/models/asset'
 import { InterfaceId } from '@/types/assets'
+import { ImageRepository } from './image'
 
 export class AssetRepository extends Repository<AssetModel> {
   async loadAssets(addresses: Address[], profileAddress: Address) {
@@ -9,20 +11,36 @@ export class AssetRepository extends Repository<AssetModel> {
 
     await Promise.all(
       addresses.map(async assetAddress => {
-        const storageAsset = this.repo(AssetModel)
+        // we might get multiple assets since LSP8 share same contract
+        const [storageAsset] = this.repo(AssetModel)
           .where('address', assetAddress)
           .where('chainId', selectedChainId.value)
           .get()
 
-        if (storageAsset && storageAsset.length > 0) {
-          // asynchronously fetch token balances
-          if (storageAsset[0].standard === 'LSP7DigitalAsset') {
+        if (storageAsset) {
+          let assetData: DecodeDataOutput | undefined = undefined
+
+          if (storageAsset.standard === 'LSP7DigitalAsset') {
+            // asynchronously fetch token balances
             fetchLsp7Balance(assetAddress, profileAddress).then(balance => {
               this.setBalance(assetAddress, balance)
             })
+
+            assetData = await fetchLsp4Data(assetAddress)
           }
 
-          return
+          if (storageAsset.standard === 'LSP8IdentifiableDigitalAsset') {
+            assetData = await getLsp8Data(
+              assetAddress,
+              storageAsset?.tokenIdType,
+              storageAsset?.tokenId
+            )
+          }
+
+          // check if asset metadata has changed
+          if (getHash(assetData?.value) === getHash(storageAsset)) {
+            return
+          }
         }
 
         const fetchedAsset = await fetchAsset(assetAddress, profileAddress)
@@ -148,16 +166,11 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     const icon =
-      asset?.iconId &&
-      this.repo(ImageModel)
-        .where('chainId', selectedChainId.value)
-        .find(asset.iconId)
+      asset?.iconId && this.repo(ImageRepository).getImage(asset.iconId)
     const images =
       asset?.imageIds &&
       asset.imageIds.length &&
-      this.repo(ImageModel)
-        .where('chainId', selectedChainId.value)
-        .find(asset.imageIds)
+      this.repo(ImageRepository).getImages(asset.imageIds)
 
     return {
       ...asset,

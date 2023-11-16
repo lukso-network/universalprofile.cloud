@@ -1,3 +1,5 @@
+import { toWei } from 'web3-utils'
+
 import { NetworkInfo } from '@/types/network'
 
 // chain id's
@@ -13,7 +15,7 @@ export const NETWORKS: NetworkInfo[] = [
     rpcHttp: 'https://rpc.testnet.lukso.network',
     token: {
       symbol: 'LYXt',
-      supply: 42_000_000,
+      supply: toWei('42000000', 'ether'),
       name: 'LUKSO',
     },
     indexName: 'prod_testnet_universal_profiles',
@@ -24,7 +26,7 @@ export const NETWORKS: NetworkInfo[] = [
     rpcHttp: 'https://rpc.mainnet.lukso.network',
     token: {
       symbol: 'LYX',
-      supply: 42_000_000,
+      supply: toWei('42000000', 'ether'),
       name: 'LUKSO',
     },
     indexName: 'prod_mainnet_universal_profiles',
@@ -53,7 +55,7 @@ export const ASSET_LYX_ICON_URL = '/images/lyx-token.svg'
 export const ASSET_LYX_DECIMALS = 18
 
 // url of the ipfs gateway
-export const IPFS_URL = 'https://2eff.lukso.dev/ipfs/'
+export const IPFS_URL = 'https://api.universalprofile.cloud/ipfs/'
 
 // extension store links
 export const EXTENSION_STORE_LINKS = {

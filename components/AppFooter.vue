@@ -5,12 +5,13 @@ const providers: ProviderName[] = ['twitter', 'discord', 'github']
 </script>
 
 <template>
-  <lukso-footer :providers="providers">
+  <lukso-footer v-if="providers" :providers="JSON.stringify(providers)">
     <div
       slot="links"
-      class="grid gap-4 items-center grid-cols-1 grid-rows-2 xl:grid-cols-[repeat(3,max-content)] xl:gap-10 xl:grid-rows-1"
+      class="grid gap-4 items-center grid-cols-1 grid-rows-3 xl:grid-cols-[repeat(4,max-content)] xl:gap-10 xl:grid-rows-1"
     >
-      <div class="flex gap-10">
+      <AppFooterNetworkSelect />
+      <div class="flex gap-10 items-center">
         <a
           href="https://docs.lukso.tech/"
           class="nav-apax-12-medium-uppercase text-purple-41 hover:underline hover:text-purple-31"

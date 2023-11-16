@@ -49,3 +49,14 @@ export const fetchLsp4Metadata = async (
     ]
   }
 }
+
+export const fetchLsp4Data = async (assetAddress: string) => {
+  const { getInstance } = useErc725()
+  const erc725 = getInstance(
+    assetAddress,
+    LSP4DigitalAsset as ERC725JSONSchema[]
+  )
+  const metaData = await erc725.getData('LSP4Metadata')
+
+  return metaData
+}

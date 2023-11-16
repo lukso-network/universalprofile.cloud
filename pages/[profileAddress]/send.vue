@@ -17,7 +17,7 @@ const { isLoadedApp, isConnected } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
-const { sendTransaction, getBalance, contract } = useWeb3(PROVIDERS.INJECTED)
+const { sendTransaction, contract } = useWeb3(PROVIDERS.INJECTED)
 const assetRepository = useRepo(AssetRepository)
 
 onMounted(() => {
@@ -92,7 +92,7 @@ const handleSend = async () => {
       } as TransactionConfig
 
       await sendTransaction(transaction)
-      await updateLyxBalance()
+      await updateLyxBalance(connectedProfile.value?.address)
     } else {
       // custom token transfer
       switch (asset.value?.standard) {
@@ -152,20 +152,13 @@ const handleSend = async () => {
     console.error(error)
     setStatus('draft')
 
+    await checkNetwork()
+
     showModal({
       title: formatMessage('web3_connect_error_title'),
-      message: getSendErrorMessage(error),
+      message: getErrorMessage(error),
     })
   }
-}
-
-const updateLyxBalance = async () => {
-  assertString(connectedProfile.value?.address)
-  const balance = await getBalance(connectedProfile.value.address)
-
-  useRepo(ProfileModel)
-    .where('address', connectedProfile.value.address)
-    .update({ balance })
 }
 </script>
 

@@ -10,6 +10,7 @@ export const fetchLsp7Assets = async (
   profileAddress?: Address
 ): Promise<Asset> => {
   const [name, symbol, metadata] = await fetchLsp4Metadata(address)
+  const getData = await fetchLsp4Data(address)
 
   const { contract } = useWeb3(PROVIDERS.RPC)
   const lsp7Contract = contract<LSP7DigitalAssetInterface>(
@@ -24,13 +25,13 @@ export const fetchLsp7Assets = async (
 
   const tokenSupply = await lsp7Contract.methods.totalSupply().call()
   const decimals = Number(await lsp7Contract.methods.decimals().call())
-  const icon = await getAndConvertImage(metadata.LSP4Metadata.icon, 200)
+  const icon = await getAndConvertImage(metadata.LSP4Metadata.icon, 56)
   const { links, description } = metadata.LSP4Metadata
   const images: ImageMetadataEncoded[] = []
   const creators = await fetchLsp4Creators(address, '')
 
   for await (const image of metadata.LSP4Metadata.images) {
-    const convertedImage = await getAndConvertImage(image, 400)
+    const convertedImage = await getAndConvertImage(image, 100)
     if (convertedImage) {
       images.push(convertedImage)
     }
@@ -38,13 +39,18 @@ export const fetchLsp7Assets = async (
 
   const imageIds: string[] = []
   images.forEach(image => {
-    image?.hash && imageIds.push(image.hash)
+    const id = getHash(image)
+    id && imageIds.push(id)
   })
+
+  const iconId = getHash(icon)
 
   const creatorIds: string[] = []
   creators?.forEach(creator => {
     creator?.address && creatorIds.push(creator.address)
   })
+  const hash = validateHash(getData)
+  const verification = validateVerification(getData)
 
   return {
     address,
@@ -58,11 +64,13 @@ export const fetchLsp7Assets = async (
     metadata: metadata.LSP4Metadata,
     standard: 'LSP7DigitalAsset',
     icon,
-    iconId: icon?.hash,
+    iconId,
     images,
     imageIds,
     creators,
     creatorIds,
     tokenId: '',
+    hash,
+    verification,
   }
 }

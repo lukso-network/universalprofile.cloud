@@ -1,7 +1,6 @@
 import { ImageMetadata } from '@lukso/lsp-smart-contracts'
 
 import { ImageMetadataEncoded } from '@/types/assets'
-import { formatUrl } from '@/utils/formatUrl'
 import { Asset } from '@/models/asset'
 import { ImageRepository } from '@/repositories/image'
 
@@ -24,29 +23,54 @@ const fetchBlobAndConvertToBase64 = async (
 }
 
 export const fetchAndConvertImage = async (imageUrl: string) => {
-  const request = new Request(formatUrl(imageUrl))
+  const request = new Request(resolveUrl(imageUrl))
   return (await fetchBlobAndConvertToBase64(request)) as Base64EncodedImage
 }
 
 /**
  * Gets a correct image url from an array of possible image
- * by checking the max height and min width of the image.
+ * by checking the height of the image.
+ * It try to find retina version of the image first, then normal version of the image
+ * and lastly the biggest image available.
  *
  * @param {ImageMetadata[]} images - an array of images to check
- * @param {number} minWidth - min width
- * @param {number} maxHeight - max height
+ * @param {number} height - the desired height of the image
  * @returns url of the image
  */
 export const getImageBySize = (
   images: ImageMetadata[],
-  maxHeight: number
+  height: number
 ): ImageMetadata | undefined => {
-  for (const image of images) {
-    if (image.height <= maxHeight) {
-      return image
+  const sortedImagesAscending = images.sort((a, b) => {
+    if (a.height < b.height) {
+      return -1
     }
+    if (a.height > b.height) {
+      return 1
+    }
+    return 0
+  })
+
+  // check if we can get retina size image
+  const retinaImage = sortedImagesAscending.find(
+    image => image.height > height * 2
+  )
+
+  if (retinaImage) {
+    return retinaImage
   }
-  return images.length > 0 ? images[0] : undefined
+
+  // check if we can get normal size image
+  const normalImage = sortedImagesAscending.find(image => image.height > height)
+
+  if (normalImage) {
+    return normalImage
+  }
+
+  // lastly return biggest image available
+  return sortedImagesAscending.length > 0
+    ? sortedImagesAscending.pop()
+    : undefined
 }
 
 /**
@@ -83,15 +107,16 @@ export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
 
 export const getAndConvertImage = async (
   image: ImageMetadata[],
-  maxHeight: number
+  height: number
 ) => {
-  const optimalImage = getImageBySize(image, maxHeight)
+  const optimalImage = getImageBySize(image, height)
 
   if (optimalImage) {
     return {
       ...optimalImage,
-      base64: formatUrl(optimalImage.url),
+      base64: resolveUrl(optimalImage.url),
       // base64: await fetchAndConvertImage(optimalImage.url), // TODO add base when cache storage is added
+      id: getHash(optimalImage),
     } as ImageMetadataEncoded
   }
 }

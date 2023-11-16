@@ -1,10 +1,10 @@
 import { Item } from 'pinia-orm'
-import { LinkMetadata } from '@lukso/lsp-smart-contracts'
+import { ImageMetadata, LinkMetadata } from '@lukso/lsp-smart-contracts'
 
-import { Profile } from '@/models/profile'
 import { InterfaceId } from '@/types/assets'
 import { Image } from '@/models/image'
 import { BaseModel } from '@/models/base'
+import { Creator } from './creator'
 
 export class AssetModel extends BaseModel {
   static entity = 'assets'
@@ -23,7 +23,10 @@ export class AssetModel extends BaseModel {
       description: this.string(''),
       links: this.attr([]),
       tokenId: this.string(''),
+      tokenIdType: this.number(null),
       isNativeToken: this.boolean(false),
+      hash: this.string(''),
+      verification: this.attr({}),
 
       // foreign keys
       iconId: this.attr(null),
@@ -43,14 +46,17 @@ export class AssetModel extends BaseModel {
   declare description?: string
   declare links?: LinkMetadata[]
   declare tokenId?: string
+  declare tokenIdType?: number
   declare isNativeToken?: boolean
+  declare hash: string
+  declare verification?: ImageMetadata['verification']
 
   declare iconId?: string
   declare imageIds?: string[]
 
   declare icon?: Image
   declare images?: Image[]
-  declare creators?: Profile[]
+  declare creators?: Creator[]
 
   static piniaOptions = {
     persist: {

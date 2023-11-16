@@ -33,20 +33,23 @@ export const fetchLsp8Assets = async (
 
   const assets: Asset[] = await Promise.all(
     tokensIds.map(async tokenId => {
-      const collectionMetadata = (await fetchLsp8Metadata(tokenId, address))
-        .LSP4Metadata
+      const [collectionMetadata, tokenIdType] = await fetchLsp8Metadata(
+        tokenId,
+        address
+      )
+      const getData = await getLsp8Data(address, tokenIdType, tokenId)
       const {
         description,
         images: metadataImages,
         icon: metadataIcon,
         links,
-      } = collectionMetadata
-      const icon = await getAndConvertImage(metadataIcon, 200)
+      } = collectionMetadata.LSP4Metadata
+      const icon = await getAndConvertImage(metadataIcon, 260)
       const images: ImageMetadataEncoded[] = []
       const creators = await fetchLsp4Creators(address, tokenId)
 
       for await (const image of metadataImages) {
-        const convertedImage = await getAndConvertImage(image, 400)
+        const convertedImage = await getAndConvertImage(image, 260)
         if (convertedImage) {
           images.push(convertedImage)
         }
@@ -54,13 +57,18 @@ export const fetchLsp8Assets = async (
 
       const imageIds: string[] = []
       images.forEach(image => {
-        image?.hash && imageIds.push(image.hash)
+        const id = getHash(image)
+        id && imageIds.push(id)
       })
+
+      const iconId = getHash(icon)
 
       const creatorIds: string[] = []
       creators?.forEach(creator => {
         creator?.address && creatorIds.push(creator.address)
       })
+      const hash = validateHash(getData)
+      const verification = validateVerification(getData)
 
       return {
         address,
@@ -77,12 +85,15 @@ export const fetchLsp8Assets = async (
         },
         standard: 'LSP8IdentifiableDigitalAsset',
         tokenId,
+        tokenIdType,
         icon,
-        iconId: icon?.hash,
+        iconId,
         images,
         imageIds,
         creators,
         creatorIds,
+        hash,
+        verification,
       }
     })
   )
