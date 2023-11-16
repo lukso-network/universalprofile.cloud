@@ -3,11 +3,7 @@ type Props = {
   tokenId: string
 }
 
-const props = defineProps<Props>()
-
-const handleCopyTokenAddress = () => {
-  navigator.clipboard.writeText(props.tokenId)
-}
+defineProps<Props>()
 </script>
 
 <template>
@@ -21,12 +17,19 @@ const handleCopyTokenAddress = () => {
           {{ $formatMessage('token_details_token_id') }}
         </div>
       </div>
-      <lukso-icon
-        name="copy"
-        size="small"
-        class="cursor-pointer transition-opacity hover:opacity-70"
-        @click="handleCopyTokenAddress"
-      ></lukso-icon>
+      <lukso-tooltip
+        variant="light"
+        offset="15"
+        is-clipboard-copy
+        :copy-text="$formatMessage('asset_address_copied_tooltip')"
+        :copy-value="tokenId"
+      >
+        <lukso-icon
+          name="copy"
+          size="small"
+          class="cursor-pointer transition-opacity hover:opacity-70"
+        ></lukso-icon>
+      </lukso-tooltip>
     </div>
     <div class="paragraph-ptmono-12-bold pt-3">{{ tokenId }}</div>
   </div>
