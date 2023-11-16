@@ -9,6 +9,7 @@ export const fetchLsp7Assets = async (
   profileAddress?: Address
 ): Promise<Asset> => {
   const [name, symbol, metadata] = await fetchLsp4Metadata(address)
+  const getData = await fetchLsp4Data(address)
 
   const { contract } = useWeb3(PROVIDERS.RPC)
   const lsp7Contract = contract<LSP7DigitalAssetInterface>(
@@ -47,6 +48,8 @@ export const fetchLsp7Assets = async (
   creators?.forEach(creator => {
     creator?.address && creatorIds.push(creator.address)
   })
+  const hash = validateHash(getData)
+  const verification = validateVerification(getData)
 
   return {
     address,
@@ -66,5 +69,7 @@ export const fetchLsp7Assets = async (
     creators,
     creatorIds,
     tokenId: '',
+    hash,
+    verification,
   }
 }
