@@ -30,7 +30,7 @@ export class AssetRepository extends Repository<AssetModel> {
           }
 
           if (storageAsset.standard === 'LSP8IdentifiableDigitalAsset') {
-            assetData = await fetchLsp8Data(
+            assetData = await getLsp8Data(
               assetAddress,
               storageAsset?.tokenIdType,
               storageAsset?.tokenId
