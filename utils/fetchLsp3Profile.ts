@@ -11,7 +11,7 @@ export const fetchLsp3Profile = async (
     profileAddress,
     LSP3ProfileMetadata as ERC725JSONSchema[]
   )
-  const getData = await fetchLsp3ProfileData(profileAddress)
+  const getData = (await fetchLsp3ProfileData(profileAddress))[0]
   const profileData = await erc725.fetchData([
     'LSP3Profile',
     'LSP5ReceivedAssets[]',
@@ -55,7 +55,11 @@ export const fetchLsp3ProfileData = async (profileAddress: string) => {
     profileAddress,
     LSP3ProfileMetadata as ERC725JSONSchema[]
   )
-  const profileData = await erc725.getData('LSP3Profile')
+  const profileData = await erc725.getData([
+    'LSP3Profile',
+    'LSP5ReceivedAssets[]',
+    'LSP12IssuedAssets[]',
+  ])
 
   return profileData
 }

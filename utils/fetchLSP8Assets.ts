@@ -32,14 +32,17 @@ export const fetchLsp8Assets = async (
 
   const assets: Asset[] = await Promise.all(
     tokensIds.map(async tokenId => {
-      const collectionMetadata = (await fetchLsp8Metadata(tokenId, address))
-        .LSP4Metadata
+      const [collectionMetadata, tokenIdType] = await fetchLsp8Metadata(
+        tokenId,
+        address
+      )
+      const getData = await fetchLsp8Data(address, tokenIdType, tokenId)
       const {
         description,
         images: metadataImages,
         icon: metadataIcon,
         links,
-      } = collectionMetadata
+      } = collectionMetadata.LSP4Metadata
       const icon = await getAndConvertImage(metadataIcon, 260)
       const images: ImageMetadataEncoded[] = []
       const creators = await fetchLsp4Creators(address, tokenId)
@@ -63,6 +66,8 @@ export const fetchLsp8Assets = async (
       creators?.forEach(creator => {
         creator?.address && creatorIds.push(creator.address)
       })
+      const hash = validateHash(getData)
+      const verification = validateVerification(getData)
 
       return {
         address,
@@ -79,12 +84,15 @@ export const fetchLsp8Assets = async (
         },
         standard: 'LSP8IdentifiableDigitalAsset',
         tokenId,
+        tokenIdType,
         icon,
         iconId,
         images,
         imageIds,
         creators,
         creatorIds,
+        hash,
+        verification,
       }
     })
   )
