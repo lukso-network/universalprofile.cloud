@@ -69,12 +69,6 @@ const handleSendAsset = (event: Event) => {
       <div>
         <div class="heading-apax-24-medium pb-8">{{ asset?.name }}</div>
         <AssetAddress v-if="asset?.address" :address="asset.address" />
-        <AssetBalance
-          v-if="asset?.balance"
-          :balance="asset.balance"
-          :symbol="asset?.symbol"
-          :decimals="asset?.decimals"
-        />
         <AssetSupply
           v-if="asset?.tokenSupply"
           :token-supply="asset?.tokenSupply"
