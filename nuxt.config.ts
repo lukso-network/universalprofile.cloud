@@ -99,7 +99,7 @@ export default defineNuxtConfig({
     },
   },
   imports: {
-    dirs: ['stores/**', 'shared/**', 'models/**'],
+    dirs: ['stores/**', 'shared/**', 'models/**', 'repositories/**'],
     presets: [
       {
         from: 'pinia',
