@@ -1,9 +1,8 @@
 <script setup lang="ts">
 const { connectedProfile } = useConnectedProfile()
 const { profile } = useProfile(connectedProfile.value?.address)
-const { asset, receiver, receiverError, amount, onSend } = storeToRefs(
-  useSendStore()
-)
+const { asset, receiver, receiverError, amount, onSend } =
+  storeToRefs(useSendStore())
 const { isLoadedApp } = storeToRefs(useAppStore())
 const { showModal } = useModal()
 

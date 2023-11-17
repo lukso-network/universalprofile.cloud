@@ -3,9 +3,8 @@ const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
 const { viewedProfile } = useViewedProfile()
 const { connectedProfile } = useConnectedProfile()
-const { isConnecting, isConnected, isTestnet, hasSimpleNavbar } = storeToRefs(
-  useAppStore()
-)
+const { isConnecting, isConnected, isTestnet, hasSimpleNavbar } =
+  storeToRefs(useAppStore())
 
 const handleNavigateProfile = async () => {
   try {

@@ -3,9 +3,8 @@ definePageMeta({
   layout: 'landing',
 })
 
-const { isConnected, isLoadedApp, connectedProfileAddress } = storeToRefs(
-  useAppStore()
-)
+const { isConnected, isLoadedApp, connectedProfileAddress } =
+  storeToRefs(useAppStore())
 const { isUniversalProfileExtension } = useBrowserExtension()
 
 const supportedBrowsers = Object.entries(EXTENSION_STORE_LINKS)
