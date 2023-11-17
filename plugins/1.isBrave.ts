@@ -1,12 +1,15 @@
 import { DeviceExtended, NavigatorExtended } from '@/types/device'
+import { NuxtApp } from 'nuxt/app'
 
 /**
  * Detects if the browser is Brave
  *
- * @param device - object containing device flags
+ * @param nuxtApp - nuxt app instance
  */
-export default async function ({ $device }: { $device: DeviceExtended }) {
+export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
   const navigatorBrave = navigator as NavigatorExtended
-  $device.isBrave =
-    (navigatorBrave.brave && (await navigatorBrave.brave.isBrave())) || false
-}
+
+  nuxtApp?.$device &&
+    ((nuxtApp.$device as DeviceExtended).isBrave =
+      (navigatorBrave.brave && (await navigatorBrave.brave.isBrave())) || false)
+})
