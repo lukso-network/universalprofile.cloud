@@ -28,19 +28,19 @@ const handleSendAsset = (event: Event) => {
         'opacity-0': isLoadingAssets || !isLoadedApp,
         'opacity-100': !isLoadingAssets && isLoadedApp,
       }"
-      class="max-w-content py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
+      class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-20 transition-opacity duration-300"
     >
       <div>
         <lukso-card is-full-width size="small">
           <div
             slot="content"
-            class="p-6 flex items-center justify-center sm:py-10 md:py-20"
+            class="flex items-center justify-center p-6 sm:py-10 md:py-20"
           >
             <lukso-profile
               v-if="asset"
               size="large"
               :profile-url="asset.icon"
-              class="shadow-neutral-above-shadow-1xl rounded-full"
+              class="rounded-full shadow-neutral-above-shadow-1xl"
             ></lukso-profile>
           </div>
         </lukso-card>

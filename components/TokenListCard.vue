@@ -57,8 +57,8 @@ onMounted(async () => {
 
 <template>
   <lukso-card size="small" is-hoverable is-full-width @click="handleShowAsset"
-    ><div slot="content" class="p-4 h-full grid grid-rows-[max-content,auto]">
-      <div class="h-7 flex justify-end items-start">
+    ><div slot="content" class="grid h-full grid-rows-[max-content,auto] p-4">
+      <div class="flex h-7 items-start justify-end">
         <lukso-tag
           v-if="asset?.standard"
           size="x-small"
@@ -67,7 +67,7 @@ onMounted(async () => {
         >
       </div>
       <div ref="contentRef" class="flex gap-6">
-        <div ref="logoRef" class="pl-2 flex flex-col items-center">
+        <div ref="logoRef" class="flex flex-col items-center pl-2">
           <lukso-profile
             size="medium"
             :profile-address="asset?.address"
@@ -76,7 +76,7 @@ onMounted(async () => {
           ></lukso-profile>
           <div
             v-if="hasAddress"
-            class="paragraph-ptmono-10-bold text-neutral-60 pt-2"
+            class="paragraph-ptmono-10-bold pt-2 text-neutral-60"
           >
             #{{ asset?.address?.slice(2, 8) }}
           </div>
@@ -104,7 +104,7 @@ onMounted(async () => {
             <span v-else>0</span>
             <span
               ref="symbolRef"
-              class="paragraph-inter-14-semi-bold text-neutral-60 pl-2"
+              class="paragraph-inter-14-semi-bold pl-2 text-neutral-60"
               >{{ asset?.symbol }}</span
             >
           </div>
@@ -114,7 +114,7 @@ onMounted(async () => {
           >
             {{ $formatCurrency(asset.balance, asset.symbol) }}
           </div>
-          <div class="flex justify-end w-full items-end">
+          <div class="flex w-full items-end justify-end">
             <lukso-button
               v-if="
                 isConnected &&

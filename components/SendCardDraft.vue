@@ -37,22 +37,22 @@ const handleBack = () => {
     <div slot="header">
       <lukso-icon
         name="arrow-left-sm"
-        class="m-4 bg-neutral-100 z-[1] relative rounded-full cursor-pointer transition shadow-neutral-above-shadow hover:scale-105 hover:shadow-neutral-above-shadow-1xl active:scale-100 active:shadow-neutral-above-shadow"
+        class="relative z-[1] m-4 cursor-pointer rounded-full bg-neutral-100 shadow-neutral-above-shadow transition hover:scale-105 hover:shadow-neutral-above-shadow-1xl active:scale-100 active:shadow-neutral-above-shadow"
         @click="handleBack"
       ></lukso-icon>
     </div>
-    <div slot="content" class="p-6 pt-0 relative">
+    <div slot="content" class="relative p-6 pt-0">
       <div
-        class="grid grid-rows-1 grid-cols-[max-content,auto] transition relative z-[1]"
+        class="relative z-[1] grid grid-cols-[max-content,auto] grid-rows-1 transition"
         :class="{
-          'opacity-0 invisible': !isLoadedApp,
-          'opacity-100 visible': isLoadedApp,
+          'invisible opacity-0': !isLoadedApp,
+          'visible opacity-100': isLoadedApp,
         }"
       >
         <div
-          class="p-4 border border-neutral-90 border-r-0 rounded-[12px_0_0_12px] flex justify-center items-center"
+          class="flex items-center justify-center rounded-[12px_0_0_12px] border border-r-0 border-neutral-90 p-4"
         >
-          <div class="shadow-neutral-above-shadow-1xl rounded-full">
+          <div class="rounded-full shadow-neutral-above-shadow-1xl">
             <lukso-profile
               size="small"
               :profile-url="getAssetThumb(asset, isToken(asset))"
@@ -62,31 +62,31 @@ const handleBack = () => {
             ></lukso-profile>
           </div>
         </div>
-        <div class="flex flex-col w-full">
+        <div class="flex w-full flex-col">
           <div
-            class="border border-neutral-90 rounded-[0_12px_0_0] cursor-pointer paragraph-inter-14-semi-bold px-4 py-3 flex justify-between items-center transition hover:border-neutral-35"
+            class="paragraph-inter-14-semi-bold flex cursor-pointer items-center justify-between rounded-[0_12px_0_0] border border-neutral-90 px-4 py-3 transition hover:border-neutral-35"
             @click="handleSelectAssets"
           >
             {{ asset?.name }}
             <lukso-icon name="arrow-down-lg"></lukso-icon>
           </div>
-          <div class="border border-neutral-90 border-t-0 rounded-[0_0_12px_0]">
+          <div class="rounded-[0_0_12px_0] border border-t-0 border-neutral-90">
             <SendCardAmount />
           </div>
         </div>
       </div>
       <div
-        class="gap-2 grid grid-rows-2 absolute top-0 left-0 right-0 bottom-0 m-6 mt-0 transition"
+        class="absolute inset-0 m-6 mt-0 grid grid-rows-2 gap-2 transition"
         :class="{
           'opacity-0': isLoadedApp,
-          'opacity-100 animate-pulse': !isLoadedApp,
+          'animate-pulse opacity-100': !isLoadedApp,
         }"
       >
-        <div class="bg-neutral-95 rounded-12"></div>
-        <div class="bg-neutral-95 rounded-12"></div>
+        <div class="rounded-12 bg-neutral-95"></div>
+        <div class="rounded-12 bg-neutral-95"></div>
       </div>
     </div>
-    <div slot="bottom" class="p-6 flex flex-col items-center">
+    <div slot="bottom" class="flex flex-col items-center p-6">
       <AppAvatar
         :is-eoa="receiver?.isEoa"
         :is-error="!!receiverError"
@@ -94,7 +94,7 @@ const handleBack = () => {
       />
       <SendCardProfileSearch />
       <lukso-button
-        class="w-full mt-4"
+        class="mt-4 w-full"
         :disabled="
           !receiver?.address || receiverError || !Number(amount)
             ? true

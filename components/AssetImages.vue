@@ -13,11 +13,11 @@ defineProps<Props>()
     <div class="heading-inter-14-bold pb-3">
       {{ $formatMessage('token_details_images') }}
     </div>
-    <div class="flex gap-4 flex-wrap">
+    <div class="flex flex-wrap gap-4">
       <div
         v-for="(image, index) in images"
         :key="index"
-        class="w-14 h-14 rounded-8 bg-cover bg-position-center bg-neutral-90"
+        class="h-14 w-14 rounded-8 bg-neutral-90 bg-cover"
         :style="{
           backgroundImage: `url(${image?.base64})`,
         }"

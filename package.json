@@ -57,6 +57,7 @@
     "eslint-plugin-import": "2.29.0",
     "eslint-plugin-json": "3.1.0",
     "eslint-plugin-playwright": "0.18.0",
+    "eslint-plugin-tailwindcss": "^3.13.0",
     "eslint-plugin-testing-library": "6.1.2",
     "eslint-plugin-vue": "9.18.1",
     "ethereum-blockies-base64": "^1.0.2",

@@ -8,9 +8,9 @@ defineProps<Props>()
 
 <template>
   <div
-    class="bg-neutral-100 border border-neutral-90 py-3 px-4 rounded-12 mb-8"
+    class="mb-8 rounded-12 border border-neutral-90 bg-neutral-100 px-4 py-3"
   >
-    <div class="flex justify-between items-center">
+    <div class="flex items-center justify-between">
       <div class="flex items-center">
         <lukso-icon name="smart-contract-doc" size="small"></lukso-icon>
         <div class="paragraph-inter-14-medium ml-2">

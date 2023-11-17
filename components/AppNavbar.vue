@@ -70,7 +70,7 @@ const browserSupportExtension = extensionStore.url !== ''
     <div class="flex items-center justify-end" slot="desktop">
       <lukso-button
         variant="text"
-        custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+        custom-class="text-12 text-purple-51 hover:text-purple-41 uppercase nav-apax-12-medium-uppercase font-apax font-500"
         @click="handleNavigationDiscovery"
       >
         {{ $formatMessage('header_discovery') }}

@@ -12,20 +12,20 @@ const handleGetHelp = () => {
 
 <template>
   <div
-    class="flex flex-col items-center justify-center h-full px-6 transition-opacity animate-fade-in"
+    class="flex h-full animate-fade-in flex-col items-center justify-center px-6 transition-opacity"
   >
     <img
       src="/images/up-error-large.png"
       alt=""
       class="w-full px-20 pt-10 sm:w-[341px] sm:px-0"
     />
-    <div class="pb-2 heading-apax-24-medium">
+    <div class="heading-apax-24-medium pb-2">
       {{ $formatMessage('not_found_title') }}
     </div>
-    <div class="pb-10 paragraph-inter-16-regular text-center">
+    <div class="paragraph-inter-16-regular pb-10 text-center">
       {{ $formatMessage('not_found_text') }}
     </div>
-    <div class="grid gap-4 sm:grid-cols-2 w-full sm:w-auto pb-8 sm:pb-20">
+    <div class="grid w-full gap-4 pb-8 sm:w-auto sm:grid-cols-2 sm:pb-20">
       <lukso-button
         variant="landing"
         @click="handleVisitHomepage"
