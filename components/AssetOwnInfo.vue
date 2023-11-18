@@ -12,14 +12,14 @@ const profile = computed(() => useProfile(props.address).profile.value)
 
 <template>
   <lukso-card is-full-width size="small" class="mt-4">
-    <div slot="content" class="px-4 py-2 flex">
+    <div slot="content" class="flex px-4 py-2">
       <lukso-profile
         size="small"
         :profile-address="address"
         :profile-url="profile?.profileImage?.base64"
         has-identicon
       ></lukso-profile>
-      <div class="pl-4 flex flex-col justify-center">
+      <div class="flex flex-col justify-center pl-4">
         <div class="paragraph-inter-10-semi-bold pb-1">
           {{ $formatMessage('token_details_own') }}
         </div>
@@ -30,7 +30,7 @@ const profile = computed(() => useProfile(props.address).profile.value)
             })
           }}</span>
           <span v-else>0</span>
-          <span class="text-neutral-60 ml-1">{{ symbol }}</span>
+          <span class="ml-1 text-neutral-60">{{ symbol }}</span>
         </div>
       </div>
     </div>

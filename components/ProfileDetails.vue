@@ -14,10 +14,10 @@ const hasTags = computed(
 </script>
 
 <template>
-  <div v-if="hasDescription || hasLinks || hasTags" class="py-6 w-1/2 mx-auto">
+  <div v-if="hasDescription || hasLinks || hasTags" class="mx-auto w-1/2 py-6">
     <ul
       v-if="hasTags"
-      class="gap-x-4 gap-y-2 mb-6 flex justify-center flex-wrap"
+      class="mb-6 flex flex-wrap justify-center gap-x-4 gap-y-2"
     >
       <li
         v-for="(tag, index) in viewedProfile?.tags"
@@ -32,7 +32,7 @@ const hasTags = computed(
     </div>
     <ul
       v-if="hasLinks"
-      class="gap-x-4 gap-y-2 mt-3 flex justify-center flex-wrap"
+      class="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-2"
     >
       <li
         v-for="(link, index) in viewedProfile?.links"

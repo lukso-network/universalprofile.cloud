@@ -3,9 +3,8 @@ definePageMeta({
   layout: 'landing',
 })
 
-const { isConnected, isLoadedApp, connectedProfileAddress } = storeToRefs(
-  useAppStore()
-)
+const { isConnected, isLoadedApp, connectedProfileAddress } =
+  storeToRefs(useAppStore())
 const { isUniversalProfileExtension } = useBrowserExtension()
 
 const supportedBrowsers = Object.entries(EXTENSION_STORE_LINKS)
@@ -31,7 +30,7 @@ watchEffect(() => {
         'opacity-0': !isLoadedApp,
         'opacity-100': isLoadedApp,
       }"
-      class="max-w-[950px] py-20 px-4 mx-auto relative grid grid-cols-1 gap-7 h-full transition-opacity duration-300 delay-500 sm:items-center sm:grid-cols-2 sm:pt-24"
+      class="relative mx-auto grid h-full max-w-[950px] grid-cols-1 gap-7 px-4 py-20 transition-opacity delay-500 duration-300 sm:grid-cols-2 sm:items-center sm:pt-24"
     >
       <div class="hidden sm:block">
         <img
@@ -42,11 +41,11 @@ watchEffect(() => {
       </div>
       <div>
         <lukso-card is-full-width>
-          <div slot="content" class="p-10 pt-16 relative">
+          <div slot="content" class="relative p-10 pt-16">
             <img
               src="/images/up-cube.png"
               alt=""
-              class="w-[100px] absolute -top-[50px]"
+              class="absolute top-[-50px] w-[100px]"
             />
             <div class="heading-apax-24-medium">
               {{ $formatMessage('landing_hero_title') }}
@@ -69,7 +68,7 @@ watchEffect(() => {
           </div>
         </lukso-card>
         <div
-          class="flex pt-6 gap-2 justify-center items-center paragraph-inter-12-regular"
+          class="paragraph-inter-12-regular flex items-center justify-center gap-2 pt-6"
         >
           <span>{{ $formatMessage('landing_hero_supported_browsers') }}</span>
           <lukso-icon

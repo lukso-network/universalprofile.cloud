@@ -32,7 +32,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="cursor-pointer relative">
+  <div class="relative cursor-pointer">
     <lukso-profile
       size="small"
       :profile-url="connectedProfile?.profileImage?.base64"
@@ -43,7 +43,7 @@ onMounted(() => {
     ></lukso-profile>
 
     <div
-      class="absolute z-[1000] right-0 mt-8 rounded-12 bg-neutral-100 shadow-pink-drop-shadow select-none before:content before:absolute before:top-0 before:right-0 before:-mt-1 before:mr-4 before:w-3 before:h-3 before:bg-neutral-100 before:transform before:rotate-45 animate-fade-in animation-duration-150"
+      class="absolute right-0 z-[1000] mt-8 animate-fade-in select-none rounded-12 bg-neutral-100 shadow-pink-drop-shadow animation-duration-150 before:absolute before:right-0 before:top-0 before:-mt-1 before:mr-4 before:h-3 before:w-3 before:rotate-45 before:bg-neutral-100"
       :class="isOpen ? 'block' : 'hidden'"
     >
       <lukso-button
