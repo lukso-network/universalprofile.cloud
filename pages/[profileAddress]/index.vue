@@ -83,7 +83,7 @@ watchEffect(async () => {
 <template>
   <div class="relative">
     <div
-      class="max-w-content py-20 px-4 mx-auto relative transition-opacity duration-300"
+      class="relative mx-auto max-w-content px-4 py-20 transition-opacity duration-300"
       :class="{
         'opacity-0': isLoadingAssets || isLoadingProfile || !isLoadedApp,
         'opacity-100': !isLoadingAssets && !isLoadingProfile && isLoadedApp,
@@ -93,7 +93,7 @@ watchEffect(async () => {
       <ProfileDetails v-if="showProfileDetails" />
       <div>
         <div>
-          <div class="pt-10 gap-4 flex">
+          <div class="flex gap-4 pt-10">
             <lukso-button
               size="small"
               variant="secondary"

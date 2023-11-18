@@ -51,13 +51,13 @@ const handleSendAsset = (event: Event) => {
   <lukso-card size="small" is-hoverable is-full-width @click="handleShowAsset"
     ><div slot="content">
       <div
-        class="min-h-[260px] bg-neutral-90 w-100 rounded-t-12 bg-center bg-cover"
+        class="min-h-[260px] rounded-t-12 bg-neutral-90 bg-cover bg-center"
         :style="`background-image: url(${getAssetThumb(asset)});`"
       ></div>
-      <div class="p-4 relative">
+      <div class="relative p-4">
         <AssetCreator
           :creator="verifiedCreator"
-          class="relative -mt-4 -top-4"
+          class="relative -top-4 -mt-4"
         />
         <div>
           <div class="paragraph-inter-14-semi-bold">
@@ -67,7 +67,7 @@ const handleSendAsset = (event: Event) => {
             {{ asset?.balance }}
             <span class="text-neutral-60">{{ asset?.symbol }}</span>
           </div>
-          <div class="flex justify-end w-full">
+          <div class="flex w-full justify-end">
             <lukso-button
               v-if="
                 isConnected &&

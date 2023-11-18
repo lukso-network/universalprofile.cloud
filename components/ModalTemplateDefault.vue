@@ -9,11 +9,11 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div class="bg-neutral-98 text-center p-6 rounded-12 flex flex-col">
+  <div class="flex flex-col rounded-12 bg-neutral-98 p-6 text-center">
     <img
       v-if="appStore.modal?.icon"
       :src="appStore.modal.icon"
-      class="mx-auto w-[150px] mb-6"
+      class="mx-auto mb-6 w-[150px]"
       alt=""
     />
     <div class="heading-inter-21-semi-bold pb-4">

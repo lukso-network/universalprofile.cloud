@@ -14,12 +14,12 @@ defineProps<Props>()
 
 <template>
   <div
-    class="grid grid-cols-[max-content,auto] p-2 rounded-12 cursor-pointer hover:bg-neutral-95"
+    class="grid cursor-pointer grid-cols-[max-content,auto] rounded-12 p-2 hover:bg-neutral-95"
     :class="{
       'bg-neutral-95': isSelected,
     }"
   >
-    <div class="pr-4 flex items-center">
+    <div class="flex items-center pr-4">
       <div
         class="shadow-neutral-above-shadow-1xl"
         :class="{

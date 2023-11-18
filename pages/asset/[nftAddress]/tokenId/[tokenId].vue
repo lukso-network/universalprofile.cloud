@@ -40,19 +40,19 @@ const handleSendAsset = (event: Event) => {
         'opacity-0': isLoadingAssets || !isLoadedApp,
         'opacity-100': !isLoadingAssets && isLoadedApp,
       }"
-      class="max-w-content py-20 px-4 mx-auto relative grid grid-cols-[1fr,2fr] gap-12 transition-opacity duration-300"
+      class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-20 transition-opacity duration-300"
     >
       <div>
         <lukso-card size="small" is-full-width
           ><div slot="content">
             <div
-              class="min-h-[260px] bg-neutral-90 w-100 rounded-t-12 bg-center bg-cover"
+              class="min-h-[260px] rounded-t-12 bg-neutral-90 bg-cover bg-center"
               :style="`background-image: url(${getAssetThumb(asset)});`"
             ></div>
-            <div class="p-4 relative">
+            <div class="relative p-4">
               <AssetCreator
                 :creator="verifiedCreator"
-                class="relative -mt-4 -top-4"
+                class="relative -top-4 -mt-4"
               />
               <div>
                 <div class="paragraph-inter-14-semi-bold">

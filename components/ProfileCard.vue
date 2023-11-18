@@ -12,8 +12,8 @@ const { viewedProfile } = useViewedProfile()
       class="mb-22"
     >
       <div slot="content" class="flex flex-col items-center">
-        <div class="relative -bottom-[140px] text-center">
-          <div class="group cursor-pointer flex flex-col items-center">
+        <div class="relative bottom-[-140px] text-center">
+          <div class="group flex cursor-pointer flex-col items-center">
             <lukso-tooltip
               variant="light"
               offset="15"
@@ -26,11 +26,11 @@ const { viewedProfile } = useViewedProfile()
                 :profile-address="viewedProfile?.address"
                 size="x-large"
                 has-identicon
-                class="relative z-[1] inline-flex outline outline-4 outline-neutral-100 rounded-full transition group-hover:scale-105"
+                class="relative z-[1] inline-flex rounded-full outline outline-4 outline-neutral-100 transition group-hover:scale-105"
               >
               </lukso-profile>
               <div
-                class="relative -top-10 h-0 opacity-10 paragraph-ptmono-16-regular text-24 transition group-hover:opacity-30"
+                class="paragraph-ptmono-16-regular relative -top-10 h-0 text-24 opacity-10 transition group-hover:opacity-30"
               >
                 {{ viewedProfile?.address }}
               </div>
