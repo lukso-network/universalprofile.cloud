@@ -11,4 +11,5 @@ export interface NetworkInfo {
     name: string
   }
   indexName: string
+  explorerUrl: string
 }

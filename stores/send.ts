@@ -10,6 +10,7 @@ export const useSendStore = defineStore('send', () => {
   const amount = ref<string>()
   const status = ref<SendStatus>('draft')
   const onSend = ref<() => Promise<void>>()
+  const transactionHash = ref<string>()
 
   // getters
   const isDraft = computed(() => status.value === 'draft')
@@ -39,5 +40,6 @@ export const useSendStore = defineStore('send', () => {
     onSend,
     setStatus,
     clearSend,
+    transactionHash,
   }
 })
