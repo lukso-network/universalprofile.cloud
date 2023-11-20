@@ -81,6 +81,8 @@ watchEffect(() => {
 })
 
 const handleSend = async () => {
+  await checkNetwork()
+
   try {
     setStatus('pending')
     hasSimpleNavbar.value = true
@@ -154,8 +156,6 @@ const handleSend = async () => {
     console.error(error)
     setStatus('draft')
     hasSimpleNavbar.value = false
-
-    await checkNetwork()
 
     showModal({
       title: formatMessage('web3_connect_error_title'),
