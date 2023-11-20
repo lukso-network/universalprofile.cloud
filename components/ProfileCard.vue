@@ -30,7 +30,7 @@ const { viewedProfile } = useViewedProfile()
               >
               </lukso-profile>
               <div
-                class="paragraph-ptmono-16-regular relative -top-10 h-0 text-24 opacity-10 transition group-hover:opacity-30"
+                class="paragraph-ptmono-16-regular relative -top-10 h-0 text-14 opacity-10 transition group-hover:opacity-30 md:text-24"
               >
                 {{ viewedProfile?.address }}
               </div>
