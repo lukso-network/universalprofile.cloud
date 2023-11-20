@@ -18,6 +18,8 @@ const connect = async () => {
   const { formatMessage } = useIntl()
   const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
 
+  await checkNetwork()
+
   // when no extension installed we show modal
   if (!INJECTED_PROVIDER) {
     openStoreLink()
@@ -52,8 +54,6 @@ const connect = async () => {
   } catch (error: any) {
     console.error(error)
     disconnect()
-
-    await checkNetwork()
 
     showModal({
       title: formatMessage('web3_connect_error_title'),
