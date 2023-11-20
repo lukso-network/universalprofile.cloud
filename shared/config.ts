@@ -19,6 +19,7 @@ export const NETWORKS: NetworkInfo[] = [
       name: 'LUKSO',
     },
     indexName: 'prod_testnet_universal_profiles',
+    explorerUrl: 'https://explorer.execution.testnet.lukso.network',
   },
   {
     name: 'LUKSO Mainnet',
@@ -30,6 +31,7 @@ export const NETWORKS: NetworkInfo[] = [
       name: 'LUKSO',
     },
     indexName: 'prod_mainnet_universal_profiles',
+    explorerUrl: 'https://explorer.execution.mainnet.lukso.network',
   },
 ]
 

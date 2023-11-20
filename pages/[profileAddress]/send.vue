@@ -3,6 +3,7 @@ import { AbiItem, toWei } from 'web3-utils'
 import { TransactionConfig } from 'web3-core'
 import LSP7Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP7Mintable.json'
 import LSP8Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json'
+import { TransactionReceipt } from 'web3-eth'
 
 import {
   LSP7DigitalAsset,
@@ -12,7 +13,8 @@ import { AssetRepository } from '@/repositories/asset'
 
 const { connectedProfile } = useConnectedProfile()
 const { currentNetwork } = useAppStore()
-const { asset, onSend, amount, receiver } = storeToRefs(useSendStore())
+const { asset, onSend, amount, receiver, transactionHash } =
+  storeToRefs(useSendStore())
 const { isLoadedApp, isConnected, hasSimpleNavbar } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
@@ -86,6 +88,7 @@ const handleSend = async () => {
   try {
     setStatus('pending')
     hasSimpleNavbar.value = true
+    let transactionsReceipt: TransactionReceipt
 
     // native token transfer
     if (isLyx(asset.value)) {
@@ -94,8 +97,8 @@ const handleSend = async () => {
         to: receiver.value?.address as unknown as string,
         value: toWei(amount.value || '0'),
       } as TransactionConfig
-
-      await sendTransaction(transaction)
+      transactionsReceipt = await sendTransaction(transaction)
+      transactionHash.value = transactionsReceipt.transactionHash
       await updateLyxBalance(connectedProfile.value?.address)
     } else {
       // custom token transfer
@@ -108,7 +111,7 @@ const handleSend = async () => {
 
           assertAddress(connectedProfile.value?.address)
           assertAddress(receiver.value?.address)
-          await tokenContract.methods
+          transactionsReceipt = await tokenContract.methods
             .transfer(
               connectedProfile.value.address,
               receiver.value?.address,
@@ -117,6 +120,7 @@ const handleSend = async () => {
               '0x'
             )
             .send({ from: connectedProfile.value.address })
+          transactionHash.value = transactionsReceipt.transactionHash
           const balance = (await tokenContract.methods
             .balanceOf(connectedProfile.value.address)
             .call()) as string
@@ -133,7 +137,7 @@ const handleSend = async () => {
           assertAddress(connectedProfile.value?.address)
           assertAddress(receiver.value?.address)
           assertString(asset.value.tokenId)
-          await nftContract.methods
+          transactionsReceipt = await nftContract.methods
             .transfer(
               connectedProfile.value.address,
               receiver.value?.address,
@@ -142,6 +146,7 @@ const handleSend = async () => {
               '0x'
             )
             .send({ from: connectedProfile.value.address })
+          transactionHash.value = transactionsReceipt.transactionHash
           assertNotUndefined(asset.value.address, 'asset')
           assetRepository.removeAsset(asset.value.address, asset.value.tokenId)
           break
@@ -150,7 +155,6 @@ const handleSend = async () => {
           break
       }
     }
-
     setStatus('success')
   } catch (error: unknown) {
     console.error(error)
