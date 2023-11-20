@@ -23,7 +23,7 @@ export class AssetModel extends BaseModel {
       description: this.string(''),
       links: this.attr([]),
       tokenId: this.string(''),
-      tokenIdType: this.string(''),
+      tokenIdType: this.number(null),
       isNativeToken: this.boolean(false),
       hash: this.string(''),
       verification: this.attr({}),
@@ -46,7 +46,7 @@ export class AssetModel extends BaseModel {
   declare description?: string
   declare links?: LinkMetadata[]
   declare tokenId?: string
-  declare tokenIdType?: string
+  declare tokenIdType?: number
   declare isNativeToken?: boolean
   declare hash: string
   declare verification?: ImageMetadata['verification']

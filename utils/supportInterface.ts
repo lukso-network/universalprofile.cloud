@@ -1,3 +1,5 @@
+import { AbiItem } from 'web3-utils'
+
 import { LSP0ERC725Account } from '@/types/contracts'
 
 /**
@@ -16,7 +18,7 @@ export const supportInterface = async (
 
   try {
     const eip165Contract = contract<LSP0ERC725Account>(
-      eip165ABI as any,
+      eip165ABI as AbiItem[],
       address
     )
     return await eip165Contract.methods.supportsInterface(interfaceId).call()

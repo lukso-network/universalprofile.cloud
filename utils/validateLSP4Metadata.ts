@@ -1,5 +1,7 @@
-import { Verification } from '@erc725/erc725.js/build/main/src/types'
-import { LSP4DigitalAssetMetadataJSON } from '@lukso/lsp-smart-contracts'
+import {
+  LSP4DigitalAssetMetadataJSON,
+  AssetMetadata,
+} from '@lukso/lsp-smart-contracts'
 
 export const validateLsp4MetaData = (
   LSP4MetadataJSON: any
@@ -142,6 +144,6 @@ export const validateVerification = (getDataObject: any) => {
     'verification' in getDataObject?.value &&
     'data' in getDataObject?.value?.verification &&
     'method' in getDataObject?.value?.verification
-    ? (getDataObject.value?.verification as Verification)
+    ? (getDataObject.value?.verification as AssetMetadata['verification'])
     : undefined
 }

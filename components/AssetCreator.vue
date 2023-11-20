@@ -30,7 +30,7 @@ const profile = computed(() => {
 <template>
   <div
     v-if="profile?.address"
-    class="cursor-pointer shadow-neutral-drop-shadow p-2 pr-6 rounded-4 inline-flex bg-neutral-100 transition hover:scale-105"
+    class="inline-flex cursor-pointer rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow transition hover:scale-105"
     @click="event => handleOpenCreator(event, creator)"
   >
     <lukso-profile
@@ -38,7 +38,7 @@ const profile = computed(() => {
       :profile-url="profile.profileImage?.base64"
     ></lukso-profile>
     <div class="pl-1">
-      <div class="text-neutral-60 paragraph-inter-10-semi-bold">
+      <div class="paragraph-inter-10-semi-bold text-neutral-60">
         {{ $formatMessage('asset_created_by') }}
       </div>
       <lukso-username

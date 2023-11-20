@@ -12,7 +12,7 @@ defineProps<Props>()
   <div
     v-for="(link, index) in links"
     :key="index"
-    class="bg-neutral-100 border border-neutral-90 py-3 px-4 rounded-12 mb-8"
+    class="mb-8 rounded-12 border border-neutral-90 bg-neutral-100 px-4 py-3"
   >
     <div class="flex items-center">
       <lukso-icon name="link" size="small"></lukso-icon>

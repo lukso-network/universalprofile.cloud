@@ -16,7 +16,7 @@ const { assetFilter } = storeToRefs(useAppStore())
     <h3 class="heading-inter-17-semi-bold pb-4">
       {{ $formatMessage('tokens_title') }}
     </h3>
-    <div class="grid gap-6 grid-col grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
       <TokenListLyxCard v-if="assetFilter === AssetFilter.owned" />
       <TokenListCard
         v-for="(asset, index) in tokens"

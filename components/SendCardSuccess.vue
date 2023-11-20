@@ -11,10 +11,10 @@ const handleSendMore = () => {
 
 <template>
   <lukso-card variant="with-header" is-full-width>
-    <div slot="header" class="px-6 py-10 flex flex-col">
+    <div slot="header" class="flex flex-col px-6 py-10">
       <SendCardHeader />
     </div>
-    <div slot="content" class="p-8 flex flex-col items-center">
+    <div slot="content" class="flex flex-col items-center p-8">
       <div class="heading-inter-17-semi-bold">
         {{ $formatMessage('send_success_title') }}
       </div>
