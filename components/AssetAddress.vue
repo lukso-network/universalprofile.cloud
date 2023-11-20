@@ -10,14 +10,14 @@ defineProps<Props>()
 
 <template>
   <div
-    class="bg-neutral-100 border border-neutral-90 py-3 px-4 rounded-12 mb-8"
+    class="mb-8 rounded-12 border border-neutral-90 bg-neutral-100 px-4 py-3"
   >
-    <div class="flex justify-between items-center">
+    <div class="flex items-center justify-between">
       <div class="flex items-center">
         <img
           :src="makeBlockie(address)"
           alt=""
-          class="shadow-shadow-1xl rounded-full outline outline-2 outline-neutral-100 right-0 bottom-0 w-4 h-4"
+          class="shadow-shadow-1xl bottom-0 right-0 h-4 w-4 rounded-full outline outline-2 outline-neutral-100"
         />
         <div class="paragraph-inter-14-medium ml-2">
           {{ $formatMessage('token_details_contract_address') }}

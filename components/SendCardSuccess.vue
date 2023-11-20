@@ -22,10 +22,10 @@ const handleOpenProfile = () => {
 
 <template>
   <lukso-card variant="with-header" is-full-width>
-    <div slot="header" class="px-6 py-10 flex flex-col">
+    <div slot="header" class="flex flex-col px-6 py-10">
       <SendCardHeader />
     </div>
-    <div slot="content" class="p-8 flex flex-col items-center">
+    <div slot="content" class="flex flex-col items-center p-8">
       <div class="heading-inter-17-semi-bold">
         {{ $formatMessage('send_success_title') }}
       </div>
@@ -41,7 +41,7 @@ const handleOpenProfile = () => {
   </lukso-card>
   <a
     v-if="transactionHash"
-    class="mt-5 paragraph-inter-12-medium underline text-purple-51 hover:text-purple-41 block"
+    class="paragraph-inter-12-medium mt-5 block text-purple-51 underline hover:text-purple-41"
     :href="explorerTransactionUrl(transactionHash)"
     target="_blank"
     >{{ $formatMessage('send_card_view_in_explorer') }}</a

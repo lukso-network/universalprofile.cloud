@@ -16,7 +16,7 @@ defineProps<Props>()
 <template>
   <div v-if="isLoading" class="flex flex-col items-center">
     <div
-      class="w-20 h-20 bg-neutral-100 rounded-full flex items-center justify-center mb-2"
+      class="mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-neutral-100"
     >
       <lukso-icon name="progress-indicator" size="x-large"></lukso-icon>
     </div>

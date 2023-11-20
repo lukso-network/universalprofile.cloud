@@ -1,3 +1,5 @@
+import { NuxtApp } from 'nuxt/app'
+
 import { DeviceExtended } from '@/types/device'
 
 type OperaWindow = Window & {
@@ -8,12 +10,15 @@ type OperaWindow = Window & {
 /**
  * Detects if the browser is Opera
  *
- * @param device - object containing device flags
+ * @param nuxtApp - nuxt app instance
  */
-export default async function ({ $device }: { $device: DeviceExtended }) {
+
+export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
   const operaWindow = window as OperaWindow
-  $device.isOpera =
-    (!!operaWindow.opr && !!operaWindow.opr.addons) ||
-    !!operaWindow.opera ||
-    navigator.userAgent.indexOf(' OPR/') >= 0
-}
+
+  nuxtApp?.$device &&
+    ((nuxtApp.$device as DeviceExtended).isOpera =
+      (!!operaWindow.opr && !!operaWindow.opr.addons) ||
+      !!operaWindow.opera ||
+      navigator.userAgent.indexOf(' OPR/') >= 0)
+})

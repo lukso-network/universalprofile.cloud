@@ -46,17 +46,17 @@ onMounted(async () => {
     is-hoverable
     is-full-width
     @click="handleShowLyxDetails"
-    ><div slot="content" class="p-4 pt-11 flex flex-col justify-center">
+    ><div slot="content" class="flex flex-col justify-center p-4 pt-11">
       <div ref="contentRef" class="flex gap-6">
-        <div ref="logoRef" class="pl-2 flex flex-col items-center">
-          <div class="border border-neutral-90 rounded-full p-0.5">
+        <div ref="logoRef" class="flex flex-col items-center pl-2">
+          <div class="rounded-full border border-neutral-90 p-0.5">
             <lukso-profile
               size="medium"
               :profile-url="ASSET_LYX_ICON_URL"
             ></lukso-profile>
           </div>
         </div>
-        <div class="flex flex-col w-full">
+        <div class="flex w-full flex-col">
           <div class="heading-inter-14-bold pb-1">LUKSO</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
             <span
@@ -79,7 +79,7 @@ onMounted(async () => {
             <span v-else>0</span>
             <span
               ref="symbolRef"
-              class="paragraph-inter-14-semi-bold text-neutral-60 pl-2"
+              class="paragraph-inter-14-semi-bold pl-2 text-neutral-60"
               >{{ currentNetwork.token.symbol }}</span
             >
           </div>
@@ -93,7 +93,7 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <div class="flex justify-end w-full">
+      <div class="flex w-full justify-end">
         <lukso-button
           v-if="
             isConnected && viewedProfile?.address === connectedProfile?.address

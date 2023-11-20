@@ -14,6 +14,7 @@ module.exports = {
     'plugin:vue/vue3-strongly-recommended',
     'plugin:import/recommended',
     'plugin:json/recommended',
+    'plugin:tailwindcss/recommended',
     'prettier',
   ],
   parser: 'vue-eslint-parser',
@@ -55,6 +56,12 @@ module.exports = {
           'type',
         ],
         'newlines-between': 'always',
+      },
+    ],
+    'tailwindcss/no-custom-classname': [
+      'error',
+      {
+        whitelist: ['paragraph-.*', 'heading-.*', 'nav-.*', 'shadow-.*'],
       },
     ],
   },

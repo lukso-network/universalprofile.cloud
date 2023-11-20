@@ -167,7 +167,7 @@ const handleBlur = () => {
     :no-results-text="$formatMessage('profile_search_no_results')"
     :selected="selectedResultNumber"
     is-full-width
-    class="w-full mt-4"
+    class="mt-4 w-full"
     custom-class="paragraph-ptmono-14-regular"
     @on-search="handleReceiverSearch"
     @on-select="handleSelect"
