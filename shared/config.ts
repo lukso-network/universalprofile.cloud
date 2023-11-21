@@ -10,6 +10,7 @@ export const DEFAULT_NETWORK_CHAIN_ID = MAINNET_CHAIN_ID
 // list of supported networks
 export const NETWORKS: NetworkInfo[] = [
   {
+    id: 'testnet',
     name: 'LUKSO Testnet',
     chainId: TESTNET_CHAIN_ID,
     rpcHttp: 'https://rpc.testnet.lukso.network',
@@ -21,6 +22,7 @@ export const NETWORKS: NetworkInfo[] = [
     indexName: 'prod_testnet_universal_profiles',
   },
   {
+    id: 'mainnet',
     name: 'LUKSO Mainnet',
     chainId: MAINNET_CHAIN_ID,
     rpcHttp: 'https://rpc.mainnet.lukso.network',
