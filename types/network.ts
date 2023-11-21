@@ -1,6 +1,9 @@
 import { BrowserName } from './device'
 
+export type NetworkId = 'mainnet' | 'testnet'
+
 export interface NetworkInfo {
+  id: NetworkId
   name: string
   rpcHttp: string
   chainId: string
@@ -11,4 +14,5 @@ export interface NetworkInfo {
     name: string
   }
   indexName: string
+  explorerUrl: string
 }

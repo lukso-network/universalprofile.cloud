@@ -1,11 +1,22 @@
 <script setup lang="ts">
 const { setStatus, clearSend } = useSendStore()
+const { transactionHash } = storeToRefs(useSendStore())
 const { hasSimpleNavbar } = storeToRefs(useAppStore())
+const { connectedProfile } = useConnectedProfile()
 
 const handleSendMore = () => {
   clearSend()
   setStatus('draft')
   hasSimpleNavbar.value = false
+}
+
+const handleOpenProfile = () => {
+  try {
+    assertAddress(connectedProfile.value?.address, 'profile')
+    navigateTo(profileRoute(connectedProfile.value.address))
+  } catch (error) {
+    console.error(error)
+  }
 }
 </script>
 
@@ -28,4 +39,20 @@ const handleSendMore = () => {
       }}</lukso-button>
     </div>
   </lukso-card>
+  <a
+    v-if="transactionHash"
+    class="paragraph-inter-12-medium mt-5 block text-purple-51 underline hover:text-purple-41"
+    :href="explorerTransactionUrl(transactionHash)"
+    target="_blank"
+    >{{ $formatMessage('send_card_view_in_explorer') }}</a
+  >
+  <lukso-button
+    class="mt-8"
+    size="small"
+    variant="secondary"
+    @click="handleOpenProfile"
+  >
+    <lukso-icon name="return-left" size="small" class="mr-2"></lukso-icon>
+    {{ $formatMessage('send_card_return_to_profile') }}
+  </lukso-button>
 </template>

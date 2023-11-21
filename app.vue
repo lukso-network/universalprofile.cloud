@@ -9,7 +9,7 @@ if (typeof window !== 'undefined') {
 }
 
 const web3Store = useWeb3Store()
-const { getNetwork } = useAppStore()
+const { getNetworkByChainId, getNetworkById } = useAppStore()
 const { isLoadedApp, selectedChainId, modal } = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
@@ -33,7 +33,10 @@ const setupWeb3Instances = async () => {
   }
 
   // for chain interactions through RPC endpoint
-  web3Store.addWeb3(PROVIDERS.RPC, getNetwork(selectedChainId.value).rpcHttp)
+  web3Store.addWeb3(
+    PROVIDERS.RPC,
+    getNetworkByChainId(selectedChainId.value).rpcHttp
+  )
 }
 
 const routerBackProfileLoad = async () => {
@@ -109,8 +112,17 @@ const setupViewedProfile = async () => {
   }
 }
 
+const setupNetwork = async () => {
+  const network = useRouter().currentRoute.value.query?.network
+
+  if (network && network === 'testnet') {
+    selectedChainId.value = getNetworkById(network).chainId
+  }
+}
+
 onMounted(async () => {
   setupTranslations()
+  setupNetwork()
   await setupWeb3Instances()
   checkConnectionExpiry()
   await routerBackProfileLoad()

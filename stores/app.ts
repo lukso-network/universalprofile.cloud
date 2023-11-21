@@ -1,6 +1,6 @@
 import { AssetFilter } from '@/types/assets'
 import { Modal } from '@/types/modal'
-import { NetworkInfo } from '@/types/network'
+import { NetworkInfo, NetworkId } from '@/types/network'
 
 /**
  * App store
@@ -25,7 +25,7 @@ export const useAppStore = defineStore(
 
     // --- getters
 
-    const getNetwork = (chainId: string): NetworkInfo => {
+    const getNetworkByChainId = (chainId: string): NetworkInfo => {
       const network = networks.value.find(
         network => network.chainId === chainId
       )
@@ -40,7 +40,21 @@ export const useAppStore = defineStore(
       return network
     }
 
-    const currentNetwork = computed(() => getNetwork(selectedChainId.value))
+    const getNetworkById = (id: NetworkId): NetworkInfo => {
+      const network = networks.value.find(network => network.id === id)
+
+      if (!network) {
+        return networks.value.find(
+          network => network.chainId === DEFAULT_NETWORK_CHAIN_ID
+        ) as NetworkInfo
+      }
+
+      return network
+    }
+
+    const currentNetwork = computed(() =>
+      getNetworkByChainId(selectedChainId.value)
+    )
 
     const isConnected = computed(() => !!connectedProfileAddress.value)
 
@@ -55,7 +69,8 @@ export const useAppStore = defineStore(
     return {
       networks,
       selectedChainId,
-      getNetwork,
+      getNetworkByChainId,
+      getNetworkById,
       modal,
       setModal,
       currentNetwork,
