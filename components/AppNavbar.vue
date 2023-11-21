@@ -70,32 +70,53 @@ const browserSupportExtension = extensionStore.url !== ''
     <div class="flex items-center justify-end" slot="desktop">
       <lukso-button
         variant="text"
-        custom-class="text-12 text-purple-51 hover:text-purple-41 uppercase nav-apax-12-medium-uppercase font-apax font-500"
+        custom-class="text-12 nav-apax-12-medium-uppercase"
+        class="group"
         @click="handleNavigationDiscovery"
       >
-        {{ $formatMessage('header_discovery') }}
+        <span class="text-purple-63 transition group-hover:text-purple-41">
+          {{ $formatMessage('header_discovery') }}
+        </span>
       </lukso-button>
       <lukso-button
         v-if="isConnected"
         variant="text"
-        custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+        custom-class="text-12 nav-apax-12-medium-uppercase"
+        class="group"
         @click="handleNavigateSend"
       >
-        {{ $formatMessage('header_send') }}
+        <span
+          class="transition group-hover:text-purple-41"
+          :class="{
+            'text-purple-41': activePage('profileAddress-send'),
+            'text-purple-63': !activePage('profileAddress-send'),
+          }"
+        >
+          {{ $formatMessage('header_send') }}
+        </span>
       </lukso-button>
       <lukso-button
         v-if="isConnected"
         variant="text"
-        custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+        custom-class="text-12 nav-apax-12-medium-uppercase"
+        class="group"
         @click="handleNavigateProfile"
       >
-        {{ $formatMessage('header_my_profile') }}
+        <span
+          class="transition group-hover:text-purple-41"
+          :class="{
+            'text-purple-41': activePage('profileAddress'),
+            'text-purple-63': !activePage('profileAddress'),
+          }"
+        >
+          {{ $formatMessage('header_my_profile') }}
+        </span>
       </lukso-button>
       <AppNavbarProfileDropdown v-if="isConnected" />
       <lukso-button
         v-else-if="isUniversalProfileExtension()"
         variant="secondary"
-        custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+        custom-class="text-purple-63 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
         @click="handleConnect"
         :is-loading="isConnecting ? true : undefined"
         :loading-text="$formatMessage('header_connect')"
@@ -106,7 +127,7 @@ const browserSupportExtension = extensionStore.url !== ''
         v-else-if="browserSupportExtension"
         variant="secondary"
         is-link
-        custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+        custom-class="text-purple-63 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
         :href="extensionStore.url"
       >
         {{ $formatMessage('header_install_extension') }}
@@ -116,51 +137,81 @@ const browserSupportExtension = extensionStore.url !== ''
       <div className="flex flex-col items-center justify-center h-screen pb-32">
         <lukso-button
           variant="text"
-          custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+          custom-class="text-12 nav-apax-12-medium-uppercase"
+          class="group"
           @click="handleNavigationDiscovery"
         >
-          {{ $formatMessage('header_discovery') }}
+          <span class="text-purple-63 transition group-hover:text-purple-41">
+            {{ $formatMessage('header_discovery') }}
+          </span>
         </lukso-button>
         <lukso-button
           v-if="isConnected"
           variant="text"
-          custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+          custom-class="text-12 nav-apax-12-medium-uppercase"
+          class="group"
           @click="handleNavigateSend"
         >
-          {{ $formatMessage('header_send') }}
+          <span
+            class="transition group-hover:text-purple-41"
+            :class="{
+              'text-purple-41': activePage('profileAddress-send'),
+              'text-purple-63': !activePage('profileAddress-send'),
+            }"
+          >
+            {{ $formatMessage('header_send') }}
+          </span>
         </lukso-button>
         <lukso-button
           v-if="isConnected"
           variant="text"
-          custom-class="text-purple-51 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+          custom-class="text-12 nav-apax-12-medium-uppercase"
+          class="group"
           @click="handleNavigateProfile"
         >
-          {{ $formatMessage('header_my_profile') }}
+          <span
+            class="transition group-hover:text-purple-41"
+            :class="{
+              'text-purple-41': activePage('profileAddress'),
+              'text-purple-63': !activePage('profileAddress'),
+            }"
+          >
+            {{ $formatMessage('header_my_profile') }}
+          </span>
         </lukso-button>
         <lukso-button
           v-if="isConnected"
           variant="text"
-          custom-class="text-purple-51 text-12 hover:text-purple-41 uppercase nav-apax-12-medium-uppercase font-apax font-500"
+          custom-class="text-12 nav-apax-12-medium-uppercase"
+          class="group"
           @click="handleDisconnect"
         >
-          {{ $formatMessage('header_disconnect') }}
+          <span class="text-purple-63 transition group-hover:text-purple-41">
+            {{ $formatMessage('header_disconnect') }}
+          </span>
         </lukso-button>
         <lukso-button
           v-else-if="isUniversalProfileExtension()"
           variant="text"
-          custom-class="text-purple-51 text-12 hover:text-purple-41 uppercase nav-apax-12-medium-uppercase font-apax font-500"
+          custom-class="text-12 nav-apax-12-medium-uppercase"
+          class="group"
           @click="handleConnect"
         >
-          {{ $formatMessage('header_connect') }}
+          <span class="text-purple-63 transition group-hover:text-purple-41">
+            {{ $formatMessage('header_connect') }}
+          </span>
         </lukso-button>
         <lukso-button
           v-else-if="browserSupportExtension"
           variant="text"
           is-link
-          custom-class="text-purple-51 text-12 hover:text-purple-41 uppercase nav-apax-12-medium-uppercase font-apax font-500"
+          custom-class="text-12 nav-apax-12-medium-uppercase"
+          class="group"
           :href="extensionStore.url"
         >
-          {{ $formatMessage('header_install_extension') }}
+          <span class="text-purple-63 transition group-hover:text-purple-41">
+            {{ $formatMessage('header_install_extension') }}
+          </span>
         </lukso-button>
       </div>
     </div>

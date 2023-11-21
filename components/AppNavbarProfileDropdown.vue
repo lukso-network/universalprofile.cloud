@@ -48,10 +48,13 @@ onMounted(() => {
     >
       <lukso-button
         variant="text"
-        custom-class="text-purple-51 text-12 hover:text-purple-41 uppercase nav-apax-12-medium-uppercase"
+        custom-class="text-12 nav-apax-12-medium-uppercase"
+        class="group"
         @click="handleDisconnect"
       >
-        {{ $formatMessage('header_disconnect') }}
+        <span class="text-purple-63 transition group-hover:text-purple-41">
+          {{ $formatMessage('header_disconnect') }}
+        </span>
       </lukso-button>
     </div>
   </div>
