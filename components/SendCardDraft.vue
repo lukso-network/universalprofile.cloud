@@ -34,7 +34,7 @@ const handleBack = () => {
     :profile-address="connectedProfile?.address"
     is-full-width
   >
-    <div slot="header">
+    <div slot="header" class="text-left">
       <lukso-icon
         name="arrow-left-sm"
         class="relative z-[1] m-4 cursor-pointer rounded-full bg-neutral-100 shadow-neutral-above-shadow transition hover:scale-105 hover:shadow-neutral-above-shadow-1xl active:scale-100 active:shadow-neutral-above-shadow"
