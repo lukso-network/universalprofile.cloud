@@ -116,21 +116,25 @@ const browserSupportExtension = extensionStore.url !== ''
       <lukso-button
         v-else-if="isUniversalProfileExtension()"
         variant="secondary"
-        custom-class="text-purple-63 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+        custom-class="text-12 nav-apax-12-medium-uppercase"
         @click="handleConnect"
         :is-loading="isConnecting ? true : undefined"
         :loading-text="$formatMessage('header_connect')"
       >
-        {{ $formatMessage('header_connect') }}
+        <span class="text-purple-41">
+          {{ $formatMessage('header_connect') }}
+        </span>
       </lukso-button>
       <lukso-button
         v-else-if="browserSupportExtension"
         variant="secondary"
         is-link
-        custom-class="text-purple-63 hover:text-purple-41 uppercase text-12 nav-apax-12-medium-uppercase font-apax font-500"
+        custom-class="text-12 nav-apax-12-medium-uppercase"
         :href="extensionStore.url"
       >
-        {{ $formatMessage('header_install_extension') }}
+        <span class="text-purple-41">
+          {{ $formatMessage('header_install_extension') }}
+        </span>
       </lukso-button>
     </div>
     <div slot="mobile">
