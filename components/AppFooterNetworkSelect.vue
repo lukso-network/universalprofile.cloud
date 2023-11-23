@@ -23,11 +23,12 @@ watchEffect(() => {
   }
 })
 
-const handleNetworkChange = (event: CustomEvent) => {
+const handleNetworkChange = async (event: CustomEvent) => {
   const selectedNetwork = event.detail.value as SelectStringOption
   selectedNetwork.id && (selectedChainId.value = selectedNetwork.id)
   disconnect()
-  navigateTo(homeRoute())
+  await navigateTo(homeRoute())
+  location.reload()
 }
 </script>
 
