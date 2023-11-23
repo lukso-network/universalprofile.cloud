@@ -1900,13 +1900,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@npm:1.51.2":
-  version: 1.51.2
-  resolution: "@lukso/web-components@npm:1.51.2"
+"@lukso/web-components@npm:1.51.4":
+  version: 1.51.4
+  resolution: "@lukso/web-components@npm:1.51.4"
   dependencies:
     ethereum-blockies-base64: "npm:^1.0.2"
     tippy.js: "npm:^6.3.7"
-  checksum: 110d58f51ed9f06eccf80e050a1d26e9dc7b9889997e656d33fd84d2d9b2b494fc0eedcffcdd98d5ad6e9c62a3f7f0a2152eb6b8f7dfaccb958692285cec359c
+  checksum: 3290387e3f62b0175febb104939c206e88ca872e8cdf192d4542f95fbbfb995cb3151a2e602d294fa819cab4f7208904a95206d346949b647ff3d218184b5fca
   languageName: node
   linkType: hard
 
@@ -16845,7 +16845,7 @@ __metadata:
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
     "@formatjs/intl": "npm:^2.9.6"
     "@lukso/lsp-smart-contracts": "npm:0.12.1"
-    "@lukso/web-components": "npm:1.51.2"
+    "@lukso/web-components": "npm:1.51.4"
     "@nuxt/devtools": "npm:^0.7.6"
     "@nuxtjs/algolia": "npm:^1.9.0"
     "@nuxtjs/device": "npm:^3.1.1"
