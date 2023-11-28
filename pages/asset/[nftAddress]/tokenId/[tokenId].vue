@@ -96,6 +96,10 @@ const handleSendAsset = (event: Event) => {
           :symbol="asset?.symbol"
           :decimals="asset.decimals"
         />
+        <AssetCreators
+          v-if="asset?.creators && !!asset?.creators.length"
+          :creators="asset?.creators"
+        />
         <AssetLinks
           v-if="asset?.links && !!asset.links.length"
           :links="asset.links"
