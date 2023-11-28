@@ -23,6 +23,7 @@
   "landing_hero_supported_browsers": "Supported Browsers",
   "not_found_get_help_url": "https://lukso.network/faq",
   "send_input_placeholder": "Enter address of recipient",
+  "asset_links_title": "Links",
   "token_details_send": "Send {token}",
   "token_details_token_id": "Token ID",
   "send_button": "Send {amount} {symbol}",

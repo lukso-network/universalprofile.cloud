@@ -76,7 +76,7 @@ const handleSendAsset = (event: Event) => {
           :decimals="asset?.decimals"
         />
         <AssetLinks
-          v-if="asset?.links && asset.links.length > 0"
+          v-if="asset?.links && !!asset.links.length"
           :links="asset.links"
         />
         <AssetDescription
