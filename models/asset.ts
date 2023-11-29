@@ -53,6 +53,7 @@ export class AssetModel extends BaseModel {
 
   declare iconId?: string
   declare imageIds?: string[]
+  declare creatorIds?: Address[]
 
   declare icon?: Image
   declare images?: Image[]
