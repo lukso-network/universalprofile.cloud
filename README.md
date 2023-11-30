@@ -25,6 +25,15 @@ Branch: `main`
 
 - <https://wallet.universalprofile.cloud/>
 
+## 🔌 Network switch
+
+It is possible to pass a network in query parameter to force viewing a profile on a given network:
+
+```
+?network=testnet
+?network=mainnet
+```
+
 ## 🧑🏻‍💻 Getting Started
 
 Install packages:
