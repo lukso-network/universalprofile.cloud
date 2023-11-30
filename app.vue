@@ -8,7 +8,7 @@ if (typeof window !== 'undefined') {
   import('@lukso/web-components')
 }
 
-const web3Store = useWeb3Store()
+const { addWeb3, getWeb3 } = useWeb3Store()
 const { getNetworkByChainId, getNetworkById } = useAppStore()
 const { isLoadedApp, selectedChainId, modal } = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
@@ -24,16 +24,16 @@ const setupWeb3Instances = async () => {
 
   if (provider) {
     // for chain interactions through wallet
-    web3Store.addWeb3(PROVIDERS.INJECTED, provider)
+    addWeb3(PROVIDERS.INJECTED, provider)
     await addProviderEvents(provider)
     // expose web3 instance to global scope for console access
-    window.web3 = web3Store.getWeb3(PROVIDERS.INJECTED)
+    window.web3 = getWeb3(PROVIDERS.INJECTED)
   } else {
     console.error('No browser extension provider found')
   }
 
   // for chain interactions through RPC endpoint
-  web3Store.addWeb3(
+  addWeb3(
     PROVIDERS.RPC,
     getNetworkByChainId(selectedChainId.value).rpcHttp
   )
