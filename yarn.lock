@@ -1036,15 +1036,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@erc725/erc725.js@npm:0.21.1":
-  version: 0.21.1
-  resolution: "@erc725/erc725.js@npm:0.21.1"
+"@erc725/erc725.js@npm:0.21.3":
+  version: 0.21.3
+  resolution: "@erc725/erc725.js@npm:0.21.3"
   dependencies:
+    add: "npm:^2.0.6"
     ethereumjs-util: "npm:^7.1.5"
     web3-eth-abi: "npm:^1.10.0"
     web3-providers-http: "npm:^1.10.0"
     web3-utils: "npm:^1.10.0"
-  checksum: 63bf4a3a7eeca96dc66a4772c4362aa0286d4b50483025b398981aa8902bfbb4e87595b57a95e5d53728c71763c98ff0650c7886e26ed0913dad83bc065640dc
+  checksum: bd54eef579ba77b91c1f407600b3799aba226b30edb7dedcb0d8ea3a1334073c3f647522be173e4d49e9d38adccfdaae0c4ffb450bdc35fd90115ad195d6a38d
   languageName: node
   linkType: hard
 
@@ -3767,6 +3768,13 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 522310c20fdc3c271caed3caf0f06c51d61cb42267279566edd1d58e83dbc12eebdafaab666a0f0be1b7ad04af9c6bc2a6f478690a9e6391c3c8b165ada917dd
+  languageName: node
+  linkType: hard
+
+"add@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "add@npm:2.0.6"
+  checksum: 1d2c0780a660edfc161b7784a846865b28dcd8514cc6042c8e283298f379cd3b150412b67a12603a4ac885912f05759f3e2993c27219f85d1face316ffc0b175
   languageName: node
   linkType: hard
 
@@ -16887,7 +16895,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wallet.universalprofile.cloud@workspace:."
   dependencies:
-    "@erc725/erc725.js": "npm:0.21.1"
+    "@erc725/erc725.js": "npm:0.21.3"
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
     "@formatjs/intl": "npm:^2.9.6"
     "@lukso/lsp-smart-contracts": "npm:0.12.1"
