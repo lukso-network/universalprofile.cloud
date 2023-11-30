@@ -1,6 +1,6 @@
 import { BrowserName } from './device'
 
-export type NetworkId = 'mainnet' | 'testnet'
+export type NetworkId = (typeof SUPPORTED_NETWORK_IDS)[number]
 
 export interface NetworkInfo {
   id: NetworkId

@@ -115,8 +115,14 @@ const setupViewedProfile = async () => {
 const setupNetwork = async () => {
   const network = useRouter().currentRoute.value.query?.network
 
-  if (network && network === 'testnet') {
+  if (network && SUPPORTED_NETWORK_IDS.includes(network)) {
     selectedChainId.value = getNetworkById(network).chainId
+  } else {
+    console.warn(
+      `Invalid network: ${network}, valid networks are ${SUPPORTED_NETWORK_IDS.join(
+        ', '
+      )}`
+    )
   }
 }
 
