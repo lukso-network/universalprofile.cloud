@@ -39,7 +39,7 @@ const handleDisconnect = async () => {
 }
 
 const handleNavigationDiscovery = () => {
-  window.open(BASE_UP_CLOUD_URL, '_self')
+  window.open(discoveryDappUrl(), '_self')
 }
 
 const extensionStoreData = () => {
