@@ -6,6 +6,7 @@ import { NetworkInfo } from '@/types/network'
 export const TESTNET_CHAIN_ID = '0x1069'
 export const MAINNET_CHAIN_ID = '0x2a'
 export const DEFAULT_NETWORK_CHAIN_ID = MAINNET_CHAIN_ID
+export const SUPPORTED_NETWORK_IDS = ['mainnet', 'testnet'] as const
 
 // list of supported networks
 export const NETWORKS: NetworkInfo[] = [
