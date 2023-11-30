@@ -77,7 +77,7 @@ export const EXTENSION_STORE_LINKS = {
 export const SEARCH_RESULTS_LIMIT = 100
 
 // base universalprofile address
-export const BASE_UP_CLOUD_URL = 'https://universalprofile.cloud/'
+export const BASE_UP_CLOUD_URL = 'https://universalprofile.cloud'
 
 // default currency symbol
 export const DEFAULT_CURRENCY_SYMBOL = 'USD'

@@ -1900,13 +1900,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@npm:1.51.2":
-  version: 1.51.2
-  resolution: "@lukso/web-components@npm:1.51.2"
+"@lukso/web-components@npm:1.51.4":
+  version: 1.51.4
+  resolution: "@lukso/web-components@npm:1.51.4"
   dependencies:
     ethereum-blockies-base64: "npm:^1.0.2"
     tippy.js: "npm:^6.3.7"
-  checksum: 110d58f51ed9f06eccf80e050a1d26e9dc7b9889997e656d33fd84d2d9b2b494fc0eedcffcdd98d5ad6e9c62a3f7f0a2152eb6b8f7dfaccb958692285cec359c
+  checksum: 3290387e3f62b0175febb104939c206e88ca872e8cdf192d4542f95fbbfb995cb3151a2e602d294fa819cab4f7208904a95206d346949b647ff3d218184b5fca
   languageName: node
   linkType: hard
 
@@ -13307,6 +13307,59 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier-plugin-tailwindcss@npm:^0.5.7":
+  version: 0.5.7
+  resolution: "prettier-plugin-tailwindcss@npm:0.5.7"
+  peerDependencies:
+    "@ianvs/prettier-plugin-sort-imports": "*"
+    "@prettier/plugin-pug": "*"
+    "@shopify/prettier-plugin-liquid": "*"
+    "@shufo/prettier-plugin-blade": "*"
+    "@trivago/prettier-plugin-sort-imports": "*"
+    prettier: ^3.0
+    prettier-plugin-astro: "*"
+    prettier-plugin-css-order: "*"
+    prettier-plugin-import-sort: "*"
+    prettier-plugin-jsdoc: "*"
+    prettier-plugin-organize-attributes: "*"
+    prettier-plugin-organize-imports: "*"
+    prettier-plugin-style-order: "*"
+    prettier-plugin-svelte: "*"
+  peerDependenciesMeta:
+    "@ianvs/prettier-plugin-sort-imports":
+      optional: true
+    "@prettier/plugin-pug":
+      optional: true
+    "@shopify/prettier-plugin-liquid":
+      optional: true
+    "@shufo/prettier-plugin-blade":
+      optional: true
+    "@trivago/prettier-plugin-sort-imports":
+      optional: true
+    prettier-plugin-astro:
+      optional: true
+    prettier-plugin-css-order:
+      optional: true
+    prettier-plugin-import-sort:
+      optional: true
+    prettier-plugin-jsdoc:
+      optional: true
+    prettier-plugin-marko:
+      optional: true
+    prettier-plugin-organize-attributes:
+      optional: true
+    prettier-plugin-organize-imports:
+      optional: true
+    prettier-plugin-style-order:
+      optional: true
+    prettier-plugin-svelte:
+      optional: true
+    prettier-plugin-twig-melody:
+      optional: true
+  checksum: fb53766b6543bb46b5ba544d75e220c01d51fcf29403d3b908a0bcedf3a8c0e7481c8e6d7bb321bae8c96ae4f31d4d1c39e5e3e888b495d575705f6809854076
+  languageName: node
+  linkType: hard
+
 "prettier@npm:3.1.0":
   version: 3.1.0
   resolution: "prettier@npm:3.1.0"
@@ -16845,7 +16898,7 @@ __metadata:
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
     "@formatjs/intl": "npm:^2.9.6"
     "@lukso/lsp-smart-contracts": "npm:0.12.1"
-    "@lukso/web-components": "npm:1.51.2"
+    "@lukso/web-components": "npm:1.51.4"
     "@nuxt/devtools": "npm:^0.7.6"
     "@nuxtjs/algolia": "npm:^1.9.0"
     "@nuxtjs/device": "npm:^3.1.1"
@@ -16886,6 +16939,7 @@ __metadata:
     postcss-custom-properties: "npm:^13.3.2"
     postcss-html: "npm:^1.5.0"
     prettier: "npm:3.1.0"
+    prettier-plugin-tailwindcss: "npm:^0.5.7"
     rollup-plugin-polyfill-node: "npm:^0.12.0"
     sass: "npm:1.69.5"
     stream-browserify: "npm:3.0.0"
