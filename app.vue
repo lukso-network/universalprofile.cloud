@@ -3,6 +3,7 @@ import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { isAddress } from 'web3-utils'
 
 import { assertString } from '@/utils/validators'
+import { SUPPORTED_NETWORK_IDS } from '@/shared/config'
 
 if (typeof window !== 'undefined') {
   import('@lukso/web-components')
@@ -33,10 +34,7 @@ const setupWeb3Instances = async () => {
   }
 
   // for chain interactions through RPC endpoint
-  addWeb3(
-    PROVIDERS.RPC,
-    getNetworkByChainId(selectedChainId.value).rpcHttp
-  )
+  addWeb3(PROVIDERS.RPC, getNetworkByChainId(selectedChainId.value).rpcHttp)
 }
 
 const routerBackProfileLoad = async () => {

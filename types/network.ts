@@ -1,3 +1,4 @@
+import { SUPPORTED_NETWORK_IDS } from '@/shared/config'
 import { BrowserName } from './device'
 
 export type NetworkId = (typeof SUPPORTED_NETWORK_IDS)[number]
