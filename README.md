@@ -58,7 +58,7 @@ App use [Yata](https://www.yatapp.net/), a third party website for managing tran
 
 > Please first set `YATA_API_TOKEN` as an environment variable or locally in the root folder `.env` file (see `.env.example`).
 
-For generating translations use following script
+For generating translations use following script:
 
 ```sh
 yarn yata-fetch
