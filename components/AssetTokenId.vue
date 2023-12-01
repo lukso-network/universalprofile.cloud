@@ -8,7 +8,7 @@ defineProps<Props>()
 
 <template>
   <div
-    class="mb-8 rounded-12 border border-neutral-90 bg-neutral-100 px-4 py-3"
+    class="mb-8 inline-flex flex-col rounded-12 border border-neutral-90 bg-neutral-100 px-4 py-3"
   >
     <div class="flex items-center justify-between">
       <div class="flex items-center">

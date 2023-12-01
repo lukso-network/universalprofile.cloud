@@ -63,9 +63,9 @@ export const fetchLsp8Assets = async (
 
       const iconId = getHash(icon)
 
-      const creatorIds: string[] = []
+      const creatorIds: Address[] = []
       creators?.forEach(creator => {
-        creator?.address && creatorIds.push(creator.address)
+        creator?.profile?.address && creatorIds.push(creator.profile.address)
       })
       const hash = validateHash(getData)
       const verification = validateVerification(getData)

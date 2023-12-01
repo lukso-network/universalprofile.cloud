@@ -836,6 +836,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.23.1":
+  version: 7.23.4
+  resolution: "@babel/runtime@npm:7.23.4"
+  dependencies:
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: 6ef4f6dcc4ec4d74cb9f6c26a26e92d016b36debd167be48cae293fbd990b3157fb1d8d21c531285da15a5bda9ccb23e651b56234941e03d91c8af69d4c593a9
+  languageName: node
+  linkType: hard
+
 "@babel/runtime@npm:^7.5.5":
   version: 7.22.6
   resolution: "@babel/runtime@npm:7.22.6"
@@ -1027,15 +1036,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@erc725/erc725.js@npm:0.21.1":
-  version: 0.21.1
-  resolution: "@erc725/erc725.js@npm:0.21.1"
+"@erc725/erc725.js@npm:0.21.3":
+  version: 0.21.3
+  resolution: "@erc725/erc725.js@npm:0.21.3"
   dependencies:
+    add: "npm:^2.0.6"
     ethereumjs-util: "npm:^7.1.5"
     web3-eth-abi: "npm:^1.10.0"
     web3-providers-http: "npm:^1.10.0"
     web3-utils: "npm:^1.10.0"
-  checksum: 63bf4a3a7eeca96dc66a4772c4362aa0286d4b50483025b398981aa8902bfbb4e87595b57a95e5d53728c71763c98ff0650c7886e26ed0913dad83bc065640dc
+  checksum: bd54eef579ba77b91c1f407600b3799aba226b30edb7dedcb0d8ea3a1334073c3f647522be173e4d49e9d38adccfdaae0c4ffb450bdc35fd90115ad195d6a38d
   languageName: node
   linkType: hard
 
@@ -1900,13 +1910,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@npm:1.51.4":
-  version: 1.51.4
-  resolution: "@lukso/web-components@npm:1.51.4"
+"@lukso/web-components@npm:1.53.2":
+  version: 1.53.2
+  resolution: "@lukso/web-components@npm:1.53.2"
   dependencies:
+    clsx: "npm:^2.0.0"
     ethereum-blockies-base64: "npm:^1.0.2"
+    tailwind-merge: "npm:^2.0.0"
+    tailwind-variants: "npm:^0.1.18"
     tippy.js: "npm:^6.3.7"
-  checksum: 3290387e3f62b0175febb104939c206e88ca872e8cdf192d4542f95fbbfb995cb3151a2e602d294fa819cab4f7208904a95206d346949b647ff3d218184b5fca
+  checksum: 75cebabc35baf176a63156a3004790db00a5a265c75f79cbcab4db4bfa0a99b7c99b9ae83d9705adb6450ab88cbc4430a321ec7a748b1e1cc0068484813f0ffd
   languageName: node
   linkType: hard
 
@@ -3758,6 +3771,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"add@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "add@npm:2.0.6"
+  checksum: 1d2c0780a660edfc161b7784a846865b28dcd8514cc6042c8e283298f379cd3b150412b67a12603a4ac885912f05759f3e2993c27219f85d1face316ffc0b175
+  languageName: node
+  linkType: hard
+
 "agent-base@npm:6, agent-base@npm:^6.0.2":
   version: 6.0.2
   resolution: "agent-base@npm:6.0.2"
@@ -5288,6 +5308,13 @@ __metadata:
   version: 2.1.2
   resolution: "clone@npm:2.1.2"
   checksum: d9c79efba655f0bf601ab299c57eb54cbaa9860fb011aee9d89ed5ac0d12df1660ab7642fddaabb9a26b7eff0e117d4520512cb70798319ff5d30a111b5310c2
+  languageName: node
+  linkType: hard
+
+"clsx@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "clsx@npm:2.0.0"
+  checksum: 943766d1b02fee3538c871e56638d87f973fbc2d6291ce221215ea436fdecb9be97ad323f411839c2d52c45640c449b1a53fbfe7e8b3d529b4e263308b630c9a
   languageName: node
   linkType: hard
 
@@ -15470,6 +15497,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tailwind-merge@npm:^1.14.0":
+  version: 1.14.0
+  resolution: "tailwind-merge@npm:1.14.0"
+  checksum: 35ff3c3a7f89111acbdef879130064229ce7deee017fd75f17d07135aa4bcc213e049c35d6bd5000de4dc3219e25f7a03295952736d1fee1423535c55775b1e7
+  languageName: node
+  linkType: hard
+
+"tailwind-merge@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "tailwind-merge@npm:2.0.0"
+  dependencies:
+    "@babel/runtime": "npm:^7.23.1"
+  checksum: d20d2551f4b2fd9eb68466accccf9b81baef0d8cfb9ecf89738a9abe72e023ec9fe9aad5b3b9da0a0b0ec340432069568b83dea9463ae670a20a9937fbb59bb0
+  languageName: node
+  linkType: hard
+
+"tailwind-variants@npm:^0.1.18":
+  version: 0.1.18
+  resolution: "tailwind-variants@npm:0.1.18"
+  dependencies:
+    tailwind-merge: "npm:^1.14.0"
+  peerDependencies:
+    tailwindcss: "*"
+  checksum: bcab12d2fac69a843ac063a1baf4ddf97c015eabf82513ea0b8b9e59894feffcfc96ac590d99a5993dac7078e4cb04255e4378b6ca57642db5b826a77e8c6293
+  languageName: node
+  linkType: hard
+
 "tailwindcss@npm:~3.3.5":
   version: 3.3.5
   resolution: "tailwindcss@npm:3.3.5"
@@ -16894,11 +16948,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wallet.universalprofile.cloud@workspace:."
   dependencies:
-    "@erc725/erc725.js": "npm:0.21.1"
+    "@erc725/erc725.js": "npm:0.21.3"
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
     "@formatjs/intl": "npm:^2.9.6"
     "@lukso/lsp-smart-contracts": "npm:0.12.1"
-    "@lukso/web-components": "npm:1.51.4"
+    "@lukso/web-components": "npm:1.53.2"
     "@nuxt/devtools": "npm:^0.7.6"
     "@nuxtjs/algolia": "npm:^1.9.0"
     "@nuxtjs/device": "npm:^3.1.1"

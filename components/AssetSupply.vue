@@ -13,7 +13,7 @@ defineProps<Props>()
     {{ $formatMessage('asset_supply_title') }}
   </div>
   <div
-    class="mb-8 rounded-12 border border-neutral-90 bg-neutral-100 px-4 py-3"
+    class="mb-8 inline-flex rounded-12 border border-neutral-90 bg-neutral-100 px-4 py-3"
   >
     <div class="paragraph-inter-14-regular flex items-center justify-between">
       {{ $formatNumber(fromWeiWithDecimals(tokenSupply, decimals)) }}
