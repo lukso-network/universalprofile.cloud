@@ -15,6 +15,9 @@ env:
   CF_BASE_URL: wallet-universalprofile-cloud
   ALGOLIA_API_KEY: '${{ secrets.ALGOLIA_API_KEY }}'
   ALGOLIA_APPLICATION_ID: '${{ secrets.ALGOLIA_APPLICATION_ID }}'
+  NUXT_PUBLIC_SENTRY_DSN: '${{ secrets.SENTRY_DSN }}'
+  NUXT_PUBLIC_SENTRY_ENABLED: '${{ secrets.SENTRY_ENABLED }}'
+  NUXT_PUBLIC_SENTRY_ENVIRONMENT: '${{ secrets.SENTRY_ENVIRONMENT }}'
 
 jobs:
   test:
