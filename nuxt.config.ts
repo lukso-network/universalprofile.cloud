@@ -3,6 +3,7 @@ import { copyAssets } from '@lukso/web-components/tools/copy-assets'
 // @ts-ignore
 import { assets } from '@lukso/web-components/tools/assets'
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 import siteMeta from './site.meta.json'
 
@@ -53,6 +54,16 @@ export default defineNuxtConfig({
             new RegExp('node_modules/.vite/.*js'),
           ],
         }),
+      sentryVitePlugin({
+        authToken: process.env.NUXT_PUBLIC_SENTRY_AUTH_TOKEN,
+        debug: true,
+        org: 'lukso',
+        project: 'wallet-universalprofile-cloud',
+        sourcemaps: {
+          assets: ['./.nuxt/dist/client/**'],
+        },
+        telemetry: false,
+      }),
     ],
     build: {
       rollupOptions: {
@@ -64,6 +75,7 @@ export default defineNuxtConfig({
       commonjsOptions: {
         transformMixedEsModules: true,
       },
+      sourcemap: true,
     },
     resolve: {
       alias: {
@@ -107,12 +119,16 @@ export default defineNuxtConfig({
       },
     ],
   },
-  runtimeConfig: {
-    public: {},
-  },
   ssr: false,
   spaLoadingTemplate: 'public/loading-template.html',
   piniaPersistedstate: {
     storage: 'localStorage',
+  },
+  runtimeConfig: {
+    public: {
+      SENTRY_ENABLED: process.env.NUXT_PUBLIC_SENTRY_ENABLED,
+      SENTRY_DSN: process.env.NUXT_PUBLIC_SENTRY_DSN,
+      SENTRY_ENVIRONMENT: process.env.NUXT_PUBLIC_SENTRY_ENVIRONMENT,
+    },
   },
 })
