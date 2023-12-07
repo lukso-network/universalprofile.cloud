@@ -28,7 +28,7 @@ const handleNetworkChange = async (event: CustomEvent) => {
   selectedNetwork.id && (selectedChainId.value = selectedNetwork.id)
   disconnect()
   await navigateTo(homeRoute())
-  location.reload()
+  window.location.href = window.location.href.split('?')[0]
 }
 </script>
 

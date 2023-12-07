@@ -9,6 +9,8 @@ Wallet that will let you see the Tokens ([LSP7](https://docs.lukso.tech/standard
 
 ## 🚀 Deployments
 
+This project is deployed via [Cloudflare pages](https://pages.cloudflare.com/).
+
 ### Preview
 
 When you create a PR, a preview URL will be appended to the PR discussion.
@@ -73,7 +75,7 @@ For generating translations use following script:
 yarn yata-fetch
 ```
 
-### Using local `tools-web-components`
+### Using local [`tools-web-components`](https://github.com/lukso-network/tools-web-components)
 
 This repo will look for `../tools-web-components/package` to turn on linking.
 

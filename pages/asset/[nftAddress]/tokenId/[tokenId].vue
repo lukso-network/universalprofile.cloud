@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Creator } from '@/models/creator'
 import { CreatorRepository } from '@/repositories/creator'
 
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
@@ -7,12 +8,24 @@ const tokenId = useRouter().currentRoute.value.params?.tokenId
 const { connectedProfile } = useConnectedProfile()
 const { isConnected, isLoadingAssets, isLoadedApp } = storeToRefs(useAppStore())
 const { asset } = useAsset(nftAddress, tokenId)
-const creatorsRepository = useRepo(CreatorRepository)
+const creatorsRepo = useRepo(CreatorRepository)
+const creators = ref<Creator[]>([])
 
 const verifiedCreator = computed(() => {
-  return creatorsRepository
+  return creatorsRepo
     .getAssetCreators(nftAddress, tokenId)
     .find(creator => creator?.isVerified)
+})
+
+onMounted(() => {
+  creators.value =
+    asset.value?.creatorIds?.map<Creator>(creatorAddress => {
+      return creatorsRepo.getCreator(
+        creatorAddress,
+        asset.value?.address,
+        asset.value?.tokenId
+      )
+    }) || []
 })
 
 const handleSendAsset = (event: Event) => {
@@ -96,7 +109,14 @@ const handleSendAsset = (event: Event) => {
           :symbol="asset?.symbol"
           :decimals="asset.decimals"
         />
-        <AssetLinks v-if="asset?.links" :links="asset.links" />
+        <AssetCreators
+          v-if="asset?.creators && !!asset?.creators.length"
+          :creators="creators"
+        />
+        <AssetLinks
+          v-if="asset?.links && !!asset.links.length"
+          :links="asset.links"
+        />
         <AssetDescription
           v-if="asset?.description"
           :description="asset.description"
