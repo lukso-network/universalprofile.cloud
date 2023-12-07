@@ -113,7 +113,11 @@ const setupViewedProfile = async () => {
 const setupNetwork = async () => {
   const network = useRouter().currentRoute.value.query?.network
 
-  if (network && SUPPORTED_NETWORK_IDS.includes(network)) {
+  if (!network) {
+    return
+  }
+
+  if (SUPPORTED_NETWORK_IDS.includes(network)) {
     selectedChainId.value = getNetworkById(network).chainId
   } else {
     console.warn(
