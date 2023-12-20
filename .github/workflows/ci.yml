@@ -21,7 +21,7 @@ env:
 
 jobs:
   test:
-    timeout-minutes: 60
+    timeout-minutes: 15
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
