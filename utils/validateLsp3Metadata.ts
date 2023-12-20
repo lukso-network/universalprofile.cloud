@@ -11,10 +11,12 @@ export const validateLsp3Metadata = (
   let backgroundImage: ImageMetadata[] = []
 
   const lsp3Profile = LSP3Metadata?.value?.LSP3Profile as LSP3ProfileMetadata
-  const name = validateName(lsp3Profile.name)
-  const tags = validateTags(lsp3Profile.tags)
-  const links = validateLinks(lsp3Profile.links)
-  const description = validateDescription(lsp3Profile.description)
+  const name = lsp3Profile?.name ? validateName(lsp3Profile.name) : ''
+  const tags = lsp3Profile?.tags ? validateTags(lsp3Profile.tags) : []
+  const links = lsp3Profile?.links ? validateLinks(lsp3Profile.links) : []
+  const description = lsp3Profile?.description
+    ? validateDescription(lsp3Profile.description)
+    : ''
 
   if (lsp3Profile?.profileImage?.length) {
     const imageIsValid = validateImages(lsp3Profile?.profileImage)
