@@ -10,13 +10,13 @@ export const fetchProfile = async (profileAddress: Address) => {
   const storeProfile = profileRepo.getProfileAndImages(profileAddress)
 
   if (storeProfile) {
-    const [profileData, receivedAssetIds, issuedAssetIds] =
+    const [profileData, receivedAssetAddresses, issuedAssetAddresses] =
       await fetchLsp3ProfileData(profileAddress)
 
     // update profile received and issued assets array
     useRepo(ProfileModel).where('address', profileAddress).update({
-      receivedAssetIds: receivedAssetIds.value,
-      issuedAssetIds: issuedAssetIds.value,
+      receivedAssetAddresses: receivedAssetAddresses.value,
+      issuedAssetAddresses: issuedAssetAddresses.value,
     })
 
     // check if profile metadata hash has changed

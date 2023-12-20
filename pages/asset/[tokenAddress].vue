@@ -64,7 +64,7 @@ const handleSendAsset = (event: Event) => {
             isConnected &&
             connectedProfile &&
             asset?.address &&
-            connectedProfile?.receivedAssetIds?.includes(asset?.address)
+            connectedProfile?.receivedAssetAddresses?.includes(asset?.address)
           "
         >
           <AssetOwnInfo
