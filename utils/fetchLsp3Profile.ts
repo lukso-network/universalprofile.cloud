@@ -1,5 +1,6 @@
 import LSP3ProfileMetadata from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
 import { ERC725JSONSchema } from '@erc725/erc725.js'
+import { Buffer } from 'buffer'
 
 import { Profile } from '@/models/profile'
 
@@ -17,7 +18,27 @@ export const fetchLsp3Profile = async (
     'LSP5ReceivedAssets[]',
     'LSP12IssuedAssets[]',
   ])
+
   const [profileMetadata, receivedAssets, issuedAssets] = profileData
+
+  // NOTE: Some profiles have been encoded with keccak256(bytes) instead of keccak256(utf8)
+  // This little trick allows a smooth transition to the new encoding
+  try {
+    if (
+      Object.prototype.toString.call(profileMetadata.value) ===
+      '[object Uint8Array]'
+    ) {
+      const jsonString = Buffer.from(profileMetadata.value as any).toString(
+        'utf8'
+      )
+
+      profileMetadata.value = JSON.parse(jsonString)
+      console.warn(
+        `LSP3Profile of ${profileAddress} was encoded with keccak256(bytes) instead of keccak256(utf8). This frontend has converted it to ensure compatibility.`
+      )
+    }
+  } catch (err) {}
+
   const lsp3Profile = validateLsp3Metadata(profileMetadata)
   const profileImage =
     lsp3Profile.profileImage &&
