@@ -52,8 +52,8 @@ export const fetchLsp4Creators = async (
         console.warn(`Failed to fetch creator ${creatorAddress}`)
       }
       const issuedAssets =
-        (profile?.issuedAssetIds &&
-          profile.issuedAssetIds.filter(address => {
+        (profile?.issuedAssetAddresses &&
+          profile.issuedAssetAddresses.filter(address => {
             if (isAddress(address)) {
               return toChecksumAddress(address)
             }

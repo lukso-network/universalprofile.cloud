@@ -63,8 +63,8 @@ export const fetchLsp3Profile = async (
     backgroundImage,
     profileImageId,
     backgroundImageId,
-    receivedAssetIds: receivedAssets.value as Address[],
-    issuedAssetIds: issuedAssets.value as Address[],
+    receivedAssetAddresses: receivedAssets.value as Address[],
+    issuedAssetAddresses: issuedAssets.value as Address[],
     hash,
     verification,
   }
