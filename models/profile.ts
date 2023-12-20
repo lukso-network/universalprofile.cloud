@@ -28,8 +28,8 @@ export class ProfileModel extends BaseModel {
       // foreign keys
       profileImageId: this.attr(null),
       backgroundImageId: this.attr(null),
-      issuedAssetIds: this.attr(null),
-      receivedAssetIds: this.attr(null),
+      issuedAssetAddresses: this.attr(null),
+      receivedAssetAddresses: this.attr(null),
     }
   }
 
@@ -46,8 +46,8 @@ export class ProfileModel extends BaseModel {
 
   declare profileImageId?: string
   declare backgroundImageId?: string
-  declare issuedAssetIds?: Address[]
-  declare receivedAssetIds?: Address[]
+  declare issuedAssetAddresses?: Address[]
+  declare receivedAssetAddresses?: Address[]
 
   declare profileImage?: Image
   declare backgroundImage?: Image

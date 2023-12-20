@@ -65,13 +65,13 @@ export class AssetRepository extends Repository<AssetModel> {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
-    if (!viewedProfile.value?.receivedAssetIds) {
+    if (!viewedProfile.value?.receivedAssetAddresses) {
       return []
     }
 
     return this.repo(AssetModel)
       .where('standard', 'LSP7DigitalAsset')
-      .where('address', viewedProfile.value.receivedAssetIds)
+      .where('address', viewedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .get()
   }
@@ -80,13 +80,13 @@ export class AssetRepository extends Repository<AssetModel> {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
-    if (!viewedProfile.value?.issuedAssetIds) {
+    if (!viewedProfile.value?.issuedAssetAddresses) {
       return []
     }
 
     return this.repo(AssetModel)
       .where('standard', 'LSP7DigitalAsset')
-      .where('address', viewedProfile.value.issuedAssetIds)
+      .where('address', viewedProfile.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .get()
   }
@@ -95,13 +95,13 @@ export class AssetRepository extends Repository<AssetModel> {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
-    if (!viewedProfile.value?.receivedAssetIds) {
+    if (!viewedProfile.value?.receivedAssetAddresses) {
       return []
     }
 
     return this.repo(AssetModel)
       .where('standard', 'LSP8IdentifiableDigitalAsset')
-      .where('address', viewedProfile.value.receivedAssetIds)
+      .where('address', viewedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .get()
   }
@@ -110,13 +110,13 @@ export class AssetRepository extends Repository<AssetModel> {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
-    if (!viewedProfile.value?.issuedAssetIds) {
+    if (!viewedProfile.value?.issuedAssetAddresses) {
       return []
     }
 
     return this.repo(AssetModel)
       .where('standard', 'LSP8IdentifiableDigitalAsset')
-      .where('address', viewedProfile.value.issuedAssetIds)
+      .where('address', viewedProfile.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .get()
   }
@@ -125,12 +125,12 @@ export class AssetRepository extends Repository<AssetModel> {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
-    if (!viewedProfile.value?.receivedAssetIds) {
+    if (!viewedProfile.value?.receivedAssetAddresses) {
       return []
     }
 
     return this.repo(AssetModel)
-      .where('address', viewedProfile.value.receivedAssetIds)
+      .where('address', viewedProfile.value.receivedAssetAddresses)
       .where('standard', (standard: InterfaceId) => standard)
       .where('chainId', selectedChainId.value)
       .get()

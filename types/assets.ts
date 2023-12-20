@@ -1,7 +1,7 @@
 import {
   INTERFACE_IDS,
   ImageMetadata,
-  LSP8_TOKEN_ID_TYPES,
+  LSP8_TOKEN_ID_FORMAT,
 } from '@lukso/lsp-smart-contracts'
 
 export type InterfaceId = keyof typeof INTERFACE_IDS
@@ -26,7 +26,7 @@ export const Lsp8TokenIdType = {
   UNIQUE_ID: 2,
   HASH: 3,
   ADDRESS: 4,
-} as typeof LSP8_TOKEN_ID_TYPES
+} as typeof LSP8_TOKEN_ID_FORMAT
 
 export type Base64EncodedImage = `data:image/jpeg;base64${string}`
 
