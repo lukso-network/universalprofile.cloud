@@ -1049,6 +1049,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@erc725/smart-contracts@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@erc725/smart-contracts@npm:6.0.0"
+  dependencies:
+    "@openzeppelin/contracts": "npm:^4.9.3"
+    "@openzeppelin/contracts-upgradeable": "npm:^4.9.3"
+    solidity-bytes-utils: "npm:0.8.0"
+  checksum: 430ee1b80c58c5b3e1eccbe53369835f9707532e82f1f1eb0d1a06ab371220b8b395ca1ccad5a8b2a8b4ea0a912ed40cbc501a20cb103da5602d32ff05ccd312
+  languageName: node
+  linkType: hard
+
 "@erc725/smart-contracts@npm:^7.0.0":
   version: 7.0.0
   resolution: "@erc725/smart-contracts@npm:7.0.0"
@@ -1894,6 +1905,19 @@ __metadata:
     methods: "npm:^1.1.2"
     path-to-regexp: "npm:^6.2.1"
   checksum: f9427c8eb21a2d7c880dae192b7298ecb243af32a8270b5e3e32c4420da157111bc326ab0bc75ff0f17320b9d9ab9df235295fc2d53d8681b5a14103c27ad22d
+  languageName: node
+  linkType: hard
+
+"@lukso/lsp-smart-contracts-12@npm:@lukso/lsp-smart-contracts@0.12.1":
+  version: 0.12.1
+  resolution: "@lukso/lsp-smart-contracts@npm:0.12.1"
+  dependencies:
+    "@account-abstraction/contracts": "npm:^0.6.0"
+    "@erc725/smart-contracts": "npm:^6.0.0"
+    "@openzeppelin/contracts": "npm:^4.9.2"
+    "@openzeppelin/contracts-upgradeable": "npm:^4.9.2"
+    solidity-bytes-utils: "npm:0.8.0"
+  checksum: 7a604134af74b0257ac1f181e26749f89e5025ac445c8437904b46f0773e126eb0990a2031b60c0dd93692faaffd41bd1cf00d3b1cd5d1cf70627364169e4b94
   languageName: node
   linkType: hard
 
@@ -17258,6 +17282,7 @@ __metadata:
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
     "@formatjs/intl": "npm:^2.9.6"
     "@lukso/lsp-smart-contracts": "npm:0.14.0"
+    "@lukso/lsp-smart-contracts-12": "npm:@lukso/lsp-smart-contracts@0.12.1"
     "@lukso/web-components": "npm:1.53.2"
     "@nuxt/devtools": "npm:^0.7.6"
     "@nuxtjs/algolia": "npm:^1.9.0"
