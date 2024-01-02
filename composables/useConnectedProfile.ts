@@ -5,19 +5,28 @@ export const useConnectedProfile = () => {
   const profileRepo = useRepo(ProfileRepository)
   const { connectedProfileAddress } = storeToRefs(useAppStore())
   const connectedProfile = ref<Profile>()
+  const profileImageUrl = ref<string>()
+  const backgroundImageUrl = ref<string>()
 
   watchEffect(async () => {
     if (!connectedProfileAddress.value) {
       return
     }
 
-    const storeProfile = profileRepo.getProfileAndImages(
+    connectedProfile.value = profileRepo.getProfileAndImages(
       connectedProfileAddress.value
     )
-    connectedProfile.value = storeProfile
+    profileImageUrl.value = await getCachedImageUrl(
+      connectedProfile.value?.profileImage
+    )
+    backgroundImageUrl.value = await getCachedImageUrl(
+      connectedProfile.value?.backgroundImage
+    )
   })
 
   return {
     connectedProfile,
+    profileImageUrl,
+    backgroundImageUrl,
   }
 }

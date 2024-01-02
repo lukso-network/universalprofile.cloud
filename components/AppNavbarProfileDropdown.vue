@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { connectedProfile } = useConnectedProfile()
+const { connectedProfile, profileImageUrl } = useConnectedProfile()
 const { disconnect } = useBrowserExtension()
 
 const DROPDOWN_TRIGGER_TAG_NAME = 'LUKSO-PROFILE'
@@ -13,21 +13,22 @@ const handleDisconnect = async () => {
   disconnect()
 }
 
-onMounted(() => {
-  const handleOutsideDropdown = (event: Event) => {
-    const element = event.target as HTMLElement
+const handleOutsideDropdown = (event: Event) => {
+  const element = event.target as HTMLElement
 
-    if (element.tagName === DROPDOWN_TRIGGER_TAG_NAME) {
-      return
-    }
-
-    isOpen.value = false
+  if (element.tagName === DROPDOWN_TRIGGER_TAG_NAME) {
+    return
   }
 
+  isOpen.value = false
+}
+
+onMounted(async () => {
   window.addEventListener('click', handleOutsideDropdown)
-  return () => {
-    window.removeEventListener('click', handleOutsideDropdown)
-  }
+})
+
+onUnmounted(() => {
+  window.removeEventListener('click', handleOutsideDropdown)
 })
 </script>
 
@@ -35,7 +36,7 @@ onMounted(() => {
   <div class="relative cursor-pointer">
     <lukso-profile
       size="small"
-      :profile-url="connectedProfile?.profileImage?.base64"
+      :profile-url="profileImageUrl"
       @click="handleToggleDropdown"
       :profile-address="connectedProfile?.address"
       :data-profile-address="connectedProfile?.address"

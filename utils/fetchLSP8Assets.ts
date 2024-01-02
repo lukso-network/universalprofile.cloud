@@ -3,7 +3,7 @@ import { AbiItem } from 'web3-utils'
 
 import { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
 import { Asset } from '@/models/asset'
-import { ImageMetadataEncoded } from '@/types/assets'
+import { ImageMetadataWithRelationships } from '@/types/assets'
 
 export const fetchLsp8Assets = async (
   address: Address,
@@ -44,12 +44,12 @@ export const fetchLsp8Assets = async (
         icon: metadataIcon,
         links,
       } = collectionMetadata.LSP4Metadata
-      const icon = await getAndConvertImage(metadataIcon, 260)
-      const images: ImageMetadataEncoded[] = []
+      const icon = await createImageObject(metadataIcon, 260)
+      const images: ImageMetadataWithRelationships[] = []
       const creators = await fetchLsp4Creators(address, tokenId)
 
       for await (const image of metadataImages) {
-        const convertedImage = await getAndConvertImage(image, 260)
+        const convertedImage = await createImageObject(image, 260)
         if (convertedImage) {
           images.push(convertedImage)
         }

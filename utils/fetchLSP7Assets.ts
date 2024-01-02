@@ -1,7 +1,7 @@
 import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
 import { AbiItem } from 'web3-utils'
 
-import { ImageMetadataEncoded } from '@/types/assets'
+import { ImageMetadataWithRelationships } from '@/types/assets'
 import { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
 import { Asset } from '@/models/asset'
 
@@ -25,13 +25,13 @@ export const fetchLsp7Assets = async (
 
   const tokenSupply = await lsp7Contract.methods.totalSupply().call()
   const decimals = Number(await lsp7Contract.methods.decimals().call())
-  const icon = await getAndConvertImage(metadata.LSP4Metadata.icon, 56)
+  const icon = await createImageObject(metadata.LSP4Metadata.icon, 56)
   const { links, description } = metadata.LSP4Metadata
-  const images: ImageMetadataEncoded[] = []
+  const images: ImageMetadataWithRelationships[] = []
   const creators = await fetchLsp4Creators(address, '')
 
   for await (const image of metadata.LSP4Metadata.images) {
-    const convertedImage = await getAndConvertImage(image, 100)
+    const convertedImage = await createImageObject(image, 100)
     if (convertedImage) {
       images.push(convertedImage)
     }

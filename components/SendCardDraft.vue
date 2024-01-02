@@ -1,10 +1,11 @@
 <script setup lang="ts">
-const { connectedProfile } = useConnectedProfile()
-const { profile } = useProfile(connectedProfile.value?.address)
+const { connectedProfile, backgroundImageUrl, profileImageUrl } =
+  useConnectedProfile()
 const { asset, receiver, receiverError, amount, onSend } =
   storeToRefs(useSendStore())
 const { isLoadedApp } = storeToRefs(useAppStore())
 const { showModal } = useModal()
+const iconUrl = ref<string>()
 
 const handleSend = () => {
   onSend.value && onSend.value()
@@ -24,13 +25,17 @@ const handleBack = () => {
     console.error(error)
   }
 }
+
+watchEffect(async () => {
+  iconUrl.value = await getAssetThumb(asset.value, isToken(asset.value))
+})
 </script>
 
 <template>
   <lukso-card
     variant="profile-2"
-    :background-url="profile?.backgroundImage?.base64"
-    :profile-url="profile?.profileImage?.base64"
+    :background-url="backgroundImageUrl"
+    :profile-url="profileImageUrl"
     :profile-address="connectedProfile?.address"
     is-full-width
   >
@@ -55,7 +60,7 @@ const handleBack = () => {
           <div class="rounded-full shadow-neutral-above-shadow-1xl">
             <lukso-profile
               size="small"
-              :profile-url="getAssetThumb(asset, isToken(asset))"
+              :profile-url="iconUrl"
               :profile-address="asset?.address"
               :has-identicon="isLyx(asset) ? undefined : true"
               :is-square="isNft(asset) ? true : undefined"
@@ -90,7 +95,9 @@ const handleBack = () => {
       <AppAvatar
         :is-eoa="receiver?.isEoa"
         :is-error="!!receiverError"
-        :profile="receiver"
+        :name="receiver?.name"
+        :address="receiver?.address"
+        :profile-url="receiver?.profileImage?.url"
       />
       <SendCardProfileSearch />
       <lukso-button
