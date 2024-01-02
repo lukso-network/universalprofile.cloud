@@ -23,7 +23,6 @@ onMounted(async () => {
     }
     ownedAssets?.value?.push(assetWithImage)
   }
-  console.log(ownedAssets)
 })
 
 const handleSelectLyx = () => {
