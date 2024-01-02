@@ -30,8 +30,8 @@ export const Lsp8TokenIdType = {
 
 export type Base64EncodedImage = `data:image/jpeg;base64${string}`
 
-export type ImageMetadataEncoded = Partial<ImageMetadata> & {
-  base64?: Base64EncodedImage
+export type ImageMetadataWithRelationships = Partial<ImageMetadata> & {
   profileId?: Address
   assetId?: Address
+  id?: string
 }

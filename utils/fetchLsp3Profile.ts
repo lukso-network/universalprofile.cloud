@@ -42,10 +42,10 @@ export const fetchLsp3Profile = async (
   const lsp3Profile = validateLsp3Metadata(profileMetadata)
   const profileImage =
     lsp3Profile.profileImage &&
-    (await getAndConvertImage(lsp3Profile.profileImage, 96))
+    (await createImageObject(lsp3Profile.profileImage, 96))
   const backgroundImage =
     lsp3Profile.backgroundImage &&
-    (await getAndConvertImage(lsp3Profile.backgroundImage, 240))
+    (await createImageObject(lsp3Profile.backgroundImage, 240))
 
   const { getBalance } = useWeb3(PROVIDERS.RPC)
   const balance = await getBalance(profileAddress)

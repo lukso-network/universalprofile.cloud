@@ -12,7 +12,7 @@ export const fetcher = async <Response, Request>(config: {
   url: string
   method: 'GET' | 'POST'
   data?: Request
-  headers?: Record<string, never>
+  headers?: Record<string, string>
 }): Promise<Response> => {
   const fetchConfig: RequestInit = {
     method: config.method,

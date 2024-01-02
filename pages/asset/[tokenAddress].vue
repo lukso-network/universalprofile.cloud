@@ -2,13 +2,14 @@
 import { Creator } from '@/models/creator'
 
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
-const { connectedProfile } = useConnectedProfile()
+const { connectedProfile, profileImageUrl } = useConnectedProfile()
 const { isConnected, isLoadingAssets, isLoadedApp } = storeToRefs(useAppStore())
 const { asset } = useAsset(tokenAddress)
 const creators = ref<Creator[]>([])
 const creatorsRepo = useRepo(CreatorRepository)
+const iconUrl = ref<string>()
 
-onMounted(() => {
+watchEffect(async () => {
   creators.value =
     asset.value?.creatorIds?.map<Creator>(creatorAddress => {
       return creatorsRepo.getCreator(
@@ -17,6 +18,10 @@ onMounted(() => {
         asset.value?.tokenId
       )
     }) || []
+
+  iconUrl.value =
+    (await getAssetThumb(asset.value, isLsp7(asset.value))) ||
+    ASSET_ICON_PLACEHOLDER_URL
 })
 
 const handleSendAsset = (event: Event) => {
@@ -54,7 +59,7 @@ const handleSendAsset = (event: Event) => {
             <lukso-profile
               v-if="asset"
               size="large"
-              :profile-url="asset.icon"
+              :profile-url="iconUrl"
               class="rounded-full shadow-neutral-above-shadow-1xl"
             ></lukso-profile>
           </div>
@@ -72,6 +77,7 @@ const handleSendAsset = (event: Event) => {
             :balance="asset?.balance"
             :symbol="asset?.symbol"
             :decimals="asset?.decimals"
+            :profile-image-url="profileImageUrl"
           />
 
           <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{

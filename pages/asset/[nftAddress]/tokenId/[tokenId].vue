@@ -5,11 +5,12 @@ import { CreatorRepository } from '@/repositories/creator'
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 
-const { connectedProfile } = useConnectedProfile()
+const { connectedProfile, profileImageUrl } = useConnectedProfile()
 const { isConnected, isLoadingAssets, isLoadedApp } = storeToRefs(useAppStore())
 const { asset } = useAsset(nftAddress, tokenId)
 const creatorsRepo = useRepo(CreatorRepository)
 const creators = ref<Creator[]>([])
+const iconUrl = ref<string>()
 
 const verifiedCreator = computed(() => {
   return creatorsRepo
@@ -17,7 +18,7 @@ const verifiedCreator = computed(() => {
     .find(creator => creator?.isVerified)
 })
 
-onMounted(() => {
+watchEffect(async () => {
   creators.value =
     asset.value?.creatorIds?.map<Creator>(creatorAddress => {
       return creatorsRepo.getCreator(
@@ -26,6 +27,8 @@ onMounted(() => {
         asset.value?.tokenId
       )
     }) || []
+
+  iconUrl.value = await getAssetThumb(asset.value)
 })
 
 const handleSendAsset = (event: Event) => {
@@ -60,7 +63,7 @@ const handleSendAsset = (event: Event) => {
           ><div slot="content">
             <div
               class="min-h-[260px] rounded-t-12 bg-neutral-90 bg-cover bg-center"
-              :style="`background-image: url(${getAssetThumb(asset)});`"
+              :style="`background-image: url(${iconUrl});`"
             ></div>
             <div class="relative p-4">
               <AssetCreator
@@ -88,6 +91,7 @@ const handleSendAsset = (event: Event) => {
             :balance="asset?.balance"
             :symbol="asset?.symbol"
             :decimals="0"
+            :profile-image-url="profileImageUrl"
           />
 
           <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{

@@ -12,7 +12,6 @@ export class ImageModel extends Model {
       hashFunction: this.string(''),
       hash: this.string(''),
       url: this.string(''),
-      base64: this.string(''),
       verification: this.attr({}),
     }
   }
@@ -24,7 +23,6 @@ export class ImageModel extends Model {
   declare height?: number
   declare hashFunction?: string
   declare url?: string
-  declare base64?: Base64EncodedImage
   declare verification?: ImageMetadata['verification']
 
   static piniaOptions = {

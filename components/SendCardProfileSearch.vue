@@ -134,7 +134,7 @@ const handleSelect = async (event: CustomEvent) => {
     address,
     name,
     profileImage: {
-      base64: image,
+      url: image,
     },
   }
   receiverError.value = ''

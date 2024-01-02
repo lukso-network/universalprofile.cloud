@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import makeBlockie from 'ethereum-blockies-base64'
 
-import { Profile } from '@/models/profile'
-
 type Props = {
   isLoading?: boolean
   isEoa?: boolean
   isError?: boolean
-  profile?: Profile
+  address?: Address
+  name?: string
+  profileUrl?: string | Base64EncodedImage
 }
 
 defineProps<Props>()
@@ -28,13 +28,13 @@ defineProps<Props>()
   </div>
   <div v-else-if="isEoa" class="flex flex-col items-center">
     <lukso-profile
-      v-if="profile?.address"
+      v-if="address"
       size="large"
-      :profile-url="makeBlockie(profile.address)"
+      :profile-url="makeBlockie(address)"
       class="mb-2"
     ></lukso-profile>
     <lukso-username
-      :address="profile?.address"
+      :address="address"
       size="small"
       slice-by="4"
     ></lukso-username>
@@ -42,19 +42,15 @@ defineProps<Props>()
   <div v-else class="flex flex-col items-center">
     <lukso-profile
       size="large"
-      :profile-url="profile?.profileImage?.base64"
-      :profile-address="profile?.address"
+      :profile-url="profileUrl"
+      :profile-address="address"
       has-identicon
       class="mb-2"
     ></lukso-profile>
+    <lukso-username v-if="name" :name="name" size="small"></lukso-username>
     <lukso-username
-      v-if="profile?.name"
-      :name="profile.name"
-      size="small"
-    ></lukso-username>
-    <lukso-username
-      v-else-if="profile?.address"
-      :address="profile.address"
+      v-else-if="address"
+      :address="address"
       size="small"
       slice-by="4"
     ></lukso-username>
