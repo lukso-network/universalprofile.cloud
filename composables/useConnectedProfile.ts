@@ -1,5 +1,6 @@
 import { ProfileRepository } from '@/repositories/profile'
-import { Profile } from '@/models/profile'
+
+import type { Profile } from '@/models/profile'
 
 export const useConnectedProfile = () => {
   const profileRepo = useRepo(ProfileRepository)

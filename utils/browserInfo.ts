@@ -1,4 +1,4 @@
-import { BrowserInfo, DeviceExtended } from '@/types/device'
+import type { BrowserInfo, DeviceExtended } from '@/types/device'
 
 const detectBrowser = (): BrowserInfo | undefined => {
   const { isChrome, isBrave, isFirefox, isSafari, isEdge, isOpera } =

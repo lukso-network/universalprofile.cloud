@@ -1,7 +1,7 @@
 import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
-import { AbiItem } from 'web3-utils'
 
-import { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
+import type { AbiItem } from 'web3-utils'
+import type { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
 
 export const fetchLsp7Balance = async (
   assetAddress: Address,

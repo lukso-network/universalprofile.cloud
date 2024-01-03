@@ -1,4 +1,4 @@
-import { Modal } from '@/types/modal'
+import type { Modal } from '@/types/modal'
 
 const showModal = (data: Modal | string) => {
   const appStore = useAppStore()

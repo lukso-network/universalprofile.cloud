@@ -1,5 +1,6 @@
-import { Item, Model } from 'pinia-orm'
-import { ImageMetadata } from '@lukso/lsp-smart-contracts'
+import { type Item, Model } from 'pinia-orm'
+
+import type { ImageMetadata } from '@lukso/lsp-smart-contracts'
 
 export class ImageModel extends Model {
   static entity = 'images'

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Asset } from '@/models/asset'
+import { type Asset } from '@/models/asset'
 
 type Props = {
   nfts?: Asset[]

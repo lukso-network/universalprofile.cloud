@@ -1,8 +1,8 @@
-import { Item } from 'pinia-orm'
-
-import { Profile } from '@/models/profile'
-import { Asset } from '@/models/asset'
 import { BaseModel } from '@/models/base'
+
+import type { Item } from 'pinia-orm'
+import type { Profile } from '@/models/profile'
+import type { Asset } from '@/models/asset'
 
 export class CreatorModel extends BaseModel {
   static entity = 'creators'

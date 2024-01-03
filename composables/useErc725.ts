@@ -1,4 +1,4 @@
-import { ERC725, ERC725JSONSchema } from '@erc725/erc725.js'
+import { ERC725, type ERC725JSONSchema } from '@erc725/erc725.js'
 import Web3 from 'web3'
 
 const getInstance = (address: string, schema: ERC725JSONSchema[]) => {

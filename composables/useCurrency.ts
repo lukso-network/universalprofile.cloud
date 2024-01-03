@@ -1,4 +1,4 @@
-import { CurrencyCache, CurrencyList } from '@/types/currency'
+import type { CurrencyCache, CurrencyList } from '@/types/currency'
 
 const fetchCurrencies = async () => {
   const cache = await caches.open(CACHE_KEY.CURRENCY_CACHE)

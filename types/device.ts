@@ -1,4 +1,22 @@
-import { Device } from 'node_modules/@nuxtjs/device/dist/runtime/types'
+export type Device = {
+  userAgent: string
+  isDesktop: boolean
+  isIos: boolean
+  isAndroid: boolean
+  isMobile: boolean
+  isMobileOrTablet: boolean
+  isDesktopOrTablet: boolean
+  isTablet: boolean
+  isWindows: boolean
+  isMacOS: boolean
+  isApple: boolean
+  isSafari: boolean
+  isFirefox: boolean
+  isEdge: boolean
+  isChrome: boolean
+  isSamsung: boolean
+  isCrawler: boolean
+}
 
 export type NavigatorExtended = Navigator & {
   brave?: { isBrave: () => Promise<boolean> }

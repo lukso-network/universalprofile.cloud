@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SelectStringOption } from '@lukso/web-components'
+import type { SelectStringOption } from '@lukso/web-components'
 
 const networks = ref<SelectStringOption[]>()
 const selectedNetwork = ref<SelectStringOption>()

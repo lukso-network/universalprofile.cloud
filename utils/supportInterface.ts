@@ -1,6 +1,5 @@
-import { AbiItem } from 'web3-utils'
-
-import { LSP0ERC725Account } from '@/types/contracts'
+import type { AbiItem } from 'web3-utils'
+import type { LSP0ERC725Account } from '@/types/contracts'
 
 /**
  * Checks if a smart contract supports a given interface.

@@ -1,6 +1,6 @@
 import {
   INTERFACE_IDS,
-  ImageMetadata,
+  type ImageMetadata,
   LSP8_TOKEN_ID_FORMAT,
 } from '@lukso/lsp-smart-contracts'
 

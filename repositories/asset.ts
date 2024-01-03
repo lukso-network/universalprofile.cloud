@@ -1,9 +1,10 @@
 import { Repository } from 'pinia-orm'
-import { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
 
-import { Asset, AssetModel } from '@/models/asset'
-import { InterfaceId } from '@/types/assets'
+import { type Asset, AssetModel } from '@/models/asset'
 import { ImageRepository } from './image'
+
+import type { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
+import type { InterfaceId } from '@/types/assets'
 
 export class AssetRepository extends Repository<AssetModel> {
   async loadAssets(addresses: Address[], profileAddress: Address) {

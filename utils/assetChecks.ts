@@ -1,5 +1,6 @@
-import { Asset } from '@/models/asset'
 import { nftStandards, tokenStandards } from '@/types/assets'
+
+import type { Asset } from '@/models/asset'
 
 export const isLyx = (asset?: Asset) => asset?.isNativeToken
 

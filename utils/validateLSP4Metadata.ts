@@ -1,4 +1,4 @@
-import {
+import type {
   LSP4DigitalAssetMetadataJSON,
   AssetMetadata,
 } from '@lukso/lsp-smart-contracts'

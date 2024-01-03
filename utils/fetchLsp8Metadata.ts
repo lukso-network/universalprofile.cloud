@@ -1,8 +1,9 @@
-import { LSP4DigitalAssetMetadataJSON } from '@lukso/lsp-smart-contracts'
-import ERC725, { ERC725JSONSchema } from '@erc725/erc725.js'
+import ERC725, { type ERC725JSONSchema } from '@erc725/erc725.js'
 import LSP8IdentifiableDigitalAsset from '@erc725/erc725.js/schemas/LSP8IdentifiableDigitalAsset.json'
 
 import { Lsp8TokenIdType } from '@/types/assets'
+
+import type { LSP4DigitalAssetMetadataJSON } from '@lukso/lsp-smart-contracts'
 
 export const fetchLsp8Metadata = async (
   tokenId: string,

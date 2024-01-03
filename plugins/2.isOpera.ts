@@ -1,6 +1,5 @@
-import { NuxtApp } from 'nuxt/app'
-
-import { DeviceExtended } from '@/types/device'
+import type { NuxtApp } from 'nuxt/app'
+import type { DeviceExtended } from '@/types/device'
 
 type OperaWindow = Window & {
   opera?: { addons?: unknown }

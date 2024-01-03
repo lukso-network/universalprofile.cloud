@@ -1,8 +1,8 @@
-import { ImageMetadata } from '@lukso/lsp-smart-contracts'
-
-import { Asset } from '@/models/asset'
 import { ImageRepository } from '@/repositories/image'
-import { Image } from '@/models/image'
+
+import type { ImageMetadata } from '@lukso/lsp-smart-contracts'
+import type { Asset } from '@/models/asset'
+import type { Image } from '@/models/image'
 
 type ImageObjectCache = { encodedImage: Base64EncodedImage; url: string }
 

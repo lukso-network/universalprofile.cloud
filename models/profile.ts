@@ -1,12 +1,12 @@
-import { Item } from 'pinia-orm'
-import {
+import { BaseModel } from '@/models/base'
+
+import type { Item } from 'pinia-orm'
+import type {
   ImageMetadata,
   LSP3ProfileMetadata,
   LinkMetadata,
 } from '@lukso/lsp-smart-contracts'
-
-import { Image } from '@/models/image'
-import { BaseModel } from '@/models/base'
+import type { Image } from '@/models/image'
 
 export class ProfileModel extends BaseModel {
   static entity = 'profiles'
