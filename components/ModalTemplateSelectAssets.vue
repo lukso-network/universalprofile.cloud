@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Asset } from '@/models/asset'
 import { AssetRepository } from '@/repositories/asset'
+
+import type { Asset } from '@/models/asset'
 
 const { currentNetwork } = useAppStore()
 const { connectedProfile } = useConnectedProfile()
