@@ -1903,7 +1903,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxtjs/algolia@npm:^1.9.0":
+"@nuxtjs/algolia@npm:^1.10.1":
   version: 1.10.1
   resolution: "@nuxtjs/algolia@npm:1.10.1"
   dependencies:
@@ -15289,7 +15289,7 @@ __metadata:
     "@lukso/lsp-smart-contracts": "npm:0.14.0"
     "@lukso/lsp-smart-contracts-12": "npm:@lukso/lsp-smart-contracts@0.12.1"
     "@lukso/web-components": "npm:1.56.0"
-    "@nuxtjs/algolia": "npm:^1.9.0"
+    "@nuxtjs/algolia": "npm:^1.10.1"
     "@nuxtjs/device": "npm:^3.1.1"
     "@nuxtjs/plausible": "npm:^0.2.4"
     "@nuxtjs/tailwindcss": "npm:^6.10.3"
