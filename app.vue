@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import { isAddress } from 'web3-utils'
 
 import { assertString } from '@/utils/validators'
 import { SUPPORTED_NETWORK_IDS } from '@/shared/config'
+
+import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 
 if (typeof window !== 'undefined') {
   import('@lukso/web-components')
