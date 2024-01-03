@@ -113,12 +113,6 @@ export default defineNuxtConfig({
   },
   imports: {
     dirs: ['stores/**', 'shared/**', 'models/**', 'repositories/**'],
-    presets: [
-      {
-        from: 'pinia',
-        imports: ['storeToRefs', 'defineStore', 'acceptHMRUpdate'],
-      },
-    ],
   },
   ssr: false,
   spaLoadingTemplate: 'public/loading-template.html',
