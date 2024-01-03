@@ -1930,7 +1930,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxtjs/plausible@npm:^0.2.3":
+"@nuxtjs/plausible@npm:^0.2.4":
   version: 0.2.4
   resolution: "@nuxtjs/plausible@npm:0.2.4"
   dependencies:
@@ -1942,7 +1942,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxtjs/tailwindcss@npm:^6.9.5":
+"@nuxtjs/tailwindcss@npm:^6.10.3":
   version: 6.10.3
   resolution: "@nuxtjs/tailwindcss@npm:6.10.3"
   dependencies:
@@ -15492,8 +15492,8 @@ __metadata:
     "@lukso/web-components": "npm:1.56.0"
     "@nuxtjs/algolia": "npm:^1.9.0"
     "@nuxtjs/device": "npm:^3.1.1"
-    "@nuxtjs/plausible": "npm:^0.2.3"
-    "@nuxtjs/tailwindcss": "npm:^6.9.5"
+    "@nuxtjs/plausible": "npm:^0.2.4"
+    "@nuxtjs/tailwindcss": "npm:^6.10.3"
     "@pinia-orm/nuxt": "npm:^1.7.0"
     "@pinia-plugin-persistedstate/nuxt": "npm:^1.1.2"
     "@pinia/nuxt": "npm:^0.4.11"
