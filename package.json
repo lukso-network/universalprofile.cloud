@@ -33,7 +33,6 @@
     "@lukso/lsp-smart-contracts": "0.14.0",
     "@lukso/lsp-smart-contracts-12": "npm:@lukso/lsp-smart-contracts@0.12.1",
     "@lukso/web-components": "1.56.0",
-    "@nuxt/devtools": "^0.7.6",
     "@nuxtjs/algolia": "^1.9.0",
     "@nuxtjs/device": "^3.1.1",
     "@nuxtjs/plausible": "^0.2.3",
