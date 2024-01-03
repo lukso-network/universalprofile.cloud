@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { Creator } from '@/models/creator'
-import { ProfileRepository } from '@/repositories/profile'
 
 type Props = {
   creator?: Creator
 }
 
 const props = defineProps<Props>()
-const profileRepo = useRepo(ProfileRepository)
+const { profile, profileImageUrl } = useProfile(props.creator?.profile?.address)
 
 const handleOpenCreator = (event: Event, creator?: Creator) => {
   try {
@@ -18,13 +17,6 @@ const handleOpenCreator = (event: Event, creator?: Creator) => {
     console.error(error)
   }
 }
-
-const profile = computed(() => {
-  return (
-    props.creator?.profileId &&
-    profileRepo.getProfileAndImages(props.creator.profileId)
-  )
-})
 </script>
 
 <template>
@@ -35,7 +27,7 @@ const profile = computed(() => {
   >
     <lukso-profile
       size="x-small"
-      :profile-url="profile.profileImage?.base64"
+      :profile-url="profileImageUrl"
     ></lukso-profile>
     <div class="pl-1">
       <div class="paragraph-inter-10-semi-bold text-neutral-60">

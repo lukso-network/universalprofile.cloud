@@ -5,7 +5,21 @@ type Props = {
   creators: Creator[]
 }
 
-defineProps<Props>()
+type CreatorWithProfileImage = Creator & { profileImageUrl: string }
+
+const props = defineProps<Props>()
+const creatorsWithImages = ref<CreatorWithProfileImage[]>([])
+
+onMounted(async () => {
+  // for each creator we look for cached image
+  for await (const creator of props.creators) {
+    const creatorWithImage = {
+      ...creator,
+      profileImageUrl: await getCachedImageUrl(creator?.profile?.profileImage),
+    }
+    creatorsWithImages.value.push(creatorWithImage)
+  }
+})
 </script>
 
 <template>
@@ -14,13 +28,13 @@ defineProps<Props>()
   </div>
   <div class="mb-8 flex flex-wrap gap-2">
     <div
-      v-for="(creator, index) in creators"
+      v-for="(creator, index) in creatorsWithImages"
       :key="index"
       class="inline-flex items-center rounded-12 border border-neutral-90 bg-neutral-100 px-4 py-3"
     >
       <lukso-profile
         size="x-small"
-        :profile-url="creator?.profile?.profileImage?.base64"
+        :profile-url="creator.profileImageUrl"
         :profile-address="creator?.profile?.address"
         has-identicon
       ></lukso-profile>

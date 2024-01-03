@@ -1,12 +1,17 @@
 <script setup lang="ts">
-const { connectedProfile } = useConnectedProfile()
+const { connectedProfile, profileImageUrl } = useConnectedProfile()
 const { receiver } = storeToRefs(useSendStore())
 </script>
 
 <template>
   <div class="grid w-full grid-cols-[1fr,min-content,1fr]">
     <div class="flex flex-col items-center">
-      <AppAvatar :profile="connectedProfile" />
+      <AppAvatar
+        :profile="connectedProfile"
+        :name="connectedProfile?.name"
+        :address="connectedProfile?.address"
+        :profile-url="profileImageUrl"
+      />
     </div>
     <div class="flex items-center">
       <div class="z-[1] h-[92px] w-[20px] bg-neutral-100"></div>
@@ -15,7 +20,12 @@ const { receiver } = storeToRefs(useSendStore())
       ></div>
     </div>
     <div class="flex flex-col items-center">
-      <AppAvatar :profile="receiver" :is-eoa="receiver?.isEoa" />
+      <AppAvatar
+        :is-eoa="receiver?.isEoa"
+        :name="receiver?.name"
+        :address="receiver?.address"
+        :profile-url="receiver?.profileImage?.url"
+      />
     </div>
   </div>
 </template>

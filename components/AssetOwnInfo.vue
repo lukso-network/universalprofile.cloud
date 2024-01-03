@@ -4,10 +4,10 @@ type Props = {
   balance?: string
   symbol?: string
   decimals?: number
+  profileImageUrl?: string
 }
 
-const props = defineProps<Props>()
-const profile = computed(() => useProfile(props.address).profile.value)
+defineProps<Props>()
 </script>
 
 <template>
@@ -16,7 +16,7 @@ const profile = computed(() => useProfile(props.address).profile.value)
       <lukso-profile
         size="small"
         :profile-address="address"
-        :profile-url="profile?.profileImage?.base64"
+        :profile-url="profileImageUrl"
         has-identicon
       ></lukso-profile>
       <div class="flex flex-col justify-center pl-4">

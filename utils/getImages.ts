@@ -1,8 +1,10 @@
 import { ImageMetadata } from '@lukso/lsp-smart-contracts'
 
-import { ImageMetadataEncoded } from '@/types/assets'
 import { Asset } from '@/models/asset'
 import { ImageRepository } from '@/repositories/image'
+import { Image } from '@/models/image'
+
+type ImageObjectCache = { encodedImage: Base64EncodedImage; url: string }
 
 const convertBlobToBase64 = (blob: Blob) =>
   new Promise((resolve, reject) => {
@@ -81,7 +83,7 @@ export const getImageBySize = (
  * @param minHeight
  * @returns
  */
-export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
+export const getAssetThumb = async (asset?: Asset, useIcon?: boolean) => {
   if (!asset) {
     return ''
   }
@@ -94,18 +96,27 @@ export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
 
   if (asset.iconId && useIcon) {
     const icon = imageRepo.getImage(asset.iconId)
-    return icon?.base64
+    const cachedIcon = await getCachedImageUrl(icon)
+    return cachedIcon
   }
 
   if (asset.imageIds && asset.imageIds.length > 0) {
     const image = imageRepo.getImage(asset.imageIds[0])
-    return image?.base64
+    const cachedImage = await getCachedImageUrl(image)
+    return cachedImage
   }
 
   return ''
 }
 
-export const getAndConvertImage = async (
+/**
+ * Creates a Image model object
+ *
+ * @param image - image metadata array
+ * @param height - image height (represents the desired image height)
+ * @returns Image model object
+ */
+export const createImageObject = async (
   image: ImageMetadata[],
   height: number
 ) => {
@@ -114,9 +125,46 @@ export const getAndConvertImage = async (
   if (optimalImage) {
     return {
       ...optimalImage,
-      base64: resolveUrl(optimalImage.url),
-      // base64: await fetchAndConvertImage(optimalImage.url), // TODO add base when cache storage is added
       id: getHash(optimalImage),
-    } as ImageMetadataEncoded
+    } as Image
   }
+}
+
+/**
+ * Gets a base64 encoded image from cache.
+ * If there is no image in cache, it will use original image url and do caching afterwards.
+ *
+ * @param image - image to get from cache
+ * @returns
+ */
+export const getCachedImageUrl = async (image?: Image) => {
+  const cache = await caches.open(CACHE_KEY.IMAGE_CACHE)
+
+  if (!image || !image.url) {
+    return ''
+  }
+
+  const imageUrl = resolveUrl(image.url)
+  const cachedImage = await cache.match(imageUrl)
+
+  if (cachedImage) {
+    const imageObjectCache: ImageObjectCache = await cachedImage.json()
+    return imageObjectCache.encodedImage
+  } else {
+    const fetchedImage = await fetchAndConvertImage(imageUrl)
+    const imageObjectCache: ImageObjectCache = {
+      encodedImage: fetchedImage,
+      url: imageUrl,
+    }
+    await cache.put(
+      imageUrl,
+      new Response(JSON.stringify(imageObjectCache), {
+        headers: {
+          'Content-Length': imageObjectCache.encodedImage.length.toString(),
+        },
+      })
+    )
+  }
+
+  return imageUrl
 }

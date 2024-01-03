@@ -1,4 +1,5 @@
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
+import { INTERFACE_IDS as INTERFACE_IDS_v12 } from '@lukso/lsp-smart-contracts-12'
 
 import { InterfaceId } from '@/types/assets'
 
@@ -12,17 +13,27 @@ export const detectStandard = async (
     return 'LSP0ERC725Account'
   }
 
-  // LSP7
-  if (await supportInterface(contractAddress, INTERFACE_IDS.LSP7DigitalAsset)) {
+  // LSP7 (we check old and new interface)
+  if (
+    (await supportInterface(contractAddress, INTERFACE_IDS.LSP7DigitalAsset)) ||
+    (await supportInterface(
+      contractAddress,
+      INTERFACE_IDS_v12.LSP7DigitalAsset
+    ))
+  ) {
     return 'LSP7DigitalAsset'
   }
 
-  // LSP8
+  // LSP8 (we check old and new interface)
   if (
-    await supportInterface(
+    (await supportInterface(
       contractAddress,
       INTERFACE_IDS.LSP8IdentifiableDigitalAsset
-    )
+    )) ||
+    (await supportInterface(
+      contractAddress,
+      INTERFACE_IDS_v12.LSP8IdentifiableDigitalAsset
+    ))
   ) {
     return 'LSP8IdentifiableDigitalAsset'
   }
