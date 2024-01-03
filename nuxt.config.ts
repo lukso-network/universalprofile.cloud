@@ -81,6 +81,7 @@ export default defineNuxtConfig({
       alias: {
         process: 'process/browser',
         stream: 'stream-browserify',
+        http: 'stream-http',
         https: 'agent-base',
         zlib: 'browserify-zlib',
         util: 'util',
