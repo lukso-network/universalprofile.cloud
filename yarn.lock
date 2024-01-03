@@ -1288,7 +1288,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@formatjs/intl@npm:^2.9.6":
+"@formatjs/intl@npm:^2.9.9":
   version: 2.9.9
   resolution: "@formatjs/intl@npm:2.9.9"
   dependencies:
@@ -15285,7 +15285,7 @@ __metadata:
   dependencies:
     "@erc725/erc725.js": "npm:0.22.0"
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
-    "@formatjs/intl": "npm:^2.9.6"
+    "@formatjs/intl": "npm:^2.9.9"
     "@lukso/lsp-smart-contracts": "npm:0.14.0"
     "@lukso/lsp-smart-contracts-12": "npm:@lukso/lsp-smart-contracts@0.12.1"
     "@lukso/web-components": "npm:1.56.0"

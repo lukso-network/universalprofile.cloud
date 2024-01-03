@@ -29,7 +29,7 @@
   "devDependencies": {
     "@erc725/erc725.js": "0.22.0",
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
-    "@formatjs/intl": "^2.9.6",
+    "@formatjs/intl": "^2.9.9",
     "@lukso/lsp-smart-contracts": "0.14.0",
     "@lukso/lsp-smart-contracts-12": "npm:@lukso/lsp-smart-contracts@0.12.1",
     "@lukso/web-components": "1.56.0",
