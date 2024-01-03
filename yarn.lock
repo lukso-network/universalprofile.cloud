@@ -2645,7 +2645,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/integrations@npm:^7.85.0":
+"@sentry/integrations@npm:^7.91.0":
   version: 7.91.0
   resolution: "@sentry/integrations@npm:7.91.0"
   dependencies:
@@ -2682,7 +2682,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/types@npm:7.91.0, @sentry/types@npm:^7.85.0":
+"@sentry/types@npm:7.91.0, @sentry/types@npm:^7.91.0":
   version: 7.91.0
   resolution: "@sentry/types@npm:7.91.0"
   checksum: e36fe0d112c3023c0f14beb0d781ac903e2744e8e3fabd04b6bc805467edbb44c1812e24f1aa3e54c9e38fdc3795d9eea62056aa8c7bda99b4fd9fc603fa9ad3
@@ -2708,7 +2708,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/vue@npm:^7.85.0":
+"@sentry/vue@npm:^7.91.0":
   version: 7.91.0
   resolution: "@sentry/vue@npm:7.91.0"
   dependencies:
@@ -15498,10 +15498,10 @@ __metadata:
     "@pinia-plugin-persistedstate/nuxt": "npm:^1.1.2"
     "@pinia/nuxt": "npm:^0.4.11"
     "@playwright/test": "npm:1.36.2"
-    "@sentry/integrations": "npm:^7.85.0"
-    "@sentry/types": "npm:^7.85.0"
+    "@sentry/integrations": "npm:^7.91.0"
+    "@sentry/types": "npm:^7.91.0"
     "@sentry/vite-plugin": "npm:^2.10.2"
-    "@sentry/vue": "npm:^7.85.0"
+    "@sentry/vue": "npm:^7.91.0"
     "@typechain/web3-v1": "npm:^6.0.7"
     "@types/fs-extra": "npm:11.0.4"
     "@types/node": "npm:^20.9.1"
