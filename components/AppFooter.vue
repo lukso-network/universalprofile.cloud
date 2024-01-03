@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ProviderName } from '@lukso/web-components/dist/components/lukso-share'
+import type { ProviderName } from '@lukso/web-components'
 
 const providers: ProviderName[] = ['twitter', 'discord', 'github']
 </script>
