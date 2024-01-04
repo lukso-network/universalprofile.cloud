@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { isAddress } from 'web3-utils'
-import { SearchProfileResult } from '@lukso/web-components/dist/components/lukso-search'
 
-import { IndexedProfile } from '@/models/profile'
+import type { SearchProfileResult } from '@lukso/web-components'
+import type { IndexedProfile } from '@/models/profile'
 
 const SEARCH_COMPONENT_TAG_NAME = 'LUKSO-SEARCH'
 
@@ -71,7 +71,7 @@ const handleSearchKeydown = async (event: KeyboardEvent) => {
 const searchResults = async () => {
   selectedResultNumber.value = undefined
   const searchResults = await search({
-    query: searchTerm.value,
+    query: searchTerm.value || '',
     requestOptions: {
       hitsPerPage: SEARCH_RESULTS_LIMIT,
       page: 0,

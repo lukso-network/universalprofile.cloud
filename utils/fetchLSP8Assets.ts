@@ -1,9 +1,9 @@
 import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
-import { AbiItem } from 'web3-utils'
 
-import { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
-import { Asset } from '@/models/asset'
-import { ImageMetadataWithRelationships } from '@/types/assets'
+import type { AbiItem } from 'web3-utils'
+import type { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
+import type { Asset } from '@/models/asset'
+import type { ImageMetadataWithRelationships } from '@/types/assets'
 
 export const fetchLsp8Assets = async (
   address: Address,

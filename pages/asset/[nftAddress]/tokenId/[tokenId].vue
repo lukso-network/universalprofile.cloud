@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Creator } from '@/models/creator'
 import { CreatorRepository } from '@/repositories/creator'
+
+import type { Creator } from '@/models/creator'
 
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId

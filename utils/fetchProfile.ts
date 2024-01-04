@@ -1,7 +1,8 @@
 import { INTERFACE_IDS, SupportedStandards } from '@lukso/lsp-smart-contracts'
 
-import { LSP0ERC725Account } from '@/types/contracts/LSP0ERC725Account'
 import { ProfileRepository } from '@/repositories/profile'
+
+import type { LSP0ERC725Account } from '@/types/contracts/LSP0ERC725Account'
 
 export const fetchProfile = async (profileAddress: Address) => {
   const { isLoadingProfile } = storeToRefs(useAppStore())

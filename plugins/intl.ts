@@ -1,4 +1,4 @@
-import { FormatNumberOptions } from '@formatjs/intl'
+import type { FormatNumberOptions } from '@formatjs/intl'
 
 /**
  * Expose intl based functions to the app so they can be used without importing

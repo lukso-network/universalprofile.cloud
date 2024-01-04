@@ -1,8 +1,8 @@
 import LSP3ProfileMetadata from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
-import { ERC725JSONSchema } from '@erc725/erc725.js'
 import { Buffer } from 'buffer'
 
-import { Profile } from '@/models/profile'
+import type { ERC725JSONSchema } from '@erc725/erc725.js'
+import type { Profile } from '@/models/profile'
 
 export const fetchLsp3Profile = async (
   profileAddress: Address

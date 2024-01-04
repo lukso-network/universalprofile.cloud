@@ -1,7 +1,7 @@
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
 import { INTERFACE_IDS as INTERFACE_IDS_v12 } from '@lukso/lsp-smart-contracts-12'
 
-import { InterfaceId } from '@/types/assets'
+import type { InterfaceId } from '@/types/assets'
 
 export const detectStandard = async (
   contractAddress: Address

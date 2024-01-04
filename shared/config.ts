@@ -1,6 +1,6 @@
 import { toWei } from 'web3-utils'
 
-import { NetworkInfo } from '@/types/network'
+import type { NetworkInfo } from '@/types/network'
 
 // chain id's
 export const TESTNET_CHAIN_ID = '0x1069'

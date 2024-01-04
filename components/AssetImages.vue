@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Image } from '@/models/image'
+import type { Image } from '@/models/image'
 
 type Props = {
   images: Image[]

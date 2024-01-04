@@ -1,10 +1,10 @@
-import { Item } from 'pinia-orm'
-import { ImageMetadata, LinkMetadata } from '@lukso/lsp-smart-contracts'
-
-import { InterfaceId } from '@/types/assets'
-import { Image } from '@/models/image'
 import { BaseModel } from '@/models/base'
-import { Creator } from './creator'
+
+import type { Item } from 'pinia-orm'
+import type { ImageMetadata, LinkMetadata } from '@lukso/lsp-smart-contracts'
+import type { InterfaceId } from '@/types/assets'
+import type { Image } from '@/models/image'
+import type { Creator } from './creator'
 
 export class AssetModel extends BaseModel {
   static entity = 'assets'

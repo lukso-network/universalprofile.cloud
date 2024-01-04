@@ -1,5 +1,5 @@
-import { Asset } from '@/models/asset'
-import { Profile } from '@/models/profile'
+import type { Asset } from '@/models/asset'
+import type { Profile } from '@/models/profile'
 
 type SendStatus = 'draft' | 'pending' | 'success'
 

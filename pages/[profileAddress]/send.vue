@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { AbiItem, toWei } from 'web3-utils'
-import { TransactionConfig } from 'web3-core'
+import { type AbiItem, toWei } from 'web3-utils'
 import LSP7Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP7Mintable.json'
 import LSP8Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json'
-import { TransactionReceipt } from 'web3-eth'
 
-import {
+import { AssetRepository } from '@/repositories/asset'
+
+import type { TransactionConfig } from 'web3-core'
+import type { TransactionReceipt } from 'web3-eth'
+import type {
   LSP7DigitalAsset,
   LSP8IdentifiableDigitalAsset,
 } from '@/types/contracts'
-import { AssetRepository } from '@/repositories/asset'
 
 const { connectedProfile } = useConnectedProfile()
 const { currentNetwork } = useAppStore()

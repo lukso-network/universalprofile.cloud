@@ -1,4 +1,4 @@
-import {
+import type {
   ImageMetadata,
   LSP3ProfileMetadata,
   LinkMetadata,

@@ -1,8 +1,8 @@
 import {
   createIntl,
-  FormatNumberOptions,
-  IntlConfig,
-  IntlShape,
+  type FormatNumberOptions,
+  type IntlConfig,
+  type IntlShape,
 } from '@formatjs/intl'
 import { fromWei } from 'web3-utils'
 

@@ -1,6 +1,7 @@
 import { AssetFilter } from '@/types/assets'
-import { Modal } from '@/types/modal'
-import { NetworkInfo, NetworkId } from '@/types/network'
+
+import type { Modal } from '@/types/modal'
+import type { NetworkInfo, NetworkId } from '@/types/network'
 
 /**
  * App store
