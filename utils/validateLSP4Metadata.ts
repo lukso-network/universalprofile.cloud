@@ -31,8 +31,8 @@ export const validateLsp4MetaData = (
     })
   }
 
-  if (LSP4MetadataJSON?.LSP4Metadata?.icons?.length) {
-    icon = LSP4MetadataJSON?.LSP4Metadata?.icons?.filter((image: any) => {
+  if (LSP4MetadataJSON?.LSP4Metadata?.icon?.length) {
+    icon = LSP4MetadataJSON?.LSP4Metadata?.icon?.filter((image: any) => {
       return validateImage(image)
     })
   }

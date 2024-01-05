@@ -37,7 +37,7 @@ export const fetchLsp8Assets = async (
         tokenId,
         address
       )
-      const getData = await getLsp8Data(address, tokenIdType, tokenId)
+      const getBaseUriData = await getLsp8TokenMetadataBaseUri(address)
       const {
         description,
         images: metadataImages,
@@ -67,8 +67,8 @@ export const fetchLsp8Assets = async (
       creators?.forEach(creator => {
         creator?.profile?.address && creatorIds.push(creator.profile.address)
       })
-      const hash = validateHash(getData)
-      const verification = validateVerification(getData)
+      const hash = validateHash(getBaseUriData)
+      const verification = validateVerification(getBaseUriData)
 
       return {
         address,
