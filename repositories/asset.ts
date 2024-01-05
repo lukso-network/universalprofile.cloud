@@ -28,20 +28,17 @@ export class AssetRepository extends Repository<AssetModel> {
             })
 
             assetData = await fetchLsp4Data(assetAddress)
+
+            // check if asset metadata has changed
+            if (getHash(assetData?.value) === getHash(storageAsset)) {
+              return
+            }
           }
 
-          if (storageAsset.standard === 'LSP8IdentifiableDigitalAsset') {
-            assetData = await getLsp8Data(
-              assetAddress,
-              storageAsset?.tokenIdType,
-              storageAsset?.tokenId
-            )
-          }
-
-          // check if asset metadata has changed
-          if (getHash(assetData?.value) === getHash(storageAsset)) {
-            return
-          }
+          // TODO investigate if LSP8 can be checked for changes or use Algolia API instead
+          // if (storageAsset.standard === 'LSP8IdentifiableDigitalAsset') {
+          //   assetData = await getLsp8Data(assetAddress)
+          // }
         }
 
         const fetchedAsset = await fetchAsset(assetAddress, profileAddress)
