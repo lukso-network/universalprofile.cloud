@@ -101,6 +101,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('standard', 'LSP8IdentifiableDigitalAsset')
       .where('address', viewedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
+      .where('owner', viewedProfile.value.address)
       .get()
   }
 
@@ -116,6 +117,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('standard', 'LSP8IdentifiableDigitalAsset')
       .where('address', viewedProfile.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
+      .where('owner', viewedProfile.value.address)
       .get()
   }
 
@@ -131,6 +133,13 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('address', viewedProfile.value.receivedAssetAddresses)
       .where('standard', (standard: InterfaceId) => standard)
       .where('chainId', selectedChainId.value)
+      .where((asset: Asset) => {
+        return (
+          asset?.standard === 'LSP7DigitalAsset' ||
+          (asset?.standard === 'LSP8IdentifiableDigitalAsset' &&
+            asset?.owner === viewedProfile.value?.address)
+        )
+      })
       .get()
   }
 
