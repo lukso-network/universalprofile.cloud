@@ -94,6 +94,7 @@ export const fetchLsp8Assets = async (
         creatorIds,
         hash,
         verification,
+        owner: profileAddress,
       }
     })
   )

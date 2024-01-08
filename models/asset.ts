@@ -27,6 +27,7 @@ export class AssetModel extends BaseModel {
       isNativeToken: this.boolean(false),
       hash: this.string(''),
       verification: this.attr({}),
+      owner: this.string(''),
 
       // foreign keys
       iconId: this.attr(null),
@@ -50,6 +51,7 @@ export class AssetModel extends BaseModel {
   declare isNativeToken?: boolean
   declare hash: string
   declare verification?: ImageMetadata['verification']
+  declare owner: Address
 
   declare iconId?: string
   declare imageIds?: string[]
