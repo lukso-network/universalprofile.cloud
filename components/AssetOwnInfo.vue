@@ -5,6 +5,7 @@ type Props = {
   symbol?: string
   decimals?: number
   profileImageUrl?: string
+  message?: string
 }
 
 defineProps<Props>()
@@ -21,7 +22,7 @@ defineProps<Props>()
       ></lukso-profile>
       <div class="flex flex-col justify-center pl-4">
         <div class="paragraph-inter-10-semi-bold pb-1">
-          {{ $formatMessage('token_details_own') }}
+          {{ message }}
         </div>
         <div class="paragraph-inter-12-semi-bold">
           <span v-if="balance">{{

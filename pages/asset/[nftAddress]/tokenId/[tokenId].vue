@@ -26,10 +26,7 @@ const isOwned = computed(() => {
     asset.value?.address &&
     connectedProfile.value?.receivedAssetAddresses?.includes(
       asset.value?.address
-    ) &&
-    (asset.value.standard === 'LSP7DigitalAsset' ||
-      (asset.value.standard === 'LSP8IdentifiableDigitalAsset' &&
-        asset.value.owner === connectedProfile.value.address))
+    )
   )
 })
 
@@ -100,6 +97,7 @@ const handleSendAsset = (event: Event) => {
             :symbol="asset?.symbol"
             :decimals="0"
             :profile-image-url="profileImageUrl"
+            :message="$formatMessage('nft_details_own')"
           />
 
           <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{
