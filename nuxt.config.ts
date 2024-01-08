@@ -81,6 +81,7 @@ export default defineNuxtConfig({
       alias: {
         process: 'process/browser',
         stream: 'stream-browserify',
+        http: 'stream-http',
         https: 'agent-base',
         zlib: 'browserify-zlib',
         util: 'util',
@@ -112,12 +113,6 @@ export default defineNuxtConfig({
   },
   imports: {
     dirs: ['stores/**', 'shared/**', 'models/**', 'repositories/**'],
-    presets: [
-      {
-        from: 'pinia',
-        imports: ['storeToRefs', 'defineStore', 'acceptHMRUpdate'],
-      },
-    ],
   },
   ssr: false,
   spaLoadingTemplate: 'public/loading-template.html',

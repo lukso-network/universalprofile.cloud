@@ -1,6 +1,6 @@
 import { Repository } from 'pinia-orm'
 
-import { Creator, CreatorModel } from '@/models/creator'
+import { type Creator, CreatorModel } from '@/models/creator'
 
 export class CreatorRepository extends Repository<CreatorModel> {
   getAssetCreators(assetAddress?: Address, tokenId?: string): Creator[] {

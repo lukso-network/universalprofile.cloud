@@ -1,5 +1,6 @@
 import Web3 from 'web3'
-import { provider as Provider } from 'web3-core'
+
+import type { provider as Provider } from 'web3-core'
 
 export const useWeb3Store = defineStore('web3', () => {
   const web3Instances = ref<Record<string, Web3>>({})

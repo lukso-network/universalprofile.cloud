@@ -1,9 +1,10 @@
 import { Repository } from 'pinia-orm'
-import { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
 
-import { Asset, AssetModel } from '@/models/asset'
-import { InterfaceId } from '@/types/assets'
+import { type Asset, AssetModel } from '@/models/asset'
 import { ImageRepository } from './image'
+
+import type { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
+import type { InterfaceId } from '@/types/assets'
 
 export class AssetRepository extends Repository<AssetModel> {
   async loadAssets(addresses: Address[], profileAddress: Address) {
@@ -27,20 +28,17 @@ export class AssetRepository extends Repository<AssetModel> {
             })
 
             assetData = await fetchLsp4Data(assetAddress)
+
+            // check if asset metadata has changed
+            if (getHash(assetData?.value) === getHash(storageAsset)) {
+              return
+            }
           }
 
-          if (storageAsset.standard === 'LSP8IdentifiableDigitalAsset') {
-            assetData = await getLsp8Data(
-              assetAddress,
-              storageAsset?.tokenIdType,
-              storageAsset?.tokenId
-            )
-          }
-
-          // check if asset metadata has changed
-          if (getHash(assetData?.value) === getHash(storageAsset)) {
-            return
-          }
+          // TODO investigate if LSP8 can be checked for changes or use Algolia API instead
+          // if (storageAsset.standard === 'LSP8IdentifiableDigitalAsset') {
+          //   assetData = await getLsp8Data(assetAddress)
+          // }
         }
 
         const fetchedAsset = await fetchAsset(assetAddress, profileAddress)

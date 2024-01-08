@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { InterfaceId, StandardsAbbreviations } from '@/types/assets'
+import { type InterfaceId, StandardsAbbreviations } from '@/types/assets'
 
 type Props = {
   standard?: InterfaceId

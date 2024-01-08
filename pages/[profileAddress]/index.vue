@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { AssetFilter } from '@/types/assets'
 import { AssetRepository } from '@/repositories/asset'
-import { Asset } from '@/models/asset'
+
+import type { Asset } from '@/models/asset'
 
 const { isLoadingProfile, isLoadingAssets, assetFilter, isLoadedApp } =
   storeToRefs(useAppStore())

@@ -1,4 +1,4 @@
-import { ProviderAPI } from '@/types/provider'
+import type { ProviderAPI } from '@/types/provider'
 
 const openStoreLink = () => {
   const storeLink = browserInfo().storeLink

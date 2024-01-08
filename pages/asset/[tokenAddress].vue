@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Creator } from '@/models/creator'
+import type { Creator } from '@/models/creator'
 
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
 const { connectedProfile, profileImageUrl } = useConnectedProfile()

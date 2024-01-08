@@ -1,6 +1,7 @@
 import { useViewedProfile } from './useViewedProfile'
-import { Asset } from '@/models/asset'
 import { AssetRepository } from '@/repositories/asset'
+
+import type { Asset } from '@/models/asset'
 
 export const useAsset = (assetAddress?: Address, tokenId?: string) => {
   const assetRepo = useRepo(AssetRepository)

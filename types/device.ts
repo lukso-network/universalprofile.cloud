@@ -1,4 +1,4 @@
-import { Device } from 'node_modules/@nuxtjs/device/dist/runtime/types'
+import type { Device } from '@nuxtjs/device/dist/runtime/types'
 
 export type NavigatorExtended = Navigator & {
   brave?: { isBrave: () => Promise<boolean> }

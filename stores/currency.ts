@@ -1,4 +1,4 @@
-import { CurrencyList, CurrencySymbol } from '@/types/currency'
+import type { CurrencyList, CurrencySymbol } from '@/types/currency'
 
 /**
  * Currency store

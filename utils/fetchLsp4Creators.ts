@@ -5,9 +5,9 @@ import {
   toChecksumAddress,
 } from 'web3-utils'
 
-import { LSP0ERC725Account } from '@/types/contracts'
-import { Profile } from '@/models/profile'
-import { Creator } from '@/models/creator'
+import type { LSP0ERC725Account } from '@/types/contracts'
+import type { Profile } from '@/models/profile'
+import type { Creator } from '@/models/creator'
 
 export const fetchLsp4Creators = async (
   assetAddress: Address,

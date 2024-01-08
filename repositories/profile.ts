@@ -1,6 +1,6 @@
 import { Repository } from 'pinia-orm'
 
-import { Profile, ProfileModel } from '@/models/profile'
+import { type Profile, ProfileModel } from '@/models/profile'
 import { ImageModel } from '@/models/image'
 import { ImageRepository } from './image'
 

@@ -1,4 +1,4 @@
-import { TestInfo, test as base } from '@playwright/test'
+import { type TestInfo, test as base } from '@playwright/test'
 
 interface TestFixtures {}
 

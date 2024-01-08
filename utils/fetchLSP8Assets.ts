@@ -1,9 +1,9 @@
 import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
-import { AbiItem } from 'web3-utils'
 
-import { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
-import { Asset } from '@/models/asset'
-import { ImageMetadataWithRelationships } from '@/types/assets'
+import type { AbiItem } from 'web3-utils'
+import type { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
+import type { Asset } from '@/models/asset'
+import type { ImageMetadataWithRelationships } from '@/types/assets'
 
 export const fetchLsp8Assets = async (
   address: Address,
@@ -37,7 +37,7 @@ export const fetchLsp8Assets = async (
         tokenId,
         address
       )
-      const getData = await getLsp8Data(address, tokenIdType, tokenId)
+      const getBaseUriData = await getLsp8TokenMetadataBaseUri(address)
       const {
         description,
         images: metadataImages,
@@ -67,8 +67,8 @@ export const fetchLsp8Assets = async (
       creators?.forEach(creator => {
         creator?.profile?.address && creatorIds.push(creator.profile.address)
       })
-      const hash = validateHash(getData)
-      const verification = validateVerification(getData)
+      const hash = validateHash(getBaseUriData)
+      const verification = validateVerification(getBaseUriData)
 
       return {
         address,

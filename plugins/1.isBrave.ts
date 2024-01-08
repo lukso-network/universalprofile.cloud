@@ -1,6 +1,5 @@
-import { NuxtApp } from 'nuxt/app'
-
-import { DeviceExtended, NavigatorExtended } from '@/types/device'
+import type { NuxtApp } from 'nuxt/app'
+import type { DeviceExtended, NavigatorExtended } from '@/types/device'
 
 /**
  * Detects if the browser is Brave
