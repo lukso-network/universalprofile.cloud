@@ -19,6 +19,17 @@ const verifiedCreator = computed(() => {
     .find(creator => creator?.isVerified)
 })
 
+const isOwned = computed(() => {
+  return (
+    isConnected &&
+    connectedProfile &&
+    asset.value?.address &&
+    connectedProfile.value?.receivedAssetAddresses?.includes(
+      asset.value?.address
+    )
+  )
+})
+
 watchEffect(async () => {
   creators.value =
     asset.value?.creatorIds?.map<Creator>(creatorAddress => {
@@ -79,20 +90,14 @@ const handleSendAsset = (event: Event) => {
             </div>
           </div>
         </lukso-card>
-        <div
-          v-if="
-            isConnected &&
-            connectedProfile &&
-            asset?.address &&
-            connectedProfile?.receivedAssetAddresses?.includes(asset?.address)
-          "
-        >
+        <div v-if="isOwned">
           <AssetOwnInfo
-            :address="connectedProfile.address"
+            :address="connectedProfile?.address"
             :balance="asset?.balance"
             :symbol="asset?.symbol"
             :decimals="0"
             :profile-image-url="profileImageUrl"
+            :message="$formatMessage('nft_details_own')"
           />
 
           <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{

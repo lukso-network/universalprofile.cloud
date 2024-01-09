@@ -78,6 +78,7 @@ const handleSendAsset = (event: Event) => {
             :symbol="asset?.symbol"
             :decimals="asset?.decimals"
             :profile-image-url="profileImageUrl"
+            :message="$formatMessage('token_details_own')"
           />
 
           <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{

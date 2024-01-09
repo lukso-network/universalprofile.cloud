@@ -77,6 +77,7 @@
   "web3_interface_error_message": "You tried to connect with a legacy profile that is no longer supported.",
   "errors_invalid_address": "This is an invalid address",
   "header_connect": "Connect",
+  "nft_details_own": "You own a token from this Collection",
   "error_wrong_network": "Your browser extension is using different network. In order to continue please switch to {name}.",
   "web3_connect_error": "There was an error while connecting to the browser extension.",
   "footer_privacy_policy_text": "Privacy Policy",

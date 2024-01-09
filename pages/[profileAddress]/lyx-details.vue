@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
-const { connectedProfile } = useConnectedProfile()
+const { connectedProfile, profileImageUrl } = useConnectedProfile()
 const { currentNetwork, isLoadedApp } = storeToRefs(useAppStore())
 const { viewedProfile } = useViewedProfile()
 const { isConnected } = storeToRefs(useAppStore())
@@ -57,6 +57,8 @@ const handleSendLyx = () => {
             :amount="viewedProfile?.balance"
             :symbol="currentNetwork.token.symbol"
             :decimals="ASSET_LYX_DECIMALS"
+            :profile-image-url="profileImageUrl"
+            :message="$formatMessage('token_details_own')"
           />
 
           <lukso-button is-full-width class="mt-4" @click="handleSendLyx">{{
