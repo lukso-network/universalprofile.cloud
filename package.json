@@ -91,6 +91,7 @@
     "typescript": "5.3.3",
     "util": "0.12.5",
     "vue": "^3.4.6",
+    "vue-router": "^4.2.5",
     "web3": "~1.10.3",
     "web3-utils": "~1.10.3",
     "yata-fetch": "2.1.5"

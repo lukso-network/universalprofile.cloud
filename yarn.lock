@@ -16295,6 +16295,7 @@ __metadata:
     typescript: "npm:5.3.3"
     util: "npm:0.12.5"
     vue: "npm:^3.4.6"
+    vue-router: "npm:^4.2.5"
     web3: "npm:~1.10.3"
     web3-utils: "npm:~1.10.3"
     yata-fetch: "npm:2.1.5"
