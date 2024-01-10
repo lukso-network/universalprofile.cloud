@@ -120,7 +120,8 @@ const validateAsset = (asset: any) => {
  * @returns - hash if validation passes, undefined otherwise
  */
 export const validateHash = (getDataObject: any) => {
-  return typeof getDataObject === 'object' &&
+  return !!getDataObject &&
+    typeof getDataObject === 'object' &&
     typeof getDataObject?.value === 'object' &&
     getDataObject?.value !== null &&
     'hash' in getDataObject?.value &&
@@ -137,7 +138,8 @@ export const validateHash = (getDataObject: any) => {
  * @returns - verification object if validation passes, undefined otherwise
  */
 export const validateVerification = (getDataObject: any) => {
-  return typeof getDataObject === 'object' &&
+  return !!getDataObject &&
+    typeof getDataObject === 'object' &&
     'value' in getDataObject &&
     typeof getDataObject?.value === 'object' &&
     getDataObject?.value !== null &&
