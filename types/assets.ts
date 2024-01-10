@@ -1,8 +1,4 @@
-import {
-  INTERFACE_IDS,
-  type ImageMetadata,
-  LSP8_TOKEN_ID_FORMAT,
-} from '@lukso/lsp-smart-contracts'
+import { INTERFACE_IDS, type ImageMetadata } from '@lukso/lsp-smart-contracts'
 
 export type InterfaceId = keyof typeof INTERFACE_IDS
 
@@ -19,14 +15,6 @@ export enum AssetFilter {
   owned = 'owned',
   created = 'created',
 }
-
-export const Lsp8TokenIdType = {
-  NUMBER: 0,
-  STRING: 1,
-  UNIQUE_ID: 2,
-  HASH: 3,
-  ADDRESS: 4,
-} as typeof LSP8_TOKEN_ID_FORMAT
 
 export type Base64EncodedImage = `data:image/jpeg;base64${string}`
 

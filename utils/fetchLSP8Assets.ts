@@ -1,7 +1,7 @@
-import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
+import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 
 import type { AbiItem } from 'web3-utils'
-import type { LSP8IdentifiableDigitalAsset as LSP8IdentifiableDigitalAssetInterface } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
+import type { LSP8IdentifiableDigitalAsset } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
 import type { Asset } from '@/models/asset'
 import type { ImageMetadataWithRelationships } from '@/types/assets'
 
@@ -11,8 +11,8 @@ export const fetchLsp8Assets = async (
   tokensId?: string[]
 ): Promise<Asset[]> => {
   const { contract } = useWeb3(PROVIDERS.RPC)
-  const lsp8Contract = contract<LSP8IdentifiableDigitalAssetInterface>(
-    LSP8IdentifiableDigitalAsset.abi as AbiItem[],
+  const lsp8Contract = contract<LSP8IdentifiableDigitalAsset>(
+    LSP8IdentifiableDigitalAssetContract.abi as AbiItem[],
     address
   )
   const tokenSupply = await lsp8Contract.methods.totalSupply().call()
@@ -33,7 +33,7 @@ export const fetchLsp8Assets = async (
 
   const assets: Asset[] = await Promise.all(
     tokensIds.map(async tokenId => {
-      const [collectionMetadata, tokenIdType] = await fetchLsp8Metadata(
+      const [collectionMetadata, tokenIdFormat] = await fetchLsp8Metadata(
         tokenId,
         address
       )
@@ -85,7 +85,7 @@ export const fetchLsp8Assets = async (
         },
         standard: 'LSP8IdentifiableDigitalAsset',
         tokenId,
-        tokenIdType,
+        tokenIdFormat,
         icon,
         iconId,
         images,
