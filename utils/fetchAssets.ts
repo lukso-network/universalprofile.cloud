@@ -41,15 +41,15 @@ export const fetchAssets = async (profileAddress: Address) => {
     } catch (error) {
       throw error
     }
-  } catch (error) {
-    console.error(error)
-  } finally {
+
     profileRepo.saveProfile({
       ...profile.value,
       receivedAssetAddresses: receivedAssets,
       issuedAssetAddresses: issuedAssets,
     })
-
+  } catch (error) {
+    console.error(error)
+  } finally {
     isLoadingAssets.value = false
   }
 }
