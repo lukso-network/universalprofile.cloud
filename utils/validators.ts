@@ -10,12 +10,10 @@ const { isAddress } = web3utils // need to import like this due to CommonJS modu
  * @returns - throws an error if the value is not an address
  */
 export function assertAddress(
-  value?: string,
+  value: unknown,
   name = ''
 ): asserts value is Address {
-  if (!value) {
-    throw Error(`missing ${name} address`)
-  }
+  assertString(value)
 
   if (!isAddress(value)) {
     throw Error(`${value} is not an ${name} address`)
@@ -31,18 +29,29 @@ export function assertAddress(
  * @returns - throws an error if the value is not an array of addresses
  */
 export function assertAddresses(
-  value?: string[],
+  value: unknown,
   name = ''
 ): asserts value is Address[] {
-  if (!value) {
-    throw Error(`missing addresses`)
-  }
-
-  if (!Array.isArray(value)) {
-    throw Error(`is not an ${name} array`)
-  }
+  assertArray(value, name)
 
   return value.forEach(value => assertAddress(value, name))
+}
+
+/**
+ * Ensures that the given value is an array,
+ * otherwise throws an error.
+ *
+ * @param value - the value to check
+ * @param name - the name of the value
+ * @returns - throws an error if the value is not an array
+ */
+export function assertArray(
+  value: unknown,
+  name = ''
+): asserts value is Array<any> {
+  if (!Array.isArray(value)) {
+    throw Error(`${value} is not an ${name} array`)
+  }
 }
 
 /**
@@ -52,7 +61,7 @@ export function assertAddresses(
  * @param value - the value to check
  * @returns - throws an error if the value is not a string
  */
-export function assertString(value: any): asserts value is string {
+export function assertString(value: unknown): asserts value is string {
   if (typeof value !== 'string') {
     throw Error(`${value} is not a string`)
   }

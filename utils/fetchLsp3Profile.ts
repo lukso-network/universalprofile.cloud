@@ -12,14 +12,8 @@ export const fetchLsp3Profile = async (
     profileAddress,
     LSP3ProfileMetadata as ERC725JSONSchema[]
   )
-  const getData = (await fetchLsp3ProfileData(profileAddress))[0]
-  const profileData = await erc725.fetchData([
-    'LSP3Profile',
-    'LSP5ReceivedAssets[]',
-    'LSP12IssuedAssets[]',
-  ])
-
-  const [profileMetadata, receivedAssets, issuedAssets] = profileData
+  const getData = await fetchLsp3ProfileData(profileAddress)
+  const profileMetadata = await erc725.fetchData('LSP3Profile')
 
   // NOTE: Some profiles have been encoded with keccak256(bytes) instead of keccak256(utf8)
   // This little trick allows a smooth transition to the new encoding
@@ -63,8 +57,6 @@ export const fetchLsp3Profile = async (
     backgroundImage,
     profileImageId,
     backgroundImageId,
-    receivedAssetAddresses: receivedAssets.value as Address[],
-    issuedAssetAddresses: issuedAssets.value as Address[],
     hash,
     verification,
   }
@@ -76,11 +68,7 @@ export const fetchLsp3ProfileData = async (profileAddress: string) => {
     profileAddress,
     LSP3ProfileMetadata as ERC725JSONSchema[]
   )
-  const profileData = await erc725.getData([
-    'LSP3Profile',
-    'LSP5ReceivedAssets[]',
-    'LSP12IssuedAssets[]',
-  ])
+  const profileData = await erc725.getData('LSP3Profile')
 
   return profileData
 }
