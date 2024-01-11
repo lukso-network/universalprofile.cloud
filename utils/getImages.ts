@@ -4,7 +4,7 @@ import type { ImageMetadata } from '@lukso/lsp-smart-contracts'
 import type { Asset } from '@/models/asset'
 import type { Image } from '@/models/image'
 
-type ImageObjectCache = { encodedImage: Base64EncodedImage; url: string }
+type ImageObjectCache = { encodedImage?: Base64EncodedImage; url: string }
 
 const convertBlobToBase64 = (blob: Blob) =>
   new Promise((resolve, reject) => {
@@ -145,19 +145,33 @@ export const getCachedImageUrl = async (image?: Image) => {
   }
 
   const imageUrl = resolveUrl(image.url)
-  const cachedImage = await cache.match(imageUrl)
+  let cacheUrl = imageUrl
+
+  // some images url contain base64 encoded file instead of url
+  // those images don't need to be fetched but we need to provide fake url for cache
+  if (imageUrl.startsWith('data:')) {
+    cacheUrl = `https://fake.com/${imageUrl.split(',')[1].slice(0, 40)}`
+  }
+
+  const cachedImage = await cache.match(cacheUrl)
 
   if (cachedImage) {
     const imageObjectCache: ImageObjectCache = await cachedImage.json()
     return imageObjectCache.encodedImage
   } else {
-    const fetchedImage = await fetchAndConvertImage(imageUrl)
     const imageObjectCache: ImageObjectCache = {
-      encodedImage: fetchedImage,
-      url: imageUrl,
+      url: cacheUrl,
     }
+
+    if (imageUrl.startsWith('data:')) {
+      imageObjectCache.encodedImage = imageUrl as Base64EncodedImage
+    } else {
+      const fetchedImage = await fetchAndConvertImage(imageUrl)
+      imageObjectCache.encodedImage = fetchedImage
+    }
+
     await cache.put(
-      imageUrl,
+      cacheUrl,
       new Response(JSON.stringify(imageObjectCache), {
         headers: {
           'Content-Length': imageObjectCache.encodedImage.length.toString(),
