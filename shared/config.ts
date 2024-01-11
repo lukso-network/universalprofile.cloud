@@ -27,7 +27,7 @@ export const NETWORKS: NetworkInfo[] = [
     id: 'mainnet',
     name: 'LUKSO Mainnet',
     chainId: MAINNET_CHAIN_ID,
-    rpcHttp: 'https://rpc.mainnet.lukso.network',
+    rpcHttp: 'https://rpc.lukso.gateway.fm',
     token: {
       symbol: 'LYX',
       supply: toWei('42000000', 'ether'),
