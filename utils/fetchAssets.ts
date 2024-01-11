@@ -18,38 +18,35 @@ export const fetchAssets = async (profileAddress: Address) => {
 
   // we split LSP5 and LSP12 into separate catch blocks so we can handle them individually and even if
   // one fails, the other is still handled.
+  isLoadingAssets.value = true
+
   try {
-    isLoadingAssets.value = true
+    receivedAssets = (await erc725.fetchData('LSP5ReceivedAssets[]'))?.value
+    assertArray(receivedAssets)
+    assertAddresses(receivedAssets)
 
-    try {
-      receivedAssets = (await erc725.fetchData('LSP5ReceivedAssets[]'))?.value
-      assertArray(receivedAssets)
-      assertAddresses(receivedAssets)
-
-      receivedAssets &&
-        (await assetRepo.loadAssets(receivedAssets, profileAddress))
-    } catch (error) {
-      throw error
-    }
-
-    try {
-      issuedAssets = (await erc725.fetchData('LSP12IssuedAssets[]'))?.value
-      assertArray(issuedAssets)
-      assertAddresses(issuedAssets)
-
-      issuedAssets && (await assetRepo.loadAssets(issuedAssets, profileAddress))
-    } catch (error) {
-      throw error
-    }
-
+    await assetRepo.loadAssets(receivedAssets, profileAddress)
     profileRepo.saveProfile({
       ...profile.value,
       receivedAssetAddresses: receivedAssets,
+    })
+  } catch (error) {
+    console.error(error)
+  }
+
+  try {
+    issuedAssets = (await erc725.fetchData('LSP12IssuedAssets[]'))?.value
+    assertArray(issuedAssets)
+    assertAddresses(issuedAssets)
+
+    await assetRepo.loadAssets(issuedAssets, profileAddress)
+    profileRepo.saveProfile({
+      ...profile.value,
       issuedAssetAddresses: issuedAssets,
     })
   } catch (error) {
     console.error(error)
-  } finally {
-    isLoadingAssets.value = false
   }
+
+  isLoadingAssets.value = false
 }
