@@ -96,8 +96,10 @@ const setupViewedProfile = async () => {
   // verify profile address
   if (profileAddress) {
     if (!isAddress(profileAddress)) {
-      navigateTo(notFoundRoute())
+      return navigateTo(notFoundRoute())
     }
+  } else {
+    return
   }
 
   // fetch profile metadata
