@@ -6,6 +6,7 @@ import type { Asset } from '@/models/asset'
 
 const { isLoadingProfile, isLoadingAssets, assetFilter, isLoadedApp } =
   storeToRefs(useAppStore())
+const { viewedProfile } = useViewedProfile()
 const assetRepository = useRepo(AssetRepository)
 const tokensOwned = ref<Asset[]>()
 const tokensCreated = ref<Asset[]>()
@@ -14,7 +15,9 @@ const nftsCreated = ref<Asset[]>()
 
 // tokens
 const ownedTokensCount = computed(
-  () => (tokensOwned.value?.length || 0) + 1 // we +1 for LYX token that we show even with 0 balance
+  () =>
+    (tokensOwned.value?.length || 0) +
+    (viewedProfile.value?.balance !== '0' ? 1 : 0) // +1 if user has LYX token
 )
 
 const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
