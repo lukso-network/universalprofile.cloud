@@ -10,7 +10,7 @@ declare module '#app' {
   }
 }
 
-declare module '@vue/runtime-core' {
+declare module 'vue' {
   interface ComponentCustomProperties {
     $formatMessage(key: string, options?: Record<string, string>): string
     $formatNumber(value: string | number, options?: FormatNumberOptions): string

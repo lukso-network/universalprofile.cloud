@@ -13,7 +13,7 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   const assetBalanceBN = new BigNumber(
     `${fromWeiWithDecimals(asset.value?.balance || '0', asset.value?.decimals)}`
   )
-  const maxDecimalPlaces = 6
+  const maxDecimalPlaces = asset.value?.decimals
 
   // check for allowed keys or if user press CMD+A
   if (allowedKeys.includes(key) || (event.metaKey && key === 'a')) {

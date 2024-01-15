@@ -3,6 +3,7 @@ import {
   assertAddress,
   assertAddresses,
   assertString,
+  assertArray,
 } from '../../../utils/validators'
 
 test.describe('assertAddress', () => {
@@ -18,9 +19,11 @@ test.describe('assertAddress', () => {
 
   test('throw when address is missing', async ({ page }) => {
     try {
-      assertAddress()
+      assertAddress(undefined)
     } catch (error) {
-      expect((error as unknown as Error).message).toBe(`missing  address`)
+      expect((error as unknown as Error).message).toBe(
+        `undefined is not a string`
+      )
     }
   })
 
@@ -47,9 +50,11 @@ test.describe('assertAddresses', () => {
 
   test('throw when address is missing', async ({ page }) => {
     try {
-      assertAddresses()
+      assertAddresses(undefined)
     } catch (error) {
-      expect((error as unknown as Error).message).toBe(`missing addresses`)
+      expect((error as unknown as Error).message).toBe(
+        `undefined is not an  array`
+      )
     }
   })
 
@@ -84,5 +89,21 @@ test.describe('assertString', () => {
 
   test('pass when value is a string', async ({ page }) => {
     expect(assertString('asdf')).toBeUndefined()
+  })
+})
+
+test.describe('assertArray', () => {
+  test('throw when value is not array', async ({ page }) => {
+    try {
+      assertArray(123, 'users')
+    } catch (error) {
+      expect((error as unknown as Error).message).toBe(
+        `123 is not an users array`
+      )
+    }
+  })
+
+  test('pass when value is an array', async ({ page }) => {
+    expect(assertArray([1, 2, 'asdf'])).toBeUndefined()
   })
 })

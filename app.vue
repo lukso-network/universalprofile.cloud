@@ -91,23 +91,33 @@ const setupCurrencies = async () => {
 }
 
 const setupViewedProfile = async () => {
-  try {
-    const profileAddress = useRouter().currentRoute.value.params?.profileAddress
+  const profileAddress = useRouter().currentRoute.value.params?.profileAddress
 
-    if (profileAddress) {
-      if (isAddress(profileAddress)) {
-        await fetchProfile(profileAddress)
-        await fetchAssets(profileAddress)
-      } else {
-        navigateTo(notFoundRoute())
-      }
+  // verify profile address
+  if (profileAddress) {
+    if (!isAddress(profileAddress)) {
+      return navigateTo(notFoundRoute())
     }
+  } else {
+    return
+  }
+
+  // fetch profile metadata
+  try {
+    await fetchProfile(profileAddress)
   } catch (error: unknown) {
     console.error(error)
 
     if (error instanceof EoAError) {
       navigateTo(notFoundRoute()) // TODO we might want to inform user about EoA instead showing 404
     }
+  }
+
+  // fetch asset metadata
+  try {
+    await fetchAssets(profileAddress)
+  } catch (error) {
+    console.error(error)
   }
 }
 
