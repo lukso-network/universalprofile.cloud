@@ -1,6 +1,6 @@
 import LSP8IdentifiableDigitalAssetSchema from '@erc725/erc725.js/schemas/LSP8IdentifiableDigitalAsset.json'
 import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
-import { hexToUtf8, type AbiItem } from 'web3-utils'
+import { hexToUtf8, type AbiItem, hexToNumber } from 'web3-utils'
 import {
   ERC725YDataKeys,
   LSP8_TOKEN_ID_FORMAT,
@@ -29,7 +29,10 @@ export const fetchLsp8Metadata = async (
     const tokenIdFormat = Number(lsp8DigitalAsset.value)
 
     if (supportedTokenIdFormats.includes(tokenIdFormat)) {
-      return [await getLsp8Metadata(assetAddress, tokenId), tokenIdFormat]
+      return [
+        await getLsp8Metadata(assetAddress, tokenId, tokenIdFormat),
+        tokenIdFormat,
+      ]
     } else {
       throw new Error(
         `Unsupported LSP8 tokenIdFormat '${tokenIdFormat}' for '${assetAddress}' asset`
@@ -99,7 +102,11 @@ const getLsp4Metadata = async (assetAddress: string, tokenId: string) => {
  * @param tokenId - token id
  * @returns
  */
-const getLsp8Metadata = async (assetAddress: string, tokenId: string) => {
+const getLsp8Metadata = async (
+  assetAddress: string,
+  tokenId: string,
+  tokenIdFormat: number
+) => {
   let getData: URLDataWithHash
   let url: string
 
@@ -125,9 +132,30 @@ const getLsp8Metadata = async (assetAddress: string, tokenId: string) => {
         ? getData?.url
         : hexToUtf8(getData?.verification.data) + getData?.url
 
+    // decode token Id based on format
+    const tokenIdParsed = (tokenId: string, tokenIdFormat: number) => {
+      switch (tokenIdFormat) {
+        case LSP8_TOKEN_ID_FORMAT.STRING:
+          return hexToUtf8(tokenId)
+        case LSP8_TOKEN_ID_FORMAT.NUMBER:
+          return hexToNumber(tokenId)
+        default:
+          return tokenId
+      }
+    }
+
     // in order to get full url we combine URI it with tokenId
-    url = uri + hexToUtf8(tokenId)
+    // we also resolve url as uri might be ipfs link
+    url = resolveUrl(uri + tokenIdParsed(tokenId, tokenIdFormat))
   }
+
+  console.debug('LSP8 metadata', {
+    url,
+    tokenId,
+    tokenIdFormat,
+    assetAddress,
+  })
+
   // fetch json file
   const lsp8Metadata = await fetch(url).then(response => response.json())
 
