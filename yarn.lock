@@ -836,6 +836,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@erc725/erc725.js@patch:@erc725/erc725.js@npm%3A0.22.0#~/.yarn/patches/@erc725-erc725.js-npm-0.22.0-62ea381c5d.patch":
+  version: 0.22.0
+  resolution: "@erc725/erc725.js@patch:@erc725/erc725.js@npm%3A0.22.0#~/.yarn/patches/@erc725-erc725.js-npm-0.22.0-62ea381c5d.patch::version=0.22.0&hash=06621d"
+  dependencies:
+    add: "npm:^2.0.6"
+    ethereumjs-util: "npm:^7.1.5"
+    web3-eth-abi: "npm:^1.10.0"
+    web3-providers-http: "npm:^1.10.0"
+    web3-utils: "npm:^1.10.0"
+  checksum: c7186a82370872840b794271139ca043a65730ad410448965e9f14c3e08d38d19eb123d8db9d4a67d939e66af99935ca17f5f83b9e3b09f49e638db11b53367c
+  languageName: node
+  linkType: hard
+
 "@erc725/smart-contracts@npm:^6.0.0":
   version: 6.0.0
   resolution: "@erc725/smart-contracts@npm:6.0.0"
@@ -16429,7 +16442,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wallet.universalprofile.cloud@workspace:."
   dependencies:
-    "@erc725/erc725.js": "npm:0.22.0"
+    "@erc725/erc725.js": "patch:@erc725/erc725.js@npm%3A0.22.0#~/.yarn/patches/@erc725-erc725.js-npm-0.22.0-62ea381c5d.patch"
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
     "@formatjs/intl": "npm:^2.9.9"
     "@lukso/lsp-smart-contracts": "npm:0.14.0"
