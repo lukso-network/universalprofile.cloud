@@ -86,8 +86,8 @@ export const DEFAULT_CURRENCY_SYMBOL = 'USD'
 // list of currencies to fetch from the api
 export const CURRENCY_API_SYMBOLS = ['USD', 'EUR', 'GBP', 'PLN']
 
-// atm cryptocompare only supports LYXE token, swap to LYX when got avail
-export const CURRENCY_API_LYX_TOKEN_NAME = 'LYXE'
+// token to compare
+export const CURRENCY_API_LYX_TOKEN_NAME = 'LYX'
 
 // currency cache expiry time in minutes
 export const CURRENCY_CACHE_EXPIRY_IN_MINUTES = 60
