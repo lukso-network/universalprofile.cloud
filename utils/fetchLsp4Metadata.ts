@@ -20,7 +20,6 @@ export const fetchLsp4Metadata = async (
       'LSP4TokenSymbol',
       'LSP4Metadata',
     ])
-    console.log(lsp4DigitalAsset)
 
     const name =
       typeof lsp4DigitalAsset[0]?.value === 'string'
@@ -35,24 +34,6 @@ export const fetchLsp4Metadata = async (
     )
     return [name, symbol, metadata]
   } catch (error) {
-    for (const key of ['LSP4TokenName', 'LSP4TokenSymbol', 'LSP4Metadata']) {
-      try {
-        const lsp4DigitalAsset = await erc725.fetchData([key])
-        console.log(lsp4DigitalAsset)
-      } catch (error) {
-        console.error('Unable to read', key, error)
-        try {
-          console.log('getData', await erc725.fetchData(key))
-        } catch {
-          // Ignore
-        }
-        try {
-          await erc725.fetchData([key])
-        } catch {
-          // Ignore
-        }
-      }
-    }
     console.error(error)
     return [
       '',

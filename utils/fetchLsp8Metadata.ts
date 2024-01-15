@@ -176,7 +176,7 @@ const getLsp8Metadata = async (
       }
     }
     return response.json().catch(error => {
-      console.error(error, response.status, response.statusText)
+      console.error(url, error, response.status, response.statusText)
       throw new Error('Unable to parse json')
     })
   })

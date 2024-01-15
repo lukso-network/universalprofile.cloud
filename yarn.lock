@@ -838,14 +838,14 @@ __metadata:
 
 "@erc725/erc725.js@patch:@erc725/erc725.js@npm%3A0.22.0#~/.yarn/patches/@erc725-erc725.js-npm-0.22.0-62ea381c5d.patch":
   version: 0.22.0
-  resolution: "@erc725/erc725.js@patch:@erc725/erc725.js@npm%3A0.22.0#~/.yarn/patches/@erc725-erc725.js-npm-0.22.0-62ea381c5d.patch::version=0.22.0&hash=06621d"
+  resolution: "@erc725/erc725.js@patch:@erc725/erc725.js@npm%3A0.22.0#~/.yarn/patches/@erc725-erc725.js-npm-0.22.0-62ea381c5d.patch::version=0.22.0&hash=599612"
   dependencies:
     add: "npm:^2.0.6"
     ethereumjs-util: "npm:^7.1.5"
     web3-eth-abi: "npm:^1.10.0"
     web3-providers-http: "npm:^1.10.0"
     web3-utils: "npm:^1.10.0"
-  checksum: c7186a82370872840b794271139ca043a65730ad410448965e9f14c3e08d38d19eb123d8db9d4a67d939e66af99935ca17f5f83b9e3b09f49e638db11b53367c
+  checksum: 21f7c4ad72bae328ac7aed976acdf5e68cee3c823137d39cd4a9bfa05cd795e40af683d4c1b8c2ebe45090e57ac142e936c7dc89e63db313aa4560715db6a422
   languageName: node
   linkType: hard
 
