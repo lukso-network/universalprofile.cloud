@@ -126,27 +126,33 @@ const getLsp8Metadata = async (
     url = resolveUrl(getData.url)
   } else {
     getData = await getLsp8TokenMetadataBaseUri(assetAddress)
+    // TODO we can get rid of this after erc725 release
     const uri =
       !getData?.verification.method ||
       getData?.verification.method === 'unknown'
         ? getData?.url
         : hexToUtf8(getData?.verification.data) + getData?.url
 
+    // TODO add support for mixed formats
+
     // decode token Id based on format
     const tokenIdParsed = (tokenId: string, tokenIdFormat: number) => {
       switch (tokenIdFormat) {
         case LSP8_TOKEN_ID_FORMAT.STRING:
-          return hexToUtf8(tokenId)
+          return hexToUtf8(tokenId) // decode hex value to string
         case LSP8_TOKEN_ID_FORMAT.NUMBER:
-          return hexToNumber(tokenId)
+          return hexToNumber(tokenId).toString() // convert hex value to number
+        case LSP8_TOKEN_ID_FORMAT.UNIQUE_ID:
+        case LSP8_TOKEN_ID_FORMAT.HASH:
+          return tokenId.slice(2) // remove 0x from uid/hash token ids
         default:
           return tokenId
       }
     }
 
-    // in order to get full url we combine URI it with tokenId
+    // in order to get full url we combine URI it with tokenId (must be lowercased)
     // we also resolve url as uri might be ipfs link
-    url = resolveUrl(uri + tokenIdParsed(tokenId, tokenIdFormat))
+    url = resolveUrl(uri + tokenIdParsed(tokenId, tokenIdFormat).toLowerCase())
   }
 
   console.debug('LSP8 metadata', {
@@ -157,7 +163,24 @@ const getLsp8Metadata = async (
   })
 
   // fetch json file
-  const lsp8Metadata = await fetch(url).then(response => response.json())
+  const lsp8Metadata = await fetch(resolveUrl(url)).then(async response => {
+    if (!response.ok) {
+      let text: any = (await response.text()) || response.statusText
+      if (text) {
+        try {
+          text = JSON.parse(text)
+          text = text.message || text.error || text
+        } catch {
+          // Ignore
+        }
+        throw new Error(text)
+      }
+    }
+    return response.json().catch(error => {
+      console.error(error, response.status, response.statusText)
+      throw new Error('Unable to parse json')
+    })
+  })
 
   return validateLsp4MetaData(lsp8Metadata)
 }
