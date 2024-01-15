@@ -166,15 +166,21 @@ export const getCachedImageUrl = async (image?: Image) => {
     if (imageUrl.startsWith('data:')) {
       imageObjectCache.encodedImage = imageUrl as Base64EncodedImage
     } else {
-      const fetchedImage = await fetchAndConvertImage(imageUrl)
-      imageObjectCache.encodedImage = fetchedImage
+      try {
+        const fetchedImage = await fetchAndConvertImage(imageUrl)
+
+        imageObjectCache.encodedImage = fetchedImage
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     await cache.put(
       cacheUrl,
       new Response(JSON.stringify(imageObjectCache), {
         headers: {
-          'Content-Length': imageObjectCache.encodedImage.length.toString(),
+          'Content-Length':
+            imageObjectCache.encodedImage?.length.toString() || '0',
         },
       })
     )

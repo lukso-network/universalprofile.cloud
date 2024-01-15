@@ -4,7 +4,6 @@ import { type Asset, AssetModel } from '@/models/asset'
 import { ImageRepository } from './image'
 
 import type { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
-import type { InterfaceId } from '@/types/assets'
 
 export class AssetRepository extends Repository<AssetModel> {
   async loadAssets(addresses: Address[], profileAddress: Address) {
@@ -129,6 +128,7 @@ export class AssetRepository extends Repository<AssetModel> {
 
   getOwnedAssets() {
     const { viewedProfile } = useViewedProfile()
+    const { connectedProfile } = useConnectedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
     if (!viewedProfile.value?.receivedAssetAddresses) {
@@ -137,13 +137,12 @@ export class AssetRepository extends Repository<AssetModel> {
 
     return this.repo(AssetModel)
       .where('address', viewedProfile.value.receivedAssetAddresses)
-      .where('standard', (standard: InterfaceId) => standard)
       .where('chainId', selectedChainId.value)
       .where((asset: Asset) => {
         return (
           asset?.standard === 'LSP7DigitalAsset' ||
           (asset?.standard === 'LSP8IdentifiableDigitalAsset' &&
-            asset?.owner === viewedProfile.value?.address)
+            asset?.owner === connectedProfile.value?.address)
         )
       })
       .get()
