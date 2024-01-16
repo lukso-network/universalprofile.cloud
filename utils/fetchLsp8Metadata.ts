@@ -125,13 +125,12 @@ const getLsp8Metadata = async (
     getData = decode[0].value as URLDataWithHash
     url = resolveUrl(getData.url)
   } else {
+    const { url: uri } = await getLsp8TokenMetadataBaseUri(assetAddress)
+
+    if (!uri) {
+      throw new Error('LSP8TokenMetadataBaseURI is empty')
+    }
     getData = await getLsp8TokenMetadataBaseUri(assetAddress)
-    // TODO we can get rid of this after erc725 release
-    const uri =
-      !getData?.verification.method ||
-      getData?.verification.method === 'unknown'
-        ? getData?.url
-        : hexToUtf8(getData?.verification.data) + getData?.url
 
     // TODO add support for mixed formats
 
@@ -177,7 +176,7 @@ const getLsp8Metadata = async (
       }
     }
     return response.json().catch(error => {
-      console.error(error, response.status, response.statusText)
+      console.error(url, error, response.status, response.statusText)
       throw new Error('Unable to parse json')
     })
   })
