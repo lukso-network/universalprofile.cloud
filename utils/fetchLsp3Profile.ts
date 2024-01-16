@@ -4,6 +4,7 @@ import { Buffer } from 'buffer'
 import type { ERC725JSONSchema } from '@erc725/erc725.js'
 import type { Profile } from '@/models/profile'
 
+// TODO not needed probably
 export const fetchLsp3Profile = async (
   profileAddress: Address
 ): Promise<Profile> => {

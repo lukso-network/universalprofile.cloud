@@ -53,7 +53,7 @@ const routerBackProfileLoad = async () => {
           assertString(toProfileAddress)
           assertAddress(toProfileAddress, 'profile')
           if (toProfileAddress !== fromProfileAddress) {
-            await fetchProfile(toProfileAddress)
+            await fetchAndStoreProfile(toProfileAddress)
             await fetchAssets(toProfileAddress)
           }
         } catch (error) {
@@ -104,7 +104,7 @@ const setupViewedProfile = async () => {
 
   // fetch profile metadata
   try {
-    await fetchProfile(profileAddress)
+    await fetchAndStoreProfile(profileAddress)
   } catch (error: unknown) {
     console.error(error)
 
