@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const { connectedProfile } = useConnectedProfile()
-const { profile } = useProfile(connectedProfile.value?.address)
 const { asset, receiver, receiverError, amount, onSend } =
   storeToRefs(useSendStore())
 const { isLoadedApp } = storeToRefs(useAppStore())
@@ -29,8 +28,8 @@ const handleBack = () => {
 <template>
   <lukso-card
     variant="profile-2"
-    :background-url="profile?.backgroundImage?.url"
-    :profile-url="profile?.profileImage?.url"
+    :background-url="connectedProfile?.backgroundImage?.url"
+    :profile-url="connectedProfile?.profileImage?.url"
     :profile-address="connectedProfile?.address"
     is-full-width
   >
