@@ -16,7 +16,6 @@ export enum STORAGE_KEY {
 
 export enum CACHE_KEY {
   CURRENCY_CACHE = 'LW:currency',
-  IMAGE_CACHE = 'LW:images',
 }
 
 // We use ?referrer=XXX in the URL queries to enable/disable specific features

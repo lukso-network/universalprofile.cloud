@@ -2,12 +2,11 @@
 import type { Creator } from '@/models/creator'
 
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
-const { connectedProfile, profileImageUrl } = useConnectedProfile()
+const { connectedProfile } = useConnectedProfile()
 const { isConnected, isLoadingAssets, isLoadedApp } = storeToRefs(useAppStore())
 const { asset } = useAsset(tokenAddress)
 const creators = ref<Creator[]>([])
 const creatorsRepo = useRepo(CreatorRepository)
-const iconUrl = ref<string>()
 
 watchEffect(async () => {
   creators.value =
@@ -18,10 +17,6 @@ watchEffect(async () => {
         asset.value?.tokenId
       )
     }) || []
-
-  iconUrl.value =
-    (await getAssetThumb(asset.value, isLsp7(asset.value))) ||
-    ASSET_ICON_PLACEHOLDER_URL
 })
 
 const handleSendAsset = (event: Event) => {
@@ -59,7 +54,10 @@ const handleSendAsset = (event: Event) => {
             <lukso-profile
               v-if="asset"
               size="large"
-              :profile-url="iconUrl"
+              :profile-url="
+                getAssetThumb(asset, isLsp7(asset)) ||
+                ASSET_ICON_PLACEHOLDER_URL
+              "
               class="rounded-full shadow-neutral-above-shadow-1xl"
             ></lukso-profile>
           </div>
@@ -77,7 +75,7 @@ const handleSendAsset = (event: Event) => {
             :balance="asset?.balance"
             :symbol="asset?.symbol"
             :decimals="asset?.decimals"
-            :profile-image-url="profileImageUrl"
+            :profile-image-url="connectedProfile.profileImage?.url"
             :message="$formatMessage('token_details_own')"
           />
 
