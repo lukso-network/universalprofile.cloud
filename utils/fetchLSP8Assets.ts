@@ -67,8 +67,6 @@ export const fetchLsp8Assets = async (
       creators?.forEach(creator => {
         creator?.profile?.address && creatorIds.push(creator.profile.address)
       })
-      const hash = validateHash(getBaseUriData)
-      const verification = validateVerification(getBaseUriData)
 
       return {
         address,
@@ -92,8 +90,6 @@ export const fetchLsp8Assets = async (
         imageIds,
         creators,
         creatorIds,
-        hash,
-        verification,
         owner: profileAddress,
       }
     })

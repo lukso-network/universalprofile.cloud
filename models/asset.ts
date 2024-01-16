@@ -1,7 +1,7 @@
 import { BaseModel } from '@/models/base'
 
 import type { Item } from 'pinia-orm'
-import type { ImageMetadata, LinkMetadata } from '@lukso/lsp-smart-contracts'
+import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
 import type { InterfaceId } from '@/types/assets'
 import type { Image } from '@/models/image'
 import type { Creator } from './creator'
@@ -25,8 +25,6 @@ export class AssetModel extends BaseModel {
       tokenId: this.string(''),
       tokenIdFormat: this.number(null),
       isNativeToken: this.boolean(false),
-      hash: this.string(''),
-      verification: this.attr({}),
       owner: this.string(''),
 
       // foreign keys
@@ -49,8 +47,6 @@ export class AssetModel extends BaseModel {
   declare tokenId?: string
   declare tokenIdFormat?: number
   declare isNativeToken?: boolean
-  declare hash: string
-  declare verification?: ImageMetadata['verification']
   declare owner: Address
 
   declare iconId?: string

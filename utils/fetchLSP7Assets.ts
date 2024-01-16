@@ -49,8 +49,6 @@ export const fetchLsp7Assets = async (
   creators?.forEach(creator => {
     creator?.profile?.address && creatorIds.push(creator.profile.address)
   })
-  const hash = validateHash(getData)
-  const verification = validateVerification(getData)
 
   return {
     address,
@@ -70,7 +68,5 @@ export const fetchLsp7Assets = async (
     creators,
     creatorIds,
     tokenId: '',
-    hash,
-    verification,
   }
 }
