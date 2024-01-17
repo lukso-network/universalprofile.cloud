@@ -49,12 +49,13 @@ const handleSendLyx = () => {
           v-if="
             isConnected &&
             viewedProfile?.address === connectedProfile?.address &&
+            connectedProfile?.balance !== '0' &&
             connectedProfile
           "
         >
           <AssetOwnInfo
             :address="connectedProfile.address"
-            :amount="viewedProfile?.balance"
+            :balance="connectedProfile.balance"
             :symbol="currentNetwork.token.symbol"
             :decimals="ASSET_LYX_DECIMALS"
             :profile-image-url="profileImageUrl"
