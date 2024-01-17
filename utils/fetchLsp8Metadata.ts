@@ -151,7 +151,9 @@ const getLsp8Metadata = async (
 
     // in order to get full url we combine URI it with tokenId (must be lowercased)
     // we also resolve url as uri might be ipfs link
-    url = resolveUrl(uri + tokenIdParsed(tokenId, tokenIdFormat).toLowerCase())
+    url = resolveUrl(
+      uri.trim() + tokenIdParsed(tokenId, tokenIdFormat).toLowerCase()
+    )
   }
 
   console.debug('LSP8 metadata', {
