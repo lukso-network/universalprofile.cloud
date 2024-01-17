@@ -4,44 +4,6 @@ import { type Asset, AssetModel } from '@/models/asset'
 import { ImageRepository } from './image'
 
 export class AssetRepository extends Repository<AssetModel> {
-  async loadAssets(addresses: Address[], profileAddress: Address) {
-    const { selectedChainId } = storeToRefs(useAppStore())
-
-    await Promise.all(
-      addresses.map(async assetAddress => {
-        // we might get multiple assets since LSP8 share same contract
-        const [storageAsset] = this.repo(AssetModel)
-          .where('address', assetAddress)
-          .where('chainId', selectedChainId.value)
-          .get()
-
-        if (storageAsset) {
-          if (storageAsset.standard === 'LSP7DigitalAsset') {
-            // asynchronously fetch token balances
-            fetchLsp7Balance(assetAddress, profileAddress).then(balance => {
-              this.setBalance(assetAddress, balance)
-            })
-          }
-        }
-
-        const fetchedAsset = await fetchAsset(assetAddress, profileAddress)
-
-        if (fetchedAsset?.length) {
-          fetchedAsset && fetchedAsset.length && this.saveAssets(fetchedAsset)
-        } else {
-          console.warn('Asset not found', assetAddress)
-          // we store the asset although it can't be detected so we don't repeat interface check
-          this.saveAssets([
-            {
-              address: assetAddress,
-              tokenId: '',
-            },
-          ])
-        }
-      })
-    )
-  }
-
   async getOwnedTokens() {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())

@@ -16,6 +16,7 @@ export const useAsset = (assetAddress?: Address, tokenId?: string) => {
 
     let storeAsset = assetRepo.getAssetAndImages(assetAddress, tokenId)
 
+    // when we access asset details page directly, then asset might be not loaded
     if (!storeAsset) {
       let fetchedAsset: Asset[]
       isLoadingAssets.value = true

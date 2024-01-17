@@ -49,7 +49,7 @@ const connect = async () => {
     // TODO try to refresh current page based on router params
     await navigateTo(profileRoute(address))
     await fetchAndStoreProfile(address)
-    await fetchAssets(address)
+    await fetchAndStoreAssets(address)
     setConnectionExpiry()
   } catch (error: any) {
     console.error(error)
@@ -94,7 +94,7 @@ const handleAccountsChanged = async (accounts: string[]) => {
       // TODO try to refresh current page based on router params
       await navigateTo(profileRoute(address))
       await fetchAndStoreProfile(address)
-      await fetchAssets(address)
+      await fetchAndStoreAssets(address)
     } catch (error) {
       console.error(error)
     }

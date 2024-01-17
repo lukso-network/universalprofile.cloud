@@ -19,8 +19,8 @@ export const fetchLsp8Assets = async (
 
   let tokensIds = tokensId
 
+  // if we want to get the LSP8 tokens for individual profile
   if (profileAddress) {
-    // profile can have few ids of same LSP8 asset
     tokensIds = await lsp8Contract.methods.tokenIdsOf(profileAddress).call()
   }
 
@@ -37,7 +37,6 @@ export const fetchLsp8Assets = async (
         tokenId,
         address
       )
-      const getBaseUriData = await getLsp8TokenMetadataBaseUri(address)
       const {
         description,
         images: metadataImages,

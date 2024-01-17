@@ -159,7 +159,9 @@ onUnmounted(() => {
 
 useHead({
   bodyAttrs: {
+    // @ts-ignore
     class: computed(() => {
+      // prevent window scroll when modal is open
       if (modal.value?.isOpen) {
         return 'overflow-hidden'
       }

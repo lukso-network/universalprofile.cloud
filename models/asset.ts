@@ -1,8 +1,10 @@
 import { BaseModel } from '@/models/base'
 
 import type { Item } from 'pinia-orm'
-import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
-import type { InterfaceId } from '@/types/assets'
+import type {
+  LSP4DigitalAssetMetadata,
+  LinkMetadata,
+} from '@lukso/lsp-smart-contracts'
 import type { Image } from '@/models/image'
 import type { Creator } from './creator'
 
@@ -41,7 +43,7 @@ export class AssetModel extends BaseModel {
   declare balance?: string
   declare decimals?: number
   declare tokenSupply?: string
-  declare standard?: InterfaceId
+  declare standard?: IndexedAssetType
   declare description?: string
   declare links?: LinkMetadata[]
   declare tokenId?: string
@@ -56,12 +58,24 @@ export class AssetModel extends BaseModel {
   declare icon?: Image
   declare images?: Image[]
   declare creators?: Creator[]
-
-  static piniaOptions = {
-    persist: {
-      key: STORAGE_KEY.ASSET_STORE,
-    },
-  }
 }
 
 export type Asset = Partial<Item<AssetModel>>
+
+export type IndexedAssetType = 'EOA' | 'LSP7DigitalAsset' | 'LSP8DigitalAsset'
+
+export type IndexedAsset = {
+  address: Address
+  type: IndexedAssetType
+  name?: string
+  symbol?: string
+  LSP4Metadata?: LSP4DigitalAssetMetadata
+
+  // not using now this attributes but some will be useful in FE
+  // TODO refactor this later
+  hasTokenName?: boolean
+  hasTokenSymbol?: boolean
+  hasAssetImage?: boolean
+  hasIconImage?: boolean
+  lastUpdatedAt?: string
+}
