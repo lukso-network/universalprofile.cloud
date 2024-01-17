@@ -16,6 +16,7 @@ export const fetchLsp4Creators = async (
   const { contract } = useWeb3(PROVIDERS.RPC)
 
   try {
+    // TODO use erc725 instead
     const creatorsNumber = Number(
       await contract<LSP0ERC725Account>(getDataABI, assetAddress)
         .methods.getData(ERC725YDataKeys.LSP4['LSP4Creators[]'].length)
@@ -28,6 +29,7 @@ export const fetchLsp4Creators = async (
 
     const creators: Creator[] = []
     for (let i = 1; i <= creatorsNumber; i++) {
+      // TODO use erc725 instead
       const creatorAddress = await contract<LSP0ERC725Account>(
         getDataABI,
         assetAddress

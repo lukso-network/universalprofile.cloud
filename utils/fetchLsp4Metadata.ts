@@ -15,7 +15,7 @@ export const fetchLsp4Metadata = async (
   )
 
   try {
-    const lsp4DigitalAsset = await erc725.fetchData([
+    const lsp4DigitalAsset = await erc725.getData([
       'LSP4TokenName',
       'LSP4TokenSymbol',
       'LSP4Metadata',

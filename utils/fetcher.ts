@@ -28,14 +28,16 @@ export const fetcher = async <Response, Request>(config: {
   const response = await fetch(config.url, fetchConfig)
 
   if (!response.ok) {
-    return response
-      .json()
-      .catch(() => {
-        throw new Error(response.status.toString())
-      })
-      .then(message => {
-        throw message
-      })
+    let text: any = (await response.text()) || response.statusText
+    if (text) {
+      try {
+        text = JSON.parse(text)
+        text = text.message || text.error || text
+      } catch {
+        // Ignore
+      }
+      throw new Error(text)
+    }
   }
   return await response.json()
 }

@@ -23,6 +23,7 @@ const isOwned = computed(() => {
     isConnected &&
     connectedProfile &&
     asset.value?.address &&
+    asset.value?.balance &&
     connectedProfile.value?.receivedAssetAddresses?.includes(
       asset.value?.address
     )

@@ -34,6 +34,18 @@ const handleSendAsset = (event: Event) => {
     console.error(error)
   }
 }
+
+const isOwned = computed(() => {
+  return (
+    isConnected &&
+    connectedProfile &&
+    asset.value?.address &&
+    asset.value?.balance !== '0' &&
+    connectedProfile.value?.receivedAssetAddresses?.includes(
+      asset.value?.address
+    )
+  )
+})
 </script>
 
 <template>
@@ -62,16 +74,9 @@ const handleSendAsset = (event: Event) => {
             ></lukso-profile>
           </div>
         </lukso-card>
-        <div
-          v-if="
-            isConnected &&
-            connectedProfile &&
-            asset?.address &&
-            connectedProfile?.receivedAssetAddresses?.includes(asset?.address)
-          "
-        >
+        <div v-if="isOwned">
           <AssetOwnInfo
-            :address="connectedProfile.address"
+            :address="connectedProfile?.address"
             :balance="asset?.balance"
             :symbol="asset?.symbol"
             :decimals="asset?.decimals"
