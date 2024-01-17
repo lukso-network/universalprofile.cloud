@@ -26,17 +26,12 @@ export const fetchProfile = async (profileAddress: Address) => {
   const { $fetchIndexedProfile } = useNuxtApp() as unknown as NuxtApp
   const profileIndexedData = await $fetchIndexedProfile(profileAddress)
 
-  if (!profileIndexedData) {
-    throw new Error('Profile not found in the index')
+  if (!profileIndexedData || profileIndexedData.type !== 'LSP3Profile') {
+    throw new NotFoundIndexError(profileAddress)
   }
 
   try {
     isLoadingProfile.value = true
-
-    // EoA check
-    if (profileIndexedData.type === 'EOA') {
-      throw new EoAError(profileAddress)
-    }
 
     const profile = await createProfileObject(
       profileAddress,
