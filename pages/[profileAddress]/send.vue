@@ -129,7 +129,7 @@ const handleSend = async () => {
           assetRepository.setBalance(asset.value.address, balance)
 
           break
-        case 'LSP8IdentifiableDigitalAsset':
+        case 'LSP8DigitalAsset':
           const nftContract = contract<LSP8IdentifiableDigitalAsset>(
             LSP8Mintable.abi as AbiItem[],
             asset.value?.address

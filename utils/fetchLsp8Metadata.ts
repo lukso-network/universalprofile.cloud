@@ -154,15 +154,8 @@ const getLsp8Metadata = async (
     url = resolveUrl(uri + tokenIdParsed(tokenId, tokenIdFormat).toLowerCase())
   }
 
-  console.debug('LSP8 metadata', {
-    url,
-    tokenId,
-    tokenIdFormat,
-    assetAddress,
-  })
-
   // fetch json file
-  const lsp8Metadata = await fetch(resolveUrl(url)).then(async response => {
+  const metadata = await fetch(resolveUrl(url)).then(async response => {
     if (!response.ok) {
       let text: any = (await response.text()) || response.statusText
       if (text) {
@@ -181,5 +174,13 @@ const getLsp8Metadata = async (
     })
   })
 
-  return validateLsp4MetaData(lsp8Metadata)
+  console.debug('LSP8 metadata', {
+    url,
+    tokenId,
+    tokenIdFormat,
+    assetAddress,
+    metadata,
+  })
+
+  return validateLsp4MetaData(metadata)
 }
