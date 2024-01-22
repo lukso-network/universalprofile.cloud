@@ -1,5 +1,3 @@
-import { AssetFilter } from '@/types/assets'
-
 import type { Modal } from '@/types/modal'
 import type { NetworkInfo, NetworkId } from '@/types/network'
 
@@ -15,7 +13,7 @@ export const useAppStore = defineStore(
     const selectedChainId = ref<string>(DEFAULT_NETWORK_CHAIN_ID)
     const modal = ref<Modal>()
     const connectedProfileAddress = ref<Address>()
-    const assetFilter = ref<AssetFilter>(AssetFilter.owned)
+    const assetFilter = ref(AssetFilter.owned)
     const hasSimpleNavbar = ref<boolean>(false)
 
     // statuses

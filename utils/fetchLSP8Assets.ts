@@ -2,8 +2,6 @@ import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/art
 
 import type { AbiItem } from 'web3-utils'
 import type { LSP8IdentifiableDigitalAsset } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
-import type { Asset } from '@/models/asset'
-import type { ImageMetadataWithRelationships } from '@/types/assets'
 
 export const fetchLsp8Assets = async (
   address: Address,
@@ -80,7 +78,7 @@ export const fetchLsp8Assets = async (
           nft: nftMetadata.LSP4Metadata,
           collection: collectionMetadata,
         },
-        standard: 'LSP8IdentifiableDigitalAsset',
+        standard: 'LSP8DigitalAsset',
         tokenId,
         tokenIdFormat,
         icon,

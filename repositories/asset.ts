@@ -87,7 +87,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .where((asset: Asset) => {
         return (
           asset?.standard === 'LSP7DigitalAsset' ||
-          (asset?.standard === 'LSP8IdentifiableDigitalAsset' &&
+          (asset?.standard === 'LSP8DigitalAsset' &&
             asset?.owner === connectedProfile.value?.address)
         )
       })

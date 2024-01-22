@@ -34,3 +34,11 @@ export class ImageModel extends Model {
 }
 
 export type Image = Partial<Item<ImageModel>>
+
+export type Base64EncodedImage = `data:image/jpeg;base64${string}`
+
+export type ImageMetadataWithRelationships = Partial<ImageMetadata> & {
+  profileId?: Address
+  assetId?: Address
+  id?: string
+}

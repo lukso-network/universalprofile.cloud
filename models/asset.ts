@@ -43,7 +43,7 @@ export class AssetModel extends BaseModel {
   declare balance?: string
   declare decimals?: number
   declare tokenSupply?: string
-  declare standard?: IndexedAssetType
+  declare standard?: AssetType
   declare description?: string
   declare links?: LinkMetadata[]
   declare tokenId?: string
@@ -62,11 +62,19 @@ export class AssetModel extends BaseModel {
 
 export type Asset = Partial<Item<AssetModel>>
 
-export type IndexedAssetType = 'EOA' | 'LSP7DigitalAsset' | 'LSP8DigitalAsset'
+export type AssetType = 'EOA' | 'LSP7DigitalAsset' | 'LSP8DigitalAsset'
+
+export const tokenStandards: AssetType[] = ['LSP7DigitalAsset']
+export const nftStandards: AssetType[] = ['LSP8DigitalAsset']
+
+export const StandardsAbbreviations: { [K in AssetType]?: string } = {
+  LSP7DigitalAsset: 'LSP7',
+  LSP8DigitalAsset: 'LSP8',
+}
 
 export type IndexedAsset = {
   address: Address
-  type: IndexedAssetType
+  type: AssetType
   name?: string
   symbol?: string
   LSP4Metadata?: LSP4DigitalAssetMetadata

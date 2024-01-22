@@ -1,7 +1,3 @@
-import { nftStandards, tokenStandards } from '@/types/assets'
-
-import type { Asset } from '@/models/asset'
-
 export const isLyx = (asset?: Asset) => asset?.isNativeToken
 
 export const isNft = (asset?: Asset) =>
@@ -13,5 +9,4 @@ export const isToken = (asset?: Asset) =>
 
 export const isLsp7 = (asset?: Asset) => asset?.standard === 'LSP7DigitalAsset'
 
-export const isLsp8 = (asset?: Asset) =>
-  asset?.standard === 'LSP8IdentifiableDigitalAsset'
+export const isLsp8 = (asset?: Asset) => asset?.standard === 'LSP8DigitalAsset'

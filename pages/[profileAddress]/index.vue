@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { AssetFilter } from '@/types/assets'
 import { AssetRepository } from '@/repositories/asset'
 
 import type { Asset } from '@/models/asset'

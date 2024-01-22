@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { type Asset } from '@/models/asset'
-import { StandardsAbbreviations } from '@/types/assets'
-
 type Props = {
   asset: Asset
   hasAddress?: boolean
