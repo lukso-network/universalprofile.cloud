@@ -59,6 +59,10 @@ const createProfileObject = async (
 ): Promise<Profile> => {
   const { links, tags, description, name } = metadata || {}
 
+  // links and tags are passed as object instead of array so we need to convert
+  const linksParsed = links && Object.values(links)
+  const tagsParsed = tags && Object.values(tags)
+
   // get best image from collection based on height criteria
   const profileImage =
     metadata?.profileImage &&
@@ -81,8 +85,8 @@ const createProfileObject = async (
     address,
     name,
     balance,
-    links,
-    tags,
+    links: linksParsed,
+    tags: tagsParsed,
     description,
     profileImage,
     backgroundImage,

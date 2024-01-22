@@ -62,6 +62,9 @@ export const createLsp7Object = async (
     creator?.profile?.address && creatorIds.push(creator.profile.address)
   })
 
+  // links are passed as object instead of array so we need to convert
+  const linksParsed = links && Object.values(links)
+
   return {
     address,
     name,
@@ -69,7 +72,7 @@ export const createLsp7Object = async (
     balance,
     decimals,
     tokenSupply,
-    links,
+    links: linksParsed,
     description,
     standard: 'LSP7DigitalAsset',
     icon,
