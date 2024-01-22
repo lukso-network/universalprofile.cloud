@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { connectedProfile } = useConnectedProfile()
-const { currentNetwork, isConnected } = storeToRefs(useAppStore())
+const { currentNetwork, isConnected, isTestnet } = storeToRefs(useAppStore())
 const { viewedProfile } = useViewedProfile()
 const contentRef = ref()
 const logoRef = ref()
@@ -23,6 +23,15 @@ const handleShowLyxDetails = () => {
     navigateTo(lyxDetailsRoute(viewedProfile.value.address))
   } catch (error) {
     console.error(error)
+  }
+}
+
+const handleBuyLyx = (event: Event) => {
+  event.stopPropagation()
+  if (isTestnet.value) {
+    window.open(TESTNET_FAUCET_URL, '_blank')
+  } else {
+    navigateTo(buyLyxRoute())
   }
 }
 
@@ -93,7 +102,21 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <div class="flex w-full justify-end">
+      <div class="flex w-full justify-end gap-2">
+        <lukso-button
+          v-if="
+            isConnected && viewedProfile?.address === connectedProfile?.address
+          "
+          size="small"
+          variant="secondary"
+          @click="handleBuyLyx"
+          class="transition-opacity hover:opacity-70"
+          >{{
+            isTestnet
+              ? $formatMessage('button_get_lyx')
+              : $formatMessage('button_buy_lyx')
+          }}</lukso-button
+        >
         <lukso-button
           v-if="
             isConnected && viewedProfile?.address === connectedProfile?.address
