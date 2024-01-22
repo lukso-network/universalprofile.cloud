@@ -125,7 +125,7 @@ const getLsp8Metadata = async (
     getData = decode[0].value as URLDataWithHash
     url = resolveUrl(getData.url)
   } else {
-    const { url: uri } = await getLsp8TokenMetadataBaseUri(assetAddress)
+    const { url: uri } = (await getLsp8TokenMetadataBaseUri(assetAddress)) || {}
 
     if (!uri) {
       throw new Error('LSP8TokenMetadataBaseURI is empty')
