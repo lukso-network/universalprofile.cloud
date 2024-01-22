@@ -1,8 +1,10 @@
+import { hexToNumber } from 'web3-utils'
+
 import { INDEXER_API_URL, INDEXER_API_VERSION } from '@/shared/config'
 
 export default defineNuxtPlugin(() => {
   const { currentNetwork } = storeToRefs(useAppStore())
-  const chainId = currentNetwork.value.chainId
+  const chainId = hexToNumber(currentNetwork.value.chainId)
 
   /**
    * Generic fetching function for indexed data
@@ -28,6 +30,8 @@ export default defineNuxtPlugin(() => {
   return {
     provide: {
       fetchIndexedProfile: (address: Address) =>
+        fetchIndexedData<IndexedProfile>(address),
+      fetchIndexedAsset: (address: Address) =>
         fetchIndexedData<IndexedProfile>(address),
     },
   }

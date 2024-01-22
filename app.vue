@@ -54,7 +54,7 @@ const routerBackProfileLoad = async () => {
           assertAddress(toProfileAddress, 'profile')
           if (toProfileAddress !== fromProfileAddress) {
             await fetchAndStoreProfile(toProfileAddress)
-            await fetchAssets(toProfileAddress)
+            await fetchAndStoreAssets(toProfileAddress)
           }
         } catch (error) {
           console.error(error)
@@ -105,19 +105,19 @@ const setupViewedProfile = async () => {
   // fetch profile metadata
   try {
     await fetchAndStoreProfile(profileAddress)
+
+    // fetch asset metadata
+    try {
+      await fetchAndStoreAssets(profileAddress)
+    } catch (error) {
+      console.error(error)
+    }
   } catch (error: unknown) {
     console.error(error)
 
-    if (error instanceof EoAError) {
-      navigateTo(notFoundRoute()) // TODO we might want to inform user about EoA instead showing 404
+    if (error instanceof NotFoundIndexError) {
+      navigateTo(notFoundRoute())
     }
-  }
-
-  // fetch asset metadata
-  try {
-    await fetchAssets(profileAddress)
-  } catch (error) {
-    console.error(error)
   }
 }
 
@@ -159,7 +159,9 @@ onUnmounted(() => {
 
 useHead({
   bodyAttrs: {
+    // @ts-ignore
     class: computed(() => {
+      // prevent window scroll when modal is open
       if (modal.value?.isOpen) {
         return 'overflow-hidden'
       }

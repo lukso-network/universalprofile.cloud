@@ -50,14 +50,14 @@ export class ProfileModel extends BaseModel {
 
 export type Profile = Partial<Item<ProfileModel>>
 
-export type ProfileType = 'EOA' | 'LSP3Profile'
+export type IndexedProfileType = 'EOA' | 'LSP3Profile'
 
 // Type of data returned from Algolia, it's not fully covered as some
 // properties are irrelevant
 export type IndexedProfile = {
   address: Address
   LSP3Profile?: LSP3ProfileMetadata
-  type: ProfileType
+  type: IndexedProfileType
 
   // not using now this attributes but some will be useful in FE
   // TODO refactor this later

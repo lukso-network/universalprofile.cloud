@@ -26,17 +26,12 @@ export const fetchProfile = async (profileAddress: Address) => {
   const { $fetchIndexedProfile } = useNuxtApp() as unknown as NuxtApp
   const profileIndexedData = await $fetchIndexedProfile(profileAddress)
 
-  if (!profileIndexedData) {
-    throw new Error('Profile not found in the index')
+  if (!profileIndexedData || profileIndexedData.type !== 'LSP3Profile') {
+    throw new NotFoundIndexError(profileAddress)
   }
 
   try {
     isLoadingProfile.value = true
-
-    // EoA check
-    if (profileIndexedData.type === 'EOA') {
-      throw new EoAError(profileAddress)
-    }
 
     const profile = await createProfileObject(
       profileAddress,
@@ -59,23 +54,31 @@ export const fetchProfile = async (profileAddress: Address) => {
  * @returns
  */
 const createProfileObject = async (
-  profileAddress: Address,
-  profileMetadata?: LSP3ProfileMetadata
+  address: Address,
+  metadata?: LSP3ProfileMetadata
 ): Promise<Profile> => {
-  const { links, tags, description, name } = profileMetadata || {}
+  const { links, tags, description, name } = metadata || {}
+
+  // get best image from collection based on height criteria
   const profileImage =
-    profileMetadata?.profileImage &&
-    createImageObject(Object.values(profileMetadata.profileImage), 96)
+    metadata?.profileImage &&
+    createImageObject(Object.values(metadata.profileImage), 96)
+
+  // get best image from collection based on height criteria
   const backgroundImage =
-    profileMetadata?.backgroundImage &&
-    createImageObject(Object.values(profileMetadata.backgroundImage), 240)
+    metadata?.backgroundImage &&
+    createImageObject(Object.values(metadata.backgroundImage), 240)
+
+  // get profile LYX balance
   const { getBalance } = useWeb3(PROVIDERS.RPC)
-  const balance = await getBalance(profileAddress)
+  const balance = await getBalance(address)
+
+  // create image identifiers so they can be linked in Pinia ORM
   const profileImageId = getHash(profileImage)
   const backgroundImageId = getHash(backgroundImage)
 
   return {
-    address: profileAddress,
+    address,
     name,
     balance,
     links,
