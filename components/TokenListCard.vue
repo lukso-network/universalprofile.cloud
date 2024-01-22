@@ -16,7 +16,6 @@ const contentRef = ref()
 const logoRef = ref()
 const symbolRef = ref()
 const balanceWidthPx = ref(0)
-const iconUrl = ref<string>()
 
 const handleShowAsset = () => {
   try {
@@ -53,10 +52,6 @@ onMounted(async () => {
       GAP
   })
   resizeObserver.observe(contentRef.value)
-
-  iconUrl.value =
-    (await getAssetThumb(props?.asset, isLsp7(props?.asset))) ||
-    ASSET_ICON_PLACEHOLDER_URL
 })
 </script>
 
@@ -76,7 +71,9 @@ onMounted(async () => {
           <lukso-profile
             size="medium"
             :profile-address="asset?.address"
-            :profile-url="iconUrl"
+            :profile-url="
+              getAssetThumb(asset, isLsp7(asset)) || ASSET_ICON_PLACEHOLDER_URL
+            "
             :has-identicon="hasAddress ? 'true' : undefined"
           ></lukso-profile>
           <div

@@ -1,0 +1,34 @@
+import { INDEXER_API_URL, INDEXER_API_VERSION } from '@/shared/config'
+
+export default defineNuxtPlugin(() => {
+  const { currentNetwork } = storeToRefs(useAppStore())
+  const chainId = currentNetwork.value.chainId
+
+  /**
+   * Generic fetching function for indexed data
+   *
+   * @param address - profile or asset address
+   * @returns
+   */
+  const fetchIndexedData = async <T>(address: Address) => {
+    const url = `${INDEXER_API_URL}/${INDEXER_API_VERSION}/${chainId}/address/${address}`
+    const response = await fetcher<T, Record<string, never>>({
+      url,
+      method: 'GET',
+    })
+
+    console.debug('Algolia API response:', {
+      url,
+      response,
+    })
+
+    return response
+  }
+
+  return {
+    provide: {
+      fetchIndexedProfile: (address: Address) =>
+        fetchIndexedData<IndexedProfile>(address),
+    },
+  }
+})

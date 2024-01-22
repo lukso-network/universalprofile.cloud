@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { AssetRepository } from '@/repositories/asset'
-
 import type { Asset } from '@/models/asset'
 
 const { currentNetwork } = useAppStore()
 const { connectedProfile } = useConnectedProfile()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
-const assetRepository = useRepo(AssetRepository)
 const ownedAssets = ref<Asset[]>([])
 
 type Props = {
@@ -14,17 +11,6 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-
-onMounted(async () => {
-  // for each asset we look for cached image
-  for await (const asset of assetRepository.getOwnedAssets()) {
-    const assetWithImage = {
-      ...asset,
-      iconUrl: await getAssetThumb(asset, isToken(asset)),
-    }
-    ownedAssets?.value?.push(assetWithImage)
-  }
-})
 
 const handleSelectLyx = () => {
   assertAddress(connectedProfile.value?.address, 'profile')
@@ -69,7 +55,7 @@ const handleSelectAsset = (asset: Asset) => {
       </li>
       <li v-for="asset in ownedAssets" :key="asset?.address" class="mr-4">
         <AssetListItem
-          :icon="asset?.iconUrl"
+          :icon="getAssetThumb(asset, isLsp7(asset))"
           :name="asset?.name"
           :symbol="asset?.symbol"
           :address="asset?.address"

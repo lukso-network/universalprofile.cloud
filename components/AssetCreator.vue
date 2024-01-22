@@ -6,7 +6,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { profile, profileImageUrl } = useProfile(props.creator?.profile?.address)
+const { profile } = useProfile(props.creator?.profile?.address)
 
 const handleOpenCreator = (event: Event, creator?: Creator) => {
   try {
@@ -27,7 +27,7 @@ const handleOpenCreator = (event: Event, creator?: Creator) => {
   >
     <lukso-profile
       size="x-small"
-      :profile-url="profileImageUrl"
+      :profile-url="profile.profileImage?.url"
     ></lukso-profile>
     <div class="pl-1">
       <div class="paragraph-inter-10-semi-bold text-neutral-60">
