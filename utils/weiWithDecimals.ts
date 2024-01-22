@@ -34,12 +34,26 @@ const UNIT_BASED_ON_DECIMALS_MAP: Units = {
   30: 'tether',
 }
 
+/**
+ * Convert from wei value based on passed decimals
+ *
+ * @param value - value to convert
+ * @param decimals - decimals
+ * @returns
+ */
 export const fromWeiWithDecimals = (value: string, decimals = 18) => {
   const unit: Unit = UNIT_BASED_ON_DECIMALS_MAP[decimals] || DEFAULT_UNIT
 
   return fromWei(value, unit)
 }
 
+/**
+ * Convert to wei value based on passed decimals
+ *
+ * @param value - value to convert
+ * @param decimals - decimals
+ * @returns
+ */
 export const toWeiWithDecimals = (value: string, decimals = 18) => {
   const unit: Unit = UNIT_BASED_ON_DECIMALS_MAP[decimals] || DEFAULT_UNIT
 
