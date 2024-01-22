@@ -26,7 +26,12 @@ const handleBuyLyx = () => {
   if (isTestnet.value) {
     window.open(TESTNET_FAUCET_URL, '_blank')
   } else {
-    navigateTo(buyLyxRoute())
+    try {
+      assertAddress(connectedProfile.value?.address, 'profile')
+      navigateTo(buyLyxRoute(connectedProfile.value.address))
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 </script>
@@ -56,9 +61,8 @@ const handleBuyLyx = () => {
         <div
           v-if="
             isConnected &&
-            viewedProfile?.address === connectedProfile?.address &&
-            connectedProfile?.balance !== '0' &&
-            connectedProfile
+            connectedProfile &&
+            viewedProfile?.address === connectedProfile?.address
           "
         >
           <AssetOwnInfo
@@ -70,28 +74,29 @@ const handleBuyLyx = () => {
             :message="$formatMessage('token_details_own')"
           />
 
-          <lukso-button
-            is-full-width
-            class="mt-12"
-            variant="secondary"
-            @click="handleSendLyx"
-            >{{
-              $formatMessage('token_details_send', {
-                token: currentNetwork.token.symbol,
-              })
-            }}</lukso-button
-          >
-          <lukso-button
-            is-full-width
-            class="mt-4"
-            variant="primary"
-            @click="handleBuyLyx"
-            >{{
-              isTestnet
-                ? $formatMessage('token_details_get_lyx')
-                : $formatMessage('token_details_buy_lyx')
-            }}</lukso-button
-          >
+          <div class="mt-12 flex flex-col gap-2">
+            <lukso-button
+              v-if="connectedProfile?.balance !== '0'"
+              is-full-width
+              variant="secondary"
+              @click="handleSendLyx"
+              >{{
+                $formatMessage('token_details_send', {
+                  token: currentNetwork.token.symbol,
+                })
+              }}</lukso-button
+            >
+            <lukso-button
+              is-full-width
+              variant="primary"
+              @click="handleBuyLyx"
+              >{{
+                isTestnet
+                  ? $formatMessage('token_details_get_lyx')
+                  : $formatMessage('token_details_buy_lyx')
+              }}</lukso-button
+            >
+          </div>
         </div>
       </div>
       <div>

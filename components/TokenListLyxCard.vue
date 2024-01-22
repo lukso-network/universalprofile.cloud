@@ -31,7 +31,12 @@ const handleBuyLyx = (event: Event) => {
   if (isTestnet.value) {
     window.open(TESTNET_FAUCET_URL, '_blank')
   } else {
-    navigateTo(buyLyxRoute())
+    try {
+      assertAddress(connectedProfile.value?.address, 'profile')
+      navigateTo(buyLyxRoute(connectedProfile.value.address))
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 
