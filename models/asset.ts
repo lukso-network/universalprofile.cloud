@@ -64,8 +64,8 @@ export type Asset = Partial<Item<AssetModel>>
 
 export type AssetType = 'EOA' | 'LSP7DigitalAsset' | 'LSP8DigitalAsset'
 
-export const tokenStandards: AssetType[] = ['LSP7DigitalAsset']
-export const nftStandards: AssetType[] = ['LSP8DigitalAsset']
+export const TOKEN_STANDARDS: AssetType[] = ['LSP7DigitalAsset']
+export const NFT_STANDARDS: AssetType[] = ['LSP8DigitalAsset']
 
 export const StandardsAbbreviations: { [K in AssetType]?: string } = {
   LSP7DigitalAsset: 'LSP7',
