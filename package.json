@@ -27,7 +27,7 @@
     "typechain": "typechain --target web3-v1 --out-dir types/contracts/ './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
   },
   "devDependencies": {
-    "@erc725/erc725.js": "^0.22.0",
+    "@erc725/erc725.js": "patch:@erc725/erc725.js@npm%3A0.22.0#~/.yarn/patches/@erc725-erc725.js-npm-0.22.0-62ea381c5d.patch",
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.9",
     "@lukso/lsp-smart-contracts": "0.14.0",
