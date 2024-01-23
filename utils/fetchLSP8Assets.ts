@@ -3,8 +3,9 @@ import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/art
 import type { AbiItem } from 'web3-utils'
 import type { LSP8IdentifiableDigitalAsset } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
 
-export const fetchLsp8Assets = async (
+export const createLsp8Object = async (
   address: Address,
+  indexedAsset?: IndexedAsset,
   profileAddress?: Address,
   tokensId?: string[]
 ): Promise<Asset[]> => {
@@ -13,9 +14,14 @@ export const fetchLsp8Assets = async (
     LSP8IdentifiableDigitalAssetContract.abi as AbiItem[],
     address
   )
-  const tokenSupply = await lsp8Contract.methods.totalSupply().call()
-
   let tokensIds = tokensId
+
+  // from base contract we take only name and symbol, metadata is taken from individual token id's
+  const { name, symbol } = indexedAsset || {}
+
+  // get `tokenSupply` for the asset
+  // TODO get this data from index when it's added
+  const tokenSupply = await lsp8Contract.methods.totalSupply().call()
 
   // if we want to get the LSP8 tokens for individual profile
   if (profileAddress) {
@@ -26,11 +32,9 @@ export const fetchLsp8Assets = async (
     return []
   }
 
-  // nft metadata is the same for all tokens of same asset
-  const [name, symbol, nftMetadata] = await fetchLsp4Metadata(address)
-
   const assets: Asset[] = await Promise.all(
     tokensIds.map(async tokenId => {
+      // TODO fetch from Algolia when token id's are unsupported
       const [collectionMetadata, tokenIdFormat] = await fetchLsp8Metadata(
         tokenId,
         address
@@ -41,29 +45,42 @@ export const fetchLsp8Assets = async (
         icon: metadataIcon,
         links,
       } = collectionMetadata.LSP4Metadata
-      const icon = await createImageObject(metadataIcon, 260)
-      const images: ImageMetadataWithRelationships[] = []
-      const creators = await fetchLsp4Creators(address, tokenId)
 
+      // get best image from collection based on height criteria
+      const icon = createImageObject(metadataIcon, 260)
+
+      // create image identifier so they can be linked in Pinia ORM
+      const iconId = getHash(icon)
+
+      const images: ImageMetadataWithRelationships[] = []
+      const imageIds: string[] = []
+
+      // get best image from collection based on height criteria
       for await (const image of metadataImages) {
-        const convertedImage = await createImageObject(image, 260)
+        const convertedImage = createImageObject(image, 260)
         if (convertedImage) {
           images.push(convertedImage)
         }
       }
 
-      const imageIds: string[] = []
+      // create array of image identifiers so they can be linked in Pinia ORM
       images.forEach(image => {
         const id = getHash(image)
         id && imageIds.push(id)
       })
 
-      const iconId = getHash(icon)
+      // get creator metadata
+      // TODO refactor this to get from index
+      const creators = await fetchLsp4Creators(address, tokenId)
 
+      // create creator identifiers for Pinia ORM
       const creatorIds: Address[] = []
       creators?.forEach(creator => {
         creator?.profile?.address && creatorIds.push(creator.profile.address)
       })
+
+      // links are passed as object instead of array so we need to convert
+      const linksParsed = links && Object.values(links)
 
       return {
         address,
@@ -72,12 +89,8 @@ export const fetchLsp8Assets = async (
         balance: '1', // NFT is always 1
         decimals: 0, // NFT decimals are always 0
         tokenSupply,
-        links,
+        links: linksParsed,
         description,
-        metadata: {
-          nft: nftMetadata.LSP4Metadata,
-          collection: collectionMetadata,
-        },
         standard: 'LSP8DigitalAsset',
         tokenId,
         tokenIdFormat,

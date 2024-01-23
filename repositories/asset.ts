@@ -49,7 +49,7 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     return this.repo(AssetModel)
-      .where('standard', 'LSP8IdentifiableDigitalAsset')
+      .where('standard', 'LSP8DigitalAsset')
       .where('address', viewedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where('owner', viewedProfile.value.address)
@@ -65,7 +65,7 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     return this.repo(AssetModel)
-      .where('standard', 'LSP8IdentifiableDigitalAsset')
+      .where('standard', 'LSP8DigitalAsset')
       .where('address', viewedProfile.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where('owner', viewedProfile.value.address)

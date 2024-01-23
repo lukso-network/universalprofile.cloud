@@ -92,8 +92,12 @@ export const fetchAsset = async (
   // parse data based on the asset type
   switch (assetIndexedData.type) {
     case 'LSP8DigitalAsset': {
-      // TODO rework to Algolia
-      return await fetchLsp8Assets(address, profileAddress, tokenIds)
+      return await createLsp8Object(
+        address,
+        assetIndexedData,
+        profileAddress,
+        tokenIds
+      )
     }
     case 'LSP7DigitalAsset': {
       return [await createLsp7Object(address, assetIndexedData, profileAddress)]
