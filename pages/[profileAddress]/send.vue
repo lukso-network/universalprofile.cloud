@@ -116,7 +116,7 @@ const handleSend = async () => {
             .transfer(
               connectedProfile.value.address,
               receiver.value?.address,
-              toWei(amount.value || '0'),
+              toWeiWithDecimals(amount.value || '0', asset.value?.decimals),
               false,
               '0x'
             )
