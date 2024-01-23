@@ -38,5 +38,3 @@ watchEffect(() => {
     <AppLoader v-if="isLoadingProfile || !isLoadedApp" />
   </div>
 </template>
-
-https://global-stg.transak.com/?apiKey=&network=lukso&defaultCryptoCurrency=LYX&productsAvailed=BUY&fiatCurrency=USD&walletAddress=0xDC2D461bAa36Bc17d3f75425D56faaAa9551A28E&redirectURL=https://universalprofile.cloud/0xDC2D461bAa36Bc17d3f75425D56faaAa9551A28E?network=mainnet
