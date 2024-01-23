@@ -26,7 +26,6 @@ export const discoveryDappUrl = () => {
  * @returns
  */
 export const transakBuyLyxUrl = () => {
-  const { currentCurrencySymbol } = storeToRefs(useCurrencyStore())
   const { connectedProfile } = useConnectedProfile()
   const { currentNetwork } = storeToRefs(useAppStore())
   const { formatMessage } = useIntl()
@@ -37,7 +36,6 @@ export const transakBuyLyxUrl = () => {
     network: 'lukso',
     defaultCryptoCurrency: 'LYX',
     productsAvailed: 'BUY',
-    fiatCurrency: currentCurrencySymbol.value,
     walletAddress: connectedProfile.value?.address,
     redirectURL: `${BASE_WALLET_URL}/${connectedProfile.value?.address}?network=${currentNetwork.value.id}`,
     themeColor: '243542', // neutral-20
