@@ -88,6 +88,7 @@
   "nft_details_own": "You own a token from this Collection",
   "error_wrong_network": "Your browser extension is using different network. In order to continue please switch to {name}.",
   "web3_connect_error": "There was an error while connecting to the browser extension.",
+  "transak_widget_title": "Buy LYX To Your Universal Profile",
   "footer_privacy_policy_text": "Privacy Policy",
   "token_details_get_lyx": "Get LYXt",
   "token_details_images": "Token Images",

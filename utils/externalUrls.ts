@@ -14,6 +14,7 @@ export const transakBuyLyxUrl = () => {
   const { currentCurrencySymbol } = storeToRefs(useCurrencyStore())
   const { connectedProfile } = useConnectedProfile()
   const { currentNetwork } = storeToRefs(useAppStore())
+  const { formatMessage } = useIntl()
 
   const queryParams = {
     apiKey: TRANSAK_API_KEY,
@@ -23,6 +24,8 @@ export const transakBuyLyxUrl = () => {
     fiatCurrency: currentCurrencySymbol.value,
     walletAddress: connectedProfile.value?.address,
     redirectURL: `${BASE_WALLET_URL}/${connectedProfile.value?.address}?network=${currentNetwork.value.id}`,
+    themeColor: '243542', // neutral-20
+    exchangeScreenTitle: formatMessage('transak_widget_title'),
   }
 
   const queryParamsString = Object.entries(queryParams)
