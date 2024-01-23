@@ -124,6 +124,7 @@ export default defineNuxtConfig({
       SENTRY_ENABLED: process.env.NUXT_PUBLIC_SENTRY_ENABLED,
       SENTRY_DSN: process.env.NUXT_PUBLIC_SENTRY_DSN,
       SENTRY_ENVIRONMENT: process.env.NUXT_PUBLIC_SENTRY_ENVIRONMENT,
+      TRANSAK_API_KEY: process.env.NUXT_PUBLIC_TRANSAK_API_KEY,
     },
   },
 })

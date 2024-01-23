@@ -15,9 +15,10 @@ export const transakBuyLyxUrl = () => {
   const { connectedProfile } = useConnectedProfile()
   const { currentNetwork } = storeToRefs(useAppStore())
   const { formatMessage } = useIntl()
+  const { $config } = useNuxtApp()
 
   const queryParams = {
-    apiKey: TRANSAK_API_KEY,
+    apiKey: $config.public.TRANSAK_API_KEY,
     network: 'lukso',
     defaultCryptoCurrency: 'LYX',
     productsAvailed: 'BUY',
