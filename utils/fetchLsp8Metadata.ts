@@ -139,7 +139,7 @@ const getLsp8Metadata = async (
       switch (tokenIdFormat) {
         case LSP8_TOKEN_ID_FORMAT.STRING:
           // decode hex value to string
-          return hexToUtf8(tokenId)
+          return encodeURI(hexToUtf8(tokenId))
         case LSP8_TOKEN_ID_FORMAT.NUMBER:
           // convert hex value to number
           return hexToNumber(tokenId).toString()
