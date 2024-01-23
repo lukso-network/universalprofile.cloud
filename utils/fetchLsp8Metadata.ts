@@ -138,12 +138,19 @@ const getLsp8Metadata = async (
     const tokenIdParsed = (tokenId: string, tokenIdFormat: number) => {
       switch (tokenIdFormat) {
         case LSP8_TOKEN_ID_FORMAT.STRING:
-          return hexToUtf8(tokenId) // decode hex value to string
+          // decode hex value to string
+          return encodeURI(hexToUtf8(tokenId))
         case LSP8_TOKEN_ID_FORMAT.NUMBER:
-          return hexToNumber(tokenId).toString() // convert hex value to number
+          // convert hex value to number
+          return hexToNumber(tokenId).toString()
+        case LSP8_TOKEN_ID_FORMAT.ADDRESS:
+          // address needs to be lowercase
+          return tokenId.toLowerCase()
         case LSP8_TOKEN_ID_FORMAT.UNIQUE_ID:
         case LSP8_TOKEN_ID_FORMAT.HASH:
-          return tokenId.slice(2) // remove 0x from uid/hash token ids
+          // remove 0x from uid/hash token ids
+          // also hex value need to be lowercase
+          return tokenId.slice(2).toLowerCase()
         default:
           return tokenId
       }
@@ -151,7 +158,7 @@ const getLsp8Metadata = async (
 
     // in order to get full url we combine URI it with tokenId (must be lowercased)
     // we also resolve url as uri might be ipfs link
-    url = resolveUrl(uri + tokenIdParsed(tokenId, tokenIdFormat).toLowerCase())
+    url = resolveUrl(uri + tokenIdParsed(tokenId, tokenIdFormat))
   }
 
   console.debug('LSP8 metadata', {
