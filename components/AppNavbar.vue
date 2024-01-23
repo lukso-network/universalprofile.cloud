@@ -92,6 +92,7 @@ const browserSupportExtension = extensionStore.url !== ''
         </span>
       </lukso-button>
       <lukso-button
+        v-if="isConnected"
         variant="text"
         custom-class="text-12 nav-apax-12-medium-uppercase"
         class="group"
@@ -177,6 +178,7 @@ const browserSupportExtension = extensionStore.url !== ''
           </span>
         </lukso-button>
         <lukso-button
+          v-if="isConnected"
           variant="text"
           custom-class="text-12 nav-apax-12-medium-uppercase"
           class="group"
