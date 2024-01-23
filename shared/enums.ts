@@ -20,3 +20,8 @@ export enum CACHE_KEY {
 export enum REFERRERS {
   INDEXER = 'indexer',
 }
+
+export enum AssetFilter {
+  owned = 'owned',
+  created = 'created',
+}

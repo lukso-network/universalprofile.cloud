@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { type Asset } from '@/models/asset'
-import { AssetFilter } from '@/types/assets'
-
 type Props = {
   tokens?: Asset[]
 }
