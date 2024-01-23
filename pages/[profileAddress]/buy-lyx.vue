@@ -1,5 +1,13 @@
 <script setup lang="ts">
-const { isLoadingProfile, isLoadedApp } = storeToRefs(useAppStore())
+const { isLoadingProfile, isLoadedApp, isConnected } =
+  storeToRefs(useAppStore())
+
+watchEffect(() => {
+  // when not connected then navigate to home
+  if (!isConnected.value) {
+    navigateTo(homeRoute())
+  }
+})
 </script>
 
 <template>
@@ -21,7 +29,7 @@ const { isLoadingProfile, isLoadedApp } = storeToRefs(useAppStore())
         <div class="grid grid-cols-2 gap-6 pt-8">
           <BuyLyxCard
             logo-url="/images/transak-logo.png"
-            :buy-url="'TODO'"
+            :buy-url="transakBuyLyxUrl()"
             :description="$formatMessage('buy_lyx_card_transak_description')"
           ></BuyLyxCard>
         </div>
@@ -30,3 +38,5 @@ const { isLoadingProfile, isLoadedApp } = storeToRefs(useAppStore())
     <AppLoader v-if="isLoadingProfile || !isLoadedApp" />
   </div>
 </template>
+
+https://global-stg.transak.com/?apiKey=&network=lukso&defaultCryptoCurrency=LYX&productsAvailed=BUY&fiatCurrency=USD&walletAddress=0xDC2D461bAa36Bc17d3f75425D56faaAa9551A28E&redirectURL=https://universalprofile.cloud/0xDC2D461bAa36Bc17d3f75425D56faaAa9551A28E?network=mainnet
