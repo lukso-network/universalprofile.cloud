@@ -1,15 +1,30 @@
+/**
+ * URL to blockchain explorer
+ *
+ * @param transactionHash - The transaction hash
+ * @returns
+ */
 export const explorerTransactionUrl = (transactionHash: string) => {
   const { currentNetwork } = storeToRefs(useAppStore())
 
   return `${currentNetwork.value.explorerUrl}/tx/${transactionHash}`
 }
 
+/**
+ * URL to Discovery dApp aka. universalprofile.cloud
+ * @returns
+ */
 export const discoveryDappUrl = () => {
   const { currentNetwork } = storeToRefs(useAppStore())
 
   return `${BASE_UP_CLOUD_URL}?network=${currentNetwork.value.id}`
 }
 
+/**
+ * URL to Transak to buy LYX
+ *
+ * @returns
+ */
 export const transakBuyLyxUrl = () => {
   const { currentCurrencySymbol } = storeToRefs(useCurrencyStore())
   const { connectedProfile } = useConnectedProfile()
