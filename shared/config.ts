@@ -80,6 +80,9 @@ export const SEARCH_RESULTS_LIMIT = 100
 // base universalprofile address
 export const BASE_UP_CLOUD_URL = 'https://universalprofile.cloud'
 
+// base wallet address
+export const BASE_WALLET_URL = 'https://wallet.universalprofile.cloud'
+
 // default currency symbol
 export const DEFAULT_CURRENCY_SYMBOL = 'USD'
 
@@ -91,3 +94,9 @@ export const CURRENCY_API_LYX_TOKEN_NAME = 'LYX'
 
 // currency cache expiry time in minutes
 export const CURRENCY_CACHE_EXPIRY_IN_MINUTES = 60
+
+// link to the testnet faucet
+export const TESTNET_FAUCET_URL = 'https://faucet.testnet.lukso.network'
+
+// transak api key, for staging tests you can use 'https://global-stg.transak.com'
+export const TRANSAK_HOST = 'https://global.transak.com'
