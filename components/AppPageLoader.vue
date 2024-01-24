@@ -6,10 +6,11 @@ const { isLoadedApp, isLoadingProfile, isLoadingAssets } =
 <template>
   <div class="relative">
     <div
-      class="relative px-4 py-20 transition-opacity delay-500 duration-300"
+      class="relative px-4 py-20"
       :class="{
         'opacity-0': isLoadingAssets || isLoadingProfile || !isLoadedApp,
-        'opacity-100': !isLoadingAssets && !isLoadingProfile && isLoadedApp,
+        'opacity-100  transition-opacity delay-200 duration-300':
+          !isLoadingAssets && !isLoadingProfile && isLoadedApp,
       }"
     >
       <slot />
