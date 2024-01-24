@@ -58,7 +58,7 @@ const isOwned = computed(() => {
       class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-20 transition-opacity duration-300"
     >
       <div>
-        <lukso-card is-full-width size="small">
+        <lukso-card is-full-width size="small" shadow="small">
           <div
             slot="content"
             class="flex items-center justify-center p-6 sm:py-10 md:py-20"
@@ -84,7 +84,7 @@ const isOwned = computed(() => {
             :message="$formatMessage('token_details_own')"
           />
 
-          <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{
+          <lukso-button is-full-width class="mt-12" @click="handleSendAsset">{{
             $formatMessage('token_details_send', {
               token: asset?.symbol || '',
             })

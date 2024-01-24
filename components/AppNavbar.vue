@@ -42,6 +42,19 @@ const handleNavigationDiscovery = () => {
   window.open(discoveryDappUrl(), '_self')
 }
 
+const handleNavigateBuyLyx = () => {
+  if (isTestnet.value) {
+    window.open(TESTNET_FAUCET_URL, '_blank')
+  } else {
+    try {
+      assertAddress(connectedProfile.value?.address, 'profile')
+      navigateTo(buyLyxRoute(connectedProfile.value.address))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
 const extensionStoreData = () => {
   const url = browserInfo().storeLink
   const icon = `logo-${browserInfo().id}`
@@ -76,6 +89,21 @@ const browserSupportExtension = extensionStore.url !== ''
       >
         <span class="text-purple-63 transition group-hover:text-purple-41">
           {{ $formatMessage('header_discovery') }}
+        </span>
+      </lukso-button>
+      <lukso-button
+        v-if="isConnected"
+        variant="text"
+        custom-class="text-12 nav-apax-12-medium-uppercase"
+        class="group"
+        @click="handleNavigateBuyLyx"
+      >
+        <span class="text-purple-63 transition group-hover:text-purple-41">
+          {{
+            isTestnet
+              ? $formatMessage('header_get_lyx')
+              : $formatMessage('header_buy_lyx')
+          }}
         </span>
       </lukso-button>
       <lukso-button
@@ -147,6 +175,21 @@ const browserSupportExtension = extensionStore.url !== ''
         >
           <span class="text-purple-63 transition group-hover:text-purple-41">
             {{ $formatMessage('header_discovery') }}
+          </span>
+        </lukso-button>
+        <lukso-button
+          v-if="isConnected"
+          variant="text"
+          custom-class="text-12 nav-apax-12-medium-uppercase"
+          class="group"
+          @click="handleNavigateBuyLyx"
+        >
+          <span class="text-purple-63 transition group-hover:text-purple-41">
+            {{
+              isTestnet
+                ? $formatMessage('header_get_lyx')
+                : $formatMessage('header_buy_lyx')
+            }}
           </span>
         </lukso-button>
         <lukso-button
