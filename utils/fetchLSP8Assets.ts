@@ -79,9 +79,6 @@ export const createLsp8Object = async (
         creator?.profile?.address && creatorIds.push(creator.profile.address)
       })
 
-      // links are passed as object instead of array so we need to convert
-      const linksParsed = links && Object.values(links)
-
       return {
         address,
         name,
@@ -89,7 +86,7 @@ export const createLsp8Object = async (
         balance: '1', // NFT is always 1
         decimals: 0, // NFT decimals are always 0
         tokenSupply,
-        links: linksParsed,
+        links,
         description,
         standard: 'LSP8DigitalAsset',
         tokenId,

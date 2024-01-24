@@ -25,8 +25,7 @@ export const createLsp7Object = async (
   const decimals = Number(await lsp7Contract.methods.decimals().call())
 
   // get best image from collection based on height criteria
-  const icon =
-    metadata?.icon && createImageObject(Object.values(metadata.icon), 56)
+  const icon = metadata?.icon && createImageObject(metadata.icon, 56)
 
   // create image identifier so they can be linked in Pinia ORM
   const iconId = getHash(icon)
@@ -36,8 +35,8 @@ export const createLsp7Object = async (
 
   if (metadata?.images) {
     // get best image from collection based on height criteria
-    for await (const image of Object.values(metadata.images)) {
-      const convertedImage = createImageObject(Object.values(image), 100)
+    for await (const image of metadata.images) {
+      const convertedImage = createImageObject(image, 100)
       if (convertedImage) {
         images.push(convertedImage)
       }
