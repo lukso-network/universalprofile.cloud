@@ -5,6 +5,7 @@ import { assertString } from '@/utils/validators'
 import { SUPPORTED_NETWORK_IDS } from '@/shared/config'
 
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+import type { NetworkId } from './types/network'
 
 if (typeof window !== 'undefined') {
   import('@lukso/web-components')
@@ -126,12 +127,9 @@ const setupViewedProfile = async () => {
  * Check if dApp network match with extension and if not show network switch modal.
  */
 const setupNetwork = async () => {
-  const network = useRouter().currentRoute.value.query?.network
-
-  if (!network) {
-    await checkNetwork()
-    return
-  }
+  const network =
+    (useRouter().currentRoute.value.query?.network as NetworkId | undefined) ||
+    'mainnet'
 
   if (SUPPORTED_NETWORK_IDS.includes(network)) {
     selectedChainId.value = getNetworkById(network).chainId
