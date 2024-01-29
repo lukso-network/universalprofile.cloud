@@ -3,8 +3,7 @@ definePageMeta({
   layout: 'landing',
 })
 
-const { isConnected, isLoadedApp, connectedProfileAddress } =
-  storeToRefs(useAppStore())
+const { isConnected, connectedProfileAddress } = storeToRefs(useAppStore())
 const { isUniversalProfileExtension } = useBrowserExtension()
 
 const supportedBrowsers = Object.entries(EXTENSION_STORE_LINKS)
@@ -24,13 +23,9 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="relative">
+  <AppPageLoader>
     <div
-      :class="{
-        'opacity-0': !isLoadedApp,
-        'opacity-100': isLoadedApp,
-      }"
-      class="relative mx-auto grid h-full max-w-[950px] grid-cols-1 gap-7 px-4 py-20 transition-opacity delay-500 duration-300 sm:grid-cols-2 sm:items-center sm:pt-24"
+      class="relative mx-auto grid h-full max-w-[950px] grid-cols-1 gap-7 px-4 py-20 sm:grid-cols-2 sm:items-center sm:pt-24"
     >
       <div class="hidden sm:block">
         <img
@@ -81,6 +76,5 @@ watchEffect(() => {
         </div>
       </div>
     </div>
-    <AppLoader v-if="!isLoadedApp" />
-  </div>
+  </AppPageLoader>
 </template>

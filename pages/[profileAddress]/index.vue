@@ -3,8 +3,7 @@ import { AssetRepository } from '@/repositories/asset'
 
 import type { Asset } from '@/models/asset'
 
-const { isLoadingProfile, isLoadingAssets, assetFilter, isLoadedApp } =
-  storeToRefs(useAppStore())
+const { assetFilter } = storeToRefs(useAppStore())
 const { viewedProfile } = useViewedProfile()
 const assetRepository = useRepo(AssetRepository)
 const tokensOwned = ref<Asset[]>()
@@ -85,53 +84,52 @@ watchEffect(async () => {
 
 <template>
   <div class="relative">
-    <div
-      class="relative mx-auto max-w-content px-4 py-20 transition-opacity duration-300"
-      :class="{
-        'opacity-0': isLoadingAssets || isLoadingProfile || !isLoadedApp,
-        'opacity-100': !isLoadingAssets && !isLoadingProfile && isLoadedApp,
-      }"
-    >
-      <ProfileCard />
-      <ProfileDetails v-if="showProfileDetails" />
-      <div>
+    <AppPageLoader>
+      <div class="mx-auto max-w-content">
+        <ProfileCard />
+        <ProfileDetails v-if="showProfileDetails" />
         <div>
-          <div class="flex gap-4 pt-10">
-            <lukso-button
-              size="small"
-              variant="secondary"
-              :is-active="assetFilter === AssetFilter.owned ? true : undefined"
-              :count="ownedAssetsCount"
-              @click="assetFilter = AssetFilter.owned"
-              >{{ $formatMessage('asset_filter_owned_assets') }}</lukso-button
-            >
-            <lukso-button
-              size="small"
-              variant="secondary"
-              :is-active="
-                assetFilter === AssetFilter.created ? true : undefined
-              "
-              :count="createdAssetsCount"
-              @click="assetFilter = AssetFilter.created"
-              >{{ $formatMessage('asset_filter_created_assets') }}</lukso-button
-            >
-          </div>
+          <div>
+            <div class="flex gap-4 pt-10">
+              <lukso-button
+                size="small"
+                variant="secondary"
+                :is-active="
+                  assetFilter === AssetFilter.owned ? true : undefined
+                "
+                :count="ownedAssetsCount"
+                @click="assetFilter = AssetFilter.owned"
+                >{{ $formatMessage('asset_filter_owned_assets') }}</lukso-button
+              >
+              <lukso-button
+                size="small"
+                variant="secondary"
+                :is-active="
+                  assetFilter === AssetFilter.created ? true : undefined
+                "
+                :count="createdAssetsCount"
+                @click="assetFilter = AssetFilter.created"
+                >{{
+                  $formatMessage('asset_filter_created_assets')
+                }}</lukso-button
+              >
+            </div>
 
-          <div v-if="hasEmptyCreators" class="pt-8">
-            <h3 class="heading-inter-17-semi-bold pb-2">
-              {{ $formatMessage('assets_empty_state_title') }}
-            </h3>
-            <lukso-sanitize
-              :html-content="$formatMessage('assets_empty_state_description')"
-            ></lukso-sanitize>
-          </div>
-          <div v-else>
-            <TokenList v-if="hasEmptyTokens" :tokens="tokens" />
-            <NftList v-if="hasEmptyNfts" :nfts="nfts" />
+            <div v-if="hasEmptyCreators" class="pt-8">
+              <h3 class="heading-inter-17-semi-bold pb-2">
+                {{ $formatMessage('assets_empty_state_title') }}
+              </h3>
+              <lukso-sanitize
+                :html-content="$formatMessage('assets_empty_state_description')"
+              ></lukso-sanitize>
+            </div>
+            <div v-else>
+              <TokenList v-if="hasEmptyTokens" :tokens="tokens" />
+              <NftList v-if="hasEmptyNfts" :nfts="nfts" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <AppLoader v-if="isLoadingAssets || isLoadingProfile || !isLoadedApp" />
+    </AppPageLoader>
   </div>
 </template>

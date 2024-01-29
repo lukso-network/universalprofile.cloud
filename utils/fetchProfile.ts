@@ -61,13 +61,12 @@ const createProfileObject = async (
 
   // get best image from collection based on height criteria
   const profileImage =
-    metadata?.profileImage &&
-    createImageObject(Object.values(metadata.profileImage), 96)
+    metadata?.profileImage && createImageObject(metadata.profileImage, 96)
 
   // get best image from collection based on height criteria
   const backgroundImage =
     metadata?.backgroundImage &&
-    createImageObject(Object.values(metadata.backgroundImage), 240)
+    createImageObject(metadata.backgroundImage, 240)
 
   // get profile LYX balance
   const { getBalance } = useWeb3(PROVIDERS.RPC)
