@@ -18,7 +18,7 @@ const connect = async () => {
   const { formatMessage } = useIntl()
   const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
 
-  await checkNetwork()
+  await checkExtensionNetwork()
 
   // when no extension installed we show modal
   if (!INJECTED_PROVIDER) {

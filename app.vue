@@ -129,13 +129,13 @@ const setupNetwork = async () => {
   const network = useRouter().currentRoute.value.query?.network
 
   if (!network) {
-    await checkNetwork()
+    await checkExtensionNetwork()
     return
   }
 
   if (SUPPORTED_NETWORK_IDS.includes(network)) {
     selectedChainId.value = getNetworkById(network).chainId
-    await checkNetwork()
+    await checkExtensionNetwork()
   } else {
     console.warn(
       `Invalid network: ${network}, valid networks are ${SUPPORTED_NETWORK_IDS.join(

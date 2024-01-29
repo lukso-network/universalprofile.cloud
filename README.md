@@ -95,5 +95,4 @@ yarn unlink ../tools-web-components/package
 
 ### Releasing
 
-We use [Release Please](https://github.com/googleapis/release-please) to automate release process. Just merge your feature PR into `develop` branch and new release PR with changelog will be created. You can stack multiple PRs into release.
-Once you are ready to release just merge release PR into `main` branch.
+We use single branch flow. Just merge your feature PR into `main` branch and new release will be triggered.
