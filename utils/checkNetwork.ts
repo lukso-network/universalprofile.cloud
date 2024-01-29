@@ -5,6 +5,12 @@ export const checkNetwork = async () => {
     method: 'eth_chainId',
   })) as string
 
+  // when we can't get network information from ext it's very likely it's not installed yet, then we just exit
+  if (!chainId) {
+    return
+  }
+
+  // if network mismatch then show modal and break further execution by throwing an error
   if (currentNetwork.chainId !== chainId) {
     showModal({
       template: 'SwitchNetwork',
