@@ -77,7 +77,7 @@ watchEffect(() => {
       : asset.value?.balance,
   }
 
-  // when logout
+  // when not connected then navigate to home
   if (!isConnected.value) {
     navigateTo(homeRoute())
   }

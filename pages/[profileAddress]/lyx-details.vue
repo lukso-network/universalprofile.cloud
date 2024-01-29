@@ -2,7 +2,7 @@
 import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
 const { connectedProfile } = useConnectedProfile()
-const { currentNetwork } = storeToRefs(useAppStore())
+const { currentNetwork, isTestnet } = storeToRefs(useAppStore())
 const { viewedProfile } = useViewedProfile()
 const { isConnected } = storeToRefs(useAppStore())
 
@@ -21,6 +21,19 @@ const handleSendLyx = () => {
     console.error(error)
   }
 }
+
+const handleBuyLyx = () => {
+  if (isTestnet.value) {
+    window.open(TESTNET_FAUCET_URL, '_blank')
+  } else {
+    try {
+      assertAddress(connectedProfile.value?.address, 'profile')
+      navigateTo(buyLyxRoute(connectedProfile.value.address))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
 </script>
 
 <template>
@@ -29,7 +42,7 @@ const handleSendLyx = () => {
       class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-20 transition-opacity duration-300"
     >
       <div>
-        <lukso-card is-full-width size="small">
+        <lukso-card is-full-width size="small" shadow="small">
           <div
             slot="content"
             class="flex items-center justify-center p-6 sm:py-10 md:py-20"
@@ -44,9 +57,8 @@ const handleSendLyx = () => {
         <div
           v-if="
             isConnected &&
-            viewedProfile?.address === connectedProfile?.address &&
-            connectedProfile?.balance !== '0' &&
-            connectedProfile
+            connectedProfile &&
+            viewedProfile?.address === connectedProfile?.address
           "
         >
           <AssetOwnInfo
@@ -58,11 +70,29 @@ const handleSendLyx = () => {
             :message="$formatMessage('token_details_own')"
           />
 
-          <lukso-button is-full-width class="mt-4" @click="handleSendLyx">{{
-            $formatMessage('token_details_send', {
-              token: currentNetwork.token.symbol,
-            })
-          }}</lukso-button>
+          <div class="mt-12 flex flex-col gap-2">
+            <lukso-button
+              v-if="connectedProfile?.balance !== '0'"
+              is-full-width
+              variant="secondary"
+              @click="handleSendLyx"
+              >{{
+                $formatMessage('token_details_send', {
+                  token: currentNetwork.token.symbol,
+                })
+              }}</lukso-button
+            >
+            <lukso-button
+              is-full-width
+              variant="primary"
+              @click="handleBuyLyx"
+              >{{
+                isTestnet
+                  ? $formatMessage('token_details_get_lyx')
+                  : $formatMessage('token_details_buy_lyx')
+              }}</lukso-button
+            >
+          </div>
         </div>
       </div>
       <div>

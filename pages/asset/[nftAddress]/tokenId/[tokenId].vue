@@ -65,7 +65,7 @@ const handleSendAsset = (event: Event) => {
       class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-20 transition-opacity duration-300"
     >
       <div>
-        <lukso-card size="small" is-full-width
+        <lukso-card size="small" shadow="small" is-full-width
           ><div slot="content">
             <div
               class="min-h-[260px] rounded-t-12 bg-neutral-90 bg-cover bg-center"
@@ -94,7 +94,7 @@ const handleSendAsset = (event: Event) => {
             :message="$formatMessage('nft_details_own')"
           />
 
-          <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{
+          <lukso-button is-full-width class="mt-12" @click="handleSendAsset">{{
             $formatMessage('token_details_send', {
               token: asset?.symbol || '',
             })
