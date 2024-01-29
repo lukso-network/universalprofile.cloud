@@ -84,7 +84,7 @@ watchEffect(() => {
 })
 
 const handleSend = async () => {
-  await checkNetwork()
+  await checkExtensionNetwork()
 
   try {
     setStatus('pending')

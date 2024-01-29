@@ -12,7 +12,6 @@ const loadModalTemplate = () => {
 }
 
 const closeModal = async () => {
-  await appStore.modal?.onConfirm?.()
   appStore.setModal({ isOpen: false })
 }
 

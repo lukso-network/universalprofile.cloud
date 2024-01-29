@@ -5,5 +5,7 @@ export interface Modal {
   confirmButtonText?: string
   icon?: string
   template?: string
-  onConfirm?: () => void
+  data?: {
+    [key: string]: any
+  }
 }

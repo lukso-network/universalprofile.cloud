@@ -1,4 +1,10 @@
-export const checkNetwork = async () => {
+/**
+ * Check if application network match with extension.
+ * If not break execution with error and show modal to switch network.
+ *
+ * @returns
+ */
+export const checkExtensionNetwork = async (): Promise<void | never> => {
   const { currentNetwork } = useAppStore()
   const { showModal } = useModal()
   const chainId = (await INJECTED_PROVIDER?.request({
@@ -13,7 +19,7 @@ export const checkNetwork = async () => {
   // if network mismatch then show modal and break further execution by throwing an error
   if (currentNetwork.chainId !== chainId) {
     showModal({
-      template: 'SwitchNetwork',
+      template: 'SwitchExtensionNetwork',
     })
 
     throw new Error('Wrong network')
