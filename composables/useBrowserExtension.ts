@@ -108,14 +108,32 @@ const handleDisconnect = () => {
   location.reload()
 }
 
+const handleChainChanged = (network: { chainId: string }) => {
+  const { showModal } = useModal()
+  const { getNetworkByChainId, currentNetwork } = useAppStore()
+  const getNetwork = getNetworkByChainId(network.chainId)
+
+  if (currentNetwork.chainId !== network.chainId) {
+    showModal({
+      template: 'SwitchApplicationNetwork',
+      data: {
+        name: getNetwork.name,
+        chainId: network.chainId,
+      },
+    })
+  }
+}
+
 const addProviderEvents = async (provider: ProviderAPI) => {
   provider?.on?.('accountsChanged', handleAccountsChanged)
   provider?.on?.('disconnect', handleDisconnect)
+  provider?.on?.('chainChanged', handleChainChanged)
 }
 
 const removeProviderEvents = async (provider: ProviderAPI) => {
   provider?.off?.('accountsChanged', handleAccountsChanged)
   provider?.off?.('disconnect', handleDisconnect)
+  provider?.off?.('chainChanged', handleChainChanged)
 }
 
 const isUniversalProfileExtension = () => {
