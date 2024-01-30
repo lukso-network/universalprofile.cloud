@@ -24,7 +24,7 @@ const providers: ProviderName[] = ['twitter', 'discord', 'github']
           class="nav-apax-12-medium-uppercase text-purple-41 hover:text-purple-31 hover:underline"
           target="_blank"
         >
-          {{ $formatMessage('footer_faq_text') }}
+          {{ $formatMessage('footer_need_help_text') }}
         </a>
       </div>
       <div class="hidden h-4 w-0.5 bg-purple-63 xl:block"></div>
