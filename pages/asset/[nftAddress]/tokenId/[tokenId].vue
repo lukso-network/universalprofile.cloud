@@ -6,12 +6,11 @@ import type { Creator } from '@/models/creator'
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 
-const { connectedProfile, profileImageUrl } = useConnectedProfile()
-const { isConnected, isLoadingAssets, isLoadedApp } = storeToRefs(useAppStore())
+const { connectedProfile } = useConnectedProfile()
+const { isConnected } = storeToRefs(useAppStore())
 const { asset } = useAsset(nftAddress, tokenId)
 const creatorsRepo = useRepo(CreatorRepository)
 const creators = ref<Creator[]>([])
-const iconUrl = ref<string>()
 
 const verifiedCreator = computed(() => {
   return creatorsRepo
@@ -40,8 +39,6 @@ watchEffect(async () => {
         asset.value?.tokenId
       )
     }) || []
-
-  iconUrl.value = await getAssetThumb(asset.value)
 })
 
 const handleSendAsset = (event: Event) => {
@@ -63,12 +60,8 @@ const handleSendAsset = (event: Event) => {
 </script>
 
 <template>
-  <div class="relative">
+  <AppPageLoader>
     <div
-      :class="{
-        'opacity-0': isLoadingAssets || !isLoadedApp,
-        'opacity-100': !isLoadingAssets && isLoadedApp,
-      }"
       class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-20 transition-opacity duration-300"
     >
       <div>
@@ -76,7 +69,7 @@ const handleSendAsset = (event: Event) => {
           ><div slot="content">
             <div
               class="min-h-[260px] rounded-t-12 bg-neutral-90 bg-cover bg-center"
-              :style="`background-image: url(${iconUrl});`"
+              :style="`background-image: url(${getAssetThumb(asset)});`"
             ></div>
             <div class="relative p-4">
               <AssetCreator
@@ -97,7 +90,7 @@ const handleSendAsset = (event: Event) => {
             :balance="asset?.balance"
             :symbol="asset?.symbol"
             :decimals="0"
-            :profile-image-url="profileImageUrl"
+            :profile-image-url="connectedProfile?.profileImage?.url"
             :message="$formatMessage('nft_details_own')"
           />
 
@@ -140,6 +133,5 @@ const handleSendAsset = (event: Event) => {
         />
       </div>
     </div>
-    <AppLoader v-if="isLoadingAssets || !isLoadedApp" />
-  </div>
+  </AppPageLoader>
 </template>

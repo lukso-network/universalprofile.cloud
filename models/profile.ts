@@ -2,7 +2,6 @@ import { BaseModel } from '@/models/base'
 
 import type { Item } from 'pinia-orm'
 import type {
-  ImageMetadata,
   LSP3ProfileMetadata,
   LinkMetadata,
 } from '@lukso/lsp-smart-contracts'
@@ -21,9 +20,7 @@ export class ProfileModel extends BaseModel {
       links: this.attr([]),
       tags: this.attr([]),
       description: this.string(''),
-      isEoa: this.boolean(false),
-      hash: this.string(''),
-      verification: this.attr({}),
+      isEoa: this.boolean(false), // TODO change to `type` value from index
 
       // foreign keys
       profileImageId: this.attr(null),
@@ -41,8 +38,6 @@ export class ProfileModel extends BaseModel {
   declare tags?: string[]
   declare description?: string
   declare isEoa?: boolean
-  declare hash: string
-  declare verification?: ImageMetadata['verification']
 
   declare profileImageId?: string
   declare backgroundImageId?: string
@@ -51,29 +46,28 @@ export class ProfileModel extends BaseModel {
 
   declare profileImage?: Image
   declare backgroundImage?: Image
-
-  static piniaOptions = {
-    persist: {
-      key: STORAGE_KEY.PROFILE_STORE,
-    },
-  }
 }
 
 export type Profile = Partial<Item<ProfileModel>>
 
+export type IndexedProfileType = 'EOA' | 'LSP3Profile'
+
+// Type of data returned from Algolia, it's not fully covered as some
+// properties are irrelevant
 export type IndexedProfile = {
   address: Address
-  profileURL?: string
-  profileHash?: string
-  profileHashFunction?: string
   LSP3Profile?: LSP3ProfileMetadata
+  type: IndexedProfileType
+
+  // not using now this attributes but some will be useful in FE
+  // TODO refactor this later
   hasProfileName?: boolean
   hasProfileDescription?: boolean
-  backgroundImageUrl?: string
-  hasBackgroundImage?: boolean
-  profileImageUrl?: string
+  hasProfileLinks?: boolean
+  hasProfileTags?: boolean
   hasProfileImage?: boolean
+  hasBackgroundImage?: boolean
   updatedAtBlock: number
-  network: string
-  objectID: string
+  chainId: number
+  lastUpdatedAt: string
 }

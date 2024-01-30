@@ -4,8 +4,6 @@ import type { ImageMetadata } from '@lukso/lsp-smart-contracts'
 import type { Asset } from '@/models/asset'
 import type { Image } from '@/models/image'
 
-type ImageObjectCache = { encodedImage?: Base64EncodedImage; url: string }
-
 const convertBlobToBase64 = (blob: Blob) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -83,7 +81,7 @@ export const getImageBySize = (
  * @param minHeight
  * @returns
  */
-export const getAssetThumb = async (asset?: Asset, useIcon?: boolean) => {
+export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
   if (!asset) {
     return ''
   }
@@ -96,14 +94,12 @@ export const getAssetThumb = async (asset?: Asset, useIcon?: boolean) => {
 
   if (asset.iconId && useIcon) {
     const icon = imageRepo.getImage(asset.iconId)
-    const cachedIcon = await getCachedImageUrl(icon)
-    return cachedIcon
+    return icon?.url
   }
 
   if (asset.imageIds && asset.imageIds.length > 0) {
     const image = imageRepo.getImage(asset.imageIds[0])
-    const cachedImage = await getCachedImageUrl(image)
-    return cachedImage
+    return image?.url
   }
 
   return ''
@@ -116,75 +112,14 @@ export const getAssetThumb = async (asset?: Asset, useIcon?: boolean) => {
  * @param height - image height (represents the desired image height)
  * @returns Image model object
  */
-export const createImageObject = async (
-  image: ImageMetadata[],
-  height: number
-) => {
+export const createImageObject = (image: ImageMetadata[], height: number) => {
   const optimalImage = getImageBySize(image, height)
 
   if (optimalImage) {
     return {
       ...optimalImage,
       id: getHash(optimalImage),
+      url: resolveUrl(optimalImage.url),
     } as Image
   }
-}
-
-/**
- * Gets a base64 encoded image from cache.
- * If there is no image in cache, it will use original image url and do caching afterwards.
- *
- * @param image - image to get from cache
- * @returns
- */
-export const getCachedImageUrl = async (image?: Image) => {
-  const cache = await caches.open(CACHE_KEY.IMAGE_CACHE)
-
-  if (!image || !image.url) {
-    return ''
-  }
-
-  const imageUrl = resolveUrl(image.url)
-  let cacheUrl = imageUrl
-
-  // some images url contain base64 encoded file instead of url
-  // those images don't need to be fetched but we need to provide fake url for cache
-  if (imageUrl.startsWith('data:')) {
-    cacheUrl = `https://fake.com/${imageUrl.split(',')[1].slice(0, 40)}`
-  }
-
-  const cachedImage = await cache.match(cacheUrl)
-
-  if (cachedImage) {
-    const imageObjectCache: ImageObjectCache = await cachedImage.json()
-    return imageObjectCache.encodedImage
-  } else {
-    const imageObjectCache: ImageObjectCache = {
-      url: cacheUrl,
-    }
-
-    if (imageUrl.startsWith('data:')) {
-      imageObjectCache.encodedImage = imageUrl as Base64EncodedImage
-    } else {
-      try {
-        const fetchedImage = await fetchAndConvertImage(imageUrl)
-
-        imageObjectCache.encodedImage = fetchedImage
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    await cache.put(
-      cacheUrl,
-      new Response(JSON.stringify(imageObjectCache), {
-        headers: {
-          'Content-Length':
-            imageObjectCache.encodedImage?.length.toString() || '0',
-        },
-      })
-    )
-  }
-
-  return imageUrl
 }

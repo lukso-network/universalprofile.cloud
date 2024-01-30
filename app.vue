@@ -16,11 +16,17 @@ const { isLoadedApp, selectedChainId, modal } = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
 const router = useRouter()
+const profileRepo = useRepo(ProfileRepository)
 
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
 }
 
+/**
+ * Create web3 instances
+ * INJECTED - from browser extension
+ * RPC - from RPC endpoint
+ */
 const setupWeb3Instances = async () => {
   const provider = INJECTED_PROVIDER
 
@@ -38,6 +44,10 @@ const setupWeb3Instances = async () => {
   addWeb3(PROVIDERS.RPC, getNetworkByChainId(selectedChainId.value).rpcHttp)
 }
 
+/**
+ * Load profile data when using back button
+ * Useful especially after page refresh where store data is cleared
+ */
 const routerBackProfileLoad = async () => {
   router.beforeEach(
     async (
@@ -45,17 +55,22 @@ const routerBackProfileLoad = async () => {
       from: RouteLocationNormalized,
       next: NavigationGuardNext
     ) => {
-      const fromProfileAddress = from.params?.profileAddress
-      const toProfileAddress = to.params?.profileAddress
+      // we load profile only if going to the profile dashboard
+      if (to.name !== 'profileAddress') {
+        next()
+        return
+      }
 
-      if (toProfileAddress) {
+      const toProfileAddress = to.params?.profileAddress
+      assertAddress(toProfileAddress, 'profile')
+
+      const storeProfile = profileRepo.getProfileAndImages(toProfileAddress)
+
+      // only makes sense to load profile if it's not already loaded
+      if (!storeProfile) {
         try {
-          assertString(toProfileAddress)
-          assertAddress(toProfileAddress, 'profile')
-          if (toProfileAddress !== fromProfileAddress) {
-            await fetchProfile(toProfileAddress)
-            await fetchAssets(toProfileAddress)
-          }
+          await fetchAndStoreProfile(toProfileAddress)
+          await fetchAndStoreAssets(toProfileAddress)
         } catch (error) {
           console.error(error)
         }
@@ -65,6 +80,10 @@ const routerBackProfileLoad = async () => {
   )
 }
 
+/**
+ * Check if connection to the extension has expired
+ * Every connection has expiration time that is stored in local storage
+ */
 const checkConnectionExpiry = () => {
   const expiryCheck = () => {
     const expiryDate = getItem(STORAGE_KEY.CONNECTION_EXPIRY)
@@ -83,6 +102,9 @@ const checkConnectionExpiry = () => {
   setInterval(expiryCheck, CONNECTION_EXPIRY_CHECK_INTERVAL_MS)
 }
 
+/**
+ * Setup currencies that are fetched from cryptocompare API
+ */
 const setupCurrencies = async () => {
   const { currencyList } = storeToRefs(useCurrencyStore())
   const { fetchCurrencies } = useCurrency()
@@ -90,9 +112,12 @@ const setupCurrencies = async () => {
   currencyList.value = await fetchCurrencies()
 }
 
-const setupViewedProfile = async () => {
-  const profileAddress = useRouter().currentRoute.value.params?.profileAddress
-
+/**
+ * Load profile data and assets
+ *
+ * @param profileAddress - the profile address to load
+ */
+const setupProfile = async (profileAddress: Address) => {
   // verify profile address
   if (profileAddress) {
     if (!isAddress(profileAddress)) {
@@ -104,23 +129,26 @@ const setupViewedProfile = async () => {
 
   // fetch profile metadata
   try {
-    await fetchProfile(profileAddress)
+    await fetchAndStoreProfile(profileAddress)
+
+    // fetch asset metadata
+    try {
+      await fetchAndStoreAssets(profileAddress)
+    } catch (error) {
+      console.error(error)
+    }
   } catch (error: unknown) {
     console.error(error)
 
-    if (error instanceof EoAError) {
-      navigateTo(notFoundRoute()) // TODO we might want to inform user about EoA instead showing 404
+    if (error instanceof NotFoundIndexError) {
+      navigateTo(notFoundRoute())
     }
-  }
-
-  // fetch asset metadata
-  try {
-    await fetchAssets(profileAddress)
-  } catch (error) {
-    console.error(error)
   }
 }
 
+/**
+ * Setup network based on `network` query param
+ */
 const setupNetwork = async () => {
   const network = useRouter().currentRoute.value.query?.network
 
@@ -139,6 +167,37 @@ const setupNetwork = async () => {
   }
 }
 
+/**
+ * Load viewed profile data
+ */
+const setupViewedProfile = async () => {
+  const profileAddress = useRouter().currentRoute.value.params?.profileAddress
+
+  await setupProfile(profileAddress)
+}
+
+/**
+ * Load connected profile data, this is mainly when refreshing asset details
+ * where we don't have reference to viewed profile
+ */
+const setupConnectedProfile = async () => {
+  const viewedProfileAddress =
+    useRouter().currentRoute.value.params?.profileAddress
+  const { connectedProfileAddress } = storeToRefs(useAppStore())
+
+  // no need to load same profile again
+  if (viewedProfileAddress === connectedProfileAddress.value) {
+    return
+  }
+
+  try {
+    assertAddress(connectedProfileAddress.value)
+    await setupProfile(connectedProfileAddress.value)
+  } catch (error) {
+    //
+  }
+}
+
 onMounted(async () => {
   setupTranslations()
   setupNetwork()
@@ -146,6 +205,7 @@ onMounted(async () => {
   checkConnectionExpiry()
   await routerBackProfileLoad()
   await setupViewedProfile()
+  await setupConnectedProfile()
 
   isLoadedApp.value = true
 
@@ -159,7 +219,9 @@ onUnmounted(() => {
 
 useHead({
   bodyAttrs: {
+    // @ts-ignore
     class: computed(() => {
+      // prevent window scroll when modal is open
       if (modal.value?.isOpen) {
         return 'overflow-hidden'
       }

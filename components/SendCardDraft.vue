@@ -1,11 +1,9 @@
 <script setup lang="ts">
-const { connectedProfile, backgroundImageUrl, profileImageUrl } =
-  useConnectedProfile()
+const { connectedProfile } = useConnectedProfile()
 const { asset, receiver, receiverError, amount, onSend } =
   storeToRefs(useSendStore())
 const { isLoadedApp } = storeToRefs(useAppStore())
 const { showModal } = useModal()
-const iconUrl = ref<string>()
 
 const handleSend = () => {
   onSend.value && onSend.value()
@@ -25,17 +23,13 @@ const handleBack = () => {
     console.error(error)
   }
 }
-
-watchEffect(async () => {
-  iconUrl.value = await getAssetThumb(asset.value, isToken(asset.value))
-})
 </script>
 
 <template>
   <lukso-card
     variant="profile-2"
-    :background-url="backgroundImageUrl"
-    :profile-url="profileImageUrl"
+    :background-url="connectedProfile?.backgroundImage?.url"
+    :profile-url="connectedProfile?.profileImage?.url"
     :profile-address="connectedProfile?.address"
     is-full-width
   >
@@ -60,7 +54,7 @@ watchEffect(async () => {
           <div class="rounded-full shadow-neutral-above-shadow-1xl">
             <lukso-profile
               size="small"
-              :profile-url="iconUrl"
+              :profile-url="getAssetThumb(asset, isToken(asset))"
               :profile-address="asset?.address"
               :has-identicon="isLyx(asset) ? undefined : true"
               :is-square="isNft(asset) ? true : undefined"
