@@ -1,13 +1,12 @@
 <script setup lang="ts">
-const { viewedProfile, backgroundImageUrl, profileImageUrl } =
-  useViewedProfile()
+const { viewedProfile } = useViewedProfile()
 </script>
 
 <template>
   <div class="relative">
     <lukso-card
       variant="hero"
-      :background-url="backgroundImageUrl"
+      :background-url="viewedProfile?.backgroundImage?.url"
       is-full-width
       custom-class="rounded-24 shadow-neutral-drop-shadow"
       class="mb-22"
@@ -23,7 +22,7 @@ const { viewedProfile, backgroundImageUrl, profileImageUrl } =
               :copy-value="viewedProfile?.address"
             >
               <lukso-profile
-                :profile-url="profileImageUrl"
+                :profile-url="viewedProfile?.profileImage?.url"
                 :profile-address="viewedProfile?.address"
                 size="x-large"
                 has-identicon

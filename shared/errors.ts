@@ -15,3 +15,9 @@ export class SetupViewedProfileError extends Error {
     super('Could not setup viewed profile')
   }
 }
+
+export class NotFoundIndexError extends Error {
+  constructor(address: string) {
+    super(`The ${address} was not found in the index`)
+  }
+}

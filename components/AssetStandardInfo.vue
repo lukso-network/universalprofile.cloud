@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { type InterfaceId, StandardsAbbreviations } from '@/types/assets'
+import { StandardsAbbreviations, type AssetType } from '@/models/asset'
 
 type Props = {
-  standard?: InterfaceId
+  standard?: AssetType
 }
 
 const { formatMessage } = useIntl()
@@ -18,7 +18,7 @@ onMounted(() => {
 
   isLegacy.value =
     props.standard !== 'LSP7DigitalAsset' &&
-    props.standard !== 'LSP8IdentifiableDigitalAsset'
+    props.standard !== 'LSP8DigitalAsset'
 
   if (isLegacy.value) {
     title.value = formatMessage('asset_standard_info_legacy_title')

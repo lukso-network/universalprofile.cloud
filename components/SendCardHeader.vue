@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { connectedProfile, profileImageUrl } = useConnectedProfile()
+const { connectedProfile } = useConnectedProfile()
 const { receiver } = storeToRefs(useSendStore())
 </script>
 
@@ -10,7 +10,7 @@ const { receiver } = storeToRefs(useSendStore())
         :profile="connectedProfile"
         :name="connectedProfile?.name"
         :address="connectedProfile?.address"
-        :profile-url="profileImageUrl"
+        :profile-url="connectedProfile?.profileImage?.url"
       />
     </div>
     <div class="flex items-center">

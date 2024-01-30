@@ -3,61 +3,7 @@ import { Repository } from 'pinia-orm'
 import { type Asset, AssetModel } from '@/models/asset'
 import { ImageRepository } from './image'
 
-import type { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
-
 export class AssetRepository extends Repository<AssetModel> {
-  async loadAssets(addresses: Address[], profileAddress: Address) {
-    const { selectedChainId } = storeToRefs(useAppStore())
-
-    await Promise.all(
-      addresses.map(async assetAddress => {
-        // we might get multiple assets since LSP8 share same contract
-        const [storageAsset] = this.repo(AssetModel)
-          .where('address', assetAddress)
-          .where('chainId', selectedChainId.value)
-          .get()
-
-        if (storageAsset) {
-          let assetData: DecodeDataOutput | undefined = undefined
-
-          if (storageAsset.standard === 'LSP7DigitalAsset') {
-            // asynchronously fetch token balances
-            fetchLsp7Balance(assetAddress, profileAddress).then(balance => {
-              this.setBalance(assetAddress, balance)
-            })
-
-            assetData = await fetchLsp4Data(assetAddress)
-
-            // check if asset metadata has changed
-            if (getHash(assetData?.value) === getHash(storageAsset)) {
-              return
-            }
-          }
-
-          // TODO investigate if LSP8 can be checked for changes or use Algolia API instead
-          // if (storageAsset.standard === 'LSP8IdentifiableDigitalAsset') {
-          //   assetData = await getLsp8Data(assetAddress)
-          // }
-        }
-
-        const fetchedAsset = await fetchAsset(assetAddress, profileAddress)
-
-        if (fetchedAsset?.length) {
-          fetchedAsset && fetchedAsset.length && this.saveAssets(fetchedAsset)
-        } else {
-          console.warn('Asset not found', assetAddress)
-          // we store the asset although it can't be detected so we don't repeat interface check
-          this.saveAssets([
-            {
-              address: assetAddress,
-              tokenId: '',
-            },
-          ])
-        }
-      })
-    )
-  }
-
   async getOwnedTokens() {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
@@ -103,7 +49,7 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     return this.repo(AssetModel)
-      .where('standard', 'LSP8IdentifiableDigitalAsset')
+      .where('standard', 'LSP8DigitalAsset')
       .where('address', viewedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where('owner', viewedProfile.value.address)
@@ -119,7 +65,7 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     return this.repo(AssetModel)
-      .where('standard', 'LSP8IdentifiableDigitalAsset')
+      .where('standard', 'LSP8DigitalAsset')
       .where('address', viewedProfile.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where('owner', viewedProfile.value.address)
@@ -141,7 +87,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .where((asset: Asset) => {
         return (
           asset?.standard === 'LSP7DigitalAsset' ||
-          (asset?.standard === 'LSP8IdentifiableDigitalAsset' &&
+          (asset?.standard === 'LSP8DigitalAsset' &&
             asset?.owner === connectedProfile.value?.address)
         )
       })

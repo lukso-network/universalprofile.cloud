@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
-const { connectedProfile, profileImageUrl } = useConnectedProfile()
-const { currentNetwork, isLoadedApp, isTestnet } = storeToRefs(useAppStore())
+const { connectedProfile } = useConnectedProfile()
+const { currentNetwork, isTestnet } = storeToRefs(useAppStore())
 const { viewedProfile } = useViewedProfile()
 const { isConnected } = storeToRefs(useAppStore())
 
@@ -37,12 +37,8 @@ const handleBuyLyx = () => {
 </script>
 
 <template>
-  <div class="relative">
+  <AppPageLoader>
     <div
-      :class="{
-        'opacity-0': !isLoadedApp,
-        'opacity-100': isLoadedApp,
-      }"
       class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-20 transition-opacity duration-300"
     >
       <div>
@@ -70,7 +66,7 @@ const handleBuyLyx = () => {
             :balance="connectedProfile.balance"
             :symbol="currentNetwork.token.symbol"
             :decimals="ASSET_LYX_DECIMALS"
-            :profile-image-url="profileImageUrl"
+            :profile-image-url="connectedProfile.profileImage?.url"
             :message="$formatMessage('token_details_own')"
           />
 
@@ -114,6 +110,5 @@ const handleBuyLyx = () => {
         />
       </div>
     </div>
-    <AppLoader v-if="!isLoadedApp" />
-  </div>
+  </AppPageLoader>
 </template>

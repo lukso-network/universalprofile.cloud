@@ -46,8 +46,9 @@ export const fetchLsp4Creators = async (
       }
 
       try {
+        // TODO rework thi to get creators from Algolia index
         profile = {
-          ...(await fetchLsp3Profile(creatorAddress)),
+          ...(await fetchProfile(creatorAddress)),
           ...profile,
         }
       } catch (error) {

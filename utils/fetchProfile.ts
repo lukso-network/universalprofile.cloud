@@ -1,60 +1,92 @@
-import { INTERFACE_IDS, SupportedStandards } from '@lukso/lsp-smart-contracts'
-
 import { ProfileRepository } from '@/repositories/profile'
 
-import type { LSP0ERC725Account } from '@/types/contracts/LSP0ERC725Account'
+import type { LSP3ProfileMetadata } from '@lukso/lsp-smart-contracts'
+import type { NuxtApp } from '@/types/plugins'
 
+/**
+ * Put fetched profile into the store
+ *
+ * @param profileAddress - profile address
+ */
+export const fetchAndStoreProfile = async (profileAddress: Address) => {
+  const profileRepo = useRepo(ProfileRepository)
+  const profile = await fetchProfile(profileAddress)
+
+  profileRepo.saveProfile(profile)
+}
+
+/**
+ * Fetch profile from the index
+ *
+ * @param profileAddress - profile address
+ * @returns
+ */
 export const fetchProfile = async (profileAddress: Address) => {
   const { isLoadingProfile } = storeToRefs(useAppStore())
-  const profileRepo = useRepo(ProfileRepository)
+  const { $fetchIndexedProfile } = useNuxtApp() as unknown as NuxtApp
+  const profileIndexedData = await $fetchIndexedProfile(profileAddress)
 
-  const storeProfile = profileRepo.getProfileAndImages(profileAddress)
-
-  if (storeProfile) {
-    const profileData = await fetchLsp3ProfileData(profileAddress)
-
-    // check if profile metadata hash has changed
-    if (getHash(profileData.value) === getHash(storeProfile)) {
-      await updateLyxBalance(profileAddress)
-      return
-    }
+  if (!profileIndexedData || profileIndexedData.type !== 'LSP3Profile') {
+    throw new NotFoundIndexError(profileAddress)
   }
 
   try {
     isLoadingProfile.value = true
-    const { contract, isEoA } = useWeb3(PROVIDERS.RPC)
 
-    // EoA check
-    if (await isEoA(profileAddress)) {
-      throw new EoAError(profileAddress)
-    }
-
-    // interface check
-    if (
-      !(await supportInterface(profileAddress, INTERFACE_IDS.LSP0ERC725Account))
-    ) {
-      throw new InterfaceError('LSP0ERC725Account')
-    }
-
-    // standard check
-    const supportedStandard = await contract<LSP0ERC725Account>(
-      getDataABI,
-      profileAddress
+    const profile = await createProfileObject(
+      profileAddress,
+      profileIndexedData?.LSP3Profile
     )
-      .methods.getData(SupportedStandards.LSP3Profile.key)
-      .call()
-    if (supportedStandard !== SupportedStandards.LSP3Profile.value) {
-      throw new Error(
-        `This profile contract doesn't support LSP3UniversalProfile standard`
-      )
-    }
 
-    const profile = await fetchLsp3Profile(profileAddress)
-
-    profileRepo.saveProfile(profile)
+    return profile
   } catch (error: unknown) {
     throw error
   } finally {
     isLoadingProfile.value = false
+  }
+}
+
+/**
+ * Create Profile type object
+ *
+ * @param profileAddress - address of the profile
+ * @param profileMetadata - metadata of the profile
+ * @returns
+ */
+const createProfileObject = async (
+  address: Address,
+  metadata?: LSP3ProfileMetadata
+): Promise<Profile> => {
+  const { links, tags, description, name } = metadata || {}
+
+  // get best image from collection based on height criteria
+
+  const profileImage =
+    metadata?.profileImage && createImageObject(metadata.profileImage, 96)
+
+  // get best image from collection based on height criteria
+  const backgroundImage = Array.isArray(metadata?.backgroundImage)
+    ? createImageObject(metadata.backgroundImage, 240)
+    : undefined
+
+  // get profile LYX balance
+  const { getBalance } = useWeb3(PROVIDERS.RPC)
+  const balance = await getBalance(address)
+
+  // create image identifiers so they can be linked in Pinia ORM
+  const profileImageId = getHash(profileImage)
+  const backgroundImageId = getHash(backgroundImage)
+
+  return {
+    address,
+    name,
+    balance,
+    links,
+    tags,
+    description,
+    profileImage,
+    backgroundImage,
+    profileImageId,
+    backgroundImageId,
   }
 }

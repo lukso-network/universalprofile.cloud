@@ -13,7 +13,6 @@ const { isConnected } = storeToRefs(useAppStore())
 const { connectedProfile } = useConnectedProfile()
 const { viewedProfile } = useViewedProfile()
 const creatorsRepository = useRepo(CreatorRepository)
-const iconUrl = ref<string>()
 
 const verifiedCreator = computed(() => {
   return creatorsRepository
@@ -46,10 +45,6 @@ const handleSendAsset = (event: Event) => {
     console.error(error)
   }
 }
-
-onMounted(async () => {
-  iconUrl.value = await getAssetThumb(props?.asset, false)
-})
 </script>
 
 <template>
@@ -57,7 +52,7 @@ onMounted(async () => {
     ><div slot="content">
       <div
         class="min-h-[260px] rounded-t-12 bg-neutral-90 bg-cover bg-center"
-        :style="`background-image: url(${iconUrl});`"
+        :style="`background-image: url(${getAssetThumb(asset, false)});`"
       ></div>
       <div class="relative p-4">
         <AssetCreator
