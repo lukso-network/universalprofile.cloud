@@ -25,7 +25,7 @@
   "send_error_title": "Something went wrong...",
   "not_found_title": "Oops!",
   "landing_hero_supported_browsers": "Supported Browsers",
-  "not_found_get_help_url": "https://lukso.network/faq",
+  "not_found_get_help_url": "https://support.lukso.network/",
   "send_input_placeholder": "Enter address of recipient",
   "asset_links_title": "Links",
   "token_details_send": "Send {token}",
