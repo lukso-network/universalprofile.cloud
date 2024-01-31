@@ -4,6 +4,7 @@ import type { Asset } from '@/models/asset'
 const { currentNetwork } = useAppStore()
 const { connectedProfile } = useConnectedProfile()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
+const assetRepository = useRepo(AssetRepository)
 const ownedAssets = ref<Asset[]>([])
 
 type Props = {
@@ -29,6 +30,10 @@ const handleSelectAsset = (asset: Asset) => {
   })
   props.closeModal()
 }
+
+onMounted(async () => {
+  ownedAssets.value = assetRepository.getOwnedAssets()
+})
 </script>
 
 <template>
@@ -60,7 +65,7 @@ const handleSelectAsset = (asset: Asset) => {
           :symbol="asset?.symbol"
           :address="asset?.address"
           :has-identicon="true"
-          :has-square-icon="isLsp8(asset)"
+          :has-square-icon="isNft(asset)"
           :is-selected="
             selectedAsset?.address === asset?.address &&
             selectedAsset?.tokenId === asset?.tokenId

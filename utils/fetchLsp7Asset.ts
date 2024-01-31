@@ -13,7 +13,12 @@ export const createLsp7Object = async (
     LSP7DigitalAsset.abi as AbiItem[],
     address
   )
-  const { name, symbol, LSP4Metadata: metadata } = indexedAsset || {}
+  const {
+    name,
+    symbol,
+    LSP4Metadata: metadata,
+    TokenType: tokenType, // TODO change to camelcase when fixed on indexer
+  } = indexedAsset || {}
   const { links, description } = metadata || {}
 
   // get profile balance for the asset
@@ -76,6 +81,8 @@ export const createLsp7Object = async (
     creators,
     creatorIds,
     tokenId: '',
+    owner: profileAddress,
+    tokenType: tokenType || 'TOKEN', // we set default just in case it's missing from indexer
   }
 }
 
