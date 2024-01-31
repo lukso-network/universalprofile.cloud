@@ -17,7 +17,11 @@ export const createLsp8Object = async (
   let tokensIds = tokensId
 
   // from base contract we take only name and symbol, metadata is taken from individual token id's
-  const { name, symbol } = indexedAsset || {}
+  const {
+    name,
+    symbol,
+    TokenType: tokenType, // TODO change to camelcase when fixed on indexer
+  } = indexedAsset || {}
 
   // get `tokenSupply` for the asset
   // TODO get this data from index when it's added
@@ -98,6 +102,7 @@ export const createLsp8Object = async (
         creators,
         creatorIds,
         owner: profileAddress,
+        tokenType: tokenType || 'NFT', // we set default just in case it's missing from indexer
       }
     })
   )

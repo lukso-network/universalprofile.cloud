@@ -24,7 +24,12 @@ const handleShowAsset = () => {
   try {
     assertAddress(props.asset?.address)
     assertString(props.asset.tokenId)
-    navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
+
+    if (props.asset?.standard === 'LSP8DigitalAsset') {
+      navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
+    } else {
+      navigateTo(tokenRoute(props.asset.address))
+    }
   } catch (error) {
     console.error(error)
   }

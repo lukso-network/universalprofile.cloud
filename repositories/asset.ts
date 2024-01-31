@@ -19,6 +19,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .where(token => {
         return token.balance !== '0'
       })
+      .where('tokenType', 'TOKEN')
       .get()
   }
 
@@ -37,6 +38,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .where(token => {
         return token.balance !== '0'
       })
+      .where('tokenType', 'TOKEN')
       .get()
   }
 
@@ -49,10 +51,12 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     return this.repo(AssetModel)
-      .where('standard', 'LSP8DigitalAsset')
       .where('address', viewedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where('owner', viewedProfile.value.address)
+      .where((asset: Asset) => {
+        return asset?.tokenType === 'NFT' || asset?.tokenType === 'COLLECTION'
+      })
       .get()
   }
 
@@ -65,32 +69,34 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     return this.repo(AssetModel)
-      .where('standard', 'LSP8DigitalAsset')
       .where('address', viewedProfile.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where('owner', viewedProfile.value.address)
+      .where((asset: Asset) => {
+        return asset?.tokenType === 'NFT' || asset?.tokenType === 'COLLECTION'
+      })
       .get()
   }
 
   getOwnedAssets() {
-    const { viewedProfile } = useViewedProfile()
+    // const { viewedProfile } = useViewedProfile()
     const { connectedProfile } = useConnectedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
-    if (!viewedProfile.value?.receivedAssetAddresses) {
+    if (!connectedProfile.value?.receivedAssetAddresses) {
       return []
     }
 
     return this.repo(AssetModel)
-      .where('address', viewedProfile.value.receivedAssetAddresses)
+      .where('address', connectedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where((asset: Asset) => {
         return (
           asset?.standard === 'LSP7DigitalAsset' ||
-          (asset?.standard === 'LSP8DigitalAsset' &&
-            asset?.owner === connectedProfile.value?.address)
+          asset?.standard === 'LSP8DigitalAsset'
         )
       })
+      .where('owner', connectedProfile.value?.address)
       .get()
   }
 
