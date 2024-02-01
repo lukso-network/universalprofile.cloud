@@ -128,36 +128,27 @@ const setupProfile = async (profileAddress: Address) => {
   }
 
   // fetch profile metadata
-  try {
-    await fetchAndStoreProfile(profileAddress)
+  await fetchAndStoreProfile(profileAddress)
 
-    // fetch asset metadata
-    try {
-      await fetchAndStoreAssets(profileAddress)
-    } catch (error) {
-      console.error(error)
-    }
-  } catch (error: unknown) {
-    console.error(error)
-
-    if (error instanceof NotFoundIndexError) {
-      navigateTo(notFoundRoute())
-    }
-  }
+  // fetch asset metadata
+  await fetchAndStoreAssets(profileAddress)
 }
 
 /**
- * Setup network based on `network` query param
+ * Setup network based on `network` query param.
+ * Check if dApp network match with extension and if not show network switch modal.
  */
 const setupNetwork = async () => {
   const network = useRouter().currentRoute.value.query?.network
 
   if (!network) {
+    await checkExtensionNetwork()
     return
   }
 
   if (SUPPORTED_NETWORK_IDS.includes(network)) {
     selectedChainId.value = getNetworkById(network).chainId
+    await checkExtensionNetwork()
   } else {
     console.warn(
       `Invalid network: ${network}, valid networks are ${SUPPORTED_NETWORK_IDS.join(
@@ -173,7 +164,13 @@ const setupNetwork = async () => {
 const setupViewedProfile = async () => {
   const profileAddress = useRouter().currentRoute.value.params?.profileAddress
 
-  await setupProfile(profileAddress)
+  try {
+    await setupProfile(profileAddress)
+  } catch (error: unknown) {
+    if (error instanceof NotFoundIndexError) {
+      navigateTo(notFoundRoute())
+    }
+  }
 }
 
 /**
@@ -194,7 +191,11 @@ const setupConnectedProfile = async () => {
     assertAddress(connectedProfileAddress.value)
     await setupProfile(connectedProfileAddress.value)
   } catch (error) {
-    //
+    // if we can't find connected profile in the index we should disconnect it
+    // it also happens when user redirect to different network through query param while being connected
+    if (error instanceof NotFoundIndexError) {
+      disconnect()
+    }
   }
 }
 
