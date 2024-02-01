@@ -37,6 +37,9 @@ export const transakBuyLyxUrl = () => {
     defaultCryptoCurrency: 'LYX',
     productsAvailed: 'BUY',
     walletAddress: connectedProfile.value?.address,
+    isFeeCalculationHidden: 'true',
+    defaultPaymentMethod: 'credit_debit_card',
+    hideMenu: 'true',
     redirectURL: `${BASE_WALLET_URL}/${connectedProfile.value?.address}?network=${currentNetwork.value.id}`,
     themeColor: '243542', // neutral-20
     exchangeScreenTitle: formatMessage('transak_widget_title'),
