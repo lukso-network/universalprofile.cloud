@@ -30,8 +30,6 @@ const verifyStatus = computed<VerifyStatus>(() => {
     return 'verified'
   return 'partial'
 })
-
-console.log(verifyStatus.value)
 </script>
 
 <template>
