@@ -33,7 +33,7 @@ export default defineNuxtPlugin(() => {
       fetchIndexedProfile: (address: Address) =>
         fetchIndexedData<IndexedProfile>(address),
       fetchIndexedAsset: (address: Address) =>
-        fetchIndexedData<IndexedProfile>(address),
+        fetchIndexedData<IndexedAsset>(address),
     },
   }
 })
