@@ -85,7 +85,7 @@ const isLsp8 = (asset: Asset) => {
           class="min-h-[260px] rounded-t-12 bg-neutral-90 bg-cover bg-center"
           :style="`background-image: url(${getAssetThumb(asset, false)});`"
         ></div>
-        <div class="relative grid grid-rows-[max-content,auto] p-4">
+        <div class="relative grid grid-rows-[max-content,max-content,auto] p-4">
           <div
             class="relative top-[-40px] flex cursor-pointer flex-col rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
           >
