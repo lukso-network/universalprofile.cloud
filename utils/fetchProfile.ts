@@ -106,13 +106,14 @@ const createProfileObject = async (
       'LSP5ReceivedAssets[]',
       'LSP12IssuedAssets[]',
     ])
+    const [receivedAssets, issuedAssets] = assetAddresses
 
-    assertArray(assetAddresses[0].value)
-    assertAddresses(assetAddresses[0].value)
-    receivedAssetAddresses = assetAddresses[0].value
-    assertArray(assetAddresses[1].value)
-    assertAddresses(assetAddresses[1].value)
-    issuedAssetAddresses = assetAddresses[1].value
+    assertArray(receivedAssets?.value)
+    assertAddresses(receivedAssets?.value)
+    receivedAssetAddresses = receivedAssets?.value
+    assertArray(issuedAssets?.value)
+    assertAddresses(issuedAssets?.value)
+    issuedAssetAddresses = issuedAssets?.value
   } catch (error) {}
 
   return {

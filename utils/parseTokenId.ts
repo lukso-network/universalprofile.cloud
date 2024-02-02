@@ -8,7 +8,10 @@ import { hexToNumber, hexToUtf8 } from 'web3-utils'
  * @param tokenIdFormat
  * @returns
  */
-export const parseTokenId = (tokenId?: string, tokenIdFormat?: number) => {
+export const parseTokenId = (
+  tokenId?: string,
+  tokenIdFormat?: TokenIdFormatValue
+) => {
   if (!tokenId) {
     return ''
   }
@@ -22,7 +25,7 @@ export const parseTokenId = (tokenId?: string, tokenIdFormat?: number) => {
       return hexToNumber(tokenId).toString()
     case LSP8_TOKEN_ID_FORMAT.ADDRESS:
       // address needs to be lowercase
-      return tokenId.toLowerCase()
+      return paddedToAddress(tokenId.toLowerCase())
     case LSP8_TOKEN_ID_FORMAT.UNIQUE_ID:
     case LSP8_TOKEN_ID_FORMAT.HASH:
       // remove 0x from uid/hash token ids
@@ -40,8 +43,12 @@ export const parseTokenId = (tokenId?: string, tokenIdFormat?: number) => {
  * @returns
  */
 export const tokenIdPrefix = (tokenIdFormat?: number) => {
-  // no prefix for address
-  if (tokenIdFormat === 2) {
+  // no prefix for token ids starting with `0x`
+  if (
+    tokenIdFormat === LSP8_TOKEN_ID_FORMAT.ADDRESS ||
+    tokenIdFormat === LSP8_TOKEN_ID_FORMAT.UNIQUE_ID ||
+    tokenIdFormat === LSP8_TOKEN_ID_FORMAT.HASH
+  ) {
     return ''
   }
 
