@@ -70,7 +70,7 @@ const routerBackProfileLoad = async () => {
       if (!storeProfile) {
         try {
           await fetchAndStoreProfile(toProfileAddress)
-          await fetchAndStoreAssets(toProfileAddress)
+          fetchAndStoreAssets(toProfileAddress)
         } catch (error) {
           console.error(error)
         }
@@ -133,7 +133,7 @@ const setupProfile = async (profileAddress: Address) => {
 
     // fetch asset metadata
     try {
-      await fetchAndStoreAssets(profileAddress)
+      fetchAndStoreAssets(profileAddress)
     } catch (error) {
       console.error(error)
     }

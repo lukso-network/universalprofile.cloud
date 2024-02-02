@@ -85,7 +85,7 @@ const handleAccountsChanged = async (accounts: string[]) => {
       // TODO try to refresh current page based on router params
       await navigateTo(profileRoute(address))
       await fetchAndStoreProfile(address)
-      await fetchAndStoreAssets(address)
+      fetchAndStoreAssets(address)
     } catch (error) {
       console.error(error)
     }

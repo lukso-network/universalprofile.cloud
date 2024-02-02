@@ -3,22 +3,30 @@ import type { NuxtApp } from '@/types/plugins'
 export const fetchAndStoreAssets = async (profileAddress: Address) => {
   const { profile } = useProfile(profileAddress)
   const assetRepo = useRepo(AssetRepository)
+  const { isLoadingAssets } = storeToRefs(useAppStore())
 
-  // we split LSP5 and LSP12 into separate catch blocks so we can handle them individually and even if
-  // one fails, the other is still handled.
-
-  // get assets an put into store
+  // combine all LSP5/12 assets into one array
   const assets = [
     ...(profile?.value?.receivedAssetAddresses || []),
     ...(profile?.value?.issuedAssetAddresses || []),
   ]
 
-  await Promise.all(
-    assets.map(async assetAddress => {
-      const asset = await fetchAsset(assetAddress, profileAddress)
-      asset && asset.length && assetRepo.saveAssets(asset)
-    })
-  )
+  // split array into batches of 3
+  const batches = splitArray(assets, 3)
+  isLoadingAssets.value = true
+
+  // after each batch we deffer next fetch
+  for (const batch of batches) {
+    await Promise.all(
+      batch.map(async (assetAddress: Address, index: number) => {
+        const asset = await fetchAsset(assetAddress, profileAddress)
+        asset && asset.length && assetRepo.saveAssets(asset)
+        await new Promise(resolve => setTimeout(resolve, 500 * index))
+      })
+    )
+  }
+
+  isLoadingAssets.value = false
 }
 
 /**

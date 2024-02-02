@@ -37,7 +37,6 @@ export const fetchProfile = async (profileAddress: Address) => {
     return storeProfile
   }
 
-  const { isLoadingProfile } = storeToRefs(useAppStore())
   const { $fetchIndexedProfile } = useNuxtApp() as unknown as NuxtApp
   const profileIndexedData = await $fetchIndexedProfile(profileAddress)
 
@@ -46,8 +45,6 @@ export const fetchProfile = async (profileAddress: Address) => {
   }
 
   try {
-    isLoadingProfile.value = true
-
     const profile = await createProfileObject(
       profileAddress,
       profileIndexedData?.LSP3Profile
@@ -56,8 +53,6 @@ export const fetchProfile = async (profileAddress: Address) => {
     return profile
   } catch (error: unknown) {
     throw error
-  } finally {
-    isLoadingProfile.value = false
   }
 }
 
