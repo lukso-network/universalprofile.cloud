@@ -5,6 +5,7 @@ import type {
   LSP4DigitalAssetMetadata,
   LinkMetadata,
   LSP4_TOKEN_TYPES,
+  LSP8_TOKEN_ID_FORMAT,
 } from '@lukso/lsp-smart-contracts'
 import type { Image } from '@/models/image'
 import type { Creator } from '@/models/creator'
@@ -71,6 +72,8 @@ export type Asset = Partial<Item<AssetModel>>
 
 export type AssetType = 'EOA' | 'LSP7DigitalAsset' | 'LSP8DigitalAsset'
 export type TokenType = keyof typeof LSP4_TOKEN_TYPES
+export type TokenIdFormatKey = keyof typeof LSP8_TOKEN_ID_FORMAT
+export type TokenIdFormatValue = (typeof LSP8_TOKEN_ID_FORMAT)[TokenIdFormatKey]
 
 export const StandardsAbbreviations: { [K in AssetType]?: string } = {
   LSP7DigitalAsset: 'LSP7',
