@@ -30,6 +30,7 @@ export class AssetModel extends BaseModel {
       isNativeToken: this.boolean(false),
       owner: this.string(''),
       tokenType: this.string(''),
+      assetImageUrl: this.string(''),
 
       // foreign keys
       iconId: this.attr(null),
@@ -53,6 +54,7 @@ export class AssetModel extends BaseModel {
   declare isNativeToken?: boolean
   declare owner: Address
   declare tokenType?: TokenType
+  declare assetImageUrl?: string
 
   // foreign keys
 
@@ -88,6 +90,7 @@ export type IndexedAsset = {
   symbol?: string
   LSP4Metadata?: LSP4DigitalAssetMetadata
   TokenType?: TokenType // TODO change to camelcase when fixed in indexer
+  assetImageUrl?: string
 
   // not using now this attributes but some will be useful in FE
   // TODO refactor this later
