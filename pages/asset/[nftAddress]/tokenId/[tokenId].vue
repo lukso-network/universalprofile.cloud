@@ -106,7 +106,7 @@ const handleSendAsset = (event: Event) => {
           {{ asset?.name }}
         </div>
         <AssetAddress v-if="asset?.address" :address="asset.address" />
-        <AssetTokenId v-if="asset?.tokenId" :token-id="asset.tokenId" />
+        <AssetTokenId v-if="asset?.tokenId" :asset="asset" />
         <AssetSupply
           v-if="asset?.tokenSupply"
           :token-supply="asset?.tokenSupply"

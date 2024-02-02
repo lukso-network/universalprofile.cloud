@@ -25,12 +25,6 @@ export class ImageModel extends Model {
   declare hashFunction?: string
   declare url?: string
   declare verification?: ImageMetadata['verification']
-
-  static piniaOptions = {
-    persist: {
-      key: STORAGE_KEY.IMAGE_STORE,
-    },
-  }
 }
 
 export type Image = Partial<Item<ImageModel>>

@@ -19,7 +19,8 @@ export default defineNuxtPlugin(() => {
       method: 'GET',
     })
 
-    console.debug('Algolia API response:', {
+    // @ts-ignore
+    console.debug(`Algolia API response (${response.type}):`, {
       url,
       response,
     })
@@ -32,7 +33,7 @@ export default defineNuxtPlugin(() => {
       fetchIndexedProfile: (address: Address) =>
         fetchIndexedData<IndexedProfile>(address),
       fetchIndexedAsset: (address: Address) =>
-        fetchIndexedData<IndexedProfile>(address),
+        fetchIndexedData<IndexedAsset>(address),
     },
   }
 })

@@ -29,12 +29,6 @@ export class CreatorModel extends BaseModel {
 
   declare profile?: Profile
   declare asset?: Asset
-
-  static piniaOptions = {
-    persist: {
-      key: STORAGE_KEY.CREATOR_STORE,
-    },
-  }
 }
 
 export type Creator = Partial<Item<CreatorModel>>

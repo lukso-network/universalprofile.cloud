@@ -3,7 +3,7 @@ import { AssetRepository } from '@/repositories/asset'
 
 import type { Asset } from '@/models/asset'
 
-const { assetFilter } = storeToRefs(useAppStore())
+const { assetFilter, isLoadingAssets } = storeToRefs(useAppStore())
 const { viewedProfile } = useViewedProfile()
 const assetRepository = useRepo(AssetRepository)
 const tokensOwned = ref<Asset[]>()
@@ -126,6 +126,10 @@ watchEffect(async () => {
             <div v-else>
               <TokenList v-if="hasEmptyTokens" :tokens="tokens" />
               <NftList v-if="hasEmptyNfts" :nfts="nfts" />
+              <AppLoader
+                v-if="isLoadingAssets"
+                class="relative left-[calc(50%-20px)] mt-20"
+              />
             </div>
           </div>
         </div>

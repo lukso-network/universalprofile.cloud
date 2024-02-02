@@ -43,6 +43,19 @@ export class CreatorRepository extends Repository<CreatorModel> {
     } as Creator
   }
 
+  saveCreators(creators: Creator[]) {
+    // save creators
+    this.repo(CreatorModel).save(creators)
+
+    // save creator profiles
+    const creatorProfiles = creators?.map(creator => creator?.profile)
+    creatorProfiles &&
+      creatorProfiles.length &&
+      creatorProfiles.forEach(creatorProfile => {
+        this.repo(ProfileRepository).saveProfile(creatorProfile)
+      })
+  }
+
   private primaryKey(
     creatorAddress: Address,
     assetAddress?: Address,

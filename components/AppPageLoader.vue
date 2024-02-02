@@ -1,6 +1,5 @@
 <script setup lang="ts">
-const { isLoadedApp, isLoadingProfile, isLoadingAssets } =
-  storeToRefs(useAppStore())
+const { isLoadedApp } = storeToRefs(useAppStore())
 </script>
 
 <template>
@@ -8,13 +7,15 @@ const { isLoadedApp, isLoadingProfile, isLoadingAssets } =
     <div
       class="relative px-4 py-20"
       :class="{
-        'opacity-0': isLoadingAssets || isLoadingProfile || !isLoadedApp,
-        'opacity-100  transition-opacity delay-200 duration-300':
-          !isLoadingAssets && !isLoadingProfile && isLoadedApp,
+        'opacity-0': !isLoadedApp,
+        'opacity-100  transition-opacity delay-200 duration-300': isLoadedApp,
       }"
     >
       <slot />
     </div>
-    <AppLoader v-if="isLoadingAssets || isLoadingProfile || !isLoadedApp" />
+    <AppLoader
+      v-if="!isLoadedApp"
+      class="absolute left-[calc(50%-20px)] top-[300px]"
+    />
   </div>
 </template>
