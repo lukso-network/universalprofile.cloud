@@ -1,4 +1,5 @@
 import LSP3ProfileMetadataSchema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
+import { toChecksumAddress } from 'web3-utils'
 
 import { ProfileRepository } from '@/repositories/profile'
 
@@ -25,6 +26,17 @@ export const fetchAndStoreProfile = async (profileAddress: Address) => {
  * @returns
  */
 export const fetchProfile = async (profileAddress: Address) => {
+  const profileRepo = useRepo(ProfileRepository)
+  const checksumProfileAddress = toChecksumAddress(profileAddress)
+  assertAddress(checksumProfileAddress)
+
+  // check if profile is already in the store
+  const storeProfile = profileRepo.getProfileAndImages(checksumProfileAddress)
+
+  if (storeProfile) {
+    return storeProfile
+  }
+
   const { isLoadingProfile } = storeToRefs(useAppStore())
   const { $fetchIndexedProfile } = useNuxtApp() as unknown as NuxtApp
   const profileIndexedData = await $fetchIndexedProfile(profileAddress)

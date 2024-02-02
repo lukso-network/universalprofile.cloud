@@ -5,11 +5,17 @@ import { ImageModel } from '@/models/image'
 import { ImageRepository } from './image'
 
 export class ProfileRepository extends Repository<ProfileModel> {
-  getProfileAndImages(address: Address) {
+  getProfile(address: Address) {
     const { selectedChainId } = storeToRefs(useAppStore())
     const profile = this.repo(ProfileModel)
       .where('chainId', selectedChainId.value)
       .find(address)
+
+    return profile
+  }
+
+  getProfileAndImages(address: Address) {
+    const profile = this.getProfile(address)
 
     if (!profile) {
       return
