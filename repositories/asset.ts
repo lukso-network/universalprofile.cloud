@@ -114,7 +114,9 @@ export class AssetRepository extends Repository<AssetModel> {
       // save asset images
       icon && this.repo(ImageModel).save(icon)
       images && images.length && this.repo(ImageModel).save(images)
-      creators && creators.length && this.repo(CreatorModel).save(creators)
+      creators &&
+        creators.length &&
+        this.repo(CreatorRepository).saveCreators(creators)
     })
   }
 

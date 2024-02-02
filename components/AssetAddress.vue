@@ -17,7 +17,7 @@ defineProps<Props>()
         <img
           :src="makeBlockie(address)"
           alt=""
-          class="shadow-shadow-1xl bottom-0 right-0 h-4 w-4 rounded-full outline outline-2 outline-neutral-100"
+          class="bottom-0 right-0 h-4 w-4 rounded-full shadow-neutral-above-shadow-1xl outline outline-2 outline-neutral-100"
         />
         <div class="paragraph-inter-14-medium ml-2">
           {{ $formatMessage('token_details_contract_address') }}
