@@ -87,7 +87,7 @@ const createCreatorObject = async (
     (profile?.issuedAssetAddresses &&
       profile.issuedAssetAddresses.filter(address => {
         if (isAddress(address)) {
-          return toChecksumAddress(address)
+          return address
         }
       })) ||
     []
