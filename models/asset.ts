@@ -63,6 +63,12 @@ export class AssetModel extends BaseModel {
   declare icon?: Image
   declare images?: Image[]
   declare creators?: Creator[]
+
+  static piniaOptions = {
+    persist: {
+      key: STORAGE_KEY.ASSET_STORE,
+    },
+  }
 }
 
 export type Asset = Partial<Item<AssetModel>>

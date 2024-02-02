@@ -46,6 +46,12 @@ export class ProfileModel extends BaseModel {
 
   declare profileImage?: Image
   declare backgroundImage?: Image
+
+  static piniaOptions = {
+    persist: {
+      key: STORAGE_KEY.PROFILE_STORE,
+    },
+  }
 }
 
 export type Profile = Partial<Item<ProfileModel>>
