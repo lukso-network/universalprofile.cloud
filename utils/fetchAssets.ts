@@ -1,69 +1,30 @@
-import LSP3ProfileMetadata from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
-
-import type { ERC725JSONSchema } from '@erc725/erc725.js'
 import type { NuxtApp } from '@/types/plugins'
 
 export const fetchAndStoreAssets = async (profileAddress: Address) => {
   const { profile } = useProfile(profileAddress)
-  const profileRepo = useRepo(ProfileRepository)
   const assetRepo = useRepo(AssetRepository)
-  const { getInstance } = useErc725()
-  const erc725 = getInstance(
-    profileAddress,
-    LSP3ProfileMetadata as ERC725JSONSchema[]
-  )
   const { isLoadingAssets } = storeToRefs(useAppStore())
 
   // we split LSP5 and LSP12 into separate catch blocks so we can handle them individually and even if
   // one fails, the other is still handled.
   isLoadingAssets.value = true
 
-  try {
-    // TODO update this when Algolia provides LSP5 array for the profile
-    const receivedAssets = (await erc725.fetchData('LSP5ReceivedAssets[]'))
-      ?.value
-    assertArray(receivedAssets)
-    assertAddresses(receivedAssets)
+  // get assets an put into store
+  const receivedAssets = profile?.value?.receivedAssetAddresses || []
+  const issuedAssets = profile?.value?.issuedAssetAddresses || []
 
-    // get assets an put into store
-    await Promise.all(
-      receivedAssets.map(async assetAddress => {
-        const assets = await fetchAsset(assetAddress, profileAddress)
-        assets && assets.length && assetRepo.saveAssets(assets)
-      })
-    )
-
-    // update profile store with received assets array
-    profileRepo.saveProfile({
-      ...profile.value,
-      receivedAssetAddresses: receivedAssets,
+  await Promise.all(
+    receivedAssets.map(async assetAddress => {
+      const asset = await fetchAsset(assetAddress, profileAddress)
+      asset && asset.length && assetRepo.saveAssets(asset)
     })
-  } catch (error) {
-    console.error(error)
-  }
-
-  try {
-    // TODO update this when Algolia provides LSP12 array for the profile
-    const issuedAssets = (await erc725.fetchData('LSP12IssuedAssets[]'))?.value
-    assertArray(issuedAssets)
-    assertAddresses(issuedAssets)
-
-    // get assets an put into store
-    await Promise.all(
-      issuedAssets.map(async assetAddress => {
-        const assets = await fetchAsset(assetAddress, profileAddress)
-        assets && assets.length && assetRepo.saveAssets(assets)
-      })
-    )
-
-    // update profile store with issued assets array
-    profileRepo.saveProfile({
-      ...profile.value,
-      issuedAssetAddresses: issuedAssets,
+  )
+  await Promise.all(
+    issuedAssets.map(async assetAddress => {
+      const assets = await fetchAsset(assetAddress, profileAddress)
+      assets && assets.length && assetRepo.saveAssets(assets)
     })
-  } catch (error) {
-    console.error(error)
-  }
+  )
 
   isLoadingAssets.value = false
 }

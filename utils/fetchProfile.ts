@@ -1,7 +1,10 @@
+import LSP3ProfileMetadataSchema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
+
 import { ProfileRepository } from '@/repositories/profile'
 
 import type { LSP3ProfileMetadata } from '@lukso/lsp-smart-contracts'
 import type { NuxtApp } from '@/types/plugins'
+import type { ERC725JSONSchema } from '@erc725/erc725.js'
 
 /**
  * Put fetched profile into the store
@@ -57,6 +60,11 @@ const createProfileObject = async (
   address: Address,
   metadata?: LSP3ProfileMetadata
 ): Promise<Profile> => {
+  const { getInstance } = useErc725()
+  const erc725 = getInstance(
+    address,
+    LSP3ProfileMetadataSchema as ERC725JSONSchema[]
+  )
   const { links, tags, description, name } = metadata || {}
 
   // get best image from collection based on height criteria
@@ -77,6 +85,24 @@ const createProfileObject = async (
   const profileImageId = getHash(profileImage)
   const backgroundImageId = getHash(backgroundImage)
 
+  let receivedAssetAddresses: Address[] = []
+  let issuedAssetAddresses: Address[] = []
+  try {
+    // get received assets array for profile
+    // TODO update this when Algolia provides LSP5 array for the profile
+    const assetAddresses = await erc725.fetchData([
+      'LSP5ReceivedAssets[]',
+      'LSP12IssuedAssets[]',
+    ])
+
+    assertArray(assetAddresses[0].value)
+    assertAddresses(assetAddresses[0].value)
+    receivedAssetAddresses = assetAddresses[0].value
+    assertArray(assetAddresses[1].value)
+    assertAddresses(assetAddresses[1].value)
+    issuedAssetAddresses = assetAddresses[1].value
+  } catch (error) {}
+
   return {
     address,
     name,
@@ -88,5 +114,7 @@ const createProfileObject = async (
     backgroundImage,
     profileImageId,
     backgroundImageId,
+    receivedAssetAddresses,
+    issuedAssetAddresses,
   }
 }
