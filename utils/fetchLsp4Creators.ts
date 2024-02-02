@@ -59,6 +59,7 @@ export const fetchLsp4Creators = async (
     return creators
   } catch (error) {
     console.error(error)
+    return []
   }
 }
 
