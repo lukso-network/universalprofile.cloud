@@ -21,10 +21,10 @@ const restOfCreators = computed(() =>
 )
 
 const verifyStatus = computed<VerifyStatus>(() => {
-  if (props.creators?.filter(creator => creator?.verified).length === 0)
+  if (props.creators?.filter(creator => creator?.isVerified).length === 0)
     return 'unverified'
   if (
-    props.creators?.filter(creator => creator?.verified).length ===
+    props.creators?.filter(creator => creator?.isVerified).length ===
     props.creators?.length
   )
     return 'verified'
