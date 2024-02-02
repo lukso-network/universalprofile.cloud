@@ -54,9 +54,12 @@ export const createLsp7Object = async (
     })
   }
 
+  // we check contract owner in case there are no creators set
+  const owner = await lsp7Contract.methods.owner().call() // TODO fetch from Algolia when it's supported
+
   // get creator metadata
   // TODO refactor this to get from index
-  const creators = await fetchLsp4Creators(address, '')
+  const creators = await fetchLsp4Creators(address, '', owner)
 
   // create creator identifiers for Pinia ORM
   const creatorIds: Address[] = []

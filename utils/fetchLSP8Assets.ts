@@ -36,6 +36,10 @@ export const createLsp8Object = async (
     return []
   }
 
+  // we check contract owner in case there are no creators set
+  const owner = await lsp8Contract.methods.owner().call() // TODO fetch from Algolia when it's supported
+
+  // fetch metadata for each token id
   const assets: Asset[] = await Promise.all(
     tokensIds.map(async tokenId => {
       // TODO fetch from Algolia when token id's are unsupported
@@ -75,7 +79,7 @@ export const createLsp8Object = async (
 
       // get creator metadata
       // TODO refactor this to get from index
-      const creators = await fetchLsp4Creators(address, tokenId)
+      const creators = await fetchLsp4Creators(address, tokenId, owner)
 
       // create creator identifiers for Pinia ORM
       const creatorIds: Address[] = []
