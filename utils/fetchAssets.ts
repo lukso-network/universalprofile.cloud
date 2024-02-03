@@ -11,20 +11,17 @@ export const fetchAndStoreAssets = async (profileAddress: Address) => {
     ...(profile?.value?.issuedAssetAddresses || []),
   ]
 
-  // split array into batches of 3
-  const batches = splitArray(assets, 3)
   isLoadingAssets.value = true
 
-  // after each batch we deffer next fetch
-  for (const batch of batches) {
-    await Promise.all(
-      batch.map(async (assetAddress: Address, index: number) => {
-        const asset = await fetchAsset(assetAddress, profileAddress)
-        asset && asset.length && assetRepo.saveAssets(asset)
-        await new Promise(resolve => setTimeout(resolve, 500 * index))
-      })
-    )
-  }
+  const promises = assets.map(assetAddress =>
+    fetchAsset(assetAddress, profileAddress).then(asset => {
+      if (asset) {
+        assetRepo.saveAssets(asset)
+      }
+    })
+  )
+
+  await Promise.all(promises)
 
   isLoadingAssets.value = false
 }

@@ -41,7 +41,7 @@ const connect = async () => {
     // TODO try to refresh current page based on router params
     await navigateTo(profileRoute(address))
     await fetchAndStoreProfile(address)
-    await fetchAndStoreAssets(address)
+    fetchAndStoreAssets(address)
     setConnectionExpiry()
   } catch (error: any) {
     console.error(error)
