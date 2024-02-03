@@ -40,6 +40,14 @@ export class AssetModel extends BaseModel {
     }
   }
 
+  static mutators() {
+    return {
+      tokenType(value: TokenType) {
+        return value.toUpperCase() // Since indexer return mixed case we unify with mutator
+      },
+    }
+  }
+
   // types
   declare address: Address
   declare name?: string
