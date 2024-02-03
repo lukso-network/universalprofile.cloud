@@ -18,7 +18,7 @@
   "buy_lyx_title": "Use the below services to <strong>buy LYX</strong> for your Universal Profile",
   "assets_empty_state_title": "No created assets",
   "web3_connect_no_extension": "You don't have the Universal Profile browser extension installed.",
-  "asset_all_creators_partial": "Not all creators verified",
+  "asset_all_creators_partial": "Not all creators are verified",
   "header_install_extension": "Install Extension",
   "error_same_address": "You cannot send {lyxSymbol} to yourself",
   "asset_standard_info_legacy_details": "Info about the standard goes here....",
