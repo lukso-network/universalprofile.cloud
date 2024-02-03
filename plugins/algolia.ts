@@ -3,9 +3,6 @@ import { hexToNumber } from 'web3-utils'
 import { INDEXER_API_URL, INDEXER_API_VERSION } from '@/shared/config'
 
 export default defineNuxtPlugin(() => {
-  const { currentNetwork } = storeToRefs(useAppStore())
-  const chainId = hexToNumber(currentNetwork.value.chainId)
-
   /**
    * Generic fetching function for indexed data
    *
@@ -13,6 +10,8 @@ export default defineNuxtPlugin(() => {
    * @returns
    */
   const fetchIndexedData = async <T>(address: Address) => {
+    const { currentNetwork } = useAppStore()
+    const chainId = hexToNumber(currentNetwork.chainId)
     const url = `${INDEXER_API_URL}/${INDEXER_API_VERSION}/${chainId}/address/${address}`
     const response = await fetcher<T, Record<string, never>>({
       url,

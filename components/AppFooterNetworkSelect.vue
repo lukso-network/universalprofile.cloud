@@ -3,8 +3,7 @@ import type { SelectStringOption } from '@lukso/web-components'
 
 const networks = ref<SelectStringOption[]>()
 const selectedNetwork = ref<SelectStringOption>()
-const { currentNetwork, selectedChainId } = storeToRefs(useAppStore())
-const { disconnect } = useBrowserExtension()
+const { currentNetwork } = storeToRefs(useAppStore())
 const { isMobileOrTablet } = useDevice()
 
 onMounted(() => {
@@ -23,12 +22,22 @@ watchEffect(() => {
   }
 })
 
+/**
+ * When user selects a network from the dropdown, show a modal to confirm the network switch.
+ *
+ * @param event
+ */
 const handleNetworkChange = async (event: CustomEvent) => {
   const selectedNetwork = event.detail.value as SelectStringOption
-  selectedNetwork.id && (selectedChainId.value = selectedNetwork.id)
-  disconnect()
-  await navigateTo(homeRoute())
-  window.location.href = window.location.href.split('?')[0]
+  const { showModal } = useModal()
+
+  showModal({
+    template: 'SwitchApplicationNetwork',
+    data: {
+      name: selectedNetwork.value,
+      chainId: selectedNetwork.id,
+    },
+  })
 }
 </script>
 
