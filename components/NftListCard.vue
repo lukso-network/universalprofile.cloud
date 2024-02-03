@@ -29,7 +29,7 @@ const handleShowAsset = () => {
     assertAddress(props.asset?.address)
     assertString(props.asset.tokenId)
 
-    if (props.asset?.standard === 'LSP8DigitalAsset') {
+    if (isNft(props.asset)) {
       navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
     } else {
       navigateTo(tokenRoute(props.asset.address))

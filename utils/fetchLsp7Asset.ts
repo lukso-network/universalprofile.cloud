@@ -84,7 +84,7 @@ export const createLsp7Object = async (
     imageIds,
     creators,
     creatorIds,
-    tokenId: '',
+    tokenId: '0x',
     owner: profileAddress,
     tokenType: tokenType || 'TOKEN', // we set default just in case it's missing from indexer
     assetImageUrl,

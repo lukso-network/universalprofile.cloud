@@ -120,7 +120,10 @@ const assetTokenId = computed(() => {
           {{ asset?.name }}
         </div>
         <AssetAddress v-if="asset?.address" :address="asset.address" />
-        <AssetTokenId v-if="asset?.tokenId" :asset="asset" />
+        <AssetTokenId
+          v-if="asset?.tokenId && asset?.tokenId !== '0x'"
+          :asset="asset"
+        />
         <AssetSupply
           v-if="asset?.tokenSupply"
           :token-supply="asset?.tokenSupply"
