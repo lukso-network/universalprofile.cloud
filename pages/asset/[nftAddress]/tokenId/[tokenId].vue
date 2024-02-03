@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { sliceAddress } from '@lukso/web-components/tools'
+
 import { CreatorRepository } from '@/repositories/creator'
 
 import type { Creator } from '@/models/creator'
@@ -12,11 +14,11 @@ const { asset } = useAsset(nftAddress, tokenId)
 const creatorsRepo = useRepo(CreatorRepository)
 const creators = ref<Creator[]>([])
 
-const verifiedCreator = computed(() => {
-  return creatorsRepo
-    .getAssetCreators(nftAddress, tokenId)
-    .find(creator => creator?.isVerified)
-})
+// const verifiedCreator = computed(() => {
+//   return creatorsRepo
+//     .getAssetCreators(nftAddress, tokenId)
+//     .find(creator => creator?.isVerified)
+// })
 
 const isOwned = computed(() => {
   return (
@@ -57,6 +59,13 @@ const handleSendAsset = (event: Event) => {
     console.error(error)
   }
 }
+
+const assetTokenId = computed(() => {
+  return sliceAddress(
+    `${tokenIdPrefix(asset.value?.tokenIdFormat)}${parseTokenId(asset.value?.tokenId, asset.value?.tokenIdFormat)}`,
+    6
+  )
+})
 </script>
 
 <template>
@@ -72,14 +81,21 @@ const handleSendAsset = (event: Event) => {
               :style="`background-image: url(${getAssetThumb(asset)});`"
             ></div>
             <div class="relative p-4">
-              <AssetCreator
-                :creator="verifiedCreator"
-                class="relative -top-4 -mt-4"
-              />
-              <div>
-                <div class="paragraph-inter-14-semi-bold">
-                  {{ asset?.name }}
-                </div>
+              <div class="paragraph-inter-14-semi-bold">
+                {{ asset?.name }}
+                <span
+                  class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
+                  >{{ asset?.symbol }}</span
+                >
+              </div>
+              <div class="paragraph-ptmono-10-bold mt-1">
+                <span v-if="isLsp8(asset)">
+                  {{ assetTokenId }}
+                </span>
+                <span v-else>
+                  {{ $formatMessage('token_owned') }}
+                  {{ asset?.balance }}
+                </span>
               </div>
             </div>
           </div>
@@ -95,9 +111,7 @@ const handleSendAsset = (event: Event) => {
           />
 
           <lukso-button is-full-width class="mt-12" @click="handleSendAsset">{{
-            $formatMessage('token_details_send', {
-              token: asset?.symbol || '',
-            })
+            $formatMessage('token_details_send_collectible')
           }}</lukso-button>
         </div>
       </div>
