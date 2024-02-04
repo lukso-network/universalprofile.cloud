@@ -43,7 +43,7 @@ export const fetchAsset = async (
   const assetIndexedData = await $fetchIndexedAsset(address)
 
   if (!assetIndexedData) {
-    console.warn('Asset not found in the index')
+    console.warn(`Asset ${address} not found in the index`)
     return []
   }
 
@@ -62,7 +62,7 @@ export const fetchAsset = async (
     }
     case 'EOA': {
       // EOA for asset means it wasn't indexed yet
-      console.warn('Asset not found in the index')
+      console.warn(`Asset ${address} not found in the index`)
       return []
     }
     default:
