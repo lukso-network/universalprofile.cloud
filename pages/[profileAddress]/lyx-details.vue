@@ -11,6 +11,10 @@ const links: LinkMetadata[] = [
     title: 'www.lukso.network',
     url: 'https://lukso.network/',
   },
+  {
+    title: 'www.docs.lukso.tech',
+    url: 'https://docs.lukso.tech/',
+  },
 ]
 
 const handleSendLyx = () => {
@@ -39,7 +43,7 @@ const handleBuyLyx = () => {
 <template>
   <AppPageLoader>
     <div
-      class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-20 transition-opacity duration-300"
+      class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-6 transition-opacity duration-300"
     >
       <div>
         <lukso-card is-full-width size="small" shadow="small">
@@ -104,10 +108,10 @@ const handleBuyLyx = () => {
           :symbol="currentNetwork.token.symbol"
           :decimals="ASSET_LYX_DECIMALS"
         />
-        <AssetLinks :links="links" />
         <AssetDescription
           :description="$formatMessage('lyx_details_description')"
         />
+        <AssetLinks :links="links" />
       </div>
     </div>
   </AppPageLoader>
