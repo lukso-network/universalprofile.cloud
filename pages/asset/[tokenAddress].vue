@@ -52,7 +52,7 @@ const isOwned = computed(() => {
   <div class="relative">
     <AppPageLoader>
       <div
-        class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-20 transition-opacity duration-300"
+        class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-6 transition-opacity duration-300"
       >
         <div>
           <lukso-card is-full-width size="small">
@@ -90,23 +90,22 @@ const isOwned = computed(() => {
         </div>
         <div>
           <div class="heading-apax-24-medium pb-8">{{ asset?.name }}</div>
-          <AssetAddress v-if="asset?.address" :address="asset.address" />
           <AssetSupply
             v-if="asset?.tokenSupply"
             :token-supply="asset?.tokenSupply"
             :symbol="asset?.symbol"
             :decimals="asset?.decimals"
           />
-          <AssetCreators v-if="!!creators.length" :creators="creators" />
-          <AssetLinks
-            v-if="asset?.links && !!asset.links.length"
-            :links="asset.links"
-          />
           <AssetDescription
             v-if="asset?.description"
             :description="asset.description"
           />
           <AssetImages v-if="asset?.images?.length" :images="asset.images" />
+          <AssetLinks
+            v-if="asset?.links && !!asset.links.length"
+            :links="asset.links"
+          />
+          <AssetAddress v-if="asset?.address" :address="asset.address" />
           <AssetStandardInfo
             v-if="asset?.standard"
             :standard="asset.standard"
