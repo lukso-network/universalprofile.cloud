@@ -92,6 +92,7 @@ export type IndexedAsset = {
   address: Address
   type: AssetType
   name?: string
+  description?: string
   symbol?: string
   LSP4Metadata?: LSP4DigitalAssetMetadata
   TokenType?: TokenType // TODO change to camelcase when fixed in indexer

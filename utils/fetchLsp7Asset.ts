@@ -15,12 +15,13 @@ export const createLsp7Object = async (
   )
   const {
     name,
+    description,
     symbol,
     LSP4Metadata: metadata,
     TokenType: tokenType, // TODO change to camelcase when fixed on indexer
     assetImageUrl,
   } = indexedAsset || {}
-  const { links, description } = metadata || {}
+  const { links } = metadata || {}
 
   // get profile balance for the asset
   const balance = await fetchLsp7Balance(address, profileAddress)
