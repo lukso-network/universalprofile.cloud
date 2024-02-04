@@ -81,11 +81,16 @@ const isOwned = computed(() => {
               :message="$formatMessage('token_details_own')"
             />
 
-            <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{
-              $formatMessage('token_details_send', {
-                token: asset?.symbol || '',
-              })
-            }}</lukso-button>
+            <lukso-button
+              is-full-width
+              class="mt-12"
+              @click="handleSendAsset"
+              >{{
+                $formatMessage('token_details_send', {
+                  token: asset?.symbol || '',
+                })
+              }}</lukso-button
+            >
           </div>
         </div>
         <div>
