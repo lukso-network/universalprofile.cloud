@@ -6,6 +6,7 @@
   "error_rejected_request": "You rejected the request",
   "modal_switch_network_title": "Change extension network",
   "asset_standard_info_LSP8_title": "LSP8 Token Standard",
+  "token_details_collection_of": "Collection of {count}",
   "header_buy_lyx": "BUY LYX",
   "token_details_send_collectible": "Send collectible",
   "asset_creators_verified": "Verified creator",

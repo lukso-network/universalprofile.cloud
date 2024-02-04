@@ -10,18 +10,11 @@ export class CreatorRepository extends Repository<CreatorModel> {
       return []
     }
 
-    if (tokenId) {
-      return this.repo(CreatorModel)
-        .where('assetId', assetAddress)
-        .where('tokenId', tokenId)
-        .where('chainId', selectedChainId.value)
-        .get()
-    } else {
-      return this.repo(CreatorModel)
-        .where('assetId', assetAddress)
-        .where('chainId', selectedChainId.value)
-        .get()
-    }
+    return this.repo(CreatorModel)
+      .where('assetId', assetAddress)
+      .where('tokenId', tokenId)
+      .where('chainId', selectedChainId.value)
+      .get()
   }
 
   getCreator(

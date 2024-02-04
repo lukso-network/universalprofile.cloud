@@ -61,10 +61,6 @@ const assetTokenId = computed(() => {
     6
   )
 })
-
-const isLsp8 = (asset: Asset) => {
-  return asset?.standard === 'LSP8DigitalAsset'
-}
 </script>
 
 <template>
@@ -106,7 +102,10 @@ const isLsp8 = (asset: Asset) => {
               </span>
             </div>
           </div>
-          <AssetCreator :creators="creators" class="relative -top-4 -mt-2" />
+          <NftListCardCreators
+            :creators="creators"
+            class="relative -top-4 -mt-2"
+          />
           <div class="flex items-end">
             <div class="flex w-full justify-end">
               <lukso-button

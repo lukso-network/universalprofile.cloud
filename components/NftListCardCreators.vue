@@ -11,13 +11,13 @@ const props = defineProps<Props>()
 const profile: Profile = {}
 
 const firstCreator = computed(
-  () => useProfile(props.creators?.[0]?.profileId).profile
+  () => useProfile(props.creators?.[0]?.profileId).profile.value
 )
 
 const restOfCreators = computed(() =>
   props.creators
     ?.slice(1)
-    .map(creator => useProfile(creator?.profileId).profile)
+    .map(creator => useProfile(creator?.profileId).profile.value)
 )
 
 const verifyStatus = computed<VerifyStatus>(() => {
@@ -42,13 +42,13 @@ const verifyStatus = computed<VerifyStatus>(() => {
         v-for="creator in restOfCreators"
         :key="creator?.value?.address"
         size="x-small"
-        :profile-url="creator.value?.profileImage?.url"
+        :profile-url="creator?.profileImage?.url"
         class="relative"
       ></lukso-profile>
       <lukso-profile
         size="x-small"
-        :profile-url="firstCreator.value?.profileImage?.url"
-        :profile-address="firstCreator.value?.address"
+        :profile-url="firstCreator?.profileImage?.url"
+        :profile-address="firstCreator?.address"
         has-identicon
         class="relative"
       ></lukso-profile>
@@ -58,8 +58,8 @@ const verifyStatus = computed<VerifyStatus>(() => {
         {{ $formatMessage('asset_created_by') }}
       </div>
       <lukso-username
-        :name="firstCreator.value?.name"
-        :address="firstCreator.value?.address"
+        :name="firstCreator?.name"
+        :address="firstCreator?.address"
         size="x-small"
         class="flex"
         name-color="neutral-20"
