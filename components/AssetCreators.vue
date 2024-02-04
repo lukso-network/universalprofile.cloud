@@ -6,7 +6,6 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-console.log('creators', props.creators)
 
 const creatorsProfiles = computed(() =>
   props.creators.map(creator => {
