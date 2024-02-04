@@ -1,9 +1,5 @@
 import { ERC725YDataKeys } from '@lukso/lsp-smart-contracts'
-import {
-  isAddress,
-  /*isAddress,*/ padLeft /*, toChecksumAddress*/,
-  toChecksumAddress,
-} from 'web3-utils'
+import { isAddress, padLeft, toChecksumAddress } from 'web3-utils'
 
 import type { LSP0ERC725Account } from '@/types/contracts'
 import type { Profile } from '@/models/profile'

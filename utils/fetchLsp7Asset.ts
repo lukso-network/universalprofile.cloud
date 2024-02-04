@@ -60,7 +60,7 @@ export const createLsp7Object = async (
 
   // get creator metadata
   // TODO refactor this to get from index
-  const creators = await fetchLsp4Creators(address, '', owner)
+  const creators = await fetchLsp4Creators(address, '0x', owner)
 
   // create creator identifiers for Pinia ORM
   const creatorIds: Address[] = []
