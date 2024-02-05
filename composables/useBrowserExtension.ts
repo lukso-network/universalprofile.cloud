@@ -33,23 +33,15 @@ const connect = async () => {
   isConnecting.value = true
 
   try {
-    const { accounts, requestAccounts } = useWeb3(PROVIDERS.INJECTED)
-    const reconnectAddress = getItem(STORAGE_KEY.RECONNECT_ADDRESS)
-
-    let address: Address | undefined
-
-    if (reconnectAddress) {
-      address = await accounts()
-    } else {
-      ;[address] = await requestAccounts()
-    }
+    const { requestAccounts } = useWeb3(PROVIDERS.INJECTED)
+    const [address] = await requestAccounts()
 
     assertAddress(address, 'connection')
     connectedProfileAddress.value = address
     // TODO try to refresh current page based on router params
     await navigateTo(profileRoute(address))
     await fetchAndStoreProfile(address)
-    await fetchAndStoreAssets(address)
+    fetchAndStoreAssets(address)
     setConnectionExpiry()
   } catch (error: any) {
     console.error(error)
@@ -70,7 +62,6 @@ const disconnect = () => {
 
   connectedProfileAddress.value = undefined
   removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
-  removeItem(STORAGE_KEY.RECONNECT_ADDRESS)
 }
 
 const handleAccountsChanged = async (accounts: string[]) => {
@@ -94,7 +85,7 @@ const handleAccountsChanged = async (accounts: string[]) => {
       // TODO try to refresh current page based on router params
       await navigateTo(profileRoute(address))
       await fetchAndStoreProfile(address)
-      await fetchAndStoreAssets(address)
+      fetchAndStoreAssets(address)
     } catch (error) {
       console.error(error)
     }

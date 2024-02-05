@@ -1,7 +1,11 @@
+import LSP3ProfileMetadataSchema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
+import { toChecksumAddress } from 'web3-utils'
+
 import { ProfileRepository } from '@/repositories/profile'
 
 import type { LSP3ProfileMetadata } from '@lukso/lsp-smart-contracts'
 import type { NuxtApp } from '@/types/plugins'
+import type { ERC725JSONSchema } from '@erc725/erc725.js'
 
 /**
  * Put fetched profile into the store
@@ -22,7 +26,17 @@ export const fetchAndStoreProfile = async (profileAddress: Address) => {
  * @returns
  */
 export const fetchProfile = async (profileAddress: Address) => {
-  const { isLoadingProfile } = storeToRefs(useAppStore())
+  const profileRepo = useRepo(ProfileRepository)
+  const checksumProfileAddress = toChecksumAddress(profileAddress)
+  assertAddress(checksumProfileAddress)
+
+  // check if profile is already in the store
+  const storeProfile = profileRepo.getProfileAndImages(checksumProfileAddress)
+
+  if (storeProfile) {
+    return storeProfile
+  }
+
   const { $fetchIndexedProfile } = useNuxtApp() as unknown as NuxtApp
   const profileIndexedData = await $fetchIndexedProfile(profileAddress)
 
@@ -31,8 +45,6 @@ export const fetchProfile = async (profileAddress: Address) => {
   }
 
   try {
-    isLoadingProfile.value = true
-
     const profile = await createProfileObject(
       profileAddress,
       profileIndexedData?.LSP3Profile
@@ -41,8 +53,6 @@ export const fetchProfile = async (profileAddress: Address) => {
     return profile
   } catch (error: unknown) {
     throw error
-  } finally {
-    isLoadingProfile.value = false
   }
 }
 
@@ -57,6 +67,11 @@ const createProfileObject = async (
   address: Address,
   metadata?: LSP3ProfileMetadata
 ): Promise<Profile> => {
+  const { getInstance } = useErc725()
+  const erc725 = getInstance(
+    address,
+    LSP3ProfileMetadataSchema as ERC725JSONSchema[]
+  )
   const { links, tags, description, name } = metadata || {}
 
   // get best image from collection based on height criteria
@@ -77,6 +92,25 @@ const createProfileObject = async (
   const profileImageId = getHash(profileImage)
   const backgroundImageId = getHash(backgroundImage)
 
+  let receivedAssetAddresses: Address[] = []
+  let issuedAssetAddresses: Address[] = []
+  try {
+    // get received assets array for profile
+    // TODO update this when Algolia provides LSP5 array for the profile
+    const assetAddresses = await erc725.fetchData([
+      'LSP5ReceivedAssets[]',
+      'LSP12IssuedAssets[]',
+    ])
+    const [receivedAssets, issuedAssets] = assetAddresses
+
+    assertArray(receivedAssets?.value)
+    assertAddresses(receivedAssets?.value)
+    receivedAssetAddresses = receivedAssets?.value
+    assertArray(issuedAssets?.value)
+    assertAddresses(issuedAssets?.value)
+    issuedAssetAddresses = issuedAssets?.value
+  } catch (error) {}
+
   return {
     address,
     name,
@@ -88,5 +122,7 @@ const createProfileObject = async (
     backgroundImage,
     profileImageId,
     backgroundImageId,
+    receivedAssetAddresses,
+    issuedAssetAddresses,
   }
 }

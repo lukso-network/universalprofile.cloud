@@ -1,6 +1,5 @@
 import LSP8IdentifiableDigitalAssetSchema from '@erc725/erc725.js/schemas/LSP8IdentifiableDigitalAsset.json'
 import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
-import { hexToUtf8, type AbiItem, hexToNumber } from 'web3-utils'
 import {
   ERC725YDataKeys,
   LSP8_TOKEN_ID_FORMAT,
@@ -8,6 +7,7 @@ import {
 import ERC725 from '@erc725/erc725.js'
 import LSP4DigitalAsset from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json'
 
+import type { AbiItem } from 'web3-utils'
 import type { ERC725JSONSchema } from '@erc725/erc725.js'
 import type { LSP4DigitalAssetMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { URLDataWithHash } from '@erc725/erc725.js/build/main/src/types'
@@ -134,31 +134,9 @@ const getLsp8Metadata = async (
 
     // TODO add support for mixed formats
 
-    // decode token Id based on format
-    const tokenIdParsed = (tokenId: string, tokenIdFormat: number) => {
-      switch (tokenIdFormat) {
-        case LSP8_TOKEN_ID_FORMAT.STRING:
-          // decode hex value to string
-          return encodeURI(hexToUtf8(tokenId))
-        case LSP8_TOKEN_ID_FORMAT.NUMBER:
-          // convert hex value to number
-          return hexToNumber(tokenId).toString()
-        case LSP8_TOKEN_ID_FORMAT.ADDRESS:
-          // address needs to be lowercase
-          return tokenId.toLowerCase()
-        case LSP8_TOKEN_ID_FORMAT.UNIQUE_ID:
-        case LSP8_TOKEN_ID_FORMAT.HASH:
-          // remove 0x from uid/hash token ids
-          // also hex value need to be lowercase
-          return tokenId.slice(2).toLowerCase()
-        default:
-          return tokenId
-      }
-    }
-
     // in order to get full url we combine URI it with tokenId (must be lowercased)
     // we also resolve url as uri might be ipfs link
-    url = resolveUrl(uri + tokenIdParsed(tokenId, tokenIdFormat))
+    url = resolveUrl(uri + parseTokenId(tokenId, tokenIdFormat))
   }
 
   // fetch json file

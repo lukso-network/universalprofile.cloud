@@ -11,7 +11,8 @@ import type { Creator } from '@/models/creator'
 
 export const fetchLsp4Creators = async (
   assetAddress: Address,
-  tokenId?: string
+  tokenId?: string,
+  ownerAddress?: string
 ) => {
   const { contract } = useWeb3(PROVIDERS.RPC)
 
@@ -22,12 +23,18 @@ export const fetchLsp4Creators = async (
         .methods.getData(ERC725YDataKeys.LSP4['LSP4Creators[]'].length)
         .call()
     )
+    const creators: Creator[] = []
 
+    // if no creators set we fallback to contract owner
     if (creatorsNumber === 0) {
-      return []
+      const creatorObject = await createCreatorObject(
+        ownerAddress,
+        assetAddress,
+        tokenId
+      )
+      creators.push(creatorObject)
     }
 
-    const creators: Creator[] = []
     for (let i = 1; i <= creatorsNumber; i++) {
       // TODO use erc725 instead
       const creatorAddress = await contract<LSP0ERC725Account>(
@@ -40,41 +47,58 @@ export const fetchLsp4Creators = async (
         )
         .call()
 
-      assertAddress(creatorAddress)
-      let profile: Profile = {
-        address: toChecksumAddress(creatorAddress) as Address,
-      }
+      const creatorObject = await createCreatorObject(
+        creatorAddress,
+        assetAddress,
+        tokenId
+      )
 
-      try {
-        // TODO rework thi to get creators from Algolia index
-        profile = {
-          ...(await fetchProfile(creatorAddress)),
-          ...profile,
-        }
-      } catch (error) {
-        console.warn(`Failed to fetch creator ${creatorAddress}`)
-      }
-      const issuedAssets =
-        (profile?.issuedAssetAddresses &&
-          profile.issuedAssetAddresses.filter(address => {
-            if (isAddress(address)) {
-              return toChecksumAddress(address)
-            }
-          })) ||
-        []
-      const isVerified = issuedAssets.includes(assetAddress)
-
-      creators.push({
-        profileId: toChecksumAddress(creatorAddress) as Address,
-        profile,
-        assetId: assetAddress,
-        tokenId,
-        isVerified,
-      })
+      creators.push(creatorObject)
     }
 
     return creators
   } catch (error) {
     console.error(error)
+    return []
+  }
+}
+
+const createCreatorObject = async (
+  creatorAddress?: string,
+  assetAddress?: Address,
+  tokenId?: string
+): Promise<Creator> => {
+  assertAddress(creatorAddress)
+  assertAddress(assetAddress)
+
+  let profile: Profile = {
+    address: toChecksumAddress(creatorAddress) as Address,
+  }
+
+  try {
+    // TODO rework thi to get creators from Algolia index
+    profile = {
+      ...(await fetchProfile(creatorAddress)),
+      ...profile,
+    }
+  } catch (error) {
+    console.warn(`Failed to fetch creator ${creatorAddress}`)
+  }
+  const issuedAssets =
+    (profile?.issuedAssetAddresses &&
+      profile.issuedAssetAddresses.filter(address => {
+        if (isAddress(address)) {
+          return address
+        }
+      })) ||
+    []
+  const isVerified = issuedAssets.includes(assetAddress)
+
+  return {
+    profileId: toChecksumAddress(creatorAddress) as Address,
+    profile,
+    assetId: assetAddress,
+    tokenId,
+    isVerified,
   }
 }

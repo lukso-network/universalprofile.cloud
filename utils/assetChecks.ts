@@ -1,11 +1,10 @@
 export const isLyx = (asset?: Asset) => asset?.isNativeToken
 
 export const isNft = (asset?: Asset) =>
-  asset?.standard && NFT_STANDARDS.includes(asset.standard)
+  asset?.tokenType === 'NFT' || asset?.tokenType === 'COLLECTION'
 
 export const isToken = (asset?: Asset) =>
-  (asset?.standard && TOKEN_STANDARDS.includes(asset.standard)) ||
-  asset?.isNativeToken
+  asset?.tokenType === 'TOKEN' || asset?.isNativeToken
 
 export const isLsp7 = (asset?: Asset) => asset?.standard === 'LSP7DigitalAsset'
 

@@ -17,7 +17,11 @@ export const createLsp8Object = async (
   let tokensIds = tokensId
 
   // from base contract we take only name and symbol, metadata is taken from individual token id's
-  const { name, symbol } = indexedAsset || {}
+  const {
+    name,
+    symbol,
+    TokenType: tokenType, // TODO change to camelcase when fixed on indexer
+  } = indexedAsset || {}
 
   // get `tokenSupply` for the asset
   // TODO get this data from index when it's added
@@ -32,74 +36,77 @@ export const createLsp8Object = async (
     return []
   }
 
-  const assets: Asset[] = await Promise.all(
-    tokensIds.map(async tokenId => {
-      // TODO fetch from Algolia when token id's are unsupported
-      const [collectionMetadata, tokenIdFormat] = await fetchLsp8Metadata(
-        tokenId,
-        address
-      )
-      const {
-        description,
-        images: metadataImages,
-        icon: metadataIcon,
-        links,
-      } = collectionMetadata.LSP4Metadata
+  // we check contract owner in case there are no creators set
+  const owner = await lsp8Contract.methods.owner().call() // TODO fetch from Algolia when it's supported
 
-      // get best image from collection based on height criteria
-      const icon = createImageObject(metadataIcon, 260)
+  // fetch metadata for each token id
+  const assets: Asset[] = []
+  for (const tokenId of tokensIds) {
+    const [collectionMetadata, tokenIdFormat] = await fetchLsp8Metadata(
+      tokenId,
+      address
+    )
+    const {
+      description,
+      images: metadataImages,
+      icon: metadataIcon,
+      links,
+    } = collectionMetadata.LSP4Metadata
 
-      // create image identifier so they can be linked in Pinia ORM
-      const iconId = getHash(icon)
+    // get best image from collection based on height criteria
+    const icon = createImageObject(metadataIcon, 260)
 
-      const images: ImageMetadataWithRelationships[] = []
-      const imageIds: string[] = []
+    // create image identifier so they can be linked in Pinia ORM
+    const iconId = getHash(icon)
 
-      // get best image from collection based on height criteria
-      for await (const image of metadataImages) {
-        const convertedImage = createImageObject(image, 260)
-        if (convertedImage) {
-          images.push(convertedImage)
-        }
+    const images: ImageMetadataWithRelationships[] = []
+    const imageIds: string[] = []
+
+    // get best image from collection based on height criteria
+    for await (const image of metadataImages) {
+      const convertedImage = createImageObject(image, 260)
+      if (convertedImage) {
+        images.push(convertedImage)
       }
+    }
 
-      // create array of image identifiers so they can be linked in Pinia ORM
-      images.forEach(image => {
-        const id = getHash(image)
-        id && imageIds.push(id)
-      })
-
-      // get creator metadata
-      // TODO refactor this to get from index
-      const creators = await fetchLsp4Creators(address, tokenId)
-
-      // create creator identifiers for Pinia ORM
-      const creatorIds: Address[] = []
-      creators?.forEach(creator => {
-        creator?.profile?.address && creatorIds.push(creator.profile.address)
-      })
-
-      return {
-        address,
-        name,
-        symbol,
-        balance: '1', // NFT is always 1
-        decimals: 0, // NFT decimals are always 0
-        tokenSupply,
-        links,
-        description,
-        standard: 'LSP8DigitalAsset',
-        tokenId,
-        tokenIdFormat,
-        icon,
-        iconId,
-        images,
-        imageIds,
-        creators,
-        creatorIds,
-        owner: profileAddress,
-      }
+    // create array of image identifiers so they can be linked in Pinia ORM
+    images.forEach(image => {
+      const id = getHash(image)
+      id && imageIds.push(id)
     })
-  )
+
+    // get creator metadata
+    // TODO refactor this to get from index
+    const creators = await fetchLsp4Creators(address, tokenId, owner)
+
+    // create creator identifiers for Pinia ORM
+    const creatorIds: Address[] = []
+    creators?.forEach(creator => {
+      creator?.profile?.address && creatorIds.push(creator.profile.address)
+    })
+
+    assets.push({
+      address,
+      name,
+      symbol,
+      balance: '1', // NFT is always 1
+      decimals: 0, // NFT decimals are always 0
+      tokenSupply,
+      links,
+      description,
+      standard: 'LSP8DigitalAsset',
+      tokenId,
+      tokenIdFormat,
+      icon,
+      iconId,
+      images,
+      imageIds,
+      creators,
+      creatorIds,
+      owner: profileAddress,
+      tokenType: tokenType || 'NFT', // we set default just in case it's missing from indexer
+    })
+  }
   return assets
 }

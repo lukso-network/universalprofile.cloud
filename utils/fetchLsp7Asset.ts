@@ -13,7 +13,13 @@ export const createLsp7Object = async (
     LSP7DigitalAsset.abi as AbiItem[],
     address
   )
-  const { name, symbol, LSP4Metadata: metadata } = indexedAsset || {}
+  const {
+    name,
+    symbol,
+    LSP4Metadata: metadata,
+    TokenType: tokenType, // TODO change to camelcase when fixed on indexer
+    assetImageUrl,
+  } = indexedAsset || {}
   const { links, description } = metadata || {}
 
   // get profile balance for the asset
@@ -49,9 +55,12 @@ export const createLsp7Object = async (
     })
   }
 
+  // we check contract owner in case there are no creators set
+  const owner = await lsp7Contract.methods.owner().call() // TODO fetch from Algolia when it's supported
+
   // get creator metadata
   // TODO refactor this to get from index
-  const creators = await fetchLsp4Creators(address, '')
+  const creators = await fetchLsp4Creators(address, '', owner)
 
   // create creator identifiers for Pinia ORM
   const creatorIds: Address[] = []
@@ -76,6 +85,9 @@ export const createLsp7Object = async (
     creators,
     creatorIds,
     tokenId: '',
+    owner: profileAddress,
+    tokenType: tokenType || 'TOKEN', // we set default just in case it's missing from indexer
+    assetImageUrl,
   }
 }
 

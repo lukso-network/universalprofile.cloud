@@ -5,11 +5,8 @@ export enum PROVIDERS {
 
 export enum STORAGE_KEY {
   CONNECTION_EXPIRY = 'LW:connectionExpiry',
-  RECONNECT_ADDRESS = 'LW:reconnectAddress',
   CURRENCY_STORE = 'LW:currency',
   APP_STORE = 'LW:app',
-  IMAGE_STORE = 'LW:images',
-  CREATOR_STORE = 'LW:creators',
 }
 
 export enum CACHE_KEY {

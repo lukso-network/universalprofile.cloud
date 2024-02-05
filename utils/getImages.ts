@@ -102,6 +102,11 @@ export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
     return image?.url
   }
 
+  // TODO this is temporary fix to show LSP7 image before LSP4Metadata is returned properly
+  if (asset.assetImageUrl) {
+    return asset.assetImageUrl
+  }
+
   return ''
 }
 

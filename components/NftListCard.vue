@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { sliceAddress } from '@lukso/web-components/tools'
+import makeBlockie from 'ethereum-blockies-base64'
+
 import { type Asset } from '@/models/asset'
 import { CreatorRepository } from '@/repositories/creator'
 
@@ -14,17 +17,23 @@ const { connectedProfile } = useConnectedProfile()
 const { viewedProfile } = useViewedProfile()
 const creatorsRepository = useRepo(CreatorRepository)
 
-const verifiedCreator = computed(() => {
-  return creatorsRepository
-    .getAssetCreators(props.asset?.address, props.asset?.tokenId)
-    .find(creator => creator?.isVerified)
+const creators = computed(() => {
+  return creatorsRepository.getAssetCreators(
+    props.asset?.address,
+    props.asset?.tokenId
+  )
 })
 
 const handleShowAsset = () => {
   try {
     assertAddress(props.asset?.address)
     assertString(props.asset.tokenId)
-    navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
+
+    if (props.asset?.standard === 'LSP8DigitalAsset') {
+      navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
+    } else {
+      navigateTo(tokenRoute(props.asset.address))
+    }
   } catch (error) {
     console.error(error)
   }
@@ -45,41 +54,93 @@ const handleSendAsset = (event: Event) => {
     console.error(error)
   }
 }
+
+const assetTokenId = computed(() => {
+  return sliceAddress(
+    `${tokenIdPrefix(props?.asset?.tokenIdFormat)}${parseTokenId(props?.asset?.tokenId, props.asset?.tokenIdFormat)}`,
+    6
+  )
+})
+
+const isLsp8 = (asset: Asset) => {
+  return asset?.standard === 'LSP8DigitalAsset'
+}
 </script>
 
 <template>
-  <lukso-card size="small" is-hoverable is-full-width @click="handleShowAsset"
-    ><div slot="content">
+  <lukso-card
+    size="small"
+    shadow="small"
+    is-hoverable
+    is-full-width
+    @click="handleShowAsset"
+    ><div
+      slot="content"
+      class="grid h-full grid-rows-[auto,max-content] rounded-12 bg-neutral-97"
+    >
       <div
-        class="min-h-[260px] rounded-t-12 bg-neutral-90 bg-cover bg-center"
-        :style="`background-image: url(${getAssetThumb(asset, false)});`"
-      ></div>
-      <div class="relative p-4">
-        <AssetCreator
-          :creator="verifiedCreator"
-          class="relative -top-4 -mt-4"
-        />
-        <div>
-          <div class="paragraph-inter-14-semi-bold">
-            {{ asset?.name }}
+        class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
+      >
+        <div
+          class="min-h-[260px] rounded-t-12 bg-neutral-90 bg-cover bg-center"
+          :style="`background-image: url(${getAssetThumb(asset, false)});`"
+        ></div>
+        <div class="relative grid grid-rows-[max-content,max-content,auto] p-4">
+          <div
+            class="relative top-[-40px] flex cursor-pointer flex-col rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
+          >
+            <div class="paragraph-inter-14-semi-bold">
+              {{ asset?.name }}
+              <span
+                class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
+                >{{ asset?.symbol }}</span
+              >
+            </div>
+            <div class="paragraph-ptmono-10-bold mt-1">
+              <span v-if="isLsp8(asset)">
+                {{ assetTokenId }}
+              </span>
+              <span v-else>
+                {{ $formatMessage('token_owned') }}
+                {{ asset?.balance }}
+              </span>
+            </div>
           </div>
-          <div class="paragraph-inter-12-semi-bold pb-2">
-            {{ asset?.balance }}
-            <span class="text-neutral-60">{{ asset?.symbol }}</span>
+          <AssetCreator :creators="creators" class="relative -top-4 -mt-2" />
+          <div class="flex items-end">
+            <div class="flex w-full justify-end">
+              <lukso-button
+                v-if="
+                  isConnected &&
+                  viewedProfile?.address === connectedProfile?.address
+                "
+                size="small"
+                variant="secondary"
+                @click="handleSendAsset"
+                class="transition-opacity hover:opacity-70"
+                >{{ $formatMessage('button_send') }}</lukso-button
+              >
+            </div>
           </div>
-          <div class="flex w-full justify-end">
-            <lukso-button
-              v-if="
-                isConnected &&
-                viewedProfile?.address === connectedProfile?.address
-              "
-              size="small"
-              variant="secondary"
-              @click="handleSendAsset"
-              class="transition-opacity hover:opacity-70"
-              >{{ $formatMessage('button_send') }}</lukso-button
-            >
-          </div>
+        </div>
+      </div>
+      <div class="flex justify-between px-4 py-3">
+        <lukso-tag
+          v-if="asset?.standard"
+          size="x-small"
+          background-color="lukso-90"
+          >{{ StandardsAbbreviations[asset.standard] }}</lukso-tag
+        >
+        <div
+          class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
+        >
+          <img
+            v-if="asset?.address"
+            :src="makeBlockie(asset.address)"
+            alt=""
+            class="h-3 w-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
+          />
+          {{ asset?.address?.slice(0, 6) }}
         </div>
       </div>
     </div>

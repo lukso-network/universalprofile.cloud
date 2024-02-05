@@ -4,9 +4,11 @@ import type { Item } from 'pinia-orm'
 import type {
   LSP4DigitalAssetMetadata,
   LinkMetadata,
+  LSP4_TOKEN_TYPES,
+  LSP8_TOKEN_ID_FORMAT,
 } from '@lukso/lsp-smart-contracts'
 import type { Image } from '@/models/image'
-import type { Creator } from './creator'
+import type { Creator } from '@/models/creator'
 
 export class AssetModel extends BaseModel {
   static entity = 'assets'
@@ -28,11 +30,21 @@ export class AssetModel extends BaseModel {
       tokenIdFormat: this.number(null),
       isNativeToken: this.boolean(false),
       owner: this.string(''),
+      tokenType: this.string(''),
+      assetImageUrl: this.string(''),
 
       // foreign keys
       iconId: this.attr(null),
       imageIds: this.attr(null),
       creatorIds: this.attr(null),
+    }
+  }
+
+  static mutators() {
+    return {
+      tokenType(value: TokenType) {
+        return value.toUpperCase() // Since indexer return mixed case we unify with mutator
+      },
     }
   }
 
@@ -50,6 +62,10 @@ export class AssetModel extends BaseModel {
   declare tokenIdFormat?: number
   declare isNativeToken?: boolean
   declare owner: Address
+  declare tokenType?: TokenType
+  declare assetImageUrl?: string
+
+  // foreign keys
 
   declare iconId?: string
   declare imageIds?: string[]
@@ -63,9 +79,9 @@ export class AssetModel extends BaseModel {
 export type Asset = Partial<Item<AssetModel>>
 
 export type AssetType = 'EOA' | 'LSP7DigitalAsset' | 'LSP8DigitalAsset'
-
-export const TOKEN_STANDARDS: AssetType[] = ['LSP7DigitalAsset']
-export const NFT_STANDARDS: AssetType[] = ['LSP8DigitalAsset']
+export type TokenType = keyof typeof LSP4_TOKEN_TYPES
+export type TokenIdFormatKey = keyof typeof LSP8_TOKEN_ID_FORMAT
+export type TokenIdFormatValue = (typeof LSP8_TOKEN_ID_FORMAT)[TokenIdFormatKey]
 
 export const StandardsAbbreviations: { [K in AssetType]?: string } = {
   LSP7DigitalAsset: 'LSP7',
@@ -78,6 +94,8 @@ export type IndexedAsset = {
   name?: string
   symbol?: string
   LSP4Metadata?: LSP4DigitalAssetMetadata
+  TokenType?: TokenType // TODO change to camelcase when fixed in indexer
+  assetImageUrl?: string
 
   // not using now this attributes but some will be useful in FE
   // TODO refactor this later
@@ -85,5 +103,6 @@ export type IndexedAsset = {
   hasTokenSymbol?: boolean
   hasAssetImage?: boolean
   hasIconImage?: boolean
+  hasTokenType?: boolean
   lastUpdatedAt?: string
 }
