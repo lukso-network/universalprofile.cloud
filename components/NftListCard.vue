@@ -124,12 +124,7 @@ const assetTokenId = computed(() => {
         </div>
       </div>
       <div class="flex justify-between px-4 py-3">
-        <lukso-tag
-          v-if="asset?.standard"
-          size="x-small"
-          background-color="lukso-90"
-          >{{ StandardsAbbreviations[asset.standard] }}</lukso-tag
-        >
+        <AssetStandardBadge :standard="asset?.standard" />
         <div
           class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
         >

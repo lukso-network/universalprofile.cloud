@@ -94,7 +94,10 @@ const isOwned = computed(() => {
           </div>
         </div>
         <div>
-          <div class="heading-apax-24-medium pb-8">{{ asset?.name }}</div>
+          <div class="heading-apax-24-medium flex items-center gap-2 pb-8">
+            {{ asset?.name }}
+            <AssetStandardBadge :standard="asset?.standard" />
+          </div>
           <AssetSupply
             v-if="asset?.tokenSupply"
             :token-supply="asset?.tokenSupply"
@@ -111,11 +114,6 @@ const isOwned = computed(() => {
             :links="asset.links"
           />
           <AssetAddress v-if="asset?.address" :address="asset.address" />
-          <AssetStandardInfo
-            v-if="asset?.standard"
-            :standard="asset.standard"
-            class="hidden"
-          />
         </div>
       </div>
     </AppPageLoader>

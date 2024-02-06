@@ -56,12 +56,7 @@ onMounted(async () => {
   <lukso-card size="small" is-hoverable is-full-width @click="handleShowAsset"
     ><div slot="content" class="grid h-full grid-rows-[max-content,auto] p-4">
       <div class="flex h-7 items-start justify-end">
-        <lukso-tag
-          v-if="asset?.standard"
-          size="x-small"
-          background-color="lukso-90"
-          >{{ StandardsAbbreviations[asset.standard] }}</lukso-tag
-        >
+        <AssetStandardBadge :standard="asset?.standard" />
       </div>
       <div ref="contentRef" class="flex gap-6">
         <div ref="logoRef" class="flex flex-col items-center pl-2">

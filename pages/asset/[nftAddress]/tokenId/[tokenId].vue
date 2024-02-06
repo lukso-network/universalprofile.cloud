@@ -103,8 +103,9 @@ const assetTokenId = computed(() => {
         </div>
       </div>
       <div>
-        <div class="heading-apax-24-medium pb-4">
+        <div class="heading-apax-24-medium flex items-center gap-2 pb-4">
           {{ asset?.name }}
+          <AssetStandardBadge :standard="asset?.standard" />
         </div>
         <div class="paragraph-ptmono-14-regular pb-4" v-if="asset?.tokenSupply">
           {{
@@ -131,11 +132,6 @@ const assetTokenId = computed(() => {
           :links="asset.links"
         />
         <AssetAddress v-if="asset?.address" :address="asset.address" />
-        <AssetStandardInfo
-          v-if="asset?.standard"
-          :standard="asset.standard"
-          class="hidden"
-        />
       </div>
     </div>
   </AppPageLoader>
