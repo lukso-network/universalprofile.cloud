@@ -57,6 +57,9 @@ export class AssetRepository extends Repository<AssetModel> {
       .where((asset: Asset) => {
         return asset?.tokenType === 'NFT' || asset?.tokenType === 'COLLECTION'
       })
+      .where(token => {
+        return token.balance !== '0'
+      })
       .get()
   }
 
@@ -74,6 +77,9 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('owner', viewedProfile.value.address)
       .where((asset: Asset) => {
         return asset?.tokenType === 'NFT' || asset?.tokenType === 'COLLECTION'
+      })
+      .where(token => {
+        return token.balance !== '0'
       })
       .get()
   }
