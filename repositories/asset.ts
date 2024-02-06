@@ -103,6 +103,9 @@ export class AssetRepository extends Repository<AssetModel> {
         )
       })
       .where('owner', connectedProfile.value?.address)
+      .where(token => {
+        return token.balance !== '0'
+      })
       .get()
   }
 
