@@ -85,7 +85,6 @@ export class AssetRepository extends Repository<AssetModel> {
   }
 
   getOwnedAssets() {
-    // const { viewedProfile } = useViewedProfile()
     const { connectedProfile } = useConnectedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
