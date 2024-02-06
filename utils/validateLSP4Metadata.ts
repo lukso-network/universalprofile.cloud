@@ -79,23 +79,6 @@ export const validateImages = (images: any[]) => {
 }
 
 /**
- * Get hash from metadata object
- * It checks for old format using `hash` property and
- * new format using `verification.data` property.
- *
- * @param value
- * @returns
- */
-export const getHash = (value: any): string | undefined => {
-  return (
-    value &&
-    ('hash' in value && value.hash !== ''
-      ? value.hash
-      : value?.verification?.data)
-  )
-}
-
-/**
  * Validate if the given asset object follows proper structure
  *
  * @param asset
