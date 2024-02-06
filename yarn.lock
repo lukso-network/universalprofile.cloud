@@ -823,16 +823,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@erc725/erc725.js@npm:0.22.0":
-  version: 0.22.0
-  resolution: "@erc725/erc725.js@npm:0.22.0"
+"@erc725/erc725.js@npm:0.23.0":
+  version: 0.23.0
+  resolution: "@erc725/erc725.js@npm:0.23.0"
   dependencies:
     add: "npm:^2.0.6"
     ethereumjs-util: "npm:^7.1.5"
     web3-eth-abi: "npm:^1.10.0"
     web3-providers-http: "npm:^1.10.0"
     web3-utils: "npm:^1.10.0"
-  checksum: d56da9bf68cd4073deb99dc65297fd4f38b2aff71b5607666e9cca6aab1025227acaa7bc0c3290fc22b8a94ea49d666473cd0ae3fd8ff5d8d35eb0040fa7ca03
+  checksum: de50b1c72e3eaf1edb78b1f7537cb8989e59307214666672cb8dc1df615a2a9e9bdf0a0b01f97817146d1ff3d7e0ae02c6e414ced83a7e0ac07ef6b09770c95c
   languageName: node
   linkType: hard
 
@@ -16429,7 +16429,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wallet.universalprofile.cloud@workspace:."
   dependencies:
-    "@erc725/erc725.js": "npm:0.22.0"
+    "@erc725/erc725.js": "npm:0.23.0"
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
     "@formatjs/intl": "npm:^2.9.9"
     "@lukso/lsp-smart-contracts": "npm:0.14.0"
