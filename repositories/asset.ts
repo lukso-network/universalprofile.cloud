@@ -16,8 +16,8 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('standard', 'LSP7DigitalAsset')
       .where('address', viewedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
-      .where(token => {
-        return token.balance !== '0'
+      .where((asset: Asset) => {
+        return asset?.balance !== '0'
       })
       .where('tokenType', 'TOKEN')
       .get()
@@ -35,8 +35,8 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('standard', 'LSP7DigitalAsset')
       .where('address', viewedProfile.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
-      .where(token => {
-        return token.balance !== '0'
+      .where((asset: Asset) => {
+        return asset?.balance !== '0'
       })
       .where('tokenType', 'TOKEN')
       .get()
@@ -57,8 +57,8 @@ export class AssetRepository extends Repository<AssetModel> {
       .where((asset: Asset) => {
         return asset?.tokenType === 'NFT' || asset?.tokenType === 'COLLECTION'
       })
-      .where(token => {
-        return token.balance !== '0'
+      .where((asset: Asset) => {
+        return asset?.balance !== '0'
       })
       .get()
   }
@@ -78,8 +78,8 @@ export class AssetRepository extends Repository<AssetModel> {
       .where((asset: Asset) => {
         return asset?.tokenType === 'NFT' || asset?.tokenType === 'COLLECTION'
       })
-      .where(token => {
-        return token.balance !== '0'
+      .where((asset: Asset) => {
+        return asset?.balance !== '0'
       })
       .get()
   }
@@ -103,8 +103,8 @@ export class AssetRepository extends Repository<AssetModel> {
         )
       })
       .where('owner', connectedProfile.value?.address)
-      .where(token => {
-        return token.balance !== '0'
+      .where((asset: Asset) => {
+        return asset?.balance !== '0'
       })
       .get()
   }
