@@ -57,7 +57,7 @@ const handleBack = () => {
               :profile-url="getAssetThumb(asset, isToken(asset))"
               :profile-address="asset?.address"
               :has-identicon="isLyx(asset) ? undefined : true"
-              :is-square="isNft(asset) ? true : undefined"
+              :is-square="isCollectible(asset) ? true : undefined"
             ></lukso-profile>
           </div>
         </div>

@@ -18,7 +18,7 @@ export const createLsp7Object = async (
     description,
     symbol,
     LSP4Metadata: metadata,
-    TokenType: tokenType, // TODO change to camelcase when fixed on indexer
+    LSP4TokenType: tokenType,
     assetImageUrl,
   } = indexedAsset || {}
   const { links } = metadata || {}
@@ -78,7 +78,7 @@ export const createLsp7Object = async (
     tokenSupply,
     links,
     description,
-    standard: 'LSP7DigitalAsset',
+    standard: ASSET_TYPES.LSP7,
     icon,
     iconId,
     images,

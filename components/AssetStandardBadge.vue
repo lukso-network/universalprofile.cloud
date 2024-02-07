@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AssetType } from '@/models/asset'
+import { STANDARDS_ABBREVIATIONS } from '@/shared/enums'
 
 type Props = {
   standard?: AssetType
@@ -10,6 +10,6 @@ defineProps<Props>()
 
 <template>
   <lukso-tag v-if="standard" size="x-small" background-color="lukso-90">{{
-    StandardsAbbreviations[standard]
+    STANDARDS_ABBREVIATIONS[standard]
   }}</lukso-tag>
 </template>

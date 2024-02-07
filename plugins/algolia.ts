@@ -19,7 +19,7 @@ export default defineNuxtPlugin(() => {
     })
 
     // @ts-ignore
-    console.debug(`Algolia API response (${response.type}):`, {
+    console.debug(`Algolia API response (${response.LSPStandard}):`, {
       url,
       response,
     })

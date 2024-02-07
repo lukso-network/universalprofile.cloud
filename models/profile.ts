@@ -1,4 +1,5 @@
 import { BaseModel } from '@/models/base'
+import { PROFILE_TYPES } from '@/shared/enums'
 
 import type { Item } from 'pinia-orm'
 import type {
@@ -50,14 +51,14 @@ export class ProfileModel extends BaseModel {
 
 export type Profile = Partial<Item<ProfileModel>>
 
-export type IndexedProfileType = 'EOA' | 'LSP3Profile'
+export type ProfileType = `${PROFILE_TYPES}`
 
 // Type of data returned from Algolia, it's not fully covered as some
 // properties are irrelevant
 export type IndexedProfile = {
   address: Address
   LSP3Profile?: LSP3ProfileMetadata
-  type: IndexedProfileType
+  type: ProfileType
 
   // not using now this attributes but some will be useful in FE
   // TODO refactor this later

@@ -48,8 +48,8 @@ export const fetchAsset = async (
   }
 
   // parse data based on the asset type
-  switch (assetIndexedData.type) {
-    case 'LSP8DigitalAsset': {
+  switch (assetIndexedData.LSPStandard) {
+    case ASSET_TYPES.LSP8: {
       return await createLsp8Object(
         address,
         assetIndexedData,
@@ -57,10 +57,10 @@ export const fetchAsset = async (
         tokenIds
       )
     }
-    case 'LSP7DigitalAsset': {
+    case ASSET_TYPES.LSP7: {
       return [await createLsp7Object(address, assetIndexedData, profileAddress)]
     }
-    case 'EOA': {
+    case ASSET_TYPES.EOA: {
       // EOA for asset means it wasn't indexed yet
       console.warn(`Asset ${address} not found in the index`)
       return []

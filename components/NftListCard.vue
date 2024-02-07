@@ -29,7 +29,7 @@ const handleShowAsset = () => {
     assertAddress(props.asset?.address)
     assertString(props.asset.tokenId)
 
-    if (isNft(props.asset)) {
+    if (isCollectible(props.asset)) {
       navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
     } else {
       navigateTo(tokenRoute(props.asset.address))

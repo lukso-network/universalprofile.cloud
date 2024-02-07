@@ -9,6 +9,7 @@ import type {
 } from '@lukso/lsp-smart-contracts'
 import type { Image } from '@/models/image'
 import type { Creator } from '@/models/creator'
+import type { ASSET_TYPES } from '@/shared/enums'
 
 export class AssetModel extends BaseModel {
   static entity = 'assets'
@@ -40,13 +41,13 @@ export class AssetModel extends BaseModel {
     }
   }
 
-  static mutators() {
-    return {
-      tokenType(value: TokenType) {
-        return value.toUpperCase() // Since indexer return mixed case we unify with mutator
-      },
-    }
-  }
+  // static mutators() {
+  //   return {
+  //     tokenType(value: TokenType) {
+  //       return value.toUpperCase() // Since indexer return mixed case we unify with mutator
+  //     },
+  //   }
+  // }
 
   // types
   declare address: Address
@@ -78,24 +79,19 @@ export class AssetModel extends BaseModel {
 
 export type Asset = Partial<Item<AssetModel>>
 
-export type AssetType = 'EOA' | 'LSP7DigitalAsset' | 'LSP8DigitalAsset'
+export type AssetType = `${ASSET_TYPES}`
 export type TokenType = keyof typeof LSP4_TOKEN_TYPES
 export type TokenIdFormatKey = keyof typeof LSP8_TOKEN_ID_FORMAT
 export type TokenIdFormatValue = (typeof LSP8_TOKEN_ID_FORMAT)[TokenIdFormatKey]
 
-export const StandardsAbbreviations: { [K in AssetType]?: string } = {
-  LSP7DigitalAsset: 'LSP7',
-  LSP8DigitalAsset: 'LSP8',
-}
-
 export type IndexedAsset = {
   address: Address
-  type: AssetType
+  LSPStandard: AssetType
   name?: string
   description?: string
   symbol?: string
   LSP4Metadata?: LSP4DigitalAssetMetadata
-  TokenType?: TokenType // TODO change to camelcase when fixed in indexer
+  LSP4TokenType?: TokenType
   assetImageUrl?: string
 
   // not using now this attributes but some will be useful in FE

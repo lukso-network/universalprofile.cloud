@@ -13,7 +13,7 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     return this.repo(AssetModel)
-      .where('standard', 'LSP7DigitalAsset')
+      .where('standard', ASSET_TYPES.LSP7)
       .where('address', viewedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where(token => {
@@ -32,7 +32,7 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     return this.repo(AssetModel)
-      .where('standard', 'LSP7DigitalAsset')
+      .where('standard', ASSET_TYPES.LSP7)
       .where('address', viewedProfile.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where(token => {
@@ -55,7 +55,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('chainId', selectedChainId.value)
       .where('owner', viewedProfile.value.address)
       .where((asset: Asset) => {
-        return asset?.tokenType === 'NFT' || asset?.tokenType === 'COLLECTION'
+        return isCollectible(asset)
       })
       .get()
   }
@@ -73,7 +73,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('chainId', selectedChainId.value)
       .where('owner', viewedProfile.value.address)
       .where((asset: Asset) => {
-        return asset?.tokenType === 'NFT' || asset?.tokenType === 'COLLECTION'
+        return isCollectible(asset)
       })
       .get()
   }
@@ -91,10 +91,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('address', connectedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where((asset: Asset) => {
-        return (
-          asset?.standard === 'LSP7DigitalAsset' ||
-          asset?.standard === 'LSP8DigitalAsset'
-        )
+        return isLsp7(asset) || isLsp8(asset)
       })
       .where('owner', connectedProfile.value?.address)
       .get()

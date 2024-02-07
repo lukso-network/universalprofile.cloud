@@ -17,11 +17,7 @@ export const createLsp8Object = async (
   let tokensIds = tokensId
 
   // from base contract we take only name and symbol, metadata is taken from individual token id's
-  const {
-    name,
-    symbol,
-    TokenType: tokenType, // TODO change to camelcase when fixed on indexer
-  } = indexedAsset || {}
+  const { name, symbol, LSP4TokenType: tokenType } = indexedAsset || {}
 
   // get `tokenSupply` for the asset
   // TODO get this data from index when it's added
@@ -95,7 +91,7 @@ export const createLsp8Object = async (
       tokenSupply,
       links,
       description,
-      standard: 'LSP8DigitalAsset',
+      standard: ASSET_TYPES.LSP8,
       tokenId,
       tokenIdFormat,
       icon,
