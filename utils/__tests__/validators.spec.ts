@@ -4,7 +4,7 @@ import {
   assertAddresses,
   assertString,
   assertArray,
-} from '../../../utils/validators'
+} from '../validators'
 
 test.describe('assertAddress', () => {
   test('throw when address is invalid', async ({ page }) => {

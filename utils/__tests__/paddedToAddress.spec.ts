@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { paddedToAddress } from '../../../utils/paddedToAddress'
+import { paddedToAddress } from '../paddedToAddress'
 
 test('paddedToAddress should remove zero padding from an address', async ({
   page,

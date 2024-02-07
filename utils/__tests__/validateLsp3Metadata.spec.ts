@@ -3,7 +3,7 @@ import {
   validateLinks,
   validateName,
   validateDescription,
-} from '../../../utils/validateLsp3Metadata'
+} from '../validateLsp3Metadata'
 import { expect, test } from '@playwright/test'
 
 test('validateTags', async ({ page }) => {
