@@ -87,11 +87,12 @@ export type TokenIdFormatValue = (typeof LSP8_TOKEN_ID_FORMAT)[TokenIdFormatKey]
 export type IndexedAsset = {
   address: Address
   LSPStandard: AssetType
-  name?: string
+  LSP4TokenName?: string
+  LSP4TokenSymbol?: string
   description?: string
-  symbol?: string
   LSP4Metadata?: LSP4DigitalAssetMetadata
   LSP4TokenType?: TokenType
+  LSP4Creators?: Address[]
   assetImageUrl?: string
 
   // not using now this attributes but some will be useful in FE

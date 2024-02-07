@@ -17,7 +17,12 @@ export const createLsp8Object = async (
   let tokensIds = tokensId
 
   // from base contract we take only name and symbol, metadata is taken from individual token id's
-  const { name, symbol, LSP4TokenType: tokenType } = indexedAsset || {}
+  const {
+    LSP4TokenName: name,
+    LSP4TokenSymbol: symbol,
+    LSP4TokenType: tokenType,
+    LSP4Creators: creatorsAddresses,
+  } = indexedAsset || {}
 
   // get `tokenSupply` for the asset
   // TODO get this data from index when it's added
@@ -74,13 +79,12 @@ export const createLsp8Object = async (
 
     // get creator metadata
     // TODO refactor this to get from index
-    const creators = await fetchLsp4Creators(address, tokenId, owner)
-
-    // create creator identifiers for Pinia ORM
-    const creatorIds: Address[] = []
-    creators?.forEach(creator => {
-      creator?.profile?.address && creatorIds.push(creator.profile.address)
-    })
+    const creators = await fetchLsp4Creators(
+      address,
+      creatorsAddresses,
+      tokenId,
+      owner
+    )
 
     assets.push({
       address,
@@ -99,7 +103,7 @@ export const createLsp8Object = async (
       images,
       imageIds,
       creators,
-      creatorIds,
+      creatorIds: creatorsAddresses,
       owner: profileAddress,
       tokenType: tokenType || 'NFT', // we set default just in case it's missing from indexer
     })
