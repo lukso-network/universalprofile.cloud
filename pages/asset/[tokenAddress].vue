@@ -94,15 +94,14 @@ const isOwned = computed(() => {
           </div>
         </div>
         <div>
-          <div class="heading-apax-24-medium flex items-center gap-2 pb-8">
+          <div class="heading-apax-24-medium flex items-center gap-2 pb-2">
             {{ asset?.name }}
             <AssetStandardBadge :standard="asset?.standard" />
           </div>
-          <AssetSupply
-            v-if="asset?.tokenSupply"
+          <AssetTokenSupply
             :token-supply="asset?.tokenSupply"
-            :symbol="asset?.symbol"
             :decimals="asset?.decimals"
+            class="pb-8"
           />
           <AssetDescription
             v-if="asset?.description"

@@ -103,17 +103,17 @@ const assetTokenId = computed(() => {
         </div>
       </div>
       <div>
-        <div class="heading-apax-24-medium flex items-center gap-2 pb-4">
+        <div class="heading-apax-24-medium flex items-center gap-2 pb-2">
           {{ asset?.name }}
           <AssetStandardBadge :standard="asset?.standard" />
         </div>
-        <div class="paragraph-ptmono-14-regular pb-4" v-if="asset?.tokenSupply">
-          {{
-            $formatMessage('token_details_collection_of', {
-              count: asset.tokenSupply,
-            })
-          }}
-        </div>
+        <AssetCollectionSupply
+          :token-supply="asset?.tokenSupply"
+          :class="{
+            'mb-4': asset?.tokenId !== '0x',
+            'mb-8': asset?.tokenId === '0x',
+          }"
+        />
         <AssetTokenId
           v-if="asset?.tokenId && asset?.tokenId !== '0x'"
           :asset="asset"
