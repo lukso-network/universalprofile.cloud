@@ -110,14 +110,11 @@ const assetTokenId = computed(() => {
         <AssetCollectionSupply
           :token-supply="asset?.tokenSupply"
           :class="{
-            'mb-4': asset?.tokenId !== '0x',
-            'mb-8': asset?.tokenId === '0x',
+            'mb-4': hasTokenId(asset),
+            'mb-8': !hasTokenId(asset),
           }"
         />
-        <AssetTokenId
-          v-if="asset?.tokenId && asset?.tokenId !== '0x'"
-          :asset="asset"
-        />
+        <AssetTokenId v-if="hasTokenId(asset)" :asset="asset" />
         <AssetDescription
           v-if="asset?.description"
           :description="asset.description"
