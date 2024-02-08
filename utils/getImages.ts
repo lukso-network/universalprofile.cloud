@@ -123,7 +123,7 @@ export const createImageObject = (image: ImageMetadata[], height: number) => {
   if (optimalImage) {
     return {
       ...optimalImage,
-      id: getHash(optimalImage.url),
+      id: getHash(resolveUrl(optimalImage.url)),
       url: resolveUrl(optimalImage.url),
     } as Image
   }
