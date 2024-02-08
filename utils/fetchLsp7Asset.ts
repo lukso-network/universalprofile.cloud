@@ -36,7 +36,7 @@ export const createLsp7Object = async (
   const icon = metadata?.icon && createImageObject(metadata.icon, 56)
 
   // create image identifier so they can be linked in Pinia ORM
-  const iconId = getHash(icon)
+  const iconId = getHash(icon?.url)
 
   const images: ImageMetadataWithRelationships[] = []
   const imageIds: string[] = []
@@ -52,7 +52,7 @@ export const createLsp7Object = async (
 
     // create array of image identifiers so they can be linked in Pinia ORM
     images.forEach(image => {
-      const id = getHash(image)
+      const id = getHash(image.url)
       id && imageIds.push(id)
     })
   }

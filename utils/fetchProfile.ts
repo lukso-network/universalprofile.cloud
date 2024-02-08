@@ -89,8 +89,8 @@ const createProfileObject = async (
   const balance = await getBalance(address)
 
   // create image identifiers so they can be linked in Pinia ORM
-  const profileImageId = getHash(profileImage)
-  const backgroundImageId = getHash(backgroundImage)
+  const profileImageId = getHash(profileImage?.url)
+  const backgroundImageId = getHash(backgroundImage?.url)
 
   let receivedAssetAddresses: Address[] = []
   let issuedAssetAddresses: Address[] = []
