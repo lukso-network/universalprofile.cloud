@@ -10,8 +10,7 @@ defineProps<Props>()
   <lukso-tag is-rounded class="mb-8">
     <div class="flex items-center">
       <div class="paragraph-ptmono-12-bold mr-2">
-        {{ tokenIdPrefix(asset?.tokenIdFormat)
-        }}{{ parseTokenId(asset?.tokenId, asset?.tokenIdFormat) }}
+        {{ prefixedTokenId(asset?.tokenId, asset?.tokenIdFormat) }}
       </div>
       <lukso-tooltip
         variant="light"

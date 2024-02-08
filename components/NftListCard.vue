@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { sliceAddress } from '@lukso/web-components/tools'
 import makeBlockie from 'ethereum-blockies-base64'
 
 import { type Asset } from '@/models/asset'
@@ -56,10 +55,7 @@ const handleSendAsset = (event: Event) => {
 }
 
 const assetTokenId = computed(() => {
-  return sliceAddress(
-    `${tokenIdPrefix(props?.asset?.tokenIdFormat)}${parseTokenId(props?.asset?.tokenId, props.asset?.tokenIdFormat)}`,
-    6
-  )
+  return prefixedTokenId(props.asset?.tokenId, props.asset?.tokenIdFormat, 24)
 })
 </script>
 

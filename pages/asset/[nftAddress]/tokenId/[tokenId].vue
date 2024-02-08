@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { sliceAddress } from '@lukso/web-components/tools'
-
 import { CreatorRepository } from '@/repositories/creator'
 
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
@@ -48,10 +46,7 @@ const handleSendAsset = (event: Event) => {
 }
 
 const assetTokenId = computed(() => {
-  return sliceAddress(
-    `${tokenIdPrefix(asset.value?.tokenIdFormat)}${parseTokenId(asset.value?.tokenId, asset.value?.tokenIdFormat)}`,
-    6
-  )
+  return prefixedTokenId(asset.value?.tokenId, asset.value?.tokenIdFormat)
 })
 </script>
 
