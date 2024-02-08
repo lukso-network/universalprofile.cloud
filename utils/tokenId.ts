@@ -66,7 +66,7 @@ export const prefixedTokenId = (
   if (isStringFormat(tokenIdFormat) || isNumberFormat(tokenIdFormat)) {
     return `${parsedTokenId.substring(0, maxLength - 3)}...`
   } else {
-    return sliceAddress(parsedTokenId, Math.ceil((maxLength - 3) / 2))
+    return sliceAddress(parsedTokenId, Math.ceil((maxLength - 5) / 2))
   }
 }
 
