@@ -25,6 +25,7 @@ export default defineNuxtConfig({
     '@nuxtjs/plausible',
     '@nuxtjs/algolia',
     '@pinia-orm/nuxt',
+    '@nuxt/test-utils/module',
   ],
   plausible: {
     domain: 'wallet.universalprofile.cloud',
