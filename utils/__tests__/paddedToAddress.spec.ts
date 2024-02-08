@@ -1,9 +1,7 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from 'vitest'
 import { paddedToAddress } from '../paddedToAddress'
 
-test('paddedToAddress should remove zero padding from an address', async ({
-  page,
-}) => {
+test('paddedToAddress should remove zero padding from an address', async () => {
   expect(paddedToAddress('0x0023456789012345678901234567890123456789')).toEqual(
     '0x0023456789012345678901234567890123456789'
   )

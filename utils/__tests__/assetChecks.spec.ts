@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, describe } from 'vitest'
 import { ASSET_TYPES } from '@/shared/enums'
 
 import {
@@ -10,8 +10,8 @@ import {
   hasTokenId,
 } from '../assetChecks'
 
-test.describe('isLyx', () => {
-  test('should return true if the asset is a LYX', async ({ page }) => {
+describe('isLyx', () => {
+  test('should return true if the asset is a LYX', async () => {
     expect(
       isLyx({
         name: 'LYX',
@@ -20,7 +20,7 @@ test.describe('isLyx', () => {
     ).toBe(true)
   })
 
-  test('should return false if the asset is not a LYX', async ({ page }) => {
+  test('should return false if the asset is not a LYX', async () => {
     expect(
       isLyx({
         name: 'Some asset',
@@ -30,8 +30,8 @@ test.describe('isLyx', () => {
   })
 })
 
-test.describe('isCollectible', () => {
-  test('should return true if the asset is collectible', async ({ page }) => {
+describe('isCollectible', () => {
+  test('should return true if the asset is collectible', async () => {
     expect(
       isCollectible({
         tokenType: 'NFT',
@@ -44,9 +44,7 @@ test.describe('isCollectible', () => {
     ).toBe(true)
   })
 
-  test('should return false if the asset is not collectible', async ({
-    page,
-  }) => {
+  test('should return false if the asset is not collectible', async () => {
     expect(
       isCollectible({
         tokenType: 'TOKEN',
@@ -56,8 +54,8 @@ test.describe('isCollectible', () => {
   })
 })
 
-test.describe('isToken', () => {
-  test('should return true if the asset is token', async ({ page }) => {
+describe('isToken', () => {
+  test('should return true if the asset is token', async () => {
     expect(
       isToken({
         tokenType: 'TOKEN',
@@ -70,7 +68,7 @@ test.describe('isToken', () => {
     ).toBe(true)
   })
 
-  test('should return false if the asset is not token', async ({ page }) => {
+  test('should return false if the asset is not token', async () => {
     expect(
       isToken({
         tokenType: 'NFT',
@@ -85,8 +83,8 @@ test.describe('isToken', () => {
   })
 })
 
-test.describe('isLsp7', () => {
-  test('should return true if the asset is LSP7', async ({ page }) => {
+describe('isLsp7', () => {
+  test('should return true if the asset is LSP7', async () => {
     expect(
       isLsp7({
         standard: ASSET_TYPES.LSP7,
@@ -94,7 +92,7 @@ test.describe('isLsp7', () => {
     ).toBe(true)
   })
 
-  test('should return false if the asset is not LSP7', async ({ page }) => {
+  test('should return false if the asset is not LSP7', async () => {
     expect(
       isLsp7({
         standard: ASSET_TYPES.LSP8,
@@ -109,8 +107,8 @@ test.describe('isLsp7', () => {
   })
 })
 
-test.describe('isLsp8', () => {
-  test('should return true if the asset is LSP8', async ({ page }) => {
+describe('isLsp8', () => {
+  test('should return true if the asset is LSP8', async () => {
     expect(
       isLsp8({
         standard: ASSET_TYPES.LSP8,
@@ -118,7 +116,7 @@ test.describe('isLsp8', () => {
     ).toBe(true)
   })
 
-  test('should return false if the asset is not LSP8', async ({ page }) => {
+  test('should return false if the asset is not LSP8', async () => {
     expect(
       isLsp8({
         standard: ASSET_TYPES.LSP7,
@@ -133,8 +131,8 @@ test.describe('isLsp8', () => {
   })
 })
 
-test.describe('hasTokenId', () => {
-  test('should return true if the asset has token Id', async ({ page }) => {
+describe('hasTokenId', () => {
+  test('should return true if the asset has token Id', async () => {
     expect(
       hasTokenId({
         tokenId: '0x123',
@@ -142,7 +140,7 @@ test.describe('hasTokenId', () => {
     ).toBe(true)
   })
 
-  test('should return false if the asset has no token Id', async ({ page }) => {
+  test('should return false if the asset has no token Id', async () => {
     expect(
       hasTokenId({
         tokenId: '0x',
