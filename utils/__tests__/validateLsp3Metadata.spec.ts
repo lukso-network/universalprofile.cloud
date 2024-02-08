@@ -4,9 +4,9 @@ import {
   validateName,
   validateDescription,
 } from '../validateLsp3Metadata'
-import { expect, test } from '@playwright/test'
+import { expect, test } from 'vitest'
 
-test('validateTags', async ({ page }) => {
+test('validateTags', async () => {
   expect(validateTags([])).toEqual([])
   expect(validateTags(['tag1', ''])).toEqual(['tag1'])
   expect(validateTags(['tag1', 'tag2', 'tag3', 'tag4'])).toEqual([
@@ -17,7 +17,7 @@ test('validateTags', async ({ page }) => {
   expect(validateTags([123, 'tag2', { test: '123' }, 'tag4'])).toEqual(['tag2'])
 })
 
-test('validateLinks', async ({ page }) => {
+test('validateLinks', async () => {
   expect(validateLinks([])).toEqual([])
   expect(
     validateLinks([
@@ -28,13 +28,13 @@ test('validateLinks', async ({ page }) => {
   ).toEqual([{ title: 'link1', url: 'url1' }])
 })
 
-test('validateName', async ({ page }) => {
+test('validateName', async () => {
   expect(validateName([])).toEqual('')
   expect(validateName(123)).toEqual('')
   expect(validateName('CoolBro')).toEqual('coolbro')
 })
 
-test('validateDescription', async ({ page }) => {
+test('validateDescription', async () => {
   expect(validateDescription([])).toEqual('')
   expect(validateDescription(123)).toEqual('')
   expect(
