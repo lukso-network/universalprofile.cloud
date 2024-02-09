@@ -21,7 +21,7 @@ export const createLsp8Object = async (
     LSP4TokenName: name,
     LSP4TokenSymbol: symbol,
     LSP4TokenType: tokenType,
-    LSP4Creators: creatorsAddresses,
+    LSP4Creators: creators,
   } = indexedAsset || {}
 
   // get `tokenSupply` for the asset
@@ -37,8 +37,9 @@ export const createLsp8Object = async (
     return []
   }
 
-  // we check contract owner in case there are no creators set
+  // get contract owner
   const owner = await lsp8Contract.methods.owner().call() // TODO fetch from Algolia when it's supported
+  assertAddress(owner)
 
   // fetch metadata for each token id
   const assets: Asset[] = []
@@ -77,15 +78,6 @@ export const createLsp8Object = async (
       id && imageIds.push(id)
     })
 
-    // get creator metadata
-    // TODO refactor this to get from index
-    const creators = await fetchLsp4Creators(
-      address,
-      creatorsAddresses,
-      tokenId,
-      owner
-    )
-
     assets.push({
       address,
       name,
@@ -103,9 +95,9 @@ export const createLsp8Object = async (
       images,
       imageIds,
       creators,
-      creatorIds: creatorsAddresses,
       owner: profileAddress,
       tokenType: tokenType || 'NFT', // we set default just in case it's missing from indexer
+      contractOwner: owner,
     })
   }
   return assets

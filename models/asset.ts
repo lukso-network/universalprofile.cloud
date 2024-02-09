@@ -33,21 +33,14 @@ export class AssetModel extends BaseModel {
       owner: this.string(''),
       tokenType: this.string(''),
       assetImageUrl: this.string(''),
+      contractOwner: this.string(''),
+      creators: this.attr(null),
 
       // foreign keys
       iconId: this.attr(null),
       imageIds: this.attr(null),
-      creatorIds: this.attr(null),
     }
   }
-
-  // static mutators() {
-  //   return {
-  //     tokenType(value: TokenType) {
-  //       return value.toUpperCase() // Since indexer return mixed case we unify with mutator
-  //     },
-  //   }
-  // }
 
   // types
   declare address: Address
@@ -65,16 +58,16 @@ export class AssetModel extends BaseModel {
   declare owner: Address
   declare tokenType?: TokenType
   declare assetImageUrl?: string
+  declare contractOwner?: Address
+  declare creators?: Address[]
 
   // foreign keys
 
   declare iconId?: string
   declare imageIds?: string[]
-  declare creatorIds?: Address[]
 
   declare icon?: Image
   declare images?: Image[]
-  declare creators?: Creator[]
 }
 
 export type Asset = Partial<Item<AssetModel>>

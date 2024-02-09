@@ -1,69 +1,91 @@
 <script setup lang="ts">
-import type { Creator } from '@/models/creator'
-
 type Props = {
-  creators?: Creator[]
+  asset: Asset
 }
 
 type VerifyStatus = 'verified' | 'unverified' | 'partial'
 
 const props = defineProps<Props>()
-const profile: Profile = {}
 
-const firstCreator = computed(
-  () => useProfile(props.creators?.[0]?.profileId).profile.value
-)
+const creatorAddressesOrOwner = computed(() => {
+  // if no creators we use contract owner
+  if (!!!props.asset?.creators?.length && props.asset?.contractOwner) {
+    return [props.asset?.contractOwner]
+  }
 
-const restOfCreators = computed(() =>
-  props.creators
-    ?.slice(1)
-    .map(creator => useProfile(creator?.profileId).profile.value)
-)
+  return props.asset?.creators?.filter(Boolean) || []
+})
+
+const creatorQueries = useQueries({
+  queries:
+    creatorAddressesOrOwner.value.map(creatorAddress => ({
+      queryKey: ['profile', creatorAddress],
+      queryFn: () => fetchAndStoreProfile(creatorAddress),
+    })) || [],
+  combine: results => {
+    return {
+      data: results.map(result => result.data),
+      isPending: results.some(result => {
+        return result.isPending
+      }),
+    }
+  },
+})
+
+const firstCreator = computed(() => {
+  return creatorQueries.value.data?.[0]
+})
+
+const restOfCreators = computed(() => creatorQueries.value.data?.slice(1) || [])
 
 const verifyStatus = computed<VerifyStatus>(() => {
-  if (props.creators?.filter(creator => creator?.isVerified).length === 0)
-    return 'unverified'
-  if (
-    props.creators?.filter(creator => creator?.isVerified).length ===
-    props.creators?.length
+  const profileRepo = useRepo(ProfileRepository)
+  const creators = props.asset?.creators?.map(creatorId =>
+    profileRepo.getProfile(creatorId)
   )
+  const verifiedCreators = creators?.filter(
+    creator =>
+      props.asset?.address &&
+      creator?.issuedAssetAddresses?.includes(props.asset?.address)
+  ).length
+
+  if (verifiedCreators === 0) {
+    return 'unverified'
+  }
+
+  if (verifiedCreators === creators?.length) {
     return 'verified'
+  }
+
   return 'partial'
 })
 </script>
 
 <template>
   <div
-    v-if="creators?.length && profile"
-    class="grid grid-cols-[max-content,max-content,auto]"
+    v-if="creatorQueries.isPending"
+    class="flex h-6 animate-pulse items-center"
   >
-    <div class="flex space-x-[-14px]">
-      <lukso-profile
-        v-for="creator in restOfCreators"
-        :key="creator?.value?.address"
-        size="x-small"
-        :profile-url="creator?.profileImage?.url"
-        class="relative"
-      ></lukso-profile>
-      <lukso-profile
-        size="x-small"
-        :profile-url="firstCreator?.profileImage?.url"
-        :profile-address="firstCreator?.address"
-        has-identicon
-        class="relative"
-      ></lukso-profile>
+    <lukso-profile size="x-small"></lukso-profile>
+    <div class="grid h-full grid-rows-2 gap-1 pl-1">
+      <div class="flex w-16 bg-neutral-90"></div>
+      <div class="flex w-20 bg-neutral-90"></div>
     </div>
-    <div class="pl-1">
-      <div class="paragraph-inter-10-semi-bold text-neutral-60">
-        {{ $formatMessage('asset_created_by') }}
-      </div>
-      <lukso-username
-        :name="firstCreator?.name"
-        :address="firstCreator?.address"
-        size="x-small"
-        class="flex"
-        name-color="neutral-20"
-      ></lukso-username>
+  </div>
+  <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
+    <div class="flex space-x-[-14px]">
+      <NftListCardCreatorsProfile
+        v-for="(creatorProfile, index) in restOfCreators"
+        :profile="creatorProfile"
+        :key="index"
+        class="relative"
+      />
+      <NftListCardCreatorsProfile
+        v-if="firstCreator"
+        :profile="firstCreator"
+        class="relative"
+        :has-name="true"
+      />
     </div>
     <div class="flex items-center justify-end">
       <lukso-tooltip

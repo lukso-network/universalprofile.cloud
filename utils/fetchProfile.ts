@@ -17,6 +17,8 @@ export const fetchAndStoreProfile = async (profileAddress: Address) => {
   const profile = await fetchProfile(profileAddress)
 
   profileRepo.saveProfile(profile)
+
+  return profile
 }
 
 /**

@@ -19,7 +19,7 @@ export const createLsp7Object = async (
     LSP4TokenSymbol: symbol,
     LSP4Metadata: metadata,
     LSP4TokenType: tokenType,
-    LSP4Creators: creatorsAddresses,
+    LSP4Creators: creators,
     assetImageUrl,
   } = indexedAsset || {}
   const { links } = metadata || {}
@@ -57,17 +57,9 @@ export const createLsp7Object = async (
     })
   }
 
-  // we check contract owner in case there are no creators set
+  // get contract owner
   const owner = await lsp7Contract.methods.owner().call() // TODO fetch from Algolia when it's supported
-
-  // get creator metadata
-  // TODO refactor this to get from index
-  const creators = await fetchLsp4Creators(
-    address,
-    creatorsAddresses,
-    '0x',
-    owner
-  )
+  assertAddress(owner)
 
   return {
     address,
@@ -84,11 +76,11 @@ export const createLsp7Object = async (
     images,
     imageIds,
     creators,
-    creatorIds: creatorsAddresses,
     tokenId: '0x',
     owner: profileAddress,
     tokenType: tokenType || 'TOKEN', // we set default just in case it's missing from indexer
     assetImageUrl,
+    contractOwner: owner,
   }
 }
 
