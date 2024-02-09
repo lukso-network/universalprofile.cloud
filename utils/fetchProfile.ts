@@ -28,16 +28,8 @@ export const fetchAndStoreProfile = async (profileAddress: Address) => {
  * @returns
  */
 export const fetchProfile = async (profileAddress: Address) => {
-  const profileRepo = useRepo(ProfileRepository)
   const checksumProfileAddress = toChecksumAddress(profileAddress)
   assertAddress(checksumProfileAddress)
-
-  // check if profile is already in the store
-  const storeProfile = profileRepo.getProfileAndImages(checksumProfileAddress)
-
-  if (storeProfile) {
-    return storeProfile
-  }
 
   const { $fetchIndexedProfile } = useNuxtApp() as unknown as NuxtApp
   const profileIndexedData = await $fetchIndexedProfile(profileAddress)
