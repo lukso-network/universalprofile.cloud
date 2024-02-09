@@ -75,7 +75,7 @@ export const createLsp7Object = async (
     iconId,
     images,
     imageIds,
-    creators,
+    creators: creators?.filter(Boolean), // sometimes indexer return empty string [''] so we need to filter out
     tokenId: '0x',
     owner: profileAddress,
     tokenType: tokenType || 'TOKEN', // we set default just in case it's missing from indexer

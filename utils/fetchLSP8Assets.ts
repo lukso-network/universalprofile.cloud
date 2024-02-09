@@ -94,7 +94,7 @@ export const createLsp8Object = async (
       iconId,
       images,
       imageIds,
-      creators,
+      creators: creators?.filter(Boolean), // sometimes indexer return empty string [''] so we need to filter out
       owner: profileAddress,
       tokenType: tokenType || 'NFT', // we set default just in case it's missing from indexer
       contractOwner: owner,
