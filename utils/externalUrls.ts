@@ -1,13 +1,25 @@
 /**
- * URL to blockchain explorer
+ * URL to transaction on blockchain explorer
  *
- * @param transactionHash - The transaction hash
+ * @param transactionHash
  * @returns
  */
 export const explorerTransactionUrl = (transactionHash: string) => {
   const { currentNetwork } = storeToRefs(useAppStore())
 
   return `${currentNetwork.value.explorerUrl}/tx/${transactionHash}`
+}
+
+/**
+ * URL to contract on blockchain explorer
+ *
+ * @param address
+ * @returns
+ */
+export const explorerContractUrl = (address: string) => {
+  const { currentNetwork } = storeToRefs(useAppStore())
+
+  return `${currentNetwork.value.explorerUrl}/address/${address}`
 }
 
 /**

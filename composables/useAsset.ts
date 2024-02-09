@@ -3,7 +3,7 @@ import { AssetRepository } from '@/repositories/asset'
 
 import type { Asset } from '@/models/asset'
 
-export const useAsset = (assetAddress?: Address, tokenId?: string) => {
+export const useAsset = (assetAddress?: Address, tokenId = '0x') => {
   const assetRepo = useRepo(AssetRepository)
   const asset = ref<Asset>()
   const { isLoadingAssets, isLoadedApp } = storeToRefs(useAppStore())

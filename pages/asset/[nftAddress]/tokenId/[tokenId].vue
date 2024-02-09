@@ -1,22 +1,13 @@
 <script setup lang="ts">
 import { CreatorRepository } from '@/repositories/creator'
 
-import type { Creator } from '@/models/creator'
-
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 
 const { connectedProfile } = useConnectedProfile()
 const { isConnected } = storeToRefs(useAppStore())
 const { asset } = useAsset(nftAddress, tokenId)
-const creatorsRepo = useRepo(CreatorRepository)
-const creators = ref<Creator[]>([])
-
-const verifiedCreator = computed(() => {
-  return creatorsRepo
-    .getAssetCreators(nftAddress, tokenId)
-    .find(creator => creator?.isVerified)
-})
+const creatorsRepository = useRepo(CreatorRepository)
 
 const isOwned = computed(() => {
   return (
@@ -30,15 +21,11 @@ const isOwned = computed(() => {
   )
 })
 
-watchEffect(async () => {
-  creators.value =
-    asset.value?.creatorIds?.map<Creator>(creatorAddress => {
-      return creatorsRepo.getCreator(
-        creatorAddress,
-        asset.value?.address,
-        asset.value?.tokenId
-      )
-    }) || []
+const creators = computed(() => {
+  return creatorsRepository.getAssetCreators(
+    asset.value?.address,
+    asset.value?.tokenId
+  )
 })
 
 const handleSendAsset = (event: Event) => {
@@ -57,12 +44,16 @@ const handleSendAsset = (event: Event) => {
     console.error(error)
   }
 }
+
+const assetTokenId = computed(() => {
+  return prefixedTokenId(asset.value?.tokenId, asset.value?.tokenIdFormat)
+})
 </script>
 
 <template>
   <AppPageLoader>
     <div
-      class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-20 transition-opacity duration-300"
+      class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-6 transition-opacity duration-300"
     >
       <div>
         <lukso-card size="small" shadow="small" is-full-width
@@ -72,14 +63,21 @@ const handleSendAsset = (event: Event) => {
               :style="`background-image: url(${getAssetThumb(asset)});`"
             ></div>
             <div class="relative p-4">
-              <AssetCreator
-                :creator="verifiedCreator"
-                class="relative -top-4 -mt-4"
-              />
-              <div>
-                <div class="paragraph-inter-14-semi-bold">
-                  {{ asset?.name }}
-                </div>
+              <div class="paragraph-inter-14-semi-bold">
+                {{ asset?.name }}
+                <span
+                  class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
+                  >{{ asset?.symbol }}</span
+                >
+              </div>
+              <div class="paragraph-ptmono-10-bold mt-1">
+                <span v-if="isLsp8(asset)">
+                  {{ assetTokenId }}
+                </span>
+                <span v-else>
+                  {{ $formatMessage('token_owned') }}
+                  {{ asset?.balance }}
+                </span>
               </div>
             </div>
           </div>
@@ -95,42 +93,37 @@ const handleSendAsset = (event: Event) => {
           />
 
           <lukso-button is-full-width class="mt-12" @click="handleSendAsset">{{
-            $formatMessage('token_details_send', {
-              token: asset?.symbol || '',
-            })
+            $formatMessage('token_details_send_collectible')
           }}</lukso-button>
         </div>
       </div>
       <div>
-        <div class="heading-apax-24-medium pb-8">
+        <div class="heading-apax-24-medium flex items-center gap-2 pb-2">
           {{ asset?.name }}
+          <AssetStandardBadge :standard="asset?.standard" />
         </div>
-        <AssetAddress v-if="asset?.address" :address="asset.address" />
-        <AssetTokenId v-if="asset?.tokenId" :asset="asset" />
-        <AssetSupply
-          v-if="asset?.tokenSupply"
+        <AssetCollectionSupply
           :token-supply="asset?.tokenSupply"
-          :symbol="asset?.symbol"
-          :decimals="asset.decimals"
+          :class="{
+            'mb-4': hasTokenId(asset),
+            'mb-8': !hasTokenId(asset),
+          }"
         />
+        <AssetTokenId v-if="hasTokenId(asset)" :asset="asset" />
+        <AssetDescription
+          v-if="asset?.description"
+          :description="asset.description"
+        />
+        <AssetImages v-if="asset?.images?.length" :images="asset.images" />
         <AssetCreators
-          v-if="asset?.creators && !!asset?.creators.length"
+          v-if="creators && !!creators.length"
           :creators="creators"
         />
         <AssetLinks
           v-if="asset?.links && !!asset.links.length"
           :links="asset.links"
         />
-        <AssetDescription
-          v-if="asset?.description"
-          :description="asset.description"
-        />
-        <AssetImages v-if="asset?.images?.length" :images="asset.images" />
-        <AssetStandardInfo
-          v-if="asset?.standard"
-          :standard="asset.standard"
-          class="hidden"
-        />
+        <AssetAddress v-if="asset?.address" :address="asset.address" />
       </div>
     </div>
   </AppPageLoader>

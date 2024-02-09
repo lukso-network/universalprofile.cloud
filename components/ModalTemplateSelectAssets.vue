@@ -65,7 +65,7 @@ onMounted(async () => {
           :symbol="asset?.symbol"
           :address="asset?.address"
           :has-identicon="true"
-          :has-square-icon="isNft(asset)"
+          :has-square-icon="isCollectible(asset)"
           :is-selected="
             selectedAsset?.address === asset?.address &&
             selectedAsset?.tokenId === asset?.tokenId

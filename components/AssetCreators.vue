@@ -5,7 +5,20 @@ type Props = {
   creators: Creator[]
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+const creatorsProfiles = computed(() =>
+  props.creators.map(creator => {
+    return { ...creator, profile: useProfile(creator?.profileId).profile.value }
+  })
+)
+
+const handleOpenProfile = (address?: Address) => {
+  if (address) {
+    navigateTo(profileRoute(address))
+    fetchAndStoreAssets(address)
+  }
+}
 </script>
 
 <template>
@@ -13,10 +26,12 @@ defineProps<Props>()
     {{ $formatMessage('asset_creators_title') }}
   </div>
   <div class="mb-8 flex flex-wrap gap-2">
-    <div
-      v-for="(creator, index) in creators"
+    <lukso-button
+      v-for="(creator, index) in creatorsProfiles"
       :key="index"
-      class="inline-flex items-center rounded-12 border border-neutral-90 bg-neutral-100 px-4 py-3"
+      custom-class="px-4"
+      variant="secondary"
+      @click="handleOpenProfile(creator?.profile?.address)"
     >
       <lukso-profile
         size="x-small"
@@ -57,6 +72,6 @@ defineProps<Props>()
           size="small"
         ></lukso-icon>
       </lukso-tooltip>
-    </div>
+    </lukso-button>
   </div>
 </template>

@@ -29,7 +29,7 @@ onMounted(() => {
   onSend.value = handleSend
 
   // for nft's we prefill amount
-  if (isNft(asset.value)) {
+  if (isCollectible(asset.value)) {
     amount.value = '1'
   }
 })
@@ -104,7 +104,7 @@ const handleSend = async () => {
     } else {
       // custom token transfer
       switch (asset.value?.standard) {
-        case 'LSP7DigitalAsset':
+        case ASSET_TYPES.LSP7:
           const tokenContract = contract<LSP7DigitalAsset>(
             LSP7Mintable.abi as AbiItem[],
             asset.value?.address
@@ -129,7 +129,7 @@ const handleSend = async () => {
           assetRepository.setBalance(asset.value.address, balance)
 
           break
-        case 'LSP8DigitalAsset':
+        case ASSET_TYPES.LSP8:
           const nftContract = contract<LSP8IdentifiableDigitalAsset>(
             LSP8Mintable.abi as AbiItem[],
             asset.value?.address

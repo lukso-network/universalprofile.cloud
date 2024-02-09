@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { sliceAddress } from '@lukso/web-components/tools'
 import makeBlockie from 'ethereum-blockies-base64'
 
 import { type Asset } from '@/models/asset'
@@ -29,7 +28,7 @@ const handleShowAsset = () => {
     assertAddress(props.asset?.address)
     assertString(props.asset.tokenId)
 
-    if (props.asset?.standard === 'LSP8DigitalAsset') {
+    if (isCollectible(props.asset)) {
       navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
     } else {
       navigateTo(tokenRoute(props.asset.address))
@@ -56,15 +55,8 @@ const handleSendAsset = (event: Event) => {
 }
 
 const assetTokenId = computed(() => {
-  return sliceAddress(
-    `${tokenIdPrefix(props?.asset?.tokenIdFormat)}${parseTokenId(props?.asset?.tokenId, props.asset?.tokenIdFormat)}`,
-    6
-  )
+  return prefixedTokenId(props.asset?.tokenId, props.asset?.tokenIdFormat, 24)
 })
-
-const isLsp8 = (asset: Asset) => {
-  return asset?.standard === 'LSP8DigitalAsset'
-}
 </script>
 
 <template>
@@ -106,7 +98,10 @@ const isLsp8 = (asset: Asset) => {
               </span>
             </div>
           </div>
-          <AssetCreator :creators="creators" class="relative -top-4 -mt-2" />
+          <NftListCardCreators
+            :creators="creators"
+            class="relative -top-4 -mt-2"
+          />
           <div class="flex items-end">
             <div class="flex w-full justify-end">
               <lukso-button
@@ -125,12 +120,7 @@ const isLsp8 = (asset: Asset) => {
         </div>
       </div>
       <div class="flex justify-between px-4 py-3">
-        <lukso-tag
-          v-if="asset?.standard"
-          size="x-small"
-          background-color="lukso-90"
-          >{{ StandardsAbbreviations[asset.standard] }}</lukso-tag
-        >
+        <AssetStandardBadge :standard="asset?.standard" />
         <div
           class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
         >

@@ -52,7 +52,7 @@ const isOwned = computed(() => {
   <div class="relative">
     <AppPageLoader>
       <div
-        class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-20 transition-opacity duration-300"
+        class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-6 transition-opacity duration-300"
       >
         <div>
           <lukso-card is-full-width size="small">
@@ -81,37 +81,38 @@ const isOwned = computed(() => {
               :message="$formatMessage('token_details_own')"
             />
 
-            <lukso-button is-full-width class="mt-4" @click="handleSendAsset">{{
-              $formatMessage('token_details_send', {
-                token: asset?.symbol || '',
-              })
-            }}</lukso-button>
+            <lukso-button
+              is-full-width
+              class="mt-12"
+              @click="handleSendAsset"
+              >{{
+                $formatMessage('token_details_send', {
+                  token: asset?.symbol || '',
+                })
+              }}</lukso-button
+            >
           </div>
         </div>
         <div>
-          <div class="heading-apax-24-medium pb-8">{{ asset?.name }}</div>
-          <AssetAddress v-if="asset?.address" :address="asset.address" />
-          <AssetSupply
-            v-if="asset?.tokenSupply"
+          <div class="heading-apax-24-medium flex items-center gap-2 pb-2">
+            {{ asset?.name }}
+            <AssetStandardBadge :standard="asset?.standard" />
+          </div>
+          <AssetTokenSupply
             :token-supply="asset?.tokenSupply"
-            :symbol="asset?.symbol"
             :decimals="asset?.decimals"
-          />
-          <AssetCreators v-if="!!creators.length" :creators="creators" />
-          <AssetLinks
-            v-if="asset?.links && !!asset.links.length"
-            :links="asset.links"
+            class="pb-8"
           />
           <AssetDescription
             v-if="asset?.description"
             :description="asset.description"
           />
           <AssetImages v-if="asset?.images?.length" :images="asset.images" />
-          <AssetStandardInfo
-            v-if="asset?.standard"
-            :standard="asset.standard"
-            class="hidden"
+          <AssetLinks
+            v-if="asset?.links && !!asset.links.length"
+            :links="asset.links"
           />
+          <AssetAddress v-if="asset?.address" :address="asset.address" />
         </div>
       </div>
     </AppPageLoader>

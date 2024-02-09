@@ -1,13 +1,13 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, describe } from 'vitest'
 import {
   assertAddress,
   assertAddresses,
   assertString,
   assertArray,
-} from '../../../utils/validators'
+} from '../validators'
 
-test.describe('assertAddress', () => {
-  test('throw when address is invalid', async ({ page }) => {
+describe('assertAddress', () => {
+  test('throw when address is invalid', async () => {
     try {
       assertAddress('0x0', 'profile')
     } catch (error) {
@@ -17,7 +17,7 @@ test.describe('assertAddress', () => {
     }
   })
 
-  test('throw when address is missing', async ({ page }) => {
+  test('throw when address is missing', async () => {
     try {
       assertAddress(undefined)
     } catch (error) {
@@ -27,15 +27,15 @@ test.describe('assertAddress', () => {
     }
   })
 
-  test('pass when address is valid', async ({ page }) => {
+  test('pass when address is valid', async () => {
     expect(
       assertAddress('0x4440a406E00ECfe15a833119D20B848a31c80116')
     ).toBeUndefined()
   })
 })
 
-test.describe('assertAddresses', () => {
-  test('throw when address is invalid', async ({ page }) => {
+describe('assertAddresses', () => {
+  test('throw when address is invalid', async () => {
     try {
       assertAddresses(
         ['0x4440a406E00ECfe15a833119D20B848a31c80116', '0x0'],
@@ -48,7 +48,7 @@ test.describe('assertAddresses', () => {
     }
   })
 
-  test('throw when address is missing', async ({ page }) => {
+  test('throw when address is missing', async () => {
     try {
       assertAddresses(undefined)
     } catch (error) {
@@ -58,7 +58,7 @@ test.describe('assertAddresses', () => {
     }
   })
 
-  test('pass when array of addresses is valid', async ({ page }) => {
+  test('pass when array of addresses is valid', async () => {
     expect(
       assertAddresses([
         '0x4440a406E00ECfe15a833119D20B848a31c80116',
@@ -68,8 +68,8 @@ test.describe('assertAddresses', () => {
   })
 })
 
-test.describe('assertString', () => {
-  test('throw when value is a number', async ({ page }) => {
+describe('assertString', () => {
+  test('throw when value is a number', async () => {
     try {
       assertString(123)
     } catch (error) {
@@ -77,7 +77,7 @@ test.describe('assertString', () => {
     }
   })
 
-  test('throw when value is an array', async ({ page }) => {
+  test('throw when value is an array', async () => {
     try {
       assertString([123, 'asdf'])
     } catch (error) {
@@ -87,13 +87,13 @@ test.describe('assertString', () => {
     }
   })
 
-  test('pass when value is a string', async ({ page }) => {
+  test('pass when value is a string', async () => {
     expect(assertString('asdf')).toBeUndefined()
   })
 })
 
-test.describe('assertArray', () => {
-  test('throw when value is not array', async ({ page }) => {
+describe('assertArray', () => {
+  test('throw when value is not array', async () => {
     try {
       assertArray(123, 'users')
     } catch (error) {
@@ -103,7 +103,7 @@ test.describe('assertArray', () => {
     }
   })
 
-  test('pass when value is an array', async ({ page }) => {
+  test('pass when value is an array', async () => {
     expect(assertArray([1, 2, 'asdf'])).toBeUndefined()
   })
 })

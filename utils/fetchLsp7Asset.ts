@@ -14,13 +14,15 @@ export const createLsp7Object = async (
     address
   )
   const {
-    name,
-    symbol,
+    LSP4TokenName: name,
+    description,
+    LSP4TokenSymbol: symbol,
     LSP4Metadata: metadata,
-    TokenType: tokenType, // TODO change to camelcase when fixed on indexer
+    LSP4TokenType: tokenType,
+    LSP4Creators: creatorsAddresses,
     assetImageUrl,
   } = indexedAsset || {}
-  const { links, description } = metadata || {}
+  const { links } = metadata || {}
 
   // get profile balance for the asset
   const balance = await fetchLsp7Balance(address, profileAddress)
@@ -60,13 +62,12 @@ export const createLsp7Object = async (
 
   // get creator metadata
   // TODO refactor this to get from index
-  const creators = await fetchLsp4Creators(address, '', owner)
-
-  // create creator identifiers for Pinia ORM
-  const creatorIds: Address[] = []
-  creators?.forEach(creator => {
-    creator?.profile?.address && creatorIds.push(creator.profile.address)
-  })
+  const creators = await fetchLsp4Creators(
+    address,
+    creatorsAddresses,
+    '0x',
+    owner
+  )
 
   return {
     address,
@@ -77,14 +78,14 @@ export const createLsp7Object = async (
     tokenSupply,
     links,
     description,
-    standard: 'LSP7DigitalAsset',
+    standard: ASSET_TYPES.LSP7,
     icon,
     iconId,
     images,
     imageIds,
     creators,
-    creatorIds,
-    tokenId: '',
+    creatorIds: creatorsAddresses,
+    tokenId: '0x',
     owner: profileAddress,
     tokenType: tokenType || 'TOKEN', // we set default just in case it's missing from indexer
     assetImageUrl,
