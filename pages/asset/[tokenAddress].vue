@@ -1,23 +1,8 @@
 <script setup lang="ts">
-import type { Creator } from '@/models/creator'
-
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
 const { connectedProfile } = useConnectedProfile()
 const { isConnected } = storeToRefs(useAppStore())
 const { asset } = useAsset(tokenAddress)
-const creators = ref<Creator[]>([])
-const creatorsRepo = useRepo(CreatorRepository)
-
-watchEffect(async () => {
-  creators.value =
-    asset.value?.creatorIds?.map<Creator>(creatorAddress => {
-      return creatorsRepo.getCreator(
-        creatorAddress,
-        asset.value?.address,
-        asset.value?.tokenId
-      )
-    }) || []
-})
 
 const handleSendAsset = (event: Event) => {
   try {

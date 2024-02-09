@@ -8,7 +8,6 @@ import type {
   LSP8_TOKEN_ID_FORMAT,
 } from '@lukso/lsp-smart-contracts'
 import type { Image } from '@/models/image'
-import type { Creator } from '@/models/creator'
 import type { ASSET_TYPES } from '@/shared/enums'
 
 export class AssetModel extends BaseModel {
