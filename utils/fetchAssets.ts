@@ -21,9 +21,13 @@ export const fetchAndStoreAssets = async (profileAddress: Address) => {
     })
   )
 
-  await Promise.all(promises)
-
-  isLoadingAssets.value = false
+  try {
+    await Promise.all(promises)
+  } catch (error) {
+    console.error(error)
+  } finally {
+    isLoadingAssets.value = false
+  }
 }
 
 /**
