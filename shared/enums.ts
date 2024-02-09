@@ -31,11 +31,11 @@ export enum PROFILE_TYPES {
 export enum ASSET_TYPES {
   EOA = 'EOA',
   LSP7 = 'LSP7DigitalAsset',
-  LSP8 = 'LSP8IndentifiableDigitalAsset', // TODO this name has typo atm in indexer, update once it's  fixed
+  LSP8 = 'LSP8IdentifiableDigitalAsset',
 }
 
 export const STANDARDS_ABBREVIATIONS = {
   EOA: 'EOA',
   LSP7DigitalAsset: 'LSP7',
-  LSP8IndentifiableDigitalAsset: 'LSP8', // TODO this name has typo atm in indexer, update once it's  fixed
+  LSP8IdentifiableDigitalAsset: 'LSP8',
 }
