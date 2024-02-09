@@ -1,8 +1,7 @@
 <script setup lang="ts">
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
 const { connectedProfile } = useConnectedProfile()
-const { isConnected } = storeToRefs(useAppStore())
-const { asset } = useAsset(tokenAddress)
+const { asset, isLoading, isOwned } = useAsset(tokenAddress)
 
 const handleSendAsset = (event: Event) => {
   try {
@@ -19,23 +18,11 @@ const handleSendAsset = (event: Event) => {
     console.error(error)
   }
 }
-
-const isOwned = computed(() => {
-  return (
-    isConnected &&
-    connectedProfile &&
-    asset.value?.address &&
-    asset.value?.balance !== '0' &&
-    connectedProfile.value?.receivedAssetAddresses?.includes(
-      asset.value?.address
-    )
-  )
-})
 </script>
 
 <template>
   <div class="relative">
-    <AppPageLoader>
+    <AppPageLoader :is-loading="isLoading">
       <div
         class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-6 transition-opacity duration-300"
       >

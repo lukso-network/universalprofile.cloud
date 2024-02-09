@@ -1,4 +1,14 @@
 <script setup lang="ts">
+type Props = {
+  isLoading?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isLoading: false,
+})
+
+const { isLoading } = toRefs(props)
+
 const { isLoadedApp } = storeToRefs(useAppStore())
 </script>
 
@@ -7,14 +17,15 @@ const { isLoadedApp } = storeToRefs(useAppStore())
     <div
       class="relative px-4 py-20"
       :class="{
-        'opacity-0': !isLoadedApp,
-        'opacity-100  transition-opacity delay-200 duration-300': isLoadedApp,
+        'opacity-0': !isLoadedApp || isLoading,
+        'opacity-100  transition-opacity delay-200 duration-300':
+          isLoadedApp && !isLoading,
       }"
     >
       <slot />
     </div>
     <AppLoader
-      v-if="!isLoadedApp"
+      v-if="!isLoadedApp || isLoading"
       class="absolute left-[calc(50%-20px)] top-[300px]"
     />
   </div>
