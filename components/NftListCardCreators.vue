@@ -7,40 +7,12 @@ type VerifyStatus = 'verified' | 'unverified' | 'partial'
 
 const props = defineProps<Props>()
 
-const creatorAddressesOrOwner = computed(() => {
-  // if no creators we use contract owner
-  if (!!!props.asset?.creators?.length && props.asset?.contractOwner) {
-    return [props.asset?.contractOwner]
-  }
-
-  return props.asset?.creators?.filter(Boolean) || []
-})
-
-const creatorQueries = useQueries({
-  queries:
-    creatorAddressesOrOwner.value.map(creatorAddress => ({
-      queryKey: ['profile', creatorAddress],
-      queryFn: () => fetchAndStoreProfile(creatorAddress),
-    })) || [],
-  combine: results => {
-    return {
-      data: results.map(result => result.data),
-      isPending: results.some(result => {
-        return result.isPending
-      }),
-    }
-  },
-})
-
-const firstCreator = computed(() => {
-  return creatorQueries.value.data?.[0]
-})
-
-const restOfCreators = computed(() => creatorQueries.value.data?.slice(1) || [])
+const { firstCreator, restOfCreators, isPending, creatorAddressesOrOwner } =
+  useCreators(props.asset)
 
 const verifyStatus = computed<VerifyStatus>(() => {
   const profileRepo = useRepo(ProfileRepository)
-  const creators = props.asset?.creators?.map(creatorId =>
+  const creators = creatorAddressesOrOwner.value?.map(creatorId =>
     profileRepo.getProfile(creatorId)
   )
   const verifiedCreators = creators?.filter(
@@ -62,16 +34,15 @@ const verifyStatus = computed<VerifyStatus>(() => {
 </script>
 
 <template>
-  <div
-    v-if="creatorQueries.isPending"
-    class="flex h-6 animate-pulse items-center"
-  >
+  <div v-if="isPending" class="flex h-6 animate-pulse items-center">
     <lukso-profile size="x-small"></lukso-profile>
     <div class="grid h-full grid-rows-2 gap-1 pl-1">
       <div class="flex w-16 bg-neutral-90"></div>
       <div class="flex w-20 bg-neutral-90"></div>
     </div>
   </div>
+  <!--no creators at all including owner, might be that its EOA or not indexed -->
+  <div v-else-if="!firstCreator"></div>
   <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
     <div class="flex space-x-[-14px]">
       <NftListCardCreatorsProfile
