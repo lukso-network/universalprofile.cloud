@@ -59,6 +59,7 @@ export type IndexedProfile = {
   address: Address
   LSP3Profile?: LSP3ProfileMetadata
   type: ProfileType
+  LSPStandard: ProfileType
 
   // not using now this attributes but some will be useful in FE
   // TODO refactor this later
