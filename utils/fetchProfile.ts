@@ -42,7 +42,6 @@ export const fetchProfile = async (profileAddress: Address) => {
 
   if (
     !profileIndexedData ||
-    profileIndexedData.type !== PROFILE_TYPES.LSP3 ||
     profileIndexedData.LSPStandard !== PROFILE_TYPES.LSP3
   ) {
     throw new NotFoundIndexError(profileAddress)
