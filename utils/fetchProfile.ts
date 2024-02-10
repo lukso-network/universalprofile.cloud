@@ -40,7 +40,10 @@ export const fetchProfile = async (profileAddress: Address) => {
   const { $fetchIndexedProfile } = useNuxtApp() as unknown as NuxtApp
   const profileIndexedData = await $fetchIndexedProfile(profileAddress)
 
-  if (!profileIndexedData || profileIndexedData.type !== PROFILE_TYPES.LSP3) {
+  if (
+    !profileIndexedData ||
+    profileIndexedData.LSPStandard !== PROFILE_TYPES.LSP3
+  ) {
     throw new NotFoundIndexError(profileAddress)
   }
 
