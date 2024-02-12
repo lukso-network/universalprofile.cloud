@@ -2,6 +2,12 @@ import type { IndexedAsset } from '@/models/asset'
 import type { ContractType } from '@/types/contract'
 import type { NuxtApp } from '@/types/plugins'
 
+/**
+ * Fetch assets and put into the store
+ *
+ * @param profileAddress
+ * @returns
+ */
 export const fetchAndStoreAssets = async (profileAddress: Address) => {
   const { profile } = useProfile(profileAddress)
   const assetRepo = useRepo(AssetRepository)
@@ -33,7 +39,7 @@ export const fetchAndStoreAssets = async (profileAddress: Address) => {
  *
  * @param address - asset address (can be LSP7 token or LSP8 collection)
  * @param profileAddress - address of the profile
- * @param tokenIds -
+ * @param tokenIds - token ids for LSP8 token
  * @returns
  */
 export const fetchAsset = async (
