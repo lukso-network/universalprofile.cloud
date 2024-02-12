@@ -92,7 +92,9 @@ const getAssetForStandard = async (
       console.warn(`Asset ${address} not found in the index`)
       return []
     }
-    case ASSET_TYPES.UNKNOWN: {
+    case ASSET_TYPES.UNKNOWN:
+    // pass to default check
+    default: {
       // for unknown type we do additional RPC check and run getAsset again
       console.warn(
         `Asset ${address} standard is unknown, fallback to RPC check`
@@ -123,10 +125,6 @@ const getAssetForStandard = async (
           return []
         }
       }
-    }
-    default: {
-      console.warn(`Asset ${address} standard is not supported`)
-      return []
     }
   }
 }
