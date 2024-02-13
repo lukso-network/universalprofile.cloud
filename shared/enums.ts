@@ -32,6 +32,7 @@ export enum ASSET_TYPES {
   EOA = 'EOA',
   LSP7 = 'LSP7DigitalAsset',
   LSP8 = 'LSP8IdentifiableDigitalAsset',
+  UNKNOWN = 'UnknownDataType',
 }
 
 export const STANDARDS_ABBREVIATIONS = {

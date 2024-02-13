@@ -1,5 +1,13 @@
+import type { IndexedAsset } from '@/models/asset'
+import type { ContractType } from '@/types/contract'
 import type { NuxtApp } from '@/types/plugins'
 
+/**
+ * Fetch assets and put into the store
+ *
+ * @param profileAddress
+ * @returns
+ */
 export const fetchAndStoreAssets = async (profileAddress: Address) => {
   const { profile } = useProfile(profileAddress)
   const assetRepo = useRepo(AssetRepository)
@@ -31,7 +39,7 @@ export const fetchAndStoreAssets = async (profileAddress: Address) => {
  *
  * @param address - asset address (can be LSP7 token or LSP8 collection)
  * @param profileAddress - address of the profile
- * @param tokenIds -
+ * @param tokenIds - token ids for LSP8 token
  * @returns
  */
 export const fetchAsset = async (
@@ -47,8 +55,33 @@ export const fetchAsset = async (
     return []
   }
 
-  // parse data based on the asset type
-  switch (assetIndexedData.LSPStandard) {
+  return await getAssetForStandard(
+    assetIndexedData.LSPStandard,
+    address,
+    assetIndexedData,
+    profileAddress,
+    tokenIds
+  )
+}
+
+/**
+ * Get asset for given standard
+ *
+ * @param standard
+ * @param address
+ * @param assetIndexedData
+ * @param profileAddress
+ * @param tokenIds
+ * @returns
+ */
+const getAssetForStandard = async (
+  standard: ContractType,
+  address: Address,
+  assetIndexedData: IndexedAsset,
+  profileAddress?: Address,
+  tokenIds?: string[]
+): Promise<Asset[]> => {
+  switch (standard) {
     case ASSET_TYPES.LSP8: {
       return await createLsp8Object(
         address,
@@ -65,8 +98,39 @@ export const fetchAsset = async (
       console.warn(`Asset ${address} not found in the index`)
       return []
     }
-    default:
-      console.warn(`Asset ${address} standard is not supported`)
-      return []
+    case ASSET_TYPES.UNKNOWN:
+    // pass to default check
+    default: {
+      // for unknown type we do additional RPC check and run getAsset again
+      console.warn(
+        `Asset ${address} standard is unknown, fallback to RPC check`
+      )
+      const standard = await detectStandard(address)
+
+      switch (standard) {
+        case ASSET_TYPES.LSP8: {
+          return await getAssetForStandard(
+            ASSET_TYPES.LSP8,
+            address,
+            assetIndexedData,
+            profileAddress,
+            tokenIds
+          )
+        }
+        case ASSET_TYPES.LSP7: {
+          return await getAssetForStandard(
+            ASSET_TYPES.LSP7,
+            address,
+            assetIndexedData,
+            profileAddress,
+            tokenIds
+          )
+        }
+        default: {
+          console.warn(`Asset ${address} standard is not supported`)
+          return []
+        }
+      }
+    }
   }
 }
