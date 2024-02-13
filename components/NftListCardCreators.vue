@@ -7,18 +7,21 @@ type VerifyStatus = 'verified' | 'unverified' | 'partial'
 
 const props = defineProps<Props>()
 
-const { firstCreator, restOfCreators, isPending, creatorAddressesOrOwner } =
-  useCreators(props.asset)
+const {
+  firstCreator,
+  restOfCreators,
+  isPending,
+  creatorAddressesOrOwner,
+  isVerified,
+} = useCreators(props.asset)
 
 const verifyStatus = computed<VerifyStatus>(() => {
   const profileRepo = useRepo(ProfileRepository)
   const creators = creatorAddressesOrOwner.value?.map(creatorId =>
     profileRepo.getProfile(creatorId)
   )
-  const verifiedCreators = creators?.filter(
-    creator =>
-      props.asset?.address &&
-      creator?.issuedAssetAddresses?.includes(props.asset?.address)
+  const verifiedCreators = creators?.filter(creator =>
+    isVerified(creator)
   ).length
 
   if (verifiedCreators === 0) {

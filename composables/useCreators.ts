@@ -33,11 +33,16 @@ export const useCreators = (asset?: Asset) => {
 
   const isPending = computed(() => creatorQueries.value.isPending)
 
+  const isVerified = (creatorProfile?: Profile) =>
+    asset?.address &&
+    creatorProfile?.issuedAssetAddresses?.includes(asset?.address)
+
   return {
     creators,
     firstCreator,
     restOfCreators,
     isPending,
     creatorAddressesOrOwner,
+    isVerified,
   }
 }
