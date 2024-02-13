@@ -2,6 +2,7 @@ import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/art
 
 import type { AbiItem } from 'web3-utils'
 import type { LSP8IdentifiableDigitalAsset } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
+import type { Image } from '@/types/image'
 
 export const createLsp8Object = async (
   address: Address,
@@ -58,11 +59,7 @@ export const createLsp8Object = async (
     // get best image from collection based on height criteria
     const icon = createImageObject(metadataIcon, 260)
 
-    // create image identifier so they can be linked in Pinia ORM
-    const iconId = getHash(icon?.url)
-
-    const images: ImageMetadataWithRelationships[] = []
-    const imageIds: string[] = []
+    const images: Image[] = []
 
     // get best image from collection based on height criteria
     for await (const image of metadataImages) {
@@ -71,12 +68,6 @@ export const createLsp8Object = async (
         images.push(convertedImage)
       }
     }
-
-    // create array of image identifiers so they can be linked in Pinia ORM
-    images.forEach(image => {
-      const id = getHash(image.url)
-      id && imageIds.push(id)
-    })
 
     assets.push({
       address,
@@ -91,9 +82,7 @@ export const createLsp8Object = async (
       tokenId,
       tokenIdFormat,
       icon,
-      iconId,
       images,
-      imageIds,
       creators: creators?.filter(Boolean), // sometimes indexer return empty string [''] so we need to filter out
       owner: profileAddress,
       tokenType: tokenType || 'NFT', // we set default just in case it's missing from indexer

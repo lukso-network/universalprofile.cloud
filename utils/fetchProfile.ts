@@ -85,10 +85,6 @@ const createProfileObject = async (
   const { getBalance } = useWeb3(PROVIDERS.RPC)
   const balance = await getBalance(address)
 
-  // create image identifiers so they can be linked in Pinia ORM
-  const profileImageId = getHash(profileImage?.url)
-  const backgroundImageId = getHash(backgroundImage?.url)
-
   let receivedAssetAddresses: Address[] = []
   let issuedAssetAddresses: Address[] = []
   try {
@@ -117,8 +113,6 @@ const createProfileObject = async (
     description,
     profileImage,
     backgroundImage,
-    profileImageId,
-    backgroundImageId,
     receivedAssetAddresses,
     issuedAssetAddresses,
   }

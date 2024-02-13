@@ -1,7 +1,6 @@
 import { Repository } from 'pinia-orm'
 
 import { type Asset, AssetModel } from '@/models/asset'
-import { ImageRepository } from './image'
 
 export class AssetRepository extends Repository<AssetModel> {
   async getOwnedTokens() {
@@ -110,16 +109,7 @@ export class AssetRepository extends Repository<AssetModel> {
       return
     }
 
-    assets?.forEach(asset => {
-      const { icon, images, ...plainAsset } = asset || {}
-
-      // save asset
-      this.repo(AssetModel).save(plainAsset)
-
-      // save asset images
-      icon && this.repo(ImageModel).save(icon)
-      images && images.length && this.repo(ImageModel).save(images)
-    })
+    this.repo(AssetModel).save(assets)
   }
 
   getAssetAndImages(address: Address, tokenId = '') {
@@ -133,18 +123,7 @@ export class AssetRepository extends Repository<AssetModel> {
       return
     }
 
-    const icon =
-      asset?.iconId && this.repo(ImageRepository).getImage(asset.iconId)
-    const images =
-      asset?.imageIds &&
-      asset.imageIds.length &&
-      this.repo(ImageRepository).getImages(asset.imageIds)
-
-    return {
-      ...asset,
-      icon,
-      images,
-    } as Asset
+    return asset
   }
 
   setBalance(address: Address, balance: string) {

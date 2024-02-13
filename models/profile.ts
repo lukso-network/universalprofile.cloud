@@ -6,7 +6,7 @@ import type {
   LSP3ProfileMetadata,
   LinkMetadata,
 } from '@lukso/lsp-smart-contracts'
-import type { Image } from '@/models/image'
+import type { Image } from '@/types/image'
 
 export class ProfileModel extends BaseModel {
   static entity = 'profiles'
@@ -22,10 +22,8 @@ export class ProfileModel extends BaseModel {
       tags: this.attr([]),
       description: this.string(''),
       isEoa: this.boolean(false), // TODO change to `type` value from index
-
-      // foreign keys
-      profileImageId: this.attr(null),
-      backgroundImageId: this.attr(null),
+      profileImage: this.attr(null),
+      backgroundImage: this.attr(null),
       issuedAssetAddresses: this.attr(null),
       receivedAssetAddresses: this.attr(null),
     }
@@ -39,12 +37,10 @@ export class ProfileModel extends BaseModel {
   declare tags?: string[]
   declare description?: string
   declare isEoa?: boolean
-
   declare profileImageId?: string
   declare backgroundImageId?: string
   declare issuedAssetAddresses?: Address[]
   declare receivedAssetAddresses?: Address[]
-
   declare profileImage?: Image
   declare backgroundImage?: Image
 }

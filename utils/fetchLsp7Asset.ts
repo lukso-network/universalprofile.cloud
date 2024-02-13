@@ -2,6 +2,7 @@ import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAs
 
 import type { AbiItem } from 'web3-utils'
 import type { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
+import type { Image } from '@/types/image'
 
 export const createLsp7Object = async (
   address: Address,
@@ -20,7 +21,6 @@ export const createLsp7Object = async (
     LSP4Metadata: metadata,
     LSP4TokenType: tokenType,
     LSP4Creators: creators,
-    assetImageUrl,
   } = indexedAsset || {}
   const { links } = metadata || {}
 
@@ -35,11 +35,7 @@ export const createLsp7Object = async (
   // get best image from collection based on height criteria
   const icon = metadata?.icon && createImageObject(metadata.icon, 56)
 
-  // create image identifier so they can be linked in Pinia ORM
-  const iconId = getHash(icon?.url)
-
-  const images: ImageMetadataWithRelationships[] = []
-  const imageIds: string[] = []
+  const images: Image[] = []
 
   if (metadata?.images) {
     // get best image from collection based on height criteria
@@ -49,12 +45,6 @@ export const createLsp7Object = async (
         images.push(convertedImage)
       }
     }
-
-    // create array of image identifiers so they can be linked in Pinia ORM
-    images.forEach(image => {
-      const id = getHash(image.url)
-      id && imageIds.push(id)
-    })
   }
 
   // get contract owner
@@ -72,14 +62,11 @@ export const createLsp7Object = async (
     description,
     standard: ASSET_TYPES.LSP7,
     icon,
-    iconId,
     images,
-    imageIds,
     creators: creators?.filter(Boolean), // sometimes indexer return empty string [''] so we need to filter out
     tokenId: '0x',
     owner: profileAddress,
     tokenType: tokenType || 'TOKEN', // we set default just in case it's missing from indexer
-    assetImageUrl,
     contractOwner: owner,
   }
 }

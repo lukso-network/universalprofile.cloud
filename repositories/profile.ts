@@ -1,8 +1,7 @@
 import { Repository } from 'pinia-orm'
 
 import { type Profile, ProfileModel } from '@/models/profile'
-import { ImageModel } from '@/models/image'
-import { ImageRepository } from './image'
+// import { ImageModel } from '@/models/image'
 
 export class ProfileRepository extends Repository<ProfileModel> {
   getProfile(address: Address) {
@@ -14,39 +13,11 @@ export class ProfileRepository extends Repository<ProfileModel> {
     return profile
   }
 
-  getProfileAndImages(address: Address) {
-    const profile = this.getProfile(address)
-
-    if (!profile) {
-      return
-    }
-
-    const profileImage =
-      profile?.profileImageId &&
-      this.repo(ImageRepository).getImage(profile.profileImageId)
-    const backgroundImage =
-      profile?.backgroundImageId &&
-      this.repo(ImageRepository).getImage(profile.backgroundImageId)
-
-    return {
-      ...profile,
-      profileImage,
-      backgroundImage,
-    } as Profile
-  }
-
   saveProfile(profile?: Profile) {
     if (!profile) {
       return
     }
 
-    const { profileImage, backgroundImage, ...plainProfile } = profile
-
-    // save profile
-    this.repo(ProfileModel).save(plainProfile)
-
-    // save profile images
-    profileImage && this.repo(ImageModel).save(profileImage)
-    backgroundImage && this.repo(ImageModel).save(backgroundImage)
+    this.repo(ProfileModel).save(profile)
   }
 }

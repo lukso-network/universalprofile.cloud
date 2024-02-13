@@ -12,7 +12,7 @@ export const useViewedProfile = () => {
       return
     }
 
-    viewedProfile.value = profileRepo.getProfileAndImages(viewedProfileAddress)
+    viewedProfile.value = profileRepo.getProfile(viewedProfileAddress)
   })
 
   return {

@@ -12,7 +12,7 @@ export const useConnectedProfile = () => {
       return
     }
 
-    connectedProfile.value = profileRepo.getProfileAndImages(
+    connectedProfile.value = profileRepo.getProfile(
       connectedProfileAddress.value
     )
   })

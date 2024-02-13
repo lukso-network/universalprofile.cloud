@@ -7,7 +7,7 @@ import type {
   LSP4_TOKEN_TYPES,
   LSP8_TOKEN_ID_FORMAT,
 } from '@lukso/lsp-smart-contracts'
-import type { Image } from '@/models/image'
+import type { Image } from '@/types/image'
 import type { ASSET_TYPES } from '@/shared/enums'
 
 export class AssetModel extends BaseModel {
@@ -31,13 +31,10 @@ export class AssetModel extends BaseModel {
       isNativeToken: this.boolean(false),
       owner: this.string(''),
       tokenType: this.string(''),
-      assetImageUrl: this.string(''),
       contractOwner: this.string(''),
       creators: this.attr(null),
-
-      // foreign keys
-      iconId: this.attr(null),
-      imageIds: this.attr(null),
+      icon: this.attr(null),
+      images: this.attr(null),
     }
   }
 
@@ -56,15 +53,8 @@ export class AssetModel extends BaseModel {
   declare isNativeToken?: boolean
   declare owner: Address
   declare tokenType?: TokenType
-  declare assetImageUrl?: string
   declare contractOwner?: Address
   declare creators?: Address[]
-
-  // foreign keys
-
-  declare iconId?: string
-  declare imageIds?: string[]
-
   declare icon?: Image
   declare images?: Image[]
 }
@@ -85,7 +75,6 @@ export type IndexedAsset = {
   LSP4Metadata?: LSP4DigitalAssetMetadata
   LSP4TokenType?: TokenType
   LSP4Creators?: Address[]
-  assetImageUrl?: string
 
   // not using now this attributes but some will be useful in FE
   // TODO refactor this later

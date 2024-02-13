@@ -65,7 +65,7 @@ const routerBackProfileLoad = async () => {
       const toProfileAddress = to.params?.profileAddress
       assertAddress(toProfileAddress, 'profile')
 
-      const storeProfile = profileRepo.getProfileAndImages(toProfileAddress)
+      const storeProfile = profileRepo.getProfile(toProfileAddress)
 
       // only makes sense to load profile if it's not already loaded
       if (!storeProfile) {
