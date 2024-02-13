@@ -1,3 +1,5 @@
 <template>
-  <AppNotFound />
+  <AppPageLoader>
+    <AppNotFound />
+  </AppPageLoader>
 </template>

@@ -1,54 +1,42 @@
-import { useViewedProfile } from './useViewedProfile'
-import { AssetRepository } from '@/repositories/asset'
+export const useAsset = (assetAddress: Address, tokenId = '0x') => {
+  const { isConnected } = storeToRefs(useAppStore())
+  const { connectedProfile } = useConnectedProfile()
+  const queryClient = useQueryClient()
 
-import type { Asset } from '@/models/asset'
+  const { isPending: isLoading, data: assets } = useQuery({
+    queryKey: ['asset', assetAddress, tokenId],
+    queryFn: async () =>
+      await fetchAsset(assetAddress, connectedProfile.value?.address, [
+        tokenId,
+      ]),
+  })
 
-export const useAsset = (assetAddress?: Address, tokenId = '0x') => {
-  const assetRepo = useRepo(AssetRepository)
-  const asset = ref<Asset>()
-  const { isLoadingAssets, isLoadedApp } = storeToRefs(useAppStore())
-  const { viewedProfile } = useViewedProfile()
+  const asset = computed(() => assets.value?.[0])
 
-  watchEffect(async () => {
-    if (!assetAddress || !isLoadedApp.value) {
-      return
+  const isOwned = computed(() => {
+    return (
+      isConnected.value &&
+      connectedProfile &&
+      asset.value?.address &&
+      asset.value?.balance !== '0' &&
+      connectedProfile.value?.receivedAssetAddresses?.includes(
+        asset.value?.address
+      )
+    )
+  })
+
+  // when we detect that user is connected we refetch the asset to update balance
+  watch(connectedProfile, () => {
+    if (connectedProfile.value?.address) {
+      queryClient.invalidateQueries({
+        queryKey: ['asset', assetAddress, tokenId],
+      })
     }
-
-    let storeAsset = assetRepo.getAssetAndImages(assetAddress, tokenId)
-
-    // when we access asset details page directly, then asset might be not loaded
-    if (!storeAsset) {
-      let fetchedAsset: Asset[]
-      isLoadingAssets.value = true
-
-      if (tokenId) {
-        fetchedAsset = await fetchAsset(
-          assetAddress,
-          viewedProfile.value?.address,
-          [tokenId]
-        )
-      } else {
-        fetchedAsset = await fetchAsset(
-          assetAddress,
-          viewedProfile.value?.address
-        )
-      }
-
-      fetchedAsset && fetchedAsset.length && assetRepo.saveAssets(fetchedAsset)
-      storeAsset = assetRepo.getAssetAndImages(assetAddress, tokenId)
-
-      try {
-      } catch (error) {
-        console.error(error)
-      } finally {
-        isLoadingAssets.value = false
-      }
-    }
-
-    asset.value = storeAsset
   })
 
   return {
     asset,
+    isLoading,
+    isOwned,
   }
 }

@@ -1,8 +1,6 @@
-import { ImageRepository } from '@/repositories/image'
-
 import type { ImageMetadata } from '@lukso/lsp-smart-contracts'
 import type { Asset } from '@/models/asset'
-import type { Image } from '@/models/image'
+import type { Image } from '@/types/image'
 
 const convertBlobToBase64 = (blob: Blob) =>
   new Promise((resolve, reject) => {
@@ -90,21 +88,14 @@ export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
     return ASSET_LYX_ICON_URL
   }
 
-  const imageRepo = useRepo(ImageRepository)
-
-  if (asset.iconId && useIcon) {
-    const icon = imageRepo.getImage(asset.iconId)
+  if (asset.icon && useIcon) {
+    const icon = asset.icon
     return icon?.url
   }
 
-  if (asset.imageIds && asset.imageIds.length > 0) {
-    const image = imageRepo.getImage(asset.imageIds[0])
+  if (asset.images && asset.images.length > 0) {
+    const image = asset.images[0]
     return image?.url
-  }
-
-  // TODO this is temporary fix to show LSP7 image before LSP4Metadata is returned properly
-  if (asset.assetImageUrl) {
-    return asset.assetImageUrl
   }
 
   return ''
@@ -123,7 +114,6 @@ export const createImageObject = (image: ImageMetadata[], height: number) => {
   if (optimalImage) {
     return {
       ...optimalImage,
-      id: getHash(resolveUrl(optimalImage.url)),
       url: resolveUrl(optimalImage.url),
     } as Image
   }

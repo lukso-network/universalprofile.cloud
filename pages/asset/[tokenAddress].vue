@@ -1,23 +1,7 @@
 <script setup lang="ts">
-import type { Creator } from '@/models/creator'
-
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
 const { connectedProfile } = useConnectedProfile()
-const { isConnected } = storeToRefs(useAppStore())
-const { asset } = useAsset(tokenAddress)
-const creators = ref<Creator[]>([])
-const creatorsRepo = useRepo(CreatorRepository)
-
-watchEffect(async () => {
-  creators.value =
-    asset.value?.creatorIds?.map<Creator>(creatorAddress => {
-      return creatorsRepo.getCreator(
-        creatorAddress,
-        asset.value?.address,
-        asset.value?.tokenId
-      )
-    }) || []
-})
+const { asset, isLoading, isOwned } = useAsset(tokenAddress)
 
 const handleSendAsset = (event: Event) => {
   try {
@@ -34,25 +18,13 @@ const handleSendAsset = (event: Event) => {
     console.error(error)
   }
 }
-
-const isOwned = computed(() => {
-  return (
-    isConnected &&
-    connectedProfile &&
-    asset.value?.address &&
-    asset.value?.balance !== '0' &&
-    connectedProfile.value?.receivedAssetAddresses?.includes(
-      asset.value?.address
-    )
-  )
-})
 </script>
 
 <template>
   <div class="relative">
-    <AppPageLoader>
+    <AppPageLoader :is-loading="isLoading">
       <div
-        class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-6 transition-opacity duration-300"
+        class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 transition-opacity duration-300"
       >
         <div>
           <lukso-card is-full-width size="small">

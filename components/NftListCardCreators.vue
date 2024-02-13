@@ -1,69 +1,65 @@
 <script setup lang="ts">
-import type { Creator } from '@/models/creator'
-
 type Props = {
-  creators?: Creator[]
+  asset: Asset
 }
 
 type VerifyStatus = 'verified' | 'unverified' | 'partial'
 
 const props = defineProps<Props>()
-const profile: Profile = {}
 
-const firstCreator = computed(
-  () => useProfile(props.creators?.[0]?.profileId).profile.value
-)
-
-const restOfCreators = computed(() =>
-  props.creators
-    ?.slice(1)
-    .map(creator => useProfile(creator?.profileId).profile.value)
-)
+const {
+  firstCreator,
+  restOfCreators,
+  isPending,
+  creatorAddressesOrOwner,
+  isVerified,
+} = useCreators(props.asset)
 
 const verifyStatus = computed<VerifyStatus>(() => {
-  if (props.creators?.filter(creator => creator?.isVerified).length === 0)
-    return 'unverified'
-  if (
-    props.creators?.filter(creator => creator?.isVerified).length ===
-    props.creators?.length
+  const profileRepo = useRepo(ProfileRepository)
+  const creators = creatorAddressesOrOwner.value?.map(creatorId =>
+    profileRepo.getProfile(creatorId)
   )
+  const verifiedCreators = creators?.filter(creator =>
+    isVerified(creator)
+  ).length
+
+  if (verifiedCreators === 0) {
+    return 'unverified'
+  }
+
+  if (verifiedCreators === creators?.length) {
     return 'verified'
+  }
+
   return 'partial'
 })
 </script>
 
 <template>
-  <div
-    v-if="creators?.length && profile"
-    class="grid grid-cols-[max-content,max-content,auto]"
-  >
-    <div class="flex space-x-[-14px]">
-      <lukso-profile
-        v-for="creator in restOfCreators"
-        :key="creator?.value?.address"
-        size="x-small"
-        :profile-url="creator?.profileImage?.url"
-        class="relative"
-      ></lukso-profile>
-      <lukso-profile
-        size="x-small"
-        :profile-url="firstCreator?.profileImage?.url"
-        :profile-address="firstCreator?.address"
-        has-identicon
-        class="relative"
-      ></lukso-profile>
+  <div v-if="isPending" class="flex h-6 animate-pulse items-center">
+    <lukso-profile size="x-small"></lukso-profile>
+    <div class="grid h-full grid-rows-2 gap-1 pl-1">
+      <div class="flex w-16 bg-neutral-90"></div>
+      <div class="flex w-20 bg-neutral-90"></div>
     </div>
-    <div class="pl-1">
-      <div class="paragraph-inter-10-semi-bold text-neutral-60">
-        {{ $formatMessage('asset_created_by') }}
-      </div>
-      <lukso-username
-        :name="firstCreator?.name"
-        :address="firstCreator?.address"
-        size="x-small"
-        class="flex"
-        name-color="neutral-20"
-      ></lukso-username>
+  </div>
+  <!--no creators at all including owner, might be that its EOA or not indexed -->
+  <div v-else-if="!firstCreator"></div>
+  <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
+    <div class="flex space-x-[-14px]">
+      <NftListCardCreatorsProfile
+        v-for="(creatorProfile, index) in restOfCreators"
+        :profile="creatorProfile"
+        :key="index"
+        class="relative"
+      />
+      <NftListCardCreatorsProfile
+        v-if="firstCreator"
+        :profile="firstCreator"
+        class="relative"
+        :has-name="true"
+      />
     </div>
     <div class="flex items-center justify-end">
       <lukso-tooltip

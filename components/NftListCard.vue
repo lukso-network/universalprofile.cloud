@@ -2,7 +2,6 @@
 import makeBlockie from 'ethereum-blockies-base64'
 
 import { type Asset } from '@/models/asset'
-import { CreatorRepository } from '@/repositories/creator'
 
 type Props = {
   asset: Asset
@@ -14,14 +13,6 @@ const props = defineProps<Props>()
 const { isConnected } = storeToRefs(useAppStore())
 const { connectedProfile } = useConnectedProfile()
 const { viewedProfile } = useViewedProfile()
-const creatorsRepository = useRepo(CreatorRepository)
-
-const creators = computed(() => {
-  return creatorsRepository.getAssetCreators(
-    props.asset?.address,
-    props.asset?.tokenId
-  )
-})
 
 const handleShowAsset = () => {
   try {
@@ -98,10 +89,7 @@ const assetTokenId = computed(() => {
               </span>
             </div>
           </div>
-          <NftListCardCreators
-            :creators="creators"
-            class="relative -top-4 -mt-2"
-          />
+          <NftListCardCreators :asset="asset" class="relative -top-4 -mt-2" />
           <div class="flex items-end">
             <div class="flex w-full justify-end">
               <lukso-button

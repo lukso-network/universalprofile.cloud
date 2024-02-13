@@ -1,32 +1,9 @@
 <script setup lang="ts">
-import { CreatorRepository } from '@/repositories/creator'
-
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
+const { asset, isLoading, isOwned } = useAsset(nftAddress, tokenId)
 
 const { connectedProfile } = useConnectedProfile()
-const { isConnected } = storeToRefs(useAppStore())
-const { asset } = useAsset(nftAddress, tokenId)
-const creatorsRepository = useRepo(CreatorRepository)
-
-const isOwned = computed(() => {
-  return (
-    isConnected &&
-    connectedProfile &&
-    asset.value?.address &&
-    asset.value?.balance &&
-    connectedProfile.value?.receivedAssetAddresses?.includes(
-      asset.value?.address
-    )
-  )
-})
-
-const creators = computed(() => {
-  return creatorsRepository.getAssetCreators(
-    asset.value?.address,
-    asset.value?.tokenId
-  )
-})
 
 const handleSendAsset = (event: Event) => {
   try {
@@ -51,9 +28,9 @@ const assetTokenId = computed(() => {
 </script>
 
 <template>
-  <AppPageLoader>
+  <AppPageLoader :is-loading="isLoading">
     <div
-      class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 py-6 transition-opacity duration-300"
+      class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 transition-opacity duration-300"
     >
       <div>
         <lukso-card size="small" shadow="small" is-full-width
@@ -115,10 +92,7 @@ const assetTokenId = computed(() => {
           :description="asset.description"
         />
         <AssetImages v-if="asset?.images?.length" :images="asset.images" />
-        <AssetCreators
-          v-if="creators && !!creators.length"
-          :creators="creators"
-        />
+        <AssetCreators v-if="asset" :asset="asset" />
         <AssetLinks
           v-if="asset?.links && !!asset.links.length"
           :links="asset.links"

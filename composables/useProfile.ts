@@ -11,7 +11,7 @@ export const useProfile = (profileAddress?: Address) => {
       return
     }
 
-    profile.value = profileRepo.getProfileAndImages(profileAddress)
+    profile.value = profileRepo.getProfile(profileAddress)
   })
 
   return {
