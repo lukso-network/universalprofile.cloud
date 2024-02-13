@@ -54,7 +54,7 @@ const handleOpenProfile = (address?: Address) => {
     <div class="mb-8 h-12 w-52 rounded-12 bg-neutral-90"></div>
   </div>
   <div v-else-if="!creatorProfiles.length"></div>
-  <div v-else>
+  <div v-else class="animate-fade-in">
     <div class="heading-inter-14-bold pb-2">
       {{ $formatMessage('asset_creators_title') }}
     </div>
