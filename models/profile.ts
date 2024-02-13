@@ -54,6 +54,8 @@ export type ProfileType = `${PROFILE_TYPES}`
 export type IndexedProfile = {
   address: Address
   LSP3Profile?: LSP3ProfileMetadata
+  profileImageUrl?: string
+  type: ProfileType
   LSPStandard: ProfileType
 
   // not using now this attributes but some will be useful in FE
