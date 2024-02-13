@@ -6,10 +6,13 @@ import type {
 export const validateLsp4MetaData = (
   LSP4MetadataJSON: any
 ): LSP4DigitalAssetMetadataJSON => {
+  const { LSP4Metadata: metadata } = LSP4MetadataJSON || {}
+
   let images = [[]]
   let links = []
   let assets = []
   let icon = []
+  const attributes = validateAttributes(metadata.attributes)
 
   if (LSP4MetadataJSON?.LSP4Metadata?.images?.length) {
     images = LSP4MetadataJSON?.LSP4Metadata?.images?.filter((image: any) => {
@@ -44,6 +47,8 @@ export const validateLsp4MetaData = (
       images,
       assets,
       icon,
+      //@ts-ignore - ignore until release or lsp package
+      attributes,
     },
   }
 }
@@ -131,4 +136,33 @@ export const validateVerification = (getDataObject: any) => {
     'method' in getDataObject?.value?.verification
     ? (getDataObject.value?.verification as AssetMetadata['verification'])
     : undefined
+}
+
+/**
+ * Validates the given attribute object follows proper structure
+ *
+ * @param attribute
+ * @returns
+ */
+export const validateAttributes = (attributes: any) => {
+  if (!attributes?.length) {
+    return []
+  }
+
+  const validateAttributes = attributes?.filter((attribute: any) => {
+    return (
+      attribute.key ||
+      attribute.value ||
+      attribute.type === 'string' ||
+      attribute.type === 'number' ||
+      attribute.type === 'date'
+    )
+  })
+
+  if (!validateAttributes.length) {
+    console.warn('Invalid LSP4 attribute')
+    return []
+  }
+
+  return validateAttributes
 }

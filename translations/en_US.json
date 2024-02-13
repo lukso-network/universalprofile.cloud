@@ -23,6 +23,7 @@
   "header_install_extension": "Install Extension",
   "error_same_address": "You cannot send {lyxSymbol} to yourself",
   "modal_switch_application_network_confirm": "Yes please",
+  "asset_attributes_title": "Attributes",
   "web3_connect_error_title": "Can't connect",
   "button_get_lyx": "Get",
   "modal_switch_network_confirm": "Change network",

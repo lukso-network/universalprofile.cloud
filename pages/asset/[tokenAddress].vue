@@ -80,6 +80,7 @@ const handleSendAsset = (event: Event) => {
             :description="asset.description"
           />
           <AssetImages v-if="asset?.images?.length" :images="asset.images" />
+          <AssetAttributes :attributes="asset?.attributes" />
           <AssetLinks
             v-if="asset?.links && !!asset.links.length"
             :links="asset.links"
