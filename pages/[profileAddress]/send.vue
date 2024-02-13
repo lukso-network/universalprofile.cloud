@@ -171,5 +171,7 @@ const handleSend = async () => {
 </script>
 
 <template>
-  <SendCard />
+  <AppPageLoader>
+    <SendCard />
+  </AppPageLoader>
 </template>

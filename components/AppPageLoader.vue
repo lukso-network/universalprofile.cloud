@@ -8,14 +8,13 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { isLoading } = toRefs(props)
-
 const { isLoadedApp } = storeToRefs(useAppStore())
 </script>
 
 <template>
   <div class="relative">
     <div
-      class="relative px-4 py-20"
+      class="relative animate-fade-in px-4 py-20"
       :class="{
         'opacity-0': !isLoadedApp || isLoading,
         'opacity-100  transition-opacity delay-200 duration-300':
