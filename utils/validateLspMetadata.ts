@@ -72,7 +72,7 @@ export const validateLsp4Metadata = (
  * @returns - true if validation passes, false otherwise
  */
 const validateImage = (image: any) => {
-  return (
+  const imageCheck =
     (image.width &&
       image.height &&
       image.url &&
@@ -84,7 +84,13 @@ const validateImage = (image: any) => {
       image.verification &&
       image.verification.data &&
       image.verification.method)
-  )
+
+  if (!imageCheck) {
+    console.warn('Invalid LSP4 image metadata', image)
+  }
+
+  // we are ok if there is at least url
+  return image?.url
 }
 
 /**

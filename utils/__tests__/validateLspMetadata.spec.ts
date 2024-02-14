@@ -6,6 +6,7 @@ import {
   validateTags,
   validateName,
   validateDescription,
+  validateImages,
 } from '../validateLspMetadata'
 import { expect, test, describe } from 'vitest'
 
@@ -101,7 +102,6 @@ describe('validateImages', () => {
         {
           width: 223,
           height: 656,
-          url: 'https://example.com/image.png',
         },
         {
           width: 123,
@@ -139,7 +139,6 @@ describe('validateImages', () => {
       validateImages([
         [
           {
-            url: 'https://example.com/image.png',
             width: 223,
             height: 656,
           },
@@ -246,23 +245,20 @@ describe('validateIcon', () => {
   test('should return an empty array if an icon does not have a url, width, and height', () => {
     const icon = [
       {
-        url: 'https://example.com',
         width: 100,
       },
       {
-        url: 'https://example.com',
-        height: 100,
+        url: '',
       },
       {
-        width: 100,
-        height: 100,
+        url: undefined,
       },
     ]
     const result = validateIcon(icon)
     expect(result).toEqual([])
   })
 
-  test('should return an array of icons if all icons have a url, width, and height', () => {
+  test('should return an array of icons if all icons have at least url', () => {
     const icon = [
       {
         width: 123,
@@ -272,11 +268,7 @@ describe('validateIcon', () => {
         hashFunction: 'keccak256',
       },
       {
-        width: 223,
-        height: 656,
         url: 'https://example.com/image.png',
-        hash: '0x123',
-        hashFunction: 'keccak256',
       },
     ]
     const result = validateIcon(icon)
