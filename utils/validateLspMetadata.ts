@@ -1,7 +1,36 @@
 import type {
   LSP4DigitalAssetMetadataJSON,
   AssetMetadata,
+  LSP3ProfileMetadata,
 } from '@lukso/lsp-smart-contracts'
+
+/**
+ * Check and return valid LSP3 metadata
+ *
+ * @param LSP3Metadata
+ * @returns
+ */
+export const validateLsp3Metadata = (
+  LSP3Metadata: any
+): LSP3ProfileMetadata => {
+  const { LSP3Profile: metadata } = LSP3Metadata.value || {}
+
+  const profileImage = validateImages(metadata?.profileImage)
+  const backgroundImage = validateImages(metadata?.backgroundImage)
+  const name = validateName(metadata?.name)
+  const tags = validateTags(metadata?.tags)
+  const links = validateLinks(metadata?.links)
+  const description = validateDescription(metadata?.description)
+
+  return {
+    name,
+    description,
+    profileImage,
+    backgroundImage,
+    tags,
+    links,
+  }
+}
 
 /**
  * Check and return valid LSP4 metadata
@@ -198,6 +227,40 @@ export const validateIcon = (icon: any) => {
   return (
     icon?.filter((image: any) => {
       return validateImage(image)
+    }) || []
+  )
+}
+
+/**
+ * Validates if the given name is lowercase string
+ *
+ * @param name - name to be checked
+ * @returns - validated name
+ */
+export const validateName = (name: any): string => {
+  return typeof name === 'string' ? name.toLowerCase() : ''
+}
+
+/**
+ * Validate description is string with max 200 characters
+ *
+ * @param description - description to validate
+ * @returns - validated description
+ */
+export const validateDescription = (description: any): string => {
+  return typeof description === 'string' ? description.slice(0, 200) : ''
+}
+
+/**
+ * Validate if tags are strings with max 3 for profile
+ *
+ * @param tags
+ * @returns
+ */
+export const validateTags = (tags: any): string[] => {
+  return (
+    tags?.slice(0, 3).filter((tag: string) => {
+      return typeof tag === 'string' && tag !== ''
     }) || []
   )
 }

@@ -3,7 +3,10 @@ import {
   validateLinks,
   validateAssets,
   validateIcon,
-} from '../validateLsp4Metadata'
+  validateTags,
+  validateName,
+  validateDescription,
+} from '../validateLspMetadata'
 import { expect, test, describe } from 'vitest'
 
 test('validateAttribute', () => {
@@ -279,4 +282,35 @@ describe('validateIcon', () => {
     const result = validateIcon(icon)
     expect(result).toEqual(icon)
   })
+})
+
+test('validateTags', async () => {
+  expect(validateTags(undefined)).toEqual([])
+  expect(validateTags([])).toEqual([])
+  expect(validateTags(['tag1', ''])).toEqual(['tag1'])
+  expect(validateTags(['tag1', 'tag2', 'tag3', 'tag4'])).toEqual([
+    'tag1',
+    'tag2',
+    'tag3',
+  ])
+  expect(validateTags([123, 'tag2', { test: '123' }, 'tag4'])).toEqual(['tag2'])
+})
+
+test('validateName', async () => {
+  expect(validateName(undefined)).toEqual('')
+  expect(validateName([])).toEqual('')
+  expect(validateName(123)).toEqual('')
+  expect(validateName('CoolBro')).toEqual('coolbro')
+})
+
+test('validateDescription', async () => {
+  expect(validateDescription([])).toEqual('')
+  expect(validateDescription(123)).toEqual('')
+  expect(
+    validateDescription(
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+    )
+  ).toEqual(
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut a'
+  )
 })
