@@ -22,7 +22,8 @@ export const createLsp7Object = async (
     LSP4TokenType: tokenType,
     LSP4Creators: creators,
   } = indexedAsset || {}
-  const { links } = metadata || {}
+  //@ts-ignore - ignore until release or lsp package
+  const { links, attributes } = metadata || {}
 
   // get profile balance for the asset
   const balance = await fetchLsp7Balance(address, profileAddress)
@@ -68,6 +69,7 @@ export const createLsp7Object = async (
     owner: profileAddress,
     tokenType: tokenType || 'TOKEN', // we set default just in case it's missing from indexer
     contractOwner: owner,
+    attributes,
   }
 }
 

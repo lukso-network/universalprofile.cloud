@@ -1,0 +1,27 @@
+<script setup lang="ts">
+type Props = {
+  attributes: AttributeMetadata[]
+}
+
+defineProps<Props>()
+</script>
+
+<template>
+  <div v-if="attributes?.length" class="mb-8">
+    <div class="heading-inter-14-bold pb-2">
+      {{ $formatMessage('asset_attributes_title') }}
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <div
+        v-for="(attribute, index) in attributes"
+        :key="index"
+        class="rounded-12 border border-neutral-90 bg-neutral-100 px-4 py-3"
+      >
+        <div class="paragraph-inter-10-bold-uppercase mb-3">
+          {{ attribute.key }}
+        </div>
+        <div class="paragraph-inter-14-medium">{{ attribute.value }}</div>
+      </div>
+    </div>
+  </div>
+</template>
