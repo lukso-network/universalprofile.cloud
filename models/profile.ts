@@ -55,6 +55,7 @@ export type IndexedProfile = {
   address: Address
   LSP3Profile?: LSP3ProfileMetadata
   LSPStandard: ProfileType
+  type: ProfileType // TODO this is legacy type field, we keep it until indexer fully migrate to `LSPStandard`
 
   // not using now this attributes but some will be useful in FE
   // TODO refactor this later
