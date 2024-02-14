@@ -35,6 +35,7 @@ export class AssetModel extends BaseModel {
       creators: this.attr(null),
       icon: this.attr(null),
       images: this.attr(null),
+      attributes: this.attr(null),
     }
   }
 
@@ -57,6 +58,7 @@ export class AssetModel extends BaseModel {
   declare creators?: Address[]
   declare icon?: Image
   declare images?: Image[]
+  declare attributes: AttributeMetadata[]
 }
 
 export type Asset = Partial<Item<AssetModel>>

@@ -2,13 +2,19 @@ export const useAsset = (assetAddress: Address, tokenId = '0x') => {
   const { isConnected } = storeToRefs(useAppStore())
   const { connectedProfile } = useConnectedProfile()
   const queryClient = useQueryClient()
+  const assetRepo = useRepo(AssetRepository)
 
   const { isPending: isLoading, data: assets } = useQuery({
     queryKey: ['asset', assetAddress, tokenId],
     queryFn: async () =>
       await fetchAsset(assetAddress, connectedProfile.value?.address, [
         tokenId,
-      ]),
+      ]).then(asset => {
+        if (asset) {
+          assetRepo.saveAssets(asset)
+        }
+        return asset
+      }),
   })
 
   const asset = computed(() => assets.value?.[0])

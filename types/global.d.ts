@@ -8,6 +8,13 @@ declare global {
     ethereum: any
     web3: any
   }
+
+  // TODO remove when LSP package is released
+  type AttributeMetadata = {
+    key: string
+    value: string
+    type: string | number | boolean
+  }
 }
 
 export {}

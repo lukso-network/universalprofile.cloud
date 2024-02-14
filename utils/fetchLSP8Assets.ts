@@ -54,6 +54,8 @@ export const createLsp8Object = async (
       images: metadataImages,
       icon: metadataIcon,
       links,
+      //@ts-ignore - ignore until release or lsp package
+      attributes,
     } = collectionMetadata.LSP4Metadata
 
     // get best image from collection based on height criteria
@@ -87,6 +89,7 @@ export const createLsp8Object = async (
       owner: profileAddress,
       tokenType: tokenType || 'NFT', // we set default just in case it's missing from indexer
       contractOwner: owner,
+      attributes,
     })
   }
   return assets
