@@ -1,5 +1,10 @@
-import { validateAttributes } from '../validateLsp4Metadata'
-import { expect, test } from 'vitest'
+import {
+  validateAttributes,
+  validateLinks,
+  validateAssets,
+  validateIcon,
+} from '../validateLsp4Metadata'
+import { expect, test, describe } from 'vitest'
 
 test('validateAttribute', () => {
   expect(validateAttributes([])).toEqual([])
@@ -45,4 +50,233 @@ test('validateAttribute', () => {
       },
     ])
   ).toEqual([])
+})
+
+describe('validateImages', () => {
+  test('should return images has the required properties', () => {
+    const result = validateImages([
+      [
+        {
+          width: 223,
+          height: 656,
+          url: 'https://example.com/image.png',
+          hash: '0x123',
+          hashFunction: 'keccak256',
+        },
+        {
+          width: 123,
+          height: 456,
+          url: 'https://example.com/image.png',
+          hash: '0x123',
+          hashFunction: 'keccak256',
+        },
+      ],
+    ])
+    expect(result).toEqual([
+      [
+        {
+          width: 223,
+          height: 656,
+          url: 'https://example.com/image.png',
+          hash: '0x123',
+          hashFunction: 'keccak256',
+        },
+        {
+          width: 123,
+          height: 456,
+          url: 'https://example.com/image.png',
+          hash: '0x123',
+          hashFunction: 'keccak256',
+        },
+      ],
+    ])
+  })
+
+  test('should return partial images that have the required properties', () => {
+    const result = validateImages([
+      [
+        {
+          width: 223,
+          height: 656,
+          url: 'https://example.com/image.png',
+        },
+        {
+          width: 123,
+          height: 456,
+          url: 'https://example.com/image.png',
+          hash: '0x123',
+          hashFunction: 'keccak256',
+        },
+      ],
+    ])
+    expect(result).toEqual([
+      [
+        {
+          width: 123,
+          height: 456,
+          url: 'https://example.com/image.png',
+          hash: '0x123',
+          hashFunction: 'keccak256',
+        },
+      ],
+    ])
+  })
+
+  test('handle invalid objects', () => {
+    expect(
+      validateImages([
+        [
+          {
+            hashFunction: 'keccak256',
+          },
+        ],
+      ])
+    ).toEqual([])
+    expect(
+      validateImages([
+        [
+          {
+            url: 'https://example.com/image.png',
+            width: 223,
+            height: 656,
+          },
+        ],
+      ])
+    ).toEqual([])
+    expect(validateImages([[]])).toEqual([])
+    expect(validateImages(undefined)).toEqual([])
+  })
+})
+
+describe('validateLinks', () => {
+  test('should return an empty array if no links are provided', () => {
+    expect(validateLinks([])).toEqual([])
+    expect(validateLinks(undefined)).toEqual([])
+  })
+
+  test('should return an empty array if a link does not have a title or url', () => {
+    const links = [
+      {
+        title: '',
+        url: 'https://example.com',
+      },
+      {
+        title: 'Example Link',
+        url: '',
+      },
+    ]
+    const result = validateLinks(links)
+    expect(result).toEqual([])
+  })
+
+  test('should return an array of links if all links have a title and url', () => {
+    const links = [
+      {
+        title: 'Example Link',
+        url: 'https://example.com',
+      },
+      {
+        title: 'Another Example Link',
+        url: 'https://example.com/another',
+      },
+    ]
+    const result = validateLinks(links)
+    expect(result).toEqual(links)
+  })
+})
+
+describe('validateAssets', () => {
+  test('should return an empty array if no assets are provided', () => {
+    expect(validateAssets([])).toEqual([])
+    expect(validateAssets(undefined)).toEqual([])
+  })
+
+  test('should return an empty array if an asset does not have a url, fileType, hash, and hashFunction', () => {
+    const assets = [
+      {
+        url: 'https://example.com',
+        fileType: 'image/png',
+      },
+      {
+        url: 'https://example.com',
+        fileType: 'image/png',
+        hash: '0x1234567890abcdef',
+      },
+      {
+        url: 'https://example.com',
+        fileType: 'image/png',
+        hashFunction: 'sha256',
+      },
+    ]
+    const result = validateAssets(assets)
+    expect(result).toEqual([])
+  })
+
+  test('should return an array of assets if all assets have a url, fileType, hash, and hashFunction', () => {
+    const assets = [
+      {
+        url: 'https://example.com',
+        fileType: 'image/png',
+        hash: '0x1234567890abcdef',
+        hashFunction: 'sha256',
+      },
+      {
+        url: 'https://example.com',
+        fileType: 'image/png',
+        verification: {
+          data: '0x1234567890abcdef',
+          method: 'sha256',
+        },
+      },
+    ]
+    const result = validateAssets(assets)
+    expect(result).toEqual(assets)
+  })
+})
+
+describe('validateIcon', () => {
+  test('should return an empty array if no icon is provided', () => {
+    expect(validateIcon([])).toEqual([])
+    expect(validateIcon(undefined)).toEqual([])
+  })
+
+  test('should return an empty array if an icon does not have a url, width, and height', () => {
+    const icon = [
+      {
+        url: 'https://example.com',
+        width: 100,
+      },
+      {
+        url: 'https://example.com',
+        height: 100,
+      },
+      {
+        width: 100,
+        height: 100,
+      },
+    ]
+    const result = validateIcon(icon)
+    expect(result).toEqual([])
+  })
+
+  test('should return an array of icons if all icons have a url, width, and height', () => {
+    const icon = [
+      {
+        width: 123,
+        height: 456,
+        url: 'https://example.com/image.png',
+        hash: '0x123',
+        hashFunction: 'keccak256',
+      },
+      {
+        width: 223,
+        height: 656,
+        url: 'https://example.com/image.png',
+        hash: '0x123',
+        hashFunction: 'keccak256',
+      },
+    ]
+    const result = validateIcon(icon)
+    expect(result).toEqual(icon)
+  })
 })

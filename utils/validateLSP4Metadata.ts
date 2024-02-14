@@ -3,46 +3,27 @@ import type {
   AssetMetadata,
 } from '@lukso/lsp-smart-contracts'
 
-export const validateLsp4MetaData = (
+/**
+ * Check and return valid LSP4 metadata
+ *
+ * @param LSP4MetadataJSON
+ * @returns
+ */
+export const validateLsp4Metadata = (
   LSP4MetadataJSON: any
 ): LSP4DigitalAssetMetadataJSON => {
   const { LSP4Metadata: metadata } = LSP4MetadataJSON || {}
 
-  let images = [[]]
-  let links = []
-  let assets = []
-  let icon = []
+  const images = validateImages(metadata?.images)
+  const links = validateLinks(metadata?.links)
+  const assets = validateAssets(metadata?.assets)
+  const icon = validateIcon(metadata?.icon)
+  const description = metadata?.description || ''
   const attributes = validateAttributes(metadata.attributes)
-
-  if (LSP4MetadataJSON?.LSP4Metadata?.images?.length) {
-    images = LSP4MetadataJSON?.LSP4Metadata?.images?.filter((image: any) => {
-      if (!image?.length) return false
-
-      return validateImages(image)
-    })
-  }
-
-  if (LSP4MetadataJSON?.LSP4Metadata?.links?.length) {
-    links = LSP4MetadataJSON?.LSP4Metadata?.links.filter((link: any) => {
-      return link?.title && link?.url
-    })
-  }
-
-  if (LSP4MetadataJSON?.LSP4Metadata?.assets?.length) {
-    assets = LSP4MetadataJSON?.LSP4Metadata?.assets.filter((asset: any) => {
-      return validateAsset(asset)
-    })
-  }
-
-  if (LSP4MetadataJSON?.LSP4Metadata?.icon?.length) {
-    icon = LSP4MetadataJSON?.LSP4Metadata?.icon?.filter((image: any) => {
-      return validateImage(image)
-    })
-  }
 
   return {
     LSP4Metadata: {
-      description: LSP4MetadataJSON?.LSP4Metadata?.description || '',
+      description,
       links,
       images,
       assets,
@@ -77,10 +58,32 @@ const validateImage = (image: any) => {
   )
 }
 
-export const validateImages = (images: any[]) => {
-  return images.every(imageSize => {
-    return validateImage(imageSize)
-  })
+/**
+ * Validates if the given image collections follows proper structure
+ *
+ * @param imageCollections
+ * @returns
+ */
+export const validateImages = (imageCollections: any) => {
+  return (
+    imageCollections
+      ?.map((images: any[]) => {
+        if (!images?.length) {
+          return
+        }
+
+        const map = images
+          ?.map((imageSize: any) => {
+            return validateImage(imageSize) ? imageSize : undefined
+          })
+          .filter(Boolean)
+
+        if (map?.length) {
+          return map
+        }
+      })
+      .filter(Boolean) || []
+  )
 }
 
 /**
@@ -89,14 +92,18 @@ export const validateImages = (images: any[]) => {
  * @param asset
  * @returns
  */
-const validateAsset = (asset: any) => {
+export const validateAssets = (assets: any) => {
   return (
-    (asset.url && asset.fileType && asset.hash && asset.hashFunction) ||
-    (asset.url &&
-      asset.fileType &&
-      asset.verification &&
-      asset.verification.data &&
-      asset.verification.method)
+    assets?.filter((asset: any) => {
+      return (
+        (asset.url && asset.fileType && asset.hash && asset.hashFunction) ||
+        (asset.url &&
+          asset.fileType &&
+          asset.verification &&
+          asset.verification.data &&
+          asset.verification.method)
+      )
+    }) || []
   )
 }
 
@@ -165,4 +172,32 @@ export const validateAttributes = (attributes: any) => {
   }
 
   return validateAttributes
+}
+
+/**
+ * Validates if the given link object follows proper structure
+ *
+ * @param link
+ * @returns
+ */
+export const validateLinks = (links: any) => {
+  return (
+    links?.filter((link: any) => {
+      return link?.title && link?.url
+    }) || []
+  )
+}
+
+/**
+ * Validates if the given icon object follows proper structure
+ *
+ * @param icon
+ * @returns
+ */
+export const validateIcon = (icon: any) => {
+  return (
+    icon?.filter((image: any) => {
+      return validateImage(image)
+    }) || []
+  )
 }
