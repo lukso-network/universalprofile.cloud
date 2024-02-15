@@ -1,5 +1,6 @@
 import LSP3ProfileMetadataSchema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
 import { toChecksumAddress } from 'web3-utils'
+import { Buffer } from 'buffer'
 
 import { ProfileRepository } from '@/repositories/profile'
 
@@ -33,27 +34,27 @@ export const fetchProfile = async (profileAddress: Address) => {
 
   const { $fetchIndexedProfile } = useNuxtApp() as unknown as NuxtApp
   const profileIndexedData = await $fetchIndexedProfile(profileAddress)
+  const { LSPStandard, type } = profileIndexedData || {}
+  let profileData = profileIndexedData?.LSP3Profile
 
   // check if indexed profile has correct type
   if (
-    !profileIndexedData ||
-    (profileIndexedData.LSPStandard &&
-      profileIndexedData.LSPStandard !== PROFILE_TYPES.LSP3) ||
-    (profileIndexedData.type && profileIndexedData.type !== PROFILE_TYPES.LSP3)
+    (LSPStandard && LSPStandard !== PROFILE_TYPES.LSP3) ||
+    (type && type !== PROFILE_TYPES.LSP3)
   ) {
     // when indexer fails to return profile we try to check via RPC
     const standard = await detectStandard(profileAddress)
+    console.warn(`The ${profileAddress} was not found in the index`)
 
     if (standard !== PROFILE_TYPES.LSP3) {
       throw new NotFoundIndexError(profileAddress)
+    } else {
+      profileData = await getProfileData(profileAddress)
     }
   }
 
   try {
-    const profile = await createProfileObject(
-      profileAddress,
-      profileIndexedData?.LSP3Profile
-    )
+    const profile = await createProfileObject(profileAddress, profileData)
 
     return profile
   } catch (error: unknown) {
@@ -124,4 +125,41 @@ const createProfileObject = async (
     receivedAssetAddresses,
     issuedAssetAddresses,
   }
+}
+
+/**
+ * Get profile from RPC
+ *
+ * @param profileAddress
+ * @returns
+ */
+const getProfileData = async (profileAddress: Address) => {
+  const { getInstance } = useErc725()
+  const erc725 = getInstance(
+    profileAddress,
+    LSP3ProfileMetadataSchema as ERC725JSONSchema[]
+  )
+  const profileMetadata = await erc725.fetchData('LSP3Profile')
+
+  // NOTE: Some profiles have been encoded with keccak256(bytes) instead of keccak256(utf8)
+  // This little trick allows a smooth transition to the new encoding
+  try {
+    if (
+      Object.prototype.toString.call(profileMetadata.value) ===
+      '[object Uint8Array]'
+    ) {
+      const jsonString = Buffer.from(profileMetadata.value as any).toString(
+        'utf8'
+      )
+
+      profileMetadata.value = JSON.parse(jsonString)
+      console.warn(
+        `LSP3Profile of ${profileAddress} was encoded with keccak256(bytes) instead of keccak256(utf8). This frontend has converted it to ensure compatibility.`
+      )
+    }
+  } catch (err) {}
+
+  const lsp3Profile = validateLsp3Metadata(profileMetadata)
+
+  return lsp3Profile
 }
