@@ -1,8 +1,7 @@
 import type { ImageMetadata } from '@lukso/lsp-smart-contracts'
 
 export type Image = {
-  id: string
-  hash: string
+  hash?: string
   width?: number
   height?: number
   hashFunction?: string

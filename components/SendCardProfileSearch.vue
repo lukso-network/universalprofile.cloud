@@ -4,8 +4,6 @@ import { isAddress } from 'web3-utils'
 import type { SearchProfileResult } from '@lukso/web-components'
 import type { IndexedProfile } from '@/models/profile'
 
-const SEARCH_COMPONENT_TAG_NAME = 'LUKSO-SEARCH'
-
 const { currentNetwork } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
   currentNetwork.value.indexName
@@ -16,60 +14,8 @@ const isSearchingReceiver = ref<boolean>(false)
 const searchTerm = ref<string | Address | undefined>(receiver.value?.address)
 const hasNoResults = ref<boolean>(false)
 const results = ref<SearchProfileResult[]>()
-const selectedResultNumber = ref<number>()
-
-onMounted(() => {
-  window.addEventListener('click', handleOutsideSearchClick)
-  window.addEventListener('keydown', handleSearchKeydown)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('click', handleOutsideSearchClick)
-  window.removeEventListener('keydown', handleSearchKeydown)
-})
-
-const handleOutsideSearchClick = (event: MouseEvent) => {
-  const element = event.target as HTMLElement
-
-  if (element.tagName !== SEARCH_COMPONENT_TAG_NAME) {
-    hasNoResults.value = false
-    results.value = undefined
-  }
-}
-
-const handleClick = async () => {
-  if (searchTerm.value) {
-    await searchResults()
-  }
-}
-
-const handleSearchKeydown = async (event: KeyboardEvent) => {
-  if (
-    event.key === 'ArrowUp' &&
-    selectedResultNumber.value &&
-    selectedResultNumber.value > 1
-  ) {
-    selectedResultNumber.value = selectedResultNumber.value - 1
-  }
-
-  if (event.key === 'ArrowDown' && results.value) {
-    if (!selectedResultNumber.value) {
-      selectedResultNumber.value = 1
-    } else if (selectedResultNumber.value < results.value.length) {
-      selectedResultNumber.value = selectedResultNumber.value + 1
-    }
-  }
-
-  if (event.key === 'Enter') {
-    if (results.value && selectedResultNumber.value) {
-      const selectedResult = results.value[selectedResultNumber.value - 1]
-      handleSelect({ detail: { value: selectedResult } } as CustomEvent)
-    }
-  }
-}
 
 const searchResults = async () => {
-  selectedResultNumber.value = undefined
   const searchResults = await search({
     query: searchTerm.value || '',
     requestOptions: {
@@ -165,13 +111,11 @@ const handleBlur = () => {
     :is-searching="isSearchingReceiver ? 'true' : undefined"
     :show-no-results="hasNoResults ? 'true' : undefined"
     :no-results-text="$formatMessage('profile_search_no_results')"
-    :selected="selectedResultNumber"
     is-full-width
     class="mt-4 w-full"
     custom-class="paragraph-ptmono-14-regular"
     @on-search="handleReceiverSearch"
     @on-select="handleSelect"
     @on-blur="handleBlur"
-    @on-input-click="handleClick"
   ></lukso-search>
 </template>
