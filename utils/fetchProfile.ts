@@ -41,8 +41,12 @@ export const fetchProfile = async (profileAddress: Address) => {
       profileIndexedData.LSPStandard !== PROFILE_TYPES.LSP3) ||
     (profileIndexedData.type && profileIndexedData.type !== PROFILE_TYPES.LSP3)
   ) {
-    // TODO make RPC call to verify profile in case it was not indexed properly
-    throw new NotFoundIndexError(profileAddress)
+    // when indexer fails to return profile we try to check via RPC
+    const standard = await detectStandard(profileAddress)
+
+    if (standard !== PROFILE_TYPES.LSP3) {
+      throw new NotFoundIndexError(profileAddress)
+    }
   }
 
   try {
