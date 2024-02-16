@@ -1,6 +1,5 @@
 import LSP3ProfileMetadataSchema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
 import { toChecksumAddress } from 'web3-utils'
-import { Buffer } from 'buffer'
 
 import { ProfileRepository } from '@/repositories/profile'
 
