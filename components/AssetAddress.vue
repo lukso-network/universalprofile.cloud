@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import makeBlockie from 'ethereum-blockies-base64'
+import { sliceAddress } from '@lukso/web-components/tools'
 
 type Props = {
   address: Address
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const { isMobile } = useDevice()
+
+const truncateAddress = computed(() => {
+  let addressLength = 66
+
+  if (isMobile) {
+    addressLength = 8
+  }
+  return sliceAddress(props.address, addressLength)
+})
 </script>
 
 <template>
@@ -22,7 +33,7 @@ defineProps<Props>()
           alt=""
           class="bottom-0 right-0 h-6 w-6 rounded-full shadow-neutral-above-shadow-1xl outline outline-2 outline-neutral-100"
         />
-        <div class="paragraph-ptmono-12-bold ml-2">{{ address }}</div>
+        <div class="paragraph-ptmono-12-bold ml-2">{{ truncateAddress }}</div>
       </div>
       <div class="flex items-center gap-2">
         <lukso-tooltip

@@ -1,16 +1,28 @@
 <script setup lang="ts">
+const { isMobile } = useDevice()
+
 type Props = {
   asset: Asset
 }
 
 defineProps<Props>()
+
+const tokenLength = computed(() => {
+  let tokenLength = 64
+
+  if (isMobile) {
+    tokenLength = 36
+  }
+
+  return tokenLength
+})
 </script>
 
 <template>
   <lukso-tag is-rounded class="mb-8">
     <div class="flex items-center">
       <div class="paragraph-ptmono-12-bold mr-2">
-        {{ prefixedTokenId(asset?.tokenId, asset?.tokenIdFormat) }}
+        {{ prefixedTokenId(asset?.tokenId, asset?.tokenIdFormat, tokenLength) }}
       </div>
       <lukso-tooltip
         variant="light"
