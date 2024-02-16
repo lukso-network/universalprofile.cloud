@@ -33,23 +33,27 @@ export const fetchProfile = async (profileAddress: Address) => {
 
   const { $fetchIndexedProfile } = useNuxtApp() as unknown as NuxtApp
   const profileIndexedData = await $fetchIndexedProfile(profileAddress)
+  const { LSPStandard, type } = profileIndexedData || {}
+  let profileData = profileIndexedData?.LSP3Profile
 
   // check if indexed profile has correct type
   if (
-    !profileIndexedData ||
-    (profileIndexedData.LSPStandard &&
-      profileIndexedData.LSPStandard !== PROFILE_TYPES.LSP3) ||
-    (profileIndexedData.type && profileIndexedData.type !== PROFILE_TYPES.LSP3)
+    (LSPStandard && LSPStandard !== PROFILE_TYPES.LSP3) ||
+    (type && type !== PROFILE_TYPES.LSP3)
   ) {
-    // TODO make RPC call to verify profile in case it was not indexed properly
-    throw new NotFoundIndexError(profileAddress)
+    // when indexer fails to return profile we try to check via RPC
+    const standard = await detectStandard(profileAddress)
+    console.warn(`The ${profileAddress} was not found in the index`)
+
+    if (standard !== PROFILE_TYPES.LSP3) {
+      throw new NotFoundIndexError(profileAddress)
+    } else {
+      profileData = await getProfileData(profileAddress)
+    }
   }
 
   try {
-    const profile = await createProfileObject(
-      profileAddress,
-      profileIndexedData?.LSP3Profile
-    )
+    const profile = await createProfileObject(profileAddress, profileData)
 
     return profile
   } catch (error: unknown) {
@@ -120,4 +124,22 @@ const createProfileObject = async (
     receivedAssetAddresses,
     issuedAssetAddresses,
   }
+}
+
+/**
+ * Get profile from RPC
+ *
+ * @param profileAddress
+ * @returns
+ */
+const getProfileData = async (profileAddress: Address) => {
+  const { getInstance } = useErc725()
+  const erc725 = getInstance(
+    profileAddress,
+    LSP3ProfileMetadataSchema as ERC725JSONSchema[]
+  )
+  const profileFetchData = await erc725.fetchData('LSP3Profile')
+  const profileMetadata = validateLsp3Metadata(profileFetchData)
+
+  return profileMetadata
 }
