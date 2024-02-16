@@ -139,27 +139,8 @@ const getProfileData = async (profileAddress: Address) => {
     profileAddress,
     LSP3ProfileMetadataSchema as ERC725JSONSchema[]
   )
-  const profileMetadata = await erc725.fetchData('LSP3Profile')
+  const profileFetchData = await erc725.fetchData('LSP3Profile')
+  const profileMetadata = validateLsp3Metadata(profileFetchData)
 
-  // NOTE: Some profiles have been encoded with keccak256(bytes) instead of keccak256(utf8)
-  // This little trick allows a smooth transition to the new encoding
-  try {
-    if (
-      Object.prototype.toString.call(profileMetadata.value) ===
-      '[object Uint8Array]'
-    ) {
-      const jsonString = Buffer.from(profileMetadata.value as any).toString(
-        'utf8'
-      )
-
-      profileMetadata.value = JSON.parse(jsonString)
-      console.warn(
-        `LSP3Profile of ${profileAddress} was encoded with keccak256(bytes) instead of keccak256(utf8). This frontend has converted it to ensure compatibility.`
-      )
-    }
-  } catch (err) {}
-
-  const lsp3Profile = validateLsp3Metadata(profileMetadata)
-
-  return lsp3Profile
+  return profileMetadata
 }
