@@ -23,7 +23,7 @@ const handleSendAsset = (event: Event) => {
 }
 
 const assetTokenId = computed(() => {
-  return prefixedTokenId(asset.value?.tokenId, asset.value?.tokenIdFormat)
+  return prefixedTokenId(asset.value?.tokenId, asset.value?.tokenIdFormat, 36)
 })
 </script>
 
