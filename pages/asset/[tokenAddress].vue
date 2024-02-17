@@ -24,13 +24,13 @@ const handleSendAsset = (event: Event) => {
   <div class="relative">
     <AppPageLoader :is-loading="isLoading">
       <div
-        class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 transition-opacity duration-300"
+        class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
       >
         <div>
-          <lukso-card is-full-width size="small">
+          <lukso-card is-full-width size="small" shadow="small">
             <div
               slot="content"
-              class="flex items-center justify-center p-6 sm:py-10 md:py-20"
+              class="flex min-h-64 items-center justify-center p-6 sm:py-10 md:py-20"
             >
               <lukso-profile
                 v-if="asset"

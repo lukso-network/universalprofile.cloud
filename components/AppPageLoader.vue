@@ -25,7 +25,7 @@ const { isLoadedApp } = storeToRefs(useAppStore())
     </div>
     <AppLoader
       v-if="!isLoadedApp || isLoading"
-      class="absolute left-[calc(50%-20px)] top-[300px]"
+      class="absolute left-[calc(50%-20px)] top-[200px] sm:top-[300px]"
     />
   </div>
 </template>
