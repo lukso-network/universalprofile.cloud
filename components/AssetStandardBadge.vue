@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { STANDARDS_ABBREVIATIONS } from '@/shared/enums'
+import type { Standard } from '@/types/contract'
 
 type Props = {
-  standard?: AssetType
+  standard?: Standard
 }
 
 defineProps<Props>()

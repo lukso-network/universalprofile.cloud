@@ -61,7 +61,7 @@ export const createLsp7Object = async (
     tokenSupply,
     links,
     description,
-    standard: ASSET_TYPES.LSP7,
+    standard: STANDARDS.LSP7,
     icon,
     images,
     creators: creators?.filter(Boolean), // sometimes indexer return empty string [''] so we need to filter out

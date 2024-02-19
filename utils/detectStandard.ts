@@ -3,8 +3,8 @@ import { INTERFACE_IDS as INTERFACE_IDS_v12 } from '@lukso/lsp-smart-contracts-1
 import LSP0ERC725AccountInterface from '@lukso/lsp-smart-contracts/artifacts/LSP0ERC725Account.json'
 import { hexToNumber, type AbiItem } from 'web3-utils'
 
-import type { ContractType } from '@/types/contract'
 import type { LSP0ERC725Account } from '@/types/contracts'
+import type { Standard } from '@/types/contract'
 
 /**
  * Detect standard of given contract address
@@ -15,7 +15,7 @@ import type { LSP0ERC725Account } from '@/types/contracts'
  */
 export const detectStandard = async (
   contractAddress: Address
-): Promise<ContractType | undefined> => {
+): Promise<Standard> => {
   try {
     const { contract } = useWeb3(PROVIDERS.RPC)
 
@@ -56,8 +56,10 @@ export const detectStandard = async (
     if (lsp7v12interface) return 'LSP7DigitalAsset'
     if (lsp8interface) return 'LSP8IdentifiableDigitalAsset'
     if (lsp8v12interface) return 'LSP8IdentifiableDigitalAsset'
+
+    return 'UnknownDataType'
   } catch (error) {
     console.error(error)
-    return
+    return 'UnknownDataType'
   }
 }

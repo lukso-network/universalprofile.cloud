@@ -12,7 +12,7 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     return this.repo(AssetModel)
-      .where('standard', ASSET_TYPES.LSP7)
+      .where('standard', STANDARDS.LSP7)
       .where('address', viewedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where((asset: Asset) => {
@@ -31,7 +31,7 @@ export class AssetRepository extends Repository<AssetModel> {
     }
 
     return this.repo(AssetModel)
-      .where('standard', ASSET_TYPES.LSP7)
+      .where('standard', STANDARDS.LSP7)
       .where('address', viewedProfile.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where((asset: Asset) => {
