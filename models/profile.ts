@@ -56,7 +56,7 @@ export type IndexedProfile = {
   LSPStandard: Standard
   type: Standard // TODO this is legacy type field, we keep it until indexer fully migrate to `LSPStandard`
 
-  // not using now this attributes but some will be useful in FE
+  // not using now this attributes but some will be useful
   // TODO refactor this later
   hasProfileName?: boolean
   hasProfileDescription?: boolean
