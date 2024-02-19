@@ -18,7 +18,7 @@ const isLoaded = computed(
 <template>
   <div class="relative">
     <div
-      class="relative px-4 py-20"
+      class="relative h-full px-4 py-20"
       :class="{
         'opacity-0': !isLoaded,
 
