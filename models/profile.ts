@@ -1,5 +1,4 @@
 import { BaseModel } from '@/models/base'
-import { PROFILE_TYPES } from '@/shared/enums'
 
 import type { Item } from 'pinia-orm'
 import type {
@@ -7,6 +6,7 @@ import type {
   LinkMetadata,
 } from '@lukso/lsp-smart-contracts'
 import type { Image } from '@/types/image'
+import type { Standard } from '@/types/contract'
 
 export class ProfileModel extends BaseModel {
   static entity = 'profiles'
@@ -21,7 +21,7 @@ export class ProfileModel extends BaseModel {
       links: this.attr([]),
       tags: this.attr([]),
       description: this.string(''),
-      isEoa: this.boolean(false), // TODO change to `type` value from index
+      standard: this.attr(null),
       profileImage: this.attr(null),
       backgroundImage: this.attr(null),
       issuedAssetAddresses: this.attr(null),
@@ -36,7 +36,7 @@ export class ProfileModel extends BaseModel {
   declare links?: LinkMetadata[]
   declare tags?: string[]
   declare description?: string
-  declare isEoa?: boolean
+  declare standard?: Standard
   declare profileImageId?: string
   declare backgroundImageId?: string
   declare issuedAssetAddresses?: Address[]
@@ -47,16 +47,14 @@ export class ProfileModel extends BaseModel {
 
 export type Profile = Partial<Item<ProfileModel>>
 
-export type ProfileType = `${PROFILE_TYPES}`
-
 // Type of data returned from Algolia, it's not fully covered as some
 // properties are irrelevant
 export type IndexedProfile = {
   address: Address
   LSP3Profile?: LSP3ProfileMetadata
   profileImageUrl?: string
-  LSPStandard: ProfileType
-  type: ProfileType // TODO this is legacy type field, we keep it until indexer fully migrate to `LSPStandard`
+  LSPStandard: Standard
+  type: Standard // TODO this is legacy type field, we keep it until indexer fully migrate to `LSPStandard`
 
   // not using now this attributes but some will be useful in FE
   // TODO refactor this later

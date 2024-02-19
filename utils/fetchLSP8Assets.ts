@@ -80,7 +80,7 @@ export const createLsp8Object = async (
       tokenSupply,
       links,
       description,
-      standard: ASSET_TYPES.LSP8,
+      standard: STANDARDS.LSP8,
       tokenId,
       tokenIdFormat,
       icon,
