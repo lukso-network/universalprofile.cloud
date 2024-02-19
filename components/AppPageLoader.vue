@@ -21,7 +21,6 @@ const isLoaded = computed(
       class="relative px-4 py-6 sm:py-20"
       :class="{
         'opacity-0': !isLoaded,
-
         'animate-fade-in opacity-100 transition-opacity delay-200  duration-300':
           isLoaded,
       }"
