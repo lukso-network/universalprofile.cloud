@@ -1,5 +1,5 @@
 import type { IndexedAsset } from '@/models/asset'
-import type { ContractType } from '@/types/contract'
+import type { Standard } from '@/types/contract'
 import type { NuxtApp } from '@/types/plugins'
 
 /**
@@ -79,14 +79,14 @@ export const fetchAsset = async (
  * @returns
  */
 const getAssetForStandard = async (
-  standard: ContractType,
+  standard: Standard,
   address: Address,
   assetIndexedData: IndexedAsset,
   profileAddress?: Address,
   tokenIds?: string[]
 ): Promise<Asset[]> => {
   switch (standard) {
-    case ASSET_TYPES.LSP8: {
+    case STANDARDS.LSP8: {
       return await createLsp8Object(
         address,
         assetIndexedData,
@@ -94,15 +94,15 @@ const getAssetForStandard = async (
         tokenIds
       )
     }
-    case ASSET_TYPES.LSP7: {
+    case STANDARDS.LSP7: {
       return [await createLsp7Object(address, assetIndexedData, profileAddress)]
     }
-    case ASSET_TYPES.EOA: {
+    case STANDARDS.EOA: {
       // EOA for asset means it wasn't indexed yet
       console.warn(`Asset ${address} not found in the index`)
       return []
     }
-    case ASSET_TYPES.UNKNOWN:
+    case STANDARDS.UNKNOWN:
     // pass to default check
     default: {
       // for unknown type we do additional RPC check and run getAsset again
@@ -112,18 +112,18 @@ const getAssetForStandard = async (
       const standard = await detectStandard(address)
 
       switch (standard) {
-        case ASSET_TYPES.LSP8: {
+        case STANDARDS.LSP8: {
           return await getAssetForStandard(
-            ASSET_TYPES.LSP8,
+            STANDARDS.LSP8,
             address,
             assetIndexedData,
             profileAddress,
             tokenIds
           )
         }
-        case ASSET_TYPES.LSP7: {
+        case STANDARDS.LSP7: {
           return await getAssetForStandard(
-            ASSET_TYPES.LSP7,
+            STANDARDS.LSP7,
             address,
             assetIndexedData,
             profileAddress,

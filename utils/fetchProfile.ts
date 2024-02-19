@@ -2,10 +2,12 @@ import LSP3ProfileMetadataSchema from '@erc725/erc725.js/schemas/LSP3ProfileMeta
 import { toChecksumAddress } from 'web3-utils'
 
 import { ProfileRepository } from '@/repositories/profile'
+import { STANDARDS } from '@/shared/enums'
 
 import type { LSP3ProfileMetadata } from '@lukso/lsp-smart-contracts'
 import type { NuxtApp } from '@/types/plugins'
 import type { ERC725JSONSchema } from '@erc725/erc725.js'
+import type { Standard } from '@/types/contract'
 
 /**
  * Put fetched profile into the store
@@ -35,25 +37,25 @@ export const fetchProfile = async (profileAddress: Address) => {
   const profileIndexedData = await $fetchIndexedProfile(profileAddress)
   const { LSPStandard, type } = profileIndexedData || {}
   let profileData = profileIndexedData?.LSP3Profile
+  let standard: Standard = LSPStandard || type
 
   // check if indexed profile has correct type
-  if (
-    (LSPStandard && LSPStandard !== PROFILE_TYPES.LSP3) ||
-    (type && type !== PROFILE_TYPES.LSP3)
-  ) {
+  if (standard !== STANDARDS.LSP3) {
     // when indexer fails to return profile we try to check via RPC
-    const standard = await detectStandard(profileAddress)
+    standard = await detectStandard(profileAddress)
     console.warn(`The ${profileAddress} was not found in the index`)
 
-    if (standard !== PROFILE_TYPES.LSP3) {
-      throw new NotFoundIndexError(profileAddress)
-    } else {
+    if (standard === STANDARDS.LSP3) {
       profileData = await getProfileData(profileAddress)
     }
   }
 
   try {
-    const profile = await createProfileObject(profileAddress, profileData)
+    const profile = await createProfileObject(
+      profileAddress,
+      standard,
+      profileData
+    )
 
     return profile
   } catch (error: unknown) {
@@ -65,11 +67,13 @@ export const fetchProfile = async (profileAddress: Address) => {
  * Create Profile type object
  *
  * @param profileAddress - address of the profile
+ * @param standard
  * @param profileMetadata - metadata of the profile
  * @returns
  */
 const createProfileObject = async (
   address: Address,
+  standard: Standard,
   metadata?: LSP3ProfileMetadata
 ): Promise<Profile> => {
   const { getInstance } = useErc725()
@@ -123,6 +127,7 @@ const createProfileObject = async (
     backgroundImage,
     receivedAssetAddresses,
     issuedAssetAddresses,
+    standard,
   }
 }
 

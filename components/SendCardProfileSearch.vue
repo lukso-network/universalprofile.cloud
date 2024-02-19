@@ -115,7 +115,7 @@ const handleReceiverSearch = async (event: CustomEvent) => {
     if (await isEoA(searchTerm.value)) {
       receiver.value = {
         address: searchTerm.value,
-        isEoa: true,
+        type: 'EOA',
       }
     }
   } else {

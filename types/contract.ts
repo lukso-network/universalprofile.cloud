@@ -1,1 +1,3 @@
-export type ContractType = ProfileType | AssetType
+import { STANDARDS } from '@/shared/enums'
+
+export type Standard = `${STANDARDS}`

@@ -1,5 +1,4 @@
 import { expect, test, describe } from 'vitest'
-import { ASSET_TYPES } from '@/shared/enums'
 
 import {
   isLyx,
@@ -87,7 +86,7 @@ describe('isLsp7', () => {
   test('should return true if the asset is LSP7', async () => {
     expect(
       isLsp7({
-        standard: ASSET_TYPES.LSP7,
+        standard: STANDARDS.LSP7,
       })
     ).toBe(true)
   })
@@ -95,12 +94,12 @@ describe('isLsp7', () => {
   test('should return false if the asset is not LSP7', async () => {
     expect(
       isLsp7({
-        standard: ASSET_TYPES.LSP8,
+        standard: STANDARDS.LSP8,
       })
     ).toBe(false)
     expect(
       isLsp7({
-        standard: ASSET_TYPES.EOA,
+        standard: STANDARDS.EOA,
       })
     ).toBe(false)
     expect(isLsp7({})).toBe(false)
@@ -111,7 +110,7 @@ describe('isLsp8', () => {
   test('should return true if the asset is LSP8', async () => {
     expect(
       isLsp8({
-        standard: ASSET_TYPES.LSP8,
+        standard: STANDARDS.LSP8,
       })
     ).toBe(true)
   })
@@ -119,12 +118,12 @@ describe('isLsp8', () => {
   test('should return false if the asset is not LSP8', async () => {
     expect(
       isLsp8({
-        standard: ASSET_TYPES.LSP7,
+        standard: STANDARDS.LSP7,
       })
     ).toBe(false)
     expect(
       isLsp8({
-        standard: ASSET_TYPES.EOA,
+        standard: STANDARDS.EOA,
       })
     ).toBe(false)
     expect(isLsp8({})).toBe(false)
