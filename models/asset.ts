@@ -8,7 +8,7 @@ import type {
   LSP8_TOKEN_ID_FORMAT,
 } from '@lukso/lsp-smart-contracts'
 import type { Image } from '@/types/image'
-import type { ASSET_TYPES } from '@/shared/enums'
+import type { Standard } from '@/types/contract'
 
 export class AssetModel extends BaseModel {
   static entity = 'assets'
@@ -47,7 +47,7 @@ export class AssetModel extends BaseModel {
   declare balance?: string
   declare decimals?: number
   declare tokenSupply?: string
-  declare standard?: AssetType
+  declare standard?: Standard
   declare description?: string
   declare links?: LinkMetadata[]
   declare tokenId?: string
@@ -65,14 +65,13 @@ export class AssetModel extends BaseModel {
 
 export type Asset = Partial<Item<AssetModel>>
 
-export type AssetType = `${ASSET_TYPES}`
 export type TokenType = keyof typeof LSP4_TOKEN_TYPES
 export type TokenIdFormatKey = keyof typeof LSP8_TOKEN_ID_FORMAT
 export type TokenIdFormatValue = (typeof LSP8_TOKEN_ID_FORMAT)[TokenIdFormatKey]
 
 export type IndexedAsset = {
   address: Address
-  LSPStandard: AssetType
+  LSPStandard: Standard
   LSP4TokenName?: string
   LSP4TokenSymbol?: string
   description?: string

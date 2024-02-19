@@ -87,7 +87,7 @@ const handleBack = () => {
     </div>
     <div slot="bottom" class="flex flex-col items-center p-6">
       <AppAvatar
-        :is-eoa="receiver?.isEoa"
+        :is-eoa="receiver?.type === 'EOA'"
         :is-error="!!receiverError"
         :name="receiver?.name"
         :address="receiver?.address"

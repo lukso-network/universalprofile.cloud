@@ -16,7 +16,7 @@ export const explorerTransactionUrl = (transactionHash: string) => {
  * @param address
  * @returns
  */
-export const explorerContractUrl = (address: string) => {
+export const explorerContractUrl = (address?: string | Address) => {
   const { currentNetwork } = storeToRefs(useAppStore())
 
   return `${currentNetwork.value.explorerUrl}/address/${address}`
