@@ -43,13 +43,13 @@ const handleBuyLyx = () => {
 <template>
   <AppPageLoader>
     <div
-      class="relative mx-auto grid max-w-content grid-cols-[1fr,2fr] gap-12 px-4 transition-opacity duration-300"
+      class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
     >
       <div>
         <lukso-card is-full-width size="small" shadow="small">
           <div
             slot="content"
-            class="flex items-center justify-center p-6 sm:py-10 md:py-20"
+            class="flex min-h-[260px] items-center justify-center p-6 sm:py-10 md:py-20"
           >
             <lukso-profile
               size="large"
@@ -103,10 +103,10 @@ const handleBuyLyx = () => {
         <div class="heading-apax-24-medium pb-8">
           {{ $formatMessage('lyx_details_title') }}
         </div>
-        <AssetSupply
+        <AssetTokenSupply
           :token-supply="currentNetwork.token.supply"
-          :symbol="currentNetwork.token.symbol"
           :decimals="ASSET_LYX_DECIMALS"
+          class="pb-8"
         />
         <AssetDescription
           :description="$formatMessage('lyx_details_description')"

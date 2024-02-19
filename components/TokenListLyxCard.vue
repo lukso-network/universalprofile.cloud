@@ -57,6 +57,7 @@ onMounted(async () => {
 <template>
   <lukso-card
     size="small"
+    shadow="small"
     is-hoverable
     is-full-width
     @click="handleShowLyxDetails"
