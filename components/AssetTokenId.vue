@@ -16,6 +16,14 @@ const tokenLength = computed(() => {
 
   return tokenLength
 })
+
+const tooltipContent = ref<HTMLElement>()
+
+onMounted(() => {
+  tooltipContent.value = document?.getElementById(
+    'tooltip-token-id'
+  ) as HTMLElement
+})
 </script>
 
 <template>
@@ -25,11 +33,10 @@ const tokenLength = computed(() => {
         {{ prefixedTokenId(asset?.tokenId, asset?.tokenIdFormat, tokenLength) }}
       </div>
       <lukso-tooltip
-        variant="light"
+        variant="white"
+        trigger="mouseenter"
         offset="15"
-        is-clipboard-copy
-        :copy-text="$formatMessage('asset_address_copied_tooltip')"
-        :copy-value="asset?.tokenId"
+        :text="tooltipContent"
       >
         <lukso-icon
           name="copy"
@@ -37,6 +44,20 @@ const tokenLength = computed(() => {
           class="cursor-pointer transition-opacity hover:opacity-70"
         ></lukso-icon>
       </lukso-tooltip>
+      <div id="tooltip-token-id" class="text-center">
+        <div
+          class="mb-1 rounded-4 px-2 py-1 hover:cursor-pointer hover:bg-neutral-95"
+          :onclick="`navigator.clipboard.writeText('${parseTokenId(asset?.tokenId, asset?.tokenIdFormat)}')`"
+        >
+          {{ $formatMessage('tooltip_text_copy') }}
+        </div>
+        <div
+          class="rounded-4 px-2 py-1 hover:cursor-pointer hover:bg-neutral-95"
+          :onclick="`navigator.clipboard.writeText('${asset?.tokenId}')`"
+        >
+          {{ $formatMessage('tooltip_text_copy_raw') }}
+        </div>
+      </div>
     </div>
   </lukso-tag>
 </template>
