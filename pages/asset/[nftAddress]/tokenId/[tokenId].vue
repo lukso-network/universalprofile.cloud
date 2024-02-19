@@ -92,6 +92,7 @@ const assetTokenId = computed(() => {
           :description="asset.description"
         />
         <AssetImages v-if="asset?.images?.length" :images="asset.images" />
+        <AssetAssets v-if="asset?.assets?.length" :images="asset.assets" />
         <AssetAttributes :attributes="asset?.attributes" />
         <AssetCreators v-if="asset" :asset="asset" />
         <AssetLinks

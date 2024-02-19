@@ -15,6 +15,23 @@ declare global {
     value: string
     type: string | number | boolean
   }
+
+  type AssetMetadata = {
+    verification?: Verification
+    url: string
+    fileType: string
+  }
+
+  type FileAsset = {
+    verification?: Verification
+    url: string
+    fileType: string
+  }
+
+  type ContractAsset = {
+    address: string
+    tokenId?: string
+  }
 }
 
 export {}
