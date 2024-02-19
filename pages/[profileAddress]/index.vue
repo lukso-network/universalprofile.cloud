@@ -147,6 +147,7 @@ watchEffect(async () => {
         variant="landing"
         is-link
         :href="explorerContractUrl(viewedProfile?.address)"
+        class="mb-8"
         >{{ $formatMessage('not_up_button') }}</lukso-button
       >
     </div>
