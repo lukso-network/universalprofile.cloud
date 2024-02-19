@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import type { Image } from '@/types/image'
-
 type Props = {
-  images: Image[]
+  assets: AssetMetadata[]
 }
 
 defineProps<Props>()
@@ -11,17 +9,16 @@ defineProps<Props>()
 <template>
   <div class="mb-8">
     <div class="heading-inter-14-bold pb-3">
-      {{ $formatMessage('token_details_images') }}
+      {{ $formatMessage('token_details_assets') }}
     </div>
     <div class="flex flex-wrap gap-4">
       <div
-        v-for="(image, index) in images"
+        v-for="(asset, index) in assets"
         :key="index"
         class="h-14 w-14 rounded-8 bg-neutral-90 bg-cover"
-        :style="{
-          backgroundImage: `url(${image?.url})`,
-        }"
-      ></div>
+      >
+        {{ asset }}
+      </div>
     </div>
   </div>
 </template>

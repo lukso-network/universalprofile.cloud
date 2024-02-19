@@ -43,7 +43,7 @@ export const createLsp8Object = async (
   assertAddress(owner)
 
   // fetch metadata for each token id
-  const assets: Asset[] = []
+  const collectibles: Asset[] = []
   for (const tokenId of tokensIds) {
     const [collectionMetadata, tokenIdFormat] = await fetchLsp8Metadata(
       tokenId,
@@ -56,6 +56,7 @@ export const createLsp8Object = async (
       links,
       //@ts-ignore - ignore until release or lsp package
       attributes,
+      assets,
     } = collectionMetadata.LSP4Metadata
 
     // get best image from collection based on height criteria
@@ -71,7 +72,7 @@ export const createLsp8Object = async (
       }
     }
 
-    assets.push({
+    collectibles.push({
       address,
       name,
       symbol,
@@ -90,7 +91,8 @@ export const createLsp8Object = async (
       tokenType: tokenType || 'NFT', // we set default just in case it's missing from indexer
       contractOwner: owner,
       attributes,
+      assets,
     })
   }
-  return assets
+  return collectibles
 }
