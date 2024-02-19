@@ -3,7 +3,7 @@ const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
 const { viewedProfile } = useViewedProfile()
 const { connectedProfile } = useConnectedProfile()
-const { isConnecting, isConnected, isTestnet, hasSimpleNavbar } =
+const { isConnecting, isConnected, isTestnet, hasSimpleNavbar, isSearchOpen } =
   storeToRefs(useAppStore())
 
 const handleNavigateProfile = async () => {
@@ -42,6 +42,10 @@ const handleNavigationDiscovery = () => {
   window.open(discoveryDappUrl(), '_self')
 }
 
+const handleMobileSearch = () => {
+  isSearchOpen.value = !isSearchOpen.value
+}
+
 const extensionStoreData = () => {
   const url = browserInfo().storeLink
   const icon = `logo-${browserInfo().id}`
@@ -64,10 +68,11 @@ const browserSupportExtension = extensionStore.url !== ''
     icon="wallet-outline"
     :has-menu="!hasSimpleNavbar ? true : undefined"
     :is-center="hasSimpleNavbar ? true : undefined"
+    mobile-breakpoint="lg"
     @on-brand-click="handleNavigationDiscovery"
     @on-icon-click="handleNavigateProfile"
   >
-    <div class="flex items-center justify-end" slot="desktop">
+    <div class="flex items-center justify-end" slot="desktop-menu">
       <lukso-button
         variant="text"
         custom-class="text-12 nav-apax-12-medium-uppercase"
@@ -137,7 +142,7 @@ const browserSupportExtension = extensionStore.url !== ''
         </span>
       </lukso-button>
     </div>
-    <div slot="mobile">
+    <div slot="mobile-menu">
       <div className="flex flex-col items-center justify-center h-screen pb-32">
         <lukso-button
           variant="text"
@@ -219,5 +224,16 @@ const browserSupportExtension = extensionStore.url !== ''
         </lukso-button>
       </div>
     </div>
+    <div slot="mobile-icons" class="flex">
+      <lukso-icon
+        name="search"
+        class="cursor-pointer"
+        @click="handleMobileSearch"
+      ></lukso-icon>
+    </div>
+    <div slot="desktop-center" class="w-full">
+      <AppNavbarProfileSearch class="w-full" />
+    </div>
   </lukso-navbar>
+  <AppNavbarMobileSearch v-if="isSearchOpen" />
 </template>

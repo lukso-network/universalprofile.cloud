@@ -21,6 +21,7 @@ export const useAppStore = defineStore(
     const isLoadingProfile = ref(false)
     const isLoadingAssets = ref(false)
     const isLoadedApp = ref(false)
+    const isSearchOpen = ref(false)
 
     // --- getters
 
@@ -82,6 +83,7 @@ export const useAppStore = defineStore(
       assetFilter,
       isTestnet,
       hasSimpleNavbar,
+      isSearchOpen,
     }
   },
   {
