@@ -20,7 +20,7 @@ watchEffect(() => {
               :html-content="$formatMessage('buy_lyx_title')"
             ></lukso-sanitize>
           </div>
-          <div class="grid grid-cols-2 gap-6 pt-8">
+          <div class="grid gap-6 pt-8 sm:grid-cols-2">
             <BuyLyxCard
               logo-url="/images/transak-logo.png"
               :buy-url="transakBuyLyxUrl()"

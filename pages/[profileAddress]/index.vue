@@ -6,6 +6,7 @@ import type { Asset } from '@/models/asset'
 const { assetFilter, isLoadingAssets } = storeToRefs(useAppStore())
 const { viewedProfile } = useViewedProfile()
 const assetRepository = useRepo(AssetRepository)
+const { isMobile } = useDevice()
 const tokensOwned = ref<Asset[]>()
 const tokensCreated = ref<Asset[]>()
 const nftsOwned = ref<Asset[]>()
@@ -90,13 +91,14 @@ watchEffect(async () => {
         <ProfileDetails v-if="showProfileDetails" />
         <div>
           <div>
-            <div class="flex gap-4 pt-10">
+            <div class="grid grid-cols-2 gap-4 pt-10 sm:flex">
               <lukso-button
                 size="small"
                 variant="secondary"
                 :is-active="
                   assetFilter === AssetFilter.owned ? true : undefined
                 "
+                :is-full-width="isMobile ? true : undefined"
                 :count="ownedAssetsCount"
                 @click="assetFilter = AssetFilter.owned"
                 >{{ $formatMessage('asset_filter_owned_assets') }}</lukso-button
@@ -107,6 +109,7 @@ watchEffect(async () => {
                 :is-active="
                   assetFilter === AssetFilter.created ? true : undefined
                 "
+                :is-full-width="isMobile ? true : undefined"
                 :count="createdAssetsCount"
                 @click="assetFilter = AssetFilter.created"
                 >{{

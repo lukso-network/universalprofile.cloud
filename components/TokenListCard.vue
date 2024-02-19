@@ -53,7 +53,12 @@ onMounted(async () => {
 </script>
 
 <template>
-  <lukso-card size="small" is-hoverable is-full-width @click="handleShowAsset"
+  <lukso-card
+    size="small"
+    shadow="small"
+    is-hoverable
+    is-full-width
+    @click="handleShowAsset"
     ><div slot="content" class="grid h-full grid-rows-[max-content,auto] p-4">
       <div class="flex h-7 items-start justify-end">
         <AssetStandardBadge :standard="asset?.standard" />
