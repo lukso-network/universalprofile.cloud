@@ -14,7 +14,7 @@ const { isLoadedApp } = storeToRefs(useAppStore())
 <template>
   <div class="relative">
     <div
-      class="relative px-4 py-20"
+      class="relative h-full px-4 py-20"
       :class="{
         'opacity-0': !isLoadedApp || isLoading,
         'animate-fade-in opacity-100 transition-opacity delay-200  duration-300':
