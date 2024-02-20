@@ -23,13 +23,9 @@ export enum AssetFilter {
   created = 'created',
 }
 
-export enum PROFILE_TYPES {
+export enum STANDARDS {
   EOA = 'EOA',
   LSP3 = 'LSP3Profile',
-}
-
-export enum ASSET_TYPES {
-  EOA = 'EOA',
   LSP7 = 'LSP7DigitalAsset',
   LSP8 = 'LSP8IdentifiableDigitalAsset',
   UNKNOWN = 'UnknownDataType',
@@ -39,4 +35,6 @@ export const STANDARDS_ABBREVIATIONS = {
   EOA: 'EOA',
   LSP7DigitalAsset: 'LSP7',
   LSP8IdentifiableDigitalAsset: 'LSP8',
+  LSP3Profile: 'LSP3',
+  UnknownDataType: 'UNKNOWN',
 }

@@ -13,7 +13,8 @@ if (typeof window !== 'undefined') {
 
 const { addWeb3, getWeb3 } = useWeb3Store()
 const { getNetworkByChainId, getNetworkById } = useAppStore()
-const { isLoadedApp, selectedChainId, modal } = storeToRefs(useAppStore())
+const { isLoadedApp, isLoadingProfile, selectedChainId, modal, isSearchOpen } =
+  storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
 const router = useRouter()
@@ -70,8 +71,10 @@ const routerBackProfileLoad = async () => {
       // only makes sense to load profile if it's not already loaded
       if (!storeProfile) {
         try {
+          isLoadingProfile.value = true
           await fetchAndStoreProfile(toProfileAddress)
           fetchAndStoreAssets(toProfileAddress)
+          isLoadingProfile.value = false
         } catch (error) {
           console.error(error)
         }
@@ -224,8 +227,8 @@ useHead({
     // @ts-ignore
     class: computed(() => {
       // prevent window scroll when modal is open
-      if (modal.value?.isOpen) {
-        return 'overflow-hidden'
+      if (modal.value?.isOpen || isSearchOpen.value) {
+        return '!overflow-hidden'
       }
 
       return ''

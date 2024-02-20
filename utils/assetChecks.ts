@@ -1,5 +1,3 @@
-import { ASSET_TYPES } from '@/shared/enums'
-
 /**
  * Check if passed asset is LYX token
  * @param asset
@@ -31,7 +29,7 @@ export const isToken = (asset?: Asset) =>
  * @param asset
  * @returns
  */
-export const isLsp7 = (asset?: Asset) => asset?.standard === ASSET_TYPES.LSP7
+export const isLsp7 = (asset?: Asset) => asset?.standard === STANDARDS.LSP7
 
 /**
  * Check if passed asset is LSP8 token
@@ -39,7 +37,7 @@ export const isLsp7 = (asset?: Asset) => asset?.standard === ASSET_TYPES.LSP7
  * @param asset
  * @returns
  */
-export const isLsp8 = (asset?: Asset) => asset?.standard === ASSET_TYPES.LSP8
+export const isLsp8 = (asset?: Asset) => asset?.standard === STANDARDS.LSP8
 
 /**
  * Check if passed asset has a token id

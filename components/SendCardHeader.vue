@@ -21,7 +21,7 @@ const { receiver } = storeToRefs(useSendStore())
     </div>
     <div class="flex flex-col items-center">
       <AppAvatar
-        :is-eoa="receiver?.isEoa"
+        :is-eoa="receiver?.type === 'EOA'"
         :name="receiver?.name"
         :address="receiver?.address"
         :profile-url="receiver?.profileImage?.url"

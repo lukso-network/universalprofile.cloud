@@ -11,7 +11,7 @@ defineProps<Props>()
     <div class="heading-inter-14-bold pb-2">
       {{ $formatMessage('asset_attributes_title') }}
     </div>
-    <div class="flex flex-wrap gap-3">
+    <div class="grid grid-cols-1 gap-3 sm:flex sm:flex-wrap">
       <div
         v-for="(attribute, index) in attributes"
         :key="index"
