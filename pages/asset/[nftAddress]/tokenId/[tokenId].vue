@@ -2,7 +2,7 @@
 const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 const { asset, isLoading, isOwned } = useAsset(nftAddress, tokenId)
-
+const { showModal } = useModal()
 const { connectedProfile } = useConnectedProfile()
 
 const handleSendAsset = (event: Event) => {
@@ -25,6 +25,22 @@ const handleSendAsset = (event: Event) => {
 const assetTokenId = computed(() => {
   return prefixedTokenId(asset.value?.tokenId, asset.value?.tokenIdFormat, 36)
 })
+
+const handlePreviewImage = () => {
+  const image = asset.value?.images?.[0]
+
+  if (!image) {
+    return
+  }
+
+  showModal({
+    template: 'AssetImage',
+    data: {
+      asset: image,
+    },
+    size: 'auto',
+  })
+}
 </script>
 
 <template>
@@ -36,8 +52,9 @@ const assetTokenId = computed(() => {
         <lukso-card size="small" shadow="small" is-full-width
           ><div slot="content">
             <div
-              class="min-h-[260px] rounded-t-12 bg-neutral-90 bg-cover bg-center"
+              class="min-h-[260px] cursor-pointer rounded-t-12 bg-neutral-90 bg-cover bg-center"
               :style="`background-image: url(${getAssetThumb(asset)});`"
+              @click="handlePreviewImage"
             ></div>
             <div class="relative p-4">
               <div class="paragraph-inter-14-semi-bold">

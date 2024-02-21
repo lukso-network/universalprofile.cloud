@@ -6,6 +6,17 @@ type Props = {
 }
 
 defineProps<Props>()
+const { showModal } = useModal()
+
+const handlePreviewImage = (image: Image) => {
+  showModal({
+    template: 'AssetImage',
+    data: {
+      asset: image,
+    },
+    size: 'auto',
+  })
+}
 </script>
 
 <template>
@@ -17,7 +28,8 @@ defineProps<Props>()
       <div
         v-for="(image, index) in images"
         :key="index"
-        class="h-14 w-14 rounded-8 bg-neutral-90 bg-cover"
+        class="h-14 w-14 cursor-pointer rounded-8 bg-neutral-90 bg-cover transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
+        @click="handlePreviewImage(image)"
         :style="{
           backgroundImage: `url(${image?.url})`,
         }"

@@ -2,6 +2,7 @@
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
 const { connectedProfile } = useConnectedProfile()
 const { asset, isLoading, isOwned } = useAsset(tokenAddress)
+const { showModal } = useModal()
 
 const handleSendAsset = (event: Event) => {
   try {
@@ -18,6 +19,22 @@ const handleSendAsset = (event: Event) => {
     console.error(error)
   }
 }
+
+const handlePreviewImage = () => {
+  const image = asset.value?.icon
+
+  if (!image) {
+    return
+  }
+
+  showModal({
+    template: 'AssetImage',
+    data: {
+      asset: image,
+    },
+    size: 'auto',
+  })
+}
 </script>
 
 <template>
@@ -27,7 +44,13 @@ const handleSendAsset = (event: Event) => {
         class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
       >
         <div>
-          <lukso-card is-full-width size="small" shadow="small">
+          <lukso-card
+            class="cursor-pointer"
+            is-full-width
+            size="small"
+            shadow="small"
+            @click="handlePreviewImage"
+          >
             <div
               slot="content"
               class="flex min-h-64 items-center justify-center p-6 sm:py-10 md:py-20"
@@ -80,6 +103,7 @@ const handleSendAsset = (event: Event) => {
             :description="asset.description"
           />
           <AssetImages v-if="asset?.images?.length" :images="asset.images" />
+          <AssetAssets v-if="asset?.assets?.length" :assets="asset.assets" />
           <AssetAttributes :attributes="asset?.attributes" />
           <AssetLinks
             v-if="asset?.links && !!asset.links.length"

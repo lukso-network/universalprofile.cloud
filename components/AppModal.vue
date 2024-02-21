@@ -27,7 +27,11 @@ watch(
 </script>
 
 <template>
-  <lukso-modal :is-open="appStore.modal?.isOpen ? true : undefined">
+  <lukso-modal
+    :is-open="appStore.modal?.isOpen ? true : undefined"
+    :size="appStore.modal?.size"
+    @on-backdrop-click="closeModal"
+  >
     <component
       v-if="modalTemplateComponent"
       :is="modalTemplateComponent"

@@ -1,3 +1,5 @@
+import type { ModalSizes } from '@lukso/web-components'
+
 export interface Modal {
   title?: string
   message?: string
@@ -8,4 +10,5 @@ export interface Modal {
   data?: {
     [key: string]: any
   }
+  size?: ModalSizes
 }
