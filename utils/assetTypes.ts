@@ -1,7 +1,7 @@
-const DOCUMENT_FILE_TYPES = ['doc', 'pdf']
-const MUSIC_FILE_TYPES = ['mp3', 'wav']
-const VIDEO_FILE_TYPES = ['mp4', 'mov', 'avi']
-const IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg', 'gif']
+const DOCUMENT_FILE_TYPES = ['doc', 'docx', 'pdf', 'txt']
+const MUSIC_FILE_TYPES = ['mp3', 'wav', 'm4a']
+const VIDEO_FILE_TYPES = ['mp4', 'mov', 'avi', 'flv']
+const IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg', 'gif', 'svg', 'tif', 'tiff']
 const THREE_DIMENSIONAL_FILE_TYPES = ['gltf'] // TODO test other 3d types
 
 export type AssetFileType =
