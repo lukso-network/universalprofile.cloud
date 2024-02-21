@@ -1,8 +1,49 @@
-const DOCUMENT_FILE_TYPES = ['doc', 'docx', 'pdf', 'txt']
-const MUSIC_FILE_TYPES = ['mp3', 'wav', 'm4a']
-const VIDEO_FILE_TYPES = ['mp4', 'mov', 'avi', 'flv']
-const IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg', 'gif', 'svg', 'tif', 'tiff']
-const THREE_DIMENSIONAL_FILE_TYPES = ['gltf'] // TODO test other 3d types
+const DOCUMENT_FILE_TYPES = [
+  // file extensions
+  'doc',
+  'docx',
+  'pdf',
+  'txt',
+  // mime types
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'text/plain',
+]
+const MUSIC_FILE_TYPES = [
+  // file extensions
+  'mp3',
+  'wav',
+  // mime types
+  'audio/mpeg',
+  'audio/wav',
+]
+const VIDEO_FILE_TYPES = [
+  // file extensions
+  'mp4',
+  'mov',
+  'avi',
+  // mime types
+  'video/mp4',
+  'video/x-msvideo',
+]
+const IMAGE_FILE_TYPES = [
+  // file extensions
+  'png',
+  'jpg',
+  'jpeg',
+  'gif',
+  'svg',
+  'tif',
+  'tiff',
+  // mime types
+  'image/png',
+  'image/jpeg',
+  'image/gif',
+  'image/svg+xml',
+  'image/tiff',
+]
+const THREE_DIMENSIONAL_FILE_TYPES = ['gltf', 'glb']
 
 export type AssetFileType =
   | 'document'
