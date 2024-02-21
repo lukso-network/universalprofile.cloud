@@ -55,7 +55,13 @@ const handlePreviewAsset = (asset: AssetMetadata) => {
       })
     },
     ['music']: () => {
-      window.open(asset.url, '_blank')
+      showModal({
+        template: 'AssetAudio',
+        data: {
+          asset,
+        },
+        size: 'auto',
+      })
     },
     ['image']: () => {
       showModal({
