@@ -193,7 +193,7 @@ const setupConnectedProfile = async () => {
 
   try {
     assertAddress(connectedProfileAddress.value)
-    await setupProfile(connectedProfileAddress.value)
+    // await setupProfile(connectedProfileAddress.value)
   } catch (error) {
     // if we can't find connected profile in the index we should disconnect it
     // it also happens when user redirect to different network through query param while being connected
@@ -209,7 +209,7 @@ onMounted(async () => {
   await setupWeb3Instances()
   checkConnectionExpiry()
   await routerBackProfileLoad()
-  await setupViewedProfile()
+  // await setupViewedProfile()
   await setupConnectedProfile()
 
   isLoadedApp.value = true

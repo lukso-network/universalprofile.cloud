@@ -3465,10 +3465,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.18.1":
-  version: 5.18.1
-  resolution: "@tanstack/query-core@npm:5.18.1"
-  checksum: e832388e2033d6ae16eb9b9343e3d7a6f304f74ec74b16e4154417d2771aa9aa3f2659046223731d4eacb4e1ee125d98de330dd4208d9369fe0a81f5436c4847
+"@tanstack/query-core@npm:^5.20.5":
+  version: 5.20.5
+  resolution: "@tanstack/query-core@npm:5.20.5"
+  checksum: ca495a213850a79a23ea45a4e22982e06eea07959f7cf5062c154dc8c7fc01f7cc7f1f8abf74cdb2a9f38347f1df9a39238fbee6cd49662e464064d92cf1c48b
   languageName: node
   linkType: hard
 
@@ -3476,6 +3476,25 @@ __metadata:
   version: 5.18.1
   resolution: "@tanstack/query-devtools@npm:5.18.1"
   checksum: 7514ad0eb5516bed6b96e42590639e529a4585181205001dfc5c3fc096bfc48a583d8570c756539eca742b3c6946ee06439b4791c31102496878f0efe908fa6b
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-persist-client-core@npm:5.22.2, @tanstack/query-persist-client-core@npm:^5.22.2":
+  version: 5.22.2
+  resolution: "@tanstack/query-persist-client-core@npm:5.22.2"
+  dependencies:
+    "@tanstack/query-core": "npm:5.22.2"
+  checksum: 1a3217b6d6744dc0803bc3d5b483d9a648969186d6312d4c63fa2b659841593bca38ae2cf468230d6aec182913e90d7d049978244ce8679943b190178d23b5d1
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-sync-storage-persister@npm:^5.22.2":
+  version: 5.22.2
+  resolution: "@tanstack/query-sync-storage-persister@npm:5.22.2"
+  dependencies:
+    "@tanstack/query-core": "npm:5.22.2"
+    "@tanstack/query-persist-client-core": "npm:5.22.2"
+  checksum: 591ad7d52ddd4181e5d2adeefbfb7b5d28c9c05c592c6d37296f3e5864df0447bf76dd23841d697d06983d9da63deb2e41b6b1e7864c78113b2a92d9aae586a6
   languageName: node
   linkType: hard
 
@@ -10690,6 +10709,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"just-performance@npm:4.3.0":
+  version: 4.3.0
+  resolution: "just-performance@npm:4.3.0"
+  checksum: 5e5f0664f357d291aac9ccca6357b997254600f2d2dd429e9b63e058035c44b6b1c73dbae51f58af7918c0701db4b20d4f365ed61e77d87c92a0183efb77a72a
+  languageName: node
+  linkType: hard
+
 "keccak@npm:3.0.2":
   version: 3.0.2
   resolution: "keccak@npm:3.0.2"
@@ -10954,6 +10980,15 @@ __metadata:
   version: 2.1.0
   resolution: "lilconfig@npm:2.1.0"
   checksum: b1314a2e55319013d5e7d7d08be39015829d2764a1eaee130129545d40388499d81b1c31b0f9b3417d4db12775a88008b72ec33dd06e0184cf7503b32ca7cc0b
+  languageName: node
+  linkType: hard
+
+"limiter@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "limiter@npm:2.1.0"
+  dependencies:
+    just-performance: "npm:4.3.0"
+  checksum: d6292c2a576fe7c4664652a64d286cb3701dd18e1878e01207840d809c62ce6db46ec6ee5e2ab53d548cb56152d0aeeb8555e32fe9177fcb4b04983ef04f805e
   languageName: node
   linkType: hard
 
@@ -17505,6 +17540,9 @@ __metadata:
     "@sentry/types": "npm:^7.91.0"
     "@sentry/vite-plugin": "npm:^2.10.2"
     "@sentry/vue": "npm:^7.91.0"
+    "@tanstack/query-core": "npm:^5.20.5"
+    "@tanstack/query-persist-client-core": "npm:^5.22.2"
+    "@tanstack/query-sync-storage-persister": "npm:^5.22.2"
     "@tanstack/vue-query": "npm:^5.18.1"
     "@tanstack/vue-query-devtools": "npm:^5.18.1"
     "@typechain/web3-v1": "npm:^6.0.7"
@@ -17533,6 +17571,7 @@ __metadata:
     happy-dom: "npm:^13.3.8"
     https-browserify: "npm:1.0.0"
     husky: "npm:8.0.3"
+    limiter: "npm:^2.1.0"
     lint-staged: "npm:15.2.0"
     npm-run-all: "npm:4.1.5"
     nuxt: "npm:^3.9.1"

@@ -1,7 +1,7 @@
 export const useAsset = (assetAddress: Address, tokenId = '0x') => {
   const { isConnected } = storeToRefs(useAppStore())
   const { connectedProfile } = useConnectedProfile()
-  const queryClient = useQueryClient()
+  // const queryClient = useQueryClient()
   const assetRepo = useRepo(AssetRepository)
 
   const { isPending: isLoading, data: assets } = useQuery({
@@ -34,9 +34,9 @@ export const useAsset = (assetAddress: Address, tokenId = '0x') => {
   // when we detect that user is connected we refetch the asset to update balance
   watch(connectedProfile, () => {
     if (connectedProfile.value?.address) {
-      queryClient.invalidateQueries({
-        queryKey: ['asset', assetAddress, tokenId],
-      })
+      // queryClient.invalidateQueries({
+      //   queryKey: ['asset', assetAddress, tokenId],
+      // })
     }
   })
 
