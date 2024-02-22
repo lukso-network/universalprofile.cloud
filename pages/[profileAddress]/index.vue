@@ -65,9 +65,6 @@ const queries = computed<{ queryKey: string[] }[]>(() => {
               'tokenIdsOf(address)',
               viewedProfileAddress,
             ],
-            select(ids: any) {
-              return ABICoder.decodeParameter('bytes32[]', ids)
-            },
           },
           ...interfacesToCheck.map((interfacesToCheck: string) => {
             return {
@@ -78,9 +75,6 @@ const queries = computed<{ queryKey: string[] }[]>(() => {
                 'supportsInterface(bytes4)',
                 interfacesToCheck,
               ],
-              select(state: any) {
-                return hexToNumber(state) !== 0
-              },
             }
           }),
         ] as { queryKey: string[] }[]
@@ -101,26 +95,16 @@ const tokenIdsQueries = computed(() => {
       )
       .flatMap((item: any, index: number) => {
         const query = queries.value[index]
-        return item.isFetched
+        return item.isFetched && item.data?.map
           ? item.data?.map((tokenId: string) => {
               return {
                 queryKey: [
-                  'call',
+                  'tokenData',
                   currentNetwork.value.chainId,
                   query.queryKey[2],
-                  'getDataForTokenId',
                   tokenId,
-                  keccak256('LSP4Metadata'),
+                  'LSP4Metadata',
                 ],
-                select(data: any) {
-                  if (data === '0x') {
-                    return null
-                  }
-                  return ERC725.decodeData(
-                    [{ keyName: 'LSP4Metadata', value: data }],
-                    defaultSchema
-                  )[0].value
-                },
               }
             }) || []
           : []

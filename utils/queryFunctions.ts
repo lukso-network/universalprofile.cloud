@@ -1,5 +1,6 @@
 import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 import LSP7DigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
+import LSP4DigitalAssetMetadataContract from '@lukso/lsp-smart-contracts/artifacts/LSP4DigitalAssetMetadata.json'
 import LSP4Schema from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json'
 import LSP3Schema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
 import LSP8Schema from '@erc725/erc725.js/schemas/LSP8IdentifiableDigitalAsset.json'
@@ -14,19 +15,28 @@ import { type QueryKey } from '@tanstack/vue-query'
 import LSP2FetcherWithMulticall3Contract from './LSP2FetcherWithMulticall3.json'
 
 import type { LSP2FetcherWithMulticall3 } from '@/types/contracts/utils'
-import type { LSP8IdentifiableDigitalAsset } from '@/types/contracts/LSP8IdentifiableDigitalAsset'
-import type { LSP7DigitalAsset } from '@/types/contracts/LSP7DigitalAsset'
 
 export type QueryPromiseCallOptions = {
   type: 'call'
+  chainId: string
   address: Address
   method: string
   args: unknown[]
 }
 export type QueryPromiseDataOptions = {
   type: 'data'
+  chainId: string
   address: Address
   keyName: string
+  dynamicKeyParts?: string | string[]
+  schema?: ERC725JSONSchema[]
+}
+export type QueryPromiseTokenDataOptions = {
+  type: 'tokenData'
+  chainId: string
+  address: Address
+  keyName: string
+  tokenId: `0x${string}`
   dynamicKeyParts?: string | string[]
   schema?: ERC725JSONSchema[]
 }
@@ -56,6 +66,7 @@ function capture(): DeferCapture {
       resolve(value)
     }
     output.reject = error => {
+      console.log(error)
       reject(error)
     }
   })
@@ -71,9 +82,22 @@ export function createQueryPromise<T = unknown, O = QueryPromiseOptions>(
 }
 
 let queryTimer: NodeJS.Timeout | undefined
-const callQueryList: Array<QueryPromise<unknown, QueryPromiseCallOptions>> = []
-const dataQueryList: Array<QueryPromise<unknown, QueryPromiseDataOptions>> = []
+const queryList: Array<
+  QueryPromise<
+    unknown,
+    | QueryPromiseCallOptions
+    | QueryPromiseDataOptions
+    | QueryPromiseTokenDataOptions
+  >
+> = []
 export const defaultSchema = LSP4Schema.concat(LSP3Schema, LSP8Schema)
+export const defaultAbi = (
+  LSP8IdentifiableDigitalAssetContract.abi as AbiItem[]
+).concat(
+  LSP7DigitalAssetContract.abi as AbiItem[],
+  LSP4DigitalAssetMetadataContract.abi as AbiItem[],
+  eip165ABI as AbiItem[]
+) as AbiItem[]
 
 // Allow 150 requests per hour (the Twitter search limit). Also understands
 // 'second', 'minute', 'day', or a number of milliseconds
@@ -94,33 +118,47 @@ function convert<T = any>(
 
 async function doQueries() {
   const { currentNetwork } = storeToRefs(useAppStore())
-  const LSP2ContractAddress = currentNetwork.value.customLSP2ContractAddress
-  const calls = callQueryList.splice(0, callQueryList.length)
-  const datas = dataQueryList.splice(0, dataQueryList.length)
-  const callsSplit = calls.reduce(
+  const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
+    currentNetwork.value
+  const allQueries = queryList.splice(0, queryList.length)
+  console.log(allQueries)
+  allQueries
+    .filter(query => query.chainId !== chainId)
+    .forEach(query => query.reject(new Error('Query cancelled')))
+  const queries = allQueries.filter(query => query.chainId === chainId)
+  const split: Record<
+    string,
+    {
+      call?: QueryPromise<unknown, QueryPromiseCallOptions>[]
+      data?: QueryPromise<unknown, QueryPromiseDataOptions>[]
+      tokenData?: QueryPromise<unknown, QueryPromiseTokenDataOptions>[]
+    }
+  > = queries.reduce(
     (acc, query) => {
       if (!acc[query.address]) {
-        acc[query.address] = { calls: [], datas: [] }
+        acc[query.address] = {}
       }
-      acc[query.address].calls.push(query)
+      let items = acc[query.address][query.type] as QueryPromise<
+        unknown,
+        | QueryPromiseCallOptions
+        | QueryPromiseDataOptions
+        | QueryPromiseTokenDataOptions
+      >[]
+      if (!items) {
+        items = acc[query.address][query.type] = []
+      }
+      items.push(query)
       return acc
     },
     {} as Record<
       string,
       {
-        calls: QueryPromise<unknown, QueryPromiseCallOptions>[]
-        datas: QueryPromise<unknown, QueryPromiseDataOptions>[]
+        call?: QueryPromise<unknown, QueryPromiseCallOptions>[]
+        data?: QueryPromise<unknown, QueryPromiseDataOptions>[]
+        tokenData?: QueryPromise<unknown, QueryPromiseTokenDataOptions>[]
       }
     >
   )
-
-  const split = datas.reduce((acc, query) => {
-    if (!acc[query.address]) {
-      acc[query.address] = { calls: [], datas: [] }
-    }
-    acc[query.address].datas.push(query)
-    return acc
-  }, callsSplit)
 
   const multicall: {
     index: number
@@ -128,7 +166,7 @@ async function doQueries() {
     call: string
     query?: QueryPromise<any>
     queries?: Array<QueryPromise<any>>
-    decoder?: (data: any) => any
+    selector?: (data: any) => any
   }[] = []
 
   const { contract } = useWeb3(PROVIDERS.RPC)
@@ -138,75 +176,152 @@ async function doQueries() {
   )
 
   try {
-    for (const [address, { datas, calls }] of Object.entries(split)) {
-      const lspContract = contract<
-        LSP8IdentifiableDigitalAsset | LSP7DigitalAsset
-      >(
-        LSP8IdentifiableDigitalAssetContract.abi.concat(
-          LSP7DigitalAssetContract.abi
-        ) as AbiItem[],
-        address
-      )
-
-      const plainKeys = datas.filter(({ keyName }) => !/\[\]$/.test(keyName))
-      if (plainKeys.length > 0) {
-        const fn = (lspContract.methods as any).getDataBatch(
-          plainKeys.map(({ keyName, dynamicKeyParts }) =>
-            ERC725.encodeKeyName(keyName, dynamicKeyParts)
-          )
+    for (const [address, { data, tokenData, call }] of Object.entries(split)) {
+      if (tokenData) {
+        const tokenIds = tokenData.reduce(
+          (
+            tokenIds: Record<
+              string,
+              QueryPromise<unknown, QueryPromiseTokenDataOptions>[]
+            >,
+            query
+          ) => {
+            const { address } = query
+            if (!tokenIds[address]) {
+              tokenIds[address] = []
+            }
+            tokenIds[address].push(query)
+            return tokenIds
+          },
+          {} as Record<
+            string,
+            QueryPromise<unknown, QueryPromiseTokenDataOptions>[]
+          >
         )
-        multicall.push({
-          index: multicall.length,
-          target: address,
-          call: fn.encodeABI(),
-          queries: plainKeys,
-        })
-      }
-      const arrayKeys = datas.filter(({ keyName }) => /\[\]$/.test(keyName))
-      if (arrayKeys.length > 0) {
-        for (const query of arrayKeys) {
-          const { keyName, dynamicKeyParts } = query
-          const fn = lsp2CustomContract.methods.fetchArrayWithElements(
-            address,
-            ERC725.encodeKeyName(keyName, dynamicKeyParts)
+        for (const tokenQueries of Object.values(tokenIds)) {
+          const { address } = tokenQueries[0]
+          const abi = LSP8IdentifiableDigitalAssetContract.abi.find(
+            ({ name }) => name === 'getDataBatchForTokenIds'
           )
+          const call = ABICoder.encodeFunctionCall(abi as AbiItem, [
+            tokenQueries.map(({ tokenId }) => tokenId) as unknown as string,
+            tokenQueries.map(({ keyName, dynamicKeyParts }) =>
+              ERC725.encodeKeyName(keyName, dynamicKeyParts)
+            ) as unknown as string,
+          ])
           multicall.push({
             index: multicall.length,
-            target: '0x0000000000000000000000000000000000000000',
-            call: fn.encodeABI(),
-            query,
-            decoder: data => {
-              return 'decode' in fn
-                ? (fn.decode as (data: any) => any)(data)
-                : data
+            target: address,
+            call,
+            queries: tokenQueries as unknown as QueryPromise<any>[],
+            selector: (data: string) => {
+              if (data === '0x') {
+                return null
+              }
+              return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
             },
           })
         }
       }
-      for (const query of calls) {
-        if (address === LSP2ContractAddress) {
-          const fn = (lsp2CustomContract.methods as any)[query.method]
-          if (fn) {
+
+      if (data) {
+        const plainKeys = data.filter(({ keyName }) => !/\[\]$/.test(keyName))
+        if (plainKeys.length > 0) {
+          const abi = LSP8IdentifiableDigitalAssetContract.abi.find(
+            ({ name }) => name === 'getDataBatch'
+          )
+          const call = ABICoder.encodeFunctionCall(
+            abi as AbiItem,
+            [
+              plainKeys.map(({ keyName, dynamicKeyParts }) =>
+                ERC725.encodeKeyName(keyName, dynamicKeyParts)
+              ),
+            ] as unknown as string[]
+          )
+          multicall.push({
+            index: multicall.length,
+            target: address,
+            call,
+            queries: plainKeys,
+            selector: (data: string) => {
+              if (data === '0x') {
+                return null
+              }
+              return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
+            },
+          })
+        }
+        const arrayKeys = data.filter(({ keyName }) => /\[\]$/.test(keyName))
+        if (arrayKeys.length > 0) {
+          for (const query of arrayKeys) {
+            const { keyName, dynamicKeyParts } = query
+            const abi = LSP2FetcherWithMulticall3Contract.abi.find(
+              ({ name }) => name === 'fetchArrayWithElements'
+            )
+            const call = ABICoder.encodeFunctionCall(abi as AbiItem, [
+              address,
+              ERC725.encodeKeyName(keyName, dynamicKeyParts),
+            ])
             multicall.push({
               index: multicall.length,
               target: '0x0000000000000000000000000000000000000000',
-              call: fn(...query.args).encodeABI() as string,
+              call,
               query,
+              selector: (data: string) => {
+                return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
+              },
             })
-          } else {
-            query.reject(new Error('Method not found'))
           }
-        } else {
-          const fn = (lspContract.methods as any)[query.method]
-          if (fn) {
-            multicall.push({
-              index: multicall.length,
-              target: address,
-              call: fn(...query.args).encodeABI(),
-              query,
-            })
+        }
+      }
+      if (call) {
+        for (const query of call) {
+          if (address === LSP2ContractAddress) {
+            const abi = (
+              LSP2FetcherWithMulticall3Contract.abi as AbiItem[]
+            ).find(({ name }) => name === 'fetchArrayWithElements')
+            if (abi) {
+              const call = ABICoder.encodeFunctionCall(
+                abi as AbiItem,
+                query.args as string[]
+              )
+              multicall.push({
+                index: multicall.length,
+                target: '0x0000000000000000000000000000000000000000',
+                call,
+                query,
+                selector: (data: string) => {
+                  return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
+                },
+              })
+            } else {
+              query.reject(new Error('Method not found'))
+            }
           } else {
-            query.reject(new Error('Method not found'))
+            const abi = defaultAbi.find(({ name, inputs }) => {
+              return (
+                name === query.method.replace(/\(.*$/, '') &&
+                `${name}(${inputs?.map(({ type }) => type).join(',')})` ===
+                  query.method
+              )
+            })
+            if (abi) {
+              const call = ABICoder.encodeFunctionCall(
+                abi as AbiItem,
+                query.args as string[]
+              )
+              multicall.push({
+                index: multicall.length,
+                target: address,
+                call,
+                query,
+                selector: (data: string) => {
+                  return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
+                },
+              })
+            } else {
+              query.reject(new Error('Method not found'))
+            }
           }
         }
       }
@@ -227,7 +342,7 @@ async function doQueries() {
         //   calls: multicall.map(({ call, target }) => ({ target, call })),
         //   output: result,
         // })
-        for (const [i, { query, queries }] of multicall.entries()) {
+        for (const [i, { query, queries, selector }] of multicall.entries()) {
           const [success, data] = result[i]
           if (queries) {
             const items = ABICoder.decodeParameters(
@@ -242,6 +357,10 @@ async function doQueries() {
                     query as QueryPromise<unknown, QueryPromiseDataOptions>,
                     item
                   )
+                } else if (selector) {
+                  const pre = item
+                  item = selector(item)
+                  console.log('selector', query.method, { pre, item })
                 }
                 if (success) {
                   query.resolve(item)
@@ -287,6 +406,10 @@ async function doQueries() {
                     item
                   )
                 }
+              } else if (selector) {
+                const pre = item
+                item = selector(item)
+                console.log('selector', query?.method, { pre, item })
               }
               query?.resolve(item)
             } else {
@@ -312,9 +435,7 @@ async function doQueries() {
     //   error,
     // })
     // console.error(error)
-    for (const query of (calls as QueryPromise<unknown, unknown>[]).concat(
-      datas as QueryPromise<unknown, unknown>[]
-    )) {
+    for (const query of queries) {
       query.reject(error)
     }
   }
@@ -337,24 +458,41 @@ export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
     doQueries()
   }, 250)
   if (queryKey[0] === 'call') {
-    const [address, method, ...args] = queryKey.slice(2)
+    const [chainId, address, method, ...args] = queryKey.slice(1)
     const query = createQueryPromise<T, QueryPromiseCallOptions>({
       type: 'call',
+      chainId: chainId as string,
       address: address as `0x${string}`,
       method: method as string,
       args,
     })
-    callQueryList.push(query as QueryPromise<unknown, QueryPromiseCallOptions>)
+    queryList.push(query as QueryPromise<unknown, QueryPromiseCallOptions>)
     return query.promise
   }
-  const [address, key, schema, dynamicKeyParts] = queryKey.slice(2)
+  if (queryKey[0] === 'tokenData') {
+    const [chainId, address, tokenId, key, schema, dynamicKeyParts] =
+      queryKey.slice(1)
+    const query = createQueryPromise<T, QueryPromiseTokenDataOptions>({
+      type: 'tokenData',
+      chainId: chainId as string,
+      address: address as `0x${string}`,
+      keyName: key as string,
+      tokenId: tokenId as `0x${string}`,
+      schema: schema as ERC725JSONSchema[] | undefined,
+      dynamicKeyParts: dynamicKeyParts as string | string[] | undefined,
+    })
+    queryList.push(query as QueryPromise<unknown, QueryPromiseTokenDataOptions>)
+    return query.promise
+  }
+  const [chainId, address, key, schema, dynamicKeyParts] = queryKey.slice(1)
   const query = createQueryPromise<T, QueryPromiseDataOptions>({
     type: 'data',
+    chainId: chainId as string,
     address: address as `0x${string}`,
     keyName: key as string,
     schema: schema as ERC725JSONSchema[] | undefined,
     dynamicKeyParts: dynamicKeyParts as string | string[] | undefined,
   })
-  dataQueryList.push(query as QueryPromise<unknown, QueryPromiseDataOptions>)
+  queryList.push(query as QueryPromise<unknown, QueryPromiseDataOptions>)
   return query.promise
 }
