@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { useQueries } from '@tanstack/vue-query'
-import { hexToNumber, keccak256 } from 'web3-utils'
-import ABICoder from 'web3-eth-abi'
-import ERC725 from '@erc725/erc725.js'
 
-import { defaultSchema } from '../../utils/queryFunctions'
 const viewedProfileAddress = getCurrentProfileAddress()
 const { currentNetwork } = storeToRefs(useAppStore())
 const rootQueries = computed(() => [

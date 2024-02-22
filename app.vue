@@ -165,17 +165,17 @@ const setupNetwork = async () => {
 /**
  * Load viewed profile data
  */
-const setupViewedProfile = async () => {
-  const profileAddress = useRouter().currentRoute.value.params?.profileAddress
+// const setupViewedProfile = async () => {
+//   const profileAddress = useRouter().currentRoute.value.params?.profileAddress
 
-  try {
-    await setupProfile(profileAddress)
-  } catch (error: unknown) {
-    if (error instanceof NotFoundIndexError) {
-      navigateTo(notFoundRoute())
-    }
-  }
-}
+//   try {
+//     await setupProfile(profileAddress)
+//   } catch (error: unknown) {
+//     if (error instanceof NotFoundIndexError) {
+//       navigateTo(notFoundRoute())
+//     }
+//   }
+// }
 
 /**
  * Load connected profile data, this is mainly when refreshing asset details

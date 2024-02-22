@@ -1,3 +1,5 @@
+import { useQueries } from '@tanstack/vue-query'
+
 export const useCreators = (asset?: Asset) => {
   // when asset has no creators in array we use owner as fallback
   const creatorAddressesOrOwner = computed(() => {

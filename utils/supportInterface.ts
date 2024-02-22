@@ -1,5 +1,5 @@
-import type { AbiItem } from 'web3-utils'
-import type { LSP0ERC725Account } from '@/types/contracts'
+// import type { AbiItem } from 'web3-utils'
+// import type { LSP0ERC725Account } from '@/types/contracts'
 
 /**
  * Checks if a smart contract supports a given interface.
@@ -10,19 +10,20 @@ import type { LSP0ERC725Account } from '@/types/contracts'
  * @returns true/false whether the transaction supports the interface or not
  */
 export const supportInterface = async (
-  address: Address,
-  interfaceId: string
+  _address: Address,
+  _interfaceId: string
 ): Promise<boolean> => {
-  const { contract } = useWeb3(PROVIDERS.RPC)
+  return false
+  // const { contract } = useWeb3(PROVIDERS.RPC)
 
-  try {
-    const eip165Contract = contract<LSP0ERC725Account>(
-      eip165ABI as AbiItem[],
-      address
-    )
-    return await eip165Contract.methods.supportsInterface(interfaceId).call()
-  } catch (error: unknown) {
-    console.error(error)
-    return false
-  }
+  // try {
+  //   const eip165Contract = contract<LSP0ERC725Account>(
+  //     eip165ABI as AbiItem[],
+  //     address
+  //   )
+  //   return await eip165Contract.methods.supportsInterface(interfaceId).call()
+  // } catch (error: unknown) {
+  //   console.error(error)
+  //   return false
+  // }
 }
