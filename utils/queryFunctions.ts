@@ -66,7 +66,6 @@ function capture(): DeferCapture {
       resolve(value)
     }
     output.reject = error => {
-      console.log(error)
       reject(error)
     }
   })
@@ -121,7 +120,6 @@ async function doQueries() {
   const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
     currentNetwork.value
   const allQueries = queryList.splice(0, queryList.length)
-  console.log(allQueries)
   allQueries
     .filter(query => query.chainId !== chainId)
     .forEach(query => query.reject(new Error('Query cancelled')))
@@ -331,17 +329,6 @@ async function doQueries() {
       .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
       .call()
       .then((result: [boolean, string][]) => {
-        // console.log('multicall success', {
-        //   length: multicall.length,
-        //   data: lsp2CustomContract.methods
-        //     .aggregate3(
-        //       multicall.map(({ target, call }) => [target, true, call])
-        //     )
-        //     .encodeABI(),
-        //   target: LSP2ContractAddress,
-        //   calls: multicall.map(({ call, target }) => ({ target, call })),
-        //   output: result,
-        // })
         for (const [i, { query, queries, selector }] of multicall.entries()) {
           const [success, data] = result[i]
           if (queries) {
@@ -358,9 +345,7 @@ async function doQueries() {
                     item
                   )
                 } else if (selector) {
-                  const pre = item
                   item = selector(item)
-                  console.log('selector', query.method, { pre, item })
                 }
                 if (success) {
                   query.resolve(item)
@@ -407,9 +392,7 @@ async function doQueries() {
                   )
                 }
               } else if (selector) {
-                const pre = item
                 item = selector(item)
-                console.log('selector', query?.method, { pre, item })
               }
               query?.resolve(item)
             } else {
@@ -425,16 +408,6 @@ async function doQueries() {
         }
       })
   } catch (error) {
-    // console.log('multicall failure', {
-    //   length: multicall.length,
-    //   data: lsp2CustomContract.methods
-    //     .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
-    //     .encodeABI(),
-    //   target: LSP2ContractAddress,
-    //   calls: multicall.map(({ call, target }) => ({ target, call })),
-    //   error,
-    // })
-    // console.error(error)
     for (const query of queries) {
       query.reject(error)
     }

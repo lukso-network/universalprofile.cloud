@@ -26,7 +26,6 @@ export default defineNuxtConfig({
     '@nuxtjs/algolia',
     '@pinia-orm/nuxt',
     '@nuxt/test-utils/module',
-    // '@hebilicious/vue-query-nuxt',
   ],
   plausible: {
     domain: 'wallet.universalprofile.cloud',

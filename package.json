@@ -34,7 +34,6 @@
     "@erc725/erc725.js": "^0.23.0",
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.9",
-    "@hebilicious/vue-query-nuxt": "^0.3.0",
     "@lukso/lsp-smart-contracts": "0.14.0",
     "@lukso/lsp-smart-contracts-12": "npm:@lukso/lsp-smart-contracts@0.12.1",
     "@lukso/web-components": "1.59.0",
