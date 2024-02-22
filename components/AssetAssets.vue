@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { viewedProfile } = useViewedProfile()
+
 type Props = {
   assets: AssetMetadata[]
 }
@@ -7,7 +9,7 @@ defineProps<Props>()
 const { formatMessage } = useIntl()
 
 const assetFileType = (asset: AssetMetadata) => {
-  const assetType = getAssetFileType(asset)
+  const assetType = getAssetType(asset)
 
   return {
     ['document']: () => ({
@@ -30,6 +32,10 @@ const assetFileType = (asset: AssetMetadata) => {
       icon: 'cube-outline',
       text: formatMessage('token_asset_type_3d'),
     }),
+    ['contract']: () => ({
+      icon: 'smart-contract-doc',
+      text: formatMessage('token_asset_type_contract'),
+    }),
     ['other']: () => ({
       icon: 'document-outline',
       text: formatMessage('token_asset_type_other'),
@@ -39,11 +45,11 @@ const assetFileType = (asset: AssetMetadata) => {
 
 const handlePreviewAsset = (asset: AssetMetadata) => {
   const { showModal } = useModal()
-  const assetType = getAssetFileType(asset)
+  const assetType = getAssetType(asset)
 
   return {
     ['document']: () => {
-      window.open(asset.url, '_blank')
+      'url' in asset && window.open(asset.url, '_blank')
     },
     ['video']: () => {
       showModal({
@@ -81,8 +87,26 @@ const handlePreviewAsset = (asset: AssetMetadata) => {
         size: 'auto',
       })
     },
+    ['contract']: async () => {
+      if (!('address' in asset)) {
+        return
+      }
+      const tokenId = 'tokenId' in asset && asset.tokenId ? asset.tokenId : '0x'
+      assertAddress(asset.address)
+      const [fetchedAsset] = await fetchAsset(
+        asset.address,
+        viewedProfile.value?.address,
+        [tokenId]
+      )
+
+      if (isCollectible(fetchedAsset) && fetchedAsset?.tokenId) {
+        navigateTo(nftRoute(asset.address, fetchedAsset.tokenId))
+      } else {
+        navigateTo(tokenRoute(asset.address))
+      }
+    },
     ['other']: () => {
-      window.open(asset.url, '_blank')
+      'url' in asset && window.open(asset.url, '_blank')
     },
   }[assetType]()
 }

@@ -16,11 +16,7 @@ declare global {
     type: string | number | boolean
   }
 
-  type AssetMetadata = {
-    verification?: Verification
-    url: string
-    fileType: string
-  }
+  type AssetMetadata = FileAsset | ContractAsset
 
   type FileAsset = {
     verification?: Verification
