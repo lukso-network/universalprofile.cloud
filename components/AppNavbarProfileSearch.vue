@@ -90,7 +90,6 @@ watchEffect(() => {
     :is-searching="isSearching ? 'true' : undefined"
     :show-no-results="hasNoResults ? 'true' : undefined"
     :no-results-text="$formatMessage('profile_search_no_results')"
-    autofocus
     is-full-width
     class="w-full"
     @on-search="handleSearch"
