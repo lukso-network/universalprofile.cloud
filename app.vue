@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { isAddress } from 'web3-utils'
-import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
+// import { isAddress } from 'web3-utils'
+// import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 
 import { assertString } from '@/utils/validators'
 import { SUPPORTED_NETWORK_IDS } from '@/shared/config'
@@ -121,22 +121,22 @@ const setupCurrencies = async () => {
  *
  * @param profileAddress - the profile address to load
  */
-const setupProfile = async (profileAddress: Address) => {
-  // verify profile address
-  if (profileAddress) {
-    if (!isAddress(profileAddress)) {
-      return navigateTo(notFoundRoute())
-    }
-  } else {
-    return
-  }
+// const setupProfile = async (profileAddress: Address) => {
+//   // verify profile address
+//   if (profileAddress) {
+//     if (!isAddress(profileAddress)) {
+//       return navigateTo(notFoundRoute())
+//     }
+//   } else {
+//     return
+//   }
 
-  // fetch profile metadata
-  await fetchAndStoreProfile(profileAddress)
+//   // fetch profile metadata
+//   await fetchAndStoreProfile(profileAddress)
 
-  // fetch asset metadata
-  fetchAndStoreAssets(profileAddress)
-}
+//   // fetch asset metadata
+//   fetchAndStoreAssets(profileAddress)
+// }
 
 /**
  * Setup network based on `network` query param.

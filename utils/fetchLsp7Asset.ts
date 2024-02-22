@@ -1,8 +1,8 @@
-import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
+// import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
 
-import type { AbiItem } from 'web3-utils'
+// import type { AbiItem } from 'web3-utils'
 // import type { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/types/contracts'
-import type { Image } from '@/types/image'
+// import type { Image } from '@/types/image'
 
 export const createLsp7Object = async (
   _address: Address,
