@@ -74,7 +74,6 @@ let queryTimer: NodeJS.Timeout | undefined
 const callQueryList: Array<QueryPromise<unknown, QueryPromiseCallOptions>> = []
 const dataQueryList: Array<QueryPromise<unknown, QueryPromiseDataOptions>> = []
 export const defaultSchema = LSP4Schema.concat(LSP3Schema, LSP8Schema)
-const LSP2ContractAddress = '0x87B343Ee4186f4d0af5183e3484156b948F03881'
 
 // Allow 150 requests per hour (the Twitter search limit). Also understands
 // 'second', 'minute', 'day', or a number of milliseconds
@@ -94,6 +93,8 @@ function convert<T = any>(
 }
 
 async function doQueries() {
+  const { currentNetwork } = storeToRefs(useAppStore())
+  const LSP2ContractAddress = currentNetwork.value.customLSP2ContractAddress
   const calls = callQueryList.splice(0, callQueryList.length)
   const datas = dataQueryList.splice(0, dataQueryList.length)
   const callsSplit = calls.reduce(
@@ -336,7 +337,7 @@ export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
     doQueries()
   }, 250)
   if (queryKey[0] === 'call') {
-    const [address, method, ...args] = queryKey.slice(1)
+    const [address, method, ...args] = queryKey.slice(2)
     const query = createQueryPromise<T, QueryPromiseCallOptions>({
       type: 'call',
       address: address as `0x${string}`,
@@ -346,7 +347,7 @@ export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
     callQueryList.push(query as QueryPromise<unknown, QueryPromiseCallOptions>)
     return query.promise
   }
-  const [address, key, schema, dynamicKeyParts] = queryKey.slice(1)
+  const [address, key, schema, dynamicKeyParts] = queryKey.slice(2)
   const query = createQueryPromise<T, QueryPromiseDataOptions>({
     type: 'data',
     address: address as `0x${string}`,

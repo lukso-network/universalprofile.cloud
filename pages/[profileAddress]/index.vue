@@ -6,18 +6,39 @@ import ERC725 from '@erc725/erc725.js'
 
 import { defaultSchema } from '../../utils/queryFunctions'
 const viewedProfileAddress = getCurrentProfileAddress()
+const { currentNetwork } = storeToRefs(useAppStore())
 const rootQueries = computed(() => [
   {
-    queryKey: ['data', viewedProfileAddress, 'LSP4Metadata'],
+    queryKey: [
+      'data',
+      currentNetwork.value.chainId,
+      viewedProfileAddress,
+      'LSP4Metadata',
+    ],
   },
   {
-    queryKey: ['data', viewedProfileAddress, 'LSP3Profile'],
+    queryKey: [
+      'data',
+      currentNetwork.value.chainId,
+      viewedProfileAddress,
+      'LSP3Profile',
+    ],
   },
   {
-    queryKey: ['data', viewedProfileAddress, 'LSP12IssuedAssets[]'],
+    queryKey: [
+      'data',
+      currentNetwork.value.chainId,
+      viewedProfileAddress,
+      'LSP12IssuedAssets[]',
+    ],
   },
   {
-    queryKey: ['data', viewedProfileAddress, 'LSP5ReceivedAssets[]'],
+    queryKey: [
+      'data',
+      currentNetwork.value.chainId,
+      viewedProfileAddress,
+      'LSP5ReceivedAssets[]',
+    ],
   },
 ])
 const results = useQueries({
@@ -29,11 +50,17 @@ const queries = computed<{ queryKey: string[] }[]>(() => {
       (item: string) => {
         return [
           {
-            queryKey: ['data', item, 'LSP4Metadata'],
+            queryKey: [
+              'data',
+              currentNetwork.value.chainId,
+              item,
+              'LSP4Metadata',
+            ],
           },
           {
             queryKey: [
               'call',
+              currentNetwork.value.chainId,
               item,
               'tokenIdsOf(address)',
               viewedProfileAddress,
@@ -46,6 +73,7 @@ const queries = computed<{ queryKey: string[] }[]>(() => {
             return {
               queryKey: [
                 'call',
+                currentNetwork.value.chainId,
                 item,
                 'supportsInterface(bytes4)',
                 interfacesToCheck,
@@ -69,7 +97,7 @@ const tokenIdsQueries = computed(() => {
     return items.value
       .filter(
         (_, index: number) =>
-          queries.value[index].queryKey[2] === 'tokenIdsOf(address)'
+          queries.value[index].queryKey[3] === 'tokenIdsOf(address)'
       )
       .flatMap((item: any, index: number) => {
         const query = queries.value[index]
@@ -78,7 +106,8 @@ const tokenIdsQueries = computed(() => {
               return {
                 queryKey: [
                   'call',
-                  query.queryKey[1],
+                  currentNetwork.value.chainId,
+                  query.queryKey[2],
                   'getDataForTokenId',
                   tokenId,
                   keccak256('LSP4Metadata'),
