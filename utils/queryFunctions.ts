@@ -35,8 +35,8 @@ export type QueryPromiseOptions =
   | QueryPromiseDataOptions
 
 type DeferCapture<T = unknown, E = unknown> = {
-  resolve: (result: T) => void
-  reject: (error: E) => void
+  resolve(result: T): void
+  reject(error: E): void
   promise: Promise<T>
   [key: string]: unknown
 }
@@ -44,8 +44,7 @@ type DeferCapture<T = unknown, E = unknown> = {
 export type QueryPromise<
   T = unknown,
   O = QueryPromiseOptions,
-> = DeferCapture<T> &
-  O & { resolve: (result: unknown) => void; reject: (error: unknown) => void }
+> = DeferCapture<T> & O
 
 function capture(): DeferCapture {
   const output: DeferCapture = {
@@ -53,8 +52,12 @@ function capture(): DeferCapture {
     reject: () => {},
   } as unknown as DeferCapture
   output.promise = new Promise((resolve, reject) => {
-    output.resolve = resolve
-    output.reject = reject
+    output.resolve = value => {
+      resolve(value)
+    }
+    output.reject = error => {
+      reject(error)
+    }
   })
   return output
 }
@@ -70,8 +73,8 @@ export function createQueryPromise<T = unknown, O = QueryPromiseOptions>(
 let queryTimer: NodeJS.Timeout | undefined
 const callQueryList: Array<QueryPromise<unknown, QueryPromiseCallOptions>> = []
 const dataQueryList: Array<QueryPromise<unknown, QueryPromiseDataOptions>> = []
-const defaultSchema = LSP4Schema.concat(LSP3Schema, LSP8Schema)
-const LSP2ContractAddress = '0x76b872b9936efdd315ba3b78f730d9236de7f5ce'
+export const defaultSchema = LSP4Schema.concat(LSP3Schema, LSP8Schema)
+const LSP2ContractAddress = '0x87B343Ee4186f4d0af5183e3484156b948F03881'
 
 // Allow 150 requests per hour (the Twitter search limit). Also understands
 // 'second', 'minute', 'day', or a number of milliseconds
@@ -93,7 +96,6 @@ function convert<T = any>(
 async function doQueries() {
   const calls = callQueryList.splice(0, callQueryList.length)
   const datas = dataQueryList.splice(0, dataQueryList.length)
-  console.log('doQueries', calls.length, datas.length)
   const callsSplit = calls.reduce(
     (acc, query) => {
       if (!acc[query.address]) {
@@ -125,6 +127,7 @@ async function doQueries() {
     call: string
     query?: QueryPromise<any>
     queries?: Array<QueryPromise<any>>
+    decoder?: (data: any) => any
   }[] = []
 
   const { contract } = useWeb3(PROVIDERS.RPC)
@@ -146,16 +149,15 @@ async function doQueries() {
 
       const plainKeys = datas.filter(({ keyName }) => !/\[\]$/.test(keyName))
       if (plainKeys.length > 0) {
+        const fn = (lspContract.methods as any).getDataBatch(
+          plainKeys.map(({ keyName, dynamicKeyParts }) =>
+            ERC725.encodeKeyName(keyName, dynamicKeyParts)
+          )
+        )
         multicall.push({
           index: multicall.length,
           target: address,
-          call: (lspContract.methods as any)
-            .getDataBatch(
-              plainKeys.map(({ keyName, dynamicKeyParts }) =>
-                ERC725.encodeKeyName(keyName, dynamicKeyParts)
-              )
-            )
-            .encodeABI(),
+          call: fn.encodeABI(),
           queries: plainKeys,
         })
       }
@@ -163,47 +165,67 @@ async function doQueries() {
       if (arrayKeys.length > 0) {
         for (const query of arrayKeys) {
           const { keyName, dynamicKeyParts } = query
+          const fn = lsp2CustomContract.methods.fetchArrayWithElements(
+            address,
+            ERC725.encodeKeyName(keyName, dynamicKeyParts)
+          )
           multicall.push({
             index: multicall.length,
             target: '0x0000000000000000000000000000000000000000',
-            call: lsp2CustomContract.methods
-              .fetchArrayWithElements(
-                address,
-                ERC725.encodeKeyName(keyName, dynamicKeyParts)
-              )
-              .encodeABI(),
+            call: fn.encodeABI(),
             query,
+            decoder: data => {
+              return 'decode' in fn
+                ? (fn.decode as (data: any) => any)(data)
+                : data
+            },
           })
         }
       }
       for (const query of calls) {
         if (address === LSP2ContractAddress) {
-          multicall.push({
-            index: multicall.length,
-            target: '0x0000000000000000000000000000000000000000',
-            call: (lsp2CustomContract.methods as any)
-              [query.method](...query.args)
-              .encodeABI() as string,
-            query,
-          })
+          const fn = (lsp2CustomContract.methods as any)[query.method]
+          if (fn) {
+            multicall.push({
+              index: multicall.length,
+              target: '0x0000000000000000000000000000000000000000',
+              call: fn(...query.args).encodeABI() as string,
+              query,
+            })
+          } else {
+            query.reject(new Error('Method not found'))
+          }
         } else {
-          multicall.push({
-            index: multicall.length,
-            target: address,
-            call: (lspContract.methods as any)
-              [query.method](...query.args)
-              .encodeABI(),
-            query,
-          })
+          const fn = (lspContract.methods as any)[query.method]
+          if (fn) {
+            multicall.push({
+              index: multicall.length,
+              target: address,
+              call: fn(...query.args).encodeABI(),
+              query,
+            })
+          } else {
+            query.reject(new Error('Method not found'))
+          }
         }
       }
     }
     await limiter.removeTokens(1)
-    console.log('multicall', multicall.length)
     await lsp2CustomContract.methods
       .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
       .call()
       .then((result: [boolean, string][]) => {
+        // console.log('multicall success', {
+        //   length: multicall.length,
+        //   data: lsp2CustomContract.methods
+        //     .aggregate3(
+        //       multicall.map(({ target, call }) => [target, true, call])
+        //     )
+        //     .encodeABI(),
+        //   target: LSP2ContractAddress,
+        //   calls: multicall.map(({ call, target }) => ({ target, call })),
+        //   output: result,
+        // })
         for (const [i, { query, queries }] of multicall.entries()) {
           const [success, data] = result[i]
           if (queries) {
@@ -279,7 +301,16 @@ async function doQueries() {
         }
       })
   } catch (error) {
-    console.error(error)
+    // console.log('multicall failure', {
+    //   length: multicall.length,
+    //   data: lsp2CustomContract.methods
+    //     .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
+    //     .encodeABI(),
+    //   target: LSP2ContractAddress,
+    //   calls: multicall.map(({ call, target }) => ({ target, call })),
+    //   error,
+    // })
+    // console.error(error)
     for (const query of (calls as QueryPromise<unknown, unknown>[]).concat(
       datas as QueryPromise<unknown, unknown>[]
     )) {
@@ -300,7 +331,10 @@ export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
   if (queryTimer) {
     clearTimeout(queryTimer)
   }
-  console.log('query requested')
+  queryTimer = setTimeout(() => {
+    queryTimer = undefined
+    doQueries()
+  }, 250)
   if (queryKey[0] === 'call') {
     const [address, method, ...args] = queryKey.slice(1)
     const query = createQueryPromise<T, QueryPromiseCallOptions>({
@@ -321,9 +355,5 @@ export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
     dynamicKeyParts: dynamicKeyParts as string | string[] | undefined,
   })
   dataQueryList.push(query as QueryPromise<unknown, QueryPromiseDataOptions>)
-  queryTimer = setTimeout(() => {
-    queryTimer = undefined
-    doQueries()
-  }, 250)
   return query.promise
 }
