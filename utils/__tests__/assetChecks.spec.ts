@@ -153,3 +153,32 @@ describe('hasTokenId', () => {
     expect(hasTokenId({})).toBe(false)
   })
 })
+
+describe('isAsset', () => {
+  test('should return true if the asset is LSP7 or LSP8', async () => {
+    expect(
+      isAsset({
+        standard: STANDARDS.LSP7,
+      })
+    ).toBe(true)
+    expect(
+      isAsset({
+        standard: STANDARDS.LSP8,
+      })
+    ).toBe(true)
+  })
+
+  test('should return false if the asset is other smart contract', async () => {
+    expect(
+      isAsset({
+        standard: STANDARDS.EOA,
+      })
+    ).toBe(false)
+    expect(
+      isAsset({
+        standard: STANDARDS.LSP3,
+      })
+    ).toBe(false)
+    expect(hasTokenId({})).toBe(false)
+  })
+})
