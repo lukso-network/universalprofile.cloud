@@ -26,3 +26,16 @@ test('getAssetType', () => {
     })
   ).toEqual('contract')
 })
+
+test('getFileExtension', () => {
+  expect(getFileExtension('application/pdf')).toEqual('pdf')
+  expect(getFileExtension('pdf')).toEqual('pdf')
+  expect(getFileExtension('audio/mpeg')).toEqual('mpga')
+  expect(getFileExtension('wav')).toEqual('wav')
+  expect(getFileExtension('mp3')).toEqual('mp3')
+  expect(getFileExtension('video/mp4')).toEqual('mp4')
+  expect(getFileExtension('avi')).toEqual('avi')
+  expect(getFileExtension('video/x-msvideo')).toEqual('avi')
+  expect(getFileExtension('image/png')).toEqual('png')
+  expect(getFileExtension('png')).toEqual('png')
+})

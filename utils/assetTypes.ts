@@ -1,36 +1,10 @@
 import { isAddress } from 'web3-utils'
+import mime from 'mime-to-extensions'
 
-const DOCUMENT_FILE_TYPES = [
-  // file extensions
-  'doc',
-  'docx',
-  'pdf',
-  'txt',
-  // mime types
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'text/plain',
-]
-const MUSIC_FILE_TYPES = [
-  // file extensions
-  'mp3',
-  'wav',
-  // mime types
-  'audio/mpeg',
-  'audio/wav',
-]
-const VIDEO_FILE_TYPES = [
-  // file extensions
-  'mp4',
-  'mov',
-  'avi',
-  // mime types
-  'video/mp4',
-  'video/x-msvideo',
-]
-const IMAGE_FILE_TYPES = [
-  // file extensions
+const DOCUMENT_FILE_EXTENSIONS = ['doc', 'docx', 'pdf', 'txt']
+const MUSIC_FILE_EXTENSIONS = ['mp3', 'wav', 'mpga']
+const VIDEO_FILE_EXTENSIONS = ['mp4', 'mov', 'avi']
+const IMAGE_FILE_EXTENSIONS = [
   'png',
   'jpg',
   'jpeg',
@@ -38,14 +12,8 @@ const IMAGE_FILE_TYPES = [
   'svg',
   'tif',
   'tiff',
-  // mime types
-  'image/png',
-  'image/jpeg',
-  'image/gif',
-  'image/svg+xml',
-  'image/tiff',
 ]
-const THREE_DIMENSIONAL_FILE_TYPES = ['gltf', 'glb']
+const THREE_DIMENSIONAL_FILE_EXTENSIONS = ['gltf', 'glb']
 
 export type AssetFileType =
   | 'document'
@@ -68,28 +36,40 @@ export const getAssetType = (asset: AssetMetadata): AssetFileType => {
   }
 
   if ('fileType' in asset) {
-    const fileType = asset.fileType.toLowerCase()
+    const fileExtension = getFileExtension(asset.fileType)
 
-    if (DOCUMENT_FILE_TYPES.includes(fileType)) {
+    if (DOCUMENT_FILE_EXTENSIONS.includes(fileExtension)) {
       return 'document'
     }
 
-    if (MUSIC_FILE_TYPES.includes(fileType)) {
+    if (MUSIC_FILE_EXTENSIONS.includes(fileExtension)) {
       return 'music'
     }
 
-    if (VIDEO_FILE_TYPES.includes(fileType)) {
+    if (VIDEO_FILE_EXTENSIONS.includes(fileExtension)) {
       return 'video'
     }
 
-    if (IMAGE_FILE_TYPES.includes(fileType)) {
+    if (IMAGE_FILE_EXTENSIONS.includes(fileExtension)) {
       return 'image'
     }
 
-    if (THREE_DIMENSIONAL_FILE_TYPES.includes(fileType)) {
+    if (THREE_DIMENSIONAL_FILE_EXTENSIONS.includes(fileExtension)) {
       return '3d'
     }
   }
 
+  console.warn(`LSP3 Asset is missing "fileType" field.`, toRaw(asset))
+
   return 'other'
+}
+
+/**
+ * Get file extension from mime type or use the one provided by user.
+ *
+ * @param fileType
+ * @returns
+ */
+export const getFileExtension = (fileType: string): string => {
+  return mime.extension(fileType) || fileType
 }
