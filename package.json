@@ -31,7 +31,7 @@
     "typechain": "typechain --target web3-v1 --out-dir types/contracts/ './utils/LSP2FetcherWithMulticall3.json' './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
   },
   "devDependencies": {
-    "@erc725/erc725.js": "^0.23.0",
+    "@erc725/erc725.js": "patch:@erc725/erc725.js@npm%3A0.23.0#~/.yarn/patches/@erc725-erc725.js-npm-0.23.0-109d3d0d7f.patch",
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.9",
     "@lukso/lsp-smart-contracts": "0.14.0",
@@ -51,7 +51,7 @@
     "@sentry/vite-plugin": "^2.10.2",
     "@sentry/vue": "^7.91.0",
     "@tanstack/vue-query": "^5.18.1",
-    "@tanstack/vue-query-devtools": "^5.18.1",
+    "@tanstack/vue-query-devtools": "^5.24.0",
     "@typechain/web3-v1": "^6.0.7",
     "@types/fs-extra": "11.0.4",
     "@types/node": "^20.11.5",
@@ -106,13 +106,14 @@
     "vue-router": "^4.2.5",
     "web3": "~1.10.3",
     "web3-utils": "~1.10.3",
+    "web3-validator": "^2.0.4",
     "yata-fetch": "2.1.5"
   },
   "resolutions": {
     "web3-bzz": "~1.10.3",
     "web3-shh": "~1.10.3",
     "web3": "~1.10.3",
-    "@erc725/erc725.js": "^0.23.0",
+    "@erc725/erc725.js": "patch:@erc725/erc725.js@npm%3A0.23.0#~/.yarn/patches/@erc725-erc725.js-npm-0.23.0-109d3d0d7f.patch",
     "@tanstack/query-core": "^5.20.5"
   },
   "lint-staged": {

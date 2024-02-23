@@ -84,12 +84,11 @@ const items = useQueries({
 })
 const tokenIdsQueries = computed(() => {
   if (items.value[0]?.isFetched) {
-    return items.value
-      .filter(
-        (_, index: number) =>
-          queries.value[index].queryKey[3] === 'tokenIdsOf(address)'
-      )
-      .flatMap((item: any, index: number) => {
+    return items.value.flatMap((item: any, index: number) => {
+      if (
+        queries.value[index].queryKey[3] === 'tokenIdsOf(address)' &&
+        item.isFetched
+      ) {
         const query = queries.value[index]
         return item.isFetched && item.data?.map
           ? item.data?.map((tokenId: string) => {
@@ -104,7 +103,9 @@ const tokenIdsQueries = computed(() => {
               }
             }) || []
           : []
-      }) as { queryKey: string[] }[]
+      }
+      return []
+    }) as { queryKey: string[] }[]
   }
   return [] as { queryKey: string[] }[]
 })

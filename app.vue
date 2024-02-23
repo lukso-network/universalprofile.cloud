@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // import { isAddress } from 'web3-utils'
-// import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 
 import { assertString } from '@/utils/validators'
 import { SUPPORTED_NETWORK_IDS } from '@/shared/config'

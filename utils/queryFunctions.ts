@@ -5,7 +5,12 @@ import LSP4Schema from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json'
 import LSP3Schema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
 import LSP8Schema from '@erc725/erc725.js/schemas/LSP8IdentifiableDigitalAsset.json'
 import { RateLimiter } from 'limiter'
-import ERC725, { type ERC725JSONSchema } from '@erc725/erc725.js'
+import {
+  type ERC725JSONSchema,
+  decodeData,
+  getDataFromExternalSources,
+  encodeKeyName,
+} from '@erc725/erc725.js'
 import { type AbiItem } from 'web3-utils'
 import ABICoder from 'web3-eth-abi'
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
@@ -102,16 +107,32 @@ export const defaultAbi = (
 // 'second', 'minute', 'day', or a number of milliseconds
 const limiter = new RateLimiter({ tokensPerInterval: 80, interval: 'second' })
 
-function convert<T = any>(
+async function convert<T = any>(
   query: QueryPromise<unknown, QueryPromiseDataOptions>,
   data: string,
   overrideSchema?: ERC725JSONSchema[]
-): T {
+): Promise<T | null> {
   const { keyName, schema, dynamicKeyParts } = query
-  const info = ERC725.decodeData(
-    [{ keyName, value: data, dynamicKeyParts }],
+  let info = decodeData(
+    [
+      {
+        keyName,
+        value: data,
+        dynamicKeyParts,
+      },
+    ],
     overrideSchema || schema || defaultSchema
-  ) as Array<{ name: string; value: unknown }>
+  )
+  const value = info.find(({ name }) => name == keyName)?.value
+  if (value == undefined) {
+    return null
+  }
+  info = await getDataFromExternalSources(
+    overrideSchema || defaultSchema,
+    info,
+    'https://api.universalprofile.cloud/ipfs/',
+    true
+  )
   return info.find(({ name }) => name == keyName)?.value as T
 }
 
@@ -201,24 +222,27 @@ async function doQueries() {
           const abi = LSP8IdentifiableDigitalAssetContract.abi.find(
             ({ name }) => name === 'getDataBatchForTokenIds'
           )
-          const call = ABICoder.encodeFunctionCall(abi as AbiItem, [
-            tokenQueries.map(({ tokenId }) => tokenId) as unknown as string,
-            tokenQueries.map(({ keyName, dynamicKeyParts }) =>
-              ERC725.encodeKeyName(keyName, dynamicKeyParts)
-            ) as unknown as string,
-          ])
-          multicall.push({
-            index: multicall.length,
-            target: address,
-            call,
-            queries: tokenQueries as unknown as QueryPromise<any>[],
-            selector: (data: string) => {
-              if (data === '0x') {
-                return null
-              }
-              return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
-            },
-          })
+          if (abi) {
+            const call = ABICoder.encodeFunctionCall(abi as AbiItem, [
+              tokenQueries.map(({ tokenId }) => tokenId) as unknown as string,
+              tokenQueries.map(({ keyName, dynamicKeyParts }) =>
+                encodeKeyName(keyName, dynamicKeyParts)
+              ) as unknown as string,
+            ])
+            console.log('call', abi, call, address)
+            multicall.push({
+              index: multicall.length,
+              target: address,
+              call,
+              queries: tokenQueries as unknown as QueryPromise<any>[],
+              selector: (data: string) => {
+                if (data === '0x') {
+                  return null
+                }
+                return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
+              },
+            })
+          }
         }
       }
 
@@ -232,7 +256,7 @@ async function doQueries() {
             abi as AbiItem,
             [
               plainKeys.map(({ keyName, dynamicKeyParts }) =>
-                ERC725.encodeKeyName(keyName, dynamicKeyParts)
+                encodeKeyName(keyName, dynamicKeyParts)
               ),
             ] as unknown as string[]
           )
@@ -258,7 +282,7 @@ async function doQueries() {
             )
             const call = ABICoder.encodeFunctionCall(abi as AbiItem, [
               address,
-              ERC725.encodeKeyName(keyName, dynamicKeyParts),
+              encodeKeyName(keyName, dynamicKeyParts),
             ])
             multicall.push({
               index: multicall.length,
@@ -266,6 +290,9 @@ async function doQueries() {
               call,
               query,
               selector: (data: string) => {
+                if (data === '0x') {
+                  return null
+                }
                 return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
               },
             })
@@ -314,6 +341,9 @@ async function doQueries() {
                 call,
                 query,
                 selector: (data: string) => {
+                  if (data === '0x') {
+                    return null
+                  }
                   return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
                 },
               })
@@ -325,27 +355,42 @@ async function doQueries() {
       }
     }
     await limiter.removeTokens(1)
+    console.log(
+      'multicall',
+      lsp2CustomContract.methods
+        .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
+        .encodeABI(),
+      LSP2FetcherWithMulticall3Contract.abi.find(
+        ({ name }) => name === 'aggregate3'
+      )
+    )
     await lsp2CustomContract.methods
       .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
       .call()
-      .then((result: [boolean, string][]) => {
+      .then(async (result: [boolean, string][]) => {
         for (const [i, { query, queries, selector }] of multicall.entries()) {
           const [success, data] = result[i]
           if (queries) {
-            const items = ABICoder.decodeParameters(
-              ['bytes[]'],
-              data
-            )[0] as string[]
+            if (!success) {
+              for (const query of queries) {
+                const error = new Error('Call failed')
+                ;(error as any).data = data
+                query.reject(error)
+              }
+              continue
+            }
+            let items = data
+            if (selector) {
+              items = selector(data)
+            }
             for (const [j, query] of queries.entries()) {
               try {
-                let item = items[j]
-                if (query.type === 'data') {
-                  item = convert(
+                let item: string | null = items[j]
+                if (['data', 'tokenData'].includes(query.type)) {
+                  item = await convert(
                     query as QueryPromise<unknown, QueryPromiseDataOptions>,
                     item
                   )
-                } else if (selector) {
-                  item = selector(item)
                 }
                 if (success) {
                   query.resolve(item)
@@ -364,11 +409,11 @@ async function doQueries() {
           }
           try {
             if (success) {
-              let item: string = data
-              if (query?.type === 'data') {
-                let schema = (query.schema || defaultSchema).find(
-                  ({ name }) => name === query.keyName
-                )
+              let item: string | null = data
+              if (['data', 'tokenData'].includes(query?.type || '')) {
+                let schema = (
+                  (query?.schema as ERC725JSONSchema[]) || defaultSchema
+                ).find(({ name }) => name === query?.keyName)
                 if (schema && schema.keyType === 'Array') {
                   const array = ABICoder.decodeParameters(
                     ['bytes[]'],
@@ -376,17 +421,22 @@ async function doQueries() {
                   )[0] as string[]
                   schema = { ...schema, keyType: 'Singleton' }
                   query?.resolve(
-                    array.map(value =>
-                      convert(
-                        query as QueryPromise<unknown, QueryPromiseDataOptions>,
-                        value,
-                        schema ? [schema] : undefined
+                    await Promise.all(
+                      array.map(value =>
+                        convert(
+                          query as QueryPromise<
+                            unknown,
+                            QueryPromiseDataOptions
+                          >,
+                          value,
+                          schema ? [schema] : undefined
+                        )
                       )
                     )
                   )
                   continue
                 } else {
-                  item = convert(
+                  item = await convert(
                     query as QueryPromise<unknown, QueryPromiseDataOptions>,
                     item
                   )
