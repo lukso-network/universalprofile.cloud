@@ -72,7 +72,7 @@ export const createLsp8Object = async (
       }
     }
 
-    collectibles.push({
+    let asset: Asset = {
       address,
       name,
       symbol,
@@ -87,12 +87,17 @@ export const createLsp8Object = async (
       icon,
       images,
       creators: creators?.filter(Boolean), // sometimes indexer return empty string [''] so we need to filter out
-      owner: profileAddress,
       tokenType: tokenType || 'NFT', // we set default just in case it's missing from indexer
       contractOwner: owner,
       attributes,
       assets,
-    })
+    }
+
+    if (profileAddress) {
+      asset = { ...asset, owner: profileAddress }
+    }
+
+    collectibles.push(asset)
   }
   return collectibles
 }

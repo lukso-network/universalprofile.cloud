@@ -3,7 +3,7 @@ import { Repository } from 'pinia-orm'
 import { type Asset, AssetModel } from '@/models/asset'
 
 export class AssetRepository extends Repository<AssetModel> {
-  async getOwnedTokens() {
+  getOwnedTokens() {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
@@ -22,7 +22,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .get()
   }
 
-  async getIssuedTokens() {
+  getIssuedTokens() {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
@@ -41,7 +41,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .get()
   }
 
-  async getOwnedNfts() {
+  getOwnedNfts() {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
@@ -62,7 +62,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .get()
   }
 
-  async getIssuedNfts() {
+  getIssuedNfts() {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
