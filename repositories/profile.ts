@@ -1,7 +1,6 @@
 import { Repository } from 'pinia-orm'
 
 import { type Profile, ProfileModel } from '@/models/profile'
-// import { ImageModel } from '@/models/image'
 
 export class ProfileRepository extends Repository<ProfileModel> {
   getProfile(address: Address) {

@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { AssetRepository } from '@/repositories/asset'
 
-import type { Asset } from '@/models/asset'
+// import type { Asset } from '@/models/asset'
 
 const { assetFilter, isLoadingAssets } = storeToRefs(useAppStore())
 const { viewedProfile } = useViewedProfile()
 const assetRepository = useRepo(AssetRepository)
 const { isMobile } = useDevice()
-const tokensOwned = ref<Asset[]>()
-const tokensCreated = ref<Asset[]>()
-const nftsOwned = ref<Asset[]>()
-const nftsCreated = ref<Asset[]>()
+
+const tokensOwned = computed(() => assetRepository.getOwnedTokens())
+const tokensCreated = computed(() => assetRepository.getIssuedTokens())
+const nftsOwned = computed(() => assetRepository.getOwnedNfts())
+const nftsCreated = computed(() => assetRepository.getIssuedNfts())
 
 // tokens
 const ownedTokensCount = computed(
@@ -74,13 +75,6 @@ const hasEmptyNfts = computed(
 const showProfileDetails = computed(
   () => useRouter().currentRoute.value.query.referrer === REFERRERS.INDEXER
 )
-
-watchEffect(async () => {
-  tokensOwned.value = await assetRepository.getOwnedTokens()
-  tokensCreated.value = await assetRepository.getIssuedTokens()
-  nftsOwned.value = await assetRepository.getOwnedNfts()
-  nftsCreated.value = await assetRepository.getIssuedNfts()
-})
 </script>
 
 <template>

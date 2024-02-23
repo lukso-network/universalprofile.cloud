@@ -85,12 +85,11 @@ watchEffect(() => {
   <lukso-search
     name="profile-search"
     :value="searchTerm"
-    :placeholder="$formatMessage('send_input_placeholder')"
+    :placeholder="$formatMessage('profile_search_placeholder')"
     :results="JSON.stringify(results)"
     :is-searching="isSearching ? 'true' : undefined"
     :show-no-results="hasNoResults ? 'true' : undefined"
     :no-results-text="$formatMessage('profile_search_no_results')"
-    autofocus
     is-full-width
     class="w-full"
     @on-search="handleSearch"

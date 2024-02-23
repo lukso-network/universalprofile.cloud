@@ -23,7 +23,7 @@ export const createLsp7Object = async (
     LSP4Creators: creators,
   } = indexedAsset || {}
   //@ts-ignore - ignore until release or lsp package
-  const { links, attributes } = metadata || {}
+  const { links, attributes, assets } = metadata || {}
 
   // get profile balance for the asset
   const balance = await fetchLsp7Balance(address, profileAddress)
@@ -52,11 +52,10 @@ export const createLsp7Object = async (
   const owner = await lsp7Contract.methods.owner().call() // TODO fetch from Algolia when it's supported
   assertAddress(owner)
 
-  return {
+  let asset: Asset = {
     address,
     name,
     symbol,
-    balance,
     decimals,
     tokenSupply,
     links,
@@ -66,11 +65,17 @@ export const createLsp7Object = async (
     images,
     creators: creators?.filter(Boolean), // sometimes indexer return empty string [''] so we need to filter out
     tokenId: '0x',
-    owner: profileAddress,
     tokenType: tokenType || 'TOKEN', // we set default just in case it's missing from indexer
     contractOwner: owner,
     attributes,
+    assets,
   }
+
+  if (profileAddress) {
+    asset = { ...asset, owner: profileAddress, balance }
+  }
+
+  return asset
 }
 
 export const fetchLsp7Balance = async (
