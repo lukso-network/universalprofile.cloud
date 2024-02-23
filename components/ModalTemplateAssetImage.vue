@@ -22,6 +22,7 @@ defineProps<Props>()
       class="relative max-h-[calc(100vh-200px)] min-w-[calc(100vw-100px)] rounded-12 sm:min-h-[500px] sm:min-w-[500px]"
       :src="modal?.data?.asset?.url"
       alt=""
+      loading="lazy"
     />
     <lukso-icon
       name="close-lg"

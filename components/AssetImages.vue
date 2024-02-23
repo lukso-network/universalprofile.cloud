@@ -28,12 +28,17 @@ const handlePreviewImage = (image: Image) => {
       <div
         v-for="(image, index) in images"
         :key="index"
-        class="h-14 w-14 cursor-pointer rounded-8 bg-neutral-90 bg-cover transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
-        @click="handlePreviewImage(image)"
-        :style="{
-          backgroundImage: `url(${image?.url})`,
-        }"
-      ></div>
+        class="rounded-8 bg-neutral-90 transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
+      >
+        <img
+          class="h-14 w-14 cursor-pointer rounded-8 object-cover"
+          @click="handlePreviewImage(image)"
+          :src="image?.url"
+          loading="lazy"
+          alt=""
+          onerror="this.style.opacity=0"
+        />
+      </div>
     </div>
   </div>
 </template>

@@ -51,11 +51,14 @@ const handlePreviewImage = () => {
       <div>
         <lukso-card size="small" shadow="small" is-full-width
           ><div slot="content">
-            <div
-              class="min-h-[260px] cursor-pointer rounded-t-12 bg-neutral-90 bg-cover bg-center"
-              :style="`background-image: url(${getAssetThumb(asset)});`"
-              @click="handlePreviewImage"
-            ></div>
+            <div class="rounded-t-12 bg-neutral-90">
+              <img
+                class="min-h-[260px] w-full cursor-pointer rounded-t-12"
+                :src="getAssetThumb(asset)"
+                @click="handlePreviewImage"
+                loading="lazy"
+              />
+            </div>
             <div class="relative p-4">
               <div class="paragraph-inter-14-semi-bold">
                 {{ asset?.name }}
