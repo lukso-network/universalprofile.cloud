@@ -112,7 +112,7 @@ export class AssetRepository extends Repository<AssetModel> {
     this.repo(AssetModel).save(assets)
   }
 
-  getAssetAndImages(address: Address, tokenId = '') {
+  getAsset(address: Address, tokenId = '') {
     const { selectedChainId } = storeToRefs(useAppStore())
     const primaryKey = this.primaryKey(address, tokenId)
     const asset = this.repo(AssetModel)
