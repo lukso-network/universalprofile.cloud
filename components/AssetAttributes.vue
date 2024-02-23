@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type Props = {
-  attributes: AttributeMetadata[]
+  attributes?: AttributeMetadata[]
 }
 
 defineProps<Props>()
