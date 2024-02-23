@@ -28,7 +28,7 @@
     "test:debug": "npx playwright test --debug",
     "pages:build": "cross-env NODE_ENV=production NITRO_PRESET=cloudflare_pages nuxt build --standalone",
     "nuxt:prepare": "nuxt prepare",
-    "typechain": "typechain --target web3-v1 --out-dir types/contracts/ './utils/LSP2FetcherWithMulticall3.json' './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
+    "typechain": "typechain --target web3-v1 --out-dir types/contracts/ './utils/LSP2FetcherWithMulticall3.json' && typechain --target web3-v1 --out-dir types/contracts/ './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
   },
   "devDependencies": {
     "@erc725/erc725.js": "patch:@erc725/erc725.js@npm%3A0.23.0#~/.yarn/patches/@erc725-erc725.js-npm-0.23.0-109d3d0d7f.patch",
