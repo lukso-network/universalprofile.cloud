@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer'
 import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 import LSP7DigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
 import LSP4DigitalAssetMetadataContract from '@lukso/lsp-smart-contracts/artifacts/LSP4DigitalAssetMetadata.json'
@@ -127,13 +128,32 @@ async function convert<T = any>(
   if (value == undefined) {
     return null
   }
-  info = await getDataFromExternalSources(
-    overrideSchema || defaultSchema,
-    info,
-    'https://api.universalprofile.cloud/ipfs/',
-    true
-  )
-  return info.find(({ name }) => name == keyName)?.value as T
+  try {
+    info = await getDataFromExternalSources(
+      overrideSchema || defaultSchema,
+      info,
+      'https://api.universalprofile.cloud/ipfs/',
+      true
+    )
+  } catch {
+    if (typeof info[0]?.value === 'object' && (info[0]?.value as any)?.url) {
+      const [, encoding, data] =
+        (info[0]?.value as any)?.url.match(/^data:.*?;(.*?),(.*)$/) || []
+      if (data) {
+        let output = Buffer.from(
+          data,
+          encoding === 'base64' ? 'base64' : 'utf8'
+        ) as any
+        try {
+          output = JSON.parse(output.toString('utf8'))
+        } catch {
+          // ignore
+        }
+        return output as T
+      }
+    }
+  }
+  return info[0]?.value as T
 }
 
 async function doQueries() {

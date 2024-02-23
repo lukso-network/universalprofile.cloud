@@ -119,36 +119,60 @@ const resultsTokenIds = useQueries({
     <AppPageLoader>
       <div class="mx-auto max-w-content">
         {{ viewedProfileAddress }}
-        <pre v-for="(result, index) in results" :key="index">
-Root {{ rootQueries[index].queryKey.join(':') }}:
-        {{
+        <div
+          class="block rounded-lg border border-gray-200 bg-white p-6"
+          v-for="(result, index) in results"
+          :key="index"
+        >
+          <p
+            class="mb-2 font-bold tracking-tight"
+          >
+            Root {{ rootQueries[index].queryKey.join(' ') }}
+          </p>
+          <p><pre class="overflow-auto">{{
             result?.isError
               ? (result?.error as any)?.message || 'error'
               : result?.isFetched
                 ? JSON.stringify(result?.data, null, '  ')
                 : 'loading'
-          }}</pre
+          }}</pre></p>
+        </div>
+        <div
+          class="block rounded-lg border border-gray-200 bg-white p-6"
+          v-for="(result, index) in items"
+          :key="index"
         >
-        <pre v-for="(result, index) in items" :key="index">
-Dependent {{ queries[index].queryKey.join(':') }}:
-        {{
+          <p
+            class="mb-2 font-bold tracking-tight"
+          >
+            Dependent {{ queries[index].queryKey.join(' ') }}:
+          </p>
+          <p><pre class="overflow-auto">{{
             result?.isError
               ? (result?.error as any)?.message || 'error'
               : result?.isFetched
                 ? JSON.stringify(result?.data, null, '  ')
                 : 'loading'
-          }}</pre
+          }}</pre></p>
+        </div>
+        <div
+          class="block rounded-lg border border-gray-200 bg-white p-6"
+          v-for="(result, index) in resultsTokenIds"
+          :key="index"
         >
-        <pre v-for="(result, index) in resultsTokenIds" :key="index">
-TokenIds {{ tokenIdsQueries[index].queryKey.join(':') }}:
-        {{
+          <p
+            class="mb-2 font-bold tracking-tight"
+          >
+            TokenIds {{ tokenIdsQueries[index].queryKey.join(' ') }}:
+          </p>
+          <p><pre class="overflow-auto">{{
             result?.isError
               ? (result?.error as any)?.message || 'error'
               : result?.isFetched
                 ? JSON.stringify(result?.data, null, '  ')
                 : 'loading'
-          }}</pre
-        >
+          }}</pre></p>
+        </div>
       </div>
     </AppPageLoader>
   </div>
