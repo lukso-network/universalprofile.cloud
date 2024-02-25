@@ -922,29 +922,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@erc725/erc725.js@npm:0.23.0":
-  version: 0.23.0
-  resolution: "@erc725/erc725.js@npm:0.23.0"
+"@erc725/erc725.js@npm:^0.23.1":
+  version: 0.23.1
+  resolution: "@erc725/erc725.js@npm:0.23.1"
   dependencies:
     add: "npm:^2.0.6"
     ethereumjs-util: "npm:^7.1.5"
     web3-eth-abi: "npm:^1.10.0"
     web3-providers-http: "npm:^1.10.0"
     web3-utils: "npm:^1.10.0"
-  checksum: de50b1c72e3eaf1edb78b1f7537cb8989e59307214666672cb8dc1df615a2a9e9bdf0a0b01f97817146d1ff3d7e0ae02c6e414ced83a7e0ac07ef6b09770c95c
-  languageName: node
-  linkType: hard
-
-"@erc725/erc725.js@patch:@erc725/erc725.js@npm%3A0.23.0#~/.yarn/patches/@erc725-erc725.js-npm-0.23.0-109d3d0d7f.patch":
-  version: 0.23.0
-  resolution: "@erc725/erc725.js@patch:@erc725/erc725.js@npm%3A0.23.0#~/.yarn/patches/@erc725-erc725.js-npm-0.23.0-109d3d0d7f.patch::version=0.23.0&hash=d1af3d"
-  dependencies:
-    add: "npm:^2.0.6"
-    ethereumjs-util: "npm:^7.1.5"
-    web3-eth-abi: "npm:^1.10.0"
-    web3-providers-http: "npm:^1.10.0"
-    web3-utils: "npm:^1.10.0"
-  checksum: 484d93a327a19a2a10550b1aba23a9b16c1646ec17a5640ac56b3387de7e9262507386181be9e1c2b51d92055ae307af0ba84b52fe5f9ac1512a6939b0624b3b
+  checksum: a8528002266f921ab270c72b4747a82a60d1e9e0a2f1ab1aa5a99d29c07d9d99e5618370cd13fb1bba6f646e97ee7d7586e8750870bee00e69e694a9275dd5b6
   languageName: node
   linkType: hard
 
@@ -17266,7 +17253,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wallet.universalprofile.cloud@workspace:."
   dependencies:
-    "@erc725/erc725.js": "patch:@erc725/erc725.js@npm%3A0.23.0#~/.yarn/patches/@erc725-erc725.js-npm-0.23.0-109d3d0d7f.patch"
+    "@erc725/erc725.js": "npm:^0.23.1"
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
     "@formatjs/intl": "npm:^2.9.9"
     "@lukso/lsp-smart-contracts": "npm:0.14.0"
