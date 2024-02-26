@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import makeBlockie from 'ethereum-blockies-base64'
 
-import { type Asset } from '@/models/asset'
+import type { AssetData } from '@/composables/useProfileAssets'
+import type { Asset } from '@/models/asset'
 
 type Props = {
-  asset: Asset
+  asset: AssetData
   hasAddress?: boolean
 }
 
@@ -12,6 +13,7 @@ const props = defineProps<Props>()
 
 const { isConnected } = storeToRefs(useAppStore())
 const { connectedProfile } = useConnectedProfile()
+const token = useToken()(props.asset)
 const { viewedProfile } = useViewedProfile()
 
 const handleShowAsset = () => {
@@ -61,6 +63,9 @@ const assetTokenId = computed(() => {
       slot="content"
       class="grid h-full grid-rows-[auto,max-content] rounded-12 bg-neutral-97"
     >
+      <div class="w-full overflow-auto whitespace-pre-wrap pt-8">
+        token = {{ JSON.stringify(token, null, '  ') }}
+      </div>
       <div
         class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
       >
@@ -85,7 +90,7 @@ const assetTokenId = computed(() => {
               >
             </div>
             <div class="paragraph-ptmono-10-bold mt-1">
-              <span v-if="isLsp8(asset)">
+              <span v-if="isLsp8(asset as Asset)">
                 {{ assetTokenId }}
               </span>
               <span v-else>

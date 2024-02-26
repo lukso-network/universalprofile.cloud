@@ -250,7 +250,6 @@ async function doQueries() {
                 encodeKeyName(keyName, dynamicKeyParts)
               ) as unknown as string,
             ])
-            console.log('call', abi, call, address)
             multicall.push({
               index: multicall.length,
               target: address,
@@ -260,7 +259,12 @@ async function doQueries() {
                 if (data === '0x') {
                   return null
                 }
-                return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
+                try {
+                  return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
+                } catch (error) {
+                  console.error('decodeParameters', error)
+                  return null
+                }
               },
             })
           }

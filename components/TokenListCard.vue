@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { AssetData } from '@/composables/useProfileAssets'
+
 type Props = {
-  asset: Asset
+  asset: AssetData
   hasAddress?: boolean
 }
 
@@ -8,7 +10,8 @@ const props = defineProps<Props>()
 
 const { isConnected } = storeToRefs(useAppStore())
 const { connectedProfile } = useConnectedProfile()
-const { viewedProfile } = useViewedProfile()
+const viewedProfileAddress = getCurrentProfileAddress()
+const token = useToken()(props.asset)
 const contentRef = ref()
 const logoRef = ref()
 const symbolRef = ref()
@@ -60,6 +63,9 @@ onMounted(async () => {
     is-full-width
     @click="handleShowAsset"
     ><div slot="content" class="grid h-full grid-rows-[max-content,auto] p-4">
+      <div class="w-full overflow-auto whitespace-pre-wrap pt-8">
+        token = {{ JSON.stringify(token, null, '  ') }}
+      </div>
       <div class="flex h-7 items-start justify-end">
         <AssetStandardBadge :standard="asset?.standard" />
       </div>
@@ -68,9 +74,7 @@ onMounted(async () => {
           <lukso-profile
             size="medium"
             :profile-address="asset?.address"
-            :profile-url="
-              getAssetThumb(asset, isLsp7(asset)) || ASSET_ICON_PLACEHOLDER_URL
-            "
+            :profile-url="getAssetThumb(token) || ASSET_ICON_PLACEHOLDER_URL"
             :has-identicon="hasAddress ? 'true' : undefined"
           ></lukso-profile>
           <div
@@ -117,7 +121,7 @@ onMounted(async () => {
             <lukso-button
               v-if="
                 isConnected &&
-                viewedProfile?.address === connectedProfile?.address
+                viewedProfileAddress === connectedProfile?.address
               "
               size="small"
               variant="secondary"

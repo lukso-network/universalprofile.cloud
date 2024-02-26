@@ -1,6 +1,8 @@
 import { useQueries } from '@tanstack/vue-query'
+import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 
 export type AssetData = {
+  isNativeToken?: boolean
   isOwned: boolean
   isIssued: boolean
   address: Address
@@ -8,8 +10,9 @@ export type AssetData = {
   tokenStandard: string
   tokenIdFormat: number
   referenceContract: Address
-  baseURI: string
-  tokenId: `0x${string}`
+  baseURI?: any
+  tokenDataURL?: string
+  tokenId?: `0x${string}`
   balance: string
   standard: string
   name: string
@@ -17,6 +20,7 @@ export type AssetData = {
   tokenName: string
   tokenSymbol: string
   tokenType: string
+  tokenURI?: string
   supportsInterfaces: Record<string, boolean>
   images: {
     src: string
@@ -146,7 +150,7 @@ export function useProfileAssets() {
             const tokenName = results[assetIndex + 5].data as string
             const tokenSymbol = results[assetIndex + 6].data as string
             const tokenType = results[assetIndex + 7].data as string
-            const baseURI = results[assetIndex + 8].data as string
+            const baseURI = results[assetIndex + 8].data as any
             const tokenStandard = results[assetIndex + 9].data as string
             const tokenIdFormat = results[assetIndex + 10].data as number
             const referenceContract = results[assetIndex + 11].data as string
@@ -193,15 +197,44 @@ export function useProfileAssets() {
             })
             if (tokenIds && tokenIds.length > 0) {
               return tokenIds.map(tokenId => {
+                let tokenURI = undefined
+                let tokenDataURL = undefined
+                try {
+                  switch (tokenIdFormat) {
+                    case 0:
+                      tokenURI = toNumber(tokenId).toString()
+                      break
+                    case 1:
+                      tokenURI = encodeURI(hexToAscii(tokenId).trim())
+                      break
+                    case 2:
+                      tokenURI = tokenId.toLowerCase()
+                      break
+                    case 3:
+                    case 4:
+                      tokenURI = stripHexPrefix(tokenId).toLowerCase()
+                      break
+                  }
+                } catch {
+                  // Ignore
+                }
+                if (baseURI && tokenURI) {
+                  tokenDataURL = `${baseURI.url}${tokenURI}`.replace(
+                    'ipfs://',
+                    'https://api.universalprofile.cloud/image/'
+                  )
+                }
                 return {
                   isOwned: !isIssued,
                   isIssued,
                   address,
                   assetData,
+                  tokenURI,
                   tokenStandard,
                   tokenIdFormat,
                   referenceContract,
                   baseURI,
+                  tokenDataURL,
                   tokenId,
                   balance,
                   standard,

@@ -36,9 +36,9 @@ export const fetchAndConvertImage = async (imageUrl: string) => {
  * @returns url of the image
  */
 export const getImageBySize = (
-  images: ImageMetadata[],
+  images: (ImageMetadata & { src: string })[],
   height: number
-): ImageMetadata | undefined => {
+): (ImageMetadata & { src: string }) | undefined => {
   const sortedImagesAscending = images.sort((a, b) => {
     if (a.height < b.height) {
       return -1
@@ -79,7 +79,7 @@ export const getImageBySize = (
  * @param minHeight
  * @returns
  */
-export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
+export const getAssetThumb = (asset?: TokenData, useIcon?: boolean) => {
   if (!asset) {
     return ''
   }
@@ -88,17 +88,22 @@ export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
     return ASSET_LYX_ICON_URL
   }
 
-  if (asset.icon && useIcon) {
-    const icon = asset.icon
-    return icon?.url
+  if (useIcon) {
+    const icon = asset.baseURIIcon || asset.forTokenIcon || asset.icon
+    const url = getImageBySize(icon, 260)?.src
+    if (url) {
+      return url + '&width=100&height=260'
+    }
   }
 
-  if (asset.images && asset.images.length > 0) {
-    const image = asset.images[0]
-    return image?.url
+  const images = asset.baseURIImages || asset.forTokenImages || asset.images
+  const image = images?.[0]
+  const url = getImageBySize(image, 260)?.src
+  if (url) {
+    return url + '&width=100&height=260'
   }
 
-  return ''
+  return undefined
 }
 
 /**

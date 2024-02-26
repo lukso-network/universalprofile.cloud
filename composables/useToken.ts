@@ -1,6 +1,40 @@
 import { useQueries } from '@tanstack/vue-query'
 
 import type { AssetData } from './useProfileAssets'
+export type TokenData = AssetData & {
+  forTokenData: any
+  forTokenImages: {
+    src: string
+    verification: any
+    width: number
+    height: number
+    url: string
+  }[][]
+  forTokenIcon: {
+    src: string
+    verification: any
+    width: number
+    height: number
+    url: string
+  }[]
+  baseURIImages: {
+    src: string
+    verification: any
+    width: number
+    height: number
+    url: string
+  }[][]
+  baseURIIcon: {
+    src: string
+    verification: any
+    width: number
+    height: number
+    url: string
+  }[]
+  owner: string
+  creator: string
+  tokenCreators: string[]
+}
 
 export function useToken() {
   return (token: AssetData | undefined) => {
@@ -10,24 +44,53 @@ export function useToken() {
     const queries = token?.address
       ? [
           {
-            queryKey: [
-              'tokenData',
-              chainId,
-              token?.address,
-              tokenId,
-              'LSP4Metadata',
-            ],
-          },
-          {
+            // 0
             queryKey: ['call', chainId, token?.address, 'owner()'],
           },
           {
+            // 1
             queryKey: ['call', chainId, token?.address, 'creator()'],
           },
           {
+            // 2
             queryKey: ['data', chainId, token?.address, 'LSP4Creators[]'],
           },
-          ...(tokenId ? [] : []),
+          {
+            // 3
+            queryKey: ['call', chainId, token?.address, 'decimals()'],
+          },
+          ...(tokenId
+            ? [
+                {
+                  // 4
+                  queryKey: [
+                    'tokenData',
+                    chainId,
+                    token?.address,
+                    tokenId,
+                    'LSP4Metadata',
+                  ],
+                },
+                {
+                  // 5
+                  queryKey: ['tokenJSON', chainId, token?.address, tokenId],
+                  queryFn: () => {
+                    if (token.tokenDataURL) {
+                      const url = token.tokenDataURL.replace(
+                        /^ipfs:\/\//,
+                        'https://api.universalprofile.cloud/ipfs/'
+                      )
+                      return fetch(url).then(response => {
+                        if (!response.ok) {
+                          throw new Error('Unable to fetch')
+                        }
+                        return response.json()
+                      })
+                    }
+                  },
+                },
+              ]
+            : []),
         ]
       : []
     return useQueries({
@@ -36,8 +99,25 @@ export function useToken() {
         if (!token) {
           return undefined
         }
-        const tokenData = results[0].data as any
-        const tokenAssets = tokenData?.LSP4Metadata?.assets?.map(
+        const owner = results[0].data as string
+        const creator = results[1].data as string
+        const tokenCreators = results[2].data as string[]
+        const decimals = results[3]?.data as number
+        const forTokenData = results[4]?.data as any
+        const forTokenImages = forTokenData?.LSP4Metadata?.images?.map(
+          (images: any) => {
+            return images.map((image: any) => {
+              const { verification, url } = image
+              return {
+                ...image,
+                src: url.startsWith('ipfs://')
+                  ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+                  : url,
+              }
+            })
+          }
+        )
+        const forTokenIcon = forTokenData?.LSP4Metadata?.icon?.map(
           (image: any) => {
             const { verification, url } = image
             return {
@@ -48,7 +128,21 @@ export function useToken() {
             }
           }
         )
-        const tokenIcon = tokenData?.LSP4Metadata?.icon?.map((image: any) => {
+        const tokenJSON = results[5]?.data as any
+        const baseURIImages = tokenJSON?.LSP4Metadata?.images?.map(
+          (images: any) => {
+            return images.map((image: any) => {
+              const { verification, url } = image
+              return {
+                ...image,
+                src: url.startsWith('ipfs://')
+                  ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+                  : url,
+              }
+            })
+          }
+        )
+        const baseURIIcon = tokenJSON?.LSP4Metadata?.icon?.map((image: any) => {
           const { verification, url } = image
           return {
             ...image,
@@ -59,10 +153,16 @@ export function useToken() {
         })
         return {
           ...token,
-          tokenData,
-          tokenAssets,
-          tokenIcon,
-        }
+          forTokenData,
+          forTokenImages,
+          forTokenIcon,
+          baseURIImages,
+          baseURIIcon,
+          owner,
+          creator,
+          tokenCreators,
+          decimals,
+        } as TokenData
       },
     })
   }

@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { AssetData } from '@/composables/useProfileAssets'
+
 type Props = {
-  tokens?: Asset[]
+  tokens?: AssetData[]
 }
 
 defineProps<Props>()

@@ -1,32 +1,42 @@
 <script setup lang="ts">
-import { AssetRepository } from '@/repositories/asset'
+// import { AssetRepository } from '@/repositories/asset'
 
 // import type { Asset } from '@/models/asset'
 
 const { assetFilter, isLoadingAssets } = storeToRefs(useAppStore())
 const viewedProfileAddress = getCurrentProfileAddress()
 const viewedProfile = useProfile()(viewedProfileAddress)
-const assetRepository = useRepo(AssetRepository)
+// const assetRepository = useRepo(AssetRepository)
 const { isMobile } = useDevice()
 
 const allTokens = useProfileAssets()(viewedProfileAddress)
 const tokensOwned = computed(() =>
-  allTokens.value?.filter(({ isOwned }) => isOwned)
+  allTokens.value?.filter(
+    ({ isOwned, standard, balance }) =>
+      isOwned && standard === 'LSP7DigitalAsset' && balance !== '0'
+  )
 )
 const tokensCreated = computed(() =>
   allTokens.value?.filter(({ isIssued }) => isIssued)
 )
-const nftsOwned = computed(() => assetRepository.getOwnedNfts())
-const nftsCreated = computed(() => assetRepository.getIssuedNfts())
+const nftsOwned = computed(() =>
+  allTokens.value?.filter(
+    ({ isOwned, standard }) =>
+      isOwned && standard === 'LSP8IdentifiableDigitalAsset'
+  )
+)
+const nftsCreated = computed(() =>
+  allTokens.value?.filter(
+    ({ isIssued, standard }) =>
+      isIssued && standard === 'LSP8IdentifiableDigitalAsset'
+  )
+)
 
 // tokens
 const ownedTokensCount = computed(
   () =>
-    (tokensOwned.value?.reduce(
-      (sum, { tokenIds }) =>
-        sum + (tokenIds && tokenIds.length ? tokenIds.length : 1),
-      0
-    ) || 0) + (viewedProfile?.balance !== '0' ? 1 : 0) // +1 if user has LYX token
+    (tokensOwned.value?.length || 0) +
+    (viewedProfile?.value?.balance !== '0' ? 1 : 0) // +1 if user has LYX token
 )
 
 const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
