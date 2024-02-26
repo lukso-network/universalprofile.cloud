@@ -19,7 +19,7 @@
     "lint:types": "tsc --noEmit --project tsconfig.json",
     "prepare": "npm-run-all nuxt:prepare typechain && husky install",
     "yata-fetch": "dotenv -- yata-fetch --config .yata.json",
-    "test": "npm-run-all test:unit:ci test:e2e",
+    "test": "npm-run-all test:unit:ci",
     "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
     "test:unit": "dotenv -- vitest",
