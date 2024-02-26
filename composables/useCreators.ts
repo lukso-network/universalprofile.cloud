@@ -1,21 +1,21 @@
 import { useQueries } from '@tanstack/vue-query'
 
-export const useCreators = (asset?: Asset) => {
+export const useCreators = (asset?: TokenData) => {
   // when asset has no creators in array we use owner as fallback
   const creatorAddressesOrOwner = computed(() => {
     // if no creators we use contract owner
-    if (!!!asset?.creators?.length && asset?.contractOwner) {
-      return [asset?.contractOwner]
+    if (!!!asset?.tokenCreators?.length && asset?.creator) {
+      return [asset?.creator]
     }
 
-    return asset?.creators?.filter(Boolean) || []
+    return asset?.tokenCreators?.filter(Boolean) || []
   })
 
   const creatorQueries = useQueries({
     queries:
       creatorAddressesOrOwner.value.map(creatorAddress => ({
         queryKey: ['profile', creatorAddress],
-        queryFn: () => fetchAndStoreProfile(creatorAddress),
+        queryFn: () => fetchAndStoreProfile(creatorAddress as Address),
       })) || [],
     combine: results => {
       return {

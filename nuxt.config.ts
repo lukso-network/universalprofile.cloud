@@ -27,9 +27,11 @@ export default defineNuxtConfig({
     '@pinia-orm/nuxt',
     '@nuxt/test-utils/module',
   ],
-  plausible: {
-    domain: 'wallet.universalprofile.cloud',
-  },
+  ...({
+    plausible: {
+      domain: 'wallet.universalprofile.cloud',
+    },
+  } as any),
   device: {
     refreshOnResize: true,
   },

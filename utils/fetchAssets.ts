@@ -9,7 +9,7 @@ import type { NuxtApp } from '@/types/plugins'
  * @returns
  */
 export const fetchAndStoreAssets = async (profileAddress: Address) => {
-  const { profile } = { profile: {} } // useProfile(profileAddress)
+  const { profile } = { profile: { value: {} as any } } // useProfile(profileAddress)
   const assetRepo = useRepo(AssetRepository)
   const { isLoadingAssets } = storeToRefs(useAppStore())
 

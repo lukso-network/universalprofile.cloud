@@ -7,13 +7,13 @@ export class AssetRepository extends Repository<AssetModel> {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
-    if (!viewedProfile.value?.receivedAssetAddresses) {
+    if (!viewedProfile?.value?.receivedAssetAddresses) {
       return []
     }
 
     return this.repo(AssetModel)
       .where('standard', STANDARDS.LSP7)
-      .where('address', viewedProfile.value.receivedAssetAddresses)
+      .where('address', viewedProfile?.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where((asset: Asset) => {
         return asset?.balance !== '0'
@@ -26,13 +26,13 @@ export class AssetRepository extends Repository<AssetModel> {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
-    if (!viewedProfile.value?.issuedAssetAddresses) {
+    if (!viewedProfile?.value?.issuedAssetAddresses) {
       return []
     }
 
     return this.repo(AssetModel)
       .where('standard', STANDARDS.LSP7)
-      .where('address', viewedProfile.value.issuedAssetAddresses)
+      .where('address', viewedProfile?.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where((asset: Asset) => {
         return asset?.balance !== '0'
@@ -45,16 +45,16 @@ export class AssetRepository extends Repository<AssetModel> {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
-    if (!viewedProfile.value?.receivedAssetAddresses) {
+    if (!viewedProfile?.value?.receivedAssetAddresses) {
       return []
     }
 
     return this.repo(AssetModel)
-      .where('address', viewedProfile.value.receivedAssetAddresses)
+      .where('address', viewedProfile?.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where('owner', viewedProfile.value.address)
       .where((asset: Asset) => {
-        return isCollectible(asset)
+        return isCollectible(asset as TokenData)
       })
       .where((asset: Asset) => {
         return asset?.balance !== '0'
@@ -66,16 +66,16 @@ export class AssetRepository extends Repository<AssetModel> {
     const { viewedProfile } = useViewedProfile()
     const { selectedChainId } = storeToRefs(useAppStore())
 
-    if (!viewedProfile.value?.issuedAssetAddresses) {
+    if (!viewedProfile?.value?.issuedAssetAddresses) {
       return []
     }
 
     return this.repo(AssetModel)
-      .where('address', viewedProfile.value.issuedAssetAddresses)
+      .where('address', viewedProfile?.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where('owner', viewedProfile.value.address)
       .where((asset: Asset) => {
-        return isCollectible(asset)
+        return isCollectible(asset as TokenData)
       })
       .where((asset: Asset) => {
         return asset?.balance !== '0'
@@ -95,7 +95,7 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('address', connectedProfile.value.receivedAssetAddresses)
       .where('chainId', selectedChainId.value)
       .where((asset: Asset) => {
-        return isLsp7(asset) || isLsp8(asset)
+        return isLsp7(asset as TokenData) || isLsp8(asset as TokenData)
       })
       .where('owner', connectedProfile.value?.address)
       .where((asset: Asset) => {

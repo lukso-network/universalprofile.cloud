@@ -95,16 +95,16 @@ const handlePreviewAsset = (asset: AssetMetadata) => {
       assertAddress(asset.address)
       const [fetchedAsset] = await fetchAsset(
         asset.address,
-        viewedProfile.value?.address,
+        viewedProfile?.value?.address,
         [tokenId]
       )
 
       // anything that is not LSP7/8 we open in explorer
-      if (!isAsset(fetchedAsset)) {
+      if (!isAsset(fetchedAsset as TokenData)) {
         return window.open(explorerContractUrl(asset.address), '_blank')
       }
 
-      if (isCollectible(fetchedAsset) && fetchedAsset?.tokenId) {
+      if (isCollectible(fetchedAsset as TokenData) && fetchedAsset?.tokenId) {
         navigateTo(nftRoute(asset.address, fetchedAsset.tokenId))
       } else {
         navigateTo(tokenRoute(asset.address))

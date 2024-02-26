@@ -35,9 +35,9 @@ export const fetchAndConvertImage = async (imageUrl: string) => {
  * @returns url of the image
  */
 export const getImageBySize = (
-  images: (ImageMetadata & { src: string })[],
+  images: (ImageMetadata & { src?: string })[],
   height: number
-): (ImageMetadata & { src: string }) | undefined => {
+): (ImageMetadata & { src?: string }) | undefined => {
   const sortedImagesAscending = images.sort((a, b) => {
     if (a.height < b.height) {
       return -1
@@ -116,7 +116,10 @@ export const getAssetThumb = (asset?: TokenData, useIcon?: boolean) => {
  * @param height - image height (represents the desired image height)
  * @returns Image model object
  */
-export const createImageObject = (image?: ImageMetadata[], height = 100) => {
+export const createImageObject = (
+  image?: (ImageMetadata & { src?: string })[],
+  height = 100
+) => {
   if (!image) {
     return undefined
   }

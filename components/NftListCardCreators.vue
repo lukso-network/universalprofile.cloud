@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type Props = {
-  asset: Asset
+  asset: TokenData
 }
 
 type VerifyStatus = 'verified' | 'unverified' | 'partial'
