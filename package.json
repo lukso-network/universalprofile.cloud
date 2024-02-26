@@ -31,7 +31,7 @@
     "typechain": "typechain --target web3-v1 --out-dir types/contracts/ './utils/LSP2FetcherWithMulticall3.json' && typechain --target web3-v1 --out-dir types/contracts/ './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
   },
   "devDependencies": {
-    "@erc725/erc725.js": "^0.23.1",
+    "@erc725/erc725.js": "patch:@erc725/erc725.js@npm%3A0.23.1#~/.yarn/patches/@erc725-erc725.js-npm-0.23.1-cc30a75abd.patch",
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.9",
     "@google/model-viewer": "^3.4.0",
@@ -117,7 +117,7 @@
     "web3-bzz": "~1.10.3",
     "web3-shh": "~1.10.3",
     "web3": "~1.10.3",
-    "@erc725/erc725.js": "^0.23.1",
+    "@erc725/erc725.js": "patch:@erc725/erc725.js@npm%3A0.23.1#~/.yarn/patches/@erc725-erc725.js-npm-0.23.1-cc30a75abd.patch",
     "@tanstack/query-core": "^5.20.5"
   },
   "lint-staged": {

@@ -20,8 +20,6 @@ import { type QueryKey } from '@tanstack/vue-query'
 
 import LSP2FetcherWithMulticall3Contract from './LSP2FetcherWithMulticall3.json'
 
-import type { LSP2FetcherWithMulticall3 } from '@/types/contracts/utils'
-
 export type QueryPromiseCallOptions = {
   type: 'call'
   chainId: string
@@ -110,9 +108,12 @@ const limiter = new RateLimiter({ tokensPerInterval: 80, interval: 'second' })
 
 async function convert<T = any>(
   query: QueryPromise<unknown, QueryPromiseDataOptions>,
-  data: string,
+  data: string | null,
   overrideSchema?: ERC725JSONSchema[]
 ): Promise<T | null> {
+  if (data == undefined) {
+    return null
+  }
   const { keyName, schema, dynamicKeyParts } = query
   let info = decodeData(
     [
@@ -209,7 +210,7 @@ async function doQueries() {
   }[] = []
 
   const { contract } = useWeb3(PROVIDERS.RPC)
-  const lsp2CustomContract = contract<LSP2FetcherWithMulticall3>(
+  const lsp2CustomContract = contract<any>(
     LSP2FetcherWithMulticall3Contract.abi as AbiItem[],
     LSP2ContractAddress
   )
@@ -375,15 +376,15 @@ async function doQueries() {
       }
     }
     await limiter.removeTokens(1)
-    console.log(
-      'multicall',
-      lsp2CustomContract.methods
-        .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
-        .encodeABI(),
-      LSP2FetcherWithMulticall3Contract.abi.find(
-        ({ name }) => name === 'aggregate3'
-      )
-    )
+    // console.log(
+    //   'multicall',
+    //   lsp2CustomContract.methods
+    //     .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
+    //     .encodeABI(),
+    //   LSP2FetcherWithMulticall3Contract.abi.find(
+    //     ({ name }) => name === 'aggregate3'
+    //   )
+    // )
     await lsp2CustomContract.methods
       .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
       .call()
@@ -405,7 +406,7 @@ async function doQueries() {
             }
             for (const [j, query] of queries.entries()) {
               try {
-                let item: string | null = items[j]
+                let item: string | null = items?.[j] || null
                 if (['data', 'tokenData'].includes(query.type)) {
                   item = await convert(
                     query as QueryPromise<unknown, QueryPromiseDataOptions>,
@@ -485,11 +486,20 @@ async function doQueries() {
 }
 
 export const interfacesToCheck = [
-  INTERFACE_IDS.LSP0ERC725Account,
-  INTERFACE_IDS.LSP7DigitalAsset,
-  INTERFACE_IDS_v12.LSP7DigitalAsset,
-  INTERFACE_IDS.LSP8IdentifiableDigitalAsset,
-  INTERFACE_IDS_v12.LSP8IdentifiableDigitalAsset,
+  { interfaceId: INTERFACE_IDS.LSP0ERC725Account, standard: 'LSP3Profile' },
+  { interfaceId: INTERFACE_IDS.LSP7DigitalAsset, standard: 'LSP7DigitalAsset' },
+  {
+    interfaceId: INTERFACE_IDS_v12.LSP7DigitalAsset,
+    standard: 'LSP7DigitalAsset',
+  },
+  {
+    interfaceId: INTERFACE_IDS.LSP8IdentifiableDigitalAsset,
+    standard: 'LSP8IdentifiableDigitalAsset',
+  },
+  {
+    interfaceId: INTERFACE_IDS_v12.LSP8IdentifiableDigitalAsset,
+    standard: 'LSP8IdentifiableDigitalAsset',
+  },
 ]
 
 export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {

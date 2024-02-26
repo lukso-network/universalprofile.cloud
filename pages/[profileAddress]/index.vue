@@ -1,179 +1,167 @@
 <script setup lang="ts">
-import { useQueries } from '@tanstack/vue-query'
+import { AssetRepository } from '@/repositories/asset'
 
+// import type { Asset } from '@/models/asset'
+
+const { assetFilter, isLoadingAssets } = storeToRefs(useAppStore())
 const viewedProfileAddress = getCurrentProfileAddress()
-const { currentNetwork } = storeToRefs(useAppStore())
-const rootQueries = computed(() => [
-  {
-    queryKey: [
-      'data',
-      currentNetwork.value.chainId,
-      viewedProfileAddress,
-      'LSP4Metadata',
-    ],
-  },
-  {
-    queryKey: [
-      'data',
-      currentNetwork.value.chainId,
-      viewedProfileAddress,
-      'LSP3Profile',
-    ],
-  },
-  {
-    queryKey: [
-      'data',
-      currentNetwork.value.chainId,
-      viewedProfileAddress,
-      'LSP12IssuedAssets[]',
-    ],
-  },
-  {
-    queryKey: [
-      'data',
-      currentNetwork.value.chainId,
-      viewedProfileAddress,
-      'LSP5ReceivedAssets[]',
-    ],
-  },
-])
-const results = useQueries({
-  queries: rootQueries,
-})
-const queries = computed<{ queryKey: string[] }[]>(() => {
-  if (results.value[3]?.isFetched) {
-    return ((results.value[3].data as string[] | undefined)?.flatMap(
-      (item: string) => {
-        return [
-          {
-            queryKey: [
-              'data',
-              currentNetwork.value.chainId,
-              item,
-              'LSP4Metadata',
-            ],
-          },
-          {
-            queryKey: [
-              'call',
-              currentNetwork.value.chainId,
-              item,
-              'tokenIdsOf(address)',
-              viewedProfileAddress,
-            ],
-          },
-          ...interfacesToCheck.map((interfacesToCheck: string) => {
-            return {
-              queryKey: [
-                'call',
-                currentNetwork.value.chainId,
-                item,
-                'supportsInterface(bytes4)',
-                interfacesToCheck,
-              ],
-            }
-          }),
-        ] as { queryKey: string[] }[]
-      }
-    ) || []) as { queryKey: string[] }[]
+const viewedProfile = useProfile()(viewedProfileAddress)
+const assetRepository = useRepo(AssetRepository)
+const { isMobile } = useDevice()
+
+const allTokens = useProfileAssets()(viewedProfileAddress)
+const tokensOwned = computed(() =>
+  allTokens.value?.filter(({ isOwned }) => isOwned)
+)
+const tokensCreated = computed(() =>
+  allTokens.value?.filter(({ isIssued }) => isIssued)
+)
+const nftsOwned = computed(() => assetRepository.getOwnedNfts())
+const nftsCreated = computed(() => assetRepository.getIssuedNfts())
+
+// tokens
+const ownedTokensCount = computed(
+  () =>
+    (tokensOwned.value?.reduce(
+      (sum, { tokenIds }) =>
+        sum + (tokenIds && tokenIds.length ? tokenIds.length : 1),
+      0
+    ) || 0) + (viewedProfile.value?.balance !== '0' ? 1 : 0) // +1 if user has LYX token
+)
+
+const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
+
+const tokens = computed(() => {
+  if (assetFilter.value === AssetFilter.owned) {
+    return tokensOwned.value
+  } else {
+    return tokensCreated.value
   }
-  return [] as { queryKey: string[] }[]
 })
-const items = useQueries({
-  queries,
-})
-const tokenIdsQueries = computed(() => {
-  if (items.value[0]?.isFetched) {
-    return items.value.flatMap((item: any, index: number) => {
-      if (
-        queries.value[index].queryKey[3] === 'tokenIdsOf(address)' &&
-        item.isFetched
-      ) {
-        const query = queries.value[index]
-        return item.isFetched && item.data?.map
-          ? item.data?.map((tokenId: string) => {
-              return {
-                queryKey: [
-                  'tokenData',
-                  currentNetwork.value.chainId,
-                  query.queryKey[2],
-                  tokenId,
-                  'LSP4Metadata',
-                ],
-              }
-            }) || []
-          : []
-      }
-      return []
-    }) as { queryKey: string[] }[]
+
+// NFTs
+const ownedNftsCount = computed(() => nftsOwned.value?.length || 0)
+
+const createdNftsCount = computed(() => nftsCreated.value?.length || 0)
+
+const nfts = computed(() => {
+  if (assetFilter.value === AssetFilter.owned) {
+    return nftsOwned.value
+  } else {
+    return nftsCreated.value
   }
-  return [] as { queryKey: string[] }[]
 })
-const resultsTokenIds = useQueries({
-  queries: tokenIdsQueries,
-})
+
+// assets (tokens + NFTs)
+const ownedAssetsCount = computed(
+  () => ownedTokensCount.value + ownedNftsCount.value
+)
+
+const createdAssetsCount = computed(
+  () => createdTokensCount.value + createdNftsCount.value
+)
+
+// empty states
+const hasEmptyCreators = computed(
+  () =>
+    assetFilter.value === AssetFilter.created &&
+    !createdNftsCount.value &&
+    !createdTokensCount.value
+)
+
+const hasEmptyTokens = computed(
+  () =>
+    assetFilter.value === AssetFilter.owned ||
+    (assetFilter.value === AssetFilter.created && createdTokensCount.value)
+)
+
+const hasEmptyNfts = computed(
+  () =>
+    (assetFilter.value === AssetFilter.owned && ownedNftsCount.value) ||
+    (assetFilter.value === AssetFilter.created && createdNftsCount.value)
+)
+
+const showProfileDetails = computed(
+  () => useRouter().currentRoute.value.query.referrer === REFERRERS.INDEXER
+)
 </script>
 
 <template>
-  <div class="relative">
-    <AppPageLoader>
-      <div class="mx-auto max-w-content">
-        {{ viewedProfileAddress }}
-        <div
-          class="block rounded-lg border border-gray-200 bg-white p-6"
-          v-for="(result, index) in results"
-          :key="index"
-        >
-          <p class="mb-2 font-bold tracking-tight">
-            Root {{ rootQueries[index].queryKey.join(' ') }}
-          </p>
-          <p class="overflow-auto whitespace-pre">
-            {{
-              result?.isError
-                ? (result?.error as any)?.message || 'error'
-                : result?.isFetched
-                  ? JSON.stringify(result?.data, null, '  ')
-                  : 'loading'
-            }}
-          </p>
+  <AppPageLoader>
+    <div
+      v-if="viewedProfile?.standard === 'LSP3Profile'"
+      class="mx-auto max-w-content"
+    >
+      <ProfileCard />
+      <ProfileDetails v-if="showProfileDetails" />
+      <div>
+        <div class="whitespace-pre-wrap pt-8">
+          profile = {{ JSON.stringify(viewedProfile, null, '  ') }}
         </div>
-        <div
-          class="block rounded-lg border border-gray-200 bg-white p-6"
-          v-for="(result, index) in items"
-          :key="index"
-        >
-          <p class="mb-2 font-bold tracking-tight">
-            Dependent {{ queries[index].queryKey.join(' ') }}:
-          </p>
-          <p class="overflow-auto whitespace-pre">
-            {{
-              result?.isError
-                ? (result?.error as any)?.message || 'error'
-                : result?.isFetched
-                  ? JSON.stringify(result?.data, null, '  ')
-                  : 'loading'
-            }}
-          </p>
+        <div class="whitespace-pre-wrap pt-8">
+          assets = {{ JSON.stringify(allTokens, null, '  ') }}
         </div>
-        <div
-          class="block rounded-lg border border-gray-200 bg-white p-6"
-          v-for="(result, index) in resultsTokenIds"
-          :key="index"
-        >
-          <p class="mb-2 font-bold tracking-tight">
-            TokenIds {{ tokenIdsQueries[index].queryKey.join(' ') }}:
-          </p>
-          <p class="overflow-auto whitespace-pre">
-            {{
-              result?.isError
-                ? (result?.error as any)?.message || 'error'
-                : result?.isFetched
-                  ? JSON.stringify(result?.data, null, '  ')
-                  : 'loading'
-            }}
-          </p>
+
+        <lukso-sanitize
+          :html-content="$formatMessage('assets_description')"
+        ></lukso-sanitize>
+        <div class="grid grid-cols-2 gap-4 pt-10 sm:flex">
+          <lukso-button
+            size="small"
+            variant="secondary"
+            :is-active="assetFilter === AssetFilter.owned ? true : undefined"
+            :is-full-width="isMobile ? true : undefined"
+            :count="ownedAssetsCount"
+            @click="assetFilter = AssetFilter.owned"
+            >{{ $formatMessage('asset_filter_owned_assets') }}</lukso-button
+          >
+          <lukso-button
+            size="small"
+            variant="secondary"
+            :is-active="assetFilter === AssetFilter.created ? true : undefined"
+            :is-full-width="isMobile ? true : undefined"
+            :count="createdAssetsCount"
+            @click="assetFilter = AssetFilter.created"
+            >{{ $formatMessage('asset_filter_created_assets') }}</lukso-button
+          >
+        </div>
+
+        <div v-if="hasEmptyCreators" class="pt-8">
+          <h3 class="heading-inter-17-semi-bold pb-2">
+            {{ $formatMessage('assets_empty_state_title') }}
+          </h3>
+          <lukso-sanitize
+            :html-content="$formatMessage('assets_empty_state_description')"
+          ></lukso-sanitize>
+        </div>
+        <div v-else>
+          <TokenList v-if="hasEmptyTokens" :tokens="tokens" />
+          <NftList v-if="hasEmptyNfts" :nfts="nfts" />
+          <AppLoader
+            v-if="isLoadingAssets"
+            class="relative left-[calc(50%-20px)] mt-20"
+          />
         </div>
       </div>
-    </AppPageLoader>
-  </div>
+    </div>
+    <div
+      v-else
+      class="mx-auto flex h-full max-w-72 flex-col items-center justify-center text-center"
+    >
+      <img src="/images/up-error.png" alt="" class="mb-6 w-36" />
+      <div class="heading-inter-21-semi-bold mb-4">
+        {{ $formatMessage('not_up_title') }}
+      </div>
+      <div class="paragraph-inter-16-regular mb-6">
+        {{ $formatMessage('not_up_description') }}
+      </div>
+      <lukso-button
+        variant="landing"
+        is-link
+        :href="explorerContractUrl(viewedProfile?.profileAddress)"
+        class="mb-8"
+        >{{ $formatMessage('not_up_button') }}</lukso-button
+      >
+    </div>
+  </AppPageLoader>
 </template>
