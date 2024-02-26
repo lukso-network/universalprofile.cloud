@@ -5,7 +5,6 @@ const profile = useProfile()(profileAddress)
 
 <template>
   <div class="relative">
-    <img :src="profile?.backgroundImage?.src" />
     <lukso-card
       variant="hero"
       :background-url="profile?.backgroundImage?.src"
