@@ -9,7 +9,6 @@
     },
     "types": [
       "node",
-      "@nuxtjs/device"
     ],
   }
 }

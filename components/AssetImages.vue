@@ -31,7 +31,7 @@ const handlePreviewImage = (image: Image) => {
         class="rounded-8 bg-neutral-90 transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
       >
         <img
-          class="h-14 w-14 cursor-pointer rounded-8 object-cover"
+          class="size-14 cursor-pointer rounded-8 object-cover"
           @click="handlePreviewImage(image)"
           :src="image?.url"
           loading="lazy"

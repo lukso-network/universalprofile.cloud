@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import makeBlockie from 'ethereum-blockies-base64'
 
-import type { AssetData } from '@/composables/useProfileAssets'
 import type { Asset } from '@/models/asset'
 
 type Props = {
-  asset: AssetData
+  asset: TokenData
   hasAddress?: boolean
 }
 
@@ -126,7 +125,7 @@ const assetTokenId = computed(() => {
             v-if="asset?.address"
             :src="makeBlockie(asset.address)"
             alt=""
-            class="h-3 w-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
+            class="size-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
           />
           {{ asset?.address?.slice(0, 6) }}
         </div>

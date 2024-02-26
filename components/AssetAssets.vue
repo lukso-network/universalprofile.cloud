@@ -126,7 +126,7 @@ const handlePreviewAsset = (asset: AssetMetadata) => {
       <div
         v-for="(asset, index) in assets"
         :key="index"
-        class="paragraph-inter-10-bold-uppercase flex h-14 w-14 cursor-pointer flex-col items-center justify-center rounded-8 border border-neutral-90 bg-neutral-100 bg-cover transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
+        class="paragraph-inter-10-bold-uppercase flex size-14 cursor-pointer flex-col items-center justify-center rounded-8 border border-neutral-90 bg-neutral-100 bg-cover transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
         @click="handlePreviewAsset(asset)"
       >
         <lukso-icon :name="assetFileType(asset).icon" class="mb-1"></lukso-icon>

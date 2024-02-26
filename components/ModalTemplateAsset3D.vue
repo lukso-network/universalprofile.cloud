@@ -31,7 +31,7 @@ defineProps<Props>()
       exposure="1"
       environment-image="neutral"
       ar-status="not-presenting"
-      class="relative h-full w-full rounded-12"
+      class="relative size-full rounded-12"
       shadow-intensity="1"
     ></model-viewer>
     <lukso-icon

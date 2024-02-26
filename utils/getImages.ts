@@ -1,5 +1,4 @@
 import type { ImageMetadata } from '@lukso/lsp-smart-contracts'
-import type { Asset } from '@/models/asset'
 import type { Image } from '@/types/image'
 
 const convertBlobToBase64 = (blob: Blob) =>
@@ -92,7 +91,9 @@ export const getAssetThumb = (asset?: TokenData, useIcon?: boolean) => {
     const icon = asset.baseURIIcon || asset.forTokenIcon || asset.icon
     const url = getImageBySize(icon, 260)?.src
     if (url) {
-      return url + '&width=100&height=260'
+      return url.startsWith('https://api.universalprofile.cloud/image/')
+        ? url + '&width=100&height=260'
+        : url
     }
   }
 
@@ -100,7 +101,9 @@ export const getAssetThumb = (asset?: TokenData, useIcon?: boolean) => {
   const image = images?.[0]
   const url = getImageBySize(image, 260)?.src
   if (url) {
-    return url + '&width=100&height=260'
+    return url.startsWith('https://api.universalprofile.cloud/image/')
+      ? url + '&width=100&height=260'
+      : url
   }
 
   return undefined

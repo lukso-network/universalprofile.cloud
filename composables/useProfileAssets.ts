@@ -47,10 +47,10 @@ export function useProfileAssets() {
     // symbol
     // balanceOf
 
-    const receivedAssetCount = profile.value?.receivedAssets?.length || 0
+    const receivedAssetCount = profile?.value?.receivedAssets?.length || 0
     const allAddresses = ([] as `0x${string}`[]).concat(
-      profile.value?.receivedAssets || [],
-      profile.value?.issuedAssets || []
+      profile?.value?.receivedAssets || [],
+      profile?.value?.issuedAssets || []
     )
     const queries = allAddresses.flatMap((address: Address) => {
       return [
@@ -205,7 +205,9 @@ export function useProfileAssets() {
                       tokenURI = toNumber(tokenId).toString()
                       break
                     case 1:
-                      tokenURI = encodeURI(hexToAscii(tokenId).trim())
+                      tokenURI = encodeURI(
+                        hexToAscii(tokenId).replace(/\0/g, '')
+                      )
                       break
                     case 2:
                       tokenURI = tokenId.toLowerCase()

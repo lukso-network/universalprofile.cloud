@@ -15,7 +15,7 @@ describe('isLyx', () => {
       isLyx({
         name: 'LYX',
         isNativeToken: true,
-      })
+      } as TokenData)
     ).toBe(true)
   })
 

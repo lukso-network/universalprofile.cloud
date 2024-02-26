@@ -31,7 +31,7 @@ const truncateAddress = computed(() => {
         <img
           :src="makeBlockie(address)"
           alt=""
-          class="bottom-0 right-0 h-6 w-6 rounded-full shadow-neutral-above-shadow-1xl outline outline-2 outline-neutral-100"
+          class="bottom-0 right-0 size-6 rounded-full shadow-neutral-above-shadow-1xl outline outline-2 outline-neutral-100"
         />
         <div class="paragraph-ptmono-12-bold ml-2">{{ truncateAddress }}</div>
       </div>

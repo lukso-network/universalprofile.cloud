@@ -87,6 +87,7 @@ export function useToken() {
                         return response.json()
                       })
                     }
+                    return null
                   },
                 },
               ]
