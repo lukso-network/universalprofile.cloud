@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import type { Image } from '@/models/image'
+import type { Image } from '@/types/image'
 
 type Props = {
   images: Image[]
 }
 
 defineProps<Props>()
+const { showModal } = useModal()
+
+const handlePreviewImage = (image: Image) => {
+  showModal({
+    template: 'AssetImage',
+    data: {
+      asset: image,
+    },
+    size: 'auto',
+  })
+}
 </script>
 
 <template>
@@ -17,11 +28,17 @@ defineProps<Props>()
       <div
         v-for="(image, index) in images"
         :key="index"
-        class="h-14 w-14 rounded-8 bg-neutral-90 bg-cover"
-        :style="{
-          backgroundImage: `url(${image?.url})`,
-        }"
-      ></div>
+        class="rounded-8 bg-neutral-90 transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
+      >
+        <img
+          class="h-14 w-14 cursor-pointer rounded-8 object-cover"
+          @click="handlePreviewImage(image)"
+          :src="image?.url"
+          loading="lazy"
+          alt=""
+          onerror="this.style.opacity=0"
+        />
+      </div>
     </div>
   </div>
 </template>

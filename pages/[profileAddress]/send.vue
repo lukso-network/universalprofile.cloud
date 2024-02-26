@@ -51,7 +51,7 @@ watchEffect(() => {
     const assetAddress = useRouter().currentRoute.value.query.asset
     const tokenId = useRouter().currentRoute.value.query.tokenId
     assertAddress(assetAddress, 'asset')
-    const storeAsset = assetRepository.getAssetAndImages(assetAddress, tokenId)
+    const storeAsset = assetRepository.getAsset(assetAddress, tokenId)
 
     if (!storeAsset) {
       assertAddress(connectedProfile.value?.address, 'profile')

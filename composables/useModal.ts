@@ -6,6 +6,7 @@ const showModal = (data: Modal | string) => {
   const defaultData = {
     isOpen: true,
     icon: '/images/up-error.png',
+    size: 'small',
   } as Modal
 
   if (typeof data === 'string') {

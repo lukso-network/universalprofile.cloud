@@ -29,7 +29,7 @@ const isLoaded = computed(
     </div>
     <AppLoader
       v-if="!isLoaded"
-      class="absolute left-[calc(50%-20px)] top-[200px] sm:top-[300px]"
+      class="absolute left-[calc(50vw-20px)] top-[calc(50vh-20px)] sm:top-[300px]"
     />
   </div>
 </template>

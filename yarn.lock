@@ -1520,6 +1520,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@google/model-viewer@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "@google/model-viewer@npm:3.4.0"
+  dependencies:
+    "@monogrid/gainmap-js": "npm:^3.0.1"
+    lit: "npm:^2.7.2"
+  peerDependencies:
+    three: ^0.160.0
+  checksum: 8165726ebe4c89de3d3e3fd0911416142f6428e713024d8b1433b2a932328e4ca84f1e16f5950a72513578cdd2c20499bdb9a42508fd82ca31f74074e2f2afb2
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.13":
   version: 0.11.13
   resolution: "@humanwhocodes/config-array@npm:0.11.13"
@@ -1656,6 +1668,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lit-labs/ssr-dom-shim@npm:^1.0.0, @lit-labs/ssr-dom-shim@npm:^1.1.0":
+  version: 1.2.0
+  resolution: "@lit-labs/ssr-dom-shim@npm:1.2.0"
+  checksum: 33679defe08538ac6fb612854e7d32b4ea1e787cceba2c3373d26fd56baa9833881887da7bade3930a176ba518dc00bb42ce95d82ddb6af6b05b8fbe1fc3169f
+  languageName: node
+  linkType: hard
+
+"@lit/reactive-element@npm:^1.3.0, @lit/reactive-element@npm:^1.6.0":
+  version: 1.6.3
+  resolution: "@lit/reactive-element@npm:1.6.3"
+  dependencies:
+    "@lit-labs/ssr-dom-shim": "npm:^1.0.0"
+  checksum: 664c899bb0b144590dc4faf83b358b1504810eac107778c3aeb384affc65a7ef4eda754944bcc34a57237db03dff145332406345ac24da19ca37cf4b3cb343d3
+  languageName: node
+  linkType: hard
+
 "@lukso/lsp-smart-contracts-12@npm:@lukso/lsp-smart-contracts@0.12.1":
   version: 0.12.1
   resolution: "@lukso/lsp-smart-contracts@npm:0.12.1"
@@ -1682,16 +1710,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@npm:1.59.0":
-  version: 1.59.0
-  resolution: "@lukso/web-components@npm:1.59.0"
+"@lukso/web-components@npm:1.60.0":
+  version: 1.60.0
+  resolution: "@lukso/web-components@npm:1.60.0"
   dependencies:
     clsx: "npm:^2.0.0"
     ethereum-blockies-base64: "npm:^1.0.2"
     tailwind-merge: "npm:^2.0.0"
     tailwind-variants: "npm:^0.1.18"
     tippy.js: "npm:^6.3.7"
-  checksum: 32ccac0bcf076c1bb286241dcba7636ad883997ceef854f5e75d854062b330fa86b35aa4faeef5c34543bb1e53ac18b36410385368f296e87fcce65831dba018
+  checksum: f4a30923dd5b5fd858138912bfe626c5d3f26946a655bb029b8c2dccbbe6389971701713b60f83acc1c08f8fb6429731a6d9f47273ce769ddfdc4933c7b0d4c4
   languageName: node
   linkType: hard
 
@@ -1731,6 +1759,17 @@ __metadata:
   version: 2.0.0
   resolution: "@metamask/safe-event-emitter@npm:2.0.0"
   checksum: 3e4f00c64aa1ddf9b9ae5c2337fb8cee359b6c481ded0ec21ef70610960c51cdcc4a9b569de334dcd7cb1fe445cafd298360907c1e211e244c5990b55246f350
+  languageName: node
+  linkType: hard
+
+"@monogrid/gainmap-js@npm:^3.0.1":
+  version: 3.0.3
+  resolution: "@monogrid/gainmap-js@npm:3.0.3"
+  dependencies:
+    promise-worker-transferable: "npm:^1.0.4"
+  peerDependencies:
+    three: ">= 0.159.0"
+  checksum: f34ec01715b185f1d7c63ca59327d7b35011180aad8599662b336fe31ef45f517b0d2f9da22c3112c6b52e576c1deabbd3d6fdd1638474bf04d5617fce801683
   languageName: node
   linkType: hard
 
@@ -3643,6 +3682,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/stats.js@npm:*":
+  version: 0.17.3
+  resolution: "@types/stats.js@npm:0.17.3"
+  checksum: 4f84a012f630532877f62959b6335d3fa081ccaac15ce3f1f916741db265bda22b9c927d7efc9cc3389ffd60919a370673cb0b4e7221d580c571031e94b689fd
+  languageName: node
+  linkType: hard
+
+"@types/three@npm:^0":
+  version: 0.161.2
+  resolution: "@types/three@npm:0.161.2"
+  dependencies:
+    "@types/stats.js": "npm:*"
+    "@types/webxr": "npm:*"
+    fflate: "npm:~0.6.10"
+    meshoptimizer: "npm:~0.18.1"
+  checksum: 4395d86db71c9be9ec04de048d2fbeb2ae43e7f66938a505950cb2c320b735431c7e6d88e1f7c776844efb079dc9b5788f81d0d4e7532baf4b0eb7bf38b433a0
+  languageName: node
+  linkType: hard
+
+"@types/trusted-types@npm:^2.0.2":
+  version: 2.0.7
+  resolution: "@types/trusted-types@npm:2.0.7"
+  checksum: 8e4202766a65877efcf5d5a41b7dd458480b36195e580a3b1085ad21e948bc417d55d6f8af1fd2a7ad008015d4117d5fdfe432731157da3c68678487174e4ba3
+  languageName: node
+  linkType: hard
+
 "@types/underscore@npm:*":
   version: 1.11.15
   resolution: "@types/underscore@npm:1.11.15"
@@ -3666,6 +3731,13 @@ __metadata:
     "@types/bn.js": "npm:*"
     "@types/underscore": "npm:*"
   checksum: c9db2e3d13d4d6d0be6cb00ec2306be908a31227c433a0ab2df1d1afb66ffc948956d742a13814e5eb2b6e6994ffb20d4dfb6f2b29e1eb01e9a0b474149c4216
+  languageName: node
+  linkType: hard
+
+"@types/webxr@npm:*":
+  version: 0.5.14
+  resolution: "@types/webxr@npm:0.5.14"
+  checksum: 6f35bb3ec137c23a2d525c93130805fe5004572c750a9c9e875fb7dbede503e41e3ad31d4c5893d5dd77a13379e3258b874cbb3cd491d5c9e247f0ad55c5a367
   languageName: node
   linkType: hard
 
@@ -8211,6 +8283,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fflate@npm:~0.6.10":
+  version: 0.6.10
+  resolution: "fflate@npm:0.6.10"
+  checksum: 9f2fd7224bccdb28102adc7c55c262b584571426eb9e0b91b13088884f45700232b51e034e300b74abf64e5449596d5c37d0a802673e25edb17c6742e4a4a0bd
+  languageName: node
+  linkType: hard
+
 "file-entry-cache@npm:^6.0.1":
   version: 6.0.1
   resolution: "file-entry-cache@npm:6.0.1"
@@ -10010,6 +10089,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-promise@npm:^2.1.0":
+  version: 2.2.2
+  resolution: "is-promise@npm:2.2.2"
+  checksum: 18bf7d1c59953e0ad82a1ed963fb3dc0d135c8f299a14f89a17af312fc918373136e56028e8831700e1933519630cc2fd4179a777030330fde20d34e96f40c78
+  languageName: node
+  linkType: hard
+
 "is-promise@npm:^4.0.0":
   version: 4.0.0
   resolution: "is-promise@npm:4.0.0"
@@ -10713,6 +10799,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lie@npm:^3.0.2":
+  version: 3.3.0
+  resolution: "lie@npm:3.3.0"
+  dependencies:
+    immediate: "npm:~3.0.5"
+  checksum: f335ce67fe221af496185d7ce39c8321304adb701e122942c495f4f72dcee8803f9315ee572f5f8e8b08b9e8d7195da91b9fad776e8864746ba8b5e910adf76e
+  languageName: node
+  linkType: hard
+
 "lilconfig@npm:3.0.0, lilconfig@npm:^3.0.0":
   version: 3.0.0
   resolution: "lilconfig@npm:3.0.0"
@@ -10802,6 +10897,37 @@ __metadata:
     rfdc: "npm:^1.3.0"
     wrap-ansi: "npm:^9.0.0"
   checksum: d5a53b6d5feaa3a45c3750ebf10d242d42f11741b890edf8de7d68a002c36f15d0683f25742a0eb055763f04c005210a5cd61ef6c24ebac099d597cb21b06f29
+  languageName: node
+  linkType: hard
+
+"lit-element@npm:^3.3.0":
+  version: 3.3.3
+  resolution: "lit-element@npm:3.3.3"
+  dependencies:
+    "@lit-labs/ssr-dom-shim": "npm:^1.1.0"
+    "@lit/reactive-element": "npm:^1.3.0"
+    lit-html: "npm:^2.8.0"
+  checksum: 7968e7f3ce3994911f27c4c54acc956488c91d8af81677cce3d6f0c2eaea45cceb79b064077159392238d6e43d46015a950269db9914fea8913566aacb17eaa1
+  languageName: node
+  linkType: hard
+
+"lit-html@npm:^2.8.0":
+  version: 2.8.0
+  resolution: "lit-html@npm:2.8.0"
+  dependencies:
+    "@types/trusted-types": "npm:^2.0.2"
+  checksum: 3503e55e2927c2ff94773cf041fc4128f92291869c9192f36eacb7f95132d11f6b329e5b910ab60a4456349cd2e6d23b33d83291b24d557bcd6b904d6314ac1a
+  languageName: node
+  linkType: hard
+
+"lit@npm:^2.7.2":
+  version: 2.8.0
+  resolution: "lit@npm:2.8.0"
+  dependencies:
+    "@lit/reactive-element": "npm:^1.6.0"
+    lit-element: "npm:^3.3.0"
+    lit-html: "npm:^2.8.0"
+  checksum: aa64c1136b855ba328d41157dba67657d480345aeec3c1dd829abeb67719d759c9ff2ade9903f9cfb4f9d012b16087034aaa5b33f1182e70c615765562e3251b
   languageName: node
   linkType: hard
 
@@ -11209,6 +11335,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"meshoptimizer@npm:~0.18.1":
+  version: 0.18.1
+  resolution: "meshoptimizer@npm:0.18.1"
+  checksum: 5cfef6918562b8363a51e92b6eafe81a684fe7b9e31de1c19a6e2068ca8edab745b3e8ef2f0190ecbcc2065134b5dc1de97e4514eb2157914762356c07f93b9f
+  languageName: node
+  linkType: hard
+
 "metadata-scraper@npm:^0.2.49":
   version: 0.2.61
   resolution: "metadata-scraper@npm:0.2.61"
@@ -11247,6 +11380,22 @@ __metadata:
   version: 1.52.0
   resolution: "mime-db@npm:1.52.0"
   checksum: 54bb60bf39e6f8689f6622784e668a3d7f8bed6b0d886f5c3c446cb3284be28b30bf707ed05d0fe44a036f8469976b2629bbea182684977b084de9da274694d7
+  languageName: node
+  linkType: hard
+
+"mime-db@npm:~1.24.0":
+  version: 1.24.0
+  resolution: "mime-db@npm:1.24.0"
+  checksum: dac6a23b77c236175fd9755dcb185813640d4bb42fd3e31cbe3f3d0a9826942ecce05ab790d70d8cf1a3689602d23ff3ea51382b59cd91892c8dbecdee2d4930
+  languageName: node
+  linkType: hard
+
+"mime-to-extensions@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "mime-to-extensions@npm:1.0.2"
+  dependencies:
+    mime-db: "npm:~1.24.0"
+  checksum: 869efbbc806c38f0114ead24099c9bdd2492eb88a07e720d5d9c4684e2de99da5214bbebae0632ffc359c1eed4ad03889420561a864c19cbb311bc9e6bbb9a8d
   languageName: node
   linkType: hard
 
@@ -13696,6 +13845,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"promise-worker-transferable@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "promise-worker-transferable@npm:1.0.4"
+  dependencies:
+    is-promise: "npm:^2.1.0"
+    lie: "npm:^3.0.2"
+  checksum: a54414fb3d17c9c2c3e120052f86b308787b10716f47ee2ff91f7e1a864b25320a740c9a9df32e9fe331510dbf83a782b7bb8499ba60fed13f84f5ce2e8dfe91
+  languageName: node
+  linkType: hard
+
 "prompts@npm:^2.4.2":
   version: 2.4.2
   resolution: "prompts@npm:2.4.2"
@@ -15830,6 +15989,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"three@npm:^0.161.0":
+  version: 0.161.0
+  resolution: "three@npm:0.161.0"
+  checksum: 0e3b80b0848e0f7539b9408d1032aaef9d2386a3d9ce949803c8ce6eed47bfd13b4e22a5ce21016693601aee976887336521dc273859c5cbb95e2ff5f54837f1
+  languageName: node
+  linkType: hard
+
 "timed-out@npm:^4.0.1":
   version: 4.0.1
   resolution: "timed-out@npm:4.0.1"
@@ -17256,9 +17422,10 @@ __metadata:
     "@erc725/erc725.js": "npm:^0.23.1"
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
     "@formatjs/intl": "npm:^2.9.9"
+    "@google/model-viewer": "npm:^3.4.0"
     "@lukso/lsp-smart-contracts": "npm:0.14.0"
     "@lukso/lsp-smart-contracts-12": "npm:@lukso/lsp-smart-contracts@0.12.1"
-    "@lukso/web-components": "npm:1.59.0"
+    "@lukso/web-components": "npm:1.60.0"
     "@nuxt/test-utils": "npm:^3.11.0"
     "@nuxtjs/algolia": "npm:^1.10.1"
     "@nuxtjs/device": "npm:^3.1.1"
@@ -17281,6 +17448,7 @@ __metadata:
     "@types/fs-extra": "npm:11.0.4"
     "@types/node": "npm:^20.11.5"
     "@types/randombytes": "npm:2.0.3"
+    "@types/three": "npm:^0"
     "@typescript-eslint/eslint-plugin": "npm:6.17.0"
     "@typescript-eslint/parser": "npm:6.17.0"
     "@vitest/ui": "npm:^1.2.2"
@@ -17305,6 +17473,7 @@ __metadata:
     husky: "npm:8.0.3"
     limiter: "npm:^2.1.0"
     lint-staged: "npm:15.2.0"
+    mime-to-extensions: "npm:^1.0.2"
     npm-run-all: "npm:4.1.5"
     nuxt: "npm:^3.9.1"
     pinia: "npm:^2.1.7"
@@ -17324,6 +17493,7 @@ __metadata:
     stylelint-config-standard-scss: "npm:13.0.0"
     stylelint-prettier: "npm:5.0.0"
     stylelint-scss: "npm:6.0.0"
+    three: "npm:^0.161.0"
     typechain: "npm:^8.3.2"
     typescript: "npm:5.3.3"
     util: "npm:0.12.5"
