@@ -9,7 +9,7 @@ export type AssetData = {
   tokenIdFormat: number
   referenceContract: Address
   baseURI: string
-  tokenIds: `0x${string}`[]
+  tokenId: `0x${string}`
   balance: string
   standard: string
   name: string
@@ -134,7 +134,7 @@ export function useProfileAssets() {
             type === 'call' && call === 'supportsInterface(bytes4)'
         )
         return (
-          allAddresses.map((address, _assetIndex) => {
+          allAddresses.flatMap((address, _assetIndex) => {
             const assetIndex =
               _assetIndex * (prefixLength + interfacesToCheck.length)
             const isIssued = _assetIndex > receivedAssetCount
@@ -191,6 +191,31 @@ export function useProfileAssets() {
                   : url,
               }
             })
+            if (tokenIds && tokenIds.length > 0) {
+              return tokenIds.map(tokenId => {
+                return {
+                  isOwned: !isIssued,
+                  isIssued,
+                  address,
+                  assetData,
+                  tokenStandard,
+                  tokenIdFormat,
+                  referenceContract,
+                  baseURI,
+                  tokenId,
+                  balance,
+                  standard,
+                  name,
+                  symbol,
+                  tokenName,
+                  tokenSymbol,
+                  tokenType,
+                  supportsInterfaces,
+                  images,
+                  icon,
+                } as AssetData
+              })
+            }
             return {
               isOwned: !isIssued,
               isIssued,
@@ -200,7 +225,6 @@ export function useProfileAssets() {
               tokenIdFormat,
               referenceContract,
               baseURI,
-              tokenIds,
               balance,
               standard,
               name,

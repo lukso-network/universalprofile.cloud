@@ -3,7 +3,8 @@ import { useQueries } from '@tanstack/vue-query'
 import type { AssetData } from './useProfileAssets'
 
 export function useToken() {
-  return (token: AssetData | undefined, tokenId?: `0x${string}`) => {
+  return (token: AssetData | undefined) => {
+    const tokenId = token?.tokenId
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: undefined } } = currentNetwork
     const queries = token?.address
