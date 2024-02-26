@@ -17903,6 +17903,7 @@ __metadata:
     vue: "npm:^3.4.20"
     vue-router: "npm:^4.3.0"
     web3: "npm:~1.10.4"
+    web3-bzz: "npm:1.10.3"
     web3-utils: "npm:~1.10.4"
     web3-validator: "npm:^2.0.4"
     yata-fetch: "npm:2.1.5"

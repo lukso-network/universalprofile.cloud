@@ -109,6 +109,7 @@
     "vue": "^3.4.20",
     "vue-router": "^4.3.0",
     "web3": "~1.10.4",
+    "web3-bzz": "1.10.3",
     "web3-utils": "~1.10.4",
     "web3-validator": "^2.0.4",
     "yata-fetch": "2.1.5"
