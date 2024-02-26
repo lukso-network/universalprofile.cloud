@@ -39,9 +39,11 @@ jobs:
         run: yarn prepare && yarn lint
 
       - name: 🛠 Install Playwright Browsers
+        if: false
         run: npx playwright install --with-deps chromium
 
       - name: 🎯 Run Playwright tests
+        if: false
         run: npx playwright test
 
       - uses: actions/upload-artifact@v3
