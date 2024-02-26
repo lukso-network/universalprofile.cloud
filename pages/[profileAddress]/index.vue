@@ -26,7 +26,7 @@ const ownedTokensCount = computed(
       (sum, { tokenIds }) =>
         sum + (tokenIds && tokenIds.length ? tokenIds.length : 1),
       0
-    ) || 0) + (viewedProfile.value?.balance !== '0' ? 1 : 0) // +1 if user has LYX token
+    ) || 0) + (viewedProfile?.balance !== '0' ? 1 : 0) // +1 if user has LYX token
 )
 
 const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
@@ -101,10 +101,6 @@ const showProfileDetails = computed(
         <div class="whitespace-pre-wrap pt-8">
           assets = {{ JSON.stringify(allTokens, null, '  ') }}
         </div>
-
-        <lukso-sanitize
-          :html-content="$formatMessage('assets_description')"
-        ></lukso-sanitize>
         <div class="grid grid-cols-2 gap-4 pt-10 sm:flex">
           <lukso-button
             size="small"
@@ -158,7 +154,7 @@ const showProfileDetails = computed(
       <lukso-button
         variant="landing"
         is-link
-        :href="explorerContractUrl(viewedProfile?.profileAddress)"
+        :href="explorerContractUrl(viewedProfile?.address)"
         class="mb-8"
         >{{ $formatMessage('not_up_button') }}</lukso-button
       >

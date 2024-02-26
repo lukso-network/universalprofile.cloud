@@ -1,7 +1,9 @@
 import { useQueries } from '@tanstack/vue-query'
 
+import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
+
 export function useProfile() {
-  return (profileAddress: Address | undefined) => {
+  return (profileAddress: Address | undefined): Profile => {
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: undefined } } = currentNetwork
     const queries = profileAddress
@@ -32,7 +34,7 @@ export function useProfile() {
         if (!profileAddress) {
           return undefined
         }
-        const profileData = results[0].data as any
+        const profileData = results[0].data as LSP3ProfileMetadataJSON
         const { supportsInterfaces, standard } = interfacesToCheck.reduce(
           (
             { supportsInterfaces, standard },
@@ -53,31 +55,19 @@ export function useProfile() {
         )
         const receivedAssets = results[results.length - 2].data as Address[]
         const issuedAssets = results[results.length - 1].data as Address[]
-        const profileImage = profileData?.LSP3Profile?.profileImage?.map(
-          (image: any) => {
-            const { verification, url } = image
-            return {
-              ...image,
-              src: url.startsWith('ipfs://')
-                ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                : url,
-            }
-          }
+        const profileImage = createImageObject(
+          profileData?.LSP3Profile?.profileImage,
+          96
         )
-        const backgroundImage = profileData?.LSP3Profile?.backgroundImage?.map(
-          (image: any) => {
-            const { verification, url } = image
-            return {
-              ...image,
-              src: url.startsWith('ipfs://')
-                ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                : url,
-            }
-          }
+        const backgroundImage = createImageObject(
+          profileData?.LSP3Profile?.backgroundImage,
+          240
         )
+        const { name } = profileData?.LSP3Profile || {}
+
         return {
-          profileAddress,
-          profileData,
+          address: profileAddress,
+          name,
           standard,
           supportsInterfaces,
           receivedAssets,

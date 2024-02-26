@@ -108,13 +108,20 @@ export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
  * @param height - image height (represents the desired image height)
  * @returns Image model object
  */
-export const createImageObject = (image: ImageMetadata[], height: number) => {
+export const createImageObject = (image?: ImageMetadata[], height = 100) => {
+  if (!image) {
+    return undefined
+  }
+
   const optimalImage = getImageBySize(image, height)
 
   if (optimalImage) {
+    const { verification, url } = optimalImage
     return {
       ...optimalImage,
-      url: resolveUrl(optimalImage.url),
+      src: url.startsWith('ipfs://')
+        ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+        : url,
     } as Image
   }
 }

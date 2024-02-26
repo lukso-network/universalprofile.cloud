@@ -1,12 +1,14 @@
 <script setup lang="ts">
-const { viewedProfile } = useViewedProfile()
+const profileAddress = getCurrentProfileAddress()
+const profile = useProfile()(profileAddress)
 </script>
 
 <template>
   <div class="relative">
+    <img :src="profile?.backgroundImage?.src" />
     <lukso-card
       variant="hero"
-      :background-url="viewedProfile?.backgroundImage?.url"
+      :background-url="profile?.backgroundImage?.src"
       is-full-width
       custom-class="rounded-24 shadow-neutral-drop-shadow"
       class="mb-22"
@@ -19,11 +21,11 @@ const { viewedProfile } = useViewedProfile()
               offset="15"
               is-clipboard-copy
               :copy-text="$formatMessage('profile_card_copy_address')"
-              :copy-value="viewedProfile?.address"
+              :copy-value="profile?.address"
             >
               <lukso-profile
-                :profile-url="viewedProfile?.profileImage?.url"
-                :profile-address="viewedProfile?.address"
+                :profile-url="profile?.profileImage?.src"
+                :profile-address="profile?.address"
                 size="x-large"
                 has-identicon
                 class="relative z-[1] inline-flex rounded-full outline outline-4 outline-neutral-100 transition group-hover:scale-105"
@@ -32,14 +34,14 @@ const { viewedProfile } = useViewedProfile()
               <div
                 class="paragraph-ptmono-16-regular relative -top-10 h-0 text-14 opacity-10 transition group-hover:opacity-30 md:text-24"
               >
-                {{ viewedProfile?.address }}
+                {{ profile?.address }}
               </div>
             </lukso-tooltip>
           </div>
           <lukso-username
-            v-if="viewedProfile?.name"
-            :name="viewedProfile?.name.toLowerCase()"
-            :address="viewedProfile?.address"
+            v-if="profile?.name"
+            :name="profile?.name.toLowerCase()"
+            :address="profile?.address"
             address-color="neutral-80"
             size="large"
             max-width="350"
@@ -48,7 +50,7 @@ const { viewedProfile } = useViewedProfile()
           <lukso-username
             v-else
             :name="$formatMessage('profile_default_name')"
-            :address="viewedProfile?.address"
+            :address="profile?.address"
             address-color="neutral-80"
             size="large"
             max-width="350"
