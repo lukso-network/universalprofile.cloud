@@ -34,9 +34,6 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('standard', STANDARDS.LSP7)
       .where('address', viewedProfile?.value.issuedAssetAddresses)
       .where('chainId', selectedChainId.value)
-      .where((asset: Asset) => {
-        return asset?.balance !== '0'
-      })
       .where('tokenType', 'TOKEN')
       .get()
   }
@@ -76,9 +73,6 @@ export class AssetRepository extends Repository<AssetModel> {
       .where('owner', viewedProfile.value.address)
       .where((asset: Asset) => {
         return isCollectible(asset as TokenData)
-      })
-      .where((asset: Asset) => {
-        return asset?.balance !== '0'
       })
       .get()
   }
