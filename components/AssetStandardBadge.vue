@@ -2,7 +2,7 @@
 import type { Standard } from '@/types/contract'
 
 type Props = {
-  standard?: Standard
+  standard?: string
 }
 
 defineProps<Props>()
@@ -10,6 +10,6 @@ defineProps<Props>()
 
 <template>
   <lukso-tag v-if="standard" size="x-small" background-color="lukso-90">{{
-    STANDARDS_ABBREVIATIONS[standard]
+    STANDARDS_ABBREVIATIONS[standard as Standard]
   }}</lukso-tag>
 </template>

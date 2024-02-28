@@ -2,8 +2,39 @@ import { useQueries } from '@tanstack/vue-query'
 
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 
+export type Profile = {
+  address: Address
+  name?: string
+  standard: string | null
+  balance?: string
+  supportsInterfaces: Record<string, boolean>
+  receivedAssets: Address[]
+  issuedAssets: Address[]
+  profileImages: {
+    src: string
+    verification: any
+    width: number
+    height: number
+    url: string
+  }[]
+  backgroundImages: {
+    src: string
+    verification: any
+    width: number
+    height: number
+    url: string
+  }[]
+}
+
+const profileRefs: Record<string, Ref<Profile | null>> = {}
+
 export function useProfile() {
-  return (profileAddress: Address | undefined): Profile => {
+  return (profileAddress: Address | undefined): Ref<Profile | null> => {
+    let profileRef = profileRefs[profileAddress || '']
+    if (!profileRef) {
+      profileRef = ref<Profile | null>(null)
+      profileRefs[profileAddress || ''] = profileRef
+    }
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: undefined } } = currentNetwork
     const queries = profileAddress
@@ -28,7 +59,7 @@ export function useProfile() {
           },
         ]
       : []
-    return useQueries({
+    useQueries({
       queries,
       combine: results => {
         if (!profileAddress) {
@@ -55,27 +86,42 @@ export function useProfile() {
         )
         const receivedAssets = results[results.length - 2].data as Address[]
         const issuedAssets = results[results.length - 1].data as Address[]
-        const profileImage = createImageObject(
-          profileData?.LSP3Profile?.profileImage,
-          96
+        const profileImages = profileData?.LSP3Profile?.profileImage?.map(
+          (image: any) => {
+            const { verification, url } = image
+            return {
+              ...image,
+              src: url.startsWith('ipfs://')
+                ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+                : url,
+            }
+          }
         )
-        const backgroundImage = createImageObject(
-          profileData?.LSP3Profile?.backgroundImage,
-          240
+        const backgroundImages = profileData?.LSP3Profile?.backgroundImage?.map(
+          (image: any) => {
+            const { verification, url } = image
+            return {
+              ...image,
+              src: url.startsWith('ipfs://')
+                ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+                : url,
+            }
+          }
         )
         const { name } = profileData?.LSP3Profile || {}
 
-        return {
+        profileRef.value = {
           address: profileAddress,
           name,
           standard,
           supportsInterfaces,
           receivedAssets,
           issuedAssets,
-          profileImage,
-          backgroundImage,
+          profileImages: profileImages || [],
+          backgroundImages: backgroundImages || [],
         }
       },
     })
+    return profileRef
   }
 }

@@ -14,6 +14,7 @@ export type AssetData = {
   tokenDataURL?: string
   tokenId?: `0x${string}`
   balance: string
+  decimals: number
   standard: string
   name: string
   symbol: string
@@ -46,102 +47,126 @@ export function useProfileAssets() {
     // name
     // symbol
     // balanceOf
-
-    const receivedAssetCount = profile?.value?.receivedAssets?.length || 0
-    const allAddresses = ([] as `0x${string}`[]).concat(
-      profile?.value?.receivedAssets || [],
-      profile?.value?.issuedAssets || []
-    )
-    const queries = allAddresses.flatMap((address: Address) => {
-      return [
-        {
-          // 0
-          queryKey: ['data', chainId, address, 'LSP4Metadata'],
-        },
-        {
-          // 1
-          queryKey: [
-            'call',
-            chainId,
-            address,
-            'tokenIdsOf(address)',
-            profileAddress,
-          ],
-        },
-        {
-          // 2
-          queryKey: [
-            'call',
-            chainId,
-            address,
-            'balanceOf(address)',
-            profileAddress,
-          ],
-        },
-        {
-          // 3
-          queryKey: ['call', chainId, address, 'name()'],
-        },
-        {
-          // 4
-          queryKey: ['call', chainId, address, 'symbol()'],
-        },
-        {
-          // 5
-          queryKey: ['data', chainId, address, 'LSP4TokenName'],
-        },
-        {
-          // 6
-          queryKey: ['data', chainId, address, 'LSP4TokenSymbol'],
-        },
-        {
-          // 7
-          queryKey: ['data', chainId, address, 'LSP4TokenType'],
-        },
-        {
-          // 8
-          queryKey: ['data', chainId, address, 'LSP8TokenMetadataBaseURI'],
-        },
-        {
-          // 9
-          queryKey: ['data', chainId, address, 'LSP8TokenStandard'],
-        },
-        {
-          // 10
-          queryKey: ['data', chainId, address, 'LSP8TokenIdFormat'],
-        },
-        // {  // ERC725.js is unable to read LSP8ReferenceConract due to (Address,bytes32) not being supported
-        //   // 11
-        //   queryKey: ['data', chainId, address, 'LSP8ReferenceContract'],
-        // },
-        ...interfacesToCheck.map(({ interfaceId }) => {
-          return {
+    const queries: ComputedRef<
+      Array<{ queryKey: string[] }> & {
+        receivedAssetCount: number
+        allAddresses: Address[]
+      }
+    > = computed(() => {
+      const receivedAssetCount = profile?.value?.receivedAssets?.length || 0
+      const allAddresses = ([] as `0x${string}`[]).concat(
+        profile?.value?.receivedAssets || [],
+        profile?.value?.issuedAssets || []
+      )
+      const queries: Array<{ queryKey: string[] }> & {
+        receivedAssetCount: number
+        allAddresses: Address[]
+      } = allAddresses.flatMap((address: Address) => {
+        return [
+          {
+            // 0
+            queryKey: ['data', chainId, address, 'LSP4Metadata'],
+          },
+          {
+            // 1
             queryKey: [
               'call',
               chainId,
               address,
-              'supportsInterface(bytes4)',
-              interfaceId,
+              'tokenIdsOf(address)',
+              profileAddress,
             ],
-          }
-        }),
-      ]
-    }) as { queryKey: string[] }[]
+          },
+          {
+            // 2
+            queryKey: [
+              'call',
+              chainId,
+              address,
+              'balanceOf(address)',
+              profileAddress,
+            ],
+          },
+          {
+            // 3
+            queryKey: ['call', chainId, address, 'name()'],
+          },
+          {
+            // 4
+            queryKey: ['call', chainId, address, 'symbol()'],
+          },
+          {
+            // 5
+            queryKey: ['data', chainId, address, 'LSP4TokenName'],
+          },
+          {
+            // 6
+            queryKey: ['data', chainId, address, 'LSP4TokenSymbol'],
+          },
+          {
+            // 7
+            queryKey: ['data', chainId, address, 'LSP4TokenType'],
+          },
+          {
+            // 8
+            queryKey: ['data', chainId, address, 'LSP8TokenMetadataBaseURI'],
+          },
+          {
+            // 9
+            queryKey: ['data', chainId, address, 'LSP8TokenStandard'],
+          },
+          {
+            // 10
+            queryKey: ['data', chainId, address, 'LSP8TokenIdFormat'],
+          },
+          {
+            // 11
+            queryKey: ['call', chainId, address, 'decimals()'],
+          },
+          // {  // ERC725.js is unable to read LSP8ReferenceConract due to (Address,bytes32) not being supported
+          //   // 12
+          //   queryKey: ['data', chainId, address, 'LSP8ReferenceContract'],
+          // },
+          ...interfacesToCheck.map(({ interfaceId }) => {
+            return {
+              queryKey: [
+                'call',
+                chainId,
+                address,
+                'supportsInterface(bytes4)',
+                interfaceId,
+              ],
+            }
+          }),
+        ]
+      }) as Array<{ queryKey: string[] }> & {
+        receivedAssetCount: number
+        allAddresses: Address[]
+      }
+      // Trick to keep the right receivedAssetCount and allAddresses attached
+      // to the current queries list.
+      queries.receivedAssetCount = receivedAssetCount
+      queries.allAddresses = allAddresses
+      return queries as Array<{ queryKey: string[] }> & {
+        receivedAssetCount: number
+        allAddresses: Address[]
+      }
+    })
     return useQueries({
-      queries,
+      queries: queries,
       combine: results => {
         if (!profileAddress) {
           return undefined
         }
-        const prefixLength = queries.findIndex(
+        const prefixLength = queries.value.findIndex(
           ({ queryKey: [type, , , call] }) =>
             type === 'call' && call === 'supportsInterface(bytes4)'
         )
         return (
-          allAddresses.flatMap((address, _assetIndex) => {
+          queries.value.allAddresses.flatMap((address, _assetIndex) => {
             const assetIndex =
               _assetIndex * (prefixLength + interfacesToCheck.length)
-            const isIssued = _assetIndex > receivedAssetCount
+            const isIssued = _assetIndex > queries.value.receivedAssetCount
             const assetData = results[assetIndex + 0].data as any
             const tokenIds = results[assetIndex + 1].data as string[]
             const balance = results[assetIndex + 2].data as string
@@ -154,6 +179,7 @@ export function useProfileAssets() {
             const tokenStandard = results[assetIndex + 9].data as string
             const tokenIdFormat = results[assetIndex + 10].data as number
             const referenceContract = results[assetIndex + 11].data as string
+            const decimals = results[assetIndex + 12].data as number
             const { supportsInterfaces, standard } = interfacesToCheck.reduce(
               (
                 { supportsInterfaces, standard },
@@ -237,6 +263,7 @@ export function useProfileAssets() {
                   referenceContract,
                   baseURI,
                   tokenDataURL,
+                  decimals,
                   tokenId,
                   balance,
                   standard,

@@ -1,3 +1,4 @@
+import type { AssetData } from '@/composables/useProfileAssets'
 import type { TokenData } from '@/composables/useToken'
 
 /**
@@ -5,7 +6,7 @@ import type { TokenData } from '@/composables/useToken'
  * @param asset
  * @returns
  */
-export const isLyx = (asset?: TokenData) => !!asset?.isNativeToken
+export const isLyx = (asset?: TokenData | AssetData) => !!asset?.isNativeToken
 
 /**
  * Check if passed asset is collectible
@@ -13,7 +14,7 @@ export const isLyx = (asset?: TokenData) => !!asset?.isNativeToken
  * @param asset
  * @returns
  */
-export const isCollectible = (asset?: TokenData) =>
+export const isCollectible = (asset?: TokenData | AssetData) =>
   asset?.tokenType === 'NFT' || asset?.tokenType === 'COLLECTION'
 
 /**
@@ -22,7 +23,7 @@ export const isCollectible = (asset?: TokenData) =>
  * @param asset
  * @returns
  */
-export const isToken = (asset?: TokenData) =>
+export const isToken = (asset?: TokenData | AssetData) =>
   asset?.tokenType === 'TOKEN' || isLyx(asset)
 
 /**
@@ -31,7 +32,8 @@ export const isToken = (asset?: TokenData) =>
  * @param asset
  * @returns
  */
-export const isLsp7 = (asset?: TokenData) => asset?.standard === STANDARDS.LSP7
+export const isLsp7 = (asset?: TokenData | AssetData) =>
+  asset?.standard === STANDARDS.LSP7
 
 /**
  * Check if passed asset is LSP8 token
@@ -39,7 +41,8 @@ export const isLsp7 = (asset?: TokenData) => asset?.standard === STANDARDS.LSP7
  * @param asset
  * @returns
  */
-export const isLsp8 = (asset?: TokenData) => asset?.standard === STANDARDS.LSP8
+export const isLsp8 = (asset?: TokenData | AssetData) =>
+  asset?.standard === STANDARDS.LSP8
 
 /**
  * Check if passed asset has a token id
@@ -47,7 +50,7 @@ export const isLsp8 = (asset?: TokenData) => asset?.standard === STANDARDS.LSP8
  * @param asset
  * @returns
  */
-export const hasTokenId = (asset?: TokenData) =>
+export const hasTokenId = (asset?: TokenData | AssetData) =>
   !!asset?.tokenId?.length && asset?.tokenId !== '0x'
 
 /**
@@ -56,5 +59,5 @@ export const hasTokenId = (asset?: TokenData) =>
  * @param asset
  * @returns
  */
-export const isAsset = (asset?: TokenData) =>
+export const isAsset = (asset?: TokenData | AssetData) =>
   asset?.standard === STANDARDS.LSP7 || asset?.standard === STANDARDS.LSP8

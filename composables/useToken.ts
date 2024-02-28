@@ -31,6 +31,20 @@ export type TokenData = AssetData & {
     height: number
     url: string
   }[]
+  lsp7Images: {
+    src: string
+    verification: any
+    width: number
+    height: number
+    url: string
+  }[][]
+  lsp7Icon: {
+    src: string
+    verification: any
+    width: number
+    height: number
+    url: string
+  }[]
   owner: string
   creator: string
   tokenCreators: string[]
@@ -90,6 +104,14 @@ export function useToken() {
                     return null
                   },
                 },
+                ...(token.tokenIdFormat === 2
+                  ? [
+                      {
+                        // 6
+                        queryKey: ['data', chainId, tokenId, 'LSP4Metadata'],
+                      },
+                    ]
+                  : []),
               ]
             : []),
         ]
@@ -152,11 +174,36 @@ export function useToken() {
               : url,
           }
         })
+        const lsp7JSON = results[6]?.data as any
+        const lsp7Images = lsp7JSON?.LSP4Metadata?.images?.map(
+          (images: any) => {
+            return images.map((image: any) => {
+              const { verification, url } = image
+              return {
+                ...image,
+                src: url.startsWith('ipfs://')
+                  ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+                  : url,
+              }
+            })
+          }
+        )
+        const lsp7Icon = lsp7JSON?.LSP4Metadata?.icon?.map((image: any) => {
+          const { verification, url } = image
+          return {
+            ...image,
+            src: url.startsWith('ipfs://')
+              ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+              : url,
+          }
+        })
         return {
           ...token,
           forTokenData,
           forTokenImages,
           forTokenIcon,
+          lsp7Images,
+          lsp7Icon,
           baseURIImages,
           baseURIIcon,
           owner,

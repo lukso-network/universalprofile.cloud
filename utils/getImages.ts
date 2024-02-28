@@ -35,10 +35,10 @@ export const fetchAndConvertImage = async (imageUrl: string) => {
  * @returns url of the image
  */
 export const getImageBySize = (
-  images: (ImageMetadata & { src?: string })[],
+  images: (ImageMetadata & { src?: string })[] | undefined,
   height: number
 ): (ImageMetadata & { src?: string }) | undefined => {
-  const sortedImagesAscending = images.sort((a, b) => {
+  const sortedImagesAscending = images?.sort((a, b) => {
     if (a.height < b.height) {
       return -1
     }
@@ -49,7 +49,7 @@ export const getImageBySize = (
   })
 
   // check if we can get retina size image
-  const retinaImage = sortedImagesAscending.find(
+  const retinaImage = sortedImagesAscending?.find(
     image => image.height > height * 2
   )
 
@@ -58,16 +58,31 @@ export const getImageBySize = (
   }
 
   // check if we can get normal size image
-  const normalImage = sortedImagesAscending.find(image => image.height > height)
+  const normalImage = sortedImagesAscending?.find(
+    image => image.height > height
+  )
 
   if (normalImage) {
     return normalImage
   }
 
   // lastly return biggest image available
-  return sortedImagesAscending.length > 0
-    ? sortedImagesAscending.pop()
+  return sortedImagesAscending && sortedImagesAscending.length > 0
+    ? sortedImagesAscending?.pop()
     : undefined
+}
+
+export const getProfileThumb = (
+  profileImages?: (ImageMetadata & { src: string })[],
+  size?: number
+) => {
+  const url = getImageBySize(profileImages, size || 260)?.src
+  if (url) {
+    return url.startsWith('https://api.universalprofile.cloud/image/')
+      ? url + `&width=${size || 260}&height=${size || 260}`
+      : url
+  }
+  return undefined
 }
 
 /**
@@ -78,7 +93,11 @@ export const getImageBySize = (
  * @param minHeight
  * @returns
  */
-export const getAssetThumb = (asset?: TokenData, useIcon?: boolean) => {
+export const getAssetThumb = (
+  asset?: TokenData,
+  useIcon?: boolean,
+  size?: number
+) => {
   if (!asset) {
     return ''
   }
@@ -89,20 +108,24 @@ export const getAssetThumb = (asset?: TokenData, useIcon?: boolean) => {
 
   if (useIcon) {
     const icon = asset.baseURIIcon || asset.forTokenIcon || asset.icon
-    const url = getImageBySize(icon, 260)?.src
+    const url = getImageBySize(icon, size || 260)?.src
     if (url) {
       return url.startsWith('https://api.universalprofile.cloud/image/')
-        ? url + '&width=100&height=260'
+        ? url + `&width=${size || 260}&height=${size || 260}`
         : url
     }
   }
 
-  const images = asset.baseURIImages || asset.forTokenImages || asset.images
+  const images =
+    asset.lsp7Images ||
+    asset.baseURIImages ||
+    asset.forTokenImages ||
+    asset.images
   const image = images?.[0]
   const url = getImageBySize(image, 260)?.src
   if (url) {
     return url.startsWith('https://api.universalprofile.cloud/image/')
-      ? url + '&width=100&height=260'
+      ? url + `&width=${size || 260}&height=${size || 260}`
       : url
   }
 
@@ -124,15 +147,5 @@ export const createImageObject = (
     return undefined
   }
 
-  const optimalImage = getImageBySize(image, height)
-
-  if (optimalImage) {
-    const { verification, url } = optimalImage
-    return {
-      ...optimalImage,
-      src: url.startsWith('ipfs://')
-        ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-        : url,
-    } as Image
-  }
+  return getImageBySize(image, height)
 }

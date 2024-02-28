@@ -7,7 +7,7 @@ const profile = useProfile()(profileAddress)
   <div class="relative">
     <lukso-card
       variant="hero"
-      :background-url="profile?.backgroundImage?.src"
+      :background-url="getProfileThumb(profile?.backgroundImages, 500)"
       is-full-width
       custom-class="rounded-24 shadow-neutral-drop-shadow"
       class="mb-22"
@@ -23,7 +23,7 @@ const profile = useProfile()(profileAddress)
               :copy-value="profile?.address"
             >
               <lukso-profile
-                :profile-url="profile?.profileImage?.src"
+                :profile-url="getProfileThumb(profile?.profileImages, 260)"
                 :profile-address="profile?.address"
                 size="x-large"
                 has-identicon

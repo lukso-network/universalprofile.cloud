@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import type { AssetData } from '@/composables/useProfileAssets'
+import type { TokenData } from '@/composables/useToken'
+
+const showJSON = ref(window.location.search.includes('json'))
 
 type Props = {
-  asset: AssetData
+  asset: TokenData
   hasAddress?: boolean
 }
 
@@ -63,7 +65,10 @@ onMounted(async () => {
     is-full-width
     @click="handleShowAsset"
     ><div slot="content" class="grid h-full grid-rows-[max-content,auto] p-4">
-      <div class="w-full overflow-auto whitespace-pre-wrap pt-8">
+      <div
+        v-if="showJSON"
+        class="w-full overflow-auto whitespace-pre-wrap pt-8"
+      >
         token = {{ JSON.stringify(token, null, '  ') }}
       </div>
       <div class="flex h-7 items-start justify-end">

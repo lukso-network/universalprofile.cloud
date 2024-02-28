@@ -3,6 +3,8 @@
 
 // import type { Asset } from '@/models/asset'
 
+const showJSON = ref(window.location.search.includes('json'))
+
 const { assetFilter, isLoadingAssets } = storeToRefs(useAppStore())
 const viewedProfileAddress = getCurrentProfileAddress()
 const viewedProfile = useProfile()(viewedProfileAddress)
@@ -56,9 +58,9 @@ const createdNftsCount = computed(() => nftsCreated.value?.length || 0)
 
 const nfts = computed(() => {
   if (assetFilter.value === AssetFilter.owned) {
-    return nftsOwned.value
+    return nftsOwned.value || []
   } else {
-    return nftsCreated.value
+    return nftsCreated.value || []
   }
 })
 
@@ -105,10 +107,10 @@ const showProfileDetails = computed(
       <ProfileCard />
       <ProfileDetails v-if="showProfileDetails" />
       <div>
-        <div class="whitespace-pre-wrap pt-8">
+        <div v-if="showJSON" class="whitespace-pre-wrap pt-8">
           profile = {{ JSON.stringify(viewedProfile, null, '  ') }}
         </div>
-        <div class="whitespace-pre-wrap pt-8">
+        <div v-if="showJSON" class="whitespace-pre-wrap pt-8">
           assets = {{ JSON.stringify(allTokens, null, '  ') }}
         </div>
         <div class="grid grid-cols-2 gap-4 pt-10 sm:flex">

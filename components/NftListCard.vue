@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import makeBlockie from 'ethereum-blockies-base64'
 
-import type { Asset } from '@/models/asset'
+import type { AssetData } from '@/composables/useProfileAssets'
+
+const showJSON = ref(window.location.search.includes('json'))
 
 type Props = {
-  asset: TokenData
+  asset: AssetData
   hasAddress?: boolean
 }
 
@@ -13,7 +15,7 @@ const props = defineProps<Props>()
 const { isConnected } = storeToRefs(useAppStore())
 const { connectedProfile } = useConnectedProfile()
 const token = useToken()(props.asset)
-const { viewedProfile } = useViewedProfile()
+const viewedProfileAddress = getCurrentProfileAddress()
 
 const handleShowAsset = () => {
   try {
@@ -62,7 +64,10 @@ const assetTokenId = computed(() => {
       slot="content"
       class="grid h-full grid-rows-[auto,max-content] rounded-12 bg-neutral-97"
     >
-      <div class="w-full overflow-auto whitespace-pre-wrap pt-8">
+      <div
+        v-if="showJSON"
+        class="w-full overflow-auto whitespace-pre-wrap pt-8"
+      >
         token = {{ JSON.stringify(token, null, '  ') }}
       </div>
       <div
@@ -71,7 +76,7 @@ const assetTokenId = computed(() => {
         <div class="rounded-t-12 bg-neutral-90">
           <img
             class="w-full rounded-t-12 bg-neutral-90 object-cover md:h-[260px]"
-            :src="getAssetThumb(asset, false)"
+            :src="getAssetThumb(token, false)"
             loading="lazy"
             alt=""
             onerror="this.style.opacity=0"
@@ -89,7 +94,7 @@ const assetTokenId = computed(() => {
               >
             </div>
             <div class="paragraph-ptmono-10-bold mt-1">
-              <span v-if="isLsp8(asset as Asset)">
+              <span v-if="isLsp8(asset)">
                 {{ assetTokenId }}
               </span>
               <span v-else>
@@ -98,13 +103,17 @@ const assetTokenId = computed(() => {
               </span>
             </div>
           </div>
-          <NftListCardCreators :asset="asset" class="relative -top-4 -mt-2" />
+          <NftListCardCreators
+            v-if="token"
+            :asset="token"
+            class="relative -top-4 -mt-2"
+          />
           <div class="flex items-end">
             <div class="flex w-full justify-end">
               <lukso-button
                 v-if="
                   isConnected &&
-                  viewedProfile?.address === connectedProfile?.address
+                  viewedProfileAddress === connectedProfile?.address
                 "
                 size="small"
                 variant="secondary"
