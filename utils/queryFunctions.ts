@@ -21,7 +21,8 @@ import { type QueryKey } from '@tanstack/vue-query'
 import LSP2FetcherWithMulticall3Contract from './LSP2FetcherWithMulticall3.json'
 
 const QUERY_TIMEOUT = 250
-const BIG_QUERY_LIMIT = 1
+const BIG_QUERY_LIMIT = 0
+const MAX_AGGREGATE_COUNT = 50
 
 export type QueryPromiseCallOptions = {
   type: 'call'
@@ -167,37 +168,41 @@ async function doQueries() {
   const { currentNetwork } = storeToRefs(useAppStore())
   const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
     currentNetwork.value
-  const { allQueries } = queryList.splice(0, queryList.length).reduce(
-    ({ allQueries, bigCount }, query) => {
-      if (query.isBig) {
-        if (bigCount > 0) {
-          bigCount--
-          allQueries.push(query)
-        } else {
-          if (queryTimer) {
-            clearTimeout(queryTimer)
+  const { allQueries } = queryList
+    .splice(0, Math.min(queryList.length, MAX_AGGREGATE_COUNT))
+    .reduce(
+      ({ allQueries, bigCount }, query) => {
+        if (query.isBig) {
+          if (bigCount > 0) {
+            bigCount--
+            allQueries.push(query)
+          } else if (allQueries.length === 0) {
+            allQueries.push(query)
+          } else {
+            if (queryTimer) {
+              clearTimeout(queryTimer)
+            }
+            queryTimer = setTimeout(() => {
+              queryTimer = undefined
+              doQueries()
+            }, QUERY_TIMEOUT)
+            queryList.push(query)
           }
-          queryTimer = setTimeout(() => {
-            queryTimer = undefined
-            doQueries()
-          }, QUERY_TIMEOUT)
-          queryList.push(query)
+        } else {
+          allQueries.push(query)
         }
-      } else {
-        allQueries.push(query)
+        return { bigCount, allQueries }
+      },
+      {
+        bigCount: BIG_QUERY_LIMIT,
+        allQueries: [] as QueryPromise<
+          unknown,
+          | QueryPromiseDataOptions
+          | QueryPromiseCallOptions
+          | QueryPromiseTokenDataOptions
+        >[],
       }
-      return { bigCount, allQueries }
-    },
-    {
-      bigCount: BIG_QUERY_LIMIT,
-      allQueries: [] as QueryPromise<
-        unknown,
-        | QueryPromiseDataOptions
-        | QueryPromiseCallOptions
-        | QueryPromiseTokenDataOptions
-      >[],
-    }
-  )
+    )
   allQueries
     .filter(query => query.chainId !== chainId)
     .forEach(query => query.reject(new Error('Query cancelled')))
