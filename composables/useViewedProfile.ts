@@ -1,6 +1,5 @@
 export const useViewedProfile = () => {
-  const viewedProfileAddress = getCurrentProfileAddress()
-  const viewedProfile = useProfile()(viewedProfileAddress)
+  const viewedProfile = useProfile().viewedProfile()
 
   return {
     viewedProfile,
