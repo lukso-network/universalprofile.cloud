@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { viewedProfile } = useViewedProfile()
+const viewedProfile = useProfile().viewedProfile()
 
 type Props = {
   assets: AssetMetadata[]

@@ -12,7 +12,7 @@ import type {
   LSP8IdentifiableDigitalAsset,
 } from '@/types/contracts'
 
-const { connectedProfile } = useConnectedProfile()
+const connectedProfile = useProfile().connectedProfile()
 const { currentNetwork } = useAppStore()
 const { asset, onSend, amount, receiver, transactionHash } =
   storeToRefs(useSendStore())

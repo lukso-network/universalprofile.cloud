@@ -38,7 +38,7 @@ export const discoveryDappUrl = () => {
  * @returns
  */
 export const transakBuyLyxUrl = () => {
-  const { connectedProfile } = useConnectedProfile()
+  const connectedProfile = useProfile().connectedProfile()
   const { currentNetwork } = storeToRefs(useAppStore())
   const { formatMessage } = useIntl()
   const { $config } = useNuxtApp()

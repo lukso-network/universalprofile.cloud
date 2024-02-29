@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
-const { connectedProfile } = useConnectedProfile()
+const connectedProfile = useProfile().connectedProfile()
 const { asset, isLoading, isOwned } = useAsset(tokenAddress)
 const { showModal } = useModal()
 

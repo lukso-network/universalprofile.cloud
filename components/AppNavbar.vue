@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
-const { viewedProfile } = useViewedProfile()
-const { connectedProfile } = useConnectedProfile()
+const viewedProfile = useProfile().viewedProfile()
+const connectedProfile = useProfile().connectedProfile()
 const { isConnecting, isConnected, isTestnet, hasSimpleNavbar, isSearchOpen } =
   storeToRefs(useAppStore())
 

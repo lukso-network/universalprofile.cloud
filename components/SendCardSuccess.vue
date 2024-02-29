@@ -2,7 +2,7 @@
 const { setStatus, clearSend } = useSendStore()
 const { transactionHash } = storeToRefs(useSendStore())
 const { hasSimpleNavbar } = storeToRefs(useAppStore())
-const { connectedProfile } = useConnectedProfile()
+const connectedProfile = useProfile().connectedProfile()
 
 const handleSendMore = () => {
   clearSend()

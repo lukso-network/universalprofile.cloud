@@ -1,6 +1,6 @@
 export const useAsset = (assetAddress: Address, _tokenId = '0x') => {
   // const { isConnected } = storeToRefs(useAppStore())
-  const { connectedProfile } = useConnectedProfile()
+  const connectedProfile = useProfile().connectedProfile()
   // const queryClient = useQueryClient()
   // const assetRepo = useRepo(AssetRepository)
 

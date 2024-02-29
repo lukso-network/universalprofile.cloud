@@ -11,7 +11,7 @@ type Props = {
 const props = defineProps<Props>()
 
 const { isConnected } = storeToRefs(useAppStore())
-const { connectedProfile } = useConnectedProfile()
+const connectedProfile = useProfile().connectedProfile()
 const viewedProfileAddress = getCurrentProfileAddress()
 const token = useToken()(props.asset)
 const contentRef = ref()

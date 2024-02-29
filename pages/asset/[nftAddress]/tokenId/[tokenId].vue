@@ -3,7 +3,7 @@ const nftAddress = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 const { asset, isLoading, isOwned } = useAsset(nftAddress, tokenId)
 const { showModal } = useModal()
-const { connectedProfile } = useConnectedProfile()
+const connectedProfile = useProfile().connectedProfile()
 
 const handleSendAsset = (event: Event) => {
   try {

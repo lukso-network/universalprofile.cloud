@@ -2,7 +2,7 @@
 import type { TokenData } from '@/composables/useToken'
 
 const { currentNetwork } = useAppStore()
-const { connectedProfile } = useConnectedProfile()
+const connectedProfile = useProfile().connectedProfile()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
 const assetRepository = useRepo(AssetRepository)
 const ownedAssets = ref<TokenData[]>([])

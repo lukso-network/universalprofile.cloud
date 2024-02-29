@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
-const { connectedProfile } = useConnectedProfile()
+const connectedProfile = useProfile().connectedProfile()
 const { currentNetwork, isTestnet } = storeToRefs(useAppStore())
-const { viewedProfile } = useViewedProfile()
+const viewedProfile = useProfile().viewedProfile()
 const { isConnected } = storeToRefs(useAppStore())
 
 const links: LinkMetadata[] = [

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { viewedProfile } = useViewedProfile()
+const viewedProfile = useProfile().viewedProfile()
 
 const hasLinks = computed(
   () => viewedProfile.value?.links && viewedProfile.value.links?.length > 0
