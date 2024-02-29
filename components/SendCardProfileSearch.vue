@@ -63,6 +63,9 @@ const handleReceiverSearch = async (event: CustomEvent) => {
         address: searchTerm.value,
         type: 'EOA',
       }
+      hasNoResults.value = false
+      isSearchingReceiver.value = false
+      return
     }
   } else {
     receiver.value = undefined
