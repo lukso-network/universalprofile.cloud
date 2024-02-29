@@ -13,6 +13,7 @@ export type AssetData = {
   baseURI?: any
   tokenDataURL?: string
   tokenId?: `0x${string}`
+  tokenIdIsContract?: boolean
   balance: string
   decimals: number
   standard: string

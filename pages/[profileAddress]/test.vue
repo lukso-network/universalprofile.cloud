@@ -91,17 +91,21 @@ const tokenIdsQueries = computed(() => {
       ) {
         const query = queries.value[index]
         return item.isFetched && item.data?.map
-          ? item.data?.map((tokenId: string) => {
-              return {
-                queryKey: [
-                  'tokenData',
-                  currentNetwork.value.chainId,
-                  query.queryKey[2],
-                  tokenId,
-                  'LSP4Metadata',
-                ],
-              }
-            }) || []
+          ? item.data
+              ?.map((tokenId: string) => {
+                return tokenId
+                  ? {
+                      queryKey: [
+                        'tokenData',
+                        currentNetwork.value.chainId,
+                        query.queryKey[2],
+                        tokenId,
+                        'LSP4Metadata',
+                      ],
+                    }
+                  : null
+              })
+              .filter((item: any) => item != undefined) || []
           : []
       }
       return []

@@ -1,6 +1,8 @@
 import { useQueries } from '@tanstack/vue-query'
+import ABICoder from 'web3-eth-abi'
 
 import type { AssetData } from './useProfileAssets'
+
 export type TokenData = AssetData & {
   forTokenData: any
   forTokenImages: {
@@ -78,7 +80,7 @@ export function useToken() {
                 {
                   // 4
                   queryKey: [
-                    'tokenData',
+                    'tokenDataBig',
                     chainId,
                     token?.address,
                     tokenId,
@@ -104,11 +106,19 @@ export function useToken() {
                     return null
                   },
                 },
-                ...(token.tokenIdFormat === 2
+                ...(tokenId && token.tokenIdFormat === 2
                   ? [
                       {
                         // 6
-                        queryKey: ['data', chainId, tokenId, 'LSP4Metadata'],
+                        queryKey: [
+                          'dataBig',
+                          chainId,
+                          ABICoder.decodeParameter(
+                            'address',
+                            tokenId
+                          ).toLowerCase(),
+                          'LSP4Metadata',
+                        ],
                       },
                     ]
                   : []),
@@ -174,6 +184,7 @@ export function useToken() {
               : url,
           }
         })
+        console.log('results', results[6])
         const lsp7JSON = results[6]?.data as any
         const lsp7Images = lsp7JSON?.LSP4Metadata?.images?.map(
           (images: any) => {

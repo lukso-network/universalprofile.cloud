@@ -20,8 +20,12 @@ import { type QueryKey } from '@tanstack/vue-query'
 
 import LSP2FetcherWithMulticall3Contract from './LSP2FetcherWithMulticall3.json'
 
+const QUERY_TIMEOUT = 250
+const BIG_QUERY_LIMIT = 1
+
 export type QueryPromiseCallOptions = {
   type: 'call'
+  isBig: boolean
   chainId: string
   address: Address
   method: string
@@ -29,6 +33,7 @@ export type QueryPromiseCallOptions = {
 }
 export type QueryPromiseDataOptions = {
   type: 'data'
+  isBig: boolean
   chainId: string
   address: Address
   keyName: string
@@ -37,6 +42,7 @@ export type QueryPromiseDataOptions = {
 }
 export type QueryPromiseTokenDataOptions = {
   type: 'tokenData'
+  isBig: boolean
   chainId: string
   address: Address
   keyName: string
@@ -161,7 +167,43 @@ async function doQueries() {
   const { currentNetwork } = storeToRefs(useAppStore())
   const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
     currentNetwork.value
-  const allQueries = queryList.splice(0, queryList.length)
+  const { allQueries, bigCount } = queryList.splice(0, queryList.length).reduce(
+    ({ allQueries, bigCount }, query) => {
+      if (query.isBig) {
+        if (bigCount > 0) {
+          bigCount--
+          allQueries.push(query)
+        } else {
+          if (queryTimer) {
+            clearTimeout(queryTimer)
+          }
+          queryTimer = setTimeout(() => {
+            queryTimer = undefined
+            doQueries()
+          }, QUERY_TIMEOUT)
+          queryList.push(query)
+        }
+      } else {
+        allQueries.push(query)
+      }
+      return { bigCount, allQueries }
+    },
+    {
+      bigCount: BIG_QUERY_LIMIT,
+      allQueries: [] as QueryPromise<
+        unknown,
+        | QueryPromiseDataOptions
+        | QueryPromiseCallOptions
+        | QueryPromiseTokenDataOptions
+      >[],
+    }
+  )
+  console.log(
+    'bigCount',
+    BIG_QUERY_LIMIT - bigCount,
+    allQueries.length,
+    queryList.length
+  )
   allQueries
     .filter(query => query.chainId !== chainId)
     .forEach(query => query.reject(new Error('Query cancelled')))
@@ -513,11 +555,17 @@ export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
   queryTimer = setTimeout(() => {
     queryTimer = undefined
     doQueries()
-  }, 250)
-  if (queryKey[0] === 'call') {
+  }, QUERY_TIMEOUT)
+  const isBig = /Big$/.test(queryKey[0] as string)
+  const type = (queryKey[0] as string).replace(/Big$/, '') as
+    | 'call'
+    | 'data'
+    | 'tokenData'
+  if (type === 'call') {
     const [chainId, address, method, ...args] = queryKey.slice(1)
     const query = createQueryPromise<T, QueryPromiseCallOptions>({
-      type: 'call',
+      type,
+      isBig,
       chainId: chainId as string,
       address: address as `0x${string}`,
       method: method as string,
@@ -526,11 +574,12 @@ export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
     queryList.push(query as QueryPromise<unknown, QueryPromiseCallOptions>)
     return query.promise
   }
-  if (queryKey[0] === 'tokenData') {
+  if (type === 'tokenData') {
     const [chainId, address, tokenId, key, schema, dynamicKeyParts] =
       queryKey.slice(1)
     const query = createQueryPromise<T, QueryPromiseTokenDataOptions>({
-      type: 'tokenData',
+      type,
+      isBig,
       chainId: chainId as string,
       address: address as `0x${string}`,
       keyName: key as string,
@@ -541,9 +590,13 @@ export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
     queryList.push(query as QueryPromise<unknown, QueryPromiseTokenDataOptions>)
     return query.promise
   }
+  if (type !== 'data') {
+    throw Error('Invalid query type')
+  }
   const [chainId, address, key, schema, dynamicKeyParts] = queryKey.slice(1)
   const query = createQueryPromise<T, QueryPromiseDataOptions>({
-    type: 'data',
+    type,
+    isBig,
     chainId: chainId as string,
     address: address as `0x${string}`,
     keyName: key as string,
