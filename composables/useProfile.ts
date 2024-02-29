@@ -1,8 +1,18 @@
 import { useQueries } from '@tanstack/vue-query'
 
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
+import type { Standard } from '@/types/contract'
 
-const getProfile = (profileAddress?: Address): Profile => {
+const profileRefs: Record<string, Ref<Profile | null>> = {}
+
+export const getProfile = (
+  profileAddress: Address | undefined
+): Ref<Profile | null> => {
+  let profileRef = profileRefs[profileAddress || '']
+  if (!profileRef) {
+    profileRef = ref<Profile | null>(null)
+    profileRefs[profileAddress || ''] = profileRef
+  }
   const { currentNetwork } = storeToRefs(useAppStore())
   const { value: { chainId } = { chainId: undefined } } = currentNetwork
   const queries = profileAddress
@@ -27,7 +37,7 @@ const getProfile = (profileAddress?: Address): Profile => {
         },
       ]
     : []
-  return useQueries({
+  useQueries({
     queries,
     combine: results => {
       if (!profileAddress) {
@@ -54,14 +64,12 @@ const getProfile = (profileAddress?: Address): Profile => {
       )
       const receivedAssets = results[results.length - 2].data as Address[]
       const issuedAssets = results[results.length - 1].data as Address[]
-
       const { name, profileImage, backgroundImage } =
         profileData?.LSP3Profile || {}
-
-      return {
+      profileRef.value = {
         address: profileAddress,
         name,
-        standard,
+        standard: standard as Standard,
         supportsInterfaces,
         receivedAssets,
         issuedAssets,
@@ -70,6 +78,7 @@ const getProfile = (profileAddress?: Address): Profile => {
       }
     },
   })
+  return profileRef
 }
 
 /**
