@@ -7,7 +7,11 @@ type Props = {
 
 const props = defineProps<Props>()
 const creators = computed(() => {
-  return (props.asset?.tokenCreators || []) as Address[]
+  let items = (props.asset?.tokenCreators || []) as Address[]
+  if (items.length === 0 && props.asset?.owner) {
+    items = [props.asset?.owner as Address]
+  }
+  return items
 })
 
 // const {
