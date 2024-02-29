@@ -69,7 +69,7 @@ export const getProfile = (
       const { name, profileImage, backgroundImage } =
         profileData?.LSP3Profile || {}
       const oldValue = profileRef.value || {}
-      const newValue = {
+      const newValue = reactive<Profile>({
         address: profileAddress,
         name,
         standard: standard as Standard,
@@ -78,7 +78,7 @@ export const getProfile = (
         issuedAssets,
         profileImage,
         backgroundImage,
-      }
+      })
       let changed = false
       const profile: Profile = {} as Profile
       for (const [name, value] of Object.entries(newValue)) {
