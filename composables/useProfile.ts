@@ -1,5 +1,4 @@
 import { useQueries } from '@tanstack/vue-query'
-import isDeepStrictEqual from 'deep-equal'
 
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { Standard } from '@/types/contract'
@@ -9,10 +8,10 @@ const profileRefs: Record<string, Ref<Profile | null>> = {}
 
 export const getProfile = (
   profileAddress: Address | undefined
-): Ref<Profile | null> => {
+): Profile | null => {
   let profileRef = profileRefs[profileAddress || '']
   if (!profileRef) {
-    profileRef = ref<Profile | null>(null)
+    profileRef = ref<Profile | null>({ profile: null })
     profileRefs[profileAddress || ''] = profileRef
   }
   const { currentNetwork } = storeToRefs(useAppStore())
@@ -68,8 +67,7 @@ export const getProfile = (
       const issuedAssets = results[results.length - 1].data as Address[]
       const { name, profileImage, backgroundImage } =
         profileData?.LSP3Profile || {}
-      const oldValue = profileRef.value || {}
-      const newValue = reactive<Profile>({
+      profileRef.value = {
         address: profileAddress,
         name,
         standard: standard as Standard,
@@ -78,26 +76,6 @@ export const getProfile = (
         issuedAssets,
         profileImage,
         backgroundImage,
-      })
-      let changed = false
-      const profile: Profile = {} as Profile
-      for (const [name, value] of Object.entries(newValue)) {
-        if (
-          (!oldValue[name] && value) ||
-          typeof oldValue[name] !== typeof value
-        ) {
-          profile[name] = value
-          changed = true
-          continue
-        }
-        if (!isDeepStrictEqual(value, oldValue[name])) {
-          profile[name] = value
-          changed = true
-          continue
-        }
-      }
-      if (changed) {
-        profileRef.value = profile
       }
     },
   })

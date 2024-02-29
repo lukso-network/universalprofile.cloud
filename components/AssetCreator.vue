@@ -31,9 +31,7 @@ const isVerified = (creatorProfile: Profile | null) =>
       <div class="flex items-center">
         <lukso-profile
           size="x-small"
-          :profile-url="
-            getOptimizedImage(creatorProfile?.profileImage, 24)?.src
-          "
+          :profile-url="getOptimizedImage(creatorProfile?.profileImage, 24)"
           :profile-address="creatorProfile?.address"
           has-identicon
         ></lukso-profile>

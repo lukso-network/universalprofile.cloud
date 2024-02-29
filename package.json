@@ -139,8 +139,6 @@
     "@tanstack/query-persist-client-core": "^5.24.1",
     "@tanstack/query-sync-storage-persister": "^5.24.1",
     "@tanstack/vue-query": "^5.24.1",
-    "@types/deep-equal": "^1.0.4",
-    "deep-equal": "^2.2.3",
     "limiter": "^2.1.0"
   }
 }

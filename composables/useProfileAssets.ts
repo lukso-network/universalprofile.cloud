@@ -40,8 +40,14 @@ export type AssetData = {
   }[]
 }
 
+const assetsRefs: Record<string, Ref<AssetData[]>> = {}
+
 export function useProfileAssets() {
-  return (profileAddress: Address | undefined) => {
+  return (profileAddress: Address | undefined): Ref<AssetData[]> => {
+    let outputAssets = assetsRefs[profileAddress || '']
+    if (!outputAssets) {
+      outputAssets = assetsRefs[profileAddress || ''] = ref<AssetData[]>([])
+    }
     const { currentNetwork } = storeToRefs(useAppStore())
     const profile = useProfile().viewedProfile()
     const { value: { chainId } = { chainId: undefined } } = currentNetwork
@@ -153,17 +159,17 @@ export function useProfileAssets() {
         allAddresses: Address[]
       }
     })
-    return useQueries({
+    useQueries({
       queries: queries,
       combine: results => {
         if (!profileAddress) {
-          return undefined
+          return []
         }
         const prefixLength = queries.value.findIndex(
           ({ queryKey: [type, , , call] }) =>
             type === 'call' && call === 'supportsInterface(bytes4)'
         )
-        return (
+        outputAssets.value =
           queries.value.allAddresses.flatMap((address, _assetIndex) => {
             const assetIndex =
               _assetIndex * (prefixLength + interfacesToCheck.length)
@@ -300,8 +306,8 @@ export function useProfileAssets() {
               icon,
             } as AssetData
           }) || []
-        )
       },
     })
+    return outputAssets
   }
 }

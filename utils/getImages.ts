@@ -37,61 +37,54 @@ export const fetchAndConvertImage = async (imageUrl: string) => {
 export const getImageBySize = (
   images: Image[] | undefined,
   width: number
-): ComputedRef<Image | undefined> => {
-  return computed(() => {
-    const sortedImagesAscending = images?.sort((a, b) => {
-      if (!a.width || !b.width) {
-        return 0
-      }
-
-      if (a.width < b.width) {
-        return -1
-      }
-      if (a.width > b.width) {
-        return 1
-      }
+): Image | undefined => {
+  const sortedImagesAscending = images?.sort((a, b) => {
+    if (!a.width || !b.width) {
       return 0
-    })
-
-    const normalImage = sortedImagesAscending?.find(
-      image =>
-        image.width &&
-        image.width > width &&
-        image.height &&
-        image.height > width
-    )
-
-    if (normalImage) {
-      return normalImage
     }
 
-    // lastly return biggest image available
-    return getLargestImage(images).value
+    if (a.width < b.width) {
+      return -1
+    }
+    if (a.width > b.width) {
+      return 1
+    }
+    return 0
   })
+
+  const normalImage = sortedImagesAscending?.find(
+    image =>
+      image.width && image.width > width && image.height && image.height > width
+  )
+
+  if (normalImage) {
+    return normalImage
+  }
+
+  // lastly return biggest image available
+  return getLargestImage(images)
 }
 
 export const getLargestImage = (
   images: Image[] | undefined
-): ComputedRef<Image | undefined> => {
-  return computed(() => {
-    const sortedImagesAscending = images?.sort((a, b) => {
-      if (!a.width || !b.width) {
-        return 0
-      }
-
-      if (a.width < b.width) {
-        return -1
-      }
-      if (a.width > b.width) {
-        return 1
-      }
+): Image | undefined => {
+  const sortedImagesAscending = images?.sort((a, b) => {
+    if (!a.width || !b.width) {
       return 0
-    })
+    }
 
-    return sortedImagesAscending && sortedImagesAscending.length > 0
-      ? sortedImagesAscending[0]
-      : undefined
+    if (a.width < b.width) {
+      return -1
+    }
+    if (a.width > b.width) {
+      return 1
+    }
+    return 0
   })
+
+  return sortedImagesAscending && sortedImagesAscending.length > 0
+    ? sortedImagesAscending[0]
+    : undefined
 }
 
 /**
@@ -104,33 +97,28 @@ export const getLargestImage = (
 export const getOptimizedImage = (
   profileImages: Image[] | undefined,
   width: number
-) => {
-  const dpr = computed(() => window.devicePixelRatio || 1)
-  const desiredWidth = computed(() => width * dpr.value)
-  const image = getImageBySize(profileImages, width * desiredWidth.value)
-  return computed(() => {
-    const { verification, url } = image.value || {}
+): string | undefined => {
+  const dpr = window.devicePixelRatio || 1
+  const desiredWidth = width * dpr
+  const { verification, url } =
+    getImageBySize(profileImages, width * desiredWidth) || {}
 
-    if (url) {
-      const queryParams = {
-        method: verification?.method || '0x00000000',
-        data: verification?.data || '0x',
-        width: width * 2, // for retina we double size
-        ...(dpr.value !== 1 ? { dpr: dpr.value } : {}),
-      }
-
-      const queryParamsString = Object.entries(queryParams)
-        .map(([key, value]) => `${key}=${value}`)
-        .join('&')
-
-      return {
-        ...image,
-        src: url.startsWith('ipfs://')
-          ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?${queryParamsString}`
-          : url,
-      }
+  if (url) {
+    const queryParams = {
+      method: verification?.method || '0x00000000',
+      data: verification?.data || '0x',
+      width: width * 2, // for retina we double size
+      ...(dpr !== 1 ? { dpr } : {}),
     }
-  })
+
+    const queryParamsString = Object.entries(queryParams)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&')
+
+    return url.startsWith('ipfs://')
+      ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?${queryParamsString}`
+      : url
+  }
 }
 
 /**
@@ -142,45 +130,44 @@ export const getOptimizedImage = (
  * @returns
  */
 export const getAssetThumb = (
-  asset?: TokenData,
+  asset?: TokenData | null,
   useIcon?: boolean,
   size = 100
-): ComputedRef<string | undefined> => {
-  return computed(() => {
-    if (!asset) {
-      return ''
-    }
+): string | undefined => {
+  console.log(asset)
+  if (!asset) {
+    return ''
+  }
 
-    if (asset.isNativeToken) {
-      return ASSET_LYX_ICON_URL
-    }
+  if (asset.isNativeToken) {
+    return ASSET_LYX_ICON_URL
+  }
 
-    if (useIcon) {
-      const icon =
-        asset.lsp7Icon || asset.baseURIIcon || asset.forTokenIcon || asset.icon
-      const url = getImageBySize(icon, size || 260)?.value?.src
-      if (url) {
-        return url.startsWith('https://api.universalprofile.cloud/image/')
-          ? url + `&width=${size || 260}&height=${size || 260}`
-          : url
-      }
-    }
-
-    const images =
-      asset.lsp7Images ||
-      asset.baseURIImages ||
-      asset.forTokenImages ||
-      asset.images
-    const image = images?.[0]
-    const url = getImageBySize(image, 260)?.value?.src
+  if (useIcon) {
+    const icon =
+      asset.lsp7Icon || asset.baseURIIcon || asset.forTokenIcon || asset.icon
+    const url = getImageBySize(icon, size || 260)?.src
     if (url) {
       return url.startsWith('https://api.universalprofile.cloud/image/')
         ? url + `&width=${size || 260}&height=${size || 260}`
         : url
     }
+  }
 
-    return undefined
-  })
+  const images =
+    asset.lsp7Images ||
+    asset.baseURIImages ||
+    asset.forTokenImages ||
+    asset.images
+  const image = images?.[0]
+  const url = getImageBySize(image, 260)?.src
+  if (url) {
+    return url.startsWith('https://api.universalprofile.cloud/image/')
+      ? url + `&width=${size || 260}&height=${size || 260}`
+      : url
+  }
+
+  return undefined
 }
 
 /**

@@ -17,9 +17,16 @@ export type TokenData = AssetData & {
   tokenCreators: string[]
 }
 
+const tokenRefs: Record<string, Ref<TokenData | null>> = {}
+
 export function useToken() {
-  return (token: AssetData | undefined) => {
+  return (token: AssetData | undefined): Ref<TokenData | null> => {
     const tokenId = token?.tokenId
+    const key = `${token?.address}-${tokenId}`
+    let outputToken = tokenRefs[key]
+    if (!outputToken) {
+      outputToken = tokenRefs[key] = ref<TokenData | null>(null)
+    }
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: undefined } } = currentNetwork
     const queries = token?.address
@@ -91,7 +98,7 @@ export function useToken() {
             : []),
         ]
       : []
-    return useQueries({
+    useQueries({
       queries,
       combine: results => {
         if (!token) {
@@ -100,9 +107,6 @@ export function useToken() {
         const owner = results[0].data as string
         const creator = results[1].data as string
         const tokenCreators = results[2].data as string[]
-        if (results[2]?.data === undefined) {
-          console.error(results[2])
-        }
         const decimals = results[3]?.data as number
         const forTokenData = results[4]?.data as any
         const forTokenImages = forTokenData?.LSP4Metadata?.images?.map(
@@ -175,7 +179,7 @@ export function useToken() {
               : url,
           }
         })
-        return {
+        outputToken.value = {
           ...token,
           forTokenData,
           forTokenImages,
@@ -191,5 +195,6 @@ export function useToken() {
         } as TokenData
       },
     })
+    return outputToken
   }
 }

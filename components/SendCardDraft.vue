@@ -17,8 +17,8 @@ const handleSelectAssets = () => {
 
 const handleBack = () => {
   try {
-    assertAddress(connectedProfile.value?.address, 'profile')
-    navigateTo(profileRoute(connectedProfile.value.address))
+    assertAddress(connectedProfile?.value?.address, 'profile')
+    navigateTo(profileRoute(connectedProfile?.value.address))
   } catch (error) {
     console.error(error)
   }
@@ -28,10 +28,8 @@ const handleBack = () => {
 <template>
   <lukso-card
     variant="profile-2"
-    :background-url="
-      getOptimizedImage(connectedProfile?.backgroundImage, 450)?.src
-    "
-    :profile-url="getOptimizedImage(connectedProfile?.profileImage, 80)?.src"
+    :background-url="getOptimizedImage(connectedProfile?.backgroundImage, 450)"
+    :profile-url="getOptimizedImage(connectedProfile?.profileImage, 80)"
     :profile-address="connectedProfile?.address"
     is-full-width
   >

@@ -14,7 +14,7 @@ const creatorProfile = useProfile().getProfile(props.profile)
   <div class="flex h-6">
     <lukso-profile
       size="x-small"
-      :profile-url="getOptimizedImage(creatorProfile?.profileImage, 40)?.src"
+      :profile-url="getOptimizedImage(creatorProfile?.profileImage, 40)"
       :profile-address="creatorProfile?.address"
       has-identicon
     ></lukso-profile>
