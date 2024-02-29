@@ -7,14 +7,14 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const creatorProfile = useProfile()(props.profile)
+const creatorProfile = useProfile().getProfile(props.profile)
 </script>
 
 <template>
   <div class="flex h-6">
     <lukso-profile
       size="x-small"
-      :profile-url="getProfileThumb(creatorProfile?.profileImages, 40)"
+      :profile-url="getOptimizedImage(creatorProfile?.profileImage, 40)?.src"
       :profile-address="creatorProfile?.address"
       has-identicon
     ></lukso-profile>

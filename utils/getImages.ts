@@ -1,4 +1,5 @@
 import type { ImageMetadata } from '@lukso/lsp-smart-contracts'
+import type { Image } from '@/types/image'
 
 const convertBlobToBase64 = (blob: Blob) =>
   new Promise((resolve, reject) => {
@@ -34,14 +35,18 @@ export const fetchAndConvertImage = async (imageUrl: string) => {
  * @returns url of the image
  */
 export const getImageBySize = (
-  images: (ImageMetadata & { src?: string })[] | undefined,
-  height: number
-): (ImageMetadata & { src?: string }) | undefined => {
+  images: Image[] | undefined,
+  width: number
+): Image | undefined => {
   const sortedImagesAscending = images?.sort((a, b) => {
-    if (a.height < b.height) {
+    if (!a.width || !b.width) {
+      return 0
+    }
+
+    if (a.width < b.width) {
       return -1
     }
-    if (a.height > b.height) {
+    if (a.width > b.width) {
       return 1
     }
     return 0
@@ -49,7 +54,7 @@ export const getImageBySize = (
 
   // check if we can get retina size image
   const retinaImage = sortedImagesAscending?.find(
-    image => image.height > height * 2
+    image => image.width && image.width > width * 2
   )
 
   if (retinaImage) {
@@ -58,7 +63,7 @@ export const getImageBySize = (
 
   // check if we can get normal size image
   const normalImage = sortedImagesAscending?.find(
-    image => image.height > height
+    image => image.width && image.width > width
   )
 
   if (normalImage) {
@@ -71,15 +76,59 @@ export const getImageBySize = (
     : undefined
 }
 
-export const getProfileThumb = (
-  profileImages?: (ImageMetadata & { src: string })[],
-  size?: number
+export const getLargestImage = (
+  images: Image[] | undefined
+): Image | undefined => {
+  const sortedImagesAscending = images?.sort((a, b) => {
+    if (!a.width || !b.width) {
+      return 0
+    }
+
+    if (a.width < b.width) {
+      return -1
+    }
+    if (a.width > b.width) {
+      return 1
+    }
+    return 0
+  })
+
+  return sortedImagesAscending && sortedImagesAscending.length > 0
+    ? sortedImagesAscending[0]
+    : undefined
+}
+
+/**
+ * Get optimized image using Cloudflare proxy from
+ *
+ * @param profileImages
+ * @param width
+ * @returns
+ */
+export const getOptimizedImage = (
+  profileImages: Image[] | undefined,
+  width: number
 ) => {
-  const url = getImageBySize(profileImages, size || 260)?.src
+  const image = getLargestImage(profileImages)
+  const { verification, url } = image || {}
+
   if (url) {
-    return url.startsWith('https://api.universalprofile.cloud/image/')
-      ? url + `&width=${size || 260}&height=${size || 260}`
-      : url
+    const queryParams = {
+      method: verification?.method || '0x00000000',
+      data: verification?.data || '0x',
+      width: width * 2, // for retina we double size
+    }
+
+    const queryParamsString = Object.entries(queryParams)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&')
+
+    return {
+      ...image,
+      src: url.startsWith('ipfs://')
+        ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?${queryParamsString}`
+        : url,
+    }
   }
   return undefined
 }

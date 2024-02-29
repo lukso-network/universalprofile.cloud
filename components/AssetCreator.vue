@@ -7,7 +7,7 @@ type Props = {
 const props = defineProps<Props>()
 const { isMobile } = useDevice()
 
-const creatorProfile = useProfile()(props.creator)
+const creatorProfile = useProfile().getProfile(props.creator)
 
 const handleOpenProfile = (address?: Address) => {
   if (address) {
@@ -31,7 +31,9 @@ const isVerified = (creatorProfile: Profile | null) =>
       <div class="flex items-center">
         <lukso-profile
           size="x-small"
-          :profile-url="getProfileThumb(creatorProfile?.profileImages)"
+          :profile-url="
+            getOptimizedImage(creatorProfile?.profileImage, 24)?.src
+          "
           :profile-address="creatorProfile?.address"
           has-identicon
         ></lukso-profile>

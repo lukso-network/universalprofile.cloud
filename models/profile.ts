@@ -41,8 +41,8 @@ export class ProfileModel extends BaseModel {
   declare backgroundImageId?: string
   declare issuedAssetAddresses?: Address[]
   declare receivedAssetAddresses?: Address[]
-  declare profileImage?: Image
-  declare backgroundImage?: Image
+  declare profileImage?: Image[]
+  declare backgroundImage?: Image[]
 }
 
 export type Profile = Partial<Item<ProfileModel>>

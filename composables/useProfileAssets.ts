@@ -43,7 +43,7 @@ export type AssetData = {
 export function useProfileAssets() {
   return (profileAddress: Address | undefined) => {
     const { currentNetwork } = storeToRefs(useAppStore())
-    const profile = useProfile()(profileAddress)
+    const profile = useProfile().viewedProfile()
     const { value: { chainId } = { chainId: undefined } } = currentNetwork
     // name
     // symbol

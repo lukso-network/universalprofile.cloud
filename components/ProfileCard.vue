@@ -1,13 +1,12 @@
 <script setup lang="ts">
-const profileAddress = getCurrentProfileAddress()
-const profile = useProfile()(profileAddress)
+const profile = useProfile().viewedProfile()
 </script>
 
 <template>
   <div class="relative">
     <lukso-card
       variant="hero"
-      :background-url="getProfileThumb(profile?.backgroundImages, 500)"
+      :background-url="getOptimizedImage(profile?.backgroundImage, 880)?.src"
       is-full-width
       custom-class="rounded-24 shadow-neutral-drop-shadow"
       class="mb-22"
@@ -23,7 +22,7 @@ const profile = useProfile()(profileAddress)
               :copy-value="profile?.address"
             >
               <lukso-profile
-                :profile-url="getProfileThumb(profile?.profileImages, 260)"
+                :profile-url="getOptimizedImage(profile?.profileImage, 96)?.src"
                 :profile-address="profile?.address"
                 size="x-large"
                 has-identicon

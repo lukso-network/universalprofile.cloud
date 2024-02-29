@@ -7,7 +7,7 @@ const showJSON = ref(window.location.search.includes('json'))
 
 const { assetFilter, isLoadingAssets } = storeToRefs(useAppStore())
 const viewedProfileAddress = getCurrentProfileAddress()
-const viewedProfile = useProfile()(viewedProfileAddress)
+const viewedProfile = useProfile().viewedProfile()
 // const assetRepository = useRepo(AssetRepository)
 const { isMobile } = useDevice()
 
