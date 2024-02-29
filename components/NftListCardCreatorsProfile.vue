@@ -1,18 +1,21 @@
 <script setup lang="ts">
 type Props = {
-  profile: Profile
+  profile?: Address
+  asset?: Address
   hasName?: boolean
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+const creatorProfile = useProfile()(props.profile)
 </script>
 
 <template>
   <div class="flex h-6">
     <lukso-profile
       size="x-small"
-      :profile-url="profile?.profileImage?.url"
-      :profile-address="profile?.address"
+      :profile-url="getProfileThumb(creatorProfile?.profileImages, 40)"
+      :profile-address="creatorProfile?.address"
       has-identicon
     ></lukso-profile>
     <div class="pl-1" v-if="hasName">
@@ -20,8 +23,8 @@ defineProps<Props>()
         {{ $formatMessage('asset_created_by') }}
       </div>
       <lukso-username
-        :name="profile?.name"
-        :address="profile?.address"
+        :name="creatorProfile?.name"
+        :address="creatorProfile?.address"
         size="x-small"
         class="flex"
         name-color="neutral-20"

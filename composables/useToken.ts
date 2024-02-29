@@ -184,7 +184,6 @@ export function useToken() {
               : url,
           }
         })
-        console.log('results', results[6])
         const lsp7JSON = results[6]?.data as any
         const lsp7Images = lsp7JSON?.LSP4Metadata?.images?.map(
           (images: any) => {

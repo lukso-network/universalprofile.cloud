@@ -7,3 +7,12 @@ body {
 
   @apply bg-neutral-98 text-neutral-20;
 }
+
+img::before {
+  content: ' ';
+  display: block;
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  background-image: url('/images/up-error.png');
+}

@@ -3,66 +3,66 @@ type Props = {
   asset: TokenData
 }
 
-type VerifyStatus = 'verified' | 'unverified' | 'partial'
+// type VerifyStatus = 'verified' | 'unverified' | 'partial'
 
 const props = defineProps<Props>()
-
-const {
-  firstCreator,
-  restOfCreators,
-  isPending,
-  creatorAddressesOrOwner,
-  isVerified,
-} = useCreators(props.asset)
-
-const verifyStatus = computed<VerifyStatus>(() => {
-  const profileRepo = useRepo(ProfileRepository)
-  const creators = creatorAddressesOrOwner.value?.map(creatorId =>
-    profileRepo.getProfile(creatorId)
-  )
-  const verifiedCreators = creators?.filter(creator =>
-    isVerified(creator)
-  ).length
-
-  if (verifiedCreators === 0) {
-    return 'unverified'
-  }
-
-  if (verifiedCreators === creators?.length) {
-    return 'verified'
-  }
-
-  return 'partial'
+const creators = computed(() => {
+  return (props.asset?.tokenCreators || []) as Address[]
 })
+
+// const {
+//   firstCreator,
+//   restOfCreators,
+//   isPending,
+//   creatorAddressesOrOwner,
+//   isVerified,
+// } = useCreators(props.asset)
+
+// const verifyStatus = computed<VerifyStatus>(() => {
+//   const profileRepo = useRepo(ProfileRepository)
+//   const creators = creatorAddressesOrOwner.value?.map(creatorId =>
+//     profileRepo.getProfile(creatorId)
+//   )
+//   const verifiedCreators = creators?.filter(creator =>
+//     isVerified(creator)
+//   ).length
+
+//   if (verifiedCreators === 0) {
+//     return 'unverified'
+//   }
+
+//   if (verifiedCreators === creators?.length) {
+//     return 'verified'
+//   }
+
+//   return 'partial'
+// })
 </script>
 
 <template>
-  <div v-if="isPending" class="flex h-6 animate-pulse items-center">
-    <lukso-profile size="x-small"></lukso-profile>
-    <div class="grid h-full grid-rows-2 gap-1 pl-1">
-      <div class="flex w-16 bg-neutral-90"></div>
-      <div class="flex w-20 bg-neutral-90"></div>
-    </div>
-  </div>
   <!--no creators at all including owner, might be that its EOA or not indexed -->
-  <div v-else-if="!firstCreator"></div>
+  <div v-if="(creators || []).length === 0"></div>
   <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
     <div class="flex space-x-[-14px]">
       <NftListCardCreatorsProfile
-        v-for="(creatorProfile, index) in restOfCreators"
-        :profile="creatorProfile"
+        v-for="(creatorAddress, index) in (creators || []).slice(1)"
+        :profile="creatorAddress"
+        :asset="asset.address"
         :key="index"
         class="relative"
       />
       <NftListCardCreatorsProfile
-        v-if="firstCreator"
-        :profile="firstCreator"
+        v-if="creators[0]"
+        :profile="creators[0]"
+        :asset="asset.address"
         class="relative"
-        :has-name="true"
+        has-name
       />
     </div>
     <div class="flex items-center justify-end">
-      <lukso-tooltip
+      <!-- NEED to setup publishing the verified result back from
+        the list of NftListCardCreatorsProfile
+        <lukso-tooltip
         v-if="verifyStatus === 'unverified'"
         variant="danger"
         :text="$formatMessage('asset_all_creators_unverified')"
@@ -100,7 +100,7 @@ const verifyStatus = computed<VerifyStatus>(() => {
           secondary-color="neutral-100"
           size="small"
         ></lukso-icon>
-      </lukso-tooltip>
+      </lukso-tooltip> -->
     </div>
   </div>
 </template>

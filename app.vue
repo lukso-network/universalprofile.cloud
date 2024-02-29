@@ -72,8 +72,8 @@ const routerBackProfileLoad = async () => {
       if (!storeProfile) {
         try {
           isLoadingProfile.value = true
-          await fetchAndStoreProfile(toProfileAddress)
-          fetchAndStoreAssets(toProfileAddress)
+          // await fetchAndStoreProfile(toProfileAddress)
+          // fetchAndStoreAssets(toProfileAddress)
           isLoadingProfile.value = false
         } catch (error) {
           console.error(error)

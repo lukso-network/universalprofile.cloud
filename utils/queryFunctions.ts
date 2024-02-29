@@ -167,7 +167,7 @@ async function doQueries() {
   const { currentNetwork } = storeToRefs(useAppStore())
   const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
     currentNetwork.value
-  const { allQueries, bigCount } = queryList.splice(0, queryList.length).reduce(
+  const { allQueries } = queryList.splice(0, queryList.length).reduce(
     ({ allQueries, bigCount }, query) => {
       if (query.isBig) {
         if (bigCount > 0) {
@@ -197,12 +197,6 @@ async function doQueries() {
         | QueryPromiseTokenDataOptions
       >[],
     }
-  )
-  console.log(
-    'bigCount',
-    BIG_QUERY_LIMIT - bigCount,
-    allQueries.length,
-    queryList.length
   )
   allQueries
     .filter(query => query.chainId !== chainId)

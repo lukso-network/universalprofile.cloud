@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { Asset } from '@/models/asset'
+import type { TokenData } from '@/composables/useToken'
 
 const { currentNetwork } = useAppStore()
 const { connectedProfile } = useConnectedProfile()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
 const assetRepository = useRepo(AssetRepository)
-const ownedAssets = ref<Asset[]>([])
+const ownedAssets = ref<TokenData[]>([])
 
 type Props = {
   closeModal: () => void
@@ -19,7 +19,7 @@ const handleSelectLyx = () => {
   props.closeModal()
 }
 
-const handleSelectAsset = (asset: Asset) => {
+const handleSelectAsset = (asset: TokenData) => {
   assertAddress(connectedProfile.value?.address, 'profile')
   navigateTo({
     path: sendRoute(connectedProfile.value.address),
