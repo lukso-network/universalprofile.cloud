@@ -101,30 +101,32 @@ export const getOptimizedImage = (
   profileImages: Image[] | undefined,
   width: number
 ) => {
-  const dpr = window.devicePixelRatio || 1
-  const image = getLargestImage(profileImages)
-  const { verification, url } = image || {}
+  const dpr = computed(() => window.devicePixelRatio || 1)
+  const desiredWidth = computed(() => width * dpr.value)
+  return computed(() => {
+    const image = getImageBySize(profileImages, width * desiredWidth.value)
+    const { verification, url } = image || {}
 
-  if (url) {
-    const queryParams = {
-      method: verification?.method || '0x00000000',
-      data: verification?.data || '0x',
-      width,
-      ...(dpr !== 1 ? { dpr } : {}),
+    if (url) {
+      const queryParams = {
+        method: verification?.method || '0x00000000',
+        data: verification?.data || '0x',
+        width: width * 2, // for retina we double size
+        ...(dpr.value !== 1 ? { dpr: dpr.value } : {}),
+      }
+
+      const queryParamsString = Object.entries(queryParams)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&')
+
+      return {
+        ...image,
+        src: url.startsWith('ipfs://')
+          ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?${queryParamsString}`
+          : url,
+      }
     }
-
-    const queryParamsString = Object.entries(queryParams)
-      .map(([key, value]) => `${key}=${value}`)
-      .join('&')
-
-    return {
-      ...image,
-      src: url.startsWith('ipfs://')
-        ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?${queryParamsString}`
-        : url,
-    }
-  }
-  return undefined
+  })
 }
 
 /**
@@ -150,7 +152,7 @@ export const getAssetThumb = (
 
   if (useIcon) {
     const icon = asset.baseURIIcon || asset.forTokenIcon || asset.icon
-    return getOptimizedImage(icon, size)?.src
+    return getOptimizedImage(icon, size)?.value?.src
   }
 
   const images =
@@ -160,7 +162,7 @@ export const getAssetThumb = (
     asset.images
   const image = images?.[0]
 
-  return getOptimizedImage(image, size)?.src
+  return getOptimizedImage(image, size)?.value?.src
 }
 
 /**
