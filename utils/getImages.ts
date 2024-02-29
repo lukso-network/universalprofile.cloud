@@ -102,7 +102,6 @@ export const getOptimizedImage = (
   width: number
 ) => {
   const dpr = window.devicePixelRatio || 1
-  const desiredWidth = width * dpr
   const image = getLargestImage(profileImages)
   const { verification, url } = image || {}
 
@@ -110,7 +109,7 @@ export const getOptimizedImage = (
     const queryParams = {
       method: verification?.method || '0x00000000',
       data: verification?.data || '0x',
-      width: desiredWidth,
+      width,
       ...(dpr !== 1 ? { dpr } : {}),
     }
 
