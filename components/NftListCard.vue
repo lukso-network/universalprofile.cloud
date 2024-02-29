@@ -76,10 +76,9 @@ const assetTokenId = computed(() => {
         <div class="rounded-t-12 bg-neutral-90">
           <img
             class="w-full rounded-t-12 bg-neutral-90 object-cover md:h-[260px]"
-            :src="getAssetThumb(token, false)"
+            :src="getAssetThumb(token, true, 260)"
             loading="lazy"
             alt=""
-            onerror="this.style.opacity=0"
           />
         </div>
         <div class="relative grid grid-rows-[max-content,max-content,auto] p-4">
