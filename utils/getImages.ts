@@ -38,56 +38,61 @@ export const fetchAndConvertImage = async (imageUrl: string) => {
 export const getImageBySize = (
   images: Image[] | undefined,
   width: number
-): Image | undefined => {
-  const sortedImagesAscending = images?.sort((a, b) => {
-    if (!a.width || !b.width) {
+): ComputedRef<Image | undefined> => {
+  return computed(() => {
+    const sortedImagesAscending = images?.sort((a, b) => {
+      if (!a.width || !b.width) {
+        return 0
+      }
+
+      if (a.width < b.width) {
+        return -1
+      }
+      if (a.width > b.width) {
+        return 1
+      }
       return 0
+    })
+
+    const normalImage = sortedImagesAscending?.find(
+      image =>
+        image.width &&
+        image.width > width &&
+        image.height &&
+        image.height > width
+    )
+
+    if (normalImage) {
+      return normalImage
     }
 
-    if (a.width < b.width) {
-      return -1
-    }
-    if (a.width > b.width) {
-      return 1
-    }
-    return 0
+    // lastly return biggest image available
+    return getLargestImage(images).value
   })
-
-  const normalImage = sortedImagesAscending?.find(
-    image =>
-      image.width && image.width > width && image.height && image.height > width
-  )
-
-  if (normalImage) {
-    return normalImage
-  }
-
-  // lastly return biggest image available
-  return getLargestImage(images)
 }
 
 export const getLargestImage = (
   images: Image[] | undefined
-): Image | undefined => {
-  const sortedImagesAscending = images?.sort((a, b) => {
-    if (!a.width || !b.width) {
+): ComputedRef<Image | undefined> => {
+  return computed(() => {
+    const sortedImagesAscending = images?.sort((a, b) => {
+      if (!a.width || !b.width) {
+        return 0
+      }
+
+      if (a.width < b.width) {
+        return -1
+      }
+      if (a.width > b.width) {
+        return 1
+      }
       return 0
-    }
+    })
 
-    if (a.width > b.width) {
-      return -1
-    }
-
-    if (a.width < b.width) {
-      return 1
-    }
-
-    return 0
+    return sortedImagesAscending && sortedImagesAscending.length > 0
+      ? sortedImagesAscending[0]
+      : undefined
   })
-
-  return sortedImagesAscending && sortedImagesAscending.length > 0
-    ? sortedImagesAscending[0]
-    : undefined
 }
 
 /**
@@ -103,9 +108,9 @@ export const getOptimizedImage = (
 ) => {
   const dpr = computed(() => window.devicePixelRatio || 1)
   const desiredWidth = computed(() => width * dpr.value)
+  const image = getImageBySize(profileImages, width * desiredWidth.value)
   return computed(() => {
-    const image = getImageBySize(profileImages, width * desiredWidth.value)
-    const { verification, url } = image || {}
+    const { verification, url } = image.value || {}
 
     if (url) {
       const queryParams = {
@@ -141,28 +146,42 @@ export const getAssetThumb = (
   asset?: TokenData,
   useIcon?: boolean,
   size = 100
-) => {
-  if (!asset) {
-    return ''
-  }
+): ComputedRef<string | undefined> => {
+  return computed(() => {
+    if (!asset) {
+      return ''
+    }
 
-  if (asset.isNativeToken) {
-    return ASSET_LYX_ICON_URL
-  }
+    if (asset.isNativeToken) {
+      return ASSET_LYX_ICON_URL
+    }
 
-  if (useIcon) {
-    const icon = asset.baseURIIcon || asset.forTokenIcon || asset.icon
-    return getOptimizedImage(icon, size)?.value?.src
-  }
+    if (useIcon) {
+      const icon =
+        asset.lsp7Icon || asset.baseURIIcon || asset.forTokenIcon || asset.icon
+      const url = getImageBySize(icon, size || 260)?.value?.src
+      if (url) {
+        return url.startsWith('https://api.universalprofile.cloud/image/')
+          ? url + `&width=${size || 260}&height=${size || 260}`
+          : url
+      }
+    }
 
-  const images =
-    asset.lsp7Images ||
-    asset.baseURIImages ||
-    asset.forTokenImages ||
-    asset.images
-  const image = images?.[0]
+    const images =
+      asset.lsp7Images ||
+      asset.baseURIImages ||
+      asset.forTokenImages ||
+      asset.images
+    const image = images?.[0]
+    const url = getImageBySize(image, 260)?.value?.src
+    if (url) {
+      return url.startsWith('https://api.universalprofile.cloud/image/')
+        ? url + `&width=${size || 260}&height=${size || 260}`
+        : url
+    }
 
-  return getOptimizedImage(image, size)?.value?.src
+    return undefined
+  })
 }
 
 /**
@@ -173,13 +192,13 @@ export const getAssetThumb = (
  * @param height - image height (represents the desired image height)
  * @returns Image model object
  */
-export const createImageObject = (
-  image?: (ImageMetadata & { src?: string })[],
-  height = 100
-) => {
-  if (!image) {
-    return undefined
-  }
+// export const createImageObject = (
+//   image?: (ImageMetadata & { src?: string })[],
+//   height = 100
+// ) => {
+//   if (!image) {
+//     return undefined
+//   }
 
-  return getImageBySize(image, height)
-}
+//   return getImageBySize(image, height)
+// }

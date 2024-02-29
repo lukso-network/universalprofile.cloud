@@ -95,7 +95,6 @@ export const getProfile = (
           changed = true
           continue
         }
-        console.log('equal', value, oldValue[name])
       }
       if (changed) {
         profileRef.value = profile
