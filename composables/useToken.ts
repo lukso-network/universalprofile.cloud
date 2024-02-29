@@ -2,51 +2,16 @@ import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
 
 import type { AssetData } from './useProfileAssets'
+import type { Image } from '@/types/image'
 
 export type TokenData = AssetData & {
   forTokenData: any
-  forTokenImages: {
-    src: string
-    verification: any
-    width: number
-    height: number
-    url: string
-  }[][]
-  forTokenIcon: {
-    src: string
-    verification: any
-    width: number
-    height: number
-    url: string
-  }[]
-  baseURIImages: {
-    src: string
-    verification: any
-    width: number
-    height: number
-    url: string
-  }[][]
-  baseURIIcon: {
-    src: string
-    verification: any
-    width: number
-    height: number
-    url: string
-  }[]
-  lsp7Images: {
-    src: string
-    verification: any
-    width: number
-    height: number
-    url: string
-  }[][]
-  lsp7Icon: {
-    src: string
-    verification: any
-    width: number
-    height: number
-    url: string
-  }[]
+  forTokenImages: Image[][]
+  forTokenIcon: Image[]
+  baseURIImages: Image[][]
+  baseURIIcon: Image[]
+  lsp7Images: Image[][]
+  lsp7Icon: Image[]
   owner: string
   creator: string
   tokenCreators: string[]

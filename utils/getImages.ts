@@ -25,6 +25,7 @@ export const fetchAndConvertImage = async (imageUrl: string) => {
 }
 
 /**
+ * !DEPRECATED - remove this
  * Gets a correct image url from an array of possible image
  * by checking the height of the image.
  * It try to find retina version of the image first, then normal version of the image
@@ -73,12 +74,14 @@ export const getLargestImage = (
       return 0
     }
 
-    if (a.width < b.width) {
+    if (a.width > b.width) {
       return -1
     }
-    if (a.width > b.width) {
+
+    if (a.width < b.width) {
       return 1
     }
+
     return 0
   })
 
@@ -98,17 +101,17 @@ export const getOptimizedImage = (
   profileImages: Image[] | undefined,
   width: number
 ) => {
-  const dpr = computed(() => window.devicePixelRatio || 1)
-  const desiredWidth = computed(() => width * dpr.value)
-  const image = getImageBySize(profileImages, width * desiredWidth.value)
+  const dpr = window.devicePixelRatio || 1
+  const desiredWidth = width * dpr
+  const image = getLargestImage(profileImages)
   const { verification, url } = image || {}
 
   if (url) {
     const queryParams = {
       method: verification?.method || '0x00000000',
       data: verification?.data || '0x',
-      width: width * 2, // for retina we double size
-      ...(dpr.value !== 1 ? { dpr: dpr.value } : {}),
+      width: desiredWidth,
+      ...(dpr !== 1 ? { dpr } : {}),
     }
 
     const queryParamsString = Object.entries(queryParams)
@@ -136,7 +139,7 @@ export const getOptimizedImage = (
 export const getAssetThumb = (
   asset?: TokenData,
   useIcon?: boolean,
-  size?: number
+  size = 100
 ) => {
   if (!asset) {
     return ''
@@ -148,12 +151,7 @@ export const getAssetThumb = (
 
   if (useIcon) {
     const icon = asset.baseURIIcon || asset.forTokenIcon || asset.icon
-    const url = getImageBySize(icon, size || 260)?.src
-    if (url) {
-      return url.startsWith('https://api.universalprofile.cloud/image/')
-        ? url + `&width=${size || 260}&height=${size || 260}`
-        : url
-    }
+    return getOptimizedImage(icon, size)?.src
   }
 
   const images =
@@ -162,17 +160,12 @@ export const getAssetThumb = (
     asset.forTokenImages ||
     asset.images
   const image = images?.[0]
-  const url = getImageBySize(image, 260)?.src
-  if (url) {
-    return url.startsWith('https://api.universalprofile.cloud/image/')
-      ? url + `&width=${size || 260}&height=${size || 260}`
-      : url
-  }
 
-  return undefined
+  return getOptimizedImage(image, size)?.src
 }
 
 /**
+ * !DEPRECATED - remove this
  * Creates a Image model object
  *
  * @param image - image metadata array
