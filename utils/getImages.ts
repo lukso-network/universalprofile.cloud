@@ -1,5 +1,4 @@
 import type { ImageMetadata } from '@lukso/lsp-smart-contracts'
-import type { Image } from '@/types/image'
 
 const convertBlobToBase64 = (blob: Blob) =>
   new Promise((resolve, reject) => {
