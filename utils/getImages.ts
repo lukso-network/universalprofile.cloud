@@ -52,18 +52,9 @@ export const getImageBySize = (
     return 0
   })
 
-  // check if we can get retina size image
-  const retinaImage = sortedImagesAscending?.find(
-    image => image.width && image.width > width * 2
-  )
-
-  if (retinaImage) {
-    return retinaImage
-  }
-
-  // check if we can get normal size image
   const normalImage = sortedImagesAscending?.find(
-    image => image.width && image.width > width
+    image =>
+      image.width && image.width > width && image.height && image.height > width
   )
 
   if (normalImage) {
@@ -71,9 +62,7 @@ export const getImageBySize = (
   }
 
   // lastly return biggest image available
-  return sortedImagesAscending && sortedImagesAscending.length > 0
-    ? sortedImagesAscending?.pop()
-    : undefined
+  return getLargestImage(images)
 }
 
 export const getLargestImage = (
@@ -109,7 +98,9 @@ export const getOptimizedImage = (
   profileImages: Image[] | undefined,
   width: number
 ) => {
-  const image = getLargestImage(profileImages)
+  const dpr = computed(() => window.devicePixelRatio || 1)
+  const desiredWidth = computed(() => width * dpr.value)
+  const image = getImageBySize(profileImages, width * desiredWidth.value)
   const { verification, url } = image || {}
 
   if (url) {
@@ -117,6 +108,7 @@ export const getOptimizedImage = (
       method: verification?.method || '0x00000000',
       data: verification?.data || '0x',
       width: width * 2, // for retina we double size
+      ...(dpr.value !== 1 ? { dpr: dpr.value } : {}),
     }
 
     const queryParamsString = Object.entries(queryParams)
