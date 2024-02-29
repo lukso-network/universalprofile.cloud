@@ -1,7 +1,9 @@
 import { useQueries } from '@tanstack/vue-query'
+import isDeepStrictEqual from 'deep-equal'
 
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { Standard } from '@/types/contract'
+import type { Profile } from '@/models/profile'
 
 const profileRefs: Record<string, Ref<Profile | null>> = {}
 
@@ -66,7 +68,8 @@ export const getProfile = (
       const issuedAssets = results[results.length - 1].data as Address[]
       const { name, profileImage, backgroundImage } =
         profileData?.LSP3Profile || {}
-      profileRef.value = {
+      const oldValue = profileRef.value || {}
+      const newValue = {
         address: profileAddress,
         name,
         standard: standard as Standard,
@@ -75,6 +78,27 @@ export const getProfile = (
         issuedAssets,
         profileImage,
         backgroundImage,
+      }
+      let changed = false
+      const profile: Profile = {} as Profile
+      for (const [name, value] of Object.entries(newValue)) {
+        if (
+          (!oldValue[name] && value) ||
+          typeof oldValue[name] !== typeof value
+        ) {
+          profile[name] = value
+          changed = true
+          continue
+        }
+        if (!isDeepStrictEqual(value, oldValue[name])) {
+          profile[name] = value
+          changed = true
+          continue
+        }
+        console.log('equal', value, oldValue[name])
+      }
+      if (changed) {
+        profileRef.value = profile
       }
     },
   })

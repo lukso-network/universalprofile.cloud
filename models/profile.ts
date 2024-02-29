@@ -1,6 +1,5 @@
 import { BaseModel } from '@/models/base'
 
-import type { Item } from 'pinia-orm'
 import type {
   LSP3ProfileMetadata,
   LinkMetadata,
@@ -45,7 +44,7 @@ export class ProfileModel extends BaseModel {
   declare backgroundImage?: Image[]
 }
 
-export type Profile = Partial<Item<ProfileModel>>
+export type Profile = Partial<ProfileModel>
 
 // Type of data returned from Algolia, it's not fully covered as some
 // properties are irrelevant
