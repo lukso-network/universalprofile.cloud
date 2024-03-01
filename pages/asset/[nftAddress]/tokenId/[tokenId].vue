@@ -1,20 +1,25 @@
 <script setup lang="ts">
-const nftAddress = useRouter().currentRoute.value.params?.nftAddress
+const address = useRouter().currentRoute.value.params?.nftAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
-const { asset, isLoading, isOwned } = useAsset(nftAddress, tokenId)
+// const { asset, isLoading, isOwned } = useAsset(nftAddress, tokenId)
+const asset = useToken()({
+  address,
+  tokenId,
+} as Asset)
 const { showModal } = useModal()
 const connectedProfile = useProfile().connectedProfile()
+const isLoading = false // TODO: get loading state from useQuery
 
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
-    assertAddress(connectedProfile.value?.address, 'profile')
-    assertAddress(asset.value?.address, 'nft')
+    assertAddress(connectedProfile?.value?.address, 'profile')
+    assertAddress(address, 'nft')
     navigateTo({
       path: sendRoute(connectedProfile.value.address),
       query: {
-        asset: asset.value.address,
-        tokenId: asset.value.tokenId,
+        asset: address,
+        tokenId,
       },
     })
   } catch (error) {
@@ -23,7 +28,7 @@ const handleSendAsset = (event: Event) => {
 }
 
 const assetTokenId = computed(() => {
-  return prefixedTokenId(asset.value?.tokenId, asset.value?.tokenIdFormat, 36)
+  return prefixedTokenId(tokenId, asset.value?.tokenIdFormat, 36)
 })
 
 const handlePreviewImage = () => {
@@ -44,6 +49,7 @@ const handlePreviewImage = () => {
 </script>
 
 <template>
+  {{ asset }}
   <AppPageLoader :is-loading="isLoading">
     <div
       class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
@@ -79,13 +85,15 @@ const handlePreviewImage = () => {
             </div>
           </div>
         </lukso-card>
-        <div v-if="isOwned">
+        <div v-if="asset?.isOwned">
           <AssetOwnInfo
             :address="connectedProfile?.address"
             :balance="asset?.balance"
             :symbol="asset?.symbol"
             :decimals="0"
-            :profile-image-url="connectedProfile?.profileImage?.url"
+            :profile-image-url="
+              getOptimizedImage(connectedProfile?.profileImage, 40)
+            "
             :message="$formatMessage('nft_details_own')"
           />
 
@@ -106,7 +114,7 @@ const handlePreviewImage = () => {
             'mb-8': !hasTokenId(asset),
           }"
         />
-        <AssetTokenId v-if="hasTokenId(asset)" :asset="asset" />
+        <AssetTokenId v-if="asset && hasTokenId(asset)" :asset="asset" />
         <AssetDescription
           v-if="asset?.description"
           :description="asset.description"

@@ -1,15 +1,15 @@
 import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
 
-const tokenRefs: Record<string, Ref<Asset | null>> = {}
+const tokenRefs: Record<string, Ref<Asset | undefined>> = {}
 
 export function useToken() {
-  return (token: Asset | undefined): Ref<Asset | null> => {
+  return (token: Asset | undefined): Ref<Asset | undefined> => {
     const tokenId = token?.tokenId
     const key = `${token?.address}-${tokenId}`
     let outputToken = tokenRefs[key]
     if (!outputToken) {
-      outputToken = tokenRefs[key] = ref<Asset | null>(null)
+      outputToken = tokenRefs[key] = ref<Asset | undefined>()
     }
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: undefined } } = currentNetwork
@@ -163,6 +163,9 @@ export function useToken() {
               : url,
           }
         })
+
+        const { description } = lsp7JSON?.LSP4Metadata || {}
+
         outputToken.value = {
           ...token,
           forTokenData,
@@ -176,6 +179,7 @@ export function useToken() {
           creator,
           tokenCreators,
           decimals,
+          description,
         } as Asset
       },
     })

@@ -1,3 +1,5 @@
+import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
+
 export type Asset = {
   isOwned: boolean
   isIssued: boolean
@@ -33,4 +35,9 @@ export type Asset = {
   owner?: Address
   creator?: Address
   tokenCreators?: Address[]
+  description?: string
+  assets?: AssetMetadata[]
+  attributes: AttributeMetadata[]
+  links?: LinkMetadata[]
+  tokenSupply?: string
 }
