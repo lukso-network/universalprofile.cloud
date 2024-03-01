@@ -7,6 +7,6 @@ const asset = useAsset()(address, tokenId)
 
 <template>
   <AppPageLoader :is-loading="!asset">
-    <TokenView :asset="asset" />
+    <NftAssetView :asset="asset" />
   </AppPageLoader>
 </template>

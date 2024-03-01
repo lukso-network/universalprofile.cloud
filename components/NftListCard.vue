@@ -18,11 +18,8 @@ const viewedProfileAddress = getCurrentProfileAddress()
 
 const handleShowAsset = () => {
   try {
-    assertAddress(props.asset?.address)
-    assertString(props.asset.tokenId)
-
     if (isCollectible(props.asset)) {
-      navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
+      navigateTo(nftRoute(props.asset?.address, props.asset?.tokenId || '0x'))
     } else {
       navigateTo(tokenRoute(props.asset.address))
     }
@@ -86,19 +83,19 @@ const assetTokenId = computed(() => {
             class="relative top-[-40px] flex cursor-pointer flex-col rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
           >
             <div class="paragraph-inter-14-semi-bold">
-              {{ asset?.name }}
+              {{ token?.name }}
               <span
                 class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
-                >{{ asset?.symbol }}</span
+                >{{ token?.symbol }}</span
               >
             </div>
             <div class="paragraph-ptmono-10-bold mt-1">
-              <span v-if="isLsp8(asset)">
+              <span v-if="isLsp8(token)">
                 {{ assetTokenId }}
               </span>
               <span v-else>
                 {{ $formatMessage('token_owned') }}
-                {{ asset?.balance }}
+                {{ token?.balance }}
               </span>
             </div>
           </div>
@@ -125,17 +122,17 @@ const assetTokenId = computed(() => {
         </div>
       </div>
       <div class="flex justify-between px-4 py-3">
-        <AssetStandardBadge :standard="asset?.standard" />
+        <AssetStandardBadge :standard="token?.standard" />
         <div
           class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
         >
           <img
-            v-if="asset?.address"
-            :src="makeBlockie(asset.address)"
+            v-if="token?.address"
+            :src="makeBlockie(token.address)"
             alt=""
             class="size-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
           />
-          {{ asset?.address?.slice(0, 6) }}
+          {{ token?.address?.slice(0, 6) }}
         </div>
       </div>
     </div>
