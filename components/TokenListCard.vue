@@ -77,7 +77,9 @@ onMounted(async () => {
           <lukso-profile
             size="medium"
             :profile-address="asset?.address"
-            :profile-url="getAssetThumb(token) || ASSET_ICON_PLACEHOLDER_URL"
+            :profile-url="
+              getAssetThumb(token, true, 260) || ASSET_ICON_PLACEHOLDER_URL
+            "
             :has-identicon="hasAddress ? 'true' : undefined"
           ></lukso-profile>
           <div

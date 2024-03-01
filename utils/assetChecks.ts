@@ -5,7 +5,7 @@ import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
  * @param asset
  * @returns
  */
-export const isLyx = (asset?: Asset) => !!asset?.isNativeToken
+export const isLyx = (asset?: Asset | null) => !!asset?.isNativeToken
 
 /**
  * Check if passed asset is collectible
@@ -13,7 +13,7 @@ export const isLyx = (asset?: Asset) => !!asset?.isNativeToken
  * @param asset
  * @returns
  */
-export const isCollectible = (asset?: Asset) =>
+export const isCollectible = (asset?: Asset | null) =>
   asset?.tokenType === LSP4_TOKEN_TYPES.NFT ||
   asset?.tokenType === LSP4_TOKEN_TYPES.COLLECTION
 
@@ -23,7 +23,7 @@ export const isCollectible = (asset?: Asset) =>
  * @param asset
  * @returns
  */
-export const isToken = (asset?: Asset) =>
+export const isToken = (asset?: Asset | null) =>
   asset?.tokenType === LSP4_TOKEN_TYPES.TOKEN || isLyx(asset)
 
 /**
@@ -32,7 +32,8 @@ export const isToken = (asset?: Asset) =>
  * @param asset
  * @returns
  */
-export const isLsp7 = (asset?: Asset) => asset?.standard === STANDARDS.LSP7
+export const isLsp7 = (asset?: Asset | null) =>
+  asset?.standard === STANDARDS.LSP7
 
 /**
  * Check if passed asset is LSP8 token
@@ -40,7 +41,8 @@ export const isLsp7 = (asset?: Asset) => asset?.standard === STANDARDS.LSP7
  * @param asset
  * @returns
  */
-export const isLsp8 = (asset?: Asset) => asset?.standard === STANDARDS.LSP8
+export const isLsp8 = (asset?: Asset | null) =>
+  asset?.standard === STANDARDS.LSP8
 
 /**
  * Check if passed asset has a token id
@@ -48,7 +50,7 @@ export const isLsp8 = (asset?: Asset) => asset?.standard === STANDARDS.LSP8
  * @param asset
  * @returns
  */
-export const hasTokenId = (asset?: Asset) =>
+export const hasTokenId = (asset?: Asset | null) =>
   !!asset?.tokenId?.length && asset?.tokenId !== '0x'
 
 /**
@@ -57,5 +59,5 @@ export const hasTokenId = (asset?: Asset) =>
  * @param asset
  * @returns
  */
-export const isAsset = (asset?: Asset) =>
+export const isAsset = (asset?: Asset | null) =>
   asset?.standard === STANDARDS.LSP7 || asset?.standard === STANDARDS.LSP8

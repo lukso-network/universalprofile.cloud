@@ -1,125 +1,12 @@
 <script setup lang="ts">
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
-const connectedProfile = useProfile().connectedProfile()
-const asset = useToken()(tokenAddress)
-const { showModal } = useModal()
-
-const handleSendAsset = (event: Event) => {
-  try {
-    event.stopPropagation()
-    assertAddress(connectedProfile.value?.address, 'profile')
-    assertAddress(asset.value?.address, 'token')
-    navigateTo({
-      path: sendRoute(connectedProfile.value.address),
-      query: {
-        asset: asset.value.address,
-      },
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-const handlePreviewImage = () => {
-  const image = asset.value?.resolvedMetadata?.icon
-
-  if (!image) {
-    return
-  }
-
-  showModal({
-    template: 'AssetImage',
-    data: {
-      asset: image,
-    },
-    size: 'auto',
-  })
-}
+const asset = useAsset()(tokenAddress)
 </script>
 
 <template>
   <div class="relative">
     <AppPageLoader :is-loading="!asset">
-      <div
-        class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
-      >
-        <div>
-          <lukso-card
-            class="cursor-pointer"
-            is-full-width
-            size="small"
-            shadow="small"
-            @click="handlePreviewImage"
-          >
-            <div
-              slot="content"
-              class="flex min-h-64 items-center justify-center p-6 sm:py-10 md:py-20"
-            >
-              <lukso-profile
-                v-if="asset"
-                size="large"
-                :profile-url="
-                  getAssetThumb(asset, isLsp7(asset)) ||
-                  ASSET_ICON_PLACEHOLDER_URL
-                "
-                class="rounded-full shadow-neutral-above-shadow-1xl"
-              ></lukso-profile>
-            </div>
-          </lukso-card>
-          <div v-if="asset?.isOwned">
-            <AssetOwnInfo
-              :address="connectedProfile?.address"
-              :balance="asset?.balance"
-              :symbol="asset?.symbol"
-              :decimals="asset?.decimals"
-              :profile-image-url="
-                getOptimizedImage(connectedProfile?.profileImage, 50)
-              "
-              :message="$formatMessage('token_details_own')"
-            />
-
-            <lukso-button
-              is-full-width
-              class="mt-12"
-              @click="handleSendAsset"
-              >{{
-                $formatMessage('token_details_send', {
-                  token: asset?.symbol || '',
-                })
-              }}</lukso-button
-            >
-          </div>
-        </div>
-        <div>
-          <div class="heading-apax-24-medium flex items-center gap-2 pb-2">
-            {{ asset?.name }}
-            <AssetStandardBadge :standard="asset?.standard" />
-          </div>
-          <AssetTokenSupply
-            :token-supply="asset?.tokenSupply"
-            :decimals="asset?.decimals"
-            class="pb-8"
-          />
-          <AssetDescription
-            v-if="asset.resolvedMetadata?.description"
-            :description="asset.resolvedMetadata?.description"
-          />
-          <AssetImages
-            v-if="asset.resolvedMetadata?.images?.length"
-            :images="asset.resolvedMetadata?.images"
-          />
-          <AssetAssets
-            v-if="asset.resolvedMetadata?.assets?.length"
-            :assets="asset.resolvedMetadata?.assets"
-          />
-          <AssetAttributes :attributes="asset.resolvedMetadata?.attributes" />
-          <AssetLinks
-            v-if="asset.resolvedMetadata?.links?.length"
-            :links="asset.resolvedMetadata?.links"
-          />
-          <AssetAddress v-if="asset?.address" :address="asset.address" />
-        </div>
-      </div>
+      <TokenView :asset="asset" />
     </AppPageLoader>
   </div>
 </template>

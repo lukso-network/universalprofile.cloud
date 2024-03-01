@@ -10,7 +10,7 @@ const { receiver } = storeToRefs(useSendStore())
         :profile="connectedProfile"
         :name="connectedProfile?.name"
         :address="connectedProfile?.address"
-        :profile-url="connectedProfile?.profileImage?.url"
+        :profile-url="getOptimizedImage(connectedProfile?.profileImage, 260)"
       />
     </div>
     <div class="flex items-center">
@@ -24,7 +24,7 @@ const { receiver } = storeToRefs(useSendStore())
         :is-eoa="receiver?.type === 'EOA'"
         :name="receiver?.name"
         :address="receiver?.address"
-        :profile-url="receiver?.profileImage?.url"
+        :profile-url="getOptimizedImage(receiver?.profileImage, 260)"
       />
     </div>
   </div>

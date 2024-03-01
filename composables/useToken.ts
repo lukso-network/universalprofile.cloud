@@ -5,7 +5,7 @@ import type { Image } from '@/types/image'
 import type { ExtendedAssetMetadata } from '@/types/asset'
 
 export function useToken() {
-  return (token: Asset | undefined) => {
+  return (token?: Asset | null) => {
     const tokenId = token?.tokenId
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: undefined } } = currentNetwork

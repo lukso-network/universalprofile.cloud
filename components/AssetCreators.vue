@@ -6,7 +6,7 @@ type Props = {
 const props = defineProps<Props>()
 
 const creators = computed(() => {
-  return props.asset?.creators || []
+  return props.asset?.tokenCreators || []
 })
 </script>
 
