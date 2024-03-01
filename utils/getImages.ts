@@ -38,15 +38,15 @@ export const getImageBySize = (
   images: Image[] | undefined,
   width: number
 ): Image | undefined => {
-  const sortedImagesAscending = images?.sort((a, b) => {
+  const sortedImagesAscending = images?.slice()?.sort((a, b) => {
     if (!a.width || !b.width) {
       return 0
     }
 
-    if (a.width < b.width) {
+    if (a.width > b.width) {
       return -1
     }
-    if (a.width > b.width) {
+    if (a.width < b.width) {
       return 1
     }
     return 0
@@ -68,15 +68,15 @@ export const getImageBySize = (
 export const getLargestImage = (
   images: Image[] | undefined
 ): Image | undefined => {
-  const sortedImagesAscending = images?.sort((a, b) => {
+  const sortedImagesAscending = images?.slice()?.sort((a, b) => {
     if (!a.width || !b.width) {
       return 0
     }
 
-    if (a.width < b.width) {
+    if (a.width > b.width) {
       return -1
     }
-    if (a.width > b.width) {
+    if (a.width < b.width) {
       return 1
     }
     return 0
