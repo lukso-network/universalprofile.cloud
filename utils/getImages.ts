@@ -42,13 +42,14 @@ export const getImageBySize = (
 ): Image | undefined => {
   const sortedImagesAscending = (images || []).slice()
   sortedImagesAscending.sort((a, b) => {
+    // reverse sort largest last
     if (!a.width || !b.width) {
       return 0
     }
-    if (a.width > b.width) {
+    if (a.width < b.width) {
       return -1
     }
-    if (a.width < b.width) {
+    if (a.width > b.width) {
       return 1
     }
     return 0
@@ -63,7 +64,7 @@ export const getImageBySize = (
   }
 
   // lastly return biggest image available
-  return images?.slice(-1)[0]
+  return sortedImagesAscending?.slice(-1)[0]
 }
 
 export const getLargestImage = (
@@ -71,6 +72,7 @@ export const getLargestImage = (
 ): Image | undefined => {
   const sortedImagesAscending = (images || []).slice()
   sortedImagesAscending.sort((a, b) => {
+    // forward sort largest first
     if (!a.width || !b.width) {
       return 0
     }
@@ -136,9 +138,9 @@ export const getOptimizedImage = (
  * @returns
  */
 export const getAssetThumb = (
-  asset?: Asset | null,
-  useIcon?: boolean,
-  size = 100,
+  asset: Asset | null | undefined,
+  useIcon: boolean,
+  size: number,
   hasError = false
 ): string | undefined => {
   if (hasError) {
@@ -152,8 +154,7 @@ export const getAssetThumb = (
     return ASSET_LYX_ICON_URL
   }
 
-  const icon = asset.tokenMetadata?.icon || asset.metadata?.icon || []
-  const images = asset.tokenMetadata?.images || asset.metadata?.images || []
+  const { icon, images } = asset.resolvedMetadata || {}
   if (useIcon) {
     const url = getImageBySize(icon, size || 260)?.src
     if (url) {
@@ -164,7 +165,7 @@ export const getAssetThumb = (
   }
 
   const image = images?.[0]
-  let url = getImageBySize(image, 260)?.src
+  let url = getImageBySize(image, size || 260)?.src
 
   if (url) {
     return url.startsWith('https://api.universalprofile.cloud/image/')

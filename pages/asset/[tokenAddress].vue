@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
 const connectedProfile = useProfile().connectedProfile()
-const { asset, isLoading, isOwned } = useAsset(tokenAddress)
+const asset = useToken()(tokenAddress)
 const { showModal } = useModal()
 
 const handleSendAsset = (event: Event) => {
@@ -21,7 +21,7 @@ const handleSendAsset = (event: Event) => {
 }
 
 const handlePreviewImage = () => {
-  const image = asset.value?.icon
+  const image = asset.value?.resolvedMetadata?.icon
 
   if (!image) {
     return
@@ -39,7 +39,7 @@ const handlePreviewImage = () => {
 
 <template>
   <div class="relative">
-    <AppPageLoader :is-loading="isLoading">
+    <AppPageLoader :is-loading="!asset">
       <div
         class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
       >
@@ -66,13 +66,15 @@ const handlePreviewImage = () => {
               ></lukso-profile>
             </div>
           </lukso-card>
-          <div v-if="isOwned">
+          <div v-if="asset?.isOwned">
             <AssetOwnInfo
               :address="connectedProfile?.address"
               :balance="asset?.balance"
               :symbol="asset?.symbol"
               :decimals="asset?.decimals"
-              :profile-image-url="connectedProfile?.profileImage?.url"
+              :profile-image-url="
+                getOptimizedImage(connectedProfile?.profileImage, 50)
+              "
               :message="$formatMessage('token_details_own')"
             />
 
@@ -99,15 +101,21 @@ const handlePreviewImage = () => {
             class="pb-8"
           />
           <AssetDescription
-            v-if="asset?.description"
-            :description="asset.description"
+            v-if="asset.resolvedMetadata?.description"
+            :description="asset.resolvedMetadata?.description"
           />
-          <AssetImages v-if="asset?.images?.length" :images="asset.images" />
-          <AssetAssets v-if="asset?.assets?.length" :assets="asset.assets" />
-          <AssetAttributes :attributes="asset?.attributes" />
+          <AssetImages
+            v-if="asset.resolvedMetadata?.images?.length"
+            :images="asset.resolvedMetadata?.images"
+          />
+          <AssetAssets
+            v-if="asset.resolvedMetadata?.assets?.length"
+            :assets="asset.resolvedMetadata?.assets"
+          />
+          <AssetAttributes :attributes="asset.resolvedMetadata?.attributes" />
           <AssetLinks
-            v-if="asset?.links && !!asset.links.length"
-            :links="asset.links"
+            v-if="asset.resolvedMetadata?.links?.length"
+            :links="asset.resolvedMetadata?.links"
           />
           <AssetAddress v-if="asset?.address" :address="asset.address" />
         </div>

@@ -154,6 +154,9 @@ export function useToken() {
           creator,
           tokenCreators,
           decimals,
+          get resolvedMetadata() {
+            return tokenMetadata || token.metadata
+          },
         } as Asset
       },
     })

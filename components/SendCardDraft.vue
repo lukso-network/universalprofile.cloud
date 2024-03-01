@@ -54,7 +54,7 @@ const handleBack = () => {
           <div class="rounded-full shadow-neutral-above-shadow-1xl">
             <lukso-profile
               size="small"
-              :profile-url="getAssetThumb(asset, isToken(asset))"
+              :profile-url="getAssetThumb(asset, isToken(asset), 100)"
               :profile-address="asset?.address"
               :has-identicon="isLyx(asset) ? undefined : true"
               :is-square="isCollectible(asset) ? true : undefined"
@@ -91,7 +91,7 @@ const handleBack = () => {
         :is-error="!!receiverError"
         :name="receiver?.name"
         :address="receiver?.address"
-        :profile-url="receiver?.profileImage?.url"
+        :profile-url="getOptimizedImage(receiver?.profileImage, 100)"
       />
       <SendCardProfileSearch />
       <lukso-button

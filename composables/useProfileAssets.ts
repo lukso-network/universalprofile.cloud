@@ -256,6 +256,9 @@ export function useProfileAssets() {
                 tokenType,
                 supportsInterfaces,
                 metadata,
+                get resolvedMetadata() {
+                  return metadata
+                },
               } as Asset
             })
           }
@@ -277,6 +280,9 @@ export function useProfileAssets() {
             tokenType,
             supportsInterfaces,
             metadata,
+            get resolvedMetadata() {
+              return metadata
+            },
           } as Asset
         }) || []) as Asset[]
       },

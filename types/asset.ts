@@ -38,4 +38,5 @@ export type Asset = {
   tokenSupply?: string
   metadata?: ExtendedAssetMetadata
   tokenMetadata?: ExtendedAssetMetadata
+  get resolvedMetadata(): ExtendedAssetMetadata
 }

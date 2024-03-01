@@ -2,17 +2,17 @@
 import type { Image } from '@/types/image'
 
 type Props = {
-  images: Image[]
+  images: Image[][] | undefined
 }
 
 defineProps<Props>()
 const { showModal } = useModal()
 
-const handlePreviewImage = (image: Image) => {
+const handlePreviewImage = (image: Image[]) => {
   showModal({
     template: 'AssetImage',
     data: {
-      asset: image,
+      asset: image[0],
     },
     size: 'auto',
   })
@@ -33,7 +33,7 @@ const handlePreviewImage = (image: Image) => {
         <img
           class="size-14 cursor-pointer rounded-8 object-cover"
           @click="handlePreviewImage(image)"
-          :src="image?.url"
+          :src="getOptimizedImage(image, 200)"
           loading="lazy"
           alt=""
           onerror="this.style.opacity=0"

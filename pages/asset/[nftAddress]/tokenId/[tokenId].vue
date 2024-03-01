@@ -32,7 +32,7 @@ const assetTokenId = computed(() => {
 })
 
 const handlePreviewImage = () => {
-  const image = asset.value?.images?.[0]
+  const image = asset.value?.resolvedMetadata?.images?.[0]
 
   if (!image) {
     return
