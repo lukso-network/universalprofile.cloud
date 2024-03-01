@@ -1,3 +1,5 @@
+import { ASSET_ERROR_ICON_URL } from '@/shared/config'
+
 import type { Image } from '@/types/image'
 
 const convertBlobToBase64 = (blob: Blob) =>
@@ -38,11 +40,11 @@ export const getImageBySize = (
   images: Image[] | undefined,
   width: number
 ): Image | undefined => {
-  const sortedImagesAscending = images?.slice()?.sort((a, b) => {
+  const sortedImagesAscending = (images || []).slice()
+  sortedImagesAscending.sort((a, b) => {
     if (!a.width || !b.width) {
       return 0
     }
-
     if (a.width > b.width) {
       return -1
     }
@@ -53,8 +55,7 @@ export const getImageBySize = (
   })
 
   const normalImage = sortedImagesAscending?.find(
-    image =>
-      image.width && image.width > width && image.height && image.height > width
+    image => image.width && image.width > width
   )
 
   if (normalImage) {
@@ -62,13 +63,14 @@ export const getImageBySize = (
   }
 
   // lastly return biggest image available
-  return getLargestImage(images)
+  return images?.slice(-1)[0]
 }
 
 export const getLargestImage = (
   images: Image[] | undefined
 ): Image | undefined => {
-  const sortedImagesAscending = images?.slice()?.sort((a, b) => {
+  const sortedImagesAscending = (images || []).slice()
+  sortedImagesAscending.sort((a, b) => {
     if (!a.width || !b.width) {
       return 0
     }
@@ -96,18 +98,22 @@ export const getLargestImage = (
  */
 export const getOptimizedImage = (
   profileImages: Image[] | undefined,
-  width: number
+  width: number,
+  hasError = false
 ): string | undefined => {
+  if (hasError) {
+    return ASSET_ERROR_ICON_URL
+  }
   const dpr = window.devicePixelRatio || 1
   const desiredWidth = width * dpr
   const { verification, url } =
-    getImageBySize(profileImages, width * desiredWidth) || {}
+    getImageBySize(profileImages, desiredWidth) || {}
 
   if (url) {
     const queryParams = {
       method: verification?.method || '0x00000000',
       data: verification?.data || '0x',
-      width: width * 2, // for retina we double size
+      width, // for retina we double size
       ...(dpr !== 1 ? { dpr } : {}),
     }
 
@@ -132,9 +138,12 @@ export const getOptimizedImage = (
 export const getAssetThumb = (
   asset?: Asset | null,
   useIcon?: boolean,
-  size = 100
+  size = 100,
+  hasError = false
 ): string | undefined => {
-  console.log(asset)
+  if (hasError) {
+    return ASSET_ERROR_ICON_URL
+  }
   if (!asset) {
     return ''
   }
@@ -143,9 +152,9 @@ export const getAssetThumb = (
     return ASSET_LYX_ICON_URL
   }
 
+  const icon = asset.tokenMetadata?.icon || asset.metadata?.icon || []
+  const images = asset.tokenMetadata?.images || asset.metadata?.images || []
   if (useIcon) {
-    const icon =
-      asset.lsp7Icon || asset.baseURIIcon || asset.forTokenIcon || asset.icon
     const url = getImageBySize(icon, size || 260)?.src
     if (url) {
       return url.startsWith('https://api.universalprofile.cloud/image/')
@@ -154,19 +163,21 @@ export const getAssetThumb = (
     }
   }
 
-  const images =
-    asset.lsp7Images ||
-    asset.baseURIImages ||
-    asset.forTokenImages ||
-    asset.images
   const image = images?.[0]
-  const url = getImageBySize(image, 260)?.src
+  let url = getImageBySize(image, 260)?.src
+
   if (url) {
     return url.startsWith('https://api.universalprofile.cloud/image/')
       ? url + `&width=${size || 260}&height=${size || 260}`
       : url
   }
 
+  url = getImageBySize(icon, size || 260)?.src
+  if (url) {
+    return url.startsWith('https://api.universalprofile.cloud/image/')
+      ? url + `&width=${size || 260}&height=${size || 260}`
+      : url
+  }
   return undefined
 }
 

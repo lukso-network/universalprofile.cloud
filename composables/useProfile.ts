@@ -4,45 +4,38 @@ import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { Standard } from '@/types/contract'
 import type { Profile } from '@/models/profile'
 
-const profileRefs: Record<string, Ref<Profile | null>> = {}
-
-export const getProfile = (
-  profileAddress: Address | undefined
-): Profile | null => {
-  let profileRef = profileRefs[profileAddress || '']
-  if (!profileRef) {
-    profileRef = ref<Profile | null>({ profile: null })
-    profileRefs[profileAddress || ''] = profileRef
-  }
+export const getProfile = (profileAddress: Address | undefined) => {
   const { currentNetwork } = storeToRefs(useAppStore())
-  const { value: { chainId } = { chainId: undefined } } = currentNetwork
-  const queries = profileAddress
-    ? [
-        {
-          queryKey: ['data', chainId, profileAddress, 'LSP3Profile'],
-        },
-        ...interfacesToCheck.map(({ interfaceId }) => ({
-          queryKey: [
-            'call',
-            chainId,
-            profileAddress,
-            'supportsInterface(bytes4)',
-            interfaceId,
-          ],
-        })),
-        {
-          queryKey: ['data', chainId, profileAddress, 'LSP5ReceivedAssets[]'],
-        },
-        {
-          queryKey: ['data', chainId, profileAddress, 'LSP12IssuedAssets[]'],
-        },
-      ]
-    : []
-  useQueries({
+  const queries = computed(() => {
+    const { value: { chainId } = { chainId: undefined } } = currentNetwork
+    return profileAddress
+      ? [
+          {
+            queryKey: ['data', chainId, profileAddress, 'LSP3Profile'],
+          },
+          ...interfacesToCheck.map(({ interfaceId }) => ({
+            queryKey: [
+              'call',
+              chainId,
+              profileAddress,
+              'supportsInterface(bytes4)',
+              interfaceId,
+            ],
+          })),
+          {
+            queryKey: ['data', chainId, profileAddress, 'LSP5ReceivedAssets[]'],
+          },
+          {
+            queryKey: ['data', chainId, profileAddress, 'LSP12IssuedAssets[]'],
+          },
+        ]
+      : []
+  })
+  return useQueries({
     queries,
     combine: results => {
       if (!profileAddress) {
-        return undefined
+        return null
       }
       const profileData = results[0].data as LSP3ProfileMetadataJSON
       const { supportsInterfaces, standard } = interfacesToCheck.reduce(
@@ -67,7 +60,7 @@ export const getProfile = (
       const issuedAssets = results[results.length - 1].data as Address[]
       const { name, profileImage, backgroundImage } =
         profileData?.LSP3Profile || {}
-      profileRef.value = {
+      return {
         address: profileAddress,
         name,
         standard: standard as Standard,
@@ -76,10 +69,9 @@ export const getProfile = (
         issuedAssets,
         profileImage,
         backgroundImage,
-      }
+      } as Profile
     },
   })
-  return profileRef
 }
 
 /**

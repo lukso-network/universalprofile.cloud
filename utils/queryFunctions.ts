@@ -164,197 +164,179 @@ async function convert<T = any>(
   return info[0]?.value as T
 }
 
+let running = 0
+
 async function doQueries() {
-  const { currentNetwork } = storeToRefs(useAppStore())
-  const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
-    currentNetwork.value
-  const { allQueries } = queryList
-    .splice(0, Math.min(queryList.length, MAX_AGGREGATE_COUNT))
-    .reduce(
-      ({ allQueries, bigCount }, query) => {
-        if (query.isBig) {
-          if (bigCount > 0) {
-            bigCount--
-            allQueries.push(query)
-          } else if (allQueries.length === 0) {
-            allQueries.push(query)
-          } else {
-            if (queryTimer) {
-              clearTimeout(queryTimer)
+  if (running++ > 0) {
+    triggerQuery()
+    return
+  }
+  try {
+    const { currentNetwork } = storeToRefs(useAppStore())
+    const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
+      currentNetwork.value
+    const { allQueries } = queryList
+      .splice(0, Math.min(queryList.length, MAX_AGGREGATE_COUNT))
+      .reduce(
+        ({ allQueries, bigCount }, query) => {
+          if (query.isBig) {
+            if (bigCount > 0) {
+              bigCount--
+              allQueries.push(query)
+            } else if (allQueries.length === 0) {
+              allQueries.push(query)
+            } else {
+              queryList.push(query)
+              triggerQuery()
             }
-            queryTimer = setTimeout(() => {
-              queryTimer = undefined
-              doQueries()
-            }, QUERY_TIMEOUT)
-            queryList.push(query)
+          } else {
+            allQueries.push(query)
           }
-        } else {
-          allQueries.push(query)
+          return { bigCount, allQueries }
+        },
+        {
+          bigCount: BIG_QUERY_LIMIT,
+          allQueries: [] as QueryPromise<
+            unknown,
+            | QueryPromiseDataOptions
+            | QueryPromiseCallOptions
+            | QueryPromiseTokenDataOptions
+          >[],
         }
-        return { bigCount, allQueries }
-      },
-      {
-        bigCount: BIG_QUERY_LIMIT,
-        allQueries: [] as QueryPromise<
-          unknown,
-          | QueryPromiseDataOptions
-          | QueryPromiseCallOptions
-          | QueryPromiseTokenDataOptions
-        >[],
-      }
-    )
-  allQueries
-    .filter(query => query.chainId !== chainId)
-    .forEach(query => query.reject(new Error('Query cancelled')))
-  const queries = allQueries.filter(query => query.chainId === chainId)
-  const split: Record<
-    string,
-    {
-      call?: QueryPromise<unknown, QueryPromiseCallOptions>[]
-      data?: QueryPromise<unknown, QueryPromiseDataOptions>[]
-      tokenData?: QueryPromise<unknown, QueryPromiseTokenDataOptions>[]
-    }
-  > = queries.reduce(
-    (acc, query) => {
-      if (!acc[query.address]) {
-        acc[query.address] = {}
-      }
-      let items = acc[query.address][query.type] as QueryPromise<
-        unknown,
-        | QueryPromiseCallOptions
-        | QueryPromiseDataOptions
-        | QueryPromiseTokenDataOptions
-      >[]
-      if (!items) {
-        items = acc[query.address][query.type] = []
-      }
-      items.push(query)
-      return acc
-    },
-    {} as Record<
+      )
+    allQueries
+      .filter(query => query.chainId !== chainId)
+      .forEach(query => query.reject(new Error('Query cancelled')))
+    const queries = allQueries.filter(query => query.chainId === chainId)
+    const split: Record<
       string,
       {
         call?: QueryPromise<unknown, QueryPromiseCallOptions>[]
         data?: QueryPromise<unknown, QueryPromiseDataOptions>[]
         tokenData?: QueryPromise<unknown, QueryPromiseTokenDataOptions>[]
       }
-    >
-  )
+    > = queries.reduce(
+      (acc, query) => {
+        if (!acc[query.address]) {
+          acc[query.address] = {}
+        }
+        let items = acc[query.address][query.type] as QueryPromise<
+          unknown,
+          | QueryPromiseCallOptions
+          | QueryPromiseDataOptions
+          | QueryPromiseTokenDataOptions
+        >[]
+        if (!items) {
+          items = acc[query.address][query.type] = []
+        }
+        items.push(query)
+        return acc
+      },
+      {} as Record<
+        string,
+        {
+          call?: QueryPromise<unknown, QueryPromiseCallOptions>[]
+          data?: QueryPromise<unknown, QueryPromiseDataOptions>[]
+          tokenData?: QueryPromise<unknown, QueryPromiseTokenDataOptions>[]
+        }
+      >
+    )
 
-  const multicall: {
-    index: number
-    target: string
-    call: string
-    query?: QueryPromise<any>
-    queries?: Array<QueryPromise<any>>
-    selector?: (data: any) => any
-  }[] = []
+    const multicall: {
+      index: number
+      target: string
+      call: string
+      query?: QueryPromise<any>
+      queries?: Array<QueryPromise<any>>
+      selector?: (data: any) => any
+    }[] = []
 
-  const { contract } = useWeb3(PROVIDERS.RPC)
-  const lsp2CustomContract = contract<any>(
-    LSP2FetcherWithMulticall3Contract.abi as AbiItem[],
-    LSP2ContractAddress
-  )
+    const { contract } = useWeb3(PROVIDERS.RPC)
+    const lsp2CustomContract = contract<any>(
+      LSP2FetcherWithMulticall3Contract.abi as AbiItem[],
+      LSP2ContractAddress
+    )
 
-  try {
-    for (const [address, { data, tokenData, call }] of Object.entries(split)) {
-      if (tokenData) {
-        const tokenIds = tokenData.reduce(
-          (
-            tokenIds: Record<
+    try {
+      for (const [address, { data, tokenData, call }] of Object.entries(
+        split
+      )) {
+        if (tokenData) {
+          const tokenIds = tokenData.reduce(
+            (
+              tokenIds: Record<
+                string,
+                QueryPromise<unknown, QueryPromiseTokenDataOptions>[]
+              >,
+              query
+            ) => {
+              const { address } = query
+              if (!tokenIds[address]) {
+                tokenIds[address] = []
+              }
+              tokenIds[address].push(query)
+              return tokenIds
+            },
+            {} as Record<
               string,
               QueryPromise<unknown, QueryPromiseTokenDataOptions>[]
-            >,
-            query
-          ) => {
-            const { address } = query
-            if (!tokenIds[address]) {
-              tokenIds[address] = []
-            }
-            tokenIds[address].push(query)
-            return tokenIds
-          },
-          {} as Record<
-            string,
-            QueryPromise<unknown, QueryPromiseTokenDataOptions>[]
-          >
-        )
-        for (const tokenQueries of Object.values(tokenIds)) {
-          const { address } = tokenQueries[0]
-          const abi = LSP8IdentifiableDigitalAssetContract.abi.find(
-            ({ name }) => name === 'getDataBatchForTokenIds'
+            >
           )
-          if (abi) {
-            const call = ABICoder.encodeFunctionCall(abi as AbiItem, [
-              tokenQueries.map(({ tokenId }) => tokenId) as unknown as string,
-              tokenQueries.map(({ keyName, dynamicKeyParts }) =>
-                encodeKeyName(keyName, dynamicKeyParts)
-              ) as unknown as string,
-            ])
+          for (const tokenQueries of Object.values(tokenIds)) {
+            const { address } = tokenQueries[0]
+            const abi = LSP8IdentifiableDigitalAssetContract.abi.find(
+              ({ name }) => name === 'getDataBatchForTokenIds'
+            )
+            if (abi) {
+              const call = ABICoder.encodeFunctionCall(abi as AbiItem, [
+                tokenQueries.map(({ tokenId }) => tokenId) as unknown as string,
+                tokenQueries.map(({ keyName, dynamicKeyParts }) =>
+                  encodeKeyName(keyName, dynamicKeyParts)
+                ) as unknown as string,
+              ])
+              multicall.push({
+                index: multicall.length,
+                target: address,
+                call,
+                queries: tokenQueries as unknown as QueryPromise<any>[],
+                selector: (data: string) => {
+                  if (data === '0x') {
+                    return null
+                  }
+                  try {
+                    return ABICoder.decodeParameters(
+                      abi?.outputs || [],
+                      data
+                    )[0]
+                  } catch (error) {
+                    console.error('decodeParameters', error)
+                    return null
+                  }
+                },
+              })
+            }
+          }
+        }
+
+        if (data) {
+          const plainKeys = data.filter(({ keyName }) => !/\[\]$/.test(keyName))
+          if (plainKeys.length > 0) {
+            const abi = LSP8IdentifiableDigitalAssetContract.abi.find(
+              ({ name }) => name === 'getDataBatch'
+            )
+            const call = ABICoder.encodeFunctionCall(
+              abi as AbiItem,
+              [
+                plainKeys.map(({ keyName, dynamicKeyParts }) =>
+                  encodeKeyName(keyName, dynamicKeyParts)
+                ),
+              ] as unknown as string[]
+            )
             multicall.push({
               index: multicall.length,
               target: address,
               call,
-              queries: tokenQueries as unknown as QueryPromise<any>[],
-              selector: (data: string) => {
-                if (data === '0x') {
-                  return null
-                }
-                try {
-                  return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
-                } catch (error) {
-                  console.error('decodeParameters', error)
-                  return null
-                }
-              },
-            })
-          }
-        }
-      }
-
-      if (data) {
-        const plainKeys = data.filter(({ keyName }) => !/\[\]$/.test(keyName))
-        if (plainKeys.length > 0) {
-          const abi = LSP8IdentifiableDigitalAssetContract.abi.find(
-            ({ name }) => name === 'getDataBatch'
-          )
-          const call = ABICoder.encodeFunctionCall(
-            abi as AbiItem,
-            [
-              plainKeys.map(({ keyName, dynamicKeyParts }) =>
-                encodeKeyName(keyName, dynamicKeyParts)
-              ),
-            ] as unknown as string[]
-          )
-          multicall.push({
-            index: multicall.length,
-            target: address,
-            call,
-            queries: plainKeys,
-            selector: (data: string) => {
-              if (data === '0x') {
-                return null
-              }
-              return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
-            },
-          })
-        }
-        const arrayKeys = data.filter(({ keyName }) => /\[\]$/.test(keyName))
-        if (arrayKeys.length > 0) {
-          for (const query of arrayKeys) {
-            const { keyName, dynamicKeyParts } = query
-            const abi = LSP2FetcherWithMulticall3Contract.abi.find(
-              ({ name }) => name === 'fetchArrayWithElements'
-            )
-            const call = ABICoder.encodeFunctionCall(abi as AbiItem, [
-              address,
-              encodeKeyName(keyName, dynamicKeyParts),
-            ])
-            multicall.push({
-              index: multicall.length,
-              target: '0x0000000000000000000000000000000000000000',
-              call,
-              query,
+              queries: plainKeys,
               selector: (data: string) => {
                 if (data === '0x') {
                   return null
@@ -363,47 +345,20 @@ async function doQueries() {
               },
             })
           }
-        }
-      }
-      if (call) {
-        for (const query of call) {
-          if (address === LSP2ContractAddress) {
-            const abi = (
-              LSP2FetcherWithMulticall3Contract.abi as AbiItem[]
-            ).find(({ name }) => name === 'fetchArrayWithElements')
-            if (abi) {
-              const call = ABICoder.encodeFunctionCall(
-                abi as AbiItem,
-                query.args as string[]
+          const arrayKeys = data.filter(({ keyName }) => /\[\]$/.test(keyName))
+          if (arrayKeys.length > 0) {
+            for (const query of arrayKeys) {
+              const { keyName, dynamicKeyParts } = query
+              const abi = LSP2FetcherWithMulticall3Contract.abi.find(
+                ({ name }) => name === 'fetchArrayWithElements'
               )
+              const call = ABICoder.encodeFunctionCall(abi as AbiItem, [
+                address,
+                encodeKeyName(keyName, dynamicKeyParts),
+              ])
               multicall.push({
                 index: multicall.length,
                 target: '0x0000000000000000000000000000000000000000',
-                call,
-                query,
-                selector: (data: string) => {
-                  return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
-                },
-              })
-            } else {
-              query.reject(new Error('Method not found'))
-            }
-          } else {
-            const abi = defaultAbi.find(({ name, inputs }) => {
-              return (
-                name === query.method.replace(/\(.*$/, '') &&
-                `${name}(${inputs?.map(({ type }) => type).join(',')})` ===
-                  query.method
-              )
-            })
-            if (abi) {
-              const call = ABICoder.encodeFunctionCall(
-                abi as AbiItem,
-                query.args as string[]
-              )
-              multicall.push({
-                index: multicall.length,
-                target: address,
                 call,
                 query,
                 selector: (data: string) => {
@@ -413,120 +368,171 @@ async function doQueries() {
                   return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
                 },
               })
+            }
+          }
+        }
+        if (call) {
+          for (const query of call) {
+            if (address === LSP2ContractAddress) {
+              const abi = (
+                LSP2FetcherWithMulticall3Contract.abi as AbiItem[]
+              ).find(({ name }) => name === 'fetchArrayWithElements')
+              if (abi) {
+                const call = ABICoder.encodeFunctionCall(
+                  abi as AbiItem,
+                  query.args as string[]
+                )
+                multicall.push({
+                  index: multicall.length,
+                  target: '0x0000000000000000000000000000000000000000',
+                  call,
+                  query,
+                  selector: (data: string) => {
+                    return ABICoder.decodeParameters(
+                      abi?.outputs || [],
+                      data
+                    )[0]
+                  },
+                })
+              } else {
+                query.reject(new Error('Method not found'))
+              }
             } else {
-              query.reject(new Error('Method not found'))
+              const abi = defaultAbi.find(({ name, inputs }) => {
+                return (
+                  name === query.method.replace(/\(.*$/, '') &&
+                  `${name}(${inputs?.map(({ type }) => type).join(',')})` ===
+                    query.method
+                )
+              })
+              if (abi) {
+                const call = ABICoder.encodeFunctionCall(
+                  abi as AbiItem,
+                  query.args as string[]
+                )
+                multicall.push({
+                  index: multicall.length,
+                  target: address,
+                  call,
+                  query,
+                  selector: (data: string) => {
+                    if (data === '0x') {
+                      return null
+                    }
+                    return ABICoder.decodeParameters(
+                      abi?.outputs || [],
+                      data
+                    )[0]
+                  },
+                })
+              } else {
+                query.reject(new Error('Method not found'))
+              }
             }
           }
         }
       }
-    }
-    await limiter.removeTokens(1)
-    // console.log(
-    //   'multicall',
-    //   lsp2CustomContract.methods
-    //     .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
-    //     .encodeABI(),
-    //   LSP2FetcherWithMulticall3Contract.abi.find(
-    //     ({ name }) => name === 'aggregate3'
-    //   )
-    // )
-    await lsp2CustomContract.methods
-      .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
-      .call()
-      .then(async (result: [boolean, string][]) => {
-        for (const [i, { query, queries, selector }] of multicall.entries()) {
-          const [success, data] = result[i]
-          if (queries) {
-            if (!success) {
-              for (const query of queries) {
-                const error = new Error('Call failed')
-                ;(error as any).data = data
-                query.reject(error)
+      await limiter.removeTokens(1)
+      await lsp2CustomContract.methods
+        .aggregate3(multicall.map(({ target, call }) => [target, true, call]))
+        .call()
+        .then(async (result: [boolean, string][]) => {
+          for (const [i, { query, queries, selector }] of multicall.entries()) {
+            const [success, data] = result[i]
+            if (queries) {
+              if (!success) {
+                for (const query of queries) {
+                  const error = new Error('Call failed')
+                  ;(error as any).data = data
+                  query.reject(error)
+                }
+                continue
+              }
+              let items = data
+              if (selector) {
+                items = selector(data)
+              }
+              for (const [j, query] of queries.entries()) {
+                try {
+                  let item: string | null = items?.[j] || null
+                  if (['data', 'tokenData'].includes(query.type)) {
+                    item = await convert(
+                      query as QueryPromise<unknown, QueryPromiseDataOptions>,
+                      item
+                    )
+                  }
+                  if (success) {
+                    query.resolve(item)
+                  } else {
+                    query.reject(new Error('Call failed'))
+                  }
+                } catch (error) {
+                  try {
+                    query.reject(error)
+                  } catch {
+                    // Really ignore, we tried our best
+                  }
+                }
               }
               continue
             }
-            let items = data
-            if (selector) {
-              items = selector(data)
-            }
-            for (const [j, query] of queries.entries()) {
-              try {
-                let item: string | null = items?.[j] || null
-                if (['data', 'tokenData'].includes(query.type)) {
-                  item = await convert(
-                    query as QueryPromise<unknown, QueryPromiseDataOptions>,
-                    item
-                  )
-                }
-                if (success) {
-                  query.resolve(item)
-                } else {
-                  query.reject(new Error('Call failed'))
-                }
-              } catch (error) {
-                try {
-                  query.reject(error)
-                } catch {
-                  // Really ignore, we tried our best
-                }
-              }
-            }
-            continue
-          }
-          try {
-            if (success) {
-              let item: string | null = data
-              if (['data', 'tokenData'].includes(query?.type || '')) {
-                let schema = (
-                  (query?.schema as ERC725JSONSchema[]) || defaultSchema
-                ).find(({ name }) => name === query?.keyName)
-                if (schema && schema.keyType === 'Array') {
-                  const array = ABICoder.decodeParameters(
-                    ['bytes[]'],
-                    item
-                  )[0] as string[]
-                  schema = { ...schema, keyType: 'Singleton' }
-                  query?.resolve(
-                    await Promise.all(
-                      array.map(value =>
-                        convert(
-                          query as QueryPromise<
-                            unknown,
-                            QueryPromiseDataOptions
-                          >,
-                          value,
-                          schema ? [schema] : undefined
+            try {
+              if (success) {
+                let item: string | null = data
+                if (['data', 'tokenData'].includes(query?.type || '')) {
+                  let schema = (
+                    (query?.schema as ERC725JSONSchema[]) || defaultSchema
+                  ).find(({ name }) => name === query?.keyName)
+                  if (schema && schema.keyType === 'Array') {
+                    const array = ABICoder.decodeParameters(
+                      ['bytes[]'],
+                      item
+                    )[0] as string[]
+                    schema = { ...schema, keyType: 'Singleton' }
+                    query?.resolve(
+                      await Promise.all(
+                        array.map(value =>
+                          convert(
+                            query as QueryPromise<
+                              unknown,
+                              QueryPromiseDataOptions
+                            >,
+                            value,
+                            schema ? [schema] : undefined
+                          )
                         )
                       )
                     )
-                  )
-                  continue
-                } else {
-                  item = await convert(
-                    query as QueryPromise<unknown, QueryPromiseDataOptions>,
-                    item
-                  )
+                    continue
+                  } else {
+                    item = await convert(
+                      query as QueryPromise<unknown, QueryPromiseDataOptions>,
+                      item
+                    )
+                  }
+                } else if (selector) {
+                  item = selector(item)
                 }
-              } else if (selector) {
-                item = selector(item)
+                query?.resolve(item)
+              } else {
+                query?.reject(new Error('Call failed'))
               }
-              query?.resolve(item)
-            } else {
-              query?.reject(new Error('Call failed'))
-            }
-          } catch (error) {
-            try {
-              query?.reject(error)
-            } catch {
-              // Really ignore, we tried our best
+            } catch (error) {
+              try {
+                query?.reject(error)
+              } catch {
+                // Really ignore, we tried our best
+              }
             }
           }
-        }
-      })
-  } catch (error) {
-    for (const query of queries) {
-      query.reject(error)
+        })
+    } catch (error) {
+      for (const query of queries) {
+        query.reject(error)
+      }
     }
+  } finally {
+    running--
   }
 }
 
@@ -547,14 +553,17 @@ export const interfacesToCheck = [
   },
 ]
 
-export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
+export function triggerQuery() {
   if (queryTimer) {
     clearTimeout(queryTimer)
   }
   queryTimer = setTimeout(() => {
     queryTimer = undefined
-    doQueries()
+    nextTick(doQueries)
   }, QUERY_TIMEOUT)
+}
+
+export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
   const isBig = /Big$/.test(queryKey[0] as string)
   const type = (queryKey[0] as string).replace(/Big$/, '') as
     | 'call'
@@ -571,6 +580,7 @@ export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
       args,
     })
     queryList.push(query as QueryPromise<unknown, QueryPromiseCallOptions>)
+    triggerQuery()
     return query.promise
   }
   if (type === 'tokenData') {
@@ -587,6 +597,7 @@ export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
       dynamicKeyParts: dynamicKeyParts as string | string[] | undefined,
     })
     queryList.push(query as QueryPromise<unknown, QueryPromiseTokenDataOptions>)
+    triggerQuery()
     return query.promise
   }
   if (type !== 'data') {
@@ -603,5 +614,6 @@ export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
     dynamicKeyParts: dynamicKeyParts as string | string[] | undefined,
   })
   queryList.push(query as QueryPromise<unknown, QueryPromiseDataOptions>)
+  triggerQuery()
   return query.promise
 }

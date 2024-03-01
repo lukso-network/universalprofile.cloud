@@ -1,5 +1,14 @@
 import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
+export type ExtendedAssetMetadata = {
+  images?: Image[][]
+  icon?: Image[]
+  description?: string
+  assets?: AssetMetadata[]
+  attributes?: AttributeMetadata[]
+  links?: LinkMetadata[]
+}
+
 export type Asset = {
   isOwned: boolean
   isIssued: boolean
@@ -23,21 +32,10 @@ export type Asset = {
   tokenId?: `0x${string}`
   tokenIdIsContract?: boolean
   tokenURI?: string
-  forTokenData?: any
-  images?: Image[][]
-  icon?: Image[]
-  forTokenImages?: Image[][]
-  forTokenIcon?: Image[]
-  baseURIImages?: Image[][]
-  baseURIIcon?: Image[]
-  lsp7Images?: Image[][]
-  lsp7Icon?: Image[]
   owner?: Address
   creator?: Address
   tokenCreators?: Address[]
-  description?: string
-  assets?: AssetMetadata[]
-  attributes: AttributeMetadata[]
-  links?: LinkMetadata[]
   tokenSupply?: string
+  metadata?: ExtendedAssetMetadata
+  tokenMetadata?: ExtendedAssetMetadata
 }

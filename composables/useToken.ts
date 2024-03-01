@@ -1,16 +1,12 @@
 import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
 
-const tokenRefs: Record<string, Ref<Asset | undefined>> = {}
+import type { Image } from '@/types/image'
+import type { ExtendedAssetMetadata } from '@/types/asset'
 
 export function useToken() {
-  return (token: Asset | undefined): Ref<Asset | undefined> => {
+  return (token: Asset | undefined) => {
     const tokenId = token?.tokenId
-    const key = `${token?.address}-${tokenId}`
-    let outputToken = tokenRefs[key]
-    if (!outputToken) {
-      outputToken = tokenRefs[key] = ref<Asset | undefined>()
-    }
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: undefined } } = currentNetwork
     const queries = token?.address
@@ -46,18 +42,22 @@ export function useToken() {
                 {
                   // 5
                   queryKey: ['tokenJSON', chainId, token?.address, tokenId],
-                  queryFn: () => {
+                  queryFn: async () => {
                     if (token.tokenDataURL) {
                       const url = token.tokenDataURL.replace(
                         /^ipfs:\/\//,
                         'https://api.universalprofile.cloud/ipfs/'
                       )
-                      return fetch(url).then(response => {
-                        if (!response.ok) {
-                          throw new Error('Unable to fetch')
-                        }
-                        return response.json()
-                      })
+                      return await fetch(url)
+                        .then(response => {
+                          if (!response.ok) {
+                            throw new Error('Unable to fetch')
+                          }
+                          return response.json()
+                        })
+                        .catch(error => {
+                          throw error
+                        })
                     }
                     return null
                   },
@@ -82,107 +82,80 @@ export function useToken() {
             : []),
         ]
       : []
-    useQueries({
+    return useQueries({
       queries,
       combine: results => {
         if (!token) {
-          return undefined
+          return null
         }
         const owner = results[0].data as string
         const creator = results[1].data as string
         const tokenCreators = results[2].data as string[]
         const decimals = results[3]?.data as number
         const forTokenData = results[4]?.data as any
-        const forTokenImages = forTokenData?.LSP4Metadata?.images?.map(
-          (images: any) => {
-            return images.map((image: any) => {
-              const { verification, url } = image
-              return {
-                ...image,
-                src: url.startsWith('ipfs://')
-                  ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                  : url,
-              }
-            })
-          }
-        )
-        const forTokenIcon = forTokenData?.LSP4Metadata?.icon?.map(
-          (image: any) => {
-            const { verification, url } = image
-            return {
-              ...image,
-              src: url.startsWith('ipfs://')
-                ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                : url,
-            }
-          }
-        )
-        const tokenJSON = results[5]?.data as any
-        const baseURIImages = tokenJSON?.LSP4Metadata?.images?.map(
-          (images: any) => {
-            return images.map((image: any) => {
-              const { verification, url } = image
-              return {
-                ...image,
-                src: url.startsWith('ipfs://')
-                  ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                  : url,
-              }
-            })
-          }
-        )
-        const baseURIIcon = tokenJSON?.LSP4Metadata?.icon?.map((image: any) => {
-          const { verification, url } = image
-          return {
-            ...image,
-            src: url.startsWith('ipfs://')
-              ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-              : url,
-          }
-        })
-        const lsp7JSON = results[6]?.data as any
-        const lsp7Images = lsp7JSON?.LSP4Metadata?.images?.map(
-          (images: any) => {
-            return images.map((image: any) => {
-              const { verification, url } = image
-              return {
-                ...image,
-                src: url.startsWith('ipfs://')
-                  ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                  : url,
-              }
-            })
-          }
-        )
-        const lsp7Icon = lsp7JSON?.LSP4Metadata?.icon?.map((image: any) => {
-          const { verification, url } = image
-          return {
-            ...image,
-            src: url.startsWith('ipfs://')
-              ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-              : url,
-          }
-        })
+        const baseURIData = results[5]?.data as any
+        const lsp7Data = results[6]?.data as any
+        const tokenData: any = lsp7Data || baseURIData || forTokenData
+        let tokenMetadata: ExtendedAssetMetadata | undefined
+        if (tokenData) {
+          const links = tokenData.LSP4Metadata?.links
+          const description = tokenData.LSP4Metadata?.description
+          const attributes = tokenData.LSP4Metadata?.attributes
+          const assets =
+            tokenData?.LSP7Metadata?.assets.map((asset: AssetMetadata) => {
+              const { verification, url } = asset as FileAsset
 
-        const { description } = lsp7JSON?.LSP4Metadata || {}
+              return url
+                ? ({
+                    ...asset,
+                    src: url.startsWith('ipfs://')
+                      ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+                      : url,
+                  } as AssetMetadata & { src: string })
+                : asset
+            }) || []
+          const images =
+            tokenData?.LSP4Metadata?.images?.map((images: any) => {
+              return images.map((image: any) => {
+                const { verification, url } = image
+                return {
+                  ...image,
+                  src: url.startsWith('ipfs://')
+                    ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+                    : url,
+                } as Image & { src: string }
+              })
+            }) || []
+          const icon =
+            tokenData?.LSP4Metadata?.icon?.map((image: any) => {
+              const { verification, url } = image
+              return {
+                ...image,
+                src: url.startsWith('ipfs://')
+                  ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+                  : url,
+              } as Image & { src: string }
+            }) || []
+          tokenMetadata = {
+            images,
+            icon,
+            attributes,
+            description,
+            links,
+            assets,
+          }
+        }
 
-        outputToken.value = {
+        return {
           ...token,
-          forTokenData,
-          forTokenImages,
-          forTokenIcon,
-          lsp7Images,
-          lsp7Icon,
-          baseURIImages,
-          baseURIIcon,
+          tokenData,
+          tokenMetadata,
           owner,
           creator,
           tokenCreators,
           decimals,
-          description,
         } as Asset
       },
     })
-    return outputToken
   }
 }

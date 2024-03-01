@@ -27,6 +27,9 @@ export const defaultConfig: IntlConfig = {
  * @param config - intl config
  */
 const setupIntl = (config: IntlConfig) => {
+  if (intl.value) {
+    return
+  }
   intl.value = createIntl({ ...config, defaultLocale: 'en-US' })
 }
 

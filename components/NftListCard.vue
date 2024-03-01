@@ -13,6 +13,7 @@ const props = defineProps<Props>()
 const { isConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
 const token = useToken()(props.asset)
+const hasError = ref(false)
 const viewedProfileAddress = getCurrentProfileAddress()
 
 const handleShowAsset = () => {
@@ -74,7 +75,8 @@ const assetTokenId = computed(() => {
         <div class="rounded-t-12 bg-neutral-90">
           <img
             class="w-full rounded-t-12 bg-neutral-90 object-cover md:h-[260px]"
-            :src="getAssetThumb(token, false, 260)"
+            :src="getAssetThumb(token, true, 260, hasError)"
+            @error="hasError = true"
             loading="lazy"
             alt=""
           />
