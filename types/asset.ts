@@ -1,5 +1,4 @@
 export type Asset = {
-  isNativeToken?: boolean
   isOwned: boolean
   isIssued: boolean
   address: Address
@@ -7,10 +6,6 @@ export type Asset = {
   tokenStandard: string
   tokenIdFormat: number
   referenceContract: Address
-  baseURI?: any
-  tokenDataURL?: string
-  tokenId?: `0x${string}`
-  tokenIdIsContract?: boolean
   balance: string
   decimals: number
   standard: string
@@ -18,19 +13,24 @@ export type Asset = {
   symbol: string
   tokenName: string
   tokenSymbol: string
-  tokenType: string
-  tokenURI?: string
+  tokenType: number
   supportsInterfaces: Record<string, boolean>
-  images: Image[][]
-  icon: Image[]
-  forTokenData: any
-  forTokenImages: Image[][]
-  forTokenIcon: Image[]
-  baseURIImages: Image[][]
-  baseURIIcon: Image[]
-  lsp7Images: Image[][]
-  lsp7Icon: Image[]
-  owner: string
-  creator: string
-  tokenCreators: string[]
+  isNativeToken?: boolean
+  baseURI?: any
+  tokenDataURL?: string
+  tokenId?: `0x${string}`
+  tokenIdIsContract?: boolean
+  tokenURI?: string
+  forTokenData?: any
+  images?: Image[][]
+  icon?: Image[]
+  forTokenImages?: Image[][]
+  forTokenIcon?: Image[]
+  baseURIImages?: Image[][]
+  baseURIIcon?: Image[]
+  lsp7Images?: Image[][]
+  lsp7Icon?: Image[]
+  owner?: Address
+  creator?: Address
+  tokenCreators?: Address[]
 }

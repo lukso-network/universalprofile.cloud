@@ -1,3 +1,5 @@
+import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
+
 /**
  * Check if passed asset is LYX token
  * @param asset
@@ -12,7 +14,8 @@ export const isLyx = (asset?: Asset) => !!asset?.isNativeToken
  * @returns
  */
 export const isCollectible = (asset?: Asset) =>
-  asset?.tokenType === 'NFT' || asset?.tokenType === 'COLLECTION'
+  asset?.tokenType === LSP4_TOKEN_TYPES.NFT ||
+  asset?.tokenType === LSP4_TOKEN_TYPES.COLLECTION
 
 /**
  * Check if passed asset is token
@@ -21,7 +24,7 @@ export const isCollectible = (asset?: Asset) =>
  * @returns
  */
 export const isToken = (asset?: Asset) =>
-  asset?.tokenType === 'TOKEN' || isLyx(asset)
+  asset?.tokenType === LSP4_TOKEN_TYPES.TOKEN || isLyx(asset)
 
 /**
  * Check if passed asset is LSP7 token

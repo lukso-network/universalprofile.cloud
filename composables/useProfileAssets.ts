@@ -142,7 +142,7 @@ export function useProfileAssets() {
             const symbol = results[assetIndex + 4].data as string
             const tokenName = results[assetIndex + 5].data as string
             const tokenSymbol = results[assetIndex + 6].data as string
-            const tokenType = results[assetIndex + 7].data as string
+            const tokenType = results[assetIndex + 7].data as number
             const baseURI = results[assetIndex + 8].data as any
             const tokenStandard = results[assetIndex + 9].data as string
             const tokenIdFormat = results[assetIndex + 10].data as number

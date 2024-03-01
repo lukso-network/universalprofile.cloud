@@ -8,6 +8,7 @@ import {
   isLsp8,
   hasTokenId,
 } from '../assetChecks'
+import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
 describe('isLyx', () => {
   test('should return true if the asset is a LYX', async () => {
@@ -33,12 +34,12 @@ describe('isCollectible', () => {
   test('should return true if the asset is collectible', async () => {
     expect(
       isCollectible({
-        tokenType: 'NFT',
+        tokenType: LSP4_TOKEN_TYPES.NFT,
       } as Asset)
     ).toBe(true)
     expect(
       isCollectible({
-        tokenType: 'COLLECTION',
+        tokenType: LSP4_TOKEN_TYPES.COLLECTION,
       } as Asset)
     ).toBe(true)
   })
@@ -46,7 +47,7 @@ describe('isCollectible', () => {
   test('should return false if the asset is not collectible', async () => {
     expect(
       isCollectible({
-        tokenType: 'TOKEN',
+        tokenType: LSP4_TOKEN_TYPES.TOKEN,
       } as Asset)
     ).toBe(false)
     expect(isCollectible({} as Asset)).toBe(false)
@@ -57,7 +58,7 @@ describe('isToken', () => {
   test('should return true if the asset is token', async () => {
     expect(
       isToken({
-        tokenType: 'TOKEN',
+        tokenType: LSP4_TOKEN_TYPES.TOKEN,
       } as Asset)
     ).toBe(true)
     expect(
@@ -70,12 +71,12 @@ describe('isToken', () => {
   test('should return false if the asset is not token', async () => {
     expect(
       isToken({
-        tokenType: 'NFT',
+        tokenType: LSP4_TOKEN_TYPES.NFT,
       } as Asset)
     ).toBe(false)
     expect(
       isToken({
-        tokenType: 'COLLECTION',
+        tokenType: LSP4_TOKEN_TYPES.COLLECTION,
       } as Asset)
     ).toBe(false)
     expect(isToken({} as Asset)).toBe(false)

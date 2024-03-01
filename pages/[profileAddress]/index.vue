@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
+
 // import { AssetRepository } from '@/repositories/asset'
 
 // import type { Asset } from '@/models/asset'
@@ -12,26 +14,35 @@ const viewedProfile = useProfile().viewedProfile()
 const { isMobile } = useDevice()
 
 const allTokens = useProfileAssets()(viewedProfileAddress)
+console.log(allTokens)
+
 const tokensOwned = computed(() =>
   allTokens.value?.filter(
-    ({ isOwned, standard, balance }) =>
-      isOwned && standard === 'LSP7DigitalAsset' && balance !== '0'
+    ({ isOwned, standard, balance, tokenType }) =>
+      isOwned &&
+      standard === 'LSP7DigitalAsset' &&
+      balance !== '0' &&
+      tokenType === LSP4_TOKEN_TYPES.TOKEN
   )
 )
+
 const tokensCreated = computed(() =>
-  allTokens.value?.filter(({ isIssued }) => isIssued)
+  allTokens.value?.filter(
+    ({ isIssued, standard, tokenType }) =>
+      isIssued &&
+      standard === 'LSP7DigitalAsset' &&
+      tokenType === LSP4_TOKEN_TYPES.TOKEN
+  )
 )
+
 const nftsOwned = computed(() =>
   allTokens.value?.filter(
-    ({ isOwned, standard }) =>
-      isOwned && standard === 'LSP8IdentifiableDigitalAsset'
+    asset => asset.isOwned && isCollectible(asset) && asset.balance !== '0'
   )
 )
+
 const nftsCreated = computed(() =>
-  allTokens.value?.filter(
-    ({ isIssued, standard }) =>
-      isIssued && standard === 'LSP8IdentifiableDigitalAsset'
-  )
+  allTokens.value?.filter(asset => asset.isIssued && isCollectible(asset))
 )
 
 // tokens
