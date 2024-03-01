@@ -1,52 +1,13 @@
 import { useQueries } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 
-export type AssetData = {
-  isNativeToken?: boolean
-  isOwned: boolean
-  isIssued: boolean
-  address: Address
-  assetData: any
-  tokenStandard: string
-  tokenIdFormat: number
-  referenceContract: Address
-  baseURI?: any
-  tokenDataURL?: string
-  tokenId?: `0x${string}`
-  tokenIdIsContract?: boolean
-  balance: string
-  decimals: number
-  standard: string
-  name: string
-  symbol: string
-  tokenName: string
-  tokenSymbol: string
-  tokenType: string
-  tokenURI?: string
-  supportsInterfaces: Record<string, boolean>
-  images: {
-    src: string
-    verification: any
-    width: number
-    height: number
-    url: string
-  }[][]
-  icon: {
-    src: string
-    verification: any
-    width: number
-    height: number
-    url: string
-  }[]
-}
-
-const assetsRefs: Record<string, Ref<AssetData[]>> = {}
+const assetsRefs: Record<string, Ref<Asset[]>> = {}
 
 export function useProfileAssets() {
-  return (profileAddress: Address | undefined): Ref<AssetData[]> => {
+  return (profileAddress: Address | undefined): Ref<Asset[]> => {
     let outputAssets = assetsRefs[profileAddress || '']
     if (!outputAssets) {
-      outputAssets = assetsRefs[profileAddress || ''] = ref<AssetData[]>([])
+      outputAssets = assetsRefs[profileAddress || ''] = ref<Asset[]>([])
     }
     const { currentNetwork } = storeToRefs(useAppStore())
     const profile = useProfile().viewedProfile()
@@ -282,7 +243,7 @@ export function useProfileAssets() {
                   supportsInterfaces,
                   images,
                   icon,
-                } as AssetData
+                } as Asset
               })
             }
             return {
@@ -304,7 +265,7 @@ export function useProfileAssets() {
               supportsInterfaces,
               images,
               icon,
-            } as AssetData
+            } as Asset
           }) || []
       },
     })

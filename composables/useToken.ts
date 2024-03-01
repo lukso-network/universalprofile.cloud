@@ -1,31 +1,15 @@
 import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
 
-import type { AssetData } from './useProfileAssets'
-import type { Image } from '@/types/image'
-
-export type TokenData = AssetData & {
-  forTokenData: any
-  forTokenImages: Image[][]
-  forTokenIcon: Image[]
-  baseURIImages: Image[][]
-  baseURIIcon: Image[]
-  lsp7Images: Image[][]
-  lsp7Icon: Image[]
-  owner: string
-  creator: string
-  tokenCreators: string[]
-}
-
-const tokenRefs: Record<string, Ref<TokenData | null>> = {}
+const tokenRefs: Record<string, Ref<Asset | null>> = {}
 
 export function useToken() {
-  return (token: AssetData | undefined): Ref<TokenData | null> => {
+  return (token: Asset | undefined): Ref<Asset | null> => {
     const tokenId = token?.tokenId
     const key = `${token?.address}-${tokenId}`
     let outputToken = tokenRefs[key]
     if (!outputToken) {
-      outputToken = tokenRefs[key] = ref<TokenData | null>(null)
+      outputToken = tokenRefs[key] = ref<Asset | null>(null)
     }
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: undefined } } = currentNetwork
@@ -192,7 +176,7 @@ export function useToken() {
           creator,
           tokenCreators,
           decimals,
-        } as TokenData
+        } as Asset
       },
     })
     return outputToken

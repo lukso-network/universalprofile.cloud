@@ -100,11 +100,11 @@ const handlePreviewAsset = (asset: AssetMetadata) => {
       )
 
       // anything that is not LSP7/8 we open in explorer
-      if (!isAsset(fetchedAsset as TokenData)) {
+      if (!isAsset(fetchedAsset as Asset)) {
         return window.open(explorerContractUrl(asset.address), '_blank')
       }
 
-      if (isCollectible(fetchedAsset as TokenData) && fetchedAsset?.tokenId) {
+      if (isCollectible(fetchedAsset as Asset) && fetchedAsset?.tokenId) {
         navigateTo(nftRoute(asset.address, fetchedAsset.tokenId))
       } else {
         navigateTo(tokenRoute(asset.address))

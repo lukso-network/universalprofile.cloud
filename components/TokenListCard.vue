@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import type { TokenData } from '@/composables/useToken'
-
 const showJSON = ref(window.location.search.includes('json'))
 
 type Props = {
-  asset: TokenData
+  asset: Asset
   hasAddress?: boolean
 }
 
@@ -31,7 +29,7 @@ const handleShowAsset = () => {
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
-    assertAddress(connectedProfile.value?.address, 'profile')
+    assertAddress(connectedProfile?.value?.address, 'profile')
     navigateTo({
       path: sendRoute(connectedProfile.value.address),
       query: {

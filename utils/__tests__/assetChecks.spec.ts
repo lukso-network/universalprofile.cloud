@@ -8,7 +8,6 @@ import {
   isLsp8,
   hasTokenId,
 } from '../assetChecks'
-import type { TokenData } from '@/composables/useToken'
 
 describe('isLyx', () => {
   test('should return true if the asset is a LYX', async () => {
@@ -16,7 +15,7 @@ describe('isLyx', () => {
       isLyx({
         name: 'LYX',
         isNativeToken: true,
-      } as TokenData)
+      } as Asset)
     ).toBe(true)
   })
 
@@ -24,9 +23,9 @@ describe('isLyx', () => {
     expect(
       isLyx({
         name: 'Some asset',
-      } as TokenData)
+      } as Asset)
     ).toBe(false)
-    expect(isLyx({} as TokenData)).toBe(false)
+    expect(isLyx({} as Asset)).toBe(false)
   })
 })
 
@@ -35,12 +34,12 @@ describe('isCollectible', () => {
     expect(
       isCollectible({
         tokenType: 'NFT',
-      } as TokenData)
+      } as Asset)
     ).toBe(true)
     expect(
       isCollectible({
         tokenType: 'COLLECTION',
-      } as TokenData)
+      } as Asset)
     ).toBe(true)
   })
 
@@ -48,9 +47,9 @@ describe('isCollectible', () => {
     expect(
       isCollectible({
         tokenType: 'TOKEN',
-      } as TokenData)
+      } as Asset)
     ).toBe(false)
-    expect(isCollectible({} as TokenData)).toBe(false)
+    expect(isCollectible({} as Asset)).toBe(false)
   })
 })
 
@@ -59,12 +58,12 @@ describe('isToken', () => {
     expect(
       isToken({
         tokenType: 'TOKEN',
-      } as TokenData)
+      } as Asset)
     ).toBe(true)
     expect(
       isToken({
         isNativeToken: true,
-      } as TokenData)
+      } as Asset)
     ).toBe(true)
   })
 
@@ -72,14 +71,14 @@ describe('isToken', () => {
     expect(
       isToken({
         tokenType: 'NFT',
-      } as TokenData)
+      } as Asset)
     ).toBe(false)
     expect(
       isToken({
         tokenType: 'COLLECTION',
-      } as TokenData)
+      } as Asset)
     ).toBe(false)
-    expect(isToken({} as TokenData)).toBe(false)
+    expect(isToken({} as Asset)).toBe(false)
   })
 })
 
@@ -88,7 +87,7 @@ describe('isLsp7', () => {
     expect(
       isLsp7({
         standard: STANDARDS.LSP7,
-      } as TokenData)
+      } as Asset)
     ).toBe(true)
   })
 
@@ -96,14 +95,14 @@ describe('isLsp7', () => {
     expect(
       isLsp7({
         standard: STANDARDS.LSP8,
-      } as TokenData)
+      } as Asset)
     ).toBe(false)
     expect(
       isLsp7({
         standard: STANDARDS.EOA,
-      } as TokenData)
+      } as Asset)
     ).toBe(false)
-    expect(isLsp7({} as TokenData)).toBe(false)
+    expect(isLsp7({} as Asset)).toBe(false)
   })
 })
 
@@ -112,7 +111,7 @@ describe('isLsp8', () => {
     expect(
       isLsp8({
         standard: STANDARDS.LSP8,
-      } as TokenData)
+      } as Asset)
     ).toBe(true)
   })
 
@@ -120,14 +119,14 @@ describe('isLsp8', () => {
     expect(
       isLsp8({
         standard: STANDARDS.LSP7,
-      } as TokenData)
+      } as Asset)
     ).toBe(false)
     expect(
       isLsp8({
         standard: STANDARDS.EOA,
-      } as TokenData)
+      } as Asset)
     ).toBe(false)
-    expect(isLsp8({} as TokenData)).toBe(false)
+    expect(isLsp8({} as Asset)).toBe(false)
   })
 })
 
@@ -136,7 +135,7 @@ describe('hasTokenId', () => {
     expect(
       hasTokenId({
         tokenId: '0x123',
-      } as unknown as TokenData)
+      } as unknown as Asset)
     ).toBe(true)
   })
 
@@ -144,14 +143,14 @@ describe('hasTokenId', () => {
     expect(
       hasTokenId({
         tokenId: '0x',
-      } as unknown as TokenData)
+      } as unknown as Asset)
     ).toBe(false)
     expect(
       hasTokenId({
         tokenId: '',
-      } as unknown as TokenData)
+      } as unknown as Asset)
     ).toBe(false)
-    expect(hasTokenId({} as TokenData)).toBe(false)
+    expect(hasTokenId({} as Asset)).toBe(false)
   })
 })
 
@@ -160,12 +159,12 @@ describe('isAsset', () => {
     expect(
       isAsset({
         standard: STANDARDS.LSP7,
-      } as TokenData)
+      } as Asset)
     ).toBe(true)
     expect(
       isAsset({
         standard: STANDARDS.LSP8,
-      } as TokenData)
+      } as Asset)
     ).toBe(true)
   })
 
@@ -173,13 +172,13 @@ describe('isAsset', () => {
     expect(
       isAsset({
         standard: STANDARDS.EOA,
-      } as TokenData)
+      } as Asset)
     ).toBe(false)
     expect(
       isAsset({
         standard: STANDARDS.LSP3,
-      } as TokenData)
+      } as Asset)
     ).toBe(false)
-    expect(hasTokenId({} as TokenData)).toBe(false)
+    expect(hasTokenId({} as Asset)).toBe(false)
   })
 })

@@ -121,6 +121,7 @@ export default defineNuxtConfig({
       'models/**',
       'repositories/**',
       'utils/**',
+      'types/**',
     ],
   },
   ssr: false,

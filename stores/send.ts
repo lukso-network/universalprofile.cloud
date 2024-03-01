@@ -1,6 +1,3 @@
-import type { Asset } from '@/models/asset'
-import type { Profile } from '@/models/profile'
-
 type SendStatus = 'draft' | 'pending' | 'success'
 
 export const useSendStore = defineStore('send', () => {

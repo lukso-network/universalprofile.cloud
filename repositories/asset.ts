@@ -1,6 +1,6 @@
 import { Repository } from 'pinia-orm'
 
-import { type Asset, AssetModel } from '@/models/asset'
+import { AssetModel } from '@/models/asset'
 
 export class AssetRepository extends Repository<AssetModel> {
   getOwnedTokens() {

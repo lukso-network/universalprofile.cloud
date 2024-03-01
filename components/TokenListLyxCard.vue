@@ -10,7 +10,7 @@ const balanceWidthPx = ref(0)
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
-    assertAddress(connectedProfile.value?.address, 'profile')
+    assertAddress(connectedProfile?.value?.address, 'profile')
     navigateTo(sendRoute(connectedProfile.value.address))
   } catch (error) {
     console.error(error)
@@ -19,7 +19,7 @@ const handleSendAsset = (event: Event) => {
 
 const handleShowLyxDetails = () => {
   try {
-    assertAddress(viewedProfile.value?.address, 'profile')
+    assertAddress(viewedProfile?.value?.address, 'profile')
     navigateTo(lyxDetailsRoute(viewedProfile.value.address))
   } catch (error) {
     console.error(error)
@@ -32,7 +32,7 @@ const handleBuyLyx = (event: Event) => {
     window.open(TESTNET_FAUCET_URL, '_blank')
   } else {
     try {
-      assertAddress(connectedProfile.value?.address, 'profile')
+      assertAddress(connectedProfile?.value?.address, 'profile')
       navigateTo(buyLyxRoute(connectedProfile.value.address))
     } catch (error) {
       console.error(error)

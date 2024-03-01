@@ -130,7 +130,7 @@ export const getOptimizedImage = (
  * @returns
  */
 export const getAssetThumb = (
-  asset?: TokenData | null,
+  asset?: Asset | null,
   useIcon?: boolean,
   size = 100
 ): string | undefined => {

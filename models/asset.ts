@@ -1,6 +1,5 @@
 import { BaseModel } from '@/models/base'
 
-import type { Item } from 'pinia-orm'
 import type {
   LSP4DigitalAssetMetadata,
   LinkMetadata,
@@ -63,7 +62,7 @@ export class AssetModel extends BaseModel {
   declare assets?: AssetMetadata[]
 }
 
-export type Asset = Partial<Item<AssetModel>>
+// export type Asset = Partial<Item<AssetModel>>
 
 export type TokenType = keyof typeof LSP4_TOKEN_TYPES
 export type TokenIdFormatKey = keyof typeof LSP8_TOKEN_ID_FORMAT

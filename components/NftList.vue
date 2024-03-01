@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import type { AssetData } from '@/composables/useProfileAssets'
-
 type Props = {
-  nfts?: AssetData[]
+  nfts?: Asset[]
 }
 
 defineProps<Props>()

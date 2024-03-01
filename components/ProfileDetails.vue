@@ -2,14 +2,14 @@
 const viewedProfile = useProfile().viewedProfile()
 
 const hasLinks = computed(
-  () => viewedProfile.value?.links && viewedProfile.value.links?.length > 0
+  () => viewedProfile?.value?.links && viewedProfile.value.links?.length > 0
 )
 const hasDescription = computed(
   () =>
-    viewedProfile.value?.description && viewedProfile.value.description !== ''
+    viewedProfile?.value?.description && viewedProfile.value.description !== ''
 )
 const hasTags = computed(
-  () => viewedProfile.value?.tags && viewedProfile.value.tags?.length > 0
+  () => viewedProfile?.value?.tags && viewedProfile.value.tags?.length > 0
 )
 </script>
 
