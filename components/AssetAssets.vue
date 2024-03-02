@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const viewedProfile = useProfile().viewedProfile()
-
 type Props = {
   assets: AssetMetadata[]
 }
