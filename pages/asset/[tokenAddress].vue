@@ -6,7 +6,7 @@ const asset = useAsset()(tokenAddress)
 <template>
   <div class="relative">
     <AppPageLoader :is-loading="!asset">
-      <TokenView :asset="asset" />
+      <TokenAssetView :asset="asset" />
     </AppPageLoader>
   </div>
 </template>
