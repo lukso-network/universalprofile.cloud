@@ -118,7 +118,7 @@
     "web3-bzz": "~1.10.3",
     "web3-shh": "~1.10.3",
     "web3": "~1.10.3",
-    "@erc725/erc725.js": "patch:@erc725/erc725.js@npm%3A0.23.1#~/.yarn/patches/@erc725-erc725.js-npm-0.23.1-cc30a75abd.patch",
+    "@erc725/erc725.js": "^0.23.1",
     "@tanstack/query-core": "^5.20.5"
   },
   "lint-staged": {

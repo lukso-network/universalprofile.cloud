@@ -11,6 +11,7 @@ export type LSP4DigitalAssetMetadata = {
 }
 
 export type Asset = {
+  isLoading: boolean
   isOwned: boolean
   isIssued: boolean
   address: Address

@@ -14,6 +14,7 @@ export class ProfileModel extends BaseModel {
   static fields() {
     return {
       ...super.fields(),
+      isLoading: this.attr(true),
       address: this.attr(null),
       name: this.string(''),
       balance: this.string(''),
@@ -29,6 +30,7 @@ export class ProfileModel extends BaseModel {
   }
 
   // types
+  declare isLoading: boolean
   declare address?: Address
   declare name?: string
   declare balance?: string

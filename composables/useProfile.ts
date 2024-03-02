@@ -61,6 +61,7 @@ export const getProfile = (profileAddress: Address | undefined) => {
       const { name, profileImage, backgroundImage } =
         profileData?.LSP3Profile || {}
       return {
+        isLoading: results.some(result => result.isLoading),
         address: profileAddress,
         name,
         standard: standard as Standard,

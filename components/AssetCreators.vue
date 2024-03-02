@@ -4,9 +4,12 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-
 const creators = computed(() => {
-  return props.asset?.tokenCreators || []
+  return props.asset?.tokenCreators?.length
+    ? props.asset?.tokenCreators
+    : props.asset?.owner
+      ? [props.asset?.owner]
+      : []
 })
 </script>
 

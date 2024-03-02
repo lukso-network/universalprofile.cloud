@@ -3,6 +3,8 @@ export const tokenRoute = (tokenAddress: Address) => `/asset/${tokenAddress}`
 export const nftRoute = (nftAddress: Address, tokenId: string) =>
   `/asset/${nftAddress}/tokenId/${tokenId}`
 
+export const gotoContract = (address: Address) => `/contract/${address}`
+
 export const profileRoute = (profileAddress: Address) => `/${profileAddress}`
 
 export const sendRoute = (profileAddress: Address) => `/${profileAddress}/send`

@@ -189,6 +189,7 @@ export function useAsset() {
             )
           }
           return {
+            isLoading: results.some(result => result.isLoading),
             address,
             assetData,
             tokenURI,
