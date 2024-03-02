@@ -61,7 +61,7 @@ const handlePreviewImage = () => {
             <div class="rounded-t-12 bg-neutral-90">
               <img
                 class="min-h-[260px] w-full cursor-pointer rounded-t-12"
-                :src="getAssetThumb(asset, true, 260)"
+                :src="getAssetThumb(asset, false, 260)"
                 @click="handlePreviewImage"
                 loading="lazy"
               />
