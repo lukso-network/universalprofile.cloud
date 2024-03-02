@@ -2,7 +2,7 @@ import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
 
 import type { Image } from '@/types/image'
-import type { ExtendedAssetMetadata } from '@/types/asset'
+import type { LSP4DigitalAssetMetadata } from '@/types/asset'
 
 export function useToken() {
   return (token?: Asset | null) => {
@@ -96,7 +96,7 @@ export function useToken() {
         const baseURIData = results[5]?.data as any
         const lsp7Data = results[6]?.data as any
         const tokenData: any = lsp7Data || baseURIData || forTokenData
-        let tokenMetadata: ExtendedAssetMetadata | undefined
+        let tokenMetadata: LSP4DigitalAssetMetadata | undefined
         if (tokenData) {
           const links = tokenData.LSP4Metadata?.links
           const description = tokenData.LSP4Metadata?.description
@@ -154,6 +154,11 @@ export function useToken() {
           creator,
           tokenCreators,
           decimals,
+          tokenMetadataRaw: {
+            lsp7Data,
+            baseURIData,
+            forTokenData,
+          },
           get resolvedMetadata() {
             return tokenMetadata || token.metadata
           },

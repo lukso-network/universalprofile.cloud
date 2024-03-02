@@ -1,6 +1,7 @@
 import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
-export type ExtendedAssetMetadata = {
+// TODO use type from lsp package when it's released
+export type LSP4DigitalAssetMetadata = {
   images?: Image[][]
   icon?: Image[]
   description?: string
@@ -36,7 +37,7 @@ export type Asset = {
   creator?: Address
   tokenCreators?: Address[]
   tokenSupply?: string
-  metadata?: ExtendedAssetMetadata
-  tokenMetadata?: ExtendedAssetMetadata
-  get resolvedMetadata(): ExtendedAssetMetadata
+  metadata?: LSP4DigitalAssetMetadata
+  tokenMetadata?: LSP4DigitalAssetMetadata
+  get resolvedMetadata(): LSP4DigitalAssetMetadata
 }

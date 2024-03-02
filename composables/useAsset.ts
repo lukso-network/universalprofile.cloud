@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 
-import type { Asset, ExtendedAssetMetadata } from '@/types/asset'
+import type { Asset, LSP4DigitalAssetMetadata } from '@/types/asset'
 
 export function useAsset() {
   return (address: string, tokenId?: string) => {
@@ -118,7 +118,7 @@ export function useAsset() {
             standard: string | null
           }
         )
-        let metadata: ExtendedAssetMetadata | undefined
+        let metadata: LSP4DigitalAssetMetadata | undefined
         if (assetData) {
           const attributes = assetData?.LSP4Metadata?.attributes
           const links = assetData?.LSP4Metadata?.links
