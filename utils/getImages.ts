@@ -140,12 +140,8 @@ export const getOptimizedImage = (
 export const getAssetThumb = (
   asset: Asset | null | undefined,
   useIcon: boolean,
-  size: number,
-  hasError = false
+  size: number
 ): string | undefined => {
-  if (hasError) {
-    return ASSET_ERROR_ICON_URL
-  }
   if (!asset) {
     return ''
   }
