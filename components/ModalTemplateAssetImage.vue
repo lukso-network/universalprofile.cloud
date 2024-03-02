@@ -20,7 +20,7 @@ defineProps<Props>()
     ></lukso-icon>
 
     <AssetImage
-      class="relative min-w-[calc(100vw-100px)] max-w-[calc(100vw-100px)] rounded-12 sm:min-h-[500px] sm:min-w-[500px] sm:max-w-[600px]"
+      class="relative min-w-[calc(100vw-100px)] max-w-[calc(100vw-100px)] rounded-12 sm:max-h-[calc(100vh-100px)] sm:min-h-[500px] sm:min-w-[500px] sm:max-w-[600px]"
       :src="getOptimizedImage(modal?.data?.asset, 500)"
     />
     <lukso-icon

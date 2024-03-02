@@ -16,27 +16,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    class="overflow-hidden bg-neutral-90"
+  <img
+    class="w-full bg-neutral-90 object-cover"
     :class="{
-      'animate-pulse': isImageLoading,
+      'animate-fade-in': !isImageLoading,
     }"
-  >
-    <img
-      class="w-full bg-neutral-90 object-cover"
-      :class="{
-        'animate-fade-in': !isImageLoading,
-      }"
-      :src="imageSrc || ASSET_ERROR_ICON_URL"
-      @load="isImageLoading = false"
-      @error="
-        () => {
-          hasImageError = true
-          imageSrc = ASSET_ERROR_ICON_URL
-        }
-      "
-      loading="lazy"
-      :alt="alt"
-    />
-  </div>
+    :src="imageSrc || ASSET_ERROR_ICON_URL"
+    @load="isImageLoading = false"
+    @error="
+      () => {
+        hasImageError = true
+        imageSrc = ASSET_ERROR_ICON_URL
+      }
+    "
+    loading="lazy"
+    :alt="alt"
+  />
 </template>
