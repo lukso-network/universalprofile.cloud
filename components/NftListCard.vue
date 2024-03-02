@@ -13,7 +13,6 @@ const props = defineProps<Props>()
 const { isConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
 const token = useToken()(props.asset)
-const isImageLoading = ref(true)
 const viewedProfileAddress = getCurrentProfileAddress()
 
 const handleShowAsset = () => {
@@ -69,23 +68,10 @@ const assetTokenId = computed(() => {
       <div
         class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
       >
-        <div
-          class="rounded-t-12 bg-neutral-90"
-          :class="{
-            'animate-pulse': isImageLoading,
-          }"
-        >
-          <img
-            class="w-full rounded-t-12 bg-neutral-90 object-cover md:h-[260px]"
-            :class="{
-              'animate-fade-in': !isImageLoading,
-            }"
-            :src="getAssetThumb(token, false, 260) || ASSET_ERROR_ICON_URL"
-            @load="isImageLoading = false"
-            loading="lazy"
-            alt=""
-          />
-        </div>
+        <AssetImage
+          :src="getAssetThumb(token, false, 260)"
+          class="rounded-t-12 md:max-h-[260px]"
+        />
         <div class="relative grid grid-rows-[max-content,max-content,auto] p-4">
           <div
             class="relative top-[-40px] flex cursor-pointer flex-col rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"

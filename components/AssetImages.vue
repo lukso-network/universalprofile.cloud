@@ -12,7 +12,7 @@ const handlePreviewImage = (image: Image[]) => {
   showModal({
     template: 'AssetImage',
     data: {
-      asset: image[0],
+      asset: [image[0]],
     },
     size: 'auto',
   })
@@ -30,13 +30,10 @@ const handlePreviewImage = (image: Image[]) => {
         :key="index"
         class="rounded-8 bg-neutral-90 transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
       >
-        <img
-          class="size-14 cursor-pointer rounded-8 object-cover"
+        <AssetImage
+          class="size-14 cursor-pointer rounded-8"
+          :src="getOptimizedImage(image, 56)"
           @click="handlePreviewImage(image)"
-          :src="getOptimizedImage(image, 200)"
-          loading="lazy"
-          alt=""
-          onerror="this.style.opacity=0"
         />
       </div>
     </div>
