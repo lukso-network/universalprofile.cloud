@@ -3,7 +3,7 @@ type Props = {
   asset: Asset
 }
 
-// type VerifyStatus = 'verified' | 'unverified' | 'partial'
+export type VerifyStatus = 'verified' | 'unverified' | 'partial'
 
 const props = defineProps<Props>()
 const creators = computed(() => {
@@ -13,34 +13,24 @@ const creators = computed(() => {
   }
   return items
 })
+const issued = useIssuedAssets().validateAssets(
+  creators.value,
+  props.asset?.address
+)
+const verifyInfo = computed(() => issued.value)
 
-// const {
-//   firstCreator,
-//   restOfCreators,
-//   isPending,
-//   creatorAddressesOrOwner,
-//   isVerified,
-// } = useCreators(props.asset)
+const verifyStatus = computed<VerifyStatus>(() => {
+  const hasSome = verifyInfo.value.some(info => info)
+  if (!hasSome) {
+    return 'unverified'
+  }
 
-// const verifyStatus = computed<VerifyStatus>(() => {
-//   const profileRepo = useRepo(ProfileRepository)
-//   const creators = creatorAddressesOrOwner.value?.map(creatorId =>
-//     profileRepo.getProfile(creatorId)
-//   )
-//   const verifiedCreators = creators?.filter(creator =>
-//     isVerified(creator)
-//   ).length
+  if (verifyInfo.value.every(info => info)) {
+    return 'verified'
+  }
 
-//   if (verifiedCreators === 0) {
-//     return 'unverified'
-//   }
-
-//   if (verifiedCreators === creators?.length) {
-//     return 'verified'
-//   }
-
-//   return 'partial'
-// })
+  return 'partial'
+})
 </script>
 
 <template>
@@ -64,9 +54,7 @@ const creators = computed(() => {
       />
     </div>
     <div class="flex items-center justify-end">
-      <!-- NEED to setup publishing the verified result back from
-        the list of NftListCardCreatorsProfile
-        <lukso-tooltip
+      <lukso-tooltip
         v-if="verifyStatus === 'unverified'"
         variant="danger"
         :text="$formatMessage('asset_all_creators_unverified')"
@@ -104,7 +92,7 @@ const creators = computed(() => {
           secondary-color="neutral-100"
           size="small"
         ></lukso-icon>
-      </lukso-tooltip> -->
+      </lukso-tooltip>
     </div>
   </div>
 </template>

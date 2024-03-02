@@ -16,8 +16,13 @@ const handleOpenProfile = (address?: Address) => {
   }
 }
 
-const isVerified = (creatorProfile: Profile | null) =>
-  props.asset && creatorProfile?.issuedAssetAddresses?.includes(props.asset)
+const issued = useIssuedAssets().validateAssets(
+  props.creator ? [props.creator] : [],
+  props.asset
+)
+const verified = computed(() => {
+  return issued.value?.[0]
+})
 </script>
 
 <template>
@@ -45,7 +50,7 @@ const isVerified = (creatorProfile: Profile | null) =>
       </div>
       <div class="flex items-center">
         <lukso-tooltip
-          v-if="isVerified(creatorProfile)"
+          v-if="verified"
           variant="success"
           :text="$formatMessage('asset_creators_verified')"
           class="ml-2"

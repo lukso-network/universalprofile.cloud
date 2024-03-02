@@ -10,6 +10,7 @@ export type ExtendedAssetMetadata = {
 }
 
 export type Asset = {
+  isLoading: boolean
   isOwned: boolean
   isIssued: boolean
   address: Address
