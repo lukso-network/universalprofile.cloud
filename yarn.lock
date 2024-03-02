@@ -973,7 +973,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@erc725/erc725.js@npm:^0.23.1":
+"@erc725/erc725.js@npm:0.23.1":
   version: 0.23.1
   resolution: "@erc725/erc725.js@npm:0.23.1"
   dependencies:
@@ -983,6 +983,19 @@ __metadata:
     web3-providers-http: "npm:^1.10.0"
     web3-utils: "npm:^1.10.0"
   checksum: a8528002266f921ab270c72b4747a82a60d1e9e0a2f1ab1aa5a99d29c07d9d99e5618370cd13fb1bba6f646e97ee7d7586e8750870bee00e69e694a9275dd5b6
+  languageName: node
+  linkType: hard
+
+"@erc725/erc725.js@patch:@erc725/erc725.js@npm%3A0.23.1#~/.yarn/patches/@erc725-erc725.js-npm-0.23.1-cc30a75abd.patch":
+  version: 0.23.1
+  resolution: "@erc725/erc725.js@patch:@erc725/erc725.js@npm%3A0.23.1#~/.yarn/patches/@erc725-erc725.js-npm-0.23.1-cc30a75abd.patch::version=0.23.1&hash=abdf32"
+  dependencies:
+    add: "npm:^2.0.6"
+    ethereumjs-util: "npm:^7.1.5"
+    web3-eth-abi: "npm:^1.10.0"
+    web3-providers-http: "npm:^1.10.0"
+    web3-utils: "npm:^1.10.0"
+  checksum: e5fc30744336f3b6aa3dd21e41a7abab5c54c751e5ed8c8d1cf780cdd49d52e44c5ca02c9a934cdd1df8dd31715817424eaca151639aacfd16dcc1ab19c01236
   languageName: node
   linkType: hard
 
