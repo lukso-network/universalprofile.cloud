@@ -95,7 +95,13 @@ export function useToken() {
         const forTokenData = results[4]?.data as any
         const baseURIData = results[5]?.data as any
         const lsp7Data = results[6]?.data as any
-        const tokenData: any = lsp7Data || baseURIData || forTokenData
+        const metadataIsLoaded = results.slice(4, 7).every(result => {
+          console.log(result)
+          return result.isFetched
+        })
+        const tokenData: any = metadataIsLoaded
+          ? lsp7Data || baseURIData || forTokenData || token.metadata
+          : undefined
         let tokenMetadata: LSP4DigitalAssetMetadata | undefined
         if (tokenData) {
           const links = tokenData.LSP4Metadata?.links
@@ -159,9 +165,7 @@ export function useToken() {
             baseURIData,
             forTokenData,
           },
-          get resolvedMetadata() {
-            return tokenMetadata || token.metadata
-          },
+          resolvedMetadata: tokenMetadata,
         } as Asset
       },
     })

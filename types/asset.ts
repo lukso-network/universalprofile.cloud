@@ -40,5 +40,5 @@ export type Asset = {
   tokenSupply?: string
   metadata?: LSP4DigitalAssetMetadata
   tokenMetadata?: LSP4DigitalAssetMetadata
-  get resolvedMetadata(): LSP4DigitalAssetMetadata
+  resolvedMetadata?: LSP4DigitalAssetMetadata
 }

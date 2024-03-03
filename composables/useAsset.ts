@@ -230,9 +230,7 @@ export function useAsset() {
           tokenType,
           supportsInterfaces,
           metadata,
-          get resolvedMetadata() {
-            return metadata
-          },
+          resolvedMetadata: metadata,
         } as Asset
       },
     })
