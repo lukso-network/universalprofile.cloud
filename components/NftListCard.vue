@@ -77,7 +77,7 @@ const assetTokenId = computed(() => {
             class="relative top-[-40px] flex cursor-pointer flex-col rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
           >
             <div class="paragraph-inter-14-semi-bold">
-              {{ token?.name }}
+              {{ token?.tokenName }}
               <span
                 class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
                 >{{ token?.symbol }}</span

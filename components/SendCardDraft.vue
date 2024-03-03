@@ -66,7 +66,7 @@ const handleBack = () => {
             class="paragraph-inter-14-semi-bold flex cursor-pointer items-center justify-between rounded-[0_12px_0_0] border border-neutral-90 px-4 py-3 transition hover:border-neutral-35"
             @click="handleSelectAssets"
           >
-            {{ asset?.name }}
+            {{ asset?.tokenName }}
             <lukso-icon name="arrow-down-lg"></lukso-icon>
           </div>
           <div class="rounded-[0_0_12px_0] border border-t-0 border-neutral-90">

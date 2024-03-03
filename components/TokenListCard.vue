@@ -90,7 +90,7 @@ onMounted(async () => {
           </div>
         </div>
         <div class="grid w-full grid-rows-[max-content,max-content,auto]">
-          <div class="heading-inter-14-bold pb-1">{{ asset?.name }}</div>
+          <div class="heading-inter-14-bold pb-1">{{ asset?.tokenName }}</div>
           <div class="heading-inter-21-semi-bold flex items-center pb-1">
             <span
               v-if="asset?.balance"

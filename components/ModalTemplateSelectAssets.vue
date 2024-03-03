@@ -59,7 +59,7 @@ onMounted(async () => {
       <li v-for="asset in ownedAssets" :key="asset?.address" class="mr-4">
         <AssetListItem
           :icon="getAssetThumb(asset, isLsp7(asset), 80)"
-          :name="asset?.name"
+          :name="asset?.tokenName"
           :symbol="asset?.symbol"
           :address="asset?.address"
           :has-identicon="true"

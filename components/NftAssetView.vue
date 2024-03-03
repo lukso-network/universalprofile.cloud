@@ -63,7 +63,7 @@ const handlePreviewImage = () => {
           />
           <div class="relative p-4">
             <div class="paragraph-inter-14-semi-bold">
-              {{ asset?.name }}
+              {{ asset?.tokenName }}
               <span
                 class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
                 >{{ asset?.symbol }}</span
@@ -100,7 +100,7 @@ const handlePreviewImage = () => {
     </div>
     <div>
       <div class="heading-apax-24-medium flex items-center gap-2 pb-2">
-        {{ asset?.name }}
+        {{ asset?.tokenName }}
         <AssetStandardBadge :standard="asset?.standard" />
       </div>
       <AssetCollectionSupply
