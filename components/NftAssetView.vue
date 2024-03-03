@@ -57,7 +57,7 @@ const handlePreviewImage = () => {
       <lukso-card size="small" shadow="small" is-full-width
         ><div slot="content">
           <AssetImage
-            class="cursor-pointer rounded-t-12"
+            class="min-h-[260px] cursor-pointer rounded-t-12"
             :src="getAssetThumb(token, false, 260)"
             @click="handlePreviewImage"
           />

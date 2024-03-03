@@ -70,7 +70,7 @@ const assetTokenId = computed(() => {
       >
         <AssetImage
           :src="getAssetThumb(token, false, 260)"
-          class="rounded-t-12 md:max-h-[260px]"
+          class="min-h-[260px] rounded-t-12 md:max-h-[260px]"
         />
         <div class="relative grid grid-rows-[max-content,max-content,auto] p-4">
           <div
