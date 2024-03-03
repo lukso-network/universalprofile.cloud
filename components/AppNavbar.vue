@@ -83,23 +83,7 @@ const browserSupportExtension = extensionStore.url !== ''
           {{ $formatMessage('header_discovery') }}
         </span>
       </lukso-button>
-      <lukso-button
-        v-if="isConnected"
-        variant="text"
-        custom-class="text-12 nav-apax-12-medium-uppercase"
-        class="group"
-        @click="handleNavigateSend"
-      >
-        <span
-          class="transition group-hover:text-purple-41"
-          :class="{
-            'text-purple-41': activePage('profileAddress-send'),
-            'text-purple-63': !activePage('profileAddress-send'),
-          }"
-        >
-          {{ $formatMessage('header_send') }}
-        </span>
-      </lukso-button>
+      <AppNavbarSendButton v-if="isConnected" />
       <lukso-button
         v-if="isConnected"
         variant="text"
