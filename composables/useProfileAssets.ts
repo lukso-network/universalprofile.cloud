@@ -7,7 +7,6 @@ export function useProfileAssets() {
   return (profileAddress: Address | undefined) => {
     const { currentNetwork } = storeToRefs(useAppStore())
     const profile = useProfile().viewedProfile()
-    const { value: { chainId } = { chainId: undefined } } = currentNetwork
     // name
     // symbol
     // balanceOf
@@ -17,6 +16,7 @@ export function useProfileAssets() {
         allAddresses: Address[]
       }
     > = computed(() => {
+      const { value: { chainId } = { chainId: undefined } } = currentNetwork
       const receivedAssetCount = profile?.value?.receivedAssets?.length || 0
       const allAddresses = ([] as `0x${string}`[]).concat(
         profile?.value?.receivedAssets || [],
@@ -117,7 +117,7 @@ export function useProfileAssets() {
       }
     })
     return useQueries({
-      queries: queries,
+      queries,
       combine: results => {
         if (!profileAddress) {
           return
