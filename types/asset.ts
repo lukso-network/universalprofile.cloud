@@ -16,7 +16,6 @@ export type Asset = {
   isIssued: boolean
   address: Address
   assetData: any
-  tokenStandard: string
   tokenIdFormat: number
   referenceContract: Address
   balance: string
@@ -36,7 +35,7 @@ export type Asset = {
   tokenURI?: string
   owner?: Address
   tokenCreators?: Address[]
-  tokenSupply?: string
+  totalSupply: string
   metadata?: LSP4DigitalAssetMetadata
   tokenMetadata?: LSP4DigitalAssetMetadata
   resolvedMetadata?: LSP4DigitalAssetMetadata

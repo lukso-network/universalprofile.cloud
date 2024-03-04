@@ -89,11 +89,11 @@ const handlePreviewImage = () => {
       </div>
       <div>
         <div class="heading-apax-24-medium flex items-center gap-2 pb-2">
-          {{ token?.name }}
+          {{ token?.tokenName }}
           <AssetStandardBadge :standard="token?.standard" />
         </div>
         <AssetTokenSupply
-          :token-supply="token?.tokenSupply"
+          :total-supply="token?.totalSupply"
           :decimals="token?.decimals"
           class="pb-8"
         />

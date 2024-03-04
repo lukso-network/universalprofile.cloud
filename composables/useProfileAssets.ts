@@ -77,20 +77,12 @@ export function useProfileAssets() {
           },
           {
             // 9
-            queryKey: ['data', chainId, address, 'LSP8TokenStandard'],
-          },
-          {
-            // 10
             queryKey: ['data', chainId, address, 'LSP8TokenIdFormat'],
           },
           {
-            // 11
+            // 10
             queryKey: ['call', chainId, address, 'decimals()'],
           },
-          // {  // ERC725.js is unable to read LSP8ReferenceConract due to (Address,bytes32) not being supported
-          //   // 12
-          //   queryKey: ['data', chainId, address, 'LSP8ReferenceContract'],
-          // },
           ...interfacesToCheck.map(({ interfaceId }) => {
             return {
               queryKey: [
@@ -140,10 +132,9 @@ export function useProfileAssets() {
           const tokenSymbol = results[assetIndex + 6].data as string
           const tokenType = results[assetIndex + 7].data as number
           const baseURI = results[assetIndex + 8].data as any
-          const tokenStandard = results[assetIndex + 9].data as string
-          const tokenIdFormat = results[assetIndex + 10].data as number
-          const referenceContract = results[assetIndex + 11].data as string
-          const decimals = results[assetIndex + 12].data as number
+          const tokenIdFormat = results[assetIndex + 9].data as number
+          const referenceContract = results[assetIndex + 10].data as string
+          const decimals = results[assetIndex + 11].data as number
           const { supportsInterfaces, standard } = interfacesToCheck.reduce(
             (
               { supportsInterfaces, standard },
@@ -240,7 +231,6 @@ export function useProfileAssets() {
                 address,
                 assetData,
                 tokenURI,
-                tokenStandard,
                 tokenIdFormat,
                 referenceContract,
                 baseURI,
@@ -265,7 +255,6 @@ export function useProfileAssets() {
             isIssued,
             address,
             assetData,
-            tokenStandard,
             tokenIdFormat,
             referenceContract,
             baseURI,
