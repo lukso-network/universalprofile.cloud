@@ -6,7 +6,6 @@ type Props = {
 }
 const props = defineProps<Props>()
 
-// const { asset, isLoading, isOwned } = useAsset(nftAddress, tokenId)
 const connectedProfile = useProfile().connectedProfile()
 const token = useToken()(props.asset)
 const { showModal } = useModal()
@@ -50,6 +49,7 @@ const handlePreviewImage = () => {
 </script>
 
 <template>
+  {{ console.debug(toRaw(asset)) }}
   <div
     class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
   >
@@ -104,7 +104,7 @@ const handlePreviewImage = () => {
         <AssetStandardBadge :standard="asset?.standard" />
       </div>
       <AssetCollectionSupply
-        :token-supply="asset?.tokenSupply"
+        :total-supply="asset?.totalSupply"
         :class="{
           'mb-4': hasTokenId(asset),
           'mb-8': !hasTokenId(asset),

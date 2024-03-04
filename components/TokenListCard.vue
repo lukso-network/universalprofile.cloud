@@ -56,6 +56,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  {{ console.debug(token?.tokenName, token?.standard, toRaw(token)) }}
   <lukso-card
     size="small"
     shadow="small"

@@ -41,20 +41,20 @@ export function useAsset() {
         },
         {
           // 7
-          queryKey: ['data', chainId, address, 'LSP8TokenStandard'],
-        },
-        {
-          // 8
           queryKey: ['data', chainId, address, 'LSP8TokenIdFormat'],
         },
         {
-          // 9
+          // 8
           queryKey: ['call', chainId, address, 'decimals()'],
+        },
+        {
+          // 9
+          queryKey: ['call', chainId, address, 'totalSupply()'],
         },
         ...(profileAddress
           ? [
               {
-                // 11
+                // 10
                 queryKey: [
                   'call',
                   chainId,
@@ -67,6 +67,7 @@ export function useAsset() {
           : []),
         ...interfacesToCheck.map(({ interfaceId }) => {
           return {
+            // 11
             queryKey: [
               'call',
               chainId,
@@ -95,11 +96,10 @@ export function useAsset() {
         const tokenSymbol = results[4].data as string
         const tokenType = results[5].data as number
         const baseURI = results[6].data as any
-        const tokenStandard = results[7].data as string
-        const tokenIdFormat = results[8].data as number
-        const referenceContract = results[9].data as string
-        const decimals = results[10].data as number
-        const balance = results[11].data as string
+        const tokenIdFormat = results[7].data as number
+        const decimals = parseInt(results[8].data as string)
+        const totalSupply = results[9].data as string
+        const balance = results[10].data as string
         const { supportsInterfaces, standard } = interfacesToCheck.reduce(
           (
             { supportsInterfaces, standard },
@@ -193,12 +193,11 @@ export function useAsset() {
             address,
             assetData,
             tokenURI,
-            tokenStandard,
             tokenIdFormat,
-            referenceContract,
             baseURI,
             tokenDataURL,
             decimals,
+            totalSupply,
             tokenId,
             balance,
             standard,
@@ -214,12 +213,13 @@ export function useAsset() {
             },
           } as Asset
         }
+
         return {
           address,
           assetData,
-          tokenStandard,
           tokenIdFormat,
-          referenceContract,
+          decimals,
+          totalSupply,
           baseURI,
           balance,
           standard,
