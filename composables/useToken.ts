@@ -17,20 +17,12 @@ export function useToken() {
           },
           {
             // 1
-            queryKey: ['call', chainId, token?.address, 'creator()'],
-          },
-          {
-            // 2
             queryKey: ['data', chainId, token?.address, 'LSP4Creators[]'],
-          },
-          {
-            // 3
-            queryKey: ['call', chainId, token?.address, 'decimals()'],
           },
           ...(tokenId
             ? [
                 {
-                  // 4
+                  // 2
                   queryKey: [
                     'tokenDataBig',
                     chainId,
@@ -40,7 +32,7 @@ export function useToken() {
                   ],
                 },
                 {
-                  // 5
+                  // 3
                   queryKey: ['tokenJSON', chainId, token?.address, tokenId],
                   queryFn: async () => {
                     if (token.tokenDataURL) {
@@ -65,7 +57,7 @@ export function useToken() {
                 ...(tokenId && token.tokenIdFormat === 2
                   ? [
                       {
-                        // 6
+                        // 4
                         queryKey: [
                           'dataBig',
                           chainId,
@@ -89,18 +81,18 @@ export function useToken() {
           return null
         }
         const owner = results[0].data as string
-        const creator = results[1].data as string
-        const tokenCreators = results[2].data as string[]
-        const decimals = results[3]?.data as number
-        const forTokenData = results[4]?.data as any
-        const baseURIData = results[5]?.data as any
-        const lsp7Data = results[6]?.data as any
+        const tokenCreators = results[1].data as string[]
+        const forTokenData = results[2]?.data as any
+        const baseURIData = results[3]?.data as any
+        const lsp7Data = results[4]?.data as any
         const metadataIsLoaded = results.slice(4, 7).every(result => {
           console.log(result)
-          return result.isFetched
+          return result.isFetched || result.failureReason !== undefined
         })
         const tokenData: any = metadataIsLoaded
-          ? lsp7Data || baseURIData || forTokenData || token.metadata
+          ? lsp7Data ||
+            baseURIData ||
+            forTokenData || { LSP4Metadata: token.metadata }
           : undefined
         let tokenMetadata: LSP4DigitalAssetMetadata | undefined
         if (tokenData) {
@@ -157,9 +149,7 @@ export function useToken() {
           tokenData,
           tokenMetadata,
           owner,
-          creator,
           tokenCreators,
-          decimals,
           tokenMetadataRaw: {
             lsp7Data,
             baseURIData,

@@ -35,7 +35,6 @@ export type Asset = {
   tokenIdIsContract?: boolean
   tokenURI?: string
   owner?: Address
-  creator?: Address
   tokenCreators?: Address[]
   tokenSupply?: string
   metadata?: LSP4DigitalAssetMetadata
