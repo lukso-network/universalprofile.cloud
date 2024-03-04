@@ -66,7 +66,7 @@ const handlePreviewImage = () => {
               {{ asset?.tokenName }}
               <span
                 class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
-                >{{ asset?.symbol }}</span
+                >{{ asset?.tokenSymbol }}</span
               >
             </div>
             <div class="paragraph-ptmono-10-bold mt-1">
@@ -81,11 +81,11 @@ const handlePreviewImage = () => {
           </div>
         </div>
       </lukso-card>
-      <div v-if="asset?.isOwned">
+      <div v-if="asset?.balance && connectedProfile?.address">
         <AssetOwnInfo
           :address="connectedProfile?.address"
           :balance="asset?.balance"
-          :symbol="asset?.symbol"
+          :symbol="asset?.tokenSymbol"
           :decimals="0"
           :profile-image-url="
             getOptimizedImage(connectedProfile?.profileImage, 40)

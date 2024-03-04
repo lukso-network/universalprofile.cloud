@@ -80,7 +80,7 @@ const assetTokenId = computed(() => {
               {{ token?.tokenName }}
               <span
                 class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
-                >{{ token?.symbol }}</span
+                >{{ token?.tokenSymbol }}</span
               >
             </div>
             <div class="paragraph-ptmono-10-bold mt-1">

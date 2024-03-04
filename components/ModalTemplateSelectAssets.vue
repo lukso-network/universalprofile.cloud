@@ -60,7 +60,7 @@ onMounted(async () => {
         <AssetListItem
           :icon="getAssetThumb(asset, isLsp7(asset), 80)"
           :name="asset?.tokenName"
-          :symbol="asset?.symbol"
+          :symbol="asset?.tokenSymbol"
           :address="asset?.address"
           :has-identicon="true"
           :has-square-icon="isCollectible(asset)"

@@ -114,14 +114,14 @@ onMounted(async () => {
             <span
               ref="symbolRef"
               class="paragraph-inter-14-semi-bold pl-2 text-neutral-60"
-              >{{ asset?.symbol }}</span
+              >{{ asset?.tokenSymbol }}</span
             >
           </div>
           <div
-            v-if="asset?.balance && asset.symbol"
+            v-if="asset?.balance && asset.tokenSymbol"
             class="paragraph-inter-12-regular"
           >
-            {{ $formatCurrency(asset.balance, asset.symbol) }}
+            {{ $formatCurrency(asset.balance, asset.tokenSymbol) }}
           </div>
           <div class="flex w-full items-end justify-end">
             <lukso-button

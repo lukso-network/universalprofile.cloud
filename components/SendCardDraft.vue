@@ -106,7 +106,7 @@ const handleBack = () => {
         >{{
           $formatMessage('send_button', {
             amount: !!Number(amount) ? $formatNumber(amount || '') : '',
-            symbol: asset?.symbol || '',
+            symbol: asset?.tokenSymbol || '',
           })
         }}</lukso-button
       >

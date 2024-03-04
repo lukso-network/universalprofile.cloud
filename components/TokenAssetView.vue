@@ -41,6 +41,7 @@ const handlePreviewImage = () => {
 </script>
 
 <template>
+  {{ console.debug(toRaw(asset)) }}
   <div class="relative">
     <div
       class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
@@ -68,11 +69,11 @@ const handlePreviewImage = () => {
             ></lukso-profile>
           </div>
         </lukso-card>
-        <div v-if="token?.isOwned">
+        <div v-if="token?.balance && connectedProfile?.address">
           <AssetOwnInfo
             :address="connectedProfile?.address"
             :balance="token?.balance"
-            :symbol="token?.symbol"
+            :symbol="token?.tokenSymbol"
             :decimals="token?.decimals"
             :profile-image-url="
               getOptimizedImage(connectedProfile?.profileImage, 260)
@@ -82,7 +83,7 @@ const handlePreviewImage = () => {
 
           <lukso-button is-full-width class="mt-12" @click="handleSendAsset">{{
             $formatMessage('token_details_send', {
-              token: token?.symbol || '',
+              token: token?.tokenSymbol || '',
             })
           }}</lukso-button>
         </div>
