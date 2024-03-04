@@ -70,7 +70,9 @@ const handleBuyLyx = () => {
             :balance="connectedProfile.balance"
             :symbol="currentNetwork.token.symbol"
             :decimals="ASSET_LYX_DECIMALS"
-            :profile-image-url="connectedProfile.profileImage?.url"
+            :profile-image-url="
+              getOptimizedImage(connectedProfile?.profileImage, 40)
+            "
             :message="$formatMessage('token_details_own')"
           />
 
