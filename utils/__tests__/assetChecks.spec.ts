@@ -14,7 +14,7 @@ describe('isLyx', () => {
   test('should return true if the asset is a LYX', async () => {
     expect(
       isLyx({
-        name: 'LYX',
+        tokenSymbol: 'LYX',
         isNativeToken: true,
       } as Asset)
     ).toBe(true)
@@ -23,7 +23,7 @@ describe('isLyx', () => {
   test('should return false if the asset is not a LYX', async () => {
     expect(
       isLyx({
-        name: 'Some asset',
+        tokenSymbol: 'Some asset',
       } as Asset)
     ).toBe(false)
     expect(isLyx({} as Asset)).toBe(false)

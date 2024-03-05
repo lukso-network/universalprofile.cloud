@@ -7,9 +7,11 @@ function getIssuedAssets(profiles: Address[]) {
     return profiles.flatMap(profile => {
       return profile
         ? [
-            {
-              queryKey: ['data', chainId, profile, 'LSP5ReceivedAssets[]'],
-            },
+            queryGetData({
+              chainId,
+              address: profile as Address,
+              keyName: 'LSP5ReceivedAssets[]',
+            }),
           ]
         : []
     })

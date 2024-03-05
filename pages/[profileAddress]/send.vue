@@ -13,15 +13,23 @@ import type {
 } from '@/types/contracts'
 
 const connectedProfile = useProfile().connectedProfile()
-const { currentNetwork } = useAppStore()
-const { asset, onSend, amount, receiver, transactionHash } =
-  storeToRefs(useSendStore())
+const {
+  // asset: _asset,
+  onSend,
+  amount,
+  receiver,
+  transactionHash,
+} = storeToRefs(useSendStore())
 const { isLoadedApp, isConnected, hasSimpleNavbar } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
 const { sendTransaction, contract } = useWeb3(PROVIDERS.INJECTED)
 const assetRepository = useRepo(AssetRepository)
+
+const assetAddress = useRouter().currentRoute.value.query.asset
+const tokenId = useRouter().currentRoute.value.query.tokenId
+const asset = useAsset()(assetAddress, tokenId)
 
 onMounted(() => {
   setStatus('draft')
@@ -46,35 +54,12 @@ watchEffect(() => {
     return
   }
 
-  try {
-    amount.value = undefined
-    const assetAddress = useRouter().currentRoute.value.query.asset
-    const tokenId = useRouter().currentRoute.value.query.tokenId
-    assertAddress(assetAddress, 'asset')
-    const storeAsset = assetRepository.getAsset(assetAddress, tokenId)
+  amount.value = undefined
 
-    if (!storeAsset) {
-      assertAddress(connectedProfile.value?.address, 'profile')
-      navigateTo(sendRoute(connectedProfile.value?.address))
-    } else {
-      asset.value = storeAsset
-    }
-  } catch (error) {
-    // fallback to native token
-    asset.value = {
-      name: currentNetwork.token.name,
-      symbol: currentNetwork.token.symbol,
-      isNativeToken: true,
-      decimals: ASSET_LYX_DECIMALS,
-    }
-  }
-
-  // since balance is not avail in onMounted hook
-  asset.value = {
-    ...asset.value,
-    balance: isLyx(asset.value)
-      ? connectedProfile.value?.balance
-      : asset.value?.balance,
+  if (!asset.value) {
+    assertAddress(connectedProfile.value?.address, 'profile')
+    navigateTo(sendRoute(connectedProfile.value?.address))
+    return
   }
 
   // when not connected then navigate to home

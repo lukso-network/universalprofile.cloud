@@ -8,29 +8,31 @@ export function useToken() {
   return (token?: Asset | null) => {
     const tokenId = token?.tokenId
     const { currentNetwork } = storeToRefs(useAppStore())
-    const { value: { chainId } = { chainId: undefined } } = currentNetwork
+    const { value: { chainId } = { chainId: '' } } = currentNetwork
     const queries = token?.address
       ? [
-          {
+          queryCallContract({
             // 0
-            queryKey: ['call', chainId, token?.address, 'owner()'],
-          },
-          {
+            chainId,
+            address: token?.address,
+            method: 'owner()',
+          }),
+          queryGetData({
             // 1
-            queryKey: ['data', chainId, token?.address, 'LSP4Creators[]'],
-          },
+            chainId,
+            address: token?.address,
+            keyName: 'LSP4Creators[]',
+          }),
           ...(tokenId
             ? [
-                {
+                queryGetData({
                   // 2
-                  queryKey: [
-                    'tokenDataBig',
-                    chainId,
-                    token?.address,
-                    tokenId,
-                    'LSP4Metadata',
-                  ],
-                },
+                  chainId,
+                  address: token?.address,
+                  tokenId,
+                  keyName: 'LSP4Metadata',
+                  isBig: true,
+                }),
                 {
                   // 3
                   queryKey: ['tokenJSON', chainId, token?.address, tokenId],
@@ -56,18 +58,16 @@ export function useToken() {
                 },
                 ...(tokenId && token.tokenIdFormat === 2
                   ? [
-                      {
+                      queryGetData({
                         // 4
-                        queryKey: [
-                          'dataBig',
-                          chainId,
-                          ABICoder.decodeParameter(
-                            'address',
-                            tokenId
-                          ).toLowerCase(),
-                          'LSP4Metadata',
-                        ],
-                      },
+                        chainId,
+                        address: ABICoder.decodeParameter(
+                          'address',
+                          tokenId
+                        ).toLowerCase() as Address,
+                        keyName: 'LSP4Metadata',
+                        isBig: true,
+                      }),
                     ]
                   : []),
               ]

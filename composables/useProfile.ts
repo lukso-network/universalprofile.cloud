@@ -1,33 +1,38 @@
 import { useQueries } from '@tanstack/vue-query'
 
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
-import type { Standard } from '@/types/contract'
 import type { Profile } from '@/models/profile'
+import type { Standard } from '@/types/contract'
 
 export const getProfile = (profileAddress: Address | undefined) => {
   const { currentNetwork } = storeToRefs(useAppStore())
   const queries = computed(() => {
-    const { value: { chainId } = { chainId: undefined } } = currentNetwork
+    const { value: { chainId } = { chainId: '' } } = currentNetwork
     return profileAddress
       ? [
-          {
-            queryKey: ['data', chainId, profileAddress, 'LSP3Profile'],
-          },
-          ...interfacesToCheck.map(({ interfaceId }) => ({
-            queryKey: [
-              'call',
+          queryGetData({
+            chainId,
+            address: profileAddress,
+            keyName: 'LSP3Profile',
+          }),
+          ...interfacesToCheck.map(({ interfaceId }) =>
+            queryCallContract({
               chainId,
-              profileAddress,
-              'supportsInterface(bytes4)',
-              interfaceId,
-            ],
-          })),
-          {
-            queryKey: ['data', chainId, profileAddress, 'LSP5ReceivedAssets[]'],
-          },
-          {
-            queryKey: ['data', chainId, profileAddress, 'LSP12IssuedAssets[]'],
-          },
+              address: profileAddress,
+              method: 'supportsInterface(bytes4)',
+              args: [interfaceId],
+            })
+          ),
+          queryGetData({
+            chainId,
+            address: profileAddress,
+            keyName: 'LSP5ReceivedAssets[]',
+          }),
+          queryGetData({
+            chainId,
+            address: profileAddress,
+            keyName: 'LSP12IssuedAssets[]',
+          }),
         ]
       : []
   })

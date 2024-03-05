@@ -17,6 +17,9 @@ export default defineNuxtConfig({
   app: {
     head: siteMeta,
   },
+  typescript: {
+    strict: true,
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',

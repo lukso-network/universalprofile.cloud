@@ -2,6 +2,7 @@ import { useQueries } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 
 import type { Asset, LSP4DigitalAssetMetadata } from '@/types/asset'
+import type { QFQueryOptions } from '@/utils/queryFunctions'
 
 export function useProfileAssets() {
   return (profileAddress: Address | undefined) => {
@@ -11,91 +12,90 @@ export function useProfileAssets() {
     // symbol
     // balanceOf
     const queries: ComputedRef<
-      Array<{ queryKey: string[] }> & {
+      Array<QFQueryOptions> & {
         receivedAssetCount: number
         allAddresses: Address[]
       }
     > = computed(() => {
-      const { value: { chainId } = { chainId: undefined } } = currentNetwork
+      const { value: { chainId } = { chainId: '' } } = currentNetwork
       const receivedAssetCount = profile?.value?.receivedAssets?.length || 0
       const allAddresses = ([] as `0x${string}`[]).concat(
         profile?.value?.receivedAssets || [],
         profile?.value?.issuedAssets || []
       )
-      const queries: Array<{ queryKey: string[] }> & {
+      const queries: Array<QFQueryOptions> & {
         receivedAssetCount: number
         allAddresses: Address[]
       } = allAddresses.flatMap((address: Address) => {
         return [
-          {
+          queryGetData({
             // 0
-            queryKey: ['data', chainId, address, 'LSP4Metadata'],
-          },
-          {
+            chainId,
+            address,
+            keyName: 'LSP4Metadata',
+            isBig: true,
+          }),
+          queryCallContract({
             // 1
-            queryKey: [
-              'call',
-              chainId,
-              address,
-              'tokenIdsOf(address)',
-              profileAddress,
-            ],
-          },
-          {
+            chainId,
+            address,
+            method: 'tokenIdsOf(address)',
+            args: [profileAddress],
+          }),
+          queryCallContract({
             // 2
-            queryKey: [
-              'call',
+            chainId,
+            address,
+            method: 'balanceOf(address)',
+            args: [profileAddress],
+          }),
+          queryGetData({
+            // 3
+            chainId,
+            address,
+            keyName: 'LSP4TokenName',
+          }),
+          queryGetData({
+            // 4
+            chainId,
+            address,
+            keyName: 'LSP4TokenSymbol',
+          }),
+          queryGetData({
+            // 5
+            chainId,
+            address,
+            keyName: 'LSP4TokenType',
+          }),
+          queryGetData({
+            // 6
+            chainId,
+            address,
+            keyName: 'LSP8TokenMetadataBaseURI',
+          }),
+          queryGetData({
+            // 7
+            chainId,
+            address,
+            keyName: 'LSP8TokenIdFormat',
+          }),
+          queryCallContract({
+            // 8
+            chainId,
+            address,
+            method: 'decimals()',
+          }),
+          ...interfacesToCheck.map(({ interfaceId }) => {
+            return queryCallContract({
+              // 9+
               chainId,
               address,
-              'balanceOf(address)',
-              profileAddress,
-            ],
-          },
-          {
-            // 3
-            queryKey: ['call', chainId, address, 'name()'],
-          },
-          {
-            // 4
-            queryKey: ['call', chainId, address, 'symbol()'],
-          },
-          {
-            // 5
-            queryKey: ['data', chainId, address, 'LSP4TokenName'],
-          },
-          {
-            // 6
-            queryKey: ['data', chainId, address, 'LSP4TokenSymbol'],
-          },
-          {
-            // 7
-            queryKey: ['data', chainId, address, 'LSP4TokenType'],
-          },
-          {
-            // 8
-            queryKey: ['data', chainId, address, 'LSP8TokenMetadataBaseURI'],
-          },
-          {
-            // 9
-            queryKey: ['data', chainId, address, 'LSP8TokenIdFormat'],
-          },
-          {
-            // 10
-            queryKey: ['call', chainId, address, 'decimals()'],
-          },
-          ...interfacesToCheck.map(({ interfaceId }) => {
-            return {
-              queryKey: [
-                'call',
-                chainId,
-                address,
-                'supportsInterface(bytes4)',
-                interfaceId,
-              ],
-            }
+              method: 'supportsInterface(bytes4)',
+              args: [interfaceId],
+            })
           }),
         ]
-      }) as Array<{ queryKey: string[] }> & {
+      }) as Array<QFQueryOptions> & {
         receivedAssetCount: number
         allAddresses: Address[]
       }
@@ -103,7 +103,7 @@ export function useProfileAssets() {
       // to the current queries list.
       queries.receivedAssetCount = receivedAssetCount
       queries.allAddresses = allAddresses
-      return queries as Array<{ queryKey: string[] }> & {
+      return queries as Array<QFQueryOptions> & {
         receivedAssetCount: number
         allAddresses: Address[]
       }
@@ -126,15 +126,13 @@ export function useProfileAssets() {
           const assetData = results[assetIndex + 0].data as any
           const tokenIds = results[assetIndex + 1].data as string[]
           const balance = results[assetIndex + 2].data as string
-          const name = results[assetIndex + 3].data as string
-          const symbol = results[assetIndex + 4].data as string
-          const tokenName = results[assetIndex + 5].data as string
-          const tokenSymbol = results[assetIndex + 6].data as string
-          const tokenType = results[assetIndex + 7].data as number
-          const baseURI = results[assetIndex + 8].data as any
-          const tokenIdFormat = results[assetIndex + 9].data as number
-          const referenceContract = results[assetIndex + 10].data as string
-          const decimals = results[assetIndex + 11].data as number
+          const tokenName = results[assetIndex + 3].data as string
+          const tokenSymbol = results[assetIndex + 4].data as string
+          const tokenType = results[assetIndex + 5].data as number
+          const baseURI = results[assetIndex + 6].data as any
+          const tokenIdFormat = results[assetIndex + 7].data as number
+          const referenceContract = results[assetIndex + 8].data as string
+          const decimals = results[assetIndex + 9].data as number
           const { supportsInterfaces, standard } = interfacesToCheck.reduce(
             (
               { supportsInterfaces, standard },
@@ -239,8 +237,6 @@ export function useProfileAssets() {
                 tokenId,
                 balance,
                 standard,
-                name,
-                symbol,
                 tokenName,
                 tokenSymbol,
                 tokenType,
@@ -260,8 +256,6 @@ export function useProfileAssets() {
             baseURI,
             balance,
             standard,
-            name,
-            symbol,
             tokenName,
             tokenSymbol,
             tokenType,

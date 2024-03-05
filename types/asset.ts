@@ -21,8 +21,6 @@ export type Asset = {
   balance: string
   decimals: number
   standard: string
-  name: string
-  symbol: string
   tokenName: string
   tokenSymbol: string
   tokenType: number
