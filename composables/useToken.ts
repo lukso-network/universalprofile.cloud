@@ -86,10 +86,7 @@ export function useToken() {
         const baseURIData = results[3]?.data as any
         const lsp7Data = results[4]?.data as any
         const metadataIsLoaded =
-          results.slice(2, 5).every((result, index) => {
-            if (result.failureReason != undefined) {
-              console.error(token.tokenName, `result ${index}`, result, token)
-            }
+          results.slice(2, 5).every(result => {
             return result.isFetched || result.failureReason != undefined
           }) && !token.isLoading
         const tokenData: any = metadataIsLoaded
