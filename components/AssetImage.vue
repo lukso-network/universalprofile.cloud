@@ -22,8 +22,8 @@ watch(
   (newImg, oldImg) => {
     if (newImg !== oldImg) {
       imageSrc.value = newImg
+      isImageLoading.value = true
       if (newImg) {
-        isImageLoading.value = true
         hasImageError.value = false
       }
     }

@@ -156,7 +156,7 @@ async function convert<T = any>(
 let running = 0
 
 async function doQueries() {
-  if (running++ > 5) {
+  if (running++ > 1) {
     running--
     triggerQuery()
     return
