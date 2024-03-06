@@ -20,7 +20,6 @@ const { assetFilter } = storeToRefs(useAppStore())
         :key="index"
         :asset="asset"
         :has-address="true"
-        :is-openable="true"
       />
     </div>
   </div>
