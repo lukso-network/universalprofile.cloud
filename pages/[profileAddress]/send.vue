@@ -10,7 +10,7 @@ import type { TransactionReceipt } from 'web3-eth'
 import type {
   LSP7DigitalAsset,
   LSP8IdentifiableDigitalAsset,
-} from '@/types/contracts'
+} from '@/contracts'
 
 const connectedProfile = useProfile().connectedProfile()
 const {

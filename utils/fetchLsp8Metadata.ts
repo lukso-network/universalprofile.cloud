@@ -11,7 +11,7 @@ import type { AbiItem } from 'web3-utils'
 import type { ERC725JSONSchema } from '@erc725/erc725.js'
 import type { LSP4DigitalAssetMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { URLDataWithHash } from '@erc725/erc725.js/build/main/src/types'
-import type { LSP8IdentifiableDigitalAsset } from '@/types/contracts'
+import type { LSP8IdentifiableDigitalAsset } from '@/contracts'
 
 export const fetchLsp8Metadata = async (
   tokenId: string,

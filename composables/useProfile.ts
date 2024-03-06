@@ -2,7 +2,6 @@ import { useQueries } from '@tanstack/vue-query'
 
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { Profile } from '@/models/profile'
-import type { Standard } from '@/types/contract'
 
 export const getProfile = (profileAddress: Address | undefined) => {
   const { currentNetwork } = storeToRefs(useAppStore())

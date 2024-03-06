@@ -7,7 +7,6 @@ import type {
   LSP8_TOKEN_ID_FORMAT,
 } from '@lukso/lsp-smart-contracts'
 import type { Image } from '@/types/image'
-import type { Standard } from '@/types/contract'
 
 export class AssetModel extends BaseModel {
   static entity = 'assets'

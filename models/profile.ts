@@ -5,7 +5,6 @@ import type {
   LinkMetadata,
 } from '@lukso/lsp-smart-contracts'
 import type { Image } from '@/types/image'
-import type { Standard } from '@/types/contract'
 
 export class ProfileModel extends BaseModel {
   static entity = 'profiles'

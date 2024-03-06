@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Standard } from '@/types/contract'
-
 type Props = {
   standard?: string
 }
