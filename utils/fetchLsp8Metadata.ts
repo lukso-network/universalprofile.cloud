@@ -159,13 +159,5 @@ const getLsp8Metadata = async (
     })
   })
 
-  console.debug('LSP8 metadata', {
-    url,
-    tokenId,
-    tokenIdFormat,
-    assetAddress,
-    metadata,
-  })
-
   return validateLsp4Metadata(metadata)
 }

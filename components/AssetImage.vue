@@ -10,10 +10,12 @@ const isImageLoading = ref(true)
 const hasImageError = ref(false)
 const imageSrc = ref()
 
-const handleError = () => {
+const handleError = (event: ErrorEvent) => {
+  console.log(event)
   if (props.src) {
     isImageLoading.value = false
     hasImageError.value = true
+    imageSrc.value = ASSET_ERROR_ICON_URL
   }
 }
 
@@ -45,7 +47,7 @@ onMounted(() => {
     :class="{
       'animate-fade-in': !isImageLoading,
     }"
-    :src="imageSrc || ASSET_ERROR_ICON_URL"
+    :src="imageSrc"
     @load="isImageLoading = props.src ? false : true"
     @error="handleError"
     loading="lazy"

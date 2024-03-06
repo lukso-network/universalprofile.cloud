@@ -41,7 +41,6 @@ const handlePreviewImage = () => {
 </script>
 
 <template>
-  {{ console.debug(toRaw(asset)) }}
   <div class="relative">
     <div
       class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
