@@ -9,71 +9,73 @@ export function useToken() {
     const tokenId = token?.tokenId
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: '' } } = currentNetwork
-    const queries = token?.address
-      ? [
-          queryCallContract({
-            // 0
-            chainId,
-            address: token?.address,
-            method: 'owner()',
-          }),
-          queryGetData({
-            // 1
-            chainId,
-            address: token?.address,
-            keyName: 'LSP4Creators[]',
-          }),
-          ...(tokenId
-            ? [
-                queryGetData({
-                  // 2
-                  chainId,
-                  address: token?.address,
-                  tokenId,
-                  keyName: 'LSP4Metadata',
-                  isBig: true,
-                }),
-                {
-                  // 3
-                  queryKey: ['tokenJSON', chainId, token?.address, tokenId],
-                  queryFn: async () => {
-                    if (token.tokenDataURL) {
-                      const url = token.tokenDataURL.replace(
-                        /^ipfs:\/\//,
-                        'https://api.universalprofile.cloud/ipfs/'
-                      )
-                      return await fetch(url)
-                        .then(response => {
-                          if (!response.ok) {
-                            throw new Error('Unable to fetch')
-                          }
-                          return response.json()
-                        })
-                        .catch(error => {
-                          throw error
-                        })
-                    }
-                    return null
+    const queries = computed(() =>
+      token?.address
+        ? [
+            queryCallContract({
+              // 0
+              chainId,
+              address: token?.address,
+              method: 'owner()',
+            }),
+            queryGetData({
+              // 1
+              chainId,
+              address: token?.address,
+              keyName: 'LSP4Creators[]',
+            }),
+            ...(tokenId
+              ? [
+                  queryGetData({
+                    // 2
+                    chainId,
+                    address: token?.address,
+                    tokenId,
+                    keyName: 'LSP4Metadata',
+                    isBig: true,
+                  }),
+                  {
+                    // 3
+                    queryKey: ['tokenJSON', chainId, token?.address, tokenId],
+                    queryFn: async () => {
+                      if (token.tokenDataURL) {
+                        const url = token.tokenDataURL.replace(
+                          /^ipfs:\/\//,
+                          'https://api.universalprofile.cloud/ipfs/'
+                        )
+                        return await fetch(url)
+                          .then(response => {
+                            if (!response.ok) {
+                              throw new Error('Unable to fetch')
+                            }
+                            return response.json()
+                          })
+                          .catch(error => {
+                            throw error
+                          })
+                      }
+                      return null
+                    },
                   },
-                },
-                ...(tokenId && token.tokenIdFormat === 2
-                  ? [
-                      queryGetData({
-                        // 4
-                        chainId,
-                        address: ABICoder.decodeParameter(
-                          'address',
-                          tokenId
-                        ).toLowerCase() as Address,
-                        keyName: 'LSP4Metadata',
-                        isBig: true,
-                      }),
-                    ]
-                  : []),
-              ]
-            : []),
-        ]
-      : []
+                  ...(tokenId && token.tokenIdFormat === 2
+                    ? [
+                        queryGetData({
+                          // 4
+                          chainId,
+                          address: ABICoder.decodeParameter(
+                            'address',
+                            tokenId
+                          ).toLowerCase() as Address,
+                          keyName: 'LSP4Metadata',
+                          isBig: true,
+                        }),
+                      ]
+                    : []),
+                ]
+              : []),
+          ]
+        : []
+    )
     return useQueries({
       queries,
       combine: results => {
@@ -85,10 +87,9 @@ export function useToken() {
         const forTokenData = results[2]?.data as any
         const baseURIData = results[3]?.data as any
         const lsp7Data = results[4]?.data as any
-        const metadataIsLoaded =
-          results.slice(2, 5).every(result => {
-            return result.isFetched || result.failureReason != undefined
-          }) && !token.isLoading
+        const metadataIsLoaded = results.slice(2, 5).every(result => {
+          return result.isFetched || result.failureReason != undefined
+        })
         const tokenData: any = metadataIsLoaded
           ? lsp7Data ||
             baseURIData ||

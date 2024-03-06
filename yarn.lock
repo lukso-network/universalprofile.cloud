@@ -3609,6 +3609,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-async-storage-persister@npm:^5.25.0":
+  version: 5.25.0
+  resolution: "@tanstack/query-async-storage-persister@npm:5.25.0"
+  dependencies:
+    "@tanstack/query-persist-client-core": "npm:5.25.0"
+  checksum: 07cc458837784693f93073149862e4f9353915a54e9c7f6dc1ed49b1cdf4194f35f40afec95468f80c259150d9aea3850c6c75f98644608b4e295f881044224f
+  languageName: node
+  linkType: hard
+
 "@tanstack/query-core@npm:^5.20.5":
   version: 5.20.5
   resolution: "@tanstack/query-core@npm:5.20.5"
@@ -17966,6 +17975,7 @@ __metadata:
     "@sentry/types": "npm:^7.105.0"
     "@sentry/vite-plugin": "npm:^2.14.2"
     "@sentry/vue": "npm:^7.105.0"
+    "@tanstack/query-async-storage-persister": "npm:^5.25.0"
     "@tanstack/query-core": "npm:^5.25.0"
     "@tanstack/query-persist-client-core": "npm:^5.25.0"
     "@tanstack/query-sync-storage-persister": "npm:^5.25.0"
