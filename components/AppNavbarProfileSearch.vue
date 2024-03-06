@@ -25,6 +25,7 @@ const searchResults = async () => {
 
   if (searchResults.hits.length === 0) {
     hasNoResults.value = true
+    isSearching.value = false
     return
   } else {
     hasNoResults.value = false
