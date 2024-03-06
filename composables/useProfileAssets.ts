@@ -41,6 +41,8 @@ export function useProfileAssets() {
             address,
             method: 'tokenIdsOf(address)',
             args: [profileAddress],
+            refetchInterval: 120000,
+            staleTime: 60000,
           }),
           queryCallContract({
             // 2
@@ -48,6 +50,8 @@ export function useProfileAssets() {
             address,
             method: 'balanceOf(address)',
             args: [profileAddress],
+            refetchInterval: 120000,
+            staleTime: 60000,
           }),
           queryGetData({
             // 3

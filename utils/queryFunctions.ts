@@ -156,7 +156,8 @@ async function convert<T = any>(
 let running = 0
 
 async function doQueries() {
-  if (running++ > 0) {
+  if (running++ > 5) {
+    running--
     triggerQuery()
     return
   }
@@ -540,6 +541,9 @@ async function doQueries() {
     }
   } finally {
     running--
+    if (queryList.length > 0) {
+      triggerQuery()
+    }
   }
 }
 
@@ -593,6 +597,8 @@ export type CallContractQueryOptions = {
   args?: readonly unknown[]
   chainId: string
   isBig?: boolean
+  staleTime?: number
+  refetchInterval?: number
 }
 
 export function queryCallContract({
@@ -602,6 +608,8 @@ export function queryCallContract({
   args,
   chainId,
   isBig,
+  staleTime,
+  refetchInterval,
 }: CallContractQueryOptions): QFQueryOptions {
   const methodName = method.replace(/\(.*$/, '')
   let methodItem = (abi || defaultAbi).find(item => {
@@ -635,6 +643,8 @@ export function queryCallContract({
     }
   }
   return {
+    ...(staleTime ? { staleTime } : {}),
+    ...(refetchInterval ? { refetchInterval } : {}),
     queryKey: [
       'call',
       chainId,
@@ -666,6 +676,8 @@ export type GetDataQueryOptions = {
   schema?: readonly ERC725JSONSchema[]
   tokenId?: string
   isBig?: boolean
+  staleTime?: number
+  refetchInterval?: number
 }
 
 export type VerifiableURI = {
@@ -683,12 +695,16 @@ export function queryGetData({
   schema,
   tokenId,
   isBig,
+  staleTime,
+  refetchInterval,
 }: GetDataQueryOptions): QFQueryOptions {
   const schemaItem = (schema || defaultSchema).find(
     ({ name }) => name === keyName
   )
   return {
-    queryKey: ['data', chainId, address, keyName, schemaItem],
+    ...(staleTime ? { staleTime } : {}),
+    ...(refetchInterval ? { refetchInterval } : {}),
+    queryKey: ['getData', chainId, address, keyName, schemaItem],
     queryFn: async (): Promise<unknown> => {
       const query = createQueryPromise({
         type: tokenId ? 'getDataForTokenId' : 'getData',
@@ -704,58 +720,3 @@ export function queryGetData({
     },
   }
 }
-
-// export function defaultQueryFn<T = any>({ queryKey }: { queryKey: QueryKey }) {
-//   const isBig = /Big$/.test(queryKey[0] as string)
-//   const type = (queryKey[0] as string).replace(/Big$/, '') as
-//     | 'call'
-//     | 'data'
-//     | 'tokenData'
-//   if (type === 'call') {
-//     const [chainId, address, method, ...args] = queryKey.slice(1)
-//     const query = createQueryPromise<T, QueryPromiseCallOptions>({
-//       type,
-//       isBig,
-//       chainId: chainId as string,
-//       address: address as `0x${string}`,
-//       method: method as string,
-//       args,
-//     })
-//     queryList.push(query as QueryPromise<unknown, QueryPromiseCallOptions>)
-//     triggerQuery()
-//     return query.promise
-//   }
-//   if (type === 'tokenData') {
-//     const [chainId, address, tokenId, key, schema, dynamicKeyParts] =
-//       queryKey.slice(1)
-//     const query = createQueryPromise<T, QueryPromiseDataOptions>({
-//       type: 'data',
-//       isBig,
-//       chainId: chainId as string,
-//       address: address as `0x${string}`,
-//       keyName: key as string,
-//       tokenId: tokenId as `0x${string}`,
-//       schema: schema as ERC725JSONSchema[] | undefined,
-//       dynamicKeyParts: dynamicKeyParts as string | string[] | undefined,
-//     })
-//     queryList.push(query as QueryPromise<unknown, QueryPromiseDataOptions>)
-//     triggerQuery()
-//     return query.promise
-//   }
-//   if (type !== 'data') {
-//     throw Error('Invalid query type')
-//   }
-//   const [chainId, address, key, schema, dynamicKeyParts] = queryKey.slice(1)
-//   const query = createQueryPromise<T, QueryPromiseDataOptions>({
-//     type,
-//     isBig,
-//     chainId: chainId as string,
-//     address: address as `0x${string}`,
-//     keyName: key as string,
-//     schema: schema as ERC725JSONSchema[] | undefined,
-//     dynamicKeyParts: dynamicKeyParts as string | string[] | undefined,
-//   })
-//   queryList.push(query as QueryPromise<unknown, QueryPromiseDataOptions>)
-//   triggerQuery()
-//   return query.promise
-// }

@@ -10,8 +10,32 @@ const isImageLoading = ref(true)
 const hasImageError = ref(false)
 const imageSrc = ref()
 
+const handleError = () => {
+  if (props.src) {
+    isImageLoading.value = false
+    hasImageError.value = true
+  }
+}
+
+watch(
+  () => props.src,
+  (newImg, oldImg) => {
+    if (newImg !== oldImg) {
+      imageSrc.value = newImg
+      if (newImg) {
+        isImageLoading.value = true
+        hasImageError.value = false
+      }
+    }
+  }
+)
+
 onMounted(() => {
-  imageSrc.value = props.src
+  isImageLoading.value = true
+  if (props.src) {
+    imageSrc.value = props.src
+    hasImageError.value = false
+  }
 })
 </script>
 
@@ -22,13 +46,8 @@ onMounted(() => {
       'animate-fade-in': !isImageLoading,
     }"
     :src="imageSrc || ASSET_ERROR_ICON_URL"
-    @load="isImageLoading = false"
-    @error="
-      () => {
-        hasImageError = true
-        imageSrc = ASSET_ERROR_ICON_URL
-      }
-    "
+    @load="isImageLoading = props.src ? false : true"
+    @error="handleError"
     loading="lazy"
     :alt="alt"
   />

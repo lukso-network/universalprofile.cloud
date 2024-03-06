@@ -8,7 +8,6 @@ const viewedProfile = useProfile().viewedProfile()
 const { isMobile } = useDevice()
 
 const allTokens = useProfileAssets()(viewedProfileAddress)
-console.log(allTokens)
 
 const tokensOwned = computed(() =>
   allTokens.value?.filter(

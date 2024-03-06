@@ -85,10 +85,13 @@ export function useToken() {
         const forTokenData = results[2]?.data as any
         const baseURIData = results[3]?.data as any
         const lsp7Data = results[4]?.data as any
-        const metadataIsLoaded = results.slice(4, 7).every(result => {
-          console.log(result)
-          return result.isFetched || result.failureReason !== undefined
-        })
+        const metadataIsLoaded =
+          results.slice(2, 5).every((result, index) => {
+            if (result.failureReason != undefined) {
+              console.error(token.tokenName, `result ${index}`, result, token)
+            }
+            return result.isFetched || result.failureReason != undefined
+          }) && !token.isLoading
         const tokenData: any = metadataIsLoaded
           ? lsp7Data ||
             baseURIData ||
@@ -146,6 +149,7 @@ export function useToken() {
 
         return {
           ...token,
+          isLoading: results.some(result => result.isLoading),
           tokenData,
           tokenMetadata,
           owner,

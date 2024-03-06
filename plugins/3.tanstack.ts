@@ -7,7 +7,7 @@ import {
 import { persistQueryClient } from '@tanstack/query-persist-client-core'
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
 
-import { defaultQueryFn } from '@/utils/queryFunctions'
+// import { defaultQueryFn } from '@/utils/queryFunctions'
 
 import type {
   DehydratedState,
@@ -24,11 +24,11 @@ export default defineNuxtPlugin((nuxt: NuxtApp) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 10000,
-        refetchOnReconnect: true,
-        refetchOnWindowFocus: true,
+        staleTime: 1000 * 60 * 60 * 24,
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
         gcTime: 1000 * 60 * 60 * 24,
-        queryFn: defaultQueryFn,
+        // queryFn: defaultQueryFn,
       },
     },
   })

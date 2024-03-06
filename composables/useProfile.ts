@@ -27,11 +27,15 @@ export const getProfile = (profileAddress: Address | undefined) => {
             chainId,
             address: profileAddress,
             keyName: 'LSP5ReceivedAssets[]',
+            refetchInterval: 120000,
+            staleTime: 60000,
           }),
           queryGetData({
             chainId,
             address: profileAddress,
             keyName: 'LSP12IssuedAssets[]',
+            refetchInterval: 120000,
+            staleTime: 60000,
           }),
         ]
       : []
