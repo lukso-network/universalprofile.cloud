@@ -5,23 +5,27 @@ import type { Image } from '@/types/image'
 import type { LSP4DigitalAssetMetadata } from '@/types/asset'
 
 export function useToken() {
-  return (token?: Asset | null) => {
-    const tokenId = token?.tokenId
+  return (_token?: MaybeRef<Asset | null>) => {
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: '' } } = currentNetwork
-    const queries = computed(() =>
-      token?.address
+    const queries = computed(() => {
+      const token: Asset | null = isRef(_token)
+        ? _token.value || null
+        : _token || null
+      const { address, tokenId, isLoading, tokenDataURL, tokenIdFormat } =
+        token || {}
+      return address && !isLoading
         ? [
             queryCallContract({
               // 0
               chainId,
-              address: token?.address,
+              address,
               method: 'owner()',
             }),
             queryGetData({
               // 1
               chainId,
-              address: token?.address,
+              address,
               keyName: 'LSP4Creators[]',
             }),
             ...(tokenId
@@ -29,7 +33,7 @@ export function useToken() {
                   queryGetData({
                     // 2
                     chainId,
-                    address: token?.address,
+                    address,
                     tokenId,
                     keyName: 'LSP4Metadata',
                     isBig: true,
@@ -38,8 +42,8 @@ export function useToken() {
                     // 3
                     queryKey: ['tokenJSON', chainId, token?.address, tokenId],
                     queryFn: async () => {
-                      if (token.tokenDataURL) {
-                        const url = token.tokenDataURL.replace(
+                      if (tokenDataURL) {
+                        const url = tokenDataURL.replace(
                           /^ipfs:\/\//,
                           'https://api.universalprofile.cloud/ipfs/'
                         )
@@ -57,7 +61,7 @@ export function useToken() {
                       return null
                     },
                   },
-                  ...(tokenId && token.tokenIdFormat === 2
+                  ...(tokenId && tokenIdFormat === 2
                     ? [
                         queryGetData({
                           // 4
@@ -75,11 +79,14 @@ export function useToken() {
               : []),
           ]
         : []
-    )
+    })
     return useQueries({
       queries,
       combine: results => {
-        if (!token) {
+        const token: Asset | null = isRef(_token)
+          ? _token.value || null
+          : _token || null
+        if (!token || !token?.address || token?.isLoading) {
           return null
         }
         const owner = results[0].data as string
@@ -88,7 +95,7 @@ export function useToken() {
         const baseURIData = results[3]?.data as any
         const lsp7Data = results[4]?.data as any
         const metadataIsLoaded = results.slice(2, 5).every(result => {
-          return result.isFetched || result.failureReason != undefined
+          return !result.isLoading || result.failureReason != undefined
         })
         const tokenData: any = metadataIsLoaded
           ? lsp7Data ||
@@ -148,6 +155,8 @@ export function useToken() {
         return {
           ...token,
           isLoading: results.some(result => result.isLoading),
+          isAssetLoading: token.isLoading,
+          isMetadataLoading: !metadataIsLoaded,
           tokenData,
           tokenMetadata,
           owner,

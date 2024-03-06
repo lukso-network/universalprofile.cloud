@@ -228,6 +228,7 @@ export function useProfileAssets() {
                 )
               }
               return {
+                isLoading: false,
                 isOwned: !isIssued,
                 isIssued,
                 address,
@@ -251,6 +252,7 @@ export function useProfileAssets() {
             })
           }
           return {
+            isLoading: false,
             isOwned: !isIssued,
             isIssued,
             address,

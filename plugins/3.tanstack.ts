@@ -4,8 +4,8 @@ import {
   hydrate,
   dehydrate,
 } from '@tanstack/vue-query'
-// import { persistQueryClient } from '@tanstack/query-persist-client-core'
-// import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+import { persistQueryClient } from '@tanstack/query-persist-client-core'
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 
 // import { defaultQueryFn } from '@/utils/queryFunctions'
 
@@ -17,9 +17,9 @@ import type { NuxtApp } from 'nuxt/app'
 
 export default defineNuxtPlugin((nuxt: NuxtApp) => {
   const vueQueryState = useState<DehydratedState | null>('vue-query')
-  // const {
-  //   public: { BUILD_VERSION: buster = 'debug' },
-  // } = useRuntimeConfig()
+  const {
+    public: { BUILD_VERSION: buster = 'debug' },
+  } = useRuntimeConfig()
   // Modify your Vue Query global settings here
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -35,12 +35,12 @@ export default defineNuxtPlugin((nuxt: NuxtApp) => {
 
   const options: VueQueryPluginOptions = {
     queryClient,
-    // clientPersister: queryClient =>
-    //   persistQueryClient({
-    //     queryClient,
-    //     persister: createAsyncStoragePersister({ storage: localStorage }),
-    //     buster: buster as string,
-    //   }),
+    clientPersister: queryClient =>
+      persistQueryClient({
+        queryClient,
+        persister: createAsyncStoragePersister({ storage: localStorage }),
+        buster: buster as string,
+      }),
   }
 
   nuxt.vueApp.use(VueQueryPlugin, options)

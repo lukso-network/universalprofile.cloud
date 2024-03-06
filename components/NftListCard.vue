@@ -12,7 +12,8 @@ const props = defineProps<Props>()
 
 const { isConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
-const token = useToken()(props.asset)
+const asset = computed(() => props.asset)
+const token = useToken()(asset)
 const viewedProfileAddress = getCurrentProfileAddress()
 
 const handleShowAsset = () => {
