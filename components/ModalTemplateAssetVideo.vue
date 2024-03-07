@@ -18,8 +18,8 @@ defineProps<Props>()
       name="progress-indicator"
       class="absolute left-[calc(50%-12px)] top-[calc(50%-12px)]"
     ></lukso-icon>
-    <video class="relative rounded-12" autoplay>
-      <source :src="modal?.data?.asset?.url" />
+    <video class="relative rounded-12" autoplay loop>
+      <source :src="modal?.data?.asset?.src" />
     </video>
     <lukso-icon
       name="close-lg"

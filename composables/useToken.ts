@@ -116,14 +116,13 @@ export function useToken() {
           const attributes = tokenData.LSP4Metadata?.attributes
           const assets =
             tokenData?.LSP4Metadata?.assets.map((asset: AssetMetadata) => {
-              const { verification, url } = asset as FileAsset
+              const { url } = asset as FileAsset
 
+              // TODO add url verification check
               return url
                 ? ({
                     ...asset,
-                    src: url.startsWith('ipfs://')
-                      ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                      : url,
+                    src: url.startsWith('ipfs://') ? resolveUrl(url) : url,
                   } as AssetMetadata & { src: string })
                 : asset
             }) || []
