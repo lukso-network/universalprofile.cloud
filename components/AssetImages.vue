@@ -31,7 +31,7 @@ const handlePreviewImage = (image: Image[]) => {
         class="rounded-8 bg-neutral-90 transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
       >
         <AssetImage
-          class="!size-14 cursor-pointer rounded-8"
+          class="!size-14 min-h-14 cursor-pointer rounded-8"
           :src="getOptimizedImage(image, 56)"
           @click="handlePreviewImage(image)"
         />

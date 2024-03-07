@@ -4,8 +4,12 @@ type Props = {
   alt?: string
 }
 
-const props = defineProps<Props>()
+type Emits = {
+  (event: 'on-load'): void
+}
 
+const props = defineProps<Props>()
+const emits = defineEmits<Emits>()
 const isImageLoading = ref(true)
 const hasImageError = ref(false)
 const imageSrc = ref()
@@ -34,23 +38,36 @@ watch(
 
 onMounted(() => {
   isImageLoading.value = true
+
   if (props.src) {
     imageSrc.value = props.src
     hasImageError.value = false
   }
 })
+
+const handleLoad = () => {
+  isImageLoading.value = false
+  emits('on-load')
+}
 </script>
 
 <template>
-  <img
-    class="w-full bg-neutral-90 object-cover"
+  <div
+    class="overflow-hidden bg-neutral-90"
     :class="{
-      'animate-fade-in': !isImageLoading,
+      'animate-pulse': isImageLoading,
     }"
-    :src="imageSrc"
-    @load="isImageLoading = props.src ? false : true"
-    @error="handleError"
-    loading="lazy"
-    :alt="alt"
-  />
+  >
+    <img
+      class="max-h-[inherit] min-h-[inherit] w-full bg-neutral-90 object-cover opacity-0 animation-fill-forwards"
+      :class="{
+        'animate-fade-in': !isImageLoading,
+      }"
+      :src="imageSrc"
+      @load="handleLoad"
+      @error="handleError"
+      loading="lazy"
+      :alt="alt"
+    />
+  </div>
 </template>
