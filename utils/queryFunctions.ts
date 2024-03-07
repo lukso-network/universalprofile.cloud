@@ -588,6 +588,9 @@ export function triggerQuery() {
 export type QFQueryOptions = {
   queryKey: readonly unknown[]
   queryFn: QueryFunction<unknown, readonly unknown[]>
+  staleTime?: number
+  refetchInterval?: number
+  retry?: number | boolean
 }
 
 export type CallContractQueryOptions = {
@@ -599,6 +602,7 @@ export type CallContractQueryOptions = {
   isBig?: boolean
   staleTime?: number
   refetchInterval?: number
+  retry?: number | boolean
 }
 
 export function queryCallContract({
@@ -610,6 +614,7 @@ export function queryCallContract({
   isBig,
   staleTime,
   refetchInterval,
+  retry,
 }: CallContractQueryOptions): QFQueryOptions {
   const methodName = method.replace(/\(.*$/, '')
   let methodItem = (abi || defaultAbi).find(item => {
@@ -645,6 +650,7 @@ export function queryCallContract({
   return {
     ...(staleTime ? { staleTime } : {}),
     ...(refetchInterval ? { refetchInterval } : {}),
+    ...(retry ? { retry } : { retry: false }),
     queryKey: [
       'call',
       chainId,
@@ -678,6 +684,7 @@ export type GetDataQueryOptions = {
   isBig?: boolean
   staleTime?: number
   refetchInterval?: number
+  retry?: number | boolean
 }
 
 export type VerifiableURI = {
@@ -697,6 +704,7 @@ export function queryGetData({
   isBig,
   staleTime,
   refetchInterval,
+  retry,
 }: GetDataQueryOptions): QFQueryOptions {
   const schemaItem = (schema || defaultSchema).find(
     ({ name }) => name === keyName
@@ -704,6 +712,7 @@ export function queryGetData({
   return {
     ...(staleTime ? { staleTime } : {}),
     ...(refetchInterval ? { refetchInterval } : {}),
+    ...(retry ? { retry } : { retry: false }),
     queryKey: ['getData', chainId, address, keyName, schemaItem],
     queryFn: async (): Promise<unknown> => {
       const query = createQueryPromise({

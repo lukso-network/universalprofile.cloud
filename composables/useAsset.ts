@@ -53,18 +53,12 @@ export function useAsset() {
           // 6
           chainId,
           address,
-          method: 'decimals()',
-        }),
-        queryCallContract({
-          // 7
-          chainId,
-          address,
           method: 'totalSupply()',
         }),
         ...(profileAddress
           ? [
               queryCallContract({
-                // 8
+                // 7
                 chainId,
                 address,
                 method: 'balanceOf(address)',
@@ -74,7 +68,7 @@ export function useAsset() {
           : []),
         ...interfacesToCheck.map(({ interfaceId }) => {
           return queryCallContract({
-            // 9 / 10
+            // 8 / 9
             chainId,
             address,
             method: 'supportsInterface(bytes4)',
@@ -99,9 +93,8 @@ export function useAsset() {
         const tokenType = results[3].data as number
         const baseURI = results[4].data as any
         const tokenIdFormat = results[5].data as number
-        const decimals = parseInt(results[6].data as string)
-        const totalSupply = results[7].data as string
-        const balance = profileAddress ? (results[8].data as string) : null
+        const totalSupply = results[6].data as string
+        const balance = profileAddress ? (results[7].data as string) : null
         const { supportsInterfaces, standard } = interfacesToCheck.reduce(
           (
             { supportsInterfaces, standard },
@@ -198,7 +191,6 @@ export function useAsset() {
             tokenIdFormat,
             baseURI,
             tokenDataURL,
-            decimals,
             totalSupply,
             tokenId,
             balance,
@@ -216,7 +208,6 @@ export function useAsset() {
           address,
           assetData,
           tokenIdFormat,
-          decimals,
           totalSupply,
           baseURI,
           balance,

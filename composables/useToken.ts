@@ -28,10 +28,16 @@ export function useToken() {
               address,
               keyName: 'LSP4Creators[]',
             }),
+            queryCallContract({
+              // 2
+              chainId,
+              address,
+              method: 'decimals()',
+            }),
             ...(tokenId
               ? [
                   queryGetData({
-                    // 2
+                    // 3
                     chainId,
                     address,
                     tokenId,
@@ -39,7 +45,7 @@ export function useToken() {
                     isBig: true,
                   }),
                   {
-                    // 3
+                    // 4
                     queryKey: ['tokenJSON', chainId, token?.address, tokenId],
                     queryFn: async () => {
                       if (tokenDataURL) {
@@ -64,7 +70,7 @@ export function useToken() {
                   ...(tokenId && tokenIdFormat === 2
                     ? [
                         queryGetData({
-                          // 4
+                          // 5
                           chainId,
                           address: ABICoder.decodeParameter(
                             'address',
@@ -91,9 +97,10 @@ export function useToken() {
         }
         const owner = results[0].data as string
         const tokenCreators = results[1].data as string[]
-        const forTokenData = results[2]?.data as any
-        const baseURIData = results[3]?.data as any
-        const lsp7Data = results[4]?.data as any
+        const decimals = parseInt(results[2].data as string)
+        const forTokenData = results[3]?.data as any
+        const baseURIData = results[4]?.data as any
+        const lsp7Data = results[5]?.data as any
         const metadataIsLoaded = results.slice(2, 5).every(result => {
           return !result.isLoading || result.failureReason != undefined
         })
@@ -167,6 +174,7 @@ export function useToken() {
             forTokenData,
           },
           resolvedMetadata: tokenMetadata,
+          decimals,
         } as Asset
       },
     })
