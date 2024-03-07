@@ -115,7 +115,7 @@ export function useToken() {
           const description = tokenData.LSP4Metadata?.description
           const attributes = tokenData.LSP4Metadata?.attributes
           const assets =
-            tokenData?.LSP7Metadata?.assets.map((asset: AssetMetadata) => {
+            tokenData?.LSP4Metadata?.assets.map((asset: AssetMetadata) => {
               const { verification, url } = asset as FileAsset
 
               return url
