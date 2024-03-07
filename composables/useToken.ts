@@ -97,7 +97,7 @@ export function useToken() {
         }
         const owner = results[0].data as string
         const tokenCreators = results[1].data as string[]
-        const decimals = parseInt(results[2].data as string)
+        const decimals = parseInt((results[2].data as string) || '0')
         const forTokenData = results[3]?.data as any
         const baseURIData = results[4]?.data as any
         const lsp7Data = results[5]?.data as any
