@@ -534,70 +534,138 @@ async function doQueries() {
             MAX_AGGREGATE_DATA_LIMIT
           )
           .call()
-          .then(async (result: [boolean, string, string][]) => {
-            for (const [i, multiItem] of multicall.entries()) {
-              const {
-                query,
-                queries,
-                selector,
-                data: _previousData,
-                totalLength: __totalLength,
-                extract,
-              } = multiItem
-              const [_success, _totalLength, _data] = result[i]
-              const success = toNumber(_success, false) as number
-              if (success === 3) {
-                newMulticall.push(multiItem)
-                triggerQuery()
-                continue
-              }
-              let totalLength: number = __totalLength || 0
-              let rawData = _data
-              if (extract) {
-                rawData = extract.call(multiItem, rawData)
-              }
-              if (!__totalLength && query?.isBig) {
-                totalLength = (toNumber(_totalLength, false) as number) - 64
-              }
-              const data = `0x${_previousData ? _previousData.slice(2) : ''}${rawData.slice(2)}`
-              const dataBytes = hexToBytes(data)
-              const remainder = totalLength - dataBytes.length
-              const chunkSize = hexToBytes(rawData).length
-              if (
-                query &&
-                query.type === 'getData' &&
-                query.isBig &&
-                totalLength &&
-                totalLength > dataBytes.length - 64 &&
-                chunkSize > 0
-              ) {
-                if (remainder > MAX_AGGREGATE_DATA_LIMIT) {
-                  const { tokenId, address, keyName, dynamicKeyParts } = query
-                  const key = encodeKeyName(keyName, dynamicKeyParts)
-                  const abi = LSP2FetcherWithMulticall3Contract.abi.find(
-                    item =>
-                      item.type === 'function' &&
-                      item.name ===
-                        (tokenId ? 'getDataForTokenIdSlice' : 'getDataSlice')
-                  )
-                  const offset = dataBytes?.length || 0
-                  const callLimit = MAX_AGGREGATE_DATA_LIMIT - DATA_SLICE_MARGIN
-                  const call = tokenId
-                    ? lsp2CustomContract.methods
-                        .getDataForTokenIdSlice(
-                          address,
-                          tokenId,
-                          key,
-                          offset,
-                          callLimit
-                        )
-                        .encodeABI()
-                    : lsp2CustomContract.methods
-                        .getDataSlice(address, key, offset, callLimit)
-                        .encodeABI()
-                  await doMulticall([
-                    {
-                      index: 0,
+          .then(
+            async (result: [string | number, string | number, string][]) => {
+              for (const [i, multiItem] of multicall.entries()) {
+                const {
+                  query,
+                  queries,
+                  selector,
+                  data: _previousData,
+                  totalLength: __totalLength,
+                  extract,
+                } = multiItem
+                const [_success, _totalLength, _data] = result[i]
+                const success = toNumber(_success, false) as number
+                if (success === 3) {
+                  newMulticall.push(multiItem)
+                  triggerQuery()
+                  continue
+                }
+                let totalLength: number = __totalLength || 0
+                let rawData = _data
+                if (extract) {
+                  rawData = extract.call(multiItem, rawData)
+                }
+                if (!__totalLength && query?.isBig) {
+                  totalLength = (toNumber(_totalLength, false) as number) - 64
+                }
+                const data = `0x${_previousData ? _previousData.slice(2) : ''}${rawData.slice(2)}`
+                const dataBytes = hexToBytes(data)
+                const remainder = totalLength - dataBytes.length
+                const chunkSize = hexToBytes(rawData).length
+                if (
+                  query &&
+                  query.type === 'getData' &&
+                  query.isBig &&
+                  totalLength &&
+                  totalLength > dataBytes.length - 64 &&
+                  chunkSize > 0
+                ) {
+                  if (remainder > MAX_AGGREGATE_DATA_LIMIT) {
+                    const { tokenId, address, keyName, dynamicKeyParts } = query
+                    const key = encodeKeyName(keyName, dynamicKeyParts)
+                    const abi = LSP2FetcherWithMulticall3Contract.abi.find(
+                      item =>
+                        item.type === 'function' &&
+                        item.name ===
+                          (tokenId ? 'getDataForTokenIdSlice' : 'getDataSlice')
+                    )
+                    const offset = dataBytes?.length || 0
+                    const callLimit =
+                      MAX_AGGREGATE_DATA_LIMIT - DATA_SLICE_MARGIN
+                    const call = tokenId
+                      ? lsp2CustomContract.methods
+                          .getDataForTokenIdSlice(
+                            address,
+                            tokenId,
+                            key,
+                            offset,
+                            callLimit
+                          )
+                          .encodeABI()
+                      : lsp2CustomContract.methods
+                          .getDataSlice(address, key, offset, callLimit)
+                          .encodeABI()
+                    await doMulticall([
+                      {
+                        index: 0,
+                        target: '0x0000000000000000000000000000000000000000',
+                        call,
+                        query,
+                        data,
+                        totalLength,
+                        remainder,
+                        currentLength: totalLength - remainder,
+                        extract(data: string) {
+                          if (data === '0x') {
+                            return '0x'
+                          }
+                          const [
+                            ,
+                            ,
+                            /* totalLength */ /* offset */ returnData,
+                          ] = ABICoder.decodeParameters(
+                            (abi?.outputs || []) as any,
+                            data
+                          )[0] as string[]
+                          return returnData as string
+                        },
+                        selector,
+                      },
+                    ])
+                    continue
+                  }
+                  if (remainder > 0) {
+                    const {
+                      keyName,
+                      dynamicKeyParts,
+                      address,
+                      isBig,
+                      tokenId,
+                    } = query
+                    const key = encodeKeyName(keyName, dynamicKeyParts)
+                    const abi = LSP2FetcherWithMulticall3Contract.abi.find(
+                      item =>
+                        item.type === 'function' &&
+                        item.name ===
+                          (tokenId ? 'getDataForTokenIdSlice' : 'getDataSlice')
+                    )
+                    const offset = dataBytes?.length || 0
+                    const callLimit =
+                      MAX_AGGREGATE_DATA_LIMIT - DATA_SLICE_MARGIN
+                    const call = tokenId
+                      ? lsp2CustomContract.methods
+                          .getDataForTokenIdSlice(
+                            address,
+                            tokenId,
+                            key,
+                            offset,
+                            callLimit
+                          )
+                          .encodeABI()
+                      : lsp2CustomContract.methods
+                          .getDataSlice(address, key, offset, callLimit)
+                          .encodeABI()
+                    if (
+                      remainder > limit ||
+                      newMulticall.length >= MAX_AGGREGATE_COUNT ||
+                      (isBig && newMulticall.length >= MAX_BIG_PER_MULTICALL)
+                    ) {
+                      await doMulticall(newMulticall)
+                    }
+                    newMulticall.push({
+                      index: newMulticall.length,
                       target: '0x0000000000000000000000000000000000000000',
                       call,
                       query,
@@ -617,163 +685,117 @@ async function doQueries() {
                         return returnData as string
                       },
                       selector,
-                    },
-                  ])
-                  continue
-                }
-                if (remainder > 0) {
-                  const { keyName, dynamicKeyParts, address, isBig, tokenId } =
-                    query
-                  const key = encodeKeyName(keyName, dynamicKeyParts)
-                  const abi = LSP2FetcherWithMulticall3Contract.abi.find(
-                    item =>
-                      item.type === 'function' &&
-                      item.name ===
-                        (tokenId ? 'getDataForTokenIdSlice' : 'getDataSlice')
-                  )
-                  const offset = dataBytes?.length || 0
-                  const callLimit = MAX_AGGREGATE_DATA_LIMIT - DATA_SLICE_MARGIN
-                  const call = tokenId
-                    ? lsp2CustomContract.methods
-                        .getDataForTokenIdSlice(
-                          address,
-                          tokenId,
-                          key,
-                          offset,
-                          callLimit
-                        )
-                        .encodeABI()
-                    : lsp2CustomContract.methods
-                        .getDataSlice(address, key, offset, callLimit)
-                        .encodeABI()
-                  if (
-                    remainder > limit ||
-                    newMulticall.length >= MAX_AGGREGATE_COUNT ||
-                    (isBig && newMulticall.length >= MAX_BIG_PER_MULTICALL)
-                  ) {
-                    await doMulticall(newMulticall)
-                  }
-                  newMulticall.push({
-                    index: newMulticall.length,
-                    target: '0x0000000000000000000000000000000000000000',
-                    call,
-                    query,
-                    data,
-                    totalLength,
-                    remainder,
-                    currentLength: totalLength - remainder,
-                    extract(data: string) {
-                      if (data === '0x') {
-                        return '0x'
-                      }
-                      const [, , /* totalLength */ /* offset */ returnData] =
-                        ABICoder.decodeParameters(
-                          (abi?.outputs || []) as any,
-                          data
-                        )[0] as string[]
-                      return returnData as string
-                    },
-                    selector,
-                  })
-                  if (isBig && newMulticall.length >= MAX_BIG_PER_MULTICALL) {
-                    await doMulticall(newMulticall)
-                  } else {
-                    limit -= remainder
-                    triggerQuery()
-                  }
-                  continue
-                }
-              }
-              if (queries) {
-                if (!success) {
-                  for (const query of queries) {
-                    query.resolve(null)
-                  }
-                  continue
-                }
-                let items = data
-                if (selector) {
-                  items = selector.call(multiItem, data)
-                }
-                for (const [j, query] of queries.entries()) {
-                  try {
-                    let item: string | null = items?.[j] || null
-                    if (['getData', 'getDataForTokenId'].includes(query.type)) {
-                      item = await convert(
-                        query as QueryPromise<unknown, QueryPromiseDataOptions>,
-                        item
-                      )
-                    }
-                    if (success) {
-                      query.resolve(item)
+                    })
+                    if (isBig && newMulticall.length >= MAX_BIG_PER_MULTICALL) {
+                      await doMulticall(newMulticall)
                     } else {
+                      limit -= remainder
+                      triggerQuery()
+                    }
+                    continue
+                  }
+                }
+                if (queries) {
+                  if (!success) {
+                    for (const query of queries) {
                       query.resolve(null)
                     }
-                  } catch (error) {
+                    continue
+                  }
+                  let items = data
+                  if (selector) {
+                    items = selector.call(multiItem, data)
+                  }
+                  for (const [j, query] of queries.entries()) {
                     try {
-                      query.reject(error)
-                    } catch {
-                      // Really ignore, we tried our best
+                      let item: string | null = items?.[j] || null
+                      if (
+                        ['getData', 'getDataForTokenId'].includes(query.type)
+                      ) {
+                        item = await convert(
+                          query as QueryPromise<
+                            unknown,
+                            QueryPromiseDataOptions
+                          >,
+                          item
+                        )
+                      }
+                      if (success) {
+                        query.resolve(item)
+                      } else {
+                        query.resolve(null)
+                      }
+                    } catch (error) {
+                      try {
+                        query.reject(error)
+                      } catch {
+                        // Really ignore, we tried our best
+                      }
                     }
                   }
+                  continue
                 }
-                continue
-              }
-              try {
-                if (success) {
-                  let item: string | null = data
-                  if (
-                    ['getData', 'getDataForTokenId'].includes(query?.type || '')
-                  ) {
-                    let schema = (
-                      (query?.schema as ERC725JSONSchema[]) || defaultSchema
-                    ).find(({ name }) => name === query?.keyName)
-                    if (schema && schema.keyType === 'Array') {
-                      const array = ABICoder.decodeParameters(
-                        ['bytes[]'],
-                        item
-                      )[0] as string[]
-                      schema = { ...schema, keyType: 'Singleton' }
-                      query?.resolve(
-                        await Promise.all(
-                          array.map(value =>
-                            convert(
-                              query as QueryPromise<
-                                unknown,
-                                QueryPromiseDataOptions
-                              >,
-                              value,
-                              schema ? [schema] : undefined
+                try {
+                  if (success) {
+                    let item: string | null = data
+                    if (
+                      ['getData', 'getDataForTokenId'].includes(
+                        query?.type || ''
+                      )
+                    ) {
+                      let schema = (
+                        (query?.schema as ERC725JSONSchema[]) || defaultSchema
+                      ).find(({ name }) => name === query?.keyName)
+                      if (schema && schema.keyType === 'Array') {
+                        const array = ABICoder.decodeParameters(
+                          ['bytes[]'],
+                          item
+                        )[0] as string[]
+                        schema = { ...schema, keyType: 'Singleton' }
+                        query?.resolve(
+                          await Promise.all(
+                            array.map(value =>
+                              convert(
+                                query as QueryPromise<
+                                  unknown,
+                                  QueryPromiseDataOptions
+                                >,
+                                value,
+                                schema ? [schema] : undefined
+                              )
                             )
                           )
                         )
-                      )
-                      continue
-                    } else {
-                      if (selector) {
-                        item = selector.call(multiItem, item)
+                        continue
+                      } else {
+                        if (selector) {
+                          item = selector.call(multiItem, item)
+                        }
+                        item = await convert(
+                          query as QueryPromise<
+                            unknown,
+                            QueryPromiseDataOptions
+                          >,
+                          item
+                        )
                       }
-                      item = await convert(
-                        query as QueryPromise<unknown, QueryPromiseDataOptions>,
-                        item
-                      )
+                    } else if (selector) {
+                      item = selector.call(multiItem, item)
                     }
-                  } else if (selector) {
-                    item = selector.call(multiItem, item)
+                    query?.resolve(item)
+                  } else {
+                    query?.resolve(null)
                   }
-                  query?.resolve(item)
-                } else {
-                  query?.resolve(null)
-                }
-              } catch (error) {
-                try {
-                  query?.resolve(null)
-                } catch {
-                  // Really ignore, we tried our best
+                } catch (error) {
+                  try {
+                    query?.resolve(null)
+                  } catch {
+                    // Really ignore, we tried our best
+                  }
                 }
               }
             }
-          })
+          )
           .catch((error: Error) => {
             // console.error(
             //   'failure',
