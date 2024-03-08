@@ -3,8 +3,6 @@ import { type AbiItem, toWei } from 'web3-utils'
 import LSP7Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP7Mintable.json'
 import LSP8Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json'
 
-import { AssetRepository } from '@/repositories/asset'
-
 import type { TransactionConfig } from 'web3-core'
 import type { TransactionReceipt } from 'web3-eth'
 import type {
@@ -13,23 +11,18 @@ import type {
 } from '@/contracts'
 
 const connectedProfile = useProfile().connectedProfile()
-const {
-  // asset: _asset,
-  onSend,
-  amount,
-  receiver,
-  transactionHash,
-} = storeToRefs(useSendStore())
+const { asset, onSend, amount, receiver, transactionHash } =
+  storeToRefs(useSendStore())
 const { isLoadedApp, isConnected, hasSimpleNavbar } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
 const { sendTransaction, contract } = useWeb3(PROVIDERS.INJECTED)
-const assetRepository = useRepo(AssetRepository)
+const { currentNetwork } = storeToRefs(useAppStore())
 
 const assetAddress = useRouter().currentRoute.value.query.asset
 const tokenId = useRouter().currentRoute.value.query.tokenId
-const asset = useAsset()(assetAddress, tokenId)
+const fetchedAsset = useAsset()(assetAddress, tokenId)
 
 onMounted(() => {
   setStatus('draft')
@@ -56,10 +49,15 @@ watchEffect(() => {
 
   amount.value = undefined
 
-  if (!asset.value) {
-    assertAddress(connectedProfile.value?.address, 'profile')
-    navigateTo(sendRoute(connectedProfile.value?.address))
-    return
+  if (!fetchedAsset.value.address) {
+    asset.value = {
+      tokenName: currentNetwork.value.token.name,
+      tokenSymbol: currentNetwork.value.token.symbol,
+      isNativeToken: true,
+      decimals: ASSET_LYX_DECIMALS,
+    }
+  } else {
+    asset.value = fetchedAsset.value
   }
 
   // when not connected then navigate to home
@@ -107,12 +105,7 @@ const handleSend = async () => {
             )
             .send({ from: connectedProfile.value.address })
           transactionHash.value = transactionsReceipt.transactionHash
-          const balance = (await tokenContract.methods
-            .balanceOf(connectedProfile.value.address)
-            .call()) as string
-          assertAddress(asset.value?.address, 'asset')
-          assetRepository.setBalance(asset.value.address, balance)
-
+          // TODO check if balance updates
           break
         case STANDARDS.LSP8:
           const nftContract = contract<LSP8IdentifiableDigitalAsset>(
@@ -134,7 +127,7 @@ const handleSend = async () => {
             .send({ from: connectedProfile.value.address })
           transactionHash.value = transactionsReceipt.transactionHash
           assertNotUndefined(asset.value.address, 'asset')
-          assetRepository.removeAsset(asset.value.address, asset.value.tokenId)
+          // TODO check if asset is removed
           break
         default:
           console.error('Unknown token type')
