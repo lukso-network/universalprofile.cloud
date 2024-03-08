@@ -2,7 +2,7 @@ import { isAddress } from 'web3-utils'
 import mime from 'mime-to-extensions'
 
 const DOCUMENT_FILE_EXTENSIONS = ['doc', 'docx', 'pdf', 'txt']
-const MUSIC_FILE_EXTENSIONS = ['mp3', 'wav', 'mpga']
+const AUDIO_FILE_EXTENSIONS = ['mp3', 'wav', 'mpga']
 const VIDEO_FILE_EXTENSIONS = ['mp4', 'mov', 'avi']
 const IMAGE_FILE_EXTENSIONS = [
   'png',
@@ -17,7 +17,7 @@ const THREE_DIMENSIONAL_FILE_EXTENSIONS = ['gltf', 'glb']
 
 export type AssetFileType =
   | 'document'
-  | 'music'
+  | 'audio'
   | 'video'
   | 'image'
   | '3d'
@@ -42,8 +42,8 @@ export const getAssetType = (asset: AssetMetadata): AssetFileType => {
       return 'document'
     }
 
-    if (MUSIC_FILE_EXTENSIONS.includes(fileExtension)) {
-      return 'music'
+    if (AUDIO_FILE_EXTENSIONS.includes(fileExtension)) {
+      return 'audio'
     }
 
     if (VIDEO_FILE_EXTENSIONS.includes(fileExtension)) {
