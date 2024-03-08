@@ -2,20 +2,16 @@
 import { assertString } from '@/utils/validators'
 import { SUPPORTED_NETWORK_IDS } from '@/shared/config'
 
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
-
 if (typeof window !== 'undefined') {
   import('@lukso/web-components')
 }
 
 const { addWeb3, getWeb3 } = useWeb3Store()
 const { getNetworkByChainId, getNetworkById } = useAppStore()
-const { isLoadedApp, isLoadingProfile, selectedChainId, modal, isSearchOpen } =
+const { isLoadedApp, selectedChainId, modal, isSearchOpen } =
   storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
-const router = useRouter()
-const profileRepo = useRepo(ProfileRepository)
 
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
@@ -41,44 +37,6 @@ const setupWeb3Instances = async () => {
 
   // for chain interactions through RPC endpoint
   addWeb3(PROVIDERS.RPC, getNetworkByChainId(selectedChainId.value).rpcHttp)
-}
-
-/**
- * Load profile data when using back button
- * Useful especially after page refresh where store data is cleared
- */
-const routerBackProfileLoad = async () => {
-  router.beforeEach(
-    async (
-      to: RouteLocationNormalized,
-      from: RouteLocationNormalized,
-      next: NavigationGuardNext
-    ) => {
-      // we load profile only if going to the profile dashboard
-      if (to.name !== 'profileAddress') {
-        next()
-        return
-      }
-
-      const toProfileAddress = to.params?.profileAddress
-      assertAddress(toProfileAddress, 'profile')
-
-      const storeProfile = profileRepo.getProfile(toProfileAddress)
-
-      // only makes sense to load profile if it's not already loaded
-      if (!storeProfile) {
-        try {
-          isLoadingProfile.value = true
-          // await fetchAndStoreProfile(toProfileAddress)
-          // fetchAndStoreAssets(toProfileAddress)
-          isLoadingProfile.value = false
-        } catch (error) {
-          console.error(error)
-        }
-      }
-      next()
-    }
-  )
 }
 
 /**
@@ -168,7 +126,6 @@ onMounted(async () => {
   setupNetwork()
   await setupWeb3Instances()
   checkConnectionExpiry()
-  await routerBackProfileLoad()
   await setupConnectedProfile()
 
   isLoadedApp.value = true
