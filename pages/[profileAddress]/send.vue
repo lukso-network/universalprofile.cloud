@@ -23,6 +23,7 @@ const { currentNetwork } = storeToRefs(useAppStore())
 const assetAddress = useRouter().currentRoute.value.query.asset
 const tokenId = useRouter().currentRoute.value.query.tokenId
 const fetchedAsset = useAsset()(assetAddress, tokenId)
+const profile = useProfile().connectedProfile()
 
 onMounted(() => {
   setStatus('draft')
@@ -55,6 +56,7 @@ watchEffect(() => {
       tokenSymbol: currentNetwork.value.token.symbol,
       isNativeToken: true,
       decimals: ASSET_LYX_DECIMALS,
+      balance: profile.value?.balance,
     }
   } else {
     asset.value = fetchedAsset.value
