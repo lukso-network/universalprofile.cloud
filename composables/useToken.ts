@@ -5,7 +5,7 @@ import type { Image } from '@/types/image'
 import type { LSP4DigitalAssetMetadata } from '@/types/asset'
 
 export function useToken() {
-  return (_token?: MaybeRef<Asset | null>) => {
+  return (_token?: MaybeRef<Asset | null | undefined>) => {
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: '' } } = currentNetwork
     const queries = computed(() => {
@@ -46,9 +46,16 @@ export function useToken() {
                   }),
                   {
                     // 4
-                    queryKey: ['tokenJSON', chainId, token?.address, tokenId],
+                    queryKey: [
+                      'tokenJSON',
+                      chainId,
+                      token?.address,
+                      tokenId,
+                      tokenDataURL,
+                    ],
                     queryFn: async () => {
                       if (tokenDataURL) {
+                        console.log('fetching token data', tokenDataURL)
                         const url = tokenDataURL.replace(
                           /^ipfs:\/\//,
                           'https://api.universalprofile.cloud/ipfs/'
@@ -61,6 +68,7 @@ export function useToken() {
                             return response.json()
                           })
                           .catch(error => {
+                            console.error('Error fetching token data', error)
                             throw error
                           })
                       }
@@ -101,6 +109,31 @@ export function useToken() {
         const forTokenData = results[3]?.data as any
         const baseURIData = results[4]?.data as any
         const lsp7Data = results[5]?.data as any
+        if (
+          token?.address.toLowerCase() ===
+          '0x86E817172b5c07f7036Bf8aA46e2db9063743A83'.toLowerCase()
+        ) {
+          console.log(
+            token,
+            {
+              owner,
+              tokenCreators,
+              decimals,
+              forTokenData,
+              baseURIData,
+              lsp7Data,
+            },
+            results
+              .slice(2, 5)
+              .map(({ isLoading, failureReason, error, isError, data }) => ({
+                isLoading,
+                failureReason,
+                isError,
+                error,
+                data,
+              }))
+          )
+        }
         const metadataIsLoaded = results.slice(2, 5).every(result => {
           return !result.isLoading || result.failureReason != undefined
         })

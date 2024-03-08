@@ -14,8 +14,7 @@ const isImageLoading = ref(true)
 const hasImageError = ref(false)
 const imageSrc = ref()
 
-const handleError = (event: ErrorEvent) => {
-  console.log(event)
+const handleError = () => {
   if (props.src) {
     isImageLoading.value = false
     hasImageError.value = true
