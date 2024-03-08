@@ -2,7 +2,6 @@
 import { isAddress } from 'web3-utils'
 
 import type { SearchProfileResult } from '@lukso/web-components'
-import type { IndexedProfile } from '@/models/profile'
 
 const { currentNetwork, isSearchOpen } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(

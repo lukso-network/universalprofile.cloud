@@ -2,7 +2,6 @@
 import { isAddress } from 'web3-utils'
 
 import type { SearchProfileResult } from '@lukso/web-components'
-import type { IndexedProfile } from '@/models/profile'
 
 const { currentNetwork } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
@@ -61,7 +60,7 @@ const handleReceiverSearch = async (event: CustomEvent) => {
     if (await isEoA(searchTerm.value)) {
       receiver.value = {
         address: searchTerm.value,
-        type: 'EOA',
+        standard: 'EOA',
       }
     }
   } else {

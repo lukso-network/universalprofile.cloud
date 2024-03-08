@@ -11,20 +11,20 @@ export type LSP4DigitalAssetMetadata = {
 }
 
 export type Asset = {
-  isLoading: boolean
-  isOwned: boolean
-  isIssued: boolean
-  address: Address
-  assetData: any
-  tokenIdFormat: number
-  referenceContract: Address
-  balance: string
-  decimals: number
-  standard: string
-  tokenName: string
-  tokenSymbol: string
-  tokenType: number
-  supportsInterfaces: Record<string, boolean>
+  address?: Address
+  isLoading?: boolean
+  isOwned?: boolean
+  isIssued?: boolean
+  assetData?: any
+  tokenIdFormat?: number
+  referenceContract?: Address
+  balance?: string
+  decimals?: number
+  standard?: string
+  tokenName?: string
+  tokenSymbol?: string
+  tokenType?: number
+  supportsInterfaces?: Record<string, boolean>
   isNativeToken?: boolean
   baseURI?: any
   tokenDataURL?: string
@@ -33,7 +33,7 @@ export type Asset = {
   tokenURI?: string
   owner?: Address
   tokenCreators?: Address[]
-  totalSupply: string
+  totalSupply?: string
   metadata?: LSP4DigitalAssetMetadata
   tokenMetadata?: LSP4DigitalAssetMetadata
   resolvedMetadata?: LSP4DigitalAssetMetadata
