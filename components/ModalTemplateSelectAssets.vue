@@ -16,6 +16,7 @@ const handleSelectLyx = () => {
     tokenSymbol: currentNetwork.value.token.symbol,
     isNativeToken: true,
     decimals: ASSET_LYX_DECIMALS,
+    balance: connectedProfile.value?.balance,
   }
   props.closeModal()
 }
