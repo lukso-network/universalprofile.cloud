@@ -1,37 +1,40 @@
 <script setup lang="ts">
-const { currentNetwork } = useAppStore()
 const connectedProfile = useProfile().connectedProfile()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
-const assetRepository = useRepo(AssetRepository)
-const ownedAssets = ref<Asset[]>([])
 
 type Props = {
   closeModal: () => void
 }
 
 const props = defineProps<Props>()
+const allTokens = useProfileAssets()(connectedProfile.value?.address)
+const { currentNetwork } = storeToRefs(useAppStore())
 
 const handleSelectLyx = () => {
-  assertAddress(connectedProfile?.value?.address, 'profile')
-  navigateTo(sendRoute(connectedProfile.value.address))
+  selectedAsset.value = {
+    tokenName: currentNetwork.value.token.name,
+    tokenSymbol: currentNetwork.value.token.symbol,
+    isNativeToken: true,
+    decimals: ASSET_LYX_DECIMALS,
+  }
   props.closeModal()
 }
 
 const handleSelectAsset = (asset: Asset) => {
   assertAddress(connectedProfile?.value?.address, 'profile')
-  navigateTo({
-    path: sendRoute(connectedProfile.value.address),
-    query: {
-      asset: asset?.address,
-      tokenId: asset?.tokenId ? asset?.tokenId : undefined,
-    },
-  })
+  selectedAsset.value = asset
   props.closeModal()
 }
 
-onMounted(async () => {
-  ownedAssets.value = assetRepository.getOwnedAssets()
-})
+const ownedAssets = computed(() =>
+  allTokens.value?.filter(
+    ({ isOwned, standard, balance }) =>
+      isOwned &&
+      (standard === 'LSP7DigitalAsset' ||
+        standard === 'LSP8IdentifiableDigitalAsset') &&
+      balance !== '0'
+  )
+)
 </script>
 
 <template>
@@ -58,7 +61,7 @@ onMounted(async () => {
       </li>
       <li v-for="asset in ownedAssets" :key="asset?.address" class="mr-4">
         <AssetListItem
-          :icon="getAssetThumb(asset, isLsp7(asset), 80)"
+          :icon="getAssetThumb(asset, !isCollectible(asset), 80)"
           :name="asset?.tokenName"
           :symbol="asset?.tokenSymbol"
           :address="asset?.address"
