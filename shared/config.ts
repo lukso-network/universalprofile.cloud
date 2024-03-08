@@ -22,7 +22,7 @@ export const NETWORKS: NetworkInfo[] = [
     },
     indexName: 'prod_testnet_universal_profiles',
     explorerUrl: 'https://explorer.execution.testnet.lukso.network',
-    customLSP2ContractAddress: '0x27B3747A54E83Be1fD8835329585D0973E05149C', // '0x14603c30279a7278b90ce8E92bCB4336657B8f25',
+    customLSP2ContractAddress: '0x1690c1A6f5dc385d20139222567476F0A185f77a',
   },
   {
     id: 'mainnet',
@@ -36,9 +36,7 @@ export const NETWORKS: NetworkInfo[] = [
     },
     indexName: 'prod_mainnet_universal_profiles',
     explorerUrl: 'https://explorer.execution.mainnet.lukso.network',
-    // customLSP2ContractAddress: '0x7ec7ac9cf675eef1de871d136bc4bb9e836b5ef4', // '0x1402141e81e6415da5d364994d8b277844c89739', //
-    // customLSP2ContractAddress: '0x742fedb6ed0dd33544029a556db99ea5c5de4b7e', // '0x5578B353911a0D0B54E0faE838D4F259FF6Ce411', // '0xCA870F2Cb92A32628B9eBD3e9d8e4Bf420392273', // '0x87B343Ee4186f4d0af5183e3484156b948F03881',
-    customLSP2ContractAddress: '0x5578B353911a0D0B54E0faE838D4F259FF6Ce411',
+    customLSP2ContractAddress: '0x51c602b249a5bc0ff437fbed4607448d8bc66dad',
   },
 ]
 

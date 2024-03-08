@@ -29,7 +29,7 @@ import LSP2FetcherWithMulticall3Contract from './LSP2FetcherWithMulticall3.json'
 import type { LSP2FetcherWithMulticall3 } from '@/contracts/LSP2FetcherWithMulticall3'
 
 const QUERY_TIMEOUT = 250
-const MAX_BIG_PER_MULTICALL = 2
+const MAX_BIG_PER_MULTICALL = 10
 const MAX_AGGREGATE_COUNT = 20
 const MAX_AGGREGATE_DATA_LIMIT = 75 * 1024
 const DATA_SLICE_MARGIN = 64 * 10
@@ -544,7 +544,13 @@ async function doQueries() {
                 totalLength: __totalLength,
                 extract,
               } = multiItem
-              const [success, _totalLength, _data] = result[i]
+              const [_success, _totalLength, _data] = result[i]
+              const success = toNumber(_success, false) as number
+              if (success === 3) {
+                newMulticall.push(multiItem)
+                triggerQuery()
+                continue
+              }
               let totalLength: number = __totalLength || 0
               let rawData = _data
               if (extract) {
@@ -557,30 +563,6 @@ async function doQueries() {
               const dataBytes = hexToBytes(data)
               const remainder = totalLength - dataBytes.length
               const chunkSize = hexToBytes(rawData).length
-              // if (!__totalLength && totalLength) {
-              //   if (totalLength > dataBytes.length) {
-              //     console.log('initial', totalLength, dataBytes.length, {
-              //       fromCall: _totalLength,
-              //       totalLength,
-              //       currentLength: dataBytes.length,
-              //       keyName: query?.keyName,
-              //       tokenId: query?.tokenId,
-              //       address: query?.address,
-              //     })
-              //   }
-              // } else if (totalLength) {
-              //   console.log('received', totalLength, dataBytes.length, {
-              //     totalLength,
-              //     currentLength: dataBytes.length,
-              //     predictedCurrentLength: totalLength - remainder,
-              //     chunkSize,
-              //     remainder,
-              //     keyName: query?.keyName,
-              //     tokenId: query?.tokenId,
-              //     address: query?.address,
-              //     runAgain: totalLength > dataBytes.length,
-              //   })
-              // }
               if (
                 query &&
                 query.type === 'getData' &&
@@ -613,13 +595,6 @@ async function doQueries() {
                     : lsp2CustomContract.methods
                         .getDataSlice(address, key, offset, callLimit)
                         .encodeABI()
-                  // console.log('continue(max)', {
-                  //   totalLength,
-                  //   currentLength: totalLength - remainder,
-                  //   remainder,
-                  //   offset,
-                  //   callLimit,
-                  // })
                   await doMulticall([
                     {
                       index: 0,
@@ -671,13 +646,6 @@ async function doQueries() {
                     : lsp2CustomContract.methods
                         .getDataSlice(address, key, offset, callLimit)
                         .encodeABI()
-                  // console.log('continue', {
-                  //   totalLength,
-                  //   currentLength: totalLength - remainder,
-                  //   remainder,
-                  //   offset,
-                  //   callLimit,
-                  // })
                   if (
                     remainder > limit ||
                     newMulticall.length >= MAX_AGGREGATE_COUNT ||
@@ -716,15 +684,6 @@ async function doQueries() {
                   continue
                 }
               }
-              // if (__totalLength) {
-              //   console.log('finished', totalLength, dataBytes.length, {
-              //     totalLength,
-              //     receivedLength: dataBytes.length,
-              //     keyName: query?.keyName,
-              //     tokenId: query?.tokenId,
-              //     address: query?.address,
-              //   })
-              // }
               if (queries) {
                 if (!success) {
                   for (const query of queries) {
@@ -816,29 +775,30 @@ async function doQueries() {
             }
           })
           .catch((error: Error) => {
-            console.error(
-              'failure',
-              error,
-              multicall.length,
-              multicall.map(
-                ({
-                  query,
-                  queries,
-                  totalLength,
-                  data,
-                  remainder,
-                  currentLength,
-                }) => ({
-                  type: query?.type || queries?.[0].type + 'Batch',
-                  keyName:
-                    query?.keyName || queries?.map(({ keyName }) => keyName),
-                  totalLength,
-                  remainder,
-                  currentLength,
-                  data: data?.length,
-                })
-              )
-            )
+            // console.error(
+            //   'failure',
+            //   error,
+            //   multicall.length,
+            //   multicall.map(
+            //     ({
+            //       query,
+            //       queries,
+            //       totalLength,
+            //       data,
+            //       remainder,
+            //       currentLength,
+            //     }) => ({
+            //       type: query?.type || queries?.[0].type + 'Batch',
+            //       keyName:
+            //         query?.keyName || queries?.map(({ keyName }) => keyName),
+            //       totalLength,
+            //       remainder,
+            //       currentLength,
+            //       data: data?.length,
+            //     })
+            //   )
+            // )
+            console.error(error)
             throw error
           })
       }

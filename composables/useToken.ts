@@ -55,7 +55,6 @@ export function useToken() {
                     ],
                     queryFn: async () => {
                       if (tokenDataURL) {
-                        console.log('fetching token data', tokenDataURL)
                         const url = tokenDataURL.replace(
                           /^ipfs:\/\//,
                           'https://api.universalprofile.cloud/ipfs/'
@@ -109,31 +108,6 @@ export function useToken() {
         const forTokenData = results[3]?.data as any
         const baseURIData = results[4]?.data as any
         const lsp7Data = results[5]?.data as any
-        if (
-          token?.address.toLowerCase() ===
-          '0x86E817172b5c07f7036Bf8aA46e2db9063743A83'.toLowerCase()
-        ) {
-          console.log(
-            token,
-            {
-              owner,
-              tokenCreators,
-              decimals,
-              forTokenData,
-              baseURIData,
-              lsp7Data,
-            },
-            results
-              .slice(2, 5)
-              .map(({ isLoading, failureReason, error, isError, data }) => ({
-                isLoading,
-                failureReason,
-                isError,
-                error,
-                data,
-              }))
-          )
-        }
         const metadataIsLoaded = results.slice(2, 5).every(result => {
           return !result.isLoading || result.failureReason != undefined
         })
