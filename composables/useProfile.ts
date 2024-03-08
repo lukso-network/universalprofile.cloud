@@ -1,7 +1,6 @@
 import { useQueries } from '@tanstack/vue-query'
 
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
-import type { Profile } from '@/models/profile'
 
 export const getProfile = (profileAddress: Address | undefined) => {
   const { currentNetwork } = storeToRefs(useAppStore())
@@ -9,6 +8,17 @@ export const getProfile = (profileAddress: Address | undefined) => {
     const { value: { chainId } = { chainId: '' } } = currentNetwork
     return profileAddress
       ? [
+          {
+            // 4
+            queryKey: ['getBalance', profileAddress],
+            queryFn: async () => {
+              const { getBalance } = useWeb3(PROVIDERS.RPC)
+              const balance = await getBalance(profileAddress)
+              return balance
+            },
+            refetchInterval: 120000,
+            staleTime: 60000,
+          },
           queryGetData({
             chainId,
             address: profileAddress,
@@ -45,14 +55,15 @@ export const getProfile = (profileAddress: Address | undefined) => {
       if (!profileAddress) {
         return null
       }
-      const profileData = results[0].data as LSP3ProfileMetadataJSON
+      const balance = results[0].data as string
+      const profileData = results[1].data as LSP3ProfileMetadataJSON
       const { supportsInterfaces, standard } = interfacesToCheck.reduce(
         (
           { supportsInterfaces, standard },
           { interfaceId, standard: _standard },
           index
         ) => {
-          const supports = results[index + 1].data as boolean
+          const supports = results[index + 2].data as boolean
           supportsInterfaces[interfaceId] = supports
           if (supports) {
             standard = _standard
@@ -68,6 +79,7 @@ export const getProfile = (profileAddress: Address | undefined) => {
       const issuedAssets = results[results.length - 1].data as Address[]
       const { name, profileImage, backgroundImage } =
         profileData?.LSP3Profile || {}
+
       return {
         isLoading: results.some(result => result.isLoading),
         address: profileAddress,
@@ -78,6 +90,7 @@ export const getProfile = (profileAddress: Address | undefined) => {
         issuedAssets,
         profileImage,
         backgroundImage,
+        balance,
       } as Profile
     },
   })
