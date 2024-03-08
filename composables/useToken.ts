@@ -5,7 +5,7 @@ import type { Image } from '@/types/image'
 import type { LSP4DigitalAssetMetadata } from '@/types/asset'
 
 export function useToken() {
-  return (_token?: MaybeRef<Asset | null>) => {
+  return (_token?: MaybeRef<Asset | null | undefined>) => {
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: '' } } = currentNetwork
     const queries = computed(() => {

@@ -8,9 +8,6 @@ export function useProfileAssets() {
   return (profileAddress?: Address | null) => {
     const { currentNetwork } = storeToRefs(useAppStore())
     const profile = useProfile().viewedProfile()
-    // name
-    // symbol
-    // balanceOf
     const queries: ComputedRef<
       Array<QFQueryOptions> & {
         receivedAssetCount: number
@@ -135,8 +132,8 @@ export function useProfileAssets() {
           const tokenType = results[assetIndex + 5].data as number
           const baseURI = results[assetIndex + 6].data as any
           const tokenIdFormat = results[assetIndex + 7].data as number
-          const referenceContract = results[assetIndex + 8].data as string
-          const decimals = results[assetIndex + 9].data as number
+          const decimals = (results[assetIndex + 8].data as number) || 0
+          const referenceContract = results[assetIndex + 9].data as string
           const { supportsInterfaces, standard } = interfacesToCheck.reduce(
             (
               { supportsInterfaces, standard },
@@ -240,7 +237,11 @@ export function useProfileAssets() {
                 tokenDataURL,
                 decimals,
                 tokenId,
-                balance,
+                balance:
+                  // for LSP8 we show balance as 1 not counting all tokenIds
+                  standard && isLsp8({ standard }) && balance !== '0'
+                    ? '1'
+                    : balance,
                 standard,
                 tokenName,
                 tokenSymbol,
@@ -260,13 +261,18 @@ export function useProfileAssets() {
             tokenIdFormat,
             referenceContract,
             baseURI,
-            balance,
+            balance:
+              // for LSP8 we show balance as 1 not counting all tokenIds
+              standard && isLsp8({ standard }) && balance !== '0'
+                ? '1'
+                : balance,
             standard,
             tokenName,
             tokenSymbol,
             tokenType,
             supportsInterfaces,
             metadata,
+            decimals,
             get resolvedMetadata() {
               return metadata
             },
