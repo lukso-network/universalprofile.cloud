@@ -698,13 +698,21 @@ async function doQueries() {
                 if (queries) {
                   if (!success) {
                     for (const query of queries) {
+                      // Normal success=false means the call is not supported
                       query.resolve(null)
                     }
                     continue
                   }
                   let items = data
-                  if (selector) {
-                    items = selector.call(multiItem, data)
+                  try {
+                    if (selector) {
+                      items = selector.call(multiItem, data)
+                    }
+                  } catch (error) {
+                    for (const query of queries) {
+                      query.reject(error)
+                    }
+                    continue
                   }
                   for (const [j, query] of queries.entries()) {
                     try {
@@ -723,6 +731,7 @@ async function doQueries() {
                       if (success) {
                         query.resolve(item)
                       } else {
+                        // Normal success=false means the call is not supported
                         query.resolve(null)
                       }
                     } catch (error) {
@@ -784,11 +793,13 @@ async function doQueries() {
                     }
                     query?.resolve(item)
                   } else {
+                    // Normal success=false means the call is not supported
                     query?.resolve(null)
                   }
                 } catch (error) {
                   try {
-                    query?.resolve(null)
+                    // This is an actual error so reject
+                    query?.reject(error)
                   } catch {
                     // Really ignore, we tried our best
                   }
