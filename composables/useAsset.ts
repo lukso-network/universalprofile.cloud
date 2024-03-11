@@ -99,7 +99,6 @@ export function useAsset() {
         const baseURI = results[4].data as any
         const tokenIdFormat = results[5].data as number
         const totalSupply = results[6].data as string
-        const balance = profileAddress ? (results[7].data as string) : null
         const { supportsInterfaces, standard } = interfacesToCheck.reduce(
           (
             { supportsInterfaces, standard },
@@ -118,6 +117,11 @@ export function useAsset() {
             standard: string | null
           }
         )
+        const balance = profileAddress
+          ? standard === 'LSP8IdentifiableDigitalAsset'
+            ? '1'
+            : (results[7].data as string)
+          : null
         let metadata: LSP4DigitalAssetMetadata | undefined
         if (assetData) {
           const attributes = assetData?.LSP4Metadata?.attributes
