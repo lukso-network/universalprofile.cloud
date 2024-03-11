@@ -28,7 +28,7 @@
     "test:debug": "npx playwright test --debug",
     "pages:build": "cross-env NODE_ENV=production NITRO_PRESET=cloudflare_pages nuxt build --standalone",
     "nuxt:prepare": "nuxt prepare",
-    "typechain": "typechain --target web3-v1 --out-dir contracts/ './utils/LSP2FetcherWithMulticall3.json' && typechain --target web3-v1 --out-dir contracts/ './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
+    "typechain": "typechain --target web3-v1 --out-dir contracts/ './shared/abis/LSP2FetcherWithMulticall3.json' && typechain --target web3-v1 --out-dir contracts/ './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
