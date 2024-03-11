@@ -840,9 +840,9 @@ export function triggerQuery() {
   }, QUERY_TIMEOUT)
 }
 
-export type QFQueryOptions = {
+export type QFQueryOptions<T = unknown> = {
   queryKey: readonly unknown[]
-  queryFn: QueryFunction<unknown, readonly unknown[]>
+  queryFn: QueryFunction<T, readonly unknown[]>
   staleTime?: number
   refetchInterval?: number
   retry?: number | boolean
@@ -860,17 +860,17 @@ export type CallContractQueryOptions = {
   retry?: number | boolean
 }
 
-export function queryCallContract({
+export function queryCallContract<T>({
   abi,
   address,
   method,
-  args,
+  args = [],
   chainId,
-  isBig,
+  isBig = false,
   staleTime,
   refetchInterval,
   retry,
-}: CallContractQueryOptions): QFQueryOptions {
+}: CallContractQueryOptions): QFQueryOptions<T> {
   const methodName = method.replace(/\(.*$/, '')
   let methodItem = (abi || defaultAbi).find(item => {
     if (item.type !== 'function') {
@@ -913,8 +913,8 @@ export function queryCallContract({
       method,
       ...(args ? (args as unknown as unknown[]) : []),
     ] as readonly unknown[],
-    queryFn: async (): Promise<unknown> => {
-      const query = createQueryPromise({
+    queryFn: async (): Promise<T> => {
+      const query = createQueryPromise<T>({
         type: 'call',
         isBig,
         chainId,
@@ -923,7 +923,7 @@ export function queryCallContract({
         method,
         args,
       })
-      queryList.push(query as QueryPromise<unknown, QueryPromiseCallOptions>)
+      queryList.push(query as QueryPromise<T, QueryPromiseCallOptions>)
       triggerQuery()
       return query.promise
     },
@@ -950,7 +950,7 @@ export type VerifiableURI = {
   url: string
 }
 
-export function queryGetData({
+export function queryGetData<T>({
   address,
   chainId,
   keyName,
@@ -960,7 +960,7 @@ export function queryGetData({
   staleTime,
   refetchInterval,
   retry,
-}: GetDataQueryOptions): QFQueryOptions {
+}: GetDataQueryOptions): QFQueryOptions<T> {
   const schemaItem = (schema || defaultSchema).find(
     ({ name }) => name === keyName
   )
@@ -969,7 +969,7 @@ export function queryGetData({
     ...(refetchInterval ? { refetchInterval } : {}),
     ...(retry ? { retry } : { retry: false }),
     queryKey: ['getData', chainId, address, keyName, schemaItem],
-    queryFn: async (): Promise<unknown> => {
+    queryFn: async (): Promise<T> => {
       const query = createQueryPromise({
         type: tokenId ? 'getDataForTokenId' : 'getData',
         isBig,
@@ -980,7 +980,7 @@ export function queryGetData({
       })
       queryList.push(query as QueryPromise<unknown, QueryPromiseDataOptions>)
       triggerQuery()
-      return query.promise as Promise<unknown>
+      return query.promise as Promise<T>
     },
   }
 }
