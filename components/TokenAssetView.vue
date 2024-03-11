@@ -4,7 +4,8 @@ type Props = {
   asset?: Asset | null
 }
 const props = defineProps<Props>()
-const token = useToken()(props.asset)
+const asset = computed(() => props.asset)
+const token = useToken()(asset)
 const { showModal } = useModal()
 
 const handleSendAsset = (event: Event) => {

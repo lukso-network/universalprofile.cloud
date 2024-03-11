@@ -114,7 +114,7 @@
     "yata-fetch": "2.1.5"
   },
   "resolutions": {
-    "@erc725/erc725.js": "patch:@erc725/erc725.js@npm%3A0.23.1#~/.yarn/patches/@erc725-erc725.js-npm-0.23.1-cc30a75abd.patch",
+    "@erc725/erc725.js": "./erc725-erc725.js-0.23.0.tgz",
     "@tanstack/query-core": "^5.20.5",
     "web3-bzz": "~1.10.3",
     "web3-shh": "~1.10.3",
@@ -134,7 +134,7 @@
   },
   "version": "1.0.0",
   "dependencies": {
-    "@erc725/erc725.js": "patch:@erc725/erc725.js@npm%3A0.23.1#~/.yarn/patches/@erc725-erc725.js-npm-0.23.1-cc30a75abd.patch",
+    "@erc725/erc725.js": "./erc725-erc725.js-0.23.0.tgz",
     "@tanstack/query-async-storage-persister": "^5.25.0",
     "@tanstack/query-core": "^5.25.0",
     "@tanstack/query-persist-client-core": "^5.25.0",

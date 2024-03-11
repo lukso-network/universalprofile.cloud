@@ -46,7 +46,13 @@ export function useToken() {
                   }),
                   {
                     // 4
-                    queryKey: ['tokenJSON', chainId, token?.address, tokenId],
+                    queryKey: [
+                      'tokenJSON',
+                      chainId,
+                      token?.address,
+                      tokenId,
+                      tokenDataURL,
+                    ],
                     queryFn: async () => {
                       if (tokenDataURL) {
                         const url = tokenDataURL.replace(
@@ -61,6 +67,7 @@ export function useToken() {
                             return response.json()
                           })
                           .catch(error => {
+                            console.error('Error fetching token data', error)
                             throw error
                           })
                       }

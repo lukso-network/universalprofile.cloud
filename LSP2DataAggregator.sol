@@ -138,20 +138,27 @@ contract LSP2FetcherWithMulticall3 {
                 calli.callData
             );
             if (!calli.allowFailure) {
-                require(result.success, "Multicall3: call failed");
+                require(result.success, "Multicall4: call failed");
             }
             if (result.success) {
                 result.totalLength = callResult.length;
-                if (result.totalLength > limit) {
+                if (limit == 0) {
+                    // don't output
+                    delete callResult;
+                } else if (result.totalLength > limit) {
                     bytes memory slice = new bytes(limit);
                     for (uint256 j = 0; j < limit; j++) {
                         slice[j] = callResult[j];
                     }
                     result.returnData = slice;
-                } else if (limit == 0) {
-                    // don't assign return data
+                    delete slice;
+                    delete callResult;
+                    unchecked {
+                        limit -= result.returnData.length;
+                    }
                 } else {
                     result.returnData = callResult;
+                    delete callResult;
                     unchecked {
                         limit -= result.returnData.length;
                     }

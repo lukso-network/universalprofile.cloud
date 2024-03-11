@@ -91,6 +91,7 @@ export function useAsset() {
           ({ queryKey: [type, , , call] }) =>
             type === 'call' && call === 'supportsInterface(bytes4)'
         )
+        const isLoading = results.some(result => result.isLoading)
         const assetData = results[0].data as any
         const tokenName = results[1].data as string
         const tokenSymbol = results[2].data as string
@@ -188,7 +189,7 @@ export function useAsset() {
             )
           }
           return {
-            isLoading: results.some(result => result.isLoading),
+            isLoading,
             address,
             assetData,
             tokenURI,
@@ -209,6 +210,7 @@ export function useAsset() {
         }
 
         return {
+          isLoading,
           address,
           assetData,
           tokenIdFormat,

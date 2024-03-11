@@ -114,9 +114,9 @@
         {
           "components": [
             {
-              "internalType": "bool",
+              "internalType": "uint256",
               "name": "success",
-              "type": "bool"
+              "type": "uint256"
             },
             {
               "internalType": "uint256",
