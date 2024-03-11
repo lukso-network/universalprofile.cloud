@@ -3,7 +3,15 @@ import BigNumber from 'bignumber.js'
 
 const { asset, receiverError, amount } = storeToRefs(useSendStore())
 const decimalQuery = useDecimals()(asset.value?.address)
-const decimals = computed(() => decimalQuery?.data.value || 0)
+
+const decimals = computed(() => {
+  // LYX token
+  if (asset.value?.isNativeToken) {
+    return asset.value.decimals
+  }
+
+  return decimalQuery?.data.value || 0
+})
 
 const handleKeyDown = (customEvent: CustomEvent) => {
   const numberRegex = /^[0-9]*\.?[0-9]*$/
