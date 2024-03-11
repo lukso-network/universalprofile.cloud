@@ -9,7 +9,7 @@ const fetchedAsset = useAsset()(props?.asset?.address, props?.asset?.tokenId)
 const handleClick = () => {
   try {
     assertAddress(props.asset?.address)
-    if (isCollectible(fetchedAsset)) {
+    if (isCollectible(fetchedAsset.value)) {
       navigateTo(nftRoute(props.asset.address, props.asset?.tokenId || '0x'))
     } else {
       navigateTo(tokenRoute(props.asset.address))

@@ -22,7 +22,7 @@ const { currentNetwork } = storeToRefs(useAppStore())
 
 const assetAddress = useRouter().currentRoute.value.query.asset
 const tokenId = useRouter().currentRoute.value.query.tokenId
-const fetchedAsset = useAsset()(assetAddress, tokenId)
+const fetchedAsset = useToken()(useAsset()(assetAddress, tokenId))
 
 onMounted(() => {
   setStatus('draft')
@@ -84,7 +84,6 @@ const handleSend = async () => {
       } as TransactionConfig
       transactionsReceipt = await sendTransaction(transaction)
       transactionHash.value = transactionsReceipt.transactionHash
-      // TODO check if lyx balance refreshes after transfer
     } else {
       // custom token transfer
       switch (asset.value?.standard) {
@@ -106,7 +105,6 @@ const handleSend = async () => {
             )
             .send({ from: connectedProfile.value.address })
           transactionHash.value = transactionsReceipt.transactionHash
-          // TODO check if balance updates
           break
         case STANDARDS.LSP8:
           const nftContract = contract<LSP8IdentifiableDigitalAsset>(
@@ -128,7 +126,6 @@ const handleSend = async () => {
             .send({ from: connectedProfile.value.address })
           transactionHash.value = transactionsReceipt.transactionHash
           assertNotUndefined(asset.value.address, 'asset')
-          // TODO check if asset is removed
           break
         default:
           console.error('Unknown token type')
@@ -150,6 +147,7 @@ const handleSend = async () => {
 </script>
 
 <template>
+  {{ console.log(fetchedAsset) }}
   <AppPageLoader>
     <SendCard />
   </AppPageLoader>
