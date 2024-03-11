@@ -91,7 +91,7 @@ const handleBack = () => {
         :is-error="!!receiverError"
         :name="receiver?.name"
         :address="receiver?.address"
-        :profile-url="getOptimizedImage(receiver?.profileImage, 100)"
+        :profile-url="receiver?.profileImage?.[0].src"
       />
       <SendCardProfileSearch />
       <lukso-button

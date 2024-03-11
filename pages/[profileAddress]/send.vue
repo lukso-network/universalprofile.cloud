@@ -49,7 +49,7 @@ watchEffect(() => {
 
   amount.value = undefined
 
-  if (!fetchedAsset.value.address) {
+  if (!fetchedAsset.value?.address) {
     asset.value = {
       tokenName: currentNetwork.value.token.name,
       tokenSymbol: currentNetwork.value.token.symbol,
@@ -84,7 +84,7 @@ const handleSend = async () => {
       } as TransactionConfig
       transactionsReceipt = await sendTransaction(transaction)
       transactionHash.value = transactionsReceipt.transactionHash
-      await updateLyxBalance(connectedProfile.value?.address)
+      // TODO check if lyx balance refreshes after transfer
     } else {
       // custom token transfer
       switch (asset.value?.standard) {

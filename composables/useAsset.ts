@@ -5,7 +5,11 @@ import type { Asset, LSP4DigitalAssetMetadata } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
 export function useAsset() {
-  return (address: Address, tokenId?: string) => {
+  return (address?: Address, tokenId?: string) => {
+    if (!address) {
+      return ref()
+    }
+
     const connectedProfile = useProfile().connectedProfile()
     const profileAddress = connectedProfile.value?.address
     const { currentNetwork } = storeToRefs(useAppStore())

@@ -72,15 +72,17 @@ const handleReceiverSearch = async (event: CustomEvent) => {
 }
 
 const handleSelect = async (event: CustomEvent) => {
-  const selection = event.detail.value
+  const selection = event.detail.value as SearchProfileResult
   const { address, name, image } = selection
   searchTerm.value = address
   receiver.value = {
     address,
     name,
-    profileImage: {
-      url: image,
-    },
+    profileImage: [
+      {
+        src: image,
+      },
+    ],
   }
   receiverError.value = ''
   results.value = undefined
