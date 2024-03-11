@@ -24,7 +24,7 @@ import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
 import { INTERFACE_IDS as INTERFACE_IDS_v12 } from '@lukso/lsp-smart-contracts-12'
 import { type QueryFunction } from '@tanstack/vue-query'
 
-import LSP2FetcherWithMulticall3Contract from './LSP2FetcherWithMulticall3.json'
+import LSP2FetcherWithMulticall3Contract from '@/shared/abis/LSP2FetcherWithMulticall3.json'
 
 import type { LSP2FetcherWithMulticall3 } from '@/contracts/LSP2FetcherWithMulticall3'
 
