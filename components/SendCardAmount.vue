@@ -2,6 +2,8 @@
 import BigNumber from 'bignumber.js'
 
 const { asset, receiverError, amount } = storeToRefs(useSendStore())
+const decimalQuery = useDecimals()(asset.value?.address)
+const decimals = computed(() => decimalQuery?.data.value || 0)
 
 const handleKeyDown = (customEvent: CustomEvent) => {
   const numberRegex = /^[0-9]*\.?[0-9]*$/
@@ -11,9 +13,9 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab']
   const realValueBN = new BigNumber(`${input.value}${key}`)
   const assetBalanceBN = new BigNumber(
-    `${fromWeiWithDecimals(asset.value?.balance || '0', asset.value?.decimals)}`
+    `${fromWeiWithDecimals(asset.value?.balance || '0', decimals.value)}`
   )
-  const maxDecimalPlaces = asset.value?.decimals || 0
+  const maxDecimalPlaces = decimals.value
 
   // check for allowed keys or if user press CMD+A
   if (allowedKeys.includes(key) || (event.metaKey && key === 'a')) {
@@ -32,14 +34,14 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   if (realValueBN.gt(assetBalanceBN)) {
     amount.value = fromWeiWithDecimals(
       asset.value?.balance?.toString() || '0',
-      asset.value?.decimals
+      decimals.value
     )
     event.preventDefault()
   }
 
   // when asset use 0 decimals we should only allow integers
   if (
-    asset.value?.decimals === 0 &&
+    decimals.value === 0 &&
     (key === '.' || (key === '0' && input.value === ''))
   ) {
     event.preventDefault()
@@ -64,22 +66,23 @@ const handleKeyUp = (event: CustomEvent) => {
 const handleUnitClick = () => {
   const total = fromWeiWithDecimals(
     asset.value?.balance?.toString() || '0',
-    asset.value?.decimals
+    decimals.value
   )
   amount.value = total
 }
 </script>
 
 <template>
+  {{ console.log(toRaw(asset)) }}
   <lukso-input
     placeholder="0"
     :value="amount"
     :unit="
       $formatMessage('profile_balance_of', {
         balance: $formatNumber(
-          fromWeiWithDecimals(asset?.balance || '0', asset?.decimals) || '',
+          fromWeiWithDecimals(asset?.balance || '0', decimals) || '',
           {
-            maximumFractionDigits: asset?.decimals,
+            maximumFractionDigits: decimals,
           }
         ),
         symbol: asset?.tokenSymbol || '',
