@@ -18,8 +18,10 @@ const viewedProfileAddress = getCurrentProfileAddress()
 
 const handleShowAsset = () => {
   try {
+    assertAddress(props.asset?.address)
+
     if (isCollectible(props.asset)) {
-      navigateTo(nftRoute(props.asset?.address, props.asset?.tokenId || '0x'))
+      navigateTo(nftRoute(props.asset.address, props.asset?.tokenId || '0x'))
     } else {
       navigateTo(tokenRoute(props.asset.address))
     }

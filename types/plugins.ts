@@ -6,8 +6,6 @@ export interface NuxtApp {
   $formatDate(date?: string | number | Date): string
   $formatTime(date?: string | number | Date): string
   $formatCurrency(value: string, symbol: string): string
-  $fetchIndexedProfile(address: Address): Promise<IndexedProfile>
-  $fetchIndexedAsset(address: Address): Promise<IndexedAsset>
 }
 
 declare module 'vue' {
@@ -17,8 +15,6 @@ declare module 'vue' {
     $formatDate(date?: string | number | Date): string
     $formatTime(date?: string | number | Date): string
     $formatCurrency(value: string, symbol: string): string
-    $fetchIndexedProfile(address: Address): Promise<IndexedProfile>
-    $fetchIndexedAsset(address: Address): Promise<IndexedAsset>
   }
 }
 

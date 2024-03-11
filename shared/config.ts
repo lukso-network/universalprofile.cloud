@@ -99,12 +99,6 @@ export const CURRENCY_API_LYX_TOKEN_NAME = 'LYX'
 // currency cache expiry time in minutes
 export const CURRENCY_CACHE_EXPIRY_IN_MINUTES = 60
 
-// Algolia API version
-export const INDEXER_API_VERSION = 'v1'
-
-// Algolia API url
-export const INDEXER_API_URL = 'https://api.universalprofile.cloud'
-
 // link to the testnet faucet
 export const TESTNET_FAUCET_URL = 'https://faucet.testnet.lukso.network'
 
