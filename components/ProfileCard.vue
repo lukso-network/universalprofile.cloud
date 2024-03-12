@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const profile = useProfile().viewedProfile()
+const { isMobile } = useDevice()
 </script>
 
 <template>
@@ -8,8 +9,9 @@ const profile = useProfile().viewedProfile()
       variant="hero"
       :background-url="getOptimizedImage(profile?.backgroundImage, 880)"
       is-full-width
-      custom-class="rounded-24 shadow-neutral-drop-shadow"
-      class="mb-22"
+      shadow="small"
+      :size="isMobile ? 'none' : 'large'"
+      class="-mx-4 -mt-6 mb-22 w-screen sm:mx-0 sm:mt-0 sm:w-full"
     >
       <div slot="content" class="flex flex-col items-center">
         <div class="relative bottom-[-140px] text-center">
