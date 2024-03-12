@@ -12,7 +12,12 @@ defineProps<Props>()
 </script>
 
 <template>
-  <lukso-card is-full-width size="small" shadow="small" class="mt-8 sm:mt-4">
+  <lukso-card
+    is-full-width
+    border-radius="small"
+    shadow="small"
+    class="mt-8 sm:mt-4"
+  >
     <div slot="content" class="flex px-4 py-2">
       <lukso-profile
         size="small"

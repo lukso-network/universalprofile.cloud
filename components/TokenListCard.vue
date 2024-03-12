@@ -58,7 +58,7 @@ onMounted(async () => {
 
 <template>
   <lukso-card
-    size="small"
+    border-radius="small"
     shadow="small"
     is-hoverable
     is-full-width

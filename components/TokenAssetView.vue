@@ -51,7 +51,7 @@ const handlePreviewImage = () => {
         <lukso-card
           class="cursor-pointer"
           is-full-width
-          size="small"
+          border-radius="small"
           shadow="small"
           @click="handlePreviewImage"
         >

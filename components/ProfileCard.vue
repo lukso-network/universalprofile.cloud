@@ -10,7 +10,7 @@ const { isMobile } = useDevice()
       :background-url="getOptimizedImage(profile?.backgroundImage, 880)"
       is-full-width
       shadow="small"
-      :size="isMobile ? 'none' : 'medium'"
+      :border-radius="isMobile ? 'none' : 'medium'"
       class="-mx-4 -mt-6 mb-22 w-screen sm:mx-0 sm:mt-0 sm:w-full"
     >
       <div slot="content" class="flex flex-col items-center">

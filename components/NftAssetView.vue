@@ -55,7 +55,7 @@ const handlePreviewImage = () => {
     class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
   >
     <div>
-      <lukso-card size="small" shadow="small" is-full-width
+      <lukso-card border-radius="small" shadow="small" is-full-width
         ><div slot="content">
           <AssetImage
             class="min-h-[260px] cursor-pointer rounded-t-12"

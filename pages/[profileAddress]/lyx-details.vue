@@ -46,7 +46,7 @@ const handleBuyLyx = () => {
       class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
     >
       <div>
-        <lukso-card is-full-width size="small" shadow="small">
+        <lukso-card is-full-width border-radius="small" shadow="small">
           <div
             slot="content"
             class="flex min-h-[260px] items-center justify-center p-6 sm:py-10 md:py-20"
