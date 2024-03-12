@@ -9,7 +9,7 @@ export const getProfile = (profileAddress: Address | undefined) => {
     return profileAddress
       ? [
           {
-            // 4
+            // 0
             queryKey: ['getBalance', profileAddress],
             queryFn: async () => {
               const { getBalance } = useWeb3(PROVIDERS.RPC)
@@ -19,11 +19,13 @@ export const getProfile = (profileAddress: Address | undefined) => {
             refetchInterval: 120_000,
             staleTime: 10_000,
           },
+          // 1
           queryGetData({
             chainId,
             address: profileAddress,
             keyName: 'LSP3Profile',
           }),
+          // 2
           ...interfacesToCheck.map(({ interfaceId }) =>
             queryCallContract({
               chainId,
@@ -77,7 +79,7 @@ export const getProfile = (profileAddress: Address | undefined) => {
       )
       const receivedAssets = results[results.length - 2].data as Address[]
       const issuedAssets = results[results.length - 1].data as Address[]
-      const { name, profileImage, backgroundImage } =
+      const { name, profileImage, backgroundImage, links, description, tags } =
         profileData?.LSP3Profile || {}
 
       return {
@@ -91,6 +93,9 @@ export const getProfile = (profileAddress: Address | undefined) => {
         profileImage,
         backgroundImage,
         balance,
+        links,
+        description,
+        tags,
       } as Profile
     },
   })

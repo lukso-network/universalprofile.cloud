@@ -14,7 +14,10 @@ const hasTags = computed(
 </script>
 
 <template>
-  <div v-if="hasDescription || hasLinks || hasTags" class="mx-auto w-1/2 py-6">
+  <div
+    v-if="hasDescription || hasLinks || hasTags"
+    class="mx-auto py-6 sm:w-1/2"
+  >
     <ul
       v-if="hasTags"
       class="mb-6 flex flex-wrap justify-center gap-x-4 gap-y-2"
