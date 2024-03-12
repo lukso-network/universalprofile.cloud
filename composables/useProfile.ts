@@ -6,50 +6,55 @@ export const getProfile = (profileAddress: Address | undefined) => {
   const { currentNetwork } = storeToRefs(useAppStore())
   const queries = computed(() => {
     const { value: { chainId } = { chainId: '' } } = currentNetwork
-    return profileAddress
-      ? [
-          {
-            // 0
-            queryKey: ['getBalance', profileAddress],
-            queryFn: async () => {
-              const { getBalance } = useWeb3(PROVIDERS.RPC)
-              const balance = await getBalance(profileAddress)
-              return balance
-            },
-            refetchInterval: 120_000,
-            staleTime: 10_000,
-          },
-          // 1
-          queryGetData({
-            chainId,
-            address: profileAddress,
-            keyName: 'LSP3Profile',
-          }),
-          // 2
-          ...interfacesToCheck.map(({ interfaceId }) =>
-            queryCallContract({
-              chainId,
-              address: profileAddress,
-              method: 'supportsInterface(bytes4)',
-              args: [interfaceId],
-            })
-          ),
-          queryGetData({
-            chainId,
-            address: profileAddress,
-            keyName: 'LSP5ReceivedAssets[]',
-            refetchInterval: 120_000,
-            staleTime: 10_000,
-          }),
-          queryGetData({
-            chainId,
-            address: profileAddress,
-            keyName: 'LSP12IssuedAssets[]',
-            refetchInterval: 120_000,
-            staleTime: 10_000,
-          }),
-        ]
-      : []
+
+    if (!profileAddress) {
+      return []
+    }
+
+    return [
+      {
+        // 0
+        queryKey: ['getBalance', profileAddress],
+        queryFn: async () => {
+          const { getBalance } = useWeb3(PROVIDERS.RPC)
+          const balance = await getBalance(profileAddress)
+          return balance
+        },
+        refetchInterval: 120_000,
+        staleTime: 10_000,
+      },
+      // 1
+      queryGetData({
+        chainId,
+        address: profileAddress,
+        keyName: 'LSP3Profile',
+      }),
+      // 2
+      queryGetData({
+        chainId,
+        address: profileAddress,
+        keyName: 'LSP5ReceivedAssets[]',
+        refetchInterval: 120_000,
+        staleTime: 10_000,
+      }),
+      // 3
+      queryGetData({
+        chainId,
+        address: profileAddress,
+        keyName: 'LSP12IssuedAssets[]',
+        refetchInterval: 120_000,
+        staleTime: 10_000,
+      }),
+      // 4-9
+      ...interfacesToCheck.map(({ interfaceId }) =>
+        queryCallContract({
+          chainId,
+          address: profileAddress,
+          method: 'supportsInterface(bytes4)',
+          args: [interfaceId],
+        })
+      ),
+    ]
   })
   return useQueries({
     queries,
@@ -59,13 +64,15 @@ export const getProfile = (profileAddress: Address | undefined) => {
       }
       const balance = results[0].data as string
       const profileData = results[1].data as LSP3ProfileMetadataJSON
+      const receivedAssets = results[2].data as Address[]
+      const issuedAssets = results[3].data as Address[]
       const { supportsInterfaces, standard } = interfacesToCheck.reduce(
         (
           { supportsInterfaces, standard },
           { interfaceId, standard: _standard },
           index
         ) => {
-          const supports = results[index + 2].data as boolean
+          const supports = results[index + 4].data as boolean
           supportsInterfaces[interfaceId] = supports
           if (supports) {
             standard = _standard
@@ -77,8 +84,6 @@ export const getProfile = (profileAddress: Address | undefined) => {
           standard: string | null
         }
       )
-      const receivedAssets = results[results.length - 2].data as Address[]
-      const issuedAssets = results[results.length - 1].data as Address[]
       const { name, profileImage, backgroundImage, links, description, tags } =
         profileData?.LSP3Profile || {}
 
