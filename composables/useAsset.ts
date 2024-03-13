@@ -122,47 +122,9 @@ export function useAsset() {
             ? '1'
             : (results[7].data as string)
           : null
-        let metadata: LSP4DigitalAssetMetadata | undefined
+        let resolvedMetadata: LSP4DigitalAssetMetadata | undefined
         if (assetData) {
-          const attributes = assetData?.LSP4Metadata?.attributes
-          const links = assetData?.LSP4Metadata?.links
-          const description = assetData?.LSP4Metadata?.description
-          const assets =
-            assetData?.LSP7Metadata?.assets.map((asset: AssetMetadata) => {
-              const { verification, url } = asset as FileAsset
-
-              return url
-                ? ({
-                    ...asset,
-                    src: url.startsWith('ipfs://')
-                      ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                      : url,
-                  } as AssetMetadata & { src: string })
-                : asset
-            }) || []
-          const images =
-            assetData?.LSP4Metadata?.images?.map((images: any) => {
-              return images.map((image: any) => {
-                const { verification, url } = image
-                return {
-                  ...image,
-                  src: url.startsWith('ipfs://')
-                    ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                    : url,
-                } as Image & { src: string }
-              })
-            }) || []
-          const icon =
-            assetData?.LSP4Metadata?.icon?.map((image: any) => {
-              const { verification, url } = image
-              return {
-                ...image,
-                src: url.startsWith('ipfs://')
-                  ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                  : url,
-              } as Image & { src: string }
-            }) || []
-          metadata = { assets, attributes, description, images, icon, links }
+          resolvedMetadata = prepareMetadata(assetData)
         }
         if (tokenId) {
           let tokenURI = undefined
@@ -195,7 +157,6 @@ export function useAsset() {
           return {
             isLoading,
             address,
-            assetData,
             tokenURI,
             tokenIdFormat,
             baseURI,
@@ -208,8 +169,10 @@ export function useAsset() {
             tokenSymbol,
             tokenType,
             supportsInterfaces,
-            metadata,
-            resolvedMetadata: metadata,
+            rawMetadata: {
+              assetData,
+            },
+            resolvedMetadata,
           } as Asset
         }
 
@@ -226,8 +189,10 @@ export function useAsset() {
           tokenSymbol,
           tokenType,
           supportsInterfaces,
-          metadata,
-          resolvedMetadata: metadata,
+          rawMetadata: {
+            assetData,
+          },
+          resolvedMetadata,
         } as Asset
       },
     })

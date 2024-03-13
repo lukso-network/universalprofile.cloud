@@ -14,33 +14,44 @@ export type LSP4DigitalAssetMetadata = {
   links?: LinkMetadata[]
 }
 
+export type LSP4DigitalAssetMetadataJSON = {
+  LSP4Metadata: LSP4DigitalAssetMetadata
+}
+
 export type Asset = {
   address?: Address
-  isLoading?: boolean
-  isOwned?: boolean
-  isIssued?: boolean
-  assetData?: any
-  tokenIdFormat?: number
-  referenceContract?: Address
   balance?: string
   decimals?: number
   standard?: string
+  supportsInterfaces?: Record<string, boolean>
+  referenceContract?: Address
+  baseURI?: any
+  owner?: Address
+  tokenIdFormat?: number
   tokenName?: string
   tokenSymbol?: string
   tokenType?: number
-  supportsInterfaces?: Record<string, boolean>
-  isNativeToken?: boolean
-  baseURI?: any
   tokenDataURL?: string
   tokenId?: `0x${string}`
   tokenIdIsContract?: boolean
   tokenURI?: string
-  owner?: Address
   tokenCreators?: Address[]
   totalSupply?: string
-  metadata?: LSP4DigitalAssetMetadata
-  tokenMetadata?: LSP4DigitalAssetMetadata
+
   resolvedMetadata?: LSP4DigitalAssetMetadata
+  rawMetadata?: {
+    lsp7Data?: LSP4DigitalAssetMetadata
+    baseURIData?: LSP4DigitalAssetMetadata
+    forTokenData?: LSP4DigitalAssetMetadata
+    tokenMetadata?: LSP4DigitalAssetMetadata
+  }
+
+  isNativeToken?: boolean
+  isOwned?: boolean
+  isIssued?: boolean
+  isLoading?: boolean
+  isAssetLoading?: boolean
+  isMetadataLoading?: boolean
 }
 
 export type TokenType = keyof typeof LSP4_TOKEN_TYPES

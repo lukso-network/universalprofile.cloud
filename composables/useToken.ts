@@ -1,8 +1,10 @@
 import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
 
-import type { Image } from '@/types/image'
-import type { LSP4DigitalAssetMetadata } from '@/types/asset'
+import type {
+  LSP4DigitalAssetMetadata,
+  LSP4DigitalAssetMetadataJSON,
+} from '@/types/asset'
 
 export function useToken() {
   return (_token?: MaybeRef<Asset | null | undefined>) => {
@@ -111,58 +113,13 @@ export function useToken() {
         const metadataIsLoaded = results.slice(2, 5).every(result => {
           return !result.isLoading || result.failureReason != undefined
         })
-        const tokenData: any = metadataIsLoaded
-          ? lsp7Data ||
-            baseURIData ||
-            forTokenData || { LSP4Metadata: token.metadata }
+        const tokenMetadata = { LSP4Metadata: token.resolvedMetadata }
+        const tokenData: LSP4DigitalAssetMetadataJSON = metadataIsLoaded
+          ? lsp7Data || baseURIData || forTokenData || tokenMetadata
           : undefined
-        let tokenMetadata: LSP4DigitalAssetMetadata | undefined
+        let resolvedMetadata: LSP4DigitalAssetMetadata | undefined
         if (tokenData) {
-          const links = tokenData.LSP4Metadata?.links
-          const description = tokenData.LSP4Metadata?.description
-          const attributes = tokenData.LSP4Metadata?.attributes
-          const assets =
-            tokenData?.LSP4Metadata?.assets?.map((asset: AssetMetadata) => {
-              const { url } = asset as FileAsset
-
-              // TODO add url verification check
-              return url
-                ? ({
-                    ...asset,
-                    src: url.startsWith('ipfs://') ? resolveUrl(url) : url,
-                  } as AssetMetadata & { src: string })
-                : asset
-            }) || []
-          const images =
-            tokenData?.LSP4Metadata?.images?.map((images: any) => {
-              return images.map((image: any) => {
-                const { verification, url } = image
-                return {
-                  ...image,
-                  src: url.startsWith('ipfs://')
-                    ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                    : url,
-                } as Image & { src: string }
-              })
-            }) || []
-          const icon =
-            tokenData?.LSP4Metadata?.icon?.map((image: any) => {
-              const { verification, url } = image
-              return {
-                ...image,
-                src: url.startsWith('ipfs://')
-                  ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-                  : url,
-              } as Image & { src: string }
-            }) || []
-          tokenMetadata = {
-            images,
-            icon,
-            attributes,
-            description,
-            links,
-            assets,
-          }
+          resolvedMetadata = prepareMetadata(tokenData)
         }
 
         return {
@@ -170,16 +127,15 @@ export function useToken() {
           isLoading: results.some(result => result.isLoading),
           isAssetLoading: token.isLoading,
           isMetadataLoading: !metadataIsLoaded,
-          tokenData,
-          tokenMetadata,
           owner,
           tokenCreators,
-          tokenMetadataRaw: {
+          rawMetadata: {
             lsp7Data,
             baseURIData,
             forTokenData,
+            tokenMetadata,
           },
-          resolvedMetadata: tokenMetadata,
+          resolvedMetadata,
           decimals,
         } as Asset
       },
