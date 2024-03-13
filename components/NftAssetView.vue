@@ -10,6 +10,7 @@ const connectedProfile = useProfile().connectedProfile()
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const { showModal } = useModal()
+const { isConnected } = storeToRefs(useAppStore())
 
 const handleSendAsset = (event: Event) => {
   try {
@@ -74,7 +75,7 @@ const handlePreviewImage = () => {
               <span v-if="isLsp8(asset)">
                 {{ assetTokenId }}
               </span>
-              <span v-else>
+              <span v-else-if="asset?.balance">
                 {{ $formatMessage('token_owned') }}
                 {{ asset?.balance }}
               </span>
@@ -82,7 +83,7 @@ const handlePreviewImage = () => {
           </div>
         </div>
       </lukso-card>
-      <div v-if="asset?.balance && connectedProfile?.address">
+      <div v-if="asset?.balance && isConnected">
         <AssetOwnInfo
           :address="connectedProfile?.address"
           :balance="asset?.balance"
