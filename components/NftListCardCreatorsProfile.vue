@@ -1,14 +1,13 @@
 <script setup lang="ts">
 type Props = {
-  profile?: Address
-  asset?: Address
+  profileAddress?: Address
   hasName?: boolean
   count?: number
 }
 
 const props = defineProps<Props>()
-
-const creatorProfile = useProfile().getProfile(props.profile)
+const address = computed(() => props.profileAddress)
+const creatorProfile = useProfile().getProfile(address)
 </script>
 
 <template>

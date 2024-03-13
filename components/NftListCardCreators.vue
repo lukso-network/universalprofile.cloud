@@ -56,15 +56,13 @@ const tooManyCreators = computed(
     <div class="flex space-x-[-14px]">
       <NftListCardCreatorsProfile
         v-for="(creatorAddress, index) in creatorsWithLimit || []"
-        :profile="creatorAddress"
-        :asset="asset.address"
+        :profile-address="creatorAddress"
         :key="index"
         class="relative"
       />
       <NftListCardCreatorsProfile
         v-if="creators[0]"
-        :profile="creators[0]"
-        :asset="asset.address"
+        :profile-address="creators[0]"
         :count="tooManyCreators ? creators.length - CREATOR_SHOW_LIMIT : 0"
         class="relative"
         has-name
