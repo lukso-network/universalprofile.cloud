@@ -3,6 +3,7 @@ type Props = {
   profile?: Address
   asset?: Address
   hasName?: boolean
+  count: number
 }
 
 const props = defineProps<Props>()
@@ -12,7 +13,14 @@ const creatorProfile = useProfile().getProfile(props.profile)
 
 <template>
   <div class="flex h-6">
+    <div
+      v-if="count"
+      class="paragraph-inter-10-semi-bold flex size-6 items-center justify-center rounded-full bg-neutral-100 outline outline-2 outline-neutral-90"
+    >
+      +{{ count }}
+    </div>
     <lukso-profile
+      v-else
       size="x-small"
       :profile-url="getOptimizedImage(creatorProfile?.profileImage, 40)"
       :profile-address="creatorProfile?.address"

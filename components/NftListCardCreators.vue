@@ -5,7 +5,9 @@ type Props = {
 
 export type VerifyStatus = 'verified' | 'unverified' | 'partial'
 
+const CREATOR_SHOW_LIMIT = 4
 const props = defineProps<Props>()
+
 const creators = computed(() => {
   let items = (props.asset?.tokenCreators || []) as Address[]
   if (items.length === 0 && props.asset?.owner) {
@@ -13,10 +15,20 @@ const creators = computed(() => {
   }
   return items
 })
+
+const creatorsWithLimit = computed(() => {
+  if (tooManyCreators.value) {
+    return creators.value.slice(0, CREATOR_SHOW_LIMIT)
+  } else {
+    return creators.value.slice(1)
+  }
+})
+
 const issued = useIssuedAssets().validateAssets(
   creators.value,
   props.asset?.address
 )
+
 const verifyInfo = computed(() => issued.value)
 
 const verifyStatus = computed<VerifyStatus>(() => {
@@ -31,6 +43,10 @@ const verifyStatus = computed<VerifyStatus>(() => {
 
   return 'partial'
 })
+
+const tooManyCreators = computed(
+  () => creators.value.length > CREATOR_SHOW_LIMIT
+)
 </script>
 
 <template>
@@ -39,7 +55,7 @@ const verifyStatus = computed<VerifyStatus>(() => {
   <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
     <div class="flex space-x-[-14px]">
       <NftListCardCreatorsProfile
-        v-for="(creatorAddress, index) in (creators || []).slice(1)"
+        v-for="(creatorAddress, index) in creatorsWithLimit || []"
         :profile="creatorAddress"
         :asset="asset.address"
         :key="index"
@@ -49,6 +65,7 @@ const verifyStatus = computed<VerifyStatus>(() => {
         v-if="creators[0]"
         :profile="creators[0]"
         :asset="asset.address"
+        :count="tooManyCreators ? creators.length - CREATOR_SHOW_LIMIT : 0"
         class="relative"
         has-name
       />
