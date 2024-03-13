@@ -12,7 +12,6 @@ const creatorProfile = useProfile().getProfile(props.creator)
 const handleOpenProfile = (address?: Address) => {
   if (address) {
     navigateTo(profileRoute(address))
-    // fetchAndStoreAssets(address)
   }
 }
 
