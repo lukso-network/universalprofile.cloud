@@ -3,7 +3,7 @@ type Props = {
   profile?: Address
   asset?: Address
   hasName?: boolean
-  count: number
+  count?: number
 }
 
 const props = defineProps<Props>()
