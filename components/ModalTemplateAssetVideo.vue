@@ -21,10 +21,6 @@ defineProps<Props>()
     <video class="relative max-h-[calc(100vh-100px)] rounded-12" autoplay loop>
       <source :src="modal?.data?.asset?.src" />
     </video>
-    <lukso-icon
-      name="close-lg"
-      class="absolute right-6 top-6 z-[1] cursor-pointer rounded-full bg-neutral-98 shadow-neutral-above-shadow transition hover:scale-105 hover:shadow-neutral-above-shadow-1xl active:scale-100 active:shadow-neutral-above-shadow"
-      @click="closeModal"
-    ></lukso-icon>
+    <ModalCloseButton @click="closeModal" />
   </div>
 </template>
