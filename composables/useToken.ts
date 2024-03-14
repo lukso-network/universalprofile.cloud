@@ -36,10 +36,17 @@ export function useToken() {
               address,
               method: 'decimals()',
             }),
+            queryGetData({
+              // 3
+              chainId,
+              address,
+              keyName: 'LSP4Metadata',
+              isBig: true,
+            }),
             ...(tokenId
               ? [
                   queryGetData({
-                    // 3
+                    // 4
                     chainId,
                     address,
                     tokenId,
@@ -47,7 +54,7 @@ export function useToken() {
                     isBig: true,
                   }),
                   {
-                    // 4
+                    // 5
                     queryKey: [
                       'tokenJSON',
                       chainId,
@@ -79,7 +86,7 @@ export function useToken() {
                   ...(tokenId && tokenIdFormat === 2
                     ? [
                         queryGetData({
-                          // 5
+                          // 6
                           chainId,
                           address: ABICoder.decodeParameter(
                             'address',
@@ -107,21 +114,24 @@ export function useToken() {
         const owner = results[0].data as string
         const tokenCreators = results[1].data as string[]
         const decimals = parseInt((results[2].data as string) || '0')
-        const forTokenData = results[3]?.data as any
-        const baseURIData = results[4]?.data as any
-        const lsp7Data = results[5]?.data as any
-        const metadataIsLoaded = results.slice(2, 5).every(result => {
+        const _assetData = results[3]?.data as any
+        const forTokenData = results[4]?.data as any
+        const baseURIData = results[5]?.data as any
+        const lsp7Data = results[6]?.data as any
+        const metadataIsLoaded = results.slice(3, 7).every(result => {
           return !result.isLoading || result.failureReason != undefined
         })
-        const tokenMetadata = { LSP4Metadata: token.resolvedMetadata }
         const tokenData: LSP4DigitalAssetMetadataJSON = metadataIsLoaded
-          ? lsp7Data || baseURIData || forTokenData || tokenMetadata
+          ? lsp7Data || baseURIData || forTokenData || _assetData
           : undefined
         let resolvedMetadata: LSP4DigitalAssetMetadata | undefined
+        let assetData: LSP4DigitalAssetMetadata | undefined
         if (tokenData) {
           resolvedMetadata = prepareMetadata(tokenData)
         }
-
+        if (_assetData) {
+          assetData = prepareMetadata(_assetData)
+        }
         return {
           ...token,
           isLoading: results.some(result => result.isLoading),
@@ -133,8 +143,9 @@ export function useToken() {
             lsp7Data,
             baseURIData,
             forTokenData,
-            tokenMetadata,
+            assetData,
           },
+          assetData,
           resolvedMetadata,
           decimals,
         } as Asset
