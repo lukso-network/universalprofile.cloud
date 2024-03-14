@@ -3,7 +3,7 @@ import { useQueries } from '@tanstack/vue-query'
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 
 export const getProfile = (
-  _profile: Address | undefined | ComputedRef<Address | undefined>
+  _profile: Address | undefined | Ref<Address | undefined>
 ) => {
   const { currentNetwork } = storeToRefs(useAppStore())
 
@@ -122,7 +122,7 @@ export const getProfile = (
  */
 const connectedProfile = () => {
   const { connectedProfileAddress } = storeToRefs(useAppStore())
-  return getProfile(connectedProfileAddress.value)
+  return getProfile(connectedProfileAddress)
 }
 
 /**
