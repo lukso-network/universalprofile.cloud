@@ -10,7 +10,7 @@ function getIssuedAssets(profiles: Address[]) {
             queryGetData({
               chainId,
               address: profile as Address,
-              keyName: 'LSP5ReceivedAssets[]',
+              keyName: 'LSP12IssuedAssets[]',
             }),
           ]
         : []
