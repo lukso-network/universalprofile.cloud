@@ -38,8 +38,6 @@ const connect = async () => {
 
     assertAddress(address, 'connection')
     connectedProfileAddress.value = address
-    // TODO try to refresh current page based on router params
-    await navigateTo(profileRoute(address))
     setConnectionExpiry()
   } catch (error: any) {
     console.error(error)
