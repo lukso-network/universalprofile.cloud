@@ -117,11 +117,7 @@ export function useAsset() {
             standard: string | null
           }
         )
-        const balance = profileAddress
-          ? standard === 'LSP8IdentifiableDigitalAsset'
-            ? '1'
-            : (results[7].data as string)
-          : null
+        const balance = profileAddress ? (results[7].data as string) : null
         let resolvedMetadata: LSP4DigitalAssetMetadata | undefined
         if (assetData) {
           resolvedMetadata = prepareMetadata(assetData)
