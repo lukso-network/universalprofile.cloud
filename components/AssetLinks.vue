@@ -23,8 +23,8 @@ const { isMobile } = useDevice()
           :is-full-width="isMobile ? true : undefined"
           custom-class="paragraph-inter-14-medium"
         >
-          <div class="w-full text-left">
-            {{ link.title }}
+          <div class="flex w-full items-center text-left">
+            {{ link.title || link.url }}
             <lukso-icon name="link-1" size="small" class="ml-2"></lukso-icon>
           </div>
         </lukso-button>
