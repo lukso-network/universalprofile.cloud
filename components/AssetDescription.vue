@@ -11,7 +11,7 @@ defineProps<Props>()
     <div class="heading-inter-14-bold pb-3">
       {{ $formatMessage('token_details_description') }}
     </div>
-    <div class="paragraph-inter-12-regular">
+    <div class="paragraph-inter-12-regular break-word">
       {{ description }}
     </div>
   </div>

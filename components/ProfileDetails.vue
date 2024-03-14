@@ -30,7 +30,10 @@ const hasTags = computed(
         <lukso-tag is-rounded>{{ tag }}</lukso-tag>
       </li>
     </ul>
-    <div v-if="hasDescription" class="paragraph-inter-12-medium text-center">
+    <div
+      v-if="hasDescription"
+      class="paragraph-inter-12-medium text-center break-word"
+    >
       {{ viewedProfile?.description }}
     </div>
     <ul
