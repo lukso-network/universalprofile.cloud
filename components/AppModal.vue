@@ -13,6 +13,10 @@ const loadModalTemplate = () => {
 
 const closeModal = async () => {
   appStore.setModal({ isOpen: false })
+  modalTemplateComponent.value = defineAsyncComponent(() => {
+    const templateName = MODAL_DEFAULT_TEMPLATE
+    return import(`./ModalTemplate${templateName}.vue`)
+  })
 }
 
 // when modal is opened, load proper template
