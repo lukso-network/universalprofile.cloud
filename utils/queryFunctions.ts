@@ -30,6 +30,7 @@ import type { LSP2FetcherWithMulticall3 } from '@/contracts/LSP2FetcherWithMulti
 
 const QUERY_TIMEOUT = 250
 const MAX_BIG_PER_MULTICALL = 2
+const MAX_PARALLEL_REQUESTS = 5
 const MAX_AGGREGATE_COUNT = 20
 const MAX_AGGREGATE_DATA_LIMIT = 75 * 1024
 const DATA_SLICE_MARGIN = 64 * 10
@@ -189,7 +190,7 @@ let limit = MAX_AGGREGATE_DATA_LIMIT
 const newMulticall: Multicall[] = []
 
 async function doQueries() {
-  if (running++ > 0) {
+  if (running++ > MAX_PARALLEL_REQUESTS) {
     running--
     triggerQuery()
     return
