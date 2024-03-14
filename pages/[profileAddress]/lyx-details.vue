@@ -106,7 +106,7 @@ const handleBuyLyx = () => {
           {{ $formatMessage('lyx_details_title') }}
         </div>
         <AssetTokenSupply
-          :token-supply="currentNetwork.token.supply"
+          :total-supply="currentNetwork.token.supply"
           :decimals="ASSET_LYX_DECIMALS"
           class="pb-8"
         />
