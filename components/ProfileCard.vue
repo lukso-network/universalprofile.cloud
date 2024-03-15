@@ -44,7 +44,7 @@ const handlePreviewProfileImage = () => {
             </lukso-profile>
             <lukso-tooltip
               variant="light"
-              offset="35"
+              offset="110"
               is-clipboard-copy
               :copy-text="$formatMessage('profile_card_copy_address')"
               :copy-value="profile?.address"
