@@ -48,7 +48,7 @@ export function useProfileAssets() {
             method: 'balanceOf(address)',
             args: [profileAddress],
             refetchInterval: 120000,
-            staleTime: 60000,
+            staleTime: 0,
           }),
           queryGetData({
             // 3
