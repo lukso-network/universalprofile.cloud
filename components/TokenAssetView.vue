@@ -71,7 +71,7 @@ const handlePreviewImage = () => {
             ></lukso-profile>
           </div>
         </lukso-card>
-        <div v-if="token?.balance && isConnected">
+        <div v-if="token?.balance !== '0' && isConnected">
           <AssetOwnInfo
             :address="connectedProfile?.address"
             :balance="token?.balance"
