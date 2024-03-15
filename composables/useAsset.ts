@@ -11,7 +11,7 @@ export function useAsset() {
     }
 
     const connectedProfile = useProfile().connectedProfile()
-    const profileAddress = connectedProfile.value?.address
+    const profileAddress = computed(() => connectedProfile.value?.address)
     const { currentNetwork } = storeToRefs(useAppStore())
     const queries: ComputedRef<QFQueryOptions[]> = computed(() => {
       const chainId = currentNetwork.value?.chainId || ''
@@ -59,14 +59,15 @@ export function useAsset() {
           address,
           method: 'totalSupply()',
         }),
-        ...(profileAddress
+        ...(profileAddress.value
           ? [
               queryCallContract({
                 // 7
                 chainId,
                 address,
                 method: 'balanceOf(address)',
-                args: [profileAddress],
+                args: [profileAddress.value],
+                staleTime: 0,
               }),
             ]
           : []),
@@ -117,7 +118,9 @@ export function useAsset() {
             standard: string | null
           }
         )
-        const balance = profileAddress ? (results[7].data as string) : null
+        const balance = profileAddress.value
+          ? (results[7].data as string)
+          : null
         let resolvedMetadata: LSP4DigitalAssetMetadata | undefined
         if (assetData) {
           resolvedMetadata = prepareMetadata(assetData)
