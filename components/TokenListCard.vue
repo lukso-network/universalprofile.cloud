@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useIntersectionObserver } from '@vueuse/core'
+import { useIntersectionObserver, useResizeObserver } from '@vueuse/core'
 
 const showJSON = ref(window.location.search.includes('json'))
 
@@ -15,6 +15,12 @@ const connectedProfile = useProfile().connectedProfile()
 const viewedProfileAddress = getCurrentProfileAddress()
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
+const asset = computed(() => (targetIsVisible.value ? props.asset : null))
+const token = useToken()(asset)
+const contentRef = ref()
+const logoRef = ref()
+const symbolRef = ref()
+const balanceWidthPx = ref(0)
 
 const calculateBalanceWidth = () => {
   const SPACING = 24 + 32 // gap + padding
@@ -25,21 +31,13 @@ const calculateBalanceWidth = () => {
     SPACING
 }
 
-useIntersectionObserver(
-  target,
-  async ([{ isIntersecting }], _observerElement) => {
-    targetIsVisible.value = targetIsVisible.value || isIntersecting
-    await nextTick()
-    calculateBalanceWidth()
-  }
-)
+useIntersectionObserver(target, ([{ isIntersecting }], _observerElement) => {
+  targetIsVisible.value = targetIsVisible.value || isIntersecting
+})
 
-const asset = computed(() => (targetIsVisible.value ? props.asset : null))
-const token = useToken()(asset)
-const contentRef = ref()
-const logoRef = ref()
-const symbolRef = ref()
-const balanceWidthPx = ref(0)
+useResizeObserver(contentRef, () => {
+  calculateBalanceWidth()
+})
 
 const handleShowAsset = () => {
   try {
@@ -65,12 +63,13 @@ const handleSendAsset = (event: Event) => {
   }
 }
 
-onMounted(async () => {
-  const resizeObserver = new ResizeObserver(() => {
+watch(
+  () => token.value?.isLoading,
+  async () => {
+    await nextTick()
     calculateBalanceWidth()
-  })
-  resizeObserver.observe(contentRef.value)
-})
+  }
+)
 </script>
 
 <template>
