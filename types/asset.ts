@@ -25,6 +25,7 @@ export type Asset = {
   standard?: string
   supportsInterfaces?: Record<string, boolean>
   referenceContract?: Address
+  rootReferenceContract?: Address
   baseURI?: any
   owner?: Address
   tokenIdFormat?: number
@@ -37,7 +38,6 @@ export type Asset = {
   tokenURI?: string
   tokenCreators?: Address[]
   totalSupply?: string
-
   resolvedMetadata?: LSP4DigitalAssetMetadata
   rawMetadata?: {
     lsp7Data?: LSP4DigitalAssetMetadata

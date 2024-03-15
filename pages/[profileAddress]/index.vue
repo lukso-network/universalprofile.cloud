@@ -4,9 +4,9 @@ import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 const showJSON = ref(window.location.search.includes('json'))
 const { assetFilter, isLoadingAssets } = storeToRefs(useAppStore())
 const viewedProfileAddress = getCurrentProfileAddress()
-const viewedProfile = useProfile().viewedProfile()
 const { isMobile } = useDevice()
 
+const viewedProfile = useProfile().getProfile(viewedProfileAddress)
 const allTokens = useProfileAssets()(viewedProfileAddress)
 
 const tokensOwned = computed(() =>

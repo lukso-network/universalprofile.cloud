@@ -6,8 +6,9 @@ type Props = {
   closeModal: () => void
 }
 
+const profileAddress = computed(() => connectedProfile.value?.address || null)
 const props = defineProps<Props>()
-const allTokens = useProfileAssets()(connectedProfile.value?.address)
+const allTokens = useProfileAssets()(profileAddress)
 const { currentNetwork } = storeToRefs(useAppStore())
 
 const handleSelectLyx = () => {
