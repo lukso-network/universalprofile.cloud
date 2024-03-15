@@ -7,7 +7,6 @@ const showJSON = ref(window.location.search.includes('json'))
 
 type Props = {
   asset: Asset
-  hasAddress?: boolean
 }
 
 const props = defineProps<Props>()
@@ -54,7 +53,7 @@ const assetTokenId = computed(() => {
   return prefixedTokenId(props.asset?.tokenId, props.asset?.tokenIdFormat, 24)
 })
 
-onMounted(async () => {
+onMounted(() => {
   setTimeout(() => {
     useIntersectionObserver(
       target,
@@ -99,19 +98,14 @@ onMounted(async () => {
             >
               <div class="paragraph-inter-14-semi-bold flex items-center gap-1">
                 <span v-if="token?.tokenName">{{ token.tokenName }}</span>
-                <span
-                  v-else
-                  class="h-[22px] w-1/2 rounded-4 bg-neutral-90"
-                ></span>
+
+                <AppPlaceholderLine v-else class="h-[22px] w-1/2" />
                 <span
                   v-if="token?.tokenSymbol"
                   class="paragraph-inter-10-semi-bold text-neutral-60"
                   >{{ token.tokenSymbol }}</span
                 >
-                <span
-                  v-else
-                  class="h-[12px] w-1/4 rounded-[2px] bg-neutral-90"
-                ></span>
+                <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
               </div>
               <div class="paragraph-ptmono-10-bold">
                 <span v-if="isLsp8(token) && asset?.tokenId">
@@ -121,10 +115,7 @@ onMounted(async () => {
                   {{ $formatMessage('token_owned') }}
                   {{ token.balance }}
                 </span>
-                <div
-                  v-else
-                  class="h-[12px] w-1/4 rounded-[2px] bg-neutral-90"
-                ></div>
+                <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
               </div>
             </div>
             <NftListCardCreators
@@ -136,10 +127,10 @@ onMounted(async () => {
               v-else
               class="relative -top-4 -mt-2 grid grid-cols-[max-content,auto] gap-1"
             >
-              <div class="size-6 rounded-full bg-neutral-90"></div>
+              <AppPlaceholderCircle class="size-6" />
               <div class="grid w-full flex-col gap-1">
-                <div class="w-1/3 rounded-[2px] bg-neutral-90"></div>
-                <div class="w-1/2 rounded-[2px] bg-neutral-90"></div>
+                <AppPlaceholderLine class="w-1/3" />
+                <AppPlaceholderLine class="w-1/2" />
               </div>
             </div>
             <div class="flex items-end">
@@ -164,7 +155,7 @@ onMounted(async () => {
             v-if="token?.standard"
             :standard="token.standard"
           />
-          <div v-else class="h-[20px] w-1/6 rounded-4 bg-neutral-90"></div>
+          <AppPlaceholderLine v-else class="h-[20px] w-1/6" />
           <div
             v-if="token?.address"
             class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
@@ -176,7 +167,7 @@ onMounted(async () => {
             />
             {{ token?.address?.slice(0, 6) }}
           </div>
-          <div v-else class="h-[20px] w-1/6 rounded-4 bg-neutral-90"></div>
+          <AppPlaceholderLine v-else class="h-[20px] w-1/6" />
         </div>
       </div>
     </lukso-card>
