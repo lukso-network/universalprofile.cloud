@@ -61,10 +61,10 @@ const handlePreviewImage = () => {
             class="flex min-h-64 items-center justify-center p-6 sm:py-10 md:py-20"
           >
             <lukso-profile
-              v-if="asset"
+              v-if="token"
               size="large"
               :profile-url="
-                getAssetThumb(asset, isLsp7(asset), 60) ||
+                getAssetThumb(token, isLsp7(token), 60) ||
                 ASSET_ICON_PLACEHOLDER_URL
               "
               class="rounded-full shadow-neutral-above-shadow-1xl"
