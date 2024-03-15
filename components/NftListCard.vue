@@ -126,6 +126,16 @@ const assetTokenId = computed(() => {
               :asset="token"
               class="relative -top-4 -mt-2"
             />
+            <div
+              v-else
+              class="relative -top-4 -mt-2 grid grid-cols-[max-content,auto] gap-1"
+            >
+              <div class="size-6 rounded-full bg-neutral-90"></div>
+              <div class="grid w-full flex-col gap-1">
+                <div class="w-1/3 rounded-[2px] bg-neutral-90"></div>
+                <div class="w-1/2 rounded-[2px] bg-neutral-90"></div>
+              </div>
+            </div>
             <div class="flex items-end">
               <div class="flex w-full justify-end">
                 <lukso-button
