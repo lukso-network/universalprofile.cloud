@@ -12,12 +12,7 @@ defineProps<Props>()
       {{ $formatMessage('collectibles_title') }}
     </h3>
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-      <NftListCard
-        v-for="(asset, index) in nfts"
-        :key="index"
-        :asset="asset"
-        :has-address="true"
-      />
+      <NftListCard v-for="(asset, index) in nfts" :key="index" :asset="asset" />
     </div>
   </div>
 </template>

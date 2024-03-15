@@ -19,7 +19,6 @@ const { assetFilter } = storeToRefs(useAppStore())
         v-for="(asset, index) in tokens"
         :key="index"
         :asset="asset"
-        :has-address="true"
       />
     </div>
   </div>

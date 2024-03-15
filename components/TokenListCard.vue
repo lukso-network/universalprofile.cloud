@@ -5,7 +5,6 @@ const showJSON = ref(window.location.search.includes('json'))
 
 type Props = {
   asset: Asset
-  hasAddress?: boolean
 }
 
 const props = defineProps<Props>()
@@ -99,28 +98,43 @@ watch(
           token = {{ JSON.stringify(token, null, '  ') }}
         </div>
         <div class="flex h-7 items-start justify-end">
-          <AssetStandardBadge :standard="asset?.standard" />
+          <AssetStandardBadge
+            v-if="asset?.standard"
+            :standard="asset.standard"
+          />
+          <AppPlaceholderLine v-else class="h-[20px] w-1/6" />
         </div>
         <div class="flex gap-6">
-          <div ref="logoRef" class="flex flex-col items-center pl-2">
+          <div ref="logoRef" class="flex flex-col items-center gap-2 pl-2">
             <lukso-profile
+              v-if="asset?.address"
               size="medium"
-              :profile-address="asset?.address"
+              :profile-address="asset.address"
               :profile-url="
                 getAssetThumb(token, true, 260) || ASSET_ICON_PLACEHOLDER_URL
               "
-              :has-identicon="hasAddress ? 'true' : undefined"
+              has-identicon
             ></lukso-profile>
+            <AppPlaceholderCircle v-else class="size-14" />
             <div
-              v-if="hasAddress"
-              class="paragraph-ptmono-10-bold pt-2 text-neutral-60"
+              v-if="asset?.address"
+              class="paragraph-ptmono-10-bold text-neutral-60"
             >
-              #{{ asset?.address?.slice(2, 8) }}
+              #{{ asset?.address.slice(2, 8) }}
             </div>
+            <AppPlaceholderLine v-else class="h-[14px] w-full" />
           </div>
-          <div class="grid w-full grid-rows-[max-content,max-content,auto]">
-            <div class="heading-inter-14-bold pb-1">{{ asset?.tokenName }}</div>
-            <div class="heading-inter-21-semi-bold flex items-center pb-1">
+          <div
+            class="grid w-full grid-rows-[max-content,max-content,auto] gap-1"
+          >
+            <div class="heading-inter-14-bold">
+              <div v-if="asset?.tokenName">{{ asset.tokenName }}</div>
+              <AppPlaceholderLine v-else class="h-[17px] w-1/3" />
+            </div>
+            <div
+              v-if="asset"
+              class="heading-inter-21-semi-bold flex items-center"
+            >
               <span
                 v-if="asset?.balance"
                 class="truncate"
@@ -144,6 +158,10 @@ watch(
                 class="paragraph-inter-14-semi-bold pl-2 text-neutral-60"
                 >{{ asset?.tokenSymbol }}</span
               >
+            </div>
+            <div v-else class="grid grid-cols-[2fr,1fr] items-center gap-2">
+              <AppPlaceholderLine class="h-[26px] w-full" />
+              <AppPlaceholderLine class="h-[22px] w-full" />
             </div>
             <div
               v-if="asset?.balance && asset.tokenSymbol"
