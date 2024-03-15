@@ -61,7 +61,7 @@ const assetTokenId = computed(() => {
 </script>
 
 <template>
-  <div ref="target">
+  <div ref="target" class="flex">
     <lukso-card
       border-radius="small"
       shadow="small"

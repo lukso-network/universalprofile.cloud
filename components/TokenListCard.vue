@@ -14,11 +14,25 @@ const { isConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
 const viewedProfileAddress = getCurrentProfileAddress()
 const targetIsVisible = ref(false)
-
 const target = ref<HTMLElement | null>(null)
-useIntersectionObserver(target, ([{ isIntersecting }], _observerElement) => {
-  targetIsVisible.value = targetIsVisible.value || isIntersecting
-})
+
+const calculateBalanceWidth = () => {
+  const SPACING = 24 + 32 // gap + padding
+  balanceWidthPx.value =
+    contentRef.value?.clientWidth -
+    logoRef.value?.clientWidth -
+    symbolRef.value?.clientWidth -
+    SPACING
+}
+
+useIntersectionObserver(
+  target,
+  async ([{ isIntersecting }], _observerElement) => {
+    targetIsVisible.value = targetIsVisible.value || isIntersecting
+    await nextTick()
+    calculateBalanceWidth()
+  }
+)
 
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const token = useToken()(asset)
@@ -53,20 +67,14 @@ const handleSendAsset = (event: Event) => {
 
 onMounted(async () => {
   const resizeObserver = new ResizeObserver(() => {
-    const SPACING = 24 + 32 // gap + padding
-
-    balanceWidthPx.value =
-      contentRef.value?.clientWidth -
-      logoRef.value?.clientWidth -
-      symbolRef.value?.clientWidth -
-      SPACING
+    calculateBalanceWidth()
   })
   resizeObserver.observe(contentRef.value)
 })
 </script>
 
 <template>
-  <div ref="target">
+  <div ref="target" class="flex">
     <lukso-card
       border-radius="small"
       shadow="small"
