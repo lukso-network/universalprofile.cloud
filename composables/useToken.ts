@@ -95,6 +95,13 @@ export function useToken() {
                           keyName: 'LSP4Metadata',
                           isBig: true,
                         }),
+                        queryGetData({
+                          // 7
+                          chainId,
+                          address,
+                          tokenId,
+                          keyName: 'LSP8ReferenceContract',
+                        }),
                       ]
                     : []),
                 ]
@@ -111,6 +118,7 @@ export function useToken() {
         if (!token || !token?.address || token?.isLoading) {
           return null
         }
+
         const owner = results[0].data as string
         const tokenCreators = results[1].data as string[]
         const decimals = parseInt((results[2].data as string) || '0')
@@ -118,11 +126,12 @@ export function useToken() {
         const forTokenData = results[4]?.data as any
         const baseURIData = results[5]?.data as any
         const lsp7Data = results[6]?.data as any
+        const referenceContract = results[7]?.data as any
         const metadataIsLoaded = results.slice(3, 7).every(result => {
           return !result.isLoading || result.failureReason != undefined
         })
         const tokenData: LSP4DigitalAssetMetadataJSON = metadataIsLoaded
-          ? lsp7Data || baseURIData || forTokenData || _assetData
+          ? lsp7Data || forTokenData || baseURIData || _assetData
           : undefined
         let resolvedMetadata: LSP4DigitalAssetMetadata | undefined
         let assetData: LSP4DigitalAssetMetadata | undefined
@@ -147,6 +156,7 @@ export function useToken() {
           },
           assetData,
           resolvedMetadata,
+          referenceContract,
           decimals,
         } as Asset
       },

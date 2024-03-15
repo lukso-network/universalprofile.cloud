@@ -18,14 +18,19 @@ export type LSP4DigitalAssetMetadataJSON = {
   LSP4Metadata: LSP4DigitalAssetMetadata
 }
 
+export type ReferenceContract = {
+  address: Address
+  tokenId: string
+}
+
 export type Asset = {
   address?: Address
   balance?: string
   decimals?: number
   standard?: string
   supportsInterfaces?: Record<string, boolean>
-  referenceContract?: Address
-  rootReferenceContract?: Address
+  referenceContract?: ReferenceContract
+  rootReferenceContract?: ReferenceContract
   baseURI?: any
   owner?: Address
   tokenIdFormat?: number

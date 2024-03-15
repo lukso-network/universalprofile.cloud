@@ -1,8 +1,11 @@
 import { useQueries } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
+import debug from 'debug'
 
 import type { Asset } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
+
+const assetLog = debug('wallet:asset')
 
 export function useAsset() {
   return (address?: Address, tokenId?: string) => {
@@ -60,7 +63,7 @@ export function useAsset() {
                 address,
                 method: 'balanceOf(address)',
                 args: [profileAddress.value],
-                staleTime: 0,
+                staleTime: 250,
               }),
             ]
           : []),
@@ -139,7 +142,7 @@ export function useAsset() {
               'https://api.universalprofile.cloud/ipfs/'
             )
           }
-          return {
+          const asset = {
             isLoading,
             address,
             tokenURI,
@@ -155,9 +158,13 @@ export function useAsset() {
             tokenType,
             supportsInterfaces,
           } as Asset
+          if (!isLoading) {
+            assetLog('token', asset)
+          }
+          return asset
         }
 
-        return {
+        const asset = {
           isLoading,
           address,
           tokenIdFormat,
@@ -170,6 +177,10 @@ export function useAsset() {
           tokenType,
           supportsInterfaces,
         } as Asset
+        if (!isLoading) {
+          assetLog('collection', asset)
+        }
+        return asset
       },
     })
   }

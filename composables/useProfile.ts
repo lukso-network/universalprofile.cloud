@@ -1,6 +1,9 @@
 import { useQueries } from '@tanstack/vue-query'
+import debug from 'debug'
 
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
+
+const profileLog = debug('wallet:profile')
 
 export const getProfile = (
   _profile: Address | undefined | Ref<Address | undefined>
@@ -28,7 +31,7 @@ export const getProfile = (
             : 0
         },
         refetchInterval: 120_000,
-        staleTime: 10_000,
+        staleTime: 250,
       },
       // 1
       queryGetData({
@@ -42,7 +45,7 @@ export const getProfile = (
         address: profileAddress.value,
         keyName: 'LSP5ReceivedAssets[]',
         refetchInterval: 120_000,
-        staleTime: 10_000,
+        staleTime: 250,
       }),
       // 3
       queryGetData({
@@ -50,7 +53,7 @@ export const getProfile = (
         address: profileAddress.value,
         keyName: 'LSP12IssuedAssets[]',
         refetchInterval: 120_000,
-        staleTime: 10_000,
+        staleTime: 250,
       }),
       // 4-9
       ...interfacesToCheck.map(({ interfaceId }) =>
@@ -97,7 +100,7 @@ export const getProfile = (
       const { name, profileImage, backgroundImage, links, description, tags } =
         profileData?.LSP3Profile || {}
 
-      return {
+      const profile = {
         isLoading: results.some(result => result.isLoading),
         address: profileAddress,
         name,
@@ -112,6 +115,10 @@ export const getProfile = (
         description,
         tags,
       } as Profile
+      if (!profile.isLoading) {
+        profileLog('profile', profile)
+      }
+      return profile
     },
   })
 }

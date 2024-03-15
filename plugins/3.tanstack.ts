@@ -6,6 +6,9 @@ import {
 } from '@tanstack/vue-query'
 import { persistQueryClient } from '@tanstack/query-persist-client-core'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+import debug from 'debug'
+
+debug.enable(localStorage.getItem('debug') || '')
 
 // import { defaultQueryFn } from '@/utils/queryFunctions'
 

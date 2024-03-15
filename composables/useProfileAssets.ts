@@ -1,13 +1,16 @@
 import { useQueries } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
+import debug from 'debug'
 
-import type { Asset } from '@/types/asset'
+import type { Asset, ReferenceContract } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
+
+const assetLog = debug('wallet:asset')
 
 export function useProfileAssets() {
   return (profileAddress?: MaybeRef<Address | null>) => {
     const { currentNetwork } = storeToRefs(useAppStore())
-    const profile = useProfile().getProfile(profileAddress as Address)
+    const profile = useProfile().getProfile(profileAddress as MaybeRef<Address>)
     const queries: ComputedRef<
       Array<QFQueryOptions> & {
         receivedAssetCount: number
@@ -32,7 +35,7 @@ export function useProfileAssets() {
             method: 'tokenIdsOf(address)',
             args: [profileAddress],
             refetchInterval: 120000,
-            staleTime: 60000,
+            staleTime: 250,
           }),
           queryCallContract({
             // 1
@@ -41,7 +44,7 @@ export function useProfileAssets() {
             method: 'balanceOf(address)',
             args: [profileAddress],
             refetchInterval: 120000,
-            staleTime: 0,
+            staleTime: 250,
           }),
           queryGetData({
             // 2
@@ -119,119 +122,123 @@ export function useProfileAssets() {
             type === 'call' && call === 'supportsInterface(bytes4)'
         )
 
-        const assets = (queries.value.allAddresses.flatMap(
-          (address, _assetIndex) => {
-            const assetIndex =
-              _assetIndex * (prefixLength + interfacesToCheck.length)
-            const isIssued = _assetIndex > queries.value.receivedAssetCount
-            const tokenIds = results[assetIndex + 0].data as string[]
-            const balance = results[assetIndex + 1].data as string
-            const tokenName = results[assetIndex + 2].data as string
-            const tokenSymbol = results[assetIndex + 3].data as string
-            const tokenType = results[assetIndex + 4].data as number
-            const baseURI = results[assetIndex + 5].data as any
-            const tokenIdFormat = results[assetIndex + 6].data as number
-            const decimals = (results[assetIndex + 7].data as number) || 0
-            const rootReferenceContract = results[assetIndex + 8].data as string
-            const { supportsInterfaces, standard } = interfacesToCheck.reduce(
-              (
-                { supportsInterfaces, standard },
-                { interfaceId, standard: _standard },
-                index
-              ) => {
-                const supports = results[assetIndex + index + prefixLength]
-                  .data as boolean
-                supportsInterfaces[interfaceId] = supports
-                if (supports) {
-                  standard = _standard
-                }
-                return { supportsInterfaces, standard }
-              },
-              { supportsInterfaces: {}, standard: null } as {
-                supportsInterfaces: Record<string, boolean>
-                standard: string | null
+        return (queries.value.allAddresses.flatMap((address, _assetIndex) => {
+          const assetIndex =
+            _assetIndex * (prefixLength + interfacesToCheck.length)
+          const isIssued = _assetIndex > queries.value.receivedAssetCount
+          const tokenIds = results[assetIndex + 0].data as string[]
+          const balance = results[assetIndex + 1].data as string
+          const tokenName = results[assetIndex + 2].data as string
+          const tokenSymbol = results[assetIndex + 3].data as string
+          const tokenType = results[assetIndex + 4].data as number
+          const baseURI = results[assetIndex + 5].data as any
+          const tokenIdFormat = results[assetIndex + 6].data as number
+          const decimals = (results[assetIndex + 7].data as number) || 0
+          const rootReferenceContract = results[assetIndex + 8]
+            .data as ReferenceContract
+          const { supportsInterfaces, standard } = interfacesToCheck.reduce(
+            (
+              { supportsInterfaces, standard },
+              { interfaceId, standard: _standard },
+              index
+            ) => {
+              const supports = results[assetIndex + index + prefixLength]
+                .data as boolean
+              supportsInterfaces[interfaceId] = supports
+              if (supports) {
+                standard = _standard
               }
-            )
-            if (tokenIds && tokenIds.length > 0) {
-              return tokenIds.map(tokenId => {
-                let tokenURI = undefined
-                let tokenDataURL = undefined
-                try {
-                  switch (tokenIdFormat) {
-                    case 0:
-                      tokenURI = toNumber(tokenId).toString()
-                      break
-                    case 1:
-                      tokenURI = encodeURI(
-                        hexToAscii(tokenId).replace(/\0/g, '')
-                      )
-                      break
-                    case 2:
-                      tokenURI = tokenId.toLowerCase()
-                      break
-                    case 3:
-                    case 4:
-                      tokenURI = stripHexPrefix(tokenId).toLowerCase()
-                      break
-                  }
-                } catch {
-                  // Ignore
-                }
-                if (baseURI && tokenURI) {
-                  tokenDataURL = `${baseURI.url}${tokenURI}`.replace(
-                    'ipfs://',
-                    'https://api.universalprofile.cloud/ipfs/'
-                  )
-                }
-                return {
-                  isLoading: false,
-                  isOwned: !isIssued,
-                  isIssued,
-                  address,
-                  tokenURI,
-                  tokenIdFormat,
-                  rootReferenceContract,
-                  baseURI,
-                  tokenDataURL,
-                  decimals,
-                  tokenId,
-                  balance:
-                    // for LSP8 we show balance as 1 not counting all tokenIds
-                    standard && isLsp8({ standard }) && balance !== '0'
-                      ? '1'
-                      : balance,
-                  standard,
-                  tokenName,
-                  tokenSymbol,
-                  tokenType,
-                  supportsInterfaces,
-                } as Asset
-              })
+              return { supportsInterfaces, standard }
+            },
+            { supportsInterfaces: {}, standard: null } as {
+              supportsInterfaces: Record<string, boolean>
+              standard: string | null
             }
-            return {
-              isLoading: false,
-              isOwned: !isIssued,
-              isIssued,
-              address,
-              tokenIdFormat,
-              rootReferenceContract,
-              baseURI,
-              balance:
-                // for LSP8 we show balance as 1 not counting all tokenIds
-                standard && isLsp8({ standard }) && balance !== '0'
-                  ? '1'
-                  : balance,
-              standard,
-              tokenName,
-              tokenSymbol,
-              tokenType,
-              supportsInterfaces,
-              decimals,
-            } as Asset
+          )
+          const isLoading = results.some(result => result.isLoading)
+          if (tokenIds && tokenIds.length > 0) {
+            return tokenIds.map(tokenId => {
+              let tokenURI = undefined
+              let tokenDataURL = undefined
+              try {
+                switch (tokenIdFormat) {
+                  case 0:
+                    tokenURI = toNumber(tokenId).toString()
+                    break
+                  case 1:
+                    tokenURI = encodeURI(hexToAscii(tokenId).replace(/\0/g, ''))
+                    break
+                  case 2:
+                    tokenURI = tokenId.toLowerCase()
+                    break
+                  case 3:
+                  case 4:
+                    tokenURI = stripHexPrefix(tokenId).toLowerCase()
+                    break
+                }
+              } catch {
+                // Ignore
+              }
+              if (baseURI && tokenURI) {
+                tokenDataURL = `${baseURI.url}${tokenURI}`.replace(
+                  'ipfs://',
+                  'https://api.universalprofile.cloud/ipfs/'
+                )
+              }
+              const asset = {
+                isLoading,
+                isOwned: !isIssued,
+                isIssued,
+                address,
+                tokenURI,
+                tokenIdFormat,
+                rootReferenceContract,
+                baseURI: toRaw(baseURI),
+                tokenDataURL,
+                decimals,
+                tokenId,
+                balance:
+                  // for LSP8 we show balance as 1 not counting all tokenIds
+                  standard && isLsp8({ standard }) && balance !== '0'
+                    ? '1'
+                    : balance,
+                standard,
+                tokenName,
+                tokenSymbol,
+                tokenType,
+                supportsInterfaces,
+              } as Asset
+              if (!isLoading) {
+                assetLog('profile-asset', asset)
+              }
+              return asset
+            })
           }
-        ) || []) as Asset[]
-        console.log(assets)
-        return assets
+          const asset = {
+            isLoading,
+            isOwned: !isIssued,
+            isIssued,
+            address,
+            tokenIdFormat,
+            rootReferenceContract,
+            baseURI: toRaw(baseURI),
+            balance:
+              // for LSP8 we show balance as 1 not counting all tokenIds
+              standard && isLsp8({ standard }) && balance !== '0'
+                ? '1'
+                : balance,
+            standard,
+            tokenName,
+            tokenSymbol,
+            tokenType,
+            supportsInterfaces,
+            decimals,
+          } as Asset
+          if (!isLoading) {
+            assetLog('profile-asset', asset)
+          }
+          return asset
+        }) || []) as Asset[]
       },
     })
   }
