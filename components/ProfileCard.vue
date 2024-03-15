@@ -1,6 +1,23 @@
 <script setup lang="ts">
 const profile = useProfile().viewedProfile()
 const { isMobile } = useDevice()
+const { showModal } = useModal()
+
+const handlePreviewProfileImage = () => {
+  const image = profile.value?.profileImage
+
+  if (!image) {
+    return
+  }
+
+  showModal({
+    template: 'AssetImage',
+    data: {
+      asset: image,
+    },
+    size: 'auto',
+  })
+}
 </script>
 
 <template>
@@ -15,24 +32,25 @@ const { isMobile } = useDevice()
     >
       <div slot="content" class="flex flex-col items-center">
         <div class="relative bottom-[-140px] text-center">
-          <div class="group flex cursor-pointer flex-col items-center">
+          <div class="flex cursor-pointer flex-col items-center">
+            <lukso-profile
+              :profile-url="getOptimizedImage(profile?.profileImage, 96)"
+              :profile-address="profile?.address"
+              size="x-large"
+              has-identicon
+              class="relative z-[1] inline-flex rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"
+              @click="handlePreviewProfileImage"
+            >
+            </lukso-profile>
             <lukso-tooltip
               variant="light"
-              offset="15"
+              offset="35"
               is-clipboard-copy
               :copy-text="$formatMessage('profile_card_copy_address')"
               :copy-value="profile?.address"
             >
-              <lukso-profile
-                :profile-url="getOptimizedImage(profile?.profileImage, 96)"
-                :profile-address="profile?.address"
-                size="x-large"
-                has-identicon
-                class="relative z-[1] inline-flex rounded-full outline outline-4 outline-neutral-100 transition group-hover:scale-105"
-              >
-              </lukso-profile>
               <div
-                class="paragraph-ptmono-16-regular relative -top-10 h-0 text-14 opacity-10 transition group-hover:opacity-30 md:text-24"
+                class="paragraph-ptmono-16-regular relative -top-10 h-0 text-14 opacity-10 transition hover:opacity-30 md:text-24"
               >
                 {{ profile?.address }}
               </div>
