@@ -127,10 +127,9 @@ onMounted(async () => {
   await setupWeb3Instances()
   checkConnectionExpiry()
   await setupConnectedProfile()
-
   isLoadedApp.value = true
-
   await setupCurrencies()
+  window.scrollTo(0, 0)
 })
 
 onUnmounted(() => {
