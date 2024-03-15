@@ -51,7 +51,16 @@ const tooManyCreators = computed(
 
 <template>
   <!--no creators at all including owner, might be that its EOA or not indexed -->
-  <div v-if="(creators || []).length === 0"></div>
+  <div
+    v-if="(creators || []).length === 0"
+    class="grid grid-cols-[max-content,auto] gap-1"
+  >
+    <div class="size-6 rounded-full bg-neutral-90"></div>
+    <div class="grid w-full flex-col gap-1">
+      <div class="w-1/3 rounded-[2px] bg-neutral-90"></div>
+      <div class="w-1/2 rounded-[2px] bg-neutral-90"></div>
+    </div>
+  </div>
   <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
     <div class="flex space-x-[-14px]">
       <NftListCardCreatorsProfile

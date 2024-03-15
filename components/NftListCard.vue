@@ -89,23 +89,36 @@ const assetTokenId = computed(() => {
             class="relative grid grid-rows-[max-content,max-content,auto] p-4"
           >
             <div
-              class="relative top-[-40px] flex cursor-pointer flex-col rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
+              class="relative top-[-40px] flex cursor-pointer flex-col gap-1 rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
             >
-              <div class="paragraph-inter-14-semi-bold">
-                {{ token?.tokenName }}
+              <div class="paragraph-inter-14-semi-bold flex items-center gap-1">
+                <span v-if="token?.tokenName">{{ token.tokenName }}</span>
                 <span
-                  class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
-                  >{{ token?.tokenSymbol }}</span
+                  v-else
+                  class="h-[22px] w-1/2 rounded-4 bg-neutral-90"
+                ></span>
+                <span
+                  v-if="token?.tokenSymbol"
+                  class="paragraph-inter-10-semi-bold text-neutral-60"
+                  >{{ token.tokenSymbol }}</span
                 >
+                <span
+                  v-else
+                  class="h-[12px] w-1/4 rounded-[2px] bg-neutral-90"
+                ></span>
               </div>
-              <div class="paragraph-ptmono-10-bold mt-1">
-                <span v-if="isLsp8(token)">
+              <div class="paragraph-ptmono-10-bold">
+                <span v-if="isLsp8(token) && asset?.tokenId">
                   {{ assetTokenId }}
                 </span>
-                <span v-else>
+                <span v-else-if="token?.balance">
                   {{ $formatMessage('token_owned') }}
-                  {{ token?.balance }}
+                  {{ token.balance }}
                 </span>
+                <div
+                  v-else
+                  class="h-[12px] w-1/4 rounded-[2px] bg-neutral-90"
+                ></div>
               </div>
             </div>
             <NftListCardCreators
@@ -131,18 +144,23 @@ const assetTokenId = computed(() => {
           </div>
         </div>
         <div class="flex justify-between px-4 py-3">
-          <AssetStandardBadge :standard="token?.standard" />
+          <AssetStandardBadge
+            v-if="token?.standard"
+            :standard="token.standard"
+          />
+          <div v-else class="h-[20px] w-1/6 rounded-4 bg-neutral-90"></div>
           <div
+            v-if="token?.address"
             class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
           >
             <img
-              v-if="token?.address"
               :src="makeBlockie(token.address)"
               alt=""
               class="size-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
             />
             {{ token?.address?.slice(0, 6) }}
           </div>
+          <div v-else class="h-[20px] w-1/6 rounded-4 bg-neutral-90"></div>
         </div>
       </div>
     </lukso-card>
