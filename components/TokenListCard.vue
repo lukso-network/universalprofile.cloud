@@ -35,10 +35,10 @@ onMounted(() => {
   useIntersectionObserver(target, ([{ isIntersecting }], _observerElement) => {
     targetIsVisible.value = targetIsVisible.value || isIntersecting
   })
-})
 
-useResizeObserver(contentRef, () => {
-  calculateBalanceWidth()
+  useResizeObserver(contentRef, () => {
+    calculateBalanceWidth()
+  })
 })
 
 const handleShowAsset = () => {
