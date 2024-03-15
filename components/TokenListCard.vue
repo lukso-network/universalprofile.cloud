@@ -31,8 +31,10 @@ const calculateBalanceWidth = () => {
     SPACING
 }
 
-useIntersectionObserver(target, ([{ isIntersecting }], _observerElement) => {
-  targetIsVisible.value = targetIsVisible.value || isIntersecting
+onMounted(() => {
+  useIntersectionObserver(target, ([{ isIntersecting }], _observerElement) => {
+    targetIsVisible.value = targetIsVisible.value || isIntersecting
+  })
 })
 
 useResizeObserver(contentRef, () => {
