@@ -29,7 +29,8 @@ import LSP2FetcherWithMulticall3Contract from '@/shared/abis/LSP2FetcherWithMult
 import type { LSP2FetcherWithMulticall3 } from '@/contracts/LSP2FetcherWithMulticall3'
 
 const QUERY_TIMEOUT = 250
-const MAX_BIG_PER_MULTICALL = 10
+const MAX_BIG_PER_MULTICALL = 2
+const MAX_PARALLEL_REQUESTS = 5
 const MAX_AGGREGATE_COUNT = 20
 const MAX_AGGREGATE_DATA_LIMIT = 75 * 1024
 const DATA_SLICE_MARGIN = 64 * 10
@@ -189,7 +190,7 @@ let limit = MAX_AGGREGATE_DATA_LIMIT
 const newMulticall: Multicall[] = []
 
 async function doQueries() {
-  if (running++ > 0) {
+  if (running++ > MAX_PARALLEL_REQUESTS) {
     running--
     triggerQuery()
     return
@@ -205,9 +206,9 @@ async function doQueries() {
           if (query.isBig) {
             if (bigCount > 0) {
               bigCount--
-              allQueries.push(query)
+              allQueries.splice(0, 0, query)
             } else if (allQueries.length === 0) {
-              allQueries.push(query)
+              allQueries.splice(0, 0, query)
             } else {
               queryList.push(query)
               triggerQuery()

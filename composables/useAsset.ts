@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 
-import type { Asset, LSP4DigitalAssetMetadata } from '@/types/asset'
+import type { Asset } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
 export function useAsset() {
@@ -20,41 +20,34 @@ export function useAsset() {
           // 0
           chainId,
           address,
-          keyName: 'LSP4Metadata',
-          isBig: true,
+          keyName: 'LSP4TokenName',
         }),
         queryGetData({
           // 1
           chainId,
           address,
-          keyName: 'LSP4TokenName',
+          keyName: 'LSP4TokenSymbol',
         }),
         queryGetData({
           // 2
           chainId,
           address,
-          keyName: 'LSP4TokenSymbol',
+          keyName: 'LSP4TokenType',
         }),
         queryGetData({
           // 3
           chainId,
           address,
-          keyName: 'LSP4TokenType',
+          keyName: 'LSP8TokenMetadataBaseURI',
         }),
         queryGetData({
           // 4
           chainId,
           address,
-          keyName: 'LSP8TokenMetadataBaseURI',
-        }),
-        queryGetData({
-          // 5
-          chainId,
-          address,
           keyName: 'LSP8TokenIdFormat',
         }),
         queryCallContract({
-          // 6
+          // 5
           chainId,
           address,
           method: 'totalSupply()',
@@ -62,7 +55,7 @@ export function useAsset() {
         ...(profileAddress.value
           ? [
               queryCallContract({
-                // 7
+                // 6
                 chainId,
                 address,
                 method: 'balanceOf(address)',
@@ -73,7 +66,7 @@ export function useAsset() {
           : []),
         ...interfacesToCheck.map(({ interfaceId }) => {
           return queryCallContract({
-            // 8 / 9
+            // 7 / 8
             chainId,
             address,
             method: 'supportsInterface(bytes4)',
@@ -93,13 +86,12 @@ export function useAsset() {
             type === 'call' && call === 'supportsInterface(bytes4)'
         )
         const isLoading = results.some(result => result.isLoading)
-        const assetData = results[0].data as any
-        const tokenName = results[1].data as string
-        const tokenSymbol = results[2].data as string
-        const tokenType = results[3].data as number
-        const baseURI = results[4].data as any
-        const tokenIdFormat = results[5].data as number
-        const totalSupply = results[6].data as string
+        const tokenName = results[0].data as string
+        const tokenSymbol = results[1].data as string
+        const tokenType = results[2].data as number
+        const baseURI = results[3].data as any
+        const tokenIdFormat = results[4].data as number
+        const totalSupply = results[5].data as string
         const { supportsInterfaces, standard } = interfacesToCheck.reduce(
           (
             { supportsInterfaces, standard },
@@ -118,13 +110,7 @@ export function useAsset() {
             standard: string | null
           }
         )
-        const balance = profileAddress.value
-          ? (results[7].data as string)
-          : null
-        let resolvedMetadata: LSP4DigitalAssetMetadata | undefined
-        if (assetData) {
-          resolvedMetadata = prepareMetadata(assetData)
-        }
+        const balance = profileAddress ? (results[6].data as string) : null
         if (tokenId) {
           let tokenURI = undefined
           let tokenDataURL = undefined
@@ -168,17 +154,12 @@ export function useAsset() {
             tokenSymbol,
             tokenType,
             supportsInterfaces,
-            rawMetadata: {
-              assetData,
-            },
-            resolvedMetadata,
           } as Asset
         }
 
         return {
           isLoading,
           address,
-          assetData,
           tokenIdFormat,
           totalSupply,
           baseURI,
@@ -188,10 +169,6 @@ export function useAsset() {
           tokenSymbol,
           tokenType,
           supportsInterfaces,
-          rawMetadata: {
-            assetData,
-          },
-          resolvedMetadata,
         } as Asset
       },
     })

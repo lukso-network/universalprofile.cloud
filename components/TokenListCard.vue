@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useIntersectionObserver } from '@vueuse/core'
+
 const showJSON = ref(window.location.search.includes('json'))
 
 type Props = {
@@ -11,7 +13,14 @@ const props = defineProps<Props>()
 const { isConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
 const viewedProfileAddress = getCurrentProfileAddress()
-const asset = computed(() => props.asset)
+const targetIsVisible = ref(false)
+
+const target = ref<HTMLElement | null>(null)
+useIntersectionObserver(target, ([{ isIntersecting }], _observerElement) => {
+  targetIsVisible.value = targetIsVisible.value || isIntersecting
+})
+
+const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const token = useToken()(asset)
 const contentRef = ref()
 const logoRef = ref()
@@ -57,91 +66,93 @@ onMounted(async () => {
 </script>
 
 <template>
-  <lukso-card
-    border-radius="small"
-    shadow="small"
-    is-hoverable
-    is-full-width
-    @click="handleShowAsset"
-    ><div
-      slot="content"
-      class="grid h-full grid-rows-[max-content,auto] p-4"
-      ref="contentRef"
-    >
-      <div
-        v-if="showJSON"
-        class="w-full overflow-auto whitespace-pre-wrap pt-8"
+  <div ref="target">
+    <lukso-card
+      border-radius="small"
+      shadow="small"
+      is-hoverable
+      is-full-width
+      @click="handleShowAsset"
+      ><div
+        slot="content"
+        class="grid h-full grid-rows-[max-content,auto] p-4"
+        ref="contentRef"
       >
-        token = {{ JSON.stringify(token, null, '  ') }}
-      </div>
-      <div class="flex h-7 items-start justify-end">
-        <AssetStandardBadge :standard="asset?.standard" />
-      </div>
-      <div class="flex gap-6">
-        <div ref="logoRef" class="flex flex-col items-center pl-2">
-          <lukso-profile
-            size="medium"
-            :profile-address="asset?.address"
-            :profile-url="
-              getAssetThumb(token, true, 260) || ASSET_ICON_PLACEHOLDER_URL
-            "
-            :has-identicon="hasAddress ? 'true' : undefined"
-          ></lukso-profile>
-          <div
-            v-if="hasAddress"
-            class="paragraph-ptmono-10-bold pt-2 text-neutral-60"
-          >
-            #{{ asset?.address?.slice(2, 8) }}
+        <div
+          v-if="showJSON"
+          class="w-full overflow-auto whitespace-pre-wrap pt-8"
+        >
+          token = {{ JSON.stringify(token, null, '  ') }}
+        </div>
+        <div class="flex h-7 items-start justify-end">
+          <AssetStandardBadge :standard="asset?.standard" />
+        </div>
+        <div class="flex gap-6">
+          <div ref="logoRef" class="flex flex-col items-center pl-2">
+            <lukso-profile
+              size="medium"
+              :profile-address="asset?.address"
+              :profile-url="
+                getAssetThumb(token, true, 260) || ASSET_ICON_PLACEHOLDER_URL
+              "
+              :has-identicon="hasAddress ? 'true' : undefined"
+            ></lukso-profile>
+            <div
+              v-if="hasAddress"
+              class="paragraph-ptmono-10-bold pt-2 text-neutral-60"
+            >
+              #{{ asset?.address?.slice(2, 8) }}
+            </div>
+          </div>
+          <div class="grid w-full grid-rows-[max-content,max-content,auto]">
+            <div class="heading-inter-14-bold pb-1">{{ asset?.tokenName }}</div>
+            <div class="heading-inter-21-semi-bold flex items-center pb-1">
+              <span
+                v-if="asset?.balance"
+                class="truncate"
+                :style="{
+                  'max-width': `${balanceWidthPx}px`,
+                }"
+                :title="
+                  $formatNumber(
+                    fromWeiWithDecimals(asset.balance, asset.decimals)
+                  )
+                "
+                >{{
+                  $formatNumber(
+                    fromWeiWithDecimals(asset.balance, asset.decimals)
+                  )
+                }}</span
+              >
+              <span v-else>0</span>
+              <span
+                ref="symbolRef"
+                class="paragraph-inter-14-semi-bold pl-2 text-neutral-60"
+                >{{ asset?.tokenSymbol }}</span
+              >
+            </div>
+            <div
+              v-if="asset?.balance && asset.tokenSymbol"
+              class="paragraph-inter-12-regular"
+            >
+              {{ $formatCurrency(asset.balance, asset.tokenSymbol) }}
+            </div>
+            <div class="flex w-full items-end justify-end">
+              <lukso-button
+                v-if="
+                  isConnected &&
+                  viewedProfileAddress === connectedProfile?.address
+                "
+                size="small"
+                variant="secondary"
+                @click="handleSendAsset"
+                class="mt-4 transition-opacity hover:opacity-70"
+                >{{ $formatMessage('button_send') }}</lukso-button
+              >
+            </div>
           </div>
         </div>
-        <div class="grid w-full grid-rows-[max-content,max-content,auto]">
-          <div class="heading-inter-14-bold pb-1">{{ asset?.tokenName }}</div>
-          <div class="heading-inter-21-semi-bold flex items-center pb-1">
-            <span
-              v-if="asset?.balance"
-              class="truncate"
-              :style="{
-                'max-width': `${balanceWidthPx}px`,
-              }"
-              :title="
-                $formatNumber(
-                  fromWeiWithDecimals(asset.balance, asset.decimals)
-                )
-              "
-              >{{
-                $formatNumber(
-                  fromWeiWithDecimals(asset.balance, asset.decimals)
-                )
-              }}</span
-            >
-            <span v-else>0</span>
-            <span
-              ref="symbolRef"
-              class="paragraph-inter-14-semi-bold pl-2 text-neutral-60"
-              >{{ asset?.tokenSymbol }}</span
-            >
-          </div>
-          <div
-            v-if="asset?.balance && asset.tokenSymbol"
-            class="paragraph-inter-12-regular"
-          >
-            {{ $formatCurrency(asset.balance, asset.tokenSymbol) }}
-          </div>
-          <div class="flex w-full items-end justify-end">
-            <lukso-button
-              v-if="
-                isConnected &&
-                viewedProfileAddress === connectedProfile?.address
-              "
-              size="small"
-              variant="secondary"
-              @click="handleSendAsset"
-              class="mt-4 transition-opacity hover:opacity-70"
-              >{{ $formatMessage('button_send') }}</lukso-button
-            >
-          </div>
-        </div>
       </div>
-    </div>
-  </lukso-card>
+    </lukso-card>
+  </div>
 </template>

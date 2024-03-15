@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import makeBlockie from 'ethereum-blockies-base64'
+import { ref } from 'vue'
+import { useIntersectionObserver } from '@vueuse/core'
 
 const showJSON = ref(window.location.search.includes('json'))
 
@@ -12,7 +14,14 @@ const props = defineProps<Props>()
 
 const { isConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
-const asset = computed(() => props.asset)
+const targetIsVisible = ref(false)
+
+const target = ref<HTMLElement | null>(null)
+useIntersectionObserver(target, ([{ isIntersecting }], _observerElement) => {
+  targetIsVisible.value = targetIsVisible.value || isIntersecting
+})
+
+const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const token = useToken()(asset)
 const viewedProfileAddress = getCurrentProfileAddress()
 
@@ -52,86 +61,90 @@ const assetTokenId = computed(() => {
 </script>
 
 <template>
-  <lukso-card
-    border-radius="small"
-    shadow="small"
-    is-hoverable
-    is-full-width
-    @click="handleShowAsset"
-    ><div
-      slot="content"
-      class="grid h-full grid-rows-[auto,max-content] rounded-12 bg-neutral-97"
-    >
-      <div
-        v-if="showJSON"
-        class="w-full overflow-auto whitespace-pre-wrap pt-8"
+  <div ref="target">
+    <lukso-card
+      border-radius="small"
+      shadow="small"
+      is-hoverable
+      is-full-width
+      @click="handleShowAsset"
+      ><div
+        slot="content"
+        class="grid h-full grid-rows-[auto,max-content] rounded-12 bg-neutral-97"
       >
-        token = {{ JSON.stringify(token, null, '  ') }}
-      </div>
-      <div
-        class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
-      >
-        <AssetImage
-          :src="getAssetThumb(token, false, 260)"
-          class="min-h-[260px] rounded-t-12 md:max-h-[260px]"
-        />
-        <div class="relative grid grid-rows-[max-content,max-content,auto] p-4">
-          <div
-            class="relative top-[-40px] flex cursor-pointer flex-col rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
-          >
-            <div class="paragraph-inter-14-semi-bold">
-              {{ token?.tokenName }}
-              <span
-                class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
-                >{{ token?.tokenSymbol }}</span
-              >
-            </div>
-            <div class="paragraph-ptmono-10-bold mt-1">
-              <span v-if="isLsp8(token)">
-                {{ assetTokenId }}
-              </span>
-              <span v-else>
-                {{ $formatMessage('token_owned') }}
-                {{ token?.balance }}
-              </span>
-            </div>
-          </div>
-          <NftListCardCreators
-            v-if="token"
-            :asset="token"
-            class="relative -top-4 -mt-2"
-          />
-          <div class="flex items-end">
-            <div class="flex w-full justify-end">
-              <lukso-button
-                v-if="
-                  isConnected &&
-                  viewedProfileAddress === connectedProfile?.address
-                "
-                size="small"
-                variant="secondary"
-                @click="handleSendAsset"
-                class="transition-opacity hover:opacity-70"
-                >{{ $formatMessage('button_send') }}</lukso-button
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="flex justify-between px-4 py-3">
-        <AssetStandardBadge :standard="token?.standard" />
         <div
-          class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
+          v-if="showJSON"
+          class="w-full overflow-auto whitespace-pre-wrap pt-8"
         >
-          <img
-            v-if="token?.address"
-            :src="makeBlockie(token.address)"
-            alt=""
-            class="size-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
+          token = {{ JSON.stringify(token, null, '  ') }}
+        </div>
+        <div
+          class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
+        >
+          <AssetImage
+            :src="getAssetThumb(token, false, 260)"
+            class="min-h-[260px] rounded-t-12 md:max-h-[260px]"
           />
-          {{ token?.address?.slice(0, 6) }}
+          <div
+            class="relative grid grid-rows-[max-content,max-content,auto] p-4"
+          >
+            <div
+              class="relative top-[-40px] flex cursor-pointer flex-col rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
+            >
+              <div class="paragraph-inter-14-semi-bold">
+                {{ token?.tokenName }}
+                <span
+                  class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
+                  >{{ token?.tokenSymbol }}</span
+                >
+              </div>
+              <div class="paragraph-ptmono-10-bold mt-1">
+                <span v-if="isLsp8(token)">
+                  {{ assetTokenId }}
+                </span>
+                <span v-else>
+                  {{ $formatMessage('token_owned') }}
+                  {{ token?.balance }}
+                </span>
+              </div>
+            </div>
+            <NftListCardCreators
+              v-if="token"
+              :asset="token"
+              class="relative -top-4 -mt-2"
+            />
+            <div class="flex items-end">
+              <div class="flex w-full justify-end">
+                <lukso-button
+                  v-if="
+                    isConnected &&
+                    viewedProfileAddress === connectedProfile?.address
+                  "
+                  size="small"
+                  variant="secondary"
+                  @click="handleSendAsset"
+                  class="transition-opacity hover:opacity-70"
+                  >{{ $formatMessage('button_send') }}</lukso-button
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between px-4 py-3">
+          <AssetStandardBadge :standard="token?.standard" />
+          <div
+            class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
+          >
+            <img
+              v-if="token?.address"
+              :src="makeBlockie(token.address)"
+              alt=""
+              class="size-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
+            />
+            {{ token?.address?.slice(0, 6) }}
+          </div>
         </div>
       </div>
-    </div>
-  </lukso-card>
+    </lukso-card>
+  </div>
 </template>

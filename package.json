@@ -140,6 +140,7 @@
     "@tanstack/query-persist-client-core": "^5.25.0",
     "@tanstack/query-sync-storage-persister": "^5.25.0",
     "@tanstack/vue-query": "^5.25.0",
+    "@vueuse/core": "^10.9.0",
     "limiter": "^2.1.0"
   }
 }
