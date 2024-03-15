@@ -31,16 +31,6 @@ const calculateBalanceWidth = () => {
     SPACING
 }
 
-onMounted(() => {
-  useIntersectionObserver(target, ([{ isIntersecting }], _observerElement) => {
-    targetIsVisible.value = targetIsVisible.value || isIntersecting
-  })
-
-  useResizeObserver(contentRef, () => {
-    calculateBalanceWidth()
-  })
-})
-
 const handleShowAsset = () => {
   try {
     assertAddress(props.asset?.address, 'asset')
@@ -64,6 +54,21 @@ const handleSendAsset = (event: Event) => {
     console.error(error)
   }
 }
+
+onMounted(() => {
+  setTimeout(() => {
+    useIntersectionObserver(
+      target,
+      ([{ isIntersecting }], _observerElement) => {
+        targetIsVisible.value = targetIsVisible.value || isIntersecting
+      }
+    )
+  }, 1)
+
+  useResizeObserver(contentRef, () => {
+    calculateBalanceWidth()
+  })
+})
 
 watch(
   () => token.value?.isLoading,

@@ -15,12 +15,7 @@ const props = defineProps<Props>()
 const { isConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
 const targetIsVisible = ref(false)
-
 const target = ref<HTMLElement | null>(null)
-useIntersectionObserver(target, ([{ isIntersecting }], _observerElement) => {
-  targetIsVisible.value = targetIsVisible.value || isIntersecting
-})
-
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const token = useToken()(asset)
 const viewedProfileAddress = getCurrentProfileAddress()
@@ -57,6 +52,17 @@ const handleSendAsset = (event: Event) => {
 
 const assetTokenId = computed(() => {
   return prefixedTokenId(props.asset?.tokenId, props.asset?.tokenIdFormat, 24)
+})
+
+onMounted(async () => {
+  setTimeout(() => {
+    useIntersectionObserver(
+      target,
+      ([{ isIntersecting }], _observerElement) => {
+        targetIsVisible.value = targetIsVisible.value || isIntersecting
+      }
+    )
+  }, 1)
 })
 </script>
 
