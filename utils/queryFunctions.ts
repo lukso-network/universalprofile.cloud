@@ -331,7 +331,6 @@ async function doQueries() {
                 ]
               )
               multicall.push({
-                index: multicall.length,
                 target: address,
                 call,
                 queries: tokenQueries as unknown as QueryPromise<any>[],
