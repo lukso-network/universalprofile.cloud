@@ -8,10 +8,12 @@ export type VerifyStatus = 'verified' | 'unverified' | 'partial'
 const CREATOR_SHOW_LIMIT = 4
 const props = defineProps<Props>()
 
+const asset = computed(() => props.asset)
+const assetAddress = computed(() => asset.value?.address)
 const creators = computed(() => {
   let items = (props.asset?.tokenCreators || []) as Address[]
   if (items.length === 0 && props.asset?.owner) {
-    items = [props.asset?.owner as Address]
+    items = [asset.value?.owner as Address]
   }
   return items
 })
@@ -24,20 +26,16 @@ const creatorsWithLimit = computed(() => {
   }
 })
 
-const issued = useIssuedAssets().validateAssets(
-  creators.value,
-  props.asset?.address
-)
-
-const verifyInfo = computed(() => issued.value)
+const issued = useIssuedAssets().validateAssets(creators, assetAddress)
 
 const verifyStatus = computed<VerifyStatus>(() => {
-  const hasSome = verifyInfo.value.some(info => info)
+  const array = Array.from(issued.value?.values() || [])
+  const hasSome = array?.some(info => info)
   if (!hasSome) {
     return 'unverified'
   }
 
-  if (verifyInfo.value.every(info => info)) {
+  if (array.every(Boolean)) {
     return 'verified'
   }
 
