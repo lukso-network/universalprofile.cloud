@@ -33,17 +33,17 @@ const MAX_AGGREGATE_DATA_LIMIT = 75 * 1024
 
 export type QueryPromiseCallOptions = {
   type: 'call'
-  isBig: boolean
   chainId: string
   address: Address
   method: string
   abi?: AbiItem
   args: readonly unknown[]
   queryKey?: readonly unknown[]
+  priority?: number
+  aggregateLimit?: number
 }
 export type QueryPromiseDataOptions = {
   type: 'getData'
-  isBig: boolean
   chainId: string
   address: Address
   tokenId?: `0x${string}`
@@ -51,6 +51,8 @@ export type QueryPromiseDataOptions = {
   dynamicKeyParts?: string | string[]
   schema?: readonly ERC725JSONSchema[]
   queryKey?: readonly unknown[]
+  priority?: number
+  aggregateLimit?: number
 }
 export type QueryPromiseOptions =
   | QueryPromiseCallOptions
@@ -201,7 +203,7 @@ async function doQueries() {
     const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
       currentNetwork.value
     const startLength = queryList.length
-    const allBigQueries: QueryPromise<
+    const singleCallQueries: QueryPromise<
       unknown,
       QueryPromiseDataOptions | QueryPromiseCallOptions
     >[] = []
@@ -209,6 +211,11 @@ async function doQueries() {
       unknown,
       QueryPromiseDataOptions | QueryPromiseCallOptions
     >[] = []
+    queryList.sort((a, b) => {
+      const apriority = a.priority ?? 0
+      const bpriority = b.priority ?? 0
+      return bpriority - apriority
+    })
     while (true) {
       const query = queryList.shift()
       if (!query) {
@@ -222,23 +229,24 @@ async function doQueries() {
         }
         continue
       }
-      if (query.isBig) {
-        allBigQueries.push(query)
-        if (allBigQueries.length >= MAX_PARALLEL_REQUESTS - 1) {
+      if (query.aggregateLimit === 1) {
+        singleCallQueries.push(query)
+        if (singleCallQueries.length >= MAX_PARALLEL_REQUESTS - 1) {
           break
         }
       } else {
-        queries.push(query)
-        if (queries.length > MAX_AGGREGATE_COUNT) {
+        if (query.aggregateLimit && queries.length > query.aggregateLimit) {
+          queryList.splice(0, 0, query)
           break
         }
+        queries.push(query)
       }
     }
     queryLog(
       'doQueries',
-      `digested ${startLength - queryList.length} queries into ${queries.length} queries and ${allBigQueries.length} single queries`,
+      `digested ${startLength - queryList.length} queries into ${queries.length} queries and ${singleCallQueries.length} single queries`,
       toRaw(queries),
-      toRaw(allBigQueries)
+      toRaw(singleCallQueries)
     )
 
     const split: Record<
@@ -490,7 +498,7 @@ async function doQueries() {
         }
       }
 
-      allBigQueries.forEach(query => {
+      singleCallQueries.forEach(query => {
         const { keyName, dynamicKeyParts, address, type, tokenId } = query
         if (type === 'getData') {
           const abi = LSP8IdentifiableDigitalAssetContract.abi.find(
@@ -620,7 +628,7 @@ async function doQueries() {
                 }
                 if (success === 2) {
                   ;(query ? [query] : queries)?.forEach(query => {
-                    query.isBig = true
+                    query.aggregateLimit = 1
                     queryList.splice(0, 0, query)
                   })
                   triggerQuery()
@@ -887,10 +895,11 @@ export type CallContractQueryOptions = {
   method: string
   args?: readonly unknown[]
   chainId: string
-  isBig?: boolean
   staleTime?: number
   refetchInterval?: number
   retry?: number | boolean
+  aggregateLimit?: number
+  priority?: number
 }
 
 export function queryCallContract<T>({
@@ -899,7 +908,8 @@ export function queryCallContract<T>({
   method,
   args = [],
   chainId,
-  isBig = false,
+  aggregateLimit = MAX_AGGREGATE_COUNT,
+  priority = 0,
   staleTime,
   refetchInterval,
   retry,
@@ -950,7 +960,8 @@ export function queryCallContract<T>({
     queryFn: async (): Promise<T> => {
       const query = createQueryPromise<T>({
         type: 'call',
-        isBig,
+        aggregateLimit,
+        priority,
         chainId,
         abi: methodItem,
         address,
@@ -971,10 +982,11 @@ export type GetDataQueryOptions = {
   keyName: string
   schema?: readonly ERC725JSONSchema[]
   tokenId?: string
-  isBig?: boolean
   staleTime?: number
   refetchInterval?: number
   retry?: number | boolean
+  aggregateLimit?: number
+  priority?: number
 }
 
 export type VerifiableURI = {
@@ -991,10 +1003,11 @@ export function queryGetData<T>({
   keyName,
   schema,
   tokenId,
-  isBig,
   staleTime,
   refetchInterval,
   retry,
+  aggregateLimit = MAX_AGGREGATE_COUNT,
+  priority = 0,
 }: GetDataQueryOptions): QFQueryOptions<T> {
   const schemaItem = (schema || defaultSchema).find(
     ({ name }) => name === keyName
@@ -1014,7 +1027,8 @@ export function queryGetData<T>({
     queryFn: async (): Promise<T> => {
       const query = createQueryPromise({
         type: 'getData',
-        isBig,
+        aggregateLimit,
+        priority,
         chainId,
         address,
         tokenId,

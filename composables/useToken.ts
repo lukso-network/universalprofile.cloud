@@ -41,7 +41,8 @@ export function useToken() {
               chainId,
               address,
               keyName: 'LSP4Metadata',
-              isBig: true,
+              aggregateLimit: 1,
+              priority: 50,
             }),
             ...(tokenId
               ? [
@@ -51,7 +52,8 @@ export function useToken() {
                     address,
                     tokenId,
                     keyName: 'LSP4Metadata',
-                    isBig: true,
+                    aggregateLimit: 1,
+                    priority: 50,
                   }),
                   {
                     // 5
@@ -93,7 +95,8 @@ export function useToken() {
                             tokenId
                           ).toLowerCase() as Address,
                           keyName: 'LSP4Metadata',
-                          isBig: true,
+                          aggregateLimit: 1,
+                          priority: 50,
                         }),
                         queryGetData({
                           // 7
