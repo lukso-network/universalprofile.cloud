@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { useIntersectionObserver, useResizeObserver } from '@vueuse/core'
+import {
+  useIntersectionObserver,
+  useResizeObserver,
+  useElementSize,
+} from '@vueuse/core'
 
 const showJSON = ref(window.location.search.includes('json'))
 
@@ -23,11 +27,12 @@ const balanceWidthPx = ref(0)
 
 const calculateBalanceWidth = () => {
   const SPACING = 24 + 32 // gap + padding
+  const { width: contentWidth } = useElementSize(contentRef.value)
+  const { width: logoWidth } = useElementSize(logoRef.value)
+  const { width: symbolWidth } = useElementSize(symbolRef.value)
+
   balanceWidthPx.value =
-    contentRef.value?.clientWidth -
-    logoRef.value?.clientWidth -
-    symbolRef.value?.clientWidth -
-    SPACING
+    contentWidth.value - logoWidth.value - symbolWidth.value - SPACING
 }
 
 const handleShowAsset = () => {
