@@ -64,22 +64,28 @@ const handlePreviewImage = () => {
             @click="handlePreviewImage"
           />
           <div class="relative p-4">
-            <div class="paragraph-inter-14-semi-bold">
-              {{ asset?.tokenName }}
-              <span
-                class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
-                >{{ asset?.tokenSymbol }}</span
+            <div class="paragraph-inter-14-semi-bold flex items-center gap-1">
+              <div v-if="asset">{{ asset?.tokenName }}</div>
+              <AppPlaceholderLine v-else class="h-[22px] w-1/2" />
+
+              <div
+                v-if="asset"
+                class="paragraph-inter-10-semi-bold text-neutral-60"
               >
+                {{ asset?.tokenSymbol }}
+              </div>
+              <AppPlaceholderLine v-else class="h-[12px] w-1/6" />
             </div>
-            <div class="paragraph-ptmono-10-bold mt-1">
+            <div v-if="asset" class="paragraph-ptmono-10-bold mt-1">
               <span v-if="isLsp8(asset)">
                 {{ assetTokenId }}
               </span>
-              <span v-else-if="asset?.balance">
+              <span v-else-if="asset.balance">
                 {{ $formatMessage('token_owned') }}
                 {{ asset?.balance }}
               </span>
             </div>
+            <AppPlaceholderLine v-else class="mt-1 h-[11px] w-1/6" />
           </div>
         </div>
       </lukso-card>
@@ -102,36 +108,18 @@ const handlePreviewImage = () => {
     </div>
     <div>
       <div class="heading-apax-24-medium flex items-center gap-2 pb-2">
-        {{ asset?.tokenName }}
-        <AssetStandardBadge :standard="asset?.standard" />
+        <AssetName :asset="token" />
+        <AssetStandardBadge :asset="token" />
       </div>
-      <AssetCollectionSupply
-        :total-supply="asset?.totalSupply"
-        :class="{
-          'mb-4': hasTokenId(asset),
-          'mb-8': !hasTokenId(asset),
-        }"
-      />
-      <AssetTokenId v-if="asset && hasTokenId(asset)" :asset="asset" />
-      <AssetDescription
-        v-if="token?.resolvedMetadata?.description"
-        :description="token?.resolvedMetadata?.description"
-      />
-      <AssetImages
-        v-if="token?.resolvedMetadata?.images?.length"
-        :images="token?.resolvedMetadata?.images"
-      />
-      <AssetAssets
-        v-if="token?.resolvedMetadata?.assets?.length"
-        :assets="token?.resolvedMetadata?.assets"
-      />
-      <AssetAttributes :attributes="token?.resolvedMetadata?.attributes" />
-      <AssetCreators v-if="token" :asset="token" />
-      <AssetLinks
-        v-if="token?.resolvedMetadata?.links?.length"
-        :links="token?.resolvedMetadata?.links"
-      />
-      <AssetAddress v-if="token?.address" :address="token.address" />
+      <AssetCollectionSupply :asset="token" />
+      <AssetTokenId :asset="asset" />
+      <AssetDescription :asset="token" />
+      <AssetImages :asset="token" />
+      <AssetAssets :asset="token" />
+      <AssetAttributes :asset="token" />
+      <AssetCreators :asset="token" />
+      <AssetLinks :asset="token" />
+      <AssetAddress :asset="token" />
     </div>
   </div>
 </template>

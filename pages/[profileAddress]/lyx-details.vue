@@ -106,14 +106,19 @@ const handleBuyLyx = () => {
           {{ $formatMessage('lyx_details_title') }}
         </div>
         <AssetTokenSupply
-          :total-supply="currentNetwork.token.supply"
-          :decimals="ASSET_LYX_DECIMALS"
-          class="pb-8"
+          :asset="{
+            totalSupply: currentNetwork.token.supply,
+            decimals: ASSET_LYX_DECIMALS,
+          }"
         />
         <AssetDescription
-          :description="$formatMessage('lyx_details_description')"
+          :asset="{
+            resolvedMetadata: {
+              description: $formatMessage('lyx_details_description'),
+            },
+          }"
         />
-        <AssetLinks :links="links" />
+        <AssetLinks :asset="{ resolvedMetadata: { links } }" />
       </div>
     </div>
   </AppPageLoader>

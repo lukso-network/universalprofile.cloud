@@ -92,32 +92,16 @@ const handlePreviewImage = () => {
       </div>
       <div>
         <div class="heading-apax-24-medium flex items-center gap-2 pb-2">
-          {{ token?.tokenName }}
-          <AssetStandardBadge :standard="token?.standard" />
+          <AssetName :asset="token" />
+          <AssetStandardBadge :asset="token" />
         </div>
-        <AssetTokenSupply
-          :total-supply="token?.totalSupply"
-          :decimals="token?.decimals"
-          class="pb-8"
-        />
-        <AssetDescription
-          v-if="token?.resolvedMetadata?.description"
-          :description="token?.resolvedMetadata?.description"
-        />
-        <AssetImages
-          v-if="token?.resolvedMetadata?.images?.length"
-          :images="token?.resolvedMetadata?.images"
-        />
-        <AssetAssets
-          v-if="token?.resolvedMetadata?.assets?.length"
-          :assets="token?.resolvedMetadata?.assets"
-        />
-        <AssetAttributes :attributes="asset?.resolvedMetadata?.attributes" />
-        <AssetLinks
-          v-if="token?.resolvedMetadata?.links?.length"
-          :links="token?.resolvedMetadata?.links"
-        />
-        <AssetAddress v-if="token?.address" :address="token.address" />
+        <AssetTokenSupply :asset="token" />
+        <AssetDescription :asset="token" />
+        <AssetImages :asset="token" />
+        <AssetAssets :asset="token" />
+        <AssetAttributes :asset="token" />
+        <AssetLinks :asset="token" />
+        <AssetAddress :asset="token" />
       </div>
     </div>
   </div>

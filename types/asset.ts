@@ -12,6 +12,7 @@ export type LSP4DigitalAssetMetadata = {
   assets?: AssetMetadata[]
   attributes?: AttributeMetadata[]
   links?: LinkMetadata[]
+  name?: string
 }
 
 export type LSP4DigitalAssetMetadataJSON = {

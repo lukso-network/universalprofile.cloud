@@ -1,18 +1,23 @@
 <script setup lang="ts">
 type Props = {
-  description: string
+  asset?: Asset
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const isLoaded = computed(() => props.asset && !props.asset?.isMetadataLoading)
+const description = computed(() => props.asset?.resolvedMetadata?.description)
 </script>
 
 <template>
-  <div class="mb-8">
-    <div class="heading-inter-14-bold pb-3">
-      {{ $formatMessage('token_details_description') }}
-    </div>
-    <div class="paragraph-inter-12-regular break-word">
-      {{ description }}
+  <div v-if="isLoaded">
+    <div v-if="description" class="mb-8">
+      <div class="heading-inter-14-bold pb-3">
+        {{ $formatMessage('token_details_description') }}
+      </div>
+      <div class="paragraph-inter-12-regular break-word">
+        {{ description }}
+      </div>
     </div>
   </div>
+  <AppPlaceholderMultiline v-else />
 </template>

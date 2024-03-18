@@ -63,6 +63,8 @@ onMounted(() => {
     )
   }, 1)
 })
+
+const isLoaded = computed(() => token.value && !token.value.isLoading)
 </script>
 
 <template>
@@ -97,17 +99,16 @@ onMounted(() => {
               class="relative top-[-40px] flex cursor-pointer flex-col gap-1 rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
             >
               <div class="paragraph-inter-14-semi-bold flex items-center gap-1">
-                <span v-if="token?.tokenName">{{ token.tokenName }}</span>
-
+                <span v-if="isLoaded">{{ token?.tokenName }}</span>
                 <AppPlaceholderLine v-else class="h-[22px] w-1/2" />
                 <span
-                  v-if="token?.tokenSymbol"
+                  v-if="isLoaded"
                   class="paragraph-inter-10-semi-bold text-neutral-60"
-                  >{{ token.tokenSymbol }}</span
+                  >{{ token?.tokenSymbol }}</span
                 >
                 <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
               </div>
-              <div class="paragraph-ptmono-10-bold">
+              <div v-if="isLoaded" class="paragraph-ptmono-10-bold">
                 <span v-if="isLsp8(token) && asset?.tokenId">
                   {{ assetTokenId }}
                 </span>
@@ -115,11 +116,11 @@ onMounted(() => {
                   {{ $formatMessage('token_owned') }}
                   {{ token.balance }}
                 </span>
-                <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
               </div>
+              <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
             </div>
             <NftListCardCreators
-              v-if="token"
+              v-if="token && isLoaded"
               :asset="token"
               class="relative -top-4 -mt-2"
             />
@@ -151,13 +152,10 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex justify-between px-4 py-3">
-          <AssetStandardBadge
-            v-if="token?.standard"
-            :standard="token.standard"
-          />
-          <AppPlaceholderLine v-else class="h-[20px] w-1/6" />
+          <AssetStandardBadge :asset="token" />
+
           <div
-            v-if="token?.address"
+            v-if="isLoaded && token?.address"
             class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
           >
             <img

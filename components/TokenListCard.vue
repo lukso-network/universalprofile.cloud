@@ -81,6 +81,8 @@ watch(
     calculateBalanceWidth()
   }
 )
+
+const isLoaded = computed(() => token.value && !token.value.isLoading)
 </script>
 
 <template>
@@ -103,18 +105,14 @@ watch(
           token = {{ JSON.stringify(token, null, '  ') }}
         </div>
         <div class="flex h-7 items-start justify-end">
-          <AssetStandardBadge
-            v-if="asset?.standard"
-            :standard="asset.standard"
-          />
-          <AppPlaceholderLine v-else class="h-[20px] w-1/6" />
+          <AssetStandardBadge :asset="token" />
         </div>
         <div class="flex gap-6">
           <div ref="logoRef" class="flex flex-col items-center gap-2 pl-2">
             <lukso-profile
-              v-if="asset?.address"
+              v-if="isLoaded"
               size="medium"
-              :profile-address="asset.address"
+              :profile-address="token?.address"
               :profile-url="
                 getAssetThumb(token, true, 260) || ASSET_ICON_PLACEHOLDER_URL
               "
@@ -122,10 +120,10 @@ watch(
             ></lukso-profile>
             <AppPlaceholderCircle v-else class="size-14" />
             <div
-              v-if="asset?.address"
+              v-if="isLoaded"
               class="paragraph-ptmono-10-bold text-neutral-60"
             >
-              #{{ asset?.address.slice(2, 8) }}
+              #{{ token?.address?.slice(2, 8) }}
             </div>
             <AppPlaceholderLine v-else class="h-[14px] w-full" />
           </div>
@@ -133,27 +131,27 @@ watch(
             class="grid w-full grid-rows-[max-content,max-content,auto] gap-1"
           >
             <div class="heading-inter-14-bold">
-              <div v-if="asset?.tokenName">{{ asset.tokenName }}</div>
+              <div v-if="isLoaded">{{ token?.tokenName }}</div>
               <AppPlaceholderLine v-else class="h-[17px] w-1/3" />
             </div>
             <div
-              v-if="asset"
+              v-if="isLoaded"
               class="heading-inter-21-semi-bold flex items-center"
             >
               <span
-                v-if="asset?.balance"
+                v-if="token?.balance"
                 class="truncate"
                 :style="{
                   'max-width': `${balanceWidthPx}px`,
                 }"
                 :title="
                   $formatNumber(
-                    fromWeiWithDecimals(asset.balance, asset.decimals)
+                    fromWeiWithDecimals(token.balance, token.decimals)
                   )
                 "
                 >{{
                   $formatNumber(
-                    fromWeiWithDecimals(asset.balance, asset.decimals)
+                    fromWeiWithDecimals(token.balance, token.decimals)
                   )
                 }}</span
               >
@@ -161,7 +159,7 @@ watch(
               <span
                 ref="symbolRef"
                 class="paragraph-inter-14-semi-bold pl-2 text-neutral-60"
-                >{{ asset?.tokenSymbol }}</span
+                >{{ token?.tokenSymbol }}</span
               >
             </div>
             <div v-else class="grid grid-cols-[2fr,1fr] items-center gap-2">
@@ -169,10 +167,10 @@ watch(
               <AppPlaceholderLine class="h-[22px] w-full" />
             </div>
             <div
-              v-if="asset?.balance && asset.tokenSymbol"
+              v-if="token?.balance && token.tokenSymbol"
               class="paragraph-inter-12-regular"
             >
-              {{ $formatCurrency(asset.balance, asset.tokenSymbol) }}
+              {{ $formatCurrency(token.balance, token.tokenSymbol) }}
             </div>
             <div class="flex w-full items-end justify-end">
               <lukso-button

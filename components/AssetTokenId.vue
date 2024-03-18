@@ -2,10 +2,11 @@
 const { isMobile } = useDevice()
 
 type Props = {
-  asset: Asset
+  asset?: Asset
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const isLoaded = computed(() => props.asset && !props.asset?.isLoading)
 
 const tokenLength = computed(() => {
   let tokenLength = 64
@@ -27,37 +28,42 @@ onMounted(() => {
 </script>
 
 <template>
-  <lukso-tag is-rounded class="mb-8">
-    <div class="flex items-center">
-      <div class="paragraph-ptmono-12-bold mr-2">
-        {{ prefixedTokenId(asset?.tokenId, asset?.tokenIdFormat, tokenLength) }}
-      </div>
-      <lukso-tooltip
-        variant="white"
-        trigger="mouseenter"
-        offset="15"
-        :text="tooltipContent"
-      >
-        <lukso-icon
-          name="copy"
-          size="small"
-          class="cursor-pointer transition-opacity hover:opacity-70"
-        ></lukso-icon>
-      </lukso-tooltip>
-      <div id="tooltip-token-id" class="text-center">
-        <div
-          class="mb-1 rounded-4 px-2 py-1 hover:cursor-pointer hover:bg-neutral-95"
-          :onclick="`navigator.clipboard.writeText('${parseTokenId(asset?.tokenId, asset?.tokenIdFormat)}')`"
-        >
-          {{ $formatMessage('tooltip_text_copy') }}
+  <div v-if="isLoaded">
+    <lukso-tag v-if="hasTokenId(asset)" is-rounded class="mb-8">
+      <div class="flex items-center">
+        <div class="paragraph-ptmono-12-bold mr-2">
+          {{
+            prefixedTokenId(asset?.tokenId, asset?.tokenIdFormat, tokenLength)
+          }}
         </div>
-        <div
-          class="rounded-4 px-2 py-1 hover:cursor-pointer hover:bg-neutral-95"
-          :onclick="`navigator.clipboard.writeText('${asset?.tokenId}')`"
+        <lukso-tooltip
+          variant="white"
+          trigger="mouseenter"
+          offset="15"
+          :text="tooltipContent"
         >
-          {{ $formatMessage('tooltip_text_copy_raw') }}
+          <lukso-icon
+            name="copy"
+            size="small"
+            class="cursor-pointer transition-opacity hover:opacity-70"
+          ></lukso-icon>
+        </lukso-tooltip>
+        <div id="tooltip-token-id" class="text-center">
+          <div
+            class="mb-1 rounded-4 px-2 py-1 hover:cursor-pointer hover:bg-neutral-95"
+            :onclick="`navigator.clipboard.writeText('${parseTokenId(asset?.tokenId, asset?.tokenIdFormat)}')`"
+          >
+            {{ $formatMessage('tooltip_text_copy') }}
+          </div>
+          <div
+            class="rounded-4 px-2 py-1 hover:cursor-pointer hover:bg-neutral-95"
+            :onclick="`navigator.clipboard.writeText('${asset?.tokenId}')`"
+          >
+            {{ $formatMessage('tooltip_text_copy_raw') }}
+          </div>
         </div>
       </div>
-    </div>
-  </lukso-tag>
+    </lukso-tag>
+  </div>
+  <AppPlaceholderLine v-else class="mb-8 h-[28px] w-1/3" />
 </template>

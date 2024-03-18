@@ -1,12 +1,12 @@
 <script setup lang="ts">
 type Props = {
-  asset?: Asset
+  asset?: AssetMetadata
 }
 
 const props = defineProps<Props>()
 
 const handleClick = () => {
-  'url' in props.asset && window.open(props.asset.url, '_blank')
+  props.asset && 'url' in props?.asset && window.open(props.asset.url, '_blank')
 }
 </script>
 
