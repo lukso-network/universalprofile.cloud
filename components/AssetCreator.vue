@@ -6,8 +6,8 @@ type Props = {
 
 const props = defineProps<Props>()
 const { isMobile } = useDevice()
-
-const creatorProfile = useProfile().getProfile(props.creator)
+const creator = computed(() => props.creator)
+const creatorProfile = useProfile().getProfile(creator)
 
 const handleOpenProfile = (address?: Address) => {
   if (address) {
@@ -20,7 +20,7 @@ const issued = useIssuedAssets().validateAssets(
   props.asset
 )
 const verified = computed(() => {
-  return issued.value?.[0]
+  return issued.value?.get(creator.value) || false
 })
 </script>
 
