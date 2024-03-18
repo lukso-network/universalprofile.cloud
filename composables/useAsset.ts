@@ -113,7 +113,9 @@ export function useAsset() {
             standard: string | null
           }
         )
-        const balance = profileAddress ? (results[6].data as string) : null
+        const balance = profileAddress.value
+          ? (results[6].data as string)
+          : null
         if (tokenId) {
           let tokenURI = undefined
           let tokenDataURL = undefined
