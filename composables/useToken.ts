@@ -161,6 +161,9 @@ export function useToken() {
           resolvedMetadata,
           referenceContract,
           decimals,
+          tokenName: resolvedMetadata?.name
+            ? resolvedMetadata?.name
+            : token.tokenName,
         } as Asset
       },
     })
