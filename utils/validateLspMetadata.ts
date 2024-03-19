@@ -47,7 +47,7 @@ export const validateLsp4Metadata = (
   const assets = validateAssets(metadata?.assets)
   const icon = validateIcon(metadata?.icon)
   const description = metadata?.description || ''
-  const attributes = validateAttributes(metadata.attributes)
+  const attributes = validateAttributes(metadata?.attributes)
 
   return {
     LSP4Metadata: {
@@ -56,7 +56,6 @@ export const validateLsp4Metadata = (
       images,
       assets,
       icon,
-      //@ts-ignore - ignore until release or lsp package
       attributes,
     },
   }

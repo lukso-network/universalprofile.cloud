@@ -3,8 +3,6 @@ import { useQueries } from '@tanstack/vue-query'
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
-const profileLog = debug('wallet:profile')
-
 export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
   const { currentNetwork } = storeToRefs(useAppStore())
 
