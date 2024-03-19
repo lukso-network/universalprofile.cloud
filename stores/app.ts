@@ -19,8 +19,6 @@ export const useAppStore = defineStore(
 
     // statuses
     const isConnecting = ref(false)
-    const isLoadingProfile = ref(false)
-    const isLoadingAssets = ref(false)
     const isLoadedApp = ref(false)
     const isSearchOpen = ref(false)
 
@@ -78,8 +76,6 @@ export const useAppStore = defineStore(
       connectedProfileAddress,
       isConnected,
       isConnecting,
-      isLoadingProfile,
-      isLoadingAssets,
       isLoadedApp,
       assetFilter,
       isTestnet,
