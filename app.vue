@@ -133,9 +133,9 @@ const checkBuyLyx = () => {
     | string
     | undefined
 
-  console.debug('Transak order', orderId, status)
-
   if (status && orderId) {
+    console.debug('Transak order', orderId, status)
+
     const { showModal } = useModal()
     const { formatMessage } = useIntl()
 
