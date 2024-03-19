@@ -189,6 +189,12 @@ const multicall: Multicall[] = []
 const singlecall: Multicall[] = []
 let running = 0
 
+export enum Priorities {
+  High = 100,
+  Normal = 0,
+  Low = -100,
+}
+
 async function doQueries() {
   if (running > MAX_PARALLEL_REQUESTS) {
     return
@@ -208,8 +214,8 @@ async function doQueries() {
       QueryPromiseDataOptions | QueryPromiseCallOptions
     >[] = []
     queryList.sort((a, b) => {
-      const apriority = a.priority ?? 0
-      const bpriority = b.priority ?? 0
+      const apriority = a.priority ?? Priorities.Normal
+      const bpriority = b.priority ?? Priorities.Normal
       return bpriority - apriority
     })
     while (true) {
@@ -931,7 +937,7 @@ export function queryCallContract<T>({
   args = [],
   chainId,
   aggregateLimit = MAX_AGGREGATE_COUNT,
-  priority = 0,
+  priority = Priorities.Normal,
   staleTime,
   refetchInterval,
   retry,
@@ -1029,7 +1035,7 @@ export function queryGetData<T>({
   refetchInterval,
   retry,
   aggregateLimit = MAX_AGGREGATE_COUNT,
-  priority = 0,
+  priority = Priorities.Normal,
 }: GetDataQueryOptions): QFQueryOptions<T> {
   const schemaItem = (schema || defaultSchema).find(
     ({ name }) => name === keyName
