@@ -5,6 +5,7 @@ import type {
   LSP4DigitalAssetMetadata,
   LSP4DigitalAssetMetadataJSON,
 } from '@/types/asset'
+import { Priorities } from '@/utils/queryFunctions'
 
 export function useToken() {
   return (_token?: MaybeRef<Asset | null | undefined>) => {
@@ -42,7 +43,7 @@ export function useToken() {
               address,
               keyName: 'LSP4Metadata',
               aggregateLimit: 1,
-              priority: 50,
+              priority: Priorities.Low,
             }),
             ...(tokenId
               ? [
@@ -53,7 +54,7 @@ export function useToken() {
                     tokenId,
                     keyName: 'LSP4Metadata',
                     aggregateLimit: 1,
-                    priority: 50,
+                    priority: Priorities.Low,
                   }),
                   {
                     // 5
@@ -96,7 +97,7 @@ export function useToken() {
                           ).toLowerCase() as Address,
                           keyName: 'LSP4Metadata',
                           aggregateLimit: 1,
-                          priority: 50,
+                          priority: Priorities.Low,
                         }),
                         queryGetData({
                           // 7
@@ -124,7 +125,7 @@ export function useToken() {
 
         const owner = results[0].data as string
         const tokenCreators = results[1].data as string[]
-        const decimals = parseInt((results[2].data as string) || '0')
+        const decimals = Number.parseInt((results[2].data as string) || '0')
         const _assetData = results[3]?.data as any
         const forTokenData = results[4]?.data as any
         const baseURIData = results[5]?.data as any
