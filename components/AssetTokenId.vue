@@ -28,7 +28,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="isLoaded">
+  <div v-show="isLoaded">
     <lukso-tag v-if="hasTokenId(asset)" is-rounded class="mb-8">
       <div class="flex items-center">
         <div class="paragraph-ptmono-12-bold mr-2">
@@ -65,5 +65,5 @@ onMounted(() => {
       </div>
     </lukso-tag>
   </div>
-  <AppPlaceholderLine v-else class="mb-8 h-[28px] w-1/3" />
+  <AppPlaceholderLine v-show="!isLoaded" class="mb-8 h-[28px] w-1/3" />
 </template>
