@@ -108,10 +108,10 @@ const handlePreviewImage = () => {
     </div>
     <div>
       <div class="heading-apax-24-medium flex items-center gap-2 pb-2">
-        <AssetName :asset="token" />
-        <AssetStandardBadge :asset="token" />
+        <AssetName :asset="asset" />
+        <AssetStandardBadge :asset="asset" />
       </div>
-      <AssetCollectionSupply :asset="token" />
+      <AssetCollectionSupply :asset="asset" />
       <AssetTokenId :asset="asset" />
       <AssetDescription :asset="token" />
       <AssetImages :asset="token" />
@@ -119,7 +119,7 @@ const handlePreviewImage = () => {
       <AssetAttributes :asset="token" />
       <AssetCreators :asset="token" />
       <AssetLinks :asset="token" />
-      <AssetAddress :asset="token" />
+      <AssetAddress :asset="asset" />
     </div>
   </div>
 </template>

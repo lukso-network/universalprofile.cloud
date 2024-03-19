@@ -119,21 +119,7 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
               </div>
               <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
             </div>
-            <NftListCardCreators
-              v-if="isLoaded"
-              :asset="token"
-              class="relative -top-4 -mt-2"
-            />
-            <div
-              v-else
-              class="relative -top-4 -mt-2 grid grid-cols-[max-content,auto] gap-1"
-            >
-              <AppPlaceholderCircle class="size-6" />
-              <div class="grid w-full flex-col gap-1">
-                <AppPlaceholderLine class="w-1/3" />
-                <AppPlaceholderLine class="w-1/2" />
-              </div>
-            </div>
+            <NftListCardCreators :asset="token" class="relative -top-4 -mt-2" />
             <div class="flex items-end">
               <div class="flex w-full justify-end">
                 <div v-if="isLoaded">
