@@ -208,7 +208,7 @@ export function useProfileAssets() {
                 tokenType,
                 supportsInterfaces,
               } as Asset
-              if (!isLoading) {
+              if (!isLoading && assetLog.enabled) {
                 assetLog('profile-asset', asset)
               }
               return asset
@@ -234,7 +234,7 @@ export function useProfileAssets() {
             supportsInterfaces,
             decimals,
           } as Asset
-          if (!isLoading) {
+          if (!isLoading && assetLog.enabled) {
             assetLog('profile-asset', asset)
           }
           return asset

@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer'
+import debug from 'debug'
 import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 import LSP7DigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
 import LSP4DigitalAssetMetadataContract from '@lukso/lsp-smart-contracts/artifacts/LSP4DigitalAssetMetadata.json'
@@ -16,12 +16,11 @@ import { type AbiItem, type Hex, toNumber } from 'web3-utils'
 import ABICoder from 'web3-eth-abi'
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
 import { INTERFACE_IDS as INTERFACE_IDS_v12 } from '@lukso/lsp-smart-contracts-12'
-import { type QueryFunction } from '@tanstack/vue-query'
-import debug from 'debug'
 
 import LSP2FetcherWithMulticall3Contract from '@/shared/abis/LSP2FetcherWithMulticall3.json'
 
 import type { LSP2FetcherWithMulticall3 } from '@/contracts/LSP2FetcherWithMulticall3'
+import type { QueryFunction } from '@tanstack/query-core'
 
 const queryLog = debug('tanstack:query')
 const resultsLog = debug('tanstack:results')
@@ -173,12 +172,9 @@ async function convert<T = any>(
       const [, encoding, data] =
         (info[0]?.value as any)?.url.match(/^data:.*?;(.*?),(.*)$/) || []
       if (data) {
-        let output = Buffer.from(
-          data,
-          encoding === 'base64' ? 'base64' : 'utf8'
-        ) as any
+        let output = encoding === 'base64' ? atob(data) : data
         try {
-          output = JSON.parse(output.toString('utf8'))
+          output = JSON.parse(output)
         } catch {
           // ignore
         }
@@ -242,12 +238,14 @@ async function doQueries() {
         queries.push(query)
       }
     }
-    queryLog(
-      'doQueries',
-      `digested ${startLength - queryList.length} queries into ${queries.length} queries and ${singleCallQueries.length} single queries`,
-      toRaw(queries),
-      toRaw(singleCallQueries)
-    )
+    if (queryLog.enabled) {
+      queryLog(
+        'doQueries',
+        `digested ${startLength - queryList.length} queries into ${queries.length} queries and ${singleCallQueries.length} single queries`,
+        toRaw(queries),
+        toRaw(singleCallQueries)
+      )
+    }
 
     const split: Record<
       string,
@@ -368,7 +366,9 @@ async function doQueries() {
           const arrayKeys = getData.filter(
             ({ keyName, tokenId }) => /\[\]$/.test(keyName) && !tokenId
           )
-          queryLog('getData', { plainKeys, arrayKeys })
+          if (queryLog.enabled) {
+            queryLog('getData', { plainKeys, arrayKeys })
+          }
           if (plainKeys.length > 0) {
             const abi = LSP8IdentifiableDigitalAssetContract.abi.find(
               ({ name }) => name === 'getDataBatch'
@@ -409,14 +409,18 @@ async function doQueries() {
                 query,
                 selector(data: string) {
                   if (data === '0x') {
-                    resultsLog('array', { query, data, result: null })
+                    if (resultsLog.enabled) {
+                      resultsLog('array', { query, data, result: null })
+                    }
                     return null
                   }
                   const result = ABICoder.decodeParameters(
                     abi?.outputs || [],
                     data
                   )[0]
-                  resultsLog('array', { query, data, result })
+                  if (resultsLog.enabled) {
+                    resultsLog('array', { query, data, result })
+                  }
                   return result
                 },
               })
@@ -498,7 +502,7 @@ async function doQueries() {
         }
       }
 
-      singleCallQueries.forEach(query => {
+      for (const query of singleCallQueries) {
         const { keyName, dynamicKeyParts, address, type, tokenId } = query
         if (type === 'getData') {
           const abi = LSP8IdentifiableDigitalAssetContract.abi.find(
@@ -560,7 +564,7 @@ async function doQueries() {
             query.reject(new Error('Method not found'))
           }
         }
-      })
+      }
       await limiter.removeTokens(1)
       const doSinglecall = async (singlecall: Multicall) => {
         const { query, extract, selector } = singlecall
@@ -584,21 +588,25 @@ async function doQueries() {
               data
             )
           }
-          resultsLog(
-            'single-call',
-            `${Math.round((Date.now() - start) / 100) / 10}s`,
-            {
-              query,
-              data,
-            }
-          )
+          if (resultsLog.enabled) {
+            resultsLog(
+              'single-call',
+              `${Math.round((Date.now() - start) / 100) / 10}s`,
+              {
+                query,
+                data,
+              }
+            )
+          }
           singlecall.query?.resolve(data)
         } catch (error) {
-          resultsLog(
-            'single-call-reject',
-            `${Math.round((Date.now() - start) / 100) / 10}s`,
-            { query, error }
-          )
+          if (resultsLog.enabled) {
+            resultsLog(
+              'single-call-reject',
+              `${Math.round((Date.now() - start) / 100) / 10}s`,
+              { query, error }
+            )
+          }
           singlecall.query?.reject(error)
         }
       }
@@ -627,17 +635,20 @@ async function doQueries() {
                   continue
                 }
                 if (success === 2) {
-                  ;(query ? [query] : queries)?.forEach(query => {
+                  const _queries = query ? [query] : queries || []
+                  for (const query of _queries) {
                     query.aggregateLimit = 1
                     queryList.splice(0, 0, query)
-                  })
+                  }
                   triggerQuery()
                   continue
                 }
                 let rawData = _data
                 if (extract) {
                   rawData = extract.call(multiItem, rawData)
-                  resultsLog('extract', { data: rawData, origin: _data })
+                  if (resultsLog.enabled) {
+                    resultsLog('extract', { data: rawData, origin: _data })
+                  }
                 }
                 const data = rawData
                 if (queries) {
@@ -656,7 +667,9 @@ async function doQueries() {
                   try {
                     if (selector) {
                       items = selector.call(multiItem, data)
-                      resultsLog('item-selector', { items, data })
+                      if (resultsLog.enabled) {
+                        resultsLog('item-selector', { items, data })
+                      }
                     }
                   } catch (error) {
                     for (const query of queries) {
@@ -740,18 +753,14 @@ async function doQueries() {
                           )
                         )
                         continue
-                      } else {
-                        if (selector) {
-                          item = selector.call(multiItem, item)
-                        }
-                        item = await convert(
-                          query as QueryPromise<
-                            unknown,
-                            QueryPromiseDataOptions
-                          >,
-                          item
-                        )
                       }
+                      if (selector) {
+                        item = selector.call(multiItem, item)
+                      }
+                      item = await convert(
+                        query as QueryPromise<unknown, QueryPromiseDataOptions>,
+                        item
+                      )
                     } else if (selector) {
                       item = selector.call(multiItem, item)
                     }
@@ -797,15 +806,28 @@ async function doQueries() {
             //       query?.keyName || queries?.map(({ keyName }) => keyName),
             //   }))
             // )
-            resultsLog('error', error)
+            if (resultsLog.enabled) {
+              resultsLog(
+                'error',
+                error,
+                multicall.length,
+                multicall.map(({ query, queries }) => ({
+                  type: query?.type || `${queries?.[0].type} (Batch)`,
+                  keyName:
+                    query?.keyName || queries?.map(({ keyName }) => keyName),
+                }))
+              )
+            }
             throw error
           })
           .finally(() => {
-            resultsLog(
-              'results',
-              `${Math.round((Date.now() - start) / 100) / 10}s`,
-              resolved
-            )
+            if (resultsLog.enabled) {
+              resultsLog(
+                'results',
+                `${Math.round((Date.now() - start) / 100) / 10}s`,
+                resolved
+              )
+            }
           })
       }
       running++

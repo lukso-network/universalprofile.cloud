@@ -115,7 +115,7 @@ export const getProfile = (
         description,
         tags,
       } as Profile
-      if (!profile.isLoading) {
+      if (!profile.isLoading && profileLog.enabled) {
         profileLog('profile', profile)
       }
       return profile

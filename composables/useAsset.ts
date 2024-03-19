@@ -160,7 +160,7 @@ export function useAsset() {
             tokenType,
             supportsInterfaces,
           } as Asset
-          if (!isLoading) {
+          if (!isLoading && assetLog.enabled) {
             assetLog('token', asset)
           }
           return asset
@@ -179,7 +179,7 @@ export function useAsset() {
           tokenType,
           supportsInterfaces,
         } as Asset
-        if (!isLoading) {
+        if (!isLoading && assetLog.enabled) {
           assetLog('collection', asset)
         }
         return asset
