@@ -2,7 +2,7 @@
 import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
 const showJSON = ref(window.location.search.includes('json'))
-const { assetFilter, isLoadingAssets } = storeToRefs(useAppStore())
+const { assetFilter } = storeToRefs(useAppStore())
 const viewedProfileAddress = getCurrentProfileAddress()
 const { isMobile } = useDevice()
 
@@ -99,6 +99,10 @@ const hasEmptyNfts = computed(
 
 const showProfileDetails = computed(
   () => useRouter().currentRoute.value.query.referrer === REFERRERS.INDEXER
+)
+
+const isLoadingAssets = computed(() =>
+  allTokens.value?.some(asset => asset.isLoading)
 )
 </script>
 
