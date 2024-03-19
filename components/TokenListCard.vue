@@ -173,17 +173,20 @@ const isLoaded = computed(() => token.value && !token.value.isLoading)
               {{ $formatCurrency(token.balance, token.tokenSymbol) }}
             </div>
             <div class="flex w-full items-end justify-end">
-              <lukso-button
-                v-if="
-                  isConnected &&
-                  viewedProfileAddress === connectedProfile?.address
-                "
-                size="small"
-                variant="secondary"
-                @click="handleSendAsset"
-                class="mt-4 transition-opacity hover:opacity-70"
-                >{{ $formatMessage('button_send') }}</lukso-button
-              >
+              <div v-if="isLoaded">
+                <lukso-button
+                  v-if="
+                    isConnected &&
+                    viewedProfileAddress === connectedProfile?.address
+                  "
+                  size="small"
+                  variant="secondary"
+                  @click="handleSendAsset"
+                  class="mt-4 transition-opacity hover:opacity-70"
+                  >{{ $formatMessage('button_send') }}</lukso-button
+                >
+              </div>
+              <AppPlaceholderLine v-else class="h-[28px] w-[60px]" />
             </div>
           </div>
         </div>

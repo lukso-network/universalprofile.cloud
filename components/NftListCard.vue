@@ -64,7 +64,7 @@ onMounted(() => {
   }, 1)
 })
 
-const isLoaded = computed(() => token.value && !token.value.isLoading)
+const isLoaded = computed(() => asset.value && !asset.value.isLoading)
 </script>
 
 <template>
@@ -120,7 +120,7 @@ const isLoaded = computed(() => token.value && !token.value.isLoading)
               <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
             </div>
             <NftListCardCreators
-              v-if="token && isLoaded"
+              v-if="isLoaded"
               :asset="token"
               class="relative -top-4 -mt-2"
             />
@@ -136,24 +136,26 @@ const isLoaded = computed(() => token.value && !token.value.isLoading)
             </div>
             <div class="flex items-end">
               <div class="flex w-full justify-end">
-                <lukso-button
-                  v-if="
-                    isConnected &&
-                    viewedProfileAddress === connectedProfile?.address
-                  "
-                  size="small"
-                  variant="secondary"
-                  @click="handleSendAsset"
-                  class="transition-opacity hover:opacity-70"
-                  >{{ $formatMessage('button_send') }}</lukso-button
-                >
+                <div v-if="isLoaded">
+                  <lukso-button
+                    v-if="
+                      isConnected &&
+                      viewedProfileAddress === connectedProfile?.address
+                    "
+                    size="small"
+                    variant="secondary"
+                    @click="handleSendAsset"
+                    class="transition-opacity hover:opacity-70"
+                    >{{ $formatMessage('button_send') }}</lukso-button
+                  >
+                </div>
+                <AppPlaceholderLine v-else class="h-[28px] w-[60px]" />
               </div>
             </div>
           </div>
         </div>
         <div class="flex justify-between px-4 py-3">
-          <AssetStandardBadge :asset="token" />
-
+          <AssetStandardBadge :asset="asset" />
           <div
             v-if="isLoaded && token?.address"
             class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
