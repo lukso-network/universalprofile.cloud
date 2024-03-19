@@ -103,12 +103,6 @@ export function useAsset() {
             type === 'call' && call === 'supportsInterface(bytes4)'
         )
         const isLoading = results.some(result => result.isLoading)
-        if (isLoading) {
-          return {
-            isLoading,
-            address,
-          }
-        }
         const tokenName = results[0].data as string
         const tokenSymbol = results[1].data as string
         const tokenType = results[2].data as number

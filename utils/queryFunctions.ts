@@ -204,6 +204,15 @@ async function doQueries() {
     const { currentNetwork } = storeToRefs(useAppStore())
     const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
       currentNetwork.value
+    const { contract, getWeb3 } = useWeb3(PROVIDERS.RPC)
+    const lsp2CustomContract = contract<LSP2FetcherWithMulticall3>(
+      LSP2FetcherWithMulticall3Contract.abi as AbiItem[],
+      LSP2ContractAddress
+    )
+    const web3 = getWeb3()
+    if (!web3.currentProvider) {
+      return
+    }
     const startLength = queryList.length
     const singleCallQueries: QueryPromise<
       unknown,
@@ -287,12 +296,6 @@ async function doQueries() {
           getDataForTokenId?: QueryPromise<unknown, QueryPromiseDataOptions>[]
         }
       >
-    )
-
-    const { contract, getWeb3 } = useWeb3(PROVIDERS.RPC)
-    const lsp2CustomContract = contract<LSP2FetcherWithMulticall3>(
-      LSP2FetcherWithMulticall3Contract.abi as AbiItem[],
-      LSP2ContractAddress
     )
 
     try {

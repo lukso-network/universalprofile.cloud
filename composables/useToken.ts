@@ -133,14 +133,6 @@ export function useToken() {
             index >= 3 && index < 7 ? false : result.isLoading
           )
 
-        tokenLog('owner', queries.value[0], results[0], isLoading)
-        if (isLoading) {
-          return {
-            ...token,
-            isLoading: true,
-          }
-        }
-
         const owner = results[0].data as string
         const tokenCreators = results[1].data as string[]
         const decimals = Number.parseInt((results[2].data as string) || '0')

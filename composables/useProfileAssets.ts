@@ -153,14 +153,6 @@ export function useProfileAssets() {
             }
           )
           const isLoading = results.some(result => result.isLoading)
-          if (isLoading) {
-            return {
-              isLoading,
-              isOwned: !isIssued,
-              isIssued,
-              address,
-            }
-          }
           if (tokenIds && tokenIds.length > 0) {
             return tokenIds.map(tokenId => {
               let tokenURI = undefined
