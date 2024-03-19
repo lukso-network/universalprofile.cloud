@@ -20,8 +20,8 @@ const { formatMessage } = useIntl()
 const { sendTransaction, contract } = useWeb3(PROVIDERS.INJECTED)
 const { currentNetwork } = storeToRefs(useAppStore())
 
-const assetAddress = useRouter().currentRoute.value.query.asset
-const tokenId = useRouter().currentRoute.value.query.tokenId
+const assetAddress = computed(() => useRouter().currentRoute.value.query.asset)
+const tokenId = computed(() => useRouter().currentRoute.value.query.tokenId)
 const fetchedAsset = useToken()(useAsset()(assetAddress, tokenId))
 
 onMounted(() => {

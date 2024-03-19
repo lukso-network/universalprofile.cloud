@@ -5,75 +5,90 @@ import type { Asset } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
 export function useAsset() {
-  return (address?: Address, tokenId?: string) => {
-    if (!address) {
-      return ref()
-    }
-
+  return (_address?: MaybeRef<Address>, _tokenId?: MaybeRef<string>) => {
     const connectedProfile = useProfile().connectedProfile()
     const profileAddress = computed(() => connectedProfile.value?.address)
     const { currentNetwork } = storeToRefs(useAppStore())
-    const queries: ComputedRef<QFQueryOptions[]> = computed(() => {
+    const queries: ComputedRef<
+      QFQueryOptions[] & {
+        address: Address | undefined
+        tokenId: string | undefined
+      }
+    > = computed(() => {
       const chainId = currentNetwork.value?.chainId || ''
-      const queries: QFQueryOptions[] = [
-        queryGetData({
-          // 0
-          chainId,
-          address,
-          keyName: 'LSP4TokenName',
-        }),
-        queryGetData({
-          // 1
-          chainId,
-          address,
-          keyName: 'LSP4TokenSymbol',
-        }),
-        queryGetData({
-          // 2
-          chainId,
-          address,
-          keyName: 'LSP4TokenType',
-        }),
-        queryGetData({
-          // 3
-          chainId,
-          address,
-          keyName: 'LSP8TokenMetadataBaseURI',
-        }),
-        queryGetData({
-          // 4
-          chainId,
-          address,
-          keyName: 'LSP8TokenIdFormat',
-        }),
-        queryCallContract({
-          // 5
-          chainId,
-          address,
-          method: 'totalSupply()',
-        }),
-        ...(profileAddress.value
-          ? [
-              queryCallContract({
-                // 6
+      let tokenId = isRef(_tokenId) ? _tokenId.value : _tokenId
+      let address: Address | undefined = isRef(_address)
+        ? _address.value
+        : _address
+      if (address === '0x') {
+        address = undefined
+      }
+      const queries: QFQueryOptions[] & {
+        address: Address | undefined
+        tokenId: string | undefined
+      } = address
+        ? ([
+            queryGetData({
+              // 0
+              chainId,
+              address,
+              keyName: 'LSP4TokenName',
+            }),
+            queryGetData({
+              // 1
+              chainId,
+              address,
+              keyName: 'LSP4TokenSymbol',
+            }),
+            queryGetData({
+              // 2
+              chainId,
+              address,
+              keyName: 'LSP4TokenType',
+            }),
+            queryGetData({
+              // 3
+              chainId,
+              address,
+              keyName: 'LSP8TokenMetadataBaseURI',
+            }),
+            queryGetData({
+              // 4
+              chainId,
+              address,
+              keyName: 'LSP8TokenIdFormat',
+            }),
+            queryCallContract({
+              // 5
+              chainId,
+              address,
+              method: 'totalSupply()',
+            }),
+            ...(profileAddress.value
+              ? [
+                  queryCallContract({
+                    // 6
+                    chainId,
+                    address,
+                    method: 'balanceOf(address)',
+                    args: [profileAddress.value],
+                    staleTime: 250,
+                  }),
+                ]
+              : []),
+            ...interfacesToCheck.map(({ interfaceId }) => {
+              return queryCallContract({
+                // 7 / 8
                 chainId,
-                address,
-                method: 'balanceOf(address)',
-                args: [profileAddress.value],
-                staleTime: 250,
-              }),
-            ]
-          : []),
-        ...interfacesToCheck.map(({ interfaceId }) => {
-          return queryCallContract({
-            // 7 / 8
-            chainId,
-            address,
-            method: 'supportsInterface(bytes4)',
-            args: [interfaceId],
-          })
-        }),
-      ] as QFQueryOptions[]
+                address: address || '0x0',
+                method: 'supportsInterface(bytes4)',
+                args: [interfaceId],
+              })
+            }),
+          ] as QFQueryOptions[])
+        : []
+      queries.tokenId = tokenId
+      queries.address = address
       return queries
       // Trick to keep the right receivedAssetCount and allAddresses attached
       // to the current queries list.
@@ -81,11 +96,19 @@ export function useAsset() {
     return useQueries({
       queries: queries,
       combine: results => {
+        const tokenId = queries.value.tokenId
+        const address = queries.value.address
         const prefixLength = queries.value.findIndex(
           ({ queryKey: [type, , , call] }) =>
             type === 'call' && call === 'supportsInterface(bytes4)'
         )
         const isLoading = results.some(result => result.isLoading)
+        if (isLoading) {
+          return {
+            isLoading,
+            address,
+          }
+        }
         const tokenName = results[0].data as string
         const tokenSymbol = results[1].data as string
         const tokenType = results[2].data as number

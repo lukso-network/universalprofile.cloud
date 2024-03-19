@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { watch } from 'vue'
 
-const [assetAddress, tokenId] =
-  useRouter().currentRoute.value.params?.slug || []
-
+const assetAddress = computed(() => {
+  const [assetAddress] = useRouter().currentRoute.value.params?.slug || []
+  return assetAddress
+})
+const tokenId = computed(() => {
+  const [, tokenId] = useRouter().currentRoute.value.params?.slug || []
+  return tokenId
+})
 const asset = useAsset()(assetAddress, tokenId)
 
 watch(
@@ -18,9 +23,9 @@ watch(
     }
 
     if (isCollectible(asset) && asset?.tokenId) {
-      navigateTo(nftRoute(asset.address, asset.tokenId))
+      navigateTo(nftRoute(asset.address as Address, asset.tokenId))
     } else {
-      navigateTo(tokenRoute(asset.address))
+      navigateTo(tokenRoute(asset.address as Address))
     }
   }
 )

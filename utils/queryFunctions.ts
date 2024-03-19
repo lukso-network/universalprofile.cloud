@@ -196,10 +196,10 @@ export enum Priorities {
 }
 
 async function doQueries() {
-  if (running > MAX_PARALLEL_REQUESTS) {
+  if (running++ > MAX_PARALLEL_REQUESTS) {
+    running--
     return
   }
-  running++
   try {
     const { currentNetwork } = storeToRefs(useAppStore())
     const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
@@ -266,9 +266,7 @@ async function doQueries() {
           acc[query.address] = {}
         }
         const type =
-          query.type === 'getData' &&
-          query.tokenId &&
-          !/\[\]$/.test(query.keyName)
+          query.type === 'getData' && query.tokenId
             ? 'getDataForTokenId'
             : query.type
         let items = acc[query.address][type] as QueryPromise<
@@ -401,7 +399,7 @@ async function doQueries() {
           }
           if (arrayKeys.length > 0) {
             for (const query of arrayKeys) {
-              const { keyName, dynamicKeyParts } = query
+              const { keyName, dynamicKeyParts, address } = query
               const abi = LSP2FetcherWithMulticall3Contract.abi.find(
                 ({ name }) => name === 'fetchArrayWithElements'
               )
@@ -578,6 +576,7 @@ async function doQueries() {
         const web3 = getWeb3()
         const { target, call } = singlecall
         try {
+          await limiter.removeTokens(1)
           let data: any = await web3.eth.call({
             to: target,
             data: call,
@@ -621,7 +620,7 @@ async function doQueries() {
           0,
           Math.min(MAX_AGGREGATE_COUNT, multicall.length)
         )
-        const resolved: any[] = []
+        const resolved: any[] | undefined = resultsLog.enabled ? [] : undefined
         const start = Date.now()
         await lsp2CustomContract.methods
           .aggregate4(
@@ -661,10 +660,12 @@ async function doQueries() {
                   if (!success) {
                     for (const query of queries) {
                       // Normal success=false means the call is not supported
-                      resolved.push({
-                        query,
-                        error: 'not successful (assume null)',
-                      })
+                      if (resultsLog.enabled) {
+                        resolved?.push({
+                          query,
+                          error: 'not successful (assume null)',
+                        })
+                      }
                       query.resolve(null)
                     }
                     continue
@@ -679,10 +680,12 @@ async function doQueries() {
                     }
                   } catch (error) {
                     for (const query of queries) {
-                      resolved.push({
-                        query,
-                        error,
-                      })
+                      if (resultsLog.enabled) {
+                        resolved?.push({
+                          query,
+                          error,
+                        })
+                      }
                       query.reject(error)
                     }
                     continue
@@ -701,28 +704,39 @@ async function doQueries() {
                         )
                       }
                       if (success) {
-                        resolved.push({ query, data: item, raw: _data, items })
+                        if (resultsLog.enabled) {
+                          resolved?.push({
+                            query,
+                            data: item,
+                            raw: _data,
+                            items,
+                          })
+                        }
                         query.resolve(item)
                       } else {
                         // Normal success=false means the call is not supported
-                        resolved.push({
-                          query,
-                          error: 'not successful (assume null)',
-                          raw: _data,
-                          items,
-                          index: j,
-                        })
+                        if (resultsLog.enabled) {
+                          resolved?.push({
+                            query,
+                            error: 'not successful (assume null)',
+                            raw: _data,
+                            items,
+                            index: j,
+                          })
+                        }
                         query.resolve(null)
                       }
                     } catch (error) {
                       try {
-                        resolved.push({
-                          query,
-                          error,
-                          raw: _data,
-                          items,
-                          index: j,
-                        })
+                        if (resultsLog.enabled) {
+                          resolved?.push({
+                            query,
+                            error,
+                            raw: _data,
+                            items,
+                            index: j,
+                          })
+                        }
                         query.reject(error)
                       } catch {
                         // Really ignore, we tried our best
@@ -770,15 +784,17 @@ async function doQueries() {
                     } else if (selector) {
                       item = selector.call(multiItem, item)
                     }
-                    resolved.push({
-                      query,
-                      data: item,
-                      raw: _data,
-                    })
+                    if (resultsLog.enabled) {
+                      resolved?.push({
+                        query,
+                        data: item,
+                        raw: _data,
+                      })
+                    }
                     query?.resolve(item)
                   } else {
                     // Normal success=false means the call is not supported
-                    resolved.push({
+                    resolved?.push({
                       query,
                       error: 'not successful (assume null)',
                       raw: _data,
@@ -788,11 +804,13 @@ async function doQueries() {
                 } catch (error) {
                   try {
                     // This is an actual error so reject
-                    resolved.push({
-                      query,
-                      error,
-                      raw: _data,
-                    })
+                    if (resultsLog.enabled) {
+                      resolved?.push({
+                        query,
+                        error,
+                        raw: _data,
+                      })
+                    }
                     query?.reject(error)
                   } catch {
                     // Really ignore, we tried our best
@@ -943,7 +961,7 @@ export function queryCallContract<T>({
   retry,
 }: CallContractQueryOptions): QFQueryOptions<T> {
   const methodName = method.replace(/\(.*$/, '')
-  let methodItem = (abi || defaultAbi).find(item => {
+  const methodItem = (abi || defaultAbi).find(item => {
     if (item.type !== 'function') {
       return false
     }
@@ -953,26 +971,6 @@ export function queryCallContract<T>({
       `${name}(${inputs?.map(({ type }) => type).join(',')})` === method
     )
   })
-  if (!methodItem) {
-    console.warn(
-      `Method ${method} not found in abi so we will not decode result data`
-    )
-    methodItem = {
-      name: methodName,
-      type: 'function',
-      inputs: method
-        .replace(/.*\(/, '')
-        .replace(/\)/, '')
-        .split(',')
-        .map((content, index) => {
-          const [type, name] = content.split(' ')
-          return {
-            type: type.trim().replace(/ .*$/, ''),
-            name: name || `arg${index}`,
-          }
-        }),
-    }
-  }
   const queryKey = [
     'call',
     chainId,
@@ -980,6 +978,18 @@ export function queryCallContract<T>({
     method,
     ...(args ? (args as unknown as unknown[]) : []),
   ] as readonly unknown[]
+  if (!methodItem) {
+    console.warn(
+      `Method ${method} not found in abi so we will not decode result data`
+    )
+    return {
+      queryFn: async () => {
+        console.error('Method not found in abi')
+        return '0x' as any
+      },
+      queryKey,
+    }
+  }
   return {
     ...(staleTime ? { staleTime } : {}),
     ...(refetchInterval ? { refetchInterval } : {}),

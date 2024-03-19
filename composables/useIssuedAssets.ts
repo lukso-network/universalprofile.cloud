@@ -1,31 +1,58 @@
 import { useQueries } from '@tanstack/vue-query'
+import { isAddress } from 'web3-validator'
 
-function getIssuedAssets(profiles: MaybeRef<Address[]>) {
+import type { QFQueryOptions } from '@/utils/queryFunctions'
+
+function getIssuedAssets(_profiles: MaybeRef<Address[]>) {
   const { currentNetwork } = storeToRefs(useAppStore())
-  const queries = computed(() => {
+  const queries: ComputedRef<
+    QFQueryOptions[] & {
+      profiles: Address[]
+      allProfiles: (Address | undefined | null)[]
+    }
+  > = computed(() => {
     const chainId = currentNetwork.value?.chainId || ''
-    return (isRef(profiles) ? profiles.value : profiles).flatMap(profile => {
-      return profile
-        ? [
-            queryGetData({
-              chainId,
-              address: profile as Address,
-              keyName: 'LSP12IssuedAssets[]',
-            }),
-          ]
-        : []
-    })
+    const allProfiles: (Address | null)[] =
+      (isRef(_profiles) ? _profiles.value : _profiles) || []
+    const profiles: Address[] = allProfiles.filter(
+      profile => profile && isAddress(profile)
+    ) as Address[]
+    const queries: QFQueryOptions[] & {
+      profiles: Address[]
+      allProfiles: (Address | undefined | null)[]
+    } = profiles.map(profile =>
+      queryGetData({
+        chainId,
+        address: profile as Address,
+        keyName: 'LSP12IssuedAssets[]',
+        refetchInterval: 120_000,
+        staleTime: 250,
+      })
+    ) as QFQueryOptions[] & {
+      profiles: Address[]
+      allProfiles: (Address | undefined | null)[]
+    }
+    queries.allProfiles = allProfiles
+    queries.profiles = profiles
+    return queries
   })
   return useQueries({
     queries,
     combine: results => {
+      const allProfiles = queries.value.allProfiles
+      const profiles = queries.value.profiles
       const output = Object.fromEntries(
         results.map((result, index) => {
           const set = new Set((result.data as Address[]) || [])
-          const profile = (isRef(profiles) ? profiles.value : profiles)[index]
+          const profile = profiles[index]
           return [profile, set]
         })
       )
+      for (const profile of allProfiles) {
+        if (profile && !output[profile]) {
+          output[profile] = new Set()
+        }
+      }
       return output
     },
   })
@@ -41,15 +68,15 @@ export function useIssuedAssets() {
       const profiles = computed(() =>
         isRef(_profiles) ? _profiles.value : _profiles
       )
-      const assetAddress = computed(() =>
-        isRef(_assetAddress) ? _assetAddress.value : _assetAddress
-      )
       const issuedAssets = getIssuedAssets(profiles)
       return computed(() => {
+        const assetAddress = isRef(_assetAddress)
+          ? _assetAddress.value
+          : _assetAddress
         return new Map<Address, boolean>(
           Object.entries(issuedAssets.value || {})?.map(([address, assets]) => [
             address as Address,
-            assets.has(assetAddress.value || '0x'),
+            assetAddress ? assets.has(assetAddress) : false,
           ])
         )
       })

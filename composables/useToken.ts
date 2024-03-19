@@ -1,12 +1,15 @@
 import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
+import debug from 'debug'
 
-import { Priorities } from '@/utils/queryFunctions'
+import { Priorities, type QFQueryOptions } from '@/utils/queryFunctions'
 
 import type {
   LSP4DigitalAssetMetadata,
   LSP4DigitalAssetMetadataJSON,
 } from '@/types/asset'
+
+const tokenLog = debug('wallet:token')
 
 export function useToken() {
   return (_token?: MaybeRef<Asset | null | undefined>) => {
@@ -16,112 +19,126 @@ export function useToken() {
       const token: Asset | null = isRef(_token)
         ? _token.value || null
         : _token || null
-      const { address, tokenId, isLoading, tokenDataURL, tokenIdFormat } =
-        token || {}
-      return address && !isLoading
-        ? [
-            queryCallContract({
-              // 0
-              chainId,
-              address,
-              method: 'owner()',
-            }),
-            queryGetData({
-              // 1
-              chainId,
-              address,
-              keyName: 'LSP4Creators[]',
-            }),
-            queryCallContract({
-              // 2
-              chainId,
-              address,
-              method: 'decimals()',
-            }),
-            queryGetData({
-              // 3
-              chainId,
-              address,
-              keyName: 'LSP4Metadata',
-              aggregateLimit: 1,
-              priority: Priorities.Low,
-            }),
-            ...(tokenId
-              ? [
-                  queryGetData({
-                    // 4
-                    chainId,
-                    address,
-                    tokenId,
-                    keyName: 'LSP4Metadata',
-                    aggregateLimit: 1,
-                    priority: Priorities.Low,
-                  }),
-                  {
-                    // 5
-                    queryKey: [
-                      'tokenJSON',
+      const { address, tokenId, tokenDataURL, tokenIdFormat } = token || {}
+      const queries: QFQueryOptions[] & { token: Asset | null } = (
+        address
+          ? [
+              queryCallContract({
+                // 0
+                chainId,
+                address,
+                method: 'owner()',
+              }),
+              queryGetData({
+                // 1
+                chainId,
+                address,
+                keyName: 'LSP4Creators[]',
+              }),
+              queryCallContract({
+                // 2
+                chainId,
+                address,
+                method: 'decimals()',
+              }),
+              queryGetData({
+                // 3
+                chainId,
+                address,
+                keyName: 'LSP4Metadata',
+                aggregateLimit: 1,
+                priority: Priorities.Low,
+              }),
+              ...(tokenId
+                ? [
+                    queryGetData({
+                      // 4
                       chainId,
-                      token?.address,
+                      address,
                       tokenId,
-                      tokenDataURL,
-                    ],
-                    queryFn: async () => {
-                      if (tokenDataURL) {
-                        const url = tokenDataURL.replace(
-                          /^ipfs:\/\//,
-                          'https://api.universalprofile.cloud/ipfs/'
-                        )
-                        return await fetch(url)
-                          .then(response => {
-                            if (!response.ok) {
-                              throw new Error('Unable to fetch')
-                            }
-                            return response.json()
-                          })
-                          .catch(error => {
-                            console.error('Error fetching token data', error)
-                            throw error
-                          })
-                      }
-                      return null
+                      keyName: 'LSP4Metadata',
+                      aggregateLimit: 1,
+                      priority: Priorities.Low,
+                    }),
+                    {
+                      // 5
+                      queryKey: [
+                        'tokenJSON',
+                        chainId,
+                        token?.address,
+                        tokenId,
+                        tokenDataURL,
+                      ],
+                      queryFn: async () => {
+                        if (tokenDataURL) {
+                          const url = tokenDataURL.replace(
+                            /^ipfs:\/\//,
+                            'https://api.universalprofile.cloud/ipfs/'
+                          )
+                          return await fetch(url)
+                            .then(response => {
+                              if (!response.ok) {
+                                throw new Error('Unable to fetch')
+                              }
+                              return response.json()
+                            })
+                            .catch(error => {
+                              console.error('Error fetching token data', error)
+                              throw error
+                            })
+                        }
+                        return null
+                      },
                     },
-                  },
-                  ...(tokenId && tokenIdFormat === 2
-                    ? [
-                        queryGetData({
-                          // 6
-                          chainId,
-                          address: ABICoder.decodeParameter(
-                            'address',
-                            tokenId
-                          ).toLowerCase() as Address,
-                          keyName: 'LSP4Metadata',
-                          aggregateLimit: 1,
-                          priority: Priorities.Low,
-                        }),
-                        queryGetData({
-                          // 7
-                          chainId,
-                          address,
-                          tokenId,
-                          keyName: 'LSP8ReferenceContract',
-                        }),
-                      ]
-                    : []),
-                ]
-              : []),
-          ]
-        : []
+                    ...(tokenId && tokenIdFormat === 2
+                      ? [
+                          queryGetData({
+                            // 6
+                            chainId,
+                            address: ABICoder.decodeParameter(
+                              'address',
+                              tokenId
+                            ).toLowerCase() as Address,
+                            keyName: 'LSP4Metadata',
+                            aggregateLimit: 1,
+                            priority: Priorities.Low,
+                          }),
+                          queryGetData({
+                            // 7
+                            chainId,
+                            address: tokenId,
+                            keyName: 'LSP8ReferenceContract',
+                          }),
+                        ]
+                      : []),
+                  ]
+                : []),
+            ]
+          : []
+      ) as QFQueryOptions[] & { token: Asset | null }
+      queries.token = token
+      return queries
     })
     return useQueries({
       queries,
       combine: results => {
-        const token: Asset | null = isRef(_token)
-          ? _token.value || null
-          : _token || null
-        if (!token || !token?.address || token?.isLoading) {
+        const token: Asset | null = queries.value.token as Asset
+        if (!token) {
           return null
+        }
+
+        const isLoading =
+          token.isLoading ||
+          results.some((result, index) =>
+            index >= 3 && index < 7 ? false : result.isLoading
+          )
+
+        tokenLog('owner', queries.value[0], results[0], isLoading)
+        if (isLoading) {
+          return {
+            ...token,
+            isLoading: true,
+          }
         }
 
         const owner = results[0].data as string
@@ -148,7 +165,7 @@ export function useToken() {
         }
         return {
           ...token,
-          isLoading: results.some(result => result.isLoading),
+          isLoading,
           isAssetLoading: token.isLoading,
           isMetadataLoading: !metadataIsLoaded,
           owner,

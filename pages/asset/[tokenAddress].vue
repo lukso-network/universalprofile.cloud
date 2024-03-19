@@ -1,10 +1,12 @@
 <script setup lang="ts">
-const tokenAddress = useRouter().currentRoute.value.params?.tokenAddress
+const tokenAddress = computed(
+  () => useRouter().currentRoute.value.params?.tokenAddress
+)
 const asset = useAsset()(tokenAddress)
 
 onMounted(() => {
   if (isCollectible(asset.value)) {
-    navigateTo(nftRoute(asset.value?.address, '0x'))
+    navigateTo(tokenRoute(asset.value?.address as Address))
   }
 })
 </script>
