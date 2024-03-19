@@ -80,10 +80,7 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
         class="grid h-full grid-rows-[auto,max-content] rounded-12 bg-neutral-97"
       >
         <div
-          v-if="
-            showJSON ||
-            token?.address === '0x3983151E0442906000DAb83c8b1cF3f2D2535F82'
-          "
+          v-if="showJSON"
           class="w-full overflow-auto whitespace-pre-wrap pt-8"
         >
           token = {{ JSON.stringify(token, null, '  ') }}
