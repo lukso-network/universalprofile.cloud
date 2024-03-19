@@ -1,4 +1,5 @@
 import { useQueries } from '@tanstack/vue-query'
+import debug from 'debug'
 
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
