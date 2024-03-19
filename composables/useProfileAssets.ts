@@ -1,11 +1,8 @@
 import { useQueries } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
-import debug from 'debug'
 
 import type { Asset, ReferenceContract } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
-
-const assetLog = debug('wallet:asset')
 
 export function useProfileAssets() {
   return (profileAddress?: MaybeRef<Address | null>) => {

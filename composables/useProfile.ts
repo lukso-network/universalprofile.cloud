@@ -1,9 +1,6 @@
 import { useQueries } from '@tanstack/vue-query'
-import debug from 'debug'
 
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
-
-const profileLog = debug('wallet:profile')
 
 export const getProfile = (
   _profile: Address | undefined | Ref<Address | undefined>
