@@ -141,12 +141,14 @@ useHead({
   bodyAttrs: {
     // @ts-ignore
     class: computed(() => {
+      const bodyClass = ['scrollbar-stable']
+
       // prevent window scroll when modal is open
       if (modal.value?.isOpen || isSearchOpen.value) {
-        return '!overflow-hidden'
+        bodyClass.push('!overflow-hidden')
       }
 
-      return ''
+      return bodyClass.join(' ')
     }),
   },
 })
