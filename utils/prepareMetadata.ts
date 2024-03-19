@@ -1,7 +1,10 @@
 export const prepareMetadata = (metadata: LSP4DigitalAssetMetadataJSON) => {
-  const { links, description, attributes } = metadata.LSP4Metadata || {}
+  const validatedMetadata = validateLsp4Metadata(metadata)
+
+  const { links, description, attributes } =
+    validatedMetadata.LSP4Metadata || {}
   const assets =
-    metadata?.LSP4Metadata?.assets?.map((asset: AssetMetadata) => {
+    validatedMetadata?.LSP4Metadata?.assets?.map((asset: AssetMetadata) => {
       const { url } = asset as FileAsset
 
       // TODO add url verification check
@@ -13,7 +16,7 @@ export const prepareMetadata = (metadata: LSP4DigitalAssetMetadataJSON) => {
         : asset
     }) || []
   const images =
-    metadata?.LSP4Metadata?.images?.map((images: any) => {
+    validatedMetadata?.LSP4Metadata?.images?.map((images: any) => {
       return images.map((image: any) => {
         const { verification, url } = image
         return {
@@ -25,7 +28,7 @@ export const prepareMetadata = (metadata: LSP4DigitalAssetMetadataJSON) => {
       })
     }) || []
   const icon =
-    metadata?.LSP4Metadata?.icon?.map((image: any) => {
+    validatedMetadata?.LSP4Metadata?.icon?.map((image: any) => {
       const { verification, url } = image
       return {
         ...image,
