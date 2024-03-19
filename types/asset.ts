@@ -51,7 +51,8 @@ export type Asset = {
     forTokenData?: LSP4DigitalAssetMetadata
     tokenMetadata?: LSP4DigitalAssetMetadata
   }
-
+  tokenIdCreatorCount?: number
+  lsp7Creators?: any[]
   isNativeToken?: boolean
   isOwned?: boolean
   isIssued?: boolean
