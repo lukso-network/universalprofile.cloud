@@ -7,7 +7,7 @@ if (typeof window !== 'undefined') {
 }
 
 const { addWeb3, getWeb3 } = useWeb3Store()
-const { getNetworkByChainId, getNetworkById } = useAppStore()
+const { getNetworkById } = useAppStore()
 const { isLoadedApp, selectedChainId, modal, isSearchOpen } =
   storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
@@ -35,8 +35,12 @@ const setupWeb3Instances = async () => {
     console.error('No browser extension provider found')
   }
 
-  // for chain interactions through RPC endpoint
-  addWeb3(PROVIDERS.RPC, getNetworkByChainId(selectedChainId.value).rpcHttp)
+  const rpcNode = await selectRpcNode()
+
+  if (rpcNode) {
+    // for chain interactions through RPC endpoint
+    addWeb3(PROVIDERS.RPC, rpcNode?.host, { headers: rpcNode.headers })
+  }
 }
 
 /**

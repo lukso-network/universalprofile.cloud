@@ -5,9 +5,10 @@ const networks = ref<SelectStringOption[]>()
 const selectedNetwork = ref<SelectStringOption>()
 const { currentNetwork } = storeToRefs(useAppStore())
 const { isMobileOrTablet } = useDevice()
+const networkConfig = useNetworkConfig()
 
 onMounted(() => {
-  networks.value = NETWORKS.map(network => {
+  networks.value = networkConfig.map(network => {
     return {
       id: network.chainId,
       value: network.name,

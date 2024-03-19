@@ -1,44 +1,8 @@
-import { toWei } from 'web3-utils'
-
-import type { NetworkInfo } from '@/types/network'
-
 // chain id's
 export const TESTNET_CHAIN_ID = '0x1069'
 export const MAINNET_CHAIN_ID = '0x2a'
 export const DEFAULT_NETWORK_CHAIN_ID = MAINNET_CHAIN_ID
 export const SUPPORTED_NETWORK_IDS = ['mainnet', 'testnet'] as const
-
-// list of supported networks
-export const NETWORKS: NetworkInfo[] = [
-  {
-    id: 'testnet',
-    name: 'LUKSO Testnet',
-    chainId: TESTNET_CHAIN_ID,
-    rpcHttp: 'https://rpc.testnet.lukso.gateway.fm',
-    token: {
-      symbol: 'LYXt',
-      supply: toWei('42000000', 'ether'),
-      name: 'LUKSO',
-    },
-    indexName: 'prod_testnet_universal_profiles',
-    explorerUrl: 'https://explorer.execution.testnet.lukso.network',
-    customLSP2ContractAddress: '0x1690c1A6f5dc385d20139222567476F0A185f77a',
-  },
-  {
-    id: 'mainnet',
-    name: 'LUKSO Mainnet',
-    chainId: MAINNET_CHAIN_ID,
-    rpcHttp: 'https://rpc.lukso.gateway.fm',
-    token: {
-      symbol: 'LYX',
-      supply: toWei('42000000', 'ether'),
-      name: 'LUKSO',
-    },
-    indexName: 'prod_mainnet_universal_profiles',
-    explorerUrl: 'https://explorer.execution.mainnet.lukso.network',
-    customLSP2ContractAddress: '0x51c602b249a5bc0ff437fbed4607448d8bc66dad',
-  },
-]
 
 // name of default modal component name
 export const MODAL_DEFAULT_TEMPLATE = 'Default'

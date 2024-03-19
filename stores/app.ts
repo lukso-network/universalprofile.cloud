@@ -9,7 +9,8 @@ import type { NetworkInfo, NetworkId } from '@/types/network'
 export const useAppStore = defineStore(
   'app',
   () => {
-    const networks = ref<NetworkInfo[]>(NETWORKS)
+    const networkConfig = useNetworkConfig()
+    const networks = ref<NetworkInfo[]>(networkConfig)
     const selectedChainId = ref<string>(DEFAULT_NETWORK_CHAIN_ID)
     const modal = ref<Modal>()
     const connectedProfileAddress = ref<Address>()
