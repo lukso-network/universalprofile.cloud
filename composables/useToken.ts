@@ -1,11 +1,12 @@
 import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
 
+import { Priorities } from '@/utils/queryFunctions'
+
 import type {
   LSP4DigitalAssetMetadata,
   LSP4DigitalAssetMetadataJSON,
 } from '@/types/asset'
-import { Priorities } from '@/utils/queryFunctions'
 
 export function useToken() {
   return (_token?: MaybeRef<Asset | null | undefined>) => {
