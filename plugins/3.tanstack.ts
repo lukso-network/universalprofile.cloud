@@ -27,10 +27,10 @@ export default defineNuxtPlugin((nuxt: NuxtApp) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 1000 * 60 * 60 * 24,
+        staleTime: 1000 * 60 * 12, // 12 min
         refetchOnReconnect: false,
         refetchOnWindowFocus: false,
-        gcTime: 1000 * 60 * 60 * 24,
+        gcTime: 1000 * 60 * 60 * 24, // 1 day
         // queryFn: defaultQueryFn,
       },
     },
