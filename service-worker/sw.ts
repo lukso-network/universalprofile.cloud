@@ -3,6 +3,7 @@
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
 import { clientsClaim } from 'workbox-core'
 import { registerRoute } from 'workbox-routing'
+import { keccak256 } from 'js-sha3'
 
 import { processMetadata } from '../utils/processMetadata'
 
@@ -27,7 +28,7 @@ registerRoute(
     // params, // ?: string[] | MapLikeObject;
   }) => {
     const data = await request.json()
-    const response = await processMetadata(data).catch(error => {
+    const response = await processMetadata(data, keccak256).catch(error => {
       console.error(error)
       throw error
     })

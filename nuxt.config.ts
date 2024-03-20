@@ -170,6 +170,17 @@ export default defineNuxtConfig({
       // if enabling periodic sync for update use 1 hour or so (periodicSyncForUpdates: 3600)
       // periodicSyncForUpdates: 20,
     },
+    resolve: {
+      alias: {
+        process: 'process/browser',
+        stream: 'stream-browserify',
+        http: 'stream-http',
+        https: 'agent-base',
+        zlib: 'browserify-zlib',
+        util: 'util',
+        buffer: 'buffer',
+      },
+    },
     devOptions: isProduction
       ? {}
       : {

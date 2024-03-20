@@ -1,4 +1,5 @@
-import { keccak256 } from 'web3-utils'
+// YOU CANNOT IMPORT ANYTHING WHICH USES Buffer or so.
+
 import debug from 'debug'
 
 import { TANSTACK_GC_TIME, LUKSO_PROXY_API } from '@/shared/config'
@@ -7,10 +8,13 @@ const workersLog = debug('tanstack:workers')
 
 export async function processMetadata(
   data: any,
+  keccak256: (data: string) => string,
   prefix = '/hashed-images/'
 ): Promise<any> {
   if (Array.isArray(data)) {
-    return Promise.all(data.map(data => processMetadata(data, prefix)))
+    return Promise.all(
+      data.map(data => processMetadata(data, keccak256, prefix))
+    )
   }
   if (data != null && typeof data === 'object') {
     if (data.url?.startsWith('data:')) {
@@ -86,7 +90,7 @@ export async function processMetadata(
     return Promise.all(
       Object.entries(data).map(async ([key, value]) => [
         key,
-        await processMetadata(value),
+        await processMetadata(value, keccak256, prefix),
       ])
     ).then(entries => Object.fromEntries(entries))
   }
