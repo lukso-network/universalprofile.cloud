@@ -50,8 +50,7 @@ export const isLsp8 = (asset?: Asset | null) =>
  * @param asset
  * @returns
  */
-export const hasTokenId = (asset?: Asset | null) =>
-  !!asset?.tokenId?.length && asset?.tokenId !== '0x'
+export const hasTokenId = (asset?: Asset | null) => !!asset?.tokenId?.length
 
 /**
  * Check if passed asset is LSP7 or LSP8

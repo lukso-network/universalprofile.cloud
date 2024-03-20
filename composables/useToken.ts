@@ -151,6 +151,10 @@ export function useToken() {
           return null
         }
 
+        if (results.length === 0) {
+          return { isLoading: true } as Asset
+        }
+
         const isLoading =
           token.isLoading ||
           results.some((result, index) =>

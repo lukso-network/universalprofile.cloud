@@ -14,7 +14,8 @@ onMounted(() => {
 <template>
   <div class="relative">
     <AppPageLoader :is-loading="!asset">
-      <TokenAssetView :asset="asset" />
+      <TokenAssetView v-if="isToken(asset)" :asset="asset" />
+      <NftAssetView v-else :asset="asset" />
     </AppPageLoader>
   </div>
 </template>

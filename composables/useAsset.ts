@@ -17,12 +17,10 @@ export function useAsset() {
     > = computed(() => {
       const chainId = currentNetwork.value?.chainId || ''
       const tokenId = isRef(_tokenId) ? _tokenId.value : _tokenId
-      let address: Address | undefined = isRef(_address)
+      const address: Address | undefined = isRef(_address)
         ? _address.value
         : _address
-      if (address === '0x') {
-        address = undefined
-      }
+
       const queries: QFQueryOptions[] & {
         address: Address | undefined
         tokenId: string | undefined
@@ -102,7 +100,7 @@ export function useAsset() {
       queries,
       combine: results => {
         if (results.length === 0) {
-          return
+          return { isLoading: true } as Asset
         }
 
         const tokenId = queries.value.tokenId

@@ -4,13 +4,12 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const fetchedAsset = useAsset()(props?.asset?.address, props?.asset?.tokenId)
 
 const handleClick = () => {
   try {
     assertAddress(props.asset?.address)
-    if (isCollectible(fetchedAsset.value)) {
-      navigateTo(nftRoute(props.asset.address, props.asset?.tokenId || '0x'))
+    if (props.asset.tokenId) {
+      navigateTo(nftRoute(props.asset.address, props.asset?.tokenId))
     } else {
       navigateTo(tokenRoute(props.asset.address))
     }

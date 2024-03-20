@@ -8,12 +8,9 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
 
   const queries = computed(() => {
     const { value: { chainId } = { chainId: '' } } = currentNetwork
-    let profileAddress = isRef(_profile)
+    const profileAddress = isRef(_profile)
       ? _profile.value || null
       : _profile || null
-    if (!profileAddress || profileAddress === '0x') {
-      profileAddress = null
-    }
 
     const queries: QFQueryOptions[] & { profileAddress: Address | null } = (
       profileAddress
