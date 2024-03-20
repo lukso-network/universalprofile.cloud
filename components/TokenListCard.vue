@@ -5,8 +5,6 @@ import {
   useElementSize,
 } from '@vueuse/core'
 
-const showJSON = ref(window.location.search.includes('json'))
-
 type Props = {
   asset: Asset
 }
@@ -98,12 +96,6 @@ const isLoaded = computed(() => token.value && !token.value.isLoading)
         class="grid h-full grid-rows-[max-content,auto] p-4"
         ref="contentRef"
       >
-        <div
-          v-if="showJSON"
-          class="w-full overflow-auto whitespace-pre-wrap pt-8"
-        >
-          token = {{ JSON.stringify(token, null, '  ') }}
-        </div>
         <div class="flex h-7 items-start justify-end">
           <AssetStandardBadge :asset="token" />
         </div>

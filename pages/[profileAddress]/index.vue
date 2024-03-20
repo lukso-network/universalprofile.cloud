@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
-const showJSON = ref(window.location.search.includes('json'))
 const { assetFilter } = storeToRefs(useAppStore())
 const viewedProfileAddress = getCurrentProfileAddress()
 const { isMobile } = useDevice()
@@ -50,9 +49,8 @@ const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
 const tokens = computed(() => {
   if (assetFilter.value === AssetFilter.owned) {
     return tokensOwned.value
-  } else {
-    return tokensCreated.value
   }
+  return tokensCreated.value
 })
 
 // NFTs
@@ -63,9 +61,8 @@ const createdNftsCount = computed(() => nftsCreated.value?.length || 0)
 const nfts = computed(() => {
   if (assetFilter.value === AssetFilter.owned) {
     return nftsOwned.value || []
-  } else {
-    return nftsCreated.value || []
   }
+  return nftsCreated.value || []
 })
 
 // assets (tokens + NFTs)
@@ -111,12 +108,6 @@ const isLoadingAssets = computed(() =>
       <ProfileCard />
       <ProfileDetails />
       <div>
-        <div v-if="showJSON" class="whitespace-pre-wrap pt-8">
-          profile = {{ JSON.stringify(viewedProfile, null, '  ') }}
-        </div>
-        <div v-if="showJSON" class="whitespace-pre-wrap pt-8">
-          assets = {{ JSON.stringify(allTokens, null, '  ') }}
-        </div>
         <div class="grid grid-cols-2 gap-4 pt-10 sm:flex">
           <lukso-button
             size="small"

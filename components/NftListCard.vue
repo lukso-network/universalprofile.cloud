@@ -3,8 +3,6 @@ import makeBlockie from 'ethereum-blockies-base64'
 import { ref } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
 
-const showJSON = ref(window.location.search.includes('json'))
-
 type Props = {
   asset: Asset
 }
@@ -79,12 +77,6 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
         slot="content"
         class="grid h-full grid-rows-[auto,max-content] rounded-12 bg-neutral-97"
       >
-        <div
-          v-if="showJSON"
-          class="w-full overflow-auto whitespace-pre-wrap pt-8"
-        >
-          token = {{ JSON.stringify(token, null, '  ') }}
-        </div>
         <div
           class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
         >
