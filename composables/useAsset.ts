@@ -16,7 +16,7 @@ export function useAsset() {
       }
     > = computed(() => {
       const chainId = currentNetwork.value?.chainId || ''
-      let tokenId = isRef(_tokenId) ? _tokenId.value : _tokenId
+      const tokenId = isRef(_tokenId) ? _tokenId.value : _tokenId
       let address: Address | undefined = isRef(_address)
         ? _address.value
         : _address
@@ -94,7 +94,7 @@ export function useAsset() {
       // to the current queries list.
     })
     return useQueries({
-      queries: queries,
+      queries,
       combine: results => {
         const tokenId = queries.value.tokenId
         const address = queries.value.address
