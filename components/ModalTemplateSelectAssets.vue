@@ -29,13 +29,26 @@ const handleSelectAsset = (asset: Asset) => {
 }
 
 const ownedAssets = computed(() =>
-  allTokens.value?.filter(
-    ({ isOwned, standard, balance }) =>
-      isOwned &&
-      (standard === 'LSP7DigitalAsset' ||
-        standard === 'LSP8IdentifiableDigitalAsset') &&
-      balance !== '0'
-  )
+  allTokens.value
+    ?.filter(
+      ({ isOwned, standard, balance }) =>
+        isOwned &&
+        (standard === 'LSP7DigitalAsset' ||
+          standard === 'LSP8IdentifiableDigitalAsset') &&
+        balance !== '0'
+    )
+    .sort((a: Asset, _b: Asset) => {
+      // put tokens first in the list
+      if (isToken(a)) {
+        return -1
+      }
+
+      if (isCollectible(a)) {
+        return 1
+      }
+
+      return 0
+    })
 )
 </script>
 
@@ -53,22 +66,14 @@ const ownedAssets = computed(() =>
     </div>
     <ul class="-mr-4 max-h-72 space-y-2 overflow-y-auto">
       <li class="mr-4">
-        <AssetListItem
-          :icon="ASSET_LYX_ICON_URL"
-          :name="currentNetwork.token.name"
-          :symbol="currentNetwork.token.symbol"
+        <SelectAssetsLyx
           :is-selected="selectedAsset?.isNativeToken"
           @click="handleSelectLyx"
         />
       </li>
       <li v-for="asset in ownedAssets" :key="asset?.address" class="mr-4">
-        <AssetListItem
-          :icon="getAssetThumb(asset, !isCollectible(asset), 80)"
-          :name="asset?.tokenName"
-          :symbol="asset?.tokenSymbol"
-          :address="asset?.address"
-          :has-identicon="true"
-          :has-square-icon="isCollectible(asset)"
+        <SelectAssetsToken
+          :asset="asset"
           :is-selected="
             selectedAsset?.address === asset?.address &&
             selectedAsset?.tokenId === asset?.tokenId

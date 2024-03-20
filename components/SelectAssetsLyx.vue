@@ -1,15 +1,10 @@
 <script setup lang="ts">
 type Props = {
-  icon?: string
-  name?: string
-  symbol?: string
-  address?: Address
-  hasIdenticon?: boolean
-  hasSquareIcon?: boolean
   isSelected?: boolean
 }
 
 defineProps<Props>()
+const { currentNetwork } = storeToRefs(useAppStore())
 </script>
 
 <template>
@@ -20,29 +15,20 @@ defineProps<Props>()
     }"
   >
     <div class="flex items-center pr-4">
-      <div
-        class="shadow-neutral-above-shadow-1xl"
-        :class="{
-          'rounded-full': !hasSquareIcon,
-          'rounded-4': hasSquareIcon,
-        }"
-      >
+      <div class="rounded-full shadow-neutral-above-shadow-1xl">
         <lukso-profile
           size="small"
-          :profile-url="icon"
-          :profile-address="address"
-          :has-identicon="hasIdenticon ? true : undefined"
-          :is-square="hasSquareIcon ? true : undefined"
+          :profile-url="ASSET_LYX_ICON_URL"
         ></lukso-profile>
       </div>
     </div>
     <div class="grid grid-cols-[auto,max-content] items-center">
       <div class="flex flex-col text-left">
         <div class="paragraph-inter-14-semi-bold">
-          {{ name }}
+          {{ currentNetwork.token.name }}
         </div>
         <div class="paragraph-inter-12-semi-bold text-neutral-60">
-          {{ symbol }}
+          {{ currentNetwork.token.symbol }}
         </div>
       </div>
       <lukso-icon
