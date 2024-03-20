@@ -31,16 +31,24 @@ export const useNetworkConfig = (): NetworkInfo[] => {
       chainId: MAINNET_CHAIN_ID,
       rpcNodes: [
         {
-          host: `https://rpc.eu-central-1.gateway.fm/v4/lukso/non-archival/mainnet?apiKey=${config.public.GATEWAY_MAINNET_API_KEY}`,
-        },
-        {
           host: 'https://lyx-lukso.nownodes.io',
           headers: [
             {
-              name: 'Api-Key',
-              value: config.public.NOW_NODES_MAINNET_API_KEY || '',
+              name: 'Authorization',
+              value: `Basic ${config.public.NOW_NODES_MAINNET_API_KEY}` || '',
+            },
+            {
+              name: 'Access-Control-Allow-Origin',
+              value: '*',
+            },
+            {
+              name: 'Access-Control-Allow-Headers',
+              value: 'Content-Type, Authorization',
             },
           ],
+        },
+        {
+          host: `https://rpc.eu-central-1.gateway.fm/v4/lukso/non-archival/mainnet?apiKey=${config.public.GATEWAY_MAINNET_API_KEY}`,
         },
         {
           host: 'https://rpc.lukso.gateway.fm',

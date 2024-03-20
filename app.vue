@@ -177,10 +177,10 @@ useHead({
   bodyAttrs: {
     // @ts-ignore
     class: computed(() => {
-      const bodyClass = ['scrollbar-stable']
+      const bodyClass = []
 
       // prevent window scroll when modal is open
-      if (modal.value?.isOpen || isSearchOpen.value) {
+      if (isSearchOpen.value) {
         bodyClass.push('!overflow-hidden')
       }
 
