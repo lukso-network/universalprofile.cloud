@@ -10,6 +10,8 @@ import type {
 
 export function useToken() {
   return (_token?: MaybeRef<Asset | null | undefined>) => {
+    const connectedProfile = useProfile().connectedProfile()
+    const profileAddress = computed(() => connectedProfile.value?.address)
     const { currentNetwork } = storeToRefs(useAppStore())
     const { value: { chainId } = { chainId: '' } } = currentNetwork
     const queries = computed(() => {
@@ -94,10 +96,18 @@ export function useToken() {
                         return null
                       },
                     },
+                    queryCallContract({
+                      // 7
+                      chainId,
+                      address,
+                      method: 'tokenIdsOf(address)',
+                      args: [profileAddress.value],
+                      staleTime: 250,
+                    }),
                     ...(tokenId && tokenIdFormat === 2
                       ? [
                           queryGetData({
-                            // 7
+                            // 8
                             chainId,
                             address: ABICoder.decodeParameter(
                               'address',
@@ -108,7 +118,7 @@ export function useToken() {
                             priority: Priorities.Low,
                           }),
                           queryGetData({
-                            // 8
+                            // 9
                             chainId,
                             address: ABICoder.decodeParameter(
                               'address',
@@ -117,7 +127,7 @@ export function useToken() {
                             keyName: 'LSP8ReferenceContract',
                           }),
                           queryGetData({
-                            // 9
+                            // 10
                             chainId,
                             address: ABICoder.decodeParameter(
                               'address',
@@ -128,7 +138,7 @@ export function useToken() {
                         ]
                       : [
                           queryGetData({
-                            // 7
+                            // 8
                             chainId,
                             address,
                             tokenId,
@@ -169,16 +179,17 @@ export function useToken() {
         const tokenIdCreatorsCount = results[3]?.data || 0
         const lsp7Creators =
           tokenId && tokenIdFormat === 2
-            ? results[9]?.data
-            : (results[7]?.data as any[])
+            ? results[10]?.data
+            : (results[8]?.data as any[])
         const _assetData = results[4]?.data as any
         const forTokenData = results[5]?.data as any
         const baseURIData = results[6]?.data as any
+        const tokenIdsOf = results[7]?.data as string[]
         const lsp7Data =
-          tokenId && tokenIdFormat === 2 ? (results[7]?.data as any) : null
-        const referenceContract = results[8]?.data as any
+          tokenId && tokenIdFormat === 2 ? (results[8]?.data as any) : null
+        const referenceContract = results[9]?.data as any
         const metadataIsLoaded = results
-          .slice(4, tokenId && tokenIdFormat === 2 ? 8 : 7)
+          .slice(4, tokenId && tokenIdFormat === 2 ? 9 : 8)
           .every(result => {
             return !result.isLoading || result.failureReason != undefined
           })
@@ -201,6 +212,7 @@ export function useToken() {
           owner,
           tokenCreators,
           tokenIdCreatorsCount,
+          tokenIdsOf,
           lsp7Creators,
           rawMetadata: {
             lsp7Data,

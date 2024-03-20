@@ -9,17 +9,33 @@ type Props = {
 const profileAddress = computed(() => connectedProfile.value?.address || null)
 const props = defineProps<Props>()
 const allTokens = useProfileAssets()(profileAddress)
-const lyxToken = useLyxToken()
 
 const handleSelectLyx = () => {
-  selectedAsset.value = lyxToken.value
+  assertAddress(connectedProfile?.value?.address, 'profile')
+  navigateTo({
+    path: sendRoute(connectedProfile.value.address),
+  })
   props.closeModal()
 }
 
 const handleSelectAsset = (asset: Asset) => {
   assertAddress(connectedProfile?.value?.address, 'profile')
-  selectedAsset.value = asset
   sendLog('Selected asset', toRaw(asset))
+
+  let query: { asset?: string; tokenId?: string } = { asset: asset?.address }
+
+  if (isLsp8(asset)) {
+    query = {
+      ...query,
+      tokenId: asset?.tokenId,
+    }
+  }
+
+  navigateTo({
+    path: sendRoute(connectedProfile.value.address),
+    query,
+  })
+
   props.closeModal()
 }
 

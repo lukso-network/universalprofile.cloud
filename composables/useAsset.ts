@@ -7,7 +7,7 @@ import type { QFQueryOptions } from '@/utils/queryFunctions'
 export function useAsset() {
   return (
     _address?: MaybeRef<Address | undefined>,
-    _tokenId?: MaybeRef<string>
+    _tokenId?: MaybeRef<string | undefined>
   ) => {
     const connectedProfile = useProfile().connectedProfile()
     const profileAddress = computed(() => connectedProfile.value?.address)

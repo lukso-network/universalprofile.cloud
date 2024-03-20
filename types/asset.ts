@@ -41,6 +41,7 @@ export type Asset = {
   tokenDataURL?: string
   tokenId?: `0x${string}`
   tokenIdIsContract?: boolean
+  tokenIdsOf?: string[]
   tokenURI?: string
   tokenCreators?: Address[]
   totalSupply?: string

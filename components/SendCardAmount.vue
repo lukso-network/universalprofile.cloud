@@ -3,9 +3,21 @@ import BigNumber from 'bignumber.js'
 
 const { asset, receiverError, amount } = storeToRefs(useSendStore())
 
-const balance = computed(() =>
-  isLsp8(asset.value) ? '1' : asset.value?.balance || '0'
-)
+const balance = computed(() => {
+  if (
+    isLsp8(asset.value) &&
+    asset.value?.tokenId &&
+    asset.value?.tokenIdsOf?.includes(asset.value.tokenId)
+  ) {
+    return '1'
+  }
+
+  if (isLsp7(asset.value) || isLyx(asset.value)) {
+    return asset.value?.balance || '0'
+  }
+
+  return '0'
+})
 
 const handleKeyDown = (customEvent: CustomEvent) => {
   const numberRegex = /^[0-9]*\.?[0-9]*$/

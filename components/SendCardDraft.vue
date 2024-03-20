@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const connectedProfile = useProfile().connectedProfile()
-const viewedProfile = useProfile().viewedProfile()
 const {
   asset: sendAsset,
   receiver,
@@ -12,7 +11,8 @@ const { isLoadedApp } = storeToRefs(useAppStore())
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
 const address = computed(() => sendAsset.value?.address)
-const _asset = useToken()(useAsset()(address, sendAsset.value?.tokenId))
+const tokenId = computed(() => sendAsset.value?.tokenId)
+const _asset = useToken()(useAsset()(address, tokenId))
 const lyxToken = useLyxToken()
 
 const asset = computed(() =>
@@ -38,19 +38,30 @@ const handleBack = () => {
   }
 }
 
-// TODO it only works for LSP7 since we don't check balance of token Id in LSP8
 const checkBalance = () => {
-  if (
-    !asset.value?.isNativeToken &&
-    !asset.value?.isLoading &&
-    (!asset.value?.balance || asset.value?.balance === '0')
-  ) {
-    showModal({
-      message: formatMessage('no_asset_balance'),
-    })
-    viewedProfile.value?.address &&
-      navigateTo(profileRoute(viewedProfile.value.address))
+  if (asset.value?.isLoading) {
+    return
   }
+
+  if (isLyx(asset.value)) {
+    return
+  }
+
+  if (
+    isLsp8(asset.value) &&
+    asset.value?.tokenId &&
+    asset.value?.tokenIdsOf?.includes(asset.value.tokenId)
+  ) {
+    return
+  }
+
+  if (isLsp7(asset.value) && asset.value?.balance !== '0') {
+    return
+  }
+
+  showModal({
+    message: formatMessage('no_asset_balance'),
+  })
 }
 
 watch(
