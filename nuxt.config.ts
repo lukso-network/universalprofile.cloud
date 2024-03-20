@@ -159,9 +159,6 @@ export default defineNuxtConfig({
         },
       ],
     },
-    workbox: {
-      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
-    },
     injectManifest: {
       globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
     },
@@ -172,7 +169,7 @@ export default defineNuxtConfig({
       // periodicSyncForUpdates: 20,
     },
     devOptions: {
-      enabled: true,
+      enabled: process.env.NODE_ENV !== 'production',
       suppressWarnings: true,
       navigateFallback: '/',
       navigateFallbackAllowlist: [/^\/$/],

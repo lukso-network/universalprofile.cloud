@@ -95,8 +95,14 @@ function capture(): DeferCapture {
   } as unknown as DeferCapture
   output.promise = new Promise((resolve, reject) => {
     output.resolve = value => {
-      if (output.process) {
-        value = output.process(value)
+      if (output.process && value !== null) {
+        try {
+          const promise = output.process(value) as Promise<any>
+          promise.then(resolve).catch(output.reject)
+        } catch (error) {
+          output.reject(error)
+        }
+        return
       }
       resolve(value)
     }

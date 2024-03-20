@@ -3,6 +3,30 @@ import { LUKSO_PROXY_API } from '@/shared/config'
 import type { Image } from '@/types/image'
 
 /**
+ * Make the image reactive if needed
+ * @param imageObject
+ * @retursn reactive image object
+ */
+export const reactiveImageIfNeeded = (
+  imageObject: Image,
+  images: Image[]
+): Image => {
+  if (imageObject && imageObject.url?.startsWith('cached://')) {
+    const index = images.findIndex(
+      image =>
+        image.url === imageObject.url && image.width === imageObject.width
+    )
+    imageObject = images[index] = reactive(images[index])
+    imageObject.url = ASSET_ICON_PLACEHOLDER_URL // TODO: This should be the loading image but it probably doesn't matter
+    resolveImageURL(imageObject?.url, ASSET_ERROR_ICON_URL).then(url => {
+      imageObject.url = url
+    })
+    return imageObject
+  }
+  return imageObject
+}
+
+/**
  * Gets a correct image url from an array of possible image
  * by checking the height of the image.
  * It try to find retina version of the image first, then normal version of the image
@@ -37,11 +61,14 @@ export const getImageBySize = (
   )
 
   if (normalImage) {
-    return normalImage
+    return reactiveImageIfNeeded(normalImage, images as Image[])
   }
 
   // lastly return biggest image available
-  return sortedImagesAscending?.slice(-1)[0]
+  return reactiveImageIfNeeded(
+    sortedImagesAscending?.slice(-1)[0],
+    images as Image[]
+  )
 }
 
 const EXTRACT_CID = new RegExp(
@@ -58,17 +85,10 @@ const EXTRACT_CID = new RegExp(
 export const getOptimizedImage = (
   image: Image[] | undefined,
   width: number
-): MaybeRef<string> => {
+): string => {
   const dpr = window.devicePixelRatio || 1
   const { verification, url } = getImageBySize(image, width) || {}
   const { verified } = (verification || {}) as any
-  if (url?.startsWith('cached://')) {
-    const newUrl = ref<string>()
-    resolveImageURL(url, ASSET_ERROR_ICON_URL).then(url => {
-      newUrl.value = url
-    })
-    return newUrl as MaybeRef<string>
-  }
   if (
     url?.startsWith('ipfs://') ||
     url?.startsWith(`${LUKSO_PROXY_API}/image/`)
@@ -111,7 +131,7 @@ export const getAssetThumb = (
   useIcon: boolean,
   width: number,
   hasImageError?: boolean
-): MaybeRef<string> => {
+): string => {
   if (hasImageError) {
     return ASSET_ERROR_ICON_URL
   }

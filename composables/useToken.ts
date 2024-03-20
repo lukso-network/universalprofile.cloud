@@ -42,12 +42,13 @@ export function useToken() {
                 address,
                 method: 'decimals()',
               }),
-              queryGetData({
+              queryCallContract({
                 // 3
                 chainId,
                 address,
-                tokenId,
-                keyName: 'LSP4Creators[]',
+                method: 'tokenIdsOf(address)',
+                args: [profileAddress.value || address],
+                staleTime: 250,
               }),
               queryGetData({
                 // 4
@@ -103,18 +104,10 @@ export function useToken() {
                         return null
                       },
                     },
-                    queryCallContract({
-                      // 7
-                      chainId,
-                      address,
-                      method: 'tokenIdsOf(address)',
-                      args: [profileAddress.value],
-                      staleTime: 250,
-                    }),
                     ...(tokenId && tokenIdFormat === 2
                       ? [
                           queryGetData({
-                            // 8
+                            // 7
                             chainId,
                             address: ABICoder.decodeParameter(
                               'address',
@@ -126,7 +119,7 @@ export function useToken() {
                             priority: Priorities.Low,
                           }),
                           queryGetData({
-                            // 9
+                            // 8
                             chainId,
                             address: ABICoder.decodeParameter(
                               'address',
@@ -135,7 +128,7 @@ export function useToken() {
                             keyName: 'LSP8ReferenceContract',
                           }),
                           queryGetData({
-                            // 10
+                            // 9
                             chainId,
                             address: ABICoder.decodeParameter(
                               'address',
@@ -144,15 +137,7 @@ export function useToken() {
                             keyName: 'LSP4Creators[]',
                           }),
                         ]
-                      : [
-                          queryGetData({
-                            // 8
-                            chainId,
-                            address,
-                            tokenId,
-                            keyName: 'LSP4Creators[]',
-                          }),
-                        ]),
+                      : []),
                   ]
                 : []),
             ]
@@ -173,35 +158,42 @@ export function useToken() {
           return { isLoading: true } as Asset
         }
 
+        const { tokenId, tokenIdFormat } = token
+
+        const resultsWithQuery = results.map((result, index) => {
+          const query = queries.value[index]
+          return { result, query }
+        })
+        const metadataResults = resultsWithQuery.slice(
+          4,
+          tokenId && tokenIdFormat === 2 ? 8 : 7
+        )
+        const nonMetadataResults = resultsWithQuery.filter((_, index) => {
+          return !(
+            index >= 4 && index <= (tokenId && tokenIdFormat === 2 ? 7 : 6)
+          )
+        })
+        console.log(metadataResults, nonMetadataResults)
         const isLoading =
           token.isLoading ||
-          results.some((result, index) =>
-            index >= 3 && index < 7 ? false : result.isLoading
-          )
-
-        const { tokenId, tokenIdFormat } = token
+          nonMetadataResults.some(({ result }) => result.isLoading)
 
         const owner = results[0].data as string
         const tokenCreators = results[1].data as string[]
         const decimals = Number.parseInt((results[2].data as string) || '0')
         const tokenIdCreatorsCount = results[3]?.data || 0
-        const lsp7Creators =
-          tokenId && tokenIdFormat === 2
-            ? results[10]?.data
-            : (results[8]?.data as any[])
+        const tokenIdsOf = results[3]?.data as string[]
         const _assetData = results[4]?.data as any
         const forTokenData = results[5]?.data as any
         const baseURIData = results[6]?.data as any
-        const tokenIdsOf = results[7]?.data as string[]
         const lsp7Data =
-          tokenId && tokenIdFormat === 2 ? (results[8]?.data as any) : null
-        const referenceContract = results[9]?.data as any
-        const metadataIsLoaded = results
-          .slice(4, tokenId && tokenIdFormat === 2 ? 9 : 8)
-          .every(result => {
-            return !result.isLoading || result.failureReason != null
-          })
-        const tokenData: LSP4DigitalAssetMetadataJSON = metadataIsLoaded
+          tokenId && tokenIdFormat === 2 ? (results[7]?.data as any) : null
+        const referenceContract = results[8]?.data as any
+        const lsp7Creators = results[9]?.data as string[]
+        const isMetadataLoading = metadataResults.some(({ result }) => {
+          return result.isLoading
+        })
+        const tokenData: LSP4DigitalAssetMetadataJSON = !isMetadataLoading
           ? lsp7Data || forTokenData || baseURIData || _assetData
           : undefined
         let resolvedMetadata: LSP4DigitalAssetMetadata | undefined
@@ -212,11 +204,11 @@ export function useToken() {
         if (_assetData) {
           assetData = prepareMetadata(_assetData)
         }
-        return {
+        const asset = {
           ...token,
           isLoading,
           isAssetLoading: token.isLoading,
-          isMetadataLoading: !metadataIsLoaded,
+          isMetadataLoading,
           owner,
           tokenCreators,
           tokenIdCreatorsCount,
@@ -236,6 +228,10 @@ export function useToken() {
             ? resolvedMetadata?.name
             : token.tokenName,
         } as Asset
+        if (!isLoading && assetLog.enabled) {
+          assetLog('token', asset)
+        }
+        return asset
       },
     })
   }

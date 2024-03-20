@@ -49,7 +49,7 @@ export async function processMetadata(
           ...(verified != null
             ? { verification: { ...data.verification, verified } }
             : {}),
-          url: `${prefix}${hash}${verified != null ? `?verified=${verified}` : ''}`,
+          url: `${prefix}${hash}`,
         }
       }
     }

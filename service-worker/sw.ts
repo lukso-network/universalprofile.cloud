@@ -31,7 +31,11 @@ registerRoute(
     // params, // ?: string[] | MapLikeObject;
   }) => {
     const data = await request.json()
-    const response = await processMetadata(data)
+    const response = await processMetadata(data).catch(error => {
+      console.error(error)
+      throw error
+    })
+    console.log('sw', response)
     return new Response(JSON.stringify(response), {
       headers: {
         'Content-Type': 'application/json',
