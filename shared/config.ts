@@ -25,7 +25,7 @@ export const ASSET_ERROR_ICON_URL = '/images/image-error.svg'
 export const ASSET_LYX_DECIMALS = 18
 
 // the raw proxy URL
-export const LUKSO_PROXY_API = 'http://localhost:8787' // 'https://api.universalprofile.cloud'
+export const LUKSO_PROXY_API = 'https://api.universalprofile.cloud'
 
 // url of the ipfs gateway
 export const IPFS_URL = `${LUKSO_PROXY_API}/ipfs/`
