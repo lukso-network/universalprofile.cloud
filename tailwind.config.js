@@ -10,22 +10,6 @@ const wordBreakPlugin = plugin(function ({ addUtilities, theme, e }) {
   addUtilities(utilities)
 })
 
-const scrollbarGutter = plugin(function ({ addUtilities }) {
-  addUtilities([
-    {
-      '.scrollbar-gutter-auto': {
-        'scrollbar-gutter': 'auto',
-      },
-      '.scrollbar-stable': {
-        'scrollbar-gutter': 'stable',
-      },
-      '.scrollbar-both-edges': {
-        'scrollbar-gutter': 'stable both-edges',
-      },
-    },
-  ])
-})
-
 module.exports = {
   presets: [require('@lukso/web-components/tailwind.config')],
   theme: {
@@ -38,5 +22,5 @@ module.exports = {
       },
     },
   },
-  plugins: [wordBreakPlugin, scrollbarGutter],
+  plugins: [wordBreakPlugin],
 }
