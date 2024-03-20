@@ -1,6 +1,5 @@
 import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
-import debug from 'debug'
 
 import { Priorities, type QFQueryOptions } from '@/utils/queryFunctions'
 
@@ -8,8 +7,6 @@ import type {
   LSP4DigitalAssetMetadata,
   LSP4DigitalAssetMetadataJSON,
 } from '@/types/asset'
-
-const tokenLog = debug('wallet:token')
 
 export function useToken() {
   return (_token?: MaybeRef<Asset | null | undefined>) => {

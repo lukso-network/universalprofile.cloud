@@ -8,7 +8,7 @@ if (typeof window !== 'undefined') {
 
 const { addWeb3, getWeb3 } = useWeb3Store()
 const { getNetworkById } = useAppStore()
-const { isLoadedApp, selectedChainId, modal, isSearchOpen } =
+const { isLoadedApp, selectedChainId, isSearchOpen } =
   storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
