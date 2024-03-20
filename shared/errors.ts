@@ -21,3 +21,9 @@ export class NotFoundIndexError extends Error {
     super(`The ${address} was not found in the index`)
   }
 }
+
+export class StandardError extends Error {
+  constructor() {
+    super('Unknown asset standard')
+  }
+}

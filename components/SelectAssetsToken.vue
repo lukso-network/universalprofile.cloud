@@ -10,7 +10,12 @@ type Props = {
   isSelected?: boolean
 }
 
+type Emits = {
+  (event: 'on-select', asset: Asset | null): void
+}
+
 const props = defineProps<Props>()
+const emits = defineEmits<Emits>()
 const hasSquareIcon = computed(() => isCollectible(props.asset))
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
@@ -22,6 +27,7 @@ const token = useToken()(asset)
     :class="{
       'bg-neutral-95': isSelected,
     }"
+    @click="emits('on-select', token)"
   >
     <div class="flex items-center pr-4">
       <div

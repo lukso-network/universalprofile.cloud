@@ -9,22 +9,17 @@ type Props = {
 const profileAddress = computed(() => connectedProfile.value?.address || null)
 const props = defineProps<Props>()
 const allTokens = useProfileAssets()(profileAddress)
-const { currentNetwork } = storeToRefs(useAppStore())
+const lyxToken = useLyxToken()
 
 const handleSelectLyx = () => {
-  selectedAsset.value = {
-    tokenName: currentNetwork.value.token.name,
-    tokenSymbol: currentNetwork.value.token.symbol,
-    isNativeToken: true,
-    decimals: ASSET_LYX_DECIMALS,
-    balance: connectedProfile.value?.balance,
-  }
+  selectedAsset.value = lyxToken.value
   props.closeModal()
 }
 
 const handleSelectAsset = (asset: Asset) => {
   assertAddress(connectedProfile?.value?.address, 'profile')
   selectedAsset.value = asset
+  sendLog('Selected asset', toRaw(asset))
   props.closeModal()
 }
 
@@ -78,7 +73,7 @@ const ownedAssets = computed(() =>
             selectedAsset?.address === asset?.address &&
             selectedAsset?.tokenId === asset?.tokenId
           "
-          @click="handleSelectAsset(asset)"
+          @on-select="handleSelectAsset"
         />
       </li>
     </ul>

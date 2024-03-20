@@ -11,28 +11,26 @@ import type {
 } from '@/contracts'
 
 const connectedProfile = useProfile().connectedProfile()
-const { asset, onSend, amount, receiver, transactionHash } =
-  storeToRefs(useSendStore())
+const {
+  asset: sendAsset,
+  onSend,
+  amount,
+  receiver,
+  transactionHash,
+} = storeToRefs(useSendStore())
 const { isLoadedApp, isConnected, hasSimpleNavbar } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
-const { formatMessage } = useIntl()
 const { sendTransaction, contract } = useWeb3(PROVIDERS.INJECTED)
-const { currentNetwork } = storeToRefs(useAppStore())
-
 const assetAddress = computed(() => useRouter().currentRoute.value.query.asset)
 const tokenId = computed(() => useRouter().currentRoute.value.query.tokenId)
-const fetchedAsset = useToken()(useAsset()(assetAddress, tokenId))
+const asset = useToken()(useAsset()(assetAddress, tokenId))
+const lyxToken = useLyxToken()
 
 onMounted(() => {
   setStatus('draft')
 
   onSend.value = handleSend
-
-  // for nft's we prefill amount
-  if (isCollectible(asset.value)) {
-    amount.value = '1'
-  }
 })
 
 onUnmounted(() => {
@@ -49,16 +47,10 @@ watchEffect(() => {
 
   amount.value = undefined
 
-  if (!fetchedAsset.value?.address) {
-    asset.value = {
-      tokenName: currentNetwork.value.token.name,
-      tokenSymbol: currentNetwork.value.token.symbol,
-      isNativeToken: true,
-      decimals: ASSET_LYX_DECIMALS,
-      balance: connectedProfile.value?.balance,
-    }
+  if (!assetAddress.value) {
+    sendAsset.value = lyxToken.value
   } else {
-    asset.value = fetchedAsset.value
+    sendAsset.value = asset.value
   }
 
   // when not connected then navigate to home
@@ -76,7 +68,7 @@ const handleSend = async () => {
     let transactionsReceipt: TransactionReceipt
 
     // native token transfer
-    if (isLyx(asset.value)) {
+    if (isLyx(sendAsset.value)) {
       const transaction = {
         from: connectedProfile.value?.address,
         to: receiver.value?.address as unknown as string,
@@ -86,11 +78,11 @@ const handleSend = async () => {
       transactionHash.value = transactionsReceipt.transactionHash
     } else {
       // custom token transfer
-      switch (asset.value?.standard) {
+      switch (sendAsset.value?.standard) {
         case STANDARDS.LSP7:
           const tokenContract = contract<LSP7DigitalAsset>(
             LSP7Mintable.abi as AbiItem[],
-            asset.value?.address
+            sendAsset.value?.address
           )
 
           assertAddress(connectedProfile.value?.address)
@@ -99,7 +91,7 @@ const handleSend = async () => {
             .transfer(
               connectedProfile.value.address,
               receiver.value?.address,
-              toWeiWithDecimals(amount.value || '0', asset.value?.decimals),
+              toWeiWithDecimals(amount.value || '0', sendAsset.value?.decimals),
               false,
               '0x'
             )
@@ -109,27 +101,26 @@ const handleSend = async () => {
         case STANDARDS.LSP8:
           const nftContract = contract<LSP8IdentifiableDigitalAsset>(
             LSP8Mintable.abi as AbiItem[],
-            asset.value?.address
+            sendAsset.value?.address
           )
 
           assertAddress(connectedProfile.value?.address)
           assertAddress(receiver.value?.address)
-          assertString(asset.value.tokenId)
+          assertString(sendAsset.value.tokenId)
           transactionsReceipt = await nftContract.methods
             .transfer(
               connectedProfile.value.address,
               receiver.value?.address,
-              asset.value.tokenId,
+              sendAsset.value.tokenId,
               false,
               '0x'
             )
             .send({ from: connectedProfile.value.address })
           transactionHash.value = transactionsReceipt.transactionHash
-          assertNotUndefined(asset.value.address, 'asset')
+          assertNotUndefined(sendAsset.value.address, 'asset')
           break
         default:
-          console.error('Unknown token type')
-          break
+          throw new StandardError()
       }
     }
     setStatus('success')
@@ -139,7 +130,6 @@ const handleSend = async () => {
     hasSimpleNavbar.value = false
 
     showModal({
-      title: formatMessage('web3_connect_error_title'),
       message: getErrorMessage(error),
     })
   }
@@ -147,7 +137,6 @@ const handleSend = async () => {
 </script>
 
 <template>
-  {{ console.log(fetchedAsset) }}
   <AppPageLoader>
     <SendCard />
   </AppPageLoader>

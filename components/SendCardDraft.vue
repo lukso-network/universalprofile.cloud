@@ -1,9 +1,23 @@
 <script setup lang="ts">
 const connectedProfile = useProfile().connectedProfile()
-const { asset, receiver, receiverError, amount, onSend } =
-  storeToRefs(useSendStore())
+const viewedProfile = useProfile().viewedProfile()
+const {
+  asset: sendAsset,
+  receiver,
+  receiverError,
+  amount,
+  onSend,
+} = storeToRefs(useSendStore())
 const { isLoadedApp } = storeToRefs(useAppStore())
 const { showModal } = useModal()
+const { formatMessage } = useIntl()
+const address = computed(() => sendAsset.value?.address)
+const _asset = useToken()(useAsset()(address, sendAsset.value?.tokenId))
+const lyxToken = useLyxToken()
+
+const asset = computed(() =>
+  isLyx(sendAsset.value) ? lyxToken.value : _asset.value
+)
 
 const handleSend = () => {
   onSend.value && onSend.value()
@@ -23,9 +37,32 @@ const handleBack = () => {
     console.error(error)
   }
 }
+
+// TODO it only works for LSP7 since we don't check balance of token Id in LSP8
+const checkBalance = () => {
+  if (
+    !asset.value?.isNativeToken &&
+    !asset.value?.isLoading &&
+    (!asset.value?.balance || asset.value?.balance === '0')
+  ) {
+    showModal({
+      message: formatMessage('no_asset_balance'),
+    })
+    viewedProfile.value?.address &&
+      navigateTo(profileRoute(viewedProfile.value.address))
+  }
+}
+
+watch(
+  () => asset.value?.isLoading,
+  () => {
+    checkBalance()
+  }
+)
 </script>
 
 <template>
+  {{ sendLog('Current asset', toRaw(asset)) }}
   <lukso-card
     variant="profile-2"
     :background-url="getOptimizedImage(connectedProfile?.backgroundImage, 450)"

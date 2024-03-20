@@ -5,7 +5,10 @@ import type { Asset } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
 export function useAsset() {
-  return (_address?: MaybeRef<Address>, _tokenId?: MaybeRef<string>) => {
+  return (
+    _address?: MaybeRef<Address | undefined>,
+    _tokenId?: MaybeRef<string>
+  ) => {
     const connectedProfile = useProfile().connectedProfile()
     const profileAddress = computed(() => connectedProfile.value?.address)
     const { currentNetwork } = storeToRefs(useAppStore())

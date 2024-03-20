@@ -11,6 +11,10 @@ export const getErrorMessage = (error: unknown) => {
     return formatMessage('error_invalid_profile_interface')
   }
 
+  if (error instanceof StandardError) {
+    return formatMessage('error_unknown_standard')
+  }
+
   // errors that have a code or message
   if (error && typeof error === 'object' && 'code' in error) {
     switch (error.code) {
