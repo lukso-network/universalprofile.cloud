@@ -1,12 +1,8 @@
 /// <reference lib="WebWorker" />
 /// <reference types="vite/client" />
-import {
-  cleanupOutdatedCaches,
-  createHandlerBoundToURL,
-  precacheAndRoute,
-} from 'workbox-precaching'
+import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
 import { clientsClaim } from 'workbox-core'
-import { NavigationRoute, registerRoute } from 'workbox-routing'
+import { registerRoute } from 'workbox-routing'
 
 import { processMetadata } from '../utils/processMetadata'
 
@@ -18,8 +14,8 @@ precacheAndRoute(self.__WB_MANIFEST)
 // clean old assets
 cleanupOutdatedCaches()
 
-let allowlist: undefined | RegExp[]
-if (import.meta.env.DEV) allowlist = [/^\/$/]
+// let allowlist: undefined | RegExp[]
+// if (import.meta.env.DEV) allowlist = [/^\/$/]
 
 // to allow work offline
 registerRoute(
@@ -35,7 +31,6 @@ registerRoute(
       console.error(error)
       throw error
     })
-    console.log('sw', response)
     return new Response(JSON.stringify(response), {
       headers: {
         'Content-Type': 'application/json',
@@ -56,7 +51,7 @@ registerRoute(
   },
   'GET'
 )
-registerRoute(new NavigationRoute(createHandlerBoundToURL('/'), { allowlist }))
+// registerRoute(new NavigationRoute(createHandlerBoundToURL('/'), { allowlist }))
 
 self.skipWaiting()
 clientsClaim()

@@ -1,6 +1,9 @@
 import { keccak256 } from 'web3-utils'
+import debug from 'debug'
 
 import { TANSTACK_GC_TIME, LUKSO_PROXY_API } from '@/shared/config'
+
+const workersLog = debug('tanstack:workers')
 
 export async function processMetadata(
   data: any,
@@ -67,11 +70,7 @@ export async function processMetadata(
 
       const newUrl = `${LUKSO_PROXY_API}/image/${data.url.replaceAll(/^ipfs:\/\/|\?.*?$/g, '')}?${queryParamsString}`
       const cache = await caches.open('hashed-image-cache')
-      let imageResponse = await cache.match(newUrl)
-      if (!imageResponse) {
-        imageResponse = await fetch(newUrl)
-        await cache.put(newUrl, imageResponse)
-      }
+      const imageResponse = await cache.match(newUrl)
       const verified = imageResponse?.headers.get('x-verified')
       return {
         ...data,
@@ -109,13 +108,17 @@ export async function browserProcessMetadata(data: any): Promise<any> {
       'Content-Type': 'application/json',
       Accept: 'application/json',
     },
-  }).then(response => {
+  }).then(async response => {
     if (response.status !== 200) {
       // If the service worker does not exist or process this request
       // then we need to do local processing and will return "cached://HASH" urls instead.
-      return processMetadata(data, 'cached://')
+      const result = await processMetadata(data, 'cached://')
+      workersLog('process-local', result)
+      return result
     }
-    return response.json()
+    const result = await response.json()
+    workersLog('process', result)
+    return result
   })
 }
 

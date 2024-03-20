@@ -90,7 +90,9 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn prepare && yarn run pages:build
+        run: |
+          yarn prepare
+          NODE_ENV=production yarn run pages:build
 
       - name: 'Deploy release'
         if: ${{ steps.extract_branch.outputs.branch_name == '' }}

@@ -4,6 +4,7 @@ import ABICoder from 'web3-eth-abi'
 import { browserProcessMetadata } from '@/utils/processMetadata'
 import { Priorities, type QFQueryOptions } from '@/utils/queryFunctions'
 import { LUKSO_PROXY_API } from '@/shared/config'
+import { tokenLog } from '@/shared/logger'
 
 import type {
   LSP4DigitalAssetMetadata,
@@ -173,7 +174,6 @@ export function useToken() {
             index >= 4 && index <= (tokenId && tokenIdFormat === 2 ? 7 : 6)
           )
         })
-        console.log(metadataResults, nonMetadataResults)
         const isLoading =
           token.isLoading ||
           nonMetadataResults.some(({ result }) => result.isLoading)
@@ -229,7 +229,7 @@ export function useToken() {
             : token.tokenName,
         } as Asset
         if (!isLoading && assetLog.enabled) {
-          assetLog('token', asset)
+          tokenLog('token', asset)
         }
         return asset
       },

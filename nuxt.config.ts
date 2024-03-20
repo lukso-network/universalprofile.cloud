@@ -10,10 +10,12 @@ import siteMeta from './site.meta.json'
 copyAssets('./public', assets)
 
 const isProduction = process.env.NODE_ENV === 'production'
-
+if (isProduction) {
+  console.log('🚢 🚢 Building for Production')
+}
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: false },
+  devtools: { enabled: !isProduction },
   app: {
     head: siteMeta,
   },
@@ -168,12 +170,14 @@ export default defineNuxtConfig({
       // if enabling periodic sync for update use 1 hour or so (periodicSyncForUpdates: 3600)
       // periodicSyncForUpdates: 20,
     },
-    devOptions: {
-      enabled: process.env.NODE_ENV !== 'production',
-      suppressWarnings: true,
-      navigateFallback: '/',
-      navigateFallbackAllowlist: [/^\/$/],
-      type: 'module',
-    },
+    devOptions: isProduction
+      ? {}
+      : {
+          enabled: true,
+          suppressWarnings: true,
+          navigateFallback: '/',
+          navigateFallbackAllowlist: [/^\/$/],
+          type: 'module',
+        },
   },
 })
