@@ -97,10 +97,6 @@ const hasEmptyNfts = computed(
     (assetFilter.value === AssetFilter.created && createdNftsCount.value)
 )
 
-const showProfileDetails = computed(
-  () => useRouter().currentRoute.value.query.referrer === REFERRERS.INDEXER
-)
-
 const isLoadingAssets = computed(() =>
   allTokens.value?.some(asset => asset.isLoading)
 )
@@ -113,7 +109,7 @@ const isLoadingAssets = computed(() =>
       class="mx-auto max-w-content"
     >
       <ProfileCard />
-      <ProfileDetails v-if="showProfileDetails" />
+      <ProfileDetails />
       <div>
         <div v-if="showJSON" class="whitespace-pre-wrap pt-8">
           profile = {{ JSON.stringify(viewedProfile, null, '  ') }}
