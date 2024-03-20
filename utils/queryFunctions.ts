@@ -140,10 +140,11 @@ async function convert<T = any>(
     if (data === '0x') {
       return null
     }
-    const info = ABICoder.decodeParameters(['address', 'bytes32'], data)
+    const address = `0x${data.slice(2).slice(0, 40)}`
+    const tokenId = `0x${data.slice(2).slice(40)}`
     return {
-      address: info[0],
-      tokenId: info[1],
+      address,
+      tokenId,
     } as any
   }
   let info = decodeData(
