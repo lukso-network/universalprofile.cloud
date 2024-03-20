@@ -26,67 +26,72 @@ export function useAsset() {
       const queries: QFQueryOptions[] & {
         address: Address | undefined
         tokenId: string | undefined
-      } = address
-        ? ([
-            queryGetData({
-              // 0
-              chainId,
-              address,
-              keyName: 'LSP4TokenName',
-            }),
-            queryGetData({
-              // 1
-              chainId,
-              address,
-              keyName: 'LSP4TokenSymbol',
-            }),
-            queryGetData({
-              // 2
-              chainId,
-              address,
-              keyName: 'LSP4TokenType',
-            }),
-            queryGetData({
-              // 3
-              chainId,
-              address,
-              keyName: 'LSP8TokenMetadataBaseURI',
-            }),
-            queryGetData({
-              // 4
-              chainId,
-              address,
-              keyName: 'LSP8TokenIdFormat',
-            }),
-            queryCallContract({
-              // 5
-              chainId,
-              address,
-              method: 'totalSupply()',
-            }),
-            ...(profileAddress.value
-              ? [
-                  queryCallContract({
-                    // 6
-                    chainId,
-                    address,
-                    method: 'balanceOf(address)',
-                    args: [profileAddress.value],
-                    staleTime: 250,
-                  }),
-                ]
-              : []),
-            ...interfacesToCheck.map(({ interfaceId }) => {
-              return queryCallContract({
-                // 7 / 8
+      } = (
+        address
+          ? [
+              queryGetData({
+                // 0
                 chainId,
-                address: address || '0x0',
-                method: 'supportsInterface(bytes4)',
-                args: [interfaceId],
-              })
-            }),
-          ] as QFQueryOptions[])
-        : []
+                address,
+                keyName: 'LSP4TokenName',
+              }),
+              queryGetData({
+                // 1
+                chainId,
+                address,
+                keyName: 'LSP4TokenSymbol',
+              }),
+              queryGetData({
+                // 2
+                chainId,
+                address,
+                keyName: 'LSP4TokenType',
+              }),
+              queryGetData({
+                // 3
+                chainId,
+                address,
+                keyName: 'LSP8TokenMetadataBaseURI',
+              }),
+              queryGetData({
+                // 4
+                chainId,
+                address,
+                keyName: 'LSP8TokenIdFormat',
+              }),
+              queryCallContract({
+                // 5
+                chainId,
+                address,
+                method: 'totalSupply()',
+              }),
+              ...(profileAddress.value
+                ? [
+                    queryCallContract({
+                      // 6
+                      chainId,
+                      address,
+                      method: 'balanceOf(address)',
+                      args: [profileAddress.value],
+                      staleTime: 250,
+                    }),
+                  ]
+                : []),
+              ...interfacesToCheck.map(({ interfaceId }) => {
+                return queryCallContract({
+                  // 7 / 8
+                  chainId,
+                  address: address || '0x0',
+                  method: 'supportsInterface(bytes4)',
+                  args: [interfaceId],
+                })
+              }),
+            ]
+          : []
+      ) as QFQueryOptions[] & {
+        address: Address | undefined
+        tokenId: string | undefined
+      }
       queries.tokenId = tokenId
       queries.address = address
       return queries
