@@ -29,6 +29,7 @@ export default defineNuxtConfig({
     '@nuxtjs/algolia',
     '@pinia-orm/nuxt',
     '@nuxt/test-utils/module',
+    '@vite-pwa/nuxt',
   ],
   ...({
     plausible: {
@@ -55,10 +56,7 @@ export default defineNuxtConfig({
       // ↓ Needed for development mode
       !isProduction &&
         nodePolyfills({
-          include: [
-            'node_modules/**/*.js',
-            new RegExp('node_modules/.vite/.*js'),
-          ],
+          include: ['node_modules/**/*.js', /node_modules\/.vite\/.*js/],
         }),
       sentryVitePlugin({
         authToken: process.env.NUXT_PUBLIC_SENTRY_AUTH_TOKEN,
@@ -136,6 +134,49 @@ export default defineNuxtConfig({
         process.env.NUXT_PUBLIC_NOW_NODES_MAINNET_API_KEY,
       GATEWAY_MAINNET_API_KEY: process.env.NUXT_PUBLIC_GATEWAY_MAINNET_API_KEY,
       GATEWAY_TESTNET_API_KEY: process.env.NUXT_PUBLIC_GATEWAY_TESTNET_API_KEY,
+    },
+  },
+  pwa: {
+    strategies: 'injectManifest',
+    srcDir: 'service-worker',
+    filename: 'sw.ts',
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'Wallet Caching PWA',
+      short_name: 'wallet-pwa',
+      theme_color: '#ffffff',
+      icons: [
+        {
+          src: 'public/favicon.png',
+          sizes: '256x256',
+          type: 'image/png',
+        },
+        {
+          src: 'public/apple-touch-icon.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'any maskable',
+        },
+      ],
+    },
+    workbox: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+    },
+    injectManifest: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+    },
+    client: {
+      installPrompt: true,
+      // you don't need to include this: only for testing purposes
+      // if enabling periodic sync for update use 1 hour or so (periodicSyncForUpdates: 3600)
+      // periodicSyncForUpdates: 20,
+    },
+    devOptions: {
+      enabled: true,
+      suppressWarnings: true,
+      navigateFallback: '/',
+      navigateFallbackAllowlist: [/^\/$/],
+      type: 'module',
     },
   },
 })

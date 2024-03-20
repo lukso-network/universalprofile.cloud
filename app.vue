@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { assertString } from '@/utils/validators'
 import { SUPPORTED_NETWORK_IDS } from '@/shared/config'
+import { INJECTED_PROVIDER } from '@/shared/provider'
 
 if (typeof window !== 'undefined') {
   import('@lukso/web-components')
@@ -187,6 +188,11 @@ useHead({
       return bodyClass.join(' ')
     }),
   },
+  script: [
+    {
+      innerHTML: `if('serviceWorker' in navigator){window.addEventListener('load', () => {navigator.serviceWorker.register('/sw.js', { scope: '/' })})}`,
+    },
+  ],
 })
 </script>
 

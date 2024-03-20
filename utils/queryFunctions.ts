@@ -18,6 +18,7 @@ import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
 import { INTERFACE_IDS as INTERFACE_IDS_v12 } from '@lukso/lsp-smart-contracts-12'
 
 import LSP2FetcherWithMulticall3Contract from '@/shared/abis/LSP2FetcherWithMulticall3.json'
+import { LUKSO_PROXY_API } from '@/shared/config'
 
 import type { LSP2FetcherWithMulticall3 } from '@/contracts/LSP2FetcherWithMulticall3'
 import type { QueryFunction } from '@tanstack/query-core'
@@ -40,6 +41,7 @@ export type QueryPromiseCallOptions = {
   queryKey?: readonly unknown[]
   priority?: number
   aggregateLimit?: number
+  process?: (data: any) => Promise<any>
 }
 export type QueryPromiseDataOptions = {
   type: 'getData'
@@ -52,6 +54,7 @@ export type QueryPromiseDataOptions = {
   queryKey?: readonly unknown[]
   priority?: number
   aggregateLimit?: number
+  process?: (data: any) => Promise<any>
 }
 export type QueryPromiseOptions =
   | QueryPromiseCallOptions
@@ -60,6 +63,7 @@ export type QueryPromiseOptions =
 type DeferCapture<T = unknown, E = unknown> = {
   resolve(result: T): void
   reject(error: E): void
+  process?: (data: T) => T
   promise: Promise<T>
   [key: string]: unknown
 }
@@ -91,6 +95,9 @@ function capture(): DeferCapture {
   } as unknown as DeferCapture
   output.promise = new Promise((resolve, reject) => {
     output.resolve = value => {
+      if (output.process) {
+        value = output.process(value)
+      }
       resolve(value)
     }
     output.reject = error => {
@@ -132,7 +139,7 @@ async function convert<T = any>(
   data: string | null,
   overrideSchema?: readonly ERC725JSONSchema[]
 ): Promise<T | null> {
-  if (data == undefined) {
+  if (data == null) {
     return null
   }
   const { keyName, schema, dynamicKeyParts } = query
@@ -157,15 +164,15 @@ async function convert<T = any>(
     ],
     overrideSchema || schema || (defaultSchema as any)
   )
-  const value = info.find(({ name }) => name == keyName)?.value
-  if (value == undefined) {
+  const value = info.find(({ name }) => name === keyName)?.value
+  if (value == null) {
     return null
   }
   try {
     info = await getDataFromExternalSources(
       (overrideSchema || defaultSchema) as any,
       info,
-      'https://api.universalprofile.cloud/ipfs/',
+      `${LUKSO_PROXY_API}/ipfs/`,
       true
     )
   } catch {
@@ -931,6 +938,45 @@ export function triggerQuery() {
   }, QUERY_TIMEOUT)
 }
 
+/**
+ * Gets a base64 encoded image from cache.
+ * If there is no image in cache, it will use original image url and do caching afterwards.
+ *
+ * @param image - image to get from cache
+ * @returns
+ */
+// export const getCachedImageUrl = async (image?: Image) => {
+//   const cache = await caches.open(CACHE_KEY.IMAGE_CACHE)
+
+//   if (!image || !image.url) {
+//     return ''
+//   }
+
+//   const imageUrl = resolveUrl(image.url)
+//   const cachedImage = await cache.match(imageUrl)
+
+//   if (cachedImage) {
+//     const imageObjectCache: ImageObjectCache = await cachedImage.json()
+//     return imageObjectCache.encodedImage
+//   } else {
+//     const fetchedImage = await fetchAndConvertImage(imageUrl)
+//     const imageObjectCache: ImageObjectCache = {
+//       encodedImage: fetchedImage,
+//       url: imageUrl,
+//     }
+//     await cache.put(
+//       imageUrl,
+//       new Response(JSON.stringify(imageObjectCache), {
+//         headers: {
+//           'Content-Length': imageObjectCache.encodedImage.length.toString(),
+//         },
+//       })
+//     )
+//   }
+
+//   return imageUrl
+// }
+
 export type QFQueryOptions<T = unknown> = {
   queryKey: readonly unknown[]
   queryFn: QueryFunction<T, readonly unknown[]>
@@ -950,6 +996,7 @@ export type CallContractQueryOptions = {
   retry?: number | boolean
   aggregateLimit?: number
   priority?: number
+  process?: (data: any) => Promise<any>
 }
 
 export function queryCallContract<T>({
@@ -963,6 +1010,7 @@ export function queryCallContract<T>({
   staleTime,
   refetchInterval,
   retry,
+  process,
 }: CallContractQueryOptions): QFQueryOptions<T> {
   const methodName = method.replace(/\(.*$/, '')
   const methodItem = (abi || defaultAbi).find(item => {
@@ -1010,6 +1058,7 @@ export function queryCallContract<T>({
         method,
         args,
         queryKey,
+        process,
       })
       queryList.push(query as QueryPromise<T, QueryPromiseCallOptions>)
       triggerQuery()
@@ -1029,6 +1078,7 @@ export type GetDataQueryOptions = {
   retry?: number | boolean
   aggregateLimit?: number
   priority?: number
+  process?: (data: any) => Promise<any>
 }
 
 export type VerifiableURI = {
@@ -1050,6 +1100,7 @@ export function queryGetData<T>({
   retry,
   aggregateLimit = MAX_AGGREGATE_COUNT,
   priority = Priorities.Normal,
+  process,
 }: GetDataQueryOptions): QFQueryOptions<T> {
   const schemaItem = (schema || defaultSchema).find(
     ({ name }) => name === keyName
@@ -1077,6 +1128,7 @@ export function queryGetData<T>({
         keyName,
         schema: [schemaItem],
         queryKey,
+        process,
       })
       queryList.push(query as QueryPromise<unknown, QueryPromiseDataOptions>)
       triggerQuery()

@@ -1,7 +1,9 @@
 import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
 
+import { browserProcessMetadata } from '@/utils/processMetadata'
 import { Priorities, type QFQueryOptions } from '@/utils/queryFunctions'
+import { LUKSO_PROXY_API } from '@/shared/config'
 
 import type {
   LSP4DigitalAssetMetadata,
@@ -52,6 +54,7 @@ export function useToken() {
                 chainId,
                 address,
                 keyName: 'LSP4Metadata',
+                process: browserProcessMetadata,
                 aggregateLimit: 1,
                 priority: Priorities.Low,
               }),
@@ -63,6 +66,7 @@ export function useToken() {
                       address,
                       tokenId,
                       keyName: 'LSP4Metadata',
+                      process: browserProcessMetadata,
                       aggregateLimit: 1,
                       priority: Priorities.Low,
                     }),
@@ -79,7 +83,7 @@ export function useToken() {
                         if (tokenDataURL) {
                           const url = tokenDataURL.replace(
                             /^ipfs:\/\//,
-                            'https://api.universalprofile.cloud/ipfs/'
+                            `${LUKSO_PROXY_API}/ipfs/`
                           )
                           return await fetch(url)
                             .then(response => {
@@ -87,6 +91,9 @@ export function useToken() {
                                 throw new Error('Unable to fetch')
                               }
                               return response.json()
+                            })
+                            .then(async data => {
+                              return await browserProcessMetadata(data)
                             })
                             .catch(error => {
                               console.error('Error fetching token data', error)
@@ -114,6 +121,7 @@ export function useToken() {
                               tokenId
                             ).toLowerCase() as Address,
                             keyName: 'LSP4Metadata',
+                            process: browserProcessMetadata,
                             aggregateLimit: 1,
                             priority: Priorities.Low,
                           }),
@@ -191,7 +199,7 @@ export function useToken() {
         const metadataIsLoaded = results
           .slice(4, tokenId && tokenIdFormat === 2 ? 9 : 8)
           .every(result => {
-            return !result.isLoading || result.failureReason != undefined
+            return !result.isLoading || result.failureReason != null
           })
         const tokenData: LSP4DigitalAssetMetadataJSON = metadataIsLoaded
           ? lsp7Data || forTokenData || baseURIData || _assetData

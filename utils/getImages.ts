@@ -1,3 +1,5 @@
+import { LUKSO_PROXY_API } from '@/shared/config'
+
 import type { Image } from '@/types/image'
 
 /**
@@ -42,6 +44,10 @@ export const getImageBySize = (
   return sortedImagesAscending?.slice(-1)[0]
 }
 
+const EXTRACT_CID = new RegExp(
+  `^(ipfs://|${LUKSO_PROXY_API}/(ipfs|image)/)(?<cid>.*?)(\\?.*?)?$`
+)
+
 /**
  * Get optimized image using Cloudflare proxy
  *
@@ -52,14 +58,30 @@ export const getImageBySize = (
 export const getOptimizedImage = (
   image: Image[] | undefined,
   width: number
-): string => {
+): MaybeRef<string> => {
   const dpr = window.devicePixelRatio || 1
   const { verification, url } = getImageBySize(image, width) || {}
-
-  if (url) {
+  const { verified } = (verification || {}) as any
+  if (url?.startsWith('cached://')) {
+    const newUrl = ref<string>()
+    resolveImageURL(url, ASSET_ERROR_ICON_URL).then(url => {
+      newUrl.value = url
+    })
+    return newUrl as MaybeRef<string>
+  }
+  if (
+    url?.startsWith('ipfs://') ||
+    url?.startsWith(`${LUKSO_PROXY_API}/image/`)
+  ) {
     const queryParams = {
-      method: verification?.method || '0x00000000',
-      data: verification?.data || '0x',
+      ...(verified != null
+        ? {
+            /* this is already verified no need to verify it on the proxy */
+          }
+        : {
+            method: verification?.method || '0x00000000',
+            data: verification?.data || '0x',
+          }),
       width: width * dpr,
       ...(dpr !== 1 ? { dpr } : {}),
     }
@@ -68,12 +90,12 @@ export const getOptimizedImage = (
       .map(([key, value]) => `${key}=${value}`)
       .join('&')
 
-    return url.startsWith('ipfs://')
-      ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?${queryParamsString}`
-      : url
+    const { cid } = EXTRACT_CID.exec(url || '')?.groups || {}
+    if (cid) {
+      return `${LUKSO_PROXY_API}/image/${cid}?${queryParamsString}`
+    }
   }
-
-  return ''
+  return url || ''
 }
 
 /**
@@ -89,7 +111,7 @@ export const getAssetThumb = (
   useIcon: boolean,
   width: number,
   hasImageError?: boolean
-): string => {
+): MaybeRef<string> => {
   if (hasImageError) {
     return ASSET_ERROR_ICON_URL
   }

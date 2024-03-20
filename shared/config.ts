@@ -7,9 +7,6 @@ export const SUPPORTED_NETWORK_IDS = ['mainnet', 'testnet'] as const
 // name of default modal component name
 export const MODAL_DEFAULT_TEMPLATE = 'Default'
 
-// global provider object injected by browser extension
-export const INJECTED_PROVIDER = window?.lukso
-
 // connection expiry time
 export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 60 * 2 // 2 hours
 
@@ -27,8 +24,15 @@ export const ASSET_ERROR_ICON_URL = '/images/image-error.svg'
 // number of decimal places for LYX token
 export const ASSET_LYX_DECIMALS = 18
 
+// the raw proxy URL
+export const LUKSO_PROXY_API = 'http://localhost:8787' // 'https://api.universalprofile.cloud'
+
 // url of the ipfs gateway
-export const IPFS_URL = 'https://api.universalprofile.cloud/ipfs/'
+export const IPFS_URL = `${LUKSO_PROXY_API}/ipfs/`
+
+// Tanstack expirations. This is important because the sw.js has to cache longer than and no longer than the GC_TIME.
+export const TANSTACK_GC_TIME = 1000 * 60 * 60 * 24 * 7
+export const TANSTACK_DEFAULT_STALE_TIME = 1000 * 60 * 12
 
 // extension store links
 export const EXTENSION_STORE_LINKS = {

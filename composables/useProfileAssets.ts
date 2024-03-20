@@ -1,6 +1,8 @@
 import { useQueries } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 
+import { LUKSO_PROXY_API } from '@/shared/config'
+
 import type { Asset, ReferenceContract } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
@@ -179,7 +181,7 @@ export function useProfileAssets() {
               if (baseURI && tokenURI) {
                 tokenDataURL = `${baseURI.url}${tokenURI}`.replace(
                   'ipfs://',
-                  'https://api.universalprofile.cloud/ipfs/'
+                  `${LUKSO_PROXY_API}/ipfs/`
                 )
               }
               const asset = {

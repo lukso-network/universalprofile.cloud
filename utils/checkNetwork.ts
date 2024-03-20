@@ -1,3 +1,5 @@
+import { INJECTED_PROVIDER } from '@/shared/provider'
+
 /**
  * Check if application network match with extension.
  * If not break execution with error and show modal to switch network.

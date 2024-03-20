@@ -1,3 +1,5 @@
+import { LUKSO_PROXY_API } from '@/shared/config'
+
 export const prepareMetadata = (metadata: LSP4DigitalAssetMetadataJSON) => {
   const validatedMetadata = validateLsp4Metadata(metadata)
 
@@ -22,7 +24,7 @@ export const prepareMetadata = (metadata: LSP4DigitalAssetMetadataJSON) => {
         return {
           ...image,
           src: url.startsWith('ipfs://')
-            ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+            ? `${LUKSO_PROXY_API}/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
             : url,
         } as Image & { src: string }
       })
@@ -33,7 +35,7 @@ export const prepareMetadata = (metadata: LSP4DigitalAssetMetadataJSON) => {
       return {
         ...image,
         src: url.startsWith('ipfs://')
-          ? `https://api.universalprofile.cloud/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+          ? `${LUKSO_PROXY_API}/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
           : url,
       } as Image & { src: string }
     }) || []

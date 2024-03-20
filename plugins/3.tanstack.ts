@@ -8,15 +8,16 @@ import { persistQueryClient } from '@tanstack/query-persist-client-core'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import debug from 'debug'
 
-debug.enable(localStorage.getItem('debug') || '')
-
 // import { defaultQueryFn } from '@/utils/queryFunctions'
+import { TANSTACK_GC_TIME, TANSTACK_DEFAULT_STALE_TIME } from '@/shared/config'
 
 import type {
   DehydratedState,
   VueQueryPluginOptions,
 } from '@tanstack/vue-query'
 import type { NuxtApp } from 'nuxt/app'
+
+debug.enable(localStorage.getItem('debug') || '')
 
 export default defineNuxtPlugin((nuxt: NuxtApp) => {
   const vueQueryState = useState<DehydratedState | null>('vue-query')
@@ -27,10 +28,10 @@ export default defineNuxtPlugin((nuxt: NuxtApp) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 1000 * 60 * 12, // 12 min
-        refetchOnReconnect: false,
-        refetchOnWindowFocus: false,
-        gcTime: 1000 * 60 * 60 * 24, // 1 day
+        staleTime: TANSTACK_DEFAULT_STALE_TIME,
+        refetchOnReconnect: true,
+        refetchOnWindowFocus: true,
+        gcTime: TANSTACK_GC_TIME,
         // queryFn: defaultQueryFn,
       },
     },

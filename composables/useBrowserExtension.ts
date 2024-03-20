@@ -1,3 +1,5 @@
+import { INJECTED_PROVIDER } from '@/shared/provider'
+
 import type { ProviderAPI } from '@/types/provider'
 
 const openStoreLink = () => {

@@ -1,5 +1,7 @@
 import { useQueries } from '@tanstack/vue-query'
 
+import { browserProcessMetadata } from '@/utils/processMetadata'
+
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
@@ -30,6 +32,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               chainId,
               address: profileAddress,
               keyName: 'LSP3Profile',
+              process: browserProcessMetadata,
             }),
             // 2
             queryGetData({
