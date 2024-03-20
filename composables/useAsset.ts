@@ -96,6 +96,10 @@ export function useAsset() {
     return useQueries({
       queries,
       combine: results => {
+        if (results.length === 0) {
+          return
+        }
+
         const tokenId = queries.value.tokenId
         const address = queries.value.address
         const prefixLength = queries.value.findIndex(
