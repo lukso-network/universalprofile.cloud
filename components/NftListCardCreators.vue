@@ -21,9 +21,8 @@ const creators = computed(() => {
 const creatorsWithLimit = computed(() => {
   if (tooManyCreators.value) {
     return creators.value.slice(0, CREATOR_SHOW_LIMIT)
-  } else {
-    return creators.value.slice(1)
   }
+  return creators.value.slice(1)
 })
 
 const issued = useIssuedAssets().validateAssets(creators, assetAddress)
