@@ -46,7 +46,7 @@ const tooManyCreators = computed(
   () => creators.value.length > CREATOR_SHOW_LIMIT
 )
 
-const isLoaded = computed(() => asset.value && !asset.value.isMetadataLoading)
+const isLoaded = computed(() => asset.value && !asset.value.isLoading)
 </script>
 
 <template>
