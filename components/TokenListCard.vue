@@ -84,6 +84,9 @@ watch(
 
 const isLoadedToken = computed(() => token.value && !token.value.isLoading)
 const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
+const isLoadedMetadata = computed(
+  () => token.value && !token.value.isMetadataLoading
+)
 </script>
 
 <template>
@@ -105,7 +108,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
         <div class="flex gap-6">
           <div ref="logoRef" class="flex flex-col items-center gap-2 pl-2">
             <lukso-profile
-              v-if="isLoadedToken"
+              v-if="isLoadedMetadata"
               size="medium"
               :profile-address="token?.address"
               :profile-url="assetImage"
