@@ -15,7 +15,7 @@ const hasImageError = ref(false)
 const imageSrc = ref()
 
 const handleError = () => {
-  if (props.src) {
+  if (unref(props.src)) {
     isImageLoading.value = false
     hasImageError.value = true
     imageSrc.value = IMAGE_ERROR_URL
@@ -28,14 +28,14 @@ const handleLoad = () => {
 }
 
 watchEffect(() => {
-  imageSrc.value = props.src
+  imageSrc.value = unref(props.src)
 })
 
 onMounted(() => {
   isImageLoading.value = true
 
   if (props.src) {
-    imageSrc.value = props.src
+    imageSrc.value = unref(props.src)
     hasImageError.value = false
   }
 })
