@@ -3,6 +3,7 @@
 import debug from 'debug'
 
 import { TANSTACK_GC_TIME, LUKSO_PROXY_API } from '@/shared/config'
+import { keccak256 } from 'web3-utils'
 
 const workersLog = debug('tanstack:workers')
 
@@ -116,7 +117,7 @@ export async function browserProcessMetadata(data: any): Promise<any> {
     if (response.status !== 200) {
       // If the service worker does not exist or process this request
       // then we need to do local processing and will return "cached://HASH" urls instead.
-      const result = await processMetadata(data, 'cached://')
+      const result = await processMetadata(data, keccak256, 'cached://')
       workersLog('process-local', result)
       return result
     }
