@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const connectedProfile = useProfile().connectedProfile()
 const { receiver } = storeToRefs(useSendStore())
+const profileAvatar = useProfileAvatar(connectedProfile, 260)
 </script>
 
 <template>
@@ -10,7 +11,7 @@ const { receiver } = storeToRefs(useSendStore())
         :profile="connectedProfile"
         :name="connectedProfile?.name"
         :address="connectedProfile?.address"
-        :profile-url="getOptimizedImage(connectedProfile?.profileImage, 260)"
+        :profile-url="profileAvatar"
       />
     </div>
     <div class="flex items-center">

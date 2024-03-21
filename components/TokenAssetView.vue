@@ -10,6 +10,8 @@ const { showModal } = useModal()
 const { isConnected } = storeToRefs(useAppStore())
 const assetImage = useAssetImage(token, isLsp7(token.value), 60)
 
+const profileAvatar = useProfileAvatar(connectedProfile, 260)
+
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
@@ -75,9 +77,7 @@ const handlePreviewImage = () => {
             :balance="token?.balance"
             :symbol="token?.tokenSymbol"
             :decimals="token?.decimals"
-            :profile-image-url="
-              getOptimizedImage(connectedProfile?.profileImage, 260)
-            "
+            :profile-image-url="profileAvatar"
             :message="$formatMessage('token_details_own')"
           />
 

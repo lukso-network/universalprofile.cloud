@@ -3,6 +3,9 @@ const profile = useProfile().viewedProfile()
 const { isMobile } = useDevice()
 const { showModal } = useModal()
 
+const profileBackground = useProfileBackground(profile, 880)
+const profileAvatar = useProfileAvatar(profile, 96)
+
 const handlePreviewProfileImage = () => {
   const image = profile.value?.profileImage
 
@@ -24,7 +27,7 @@ const handlePreviewProfileImage = () => {
   <div class="relative">
     <lukso-card
       variant="hero"
-      :background-url="getOptimizedImage(profile?.backgroundImage, 880)"
+      :background-url="profileBackground"
       is-full-width
       shadow="small"
       :border-radius="isMobile ? 'none' : 'medium'"
@@ -34,7 +37,7 @@ const handlePreviewProfileImage = () => {
         <div class="relative bottom-[-140px] text-center">
           <div class="flex cursor-pointer flex-col items-center">
             <lukso-profile
-              :profile-url="getOptimizedImage(profile?.profileImage, 96)"
+              :profile-url="profileAvatar"
               :profile-address="profile?.address"
               size="x-large"
               has-identicon

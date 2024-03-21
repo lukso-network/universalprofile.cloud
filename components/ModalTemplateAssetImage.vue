@@ -9,6 +9,7 @@ type Props = {
 const isLoaded = ref(false)
 
 defineProps<Props>()
+const optimizedImage = useOptimizedImage(modal?.data?.asset, 500)
 </script>
 
 <template>
@@ -23,7 +24,7 @@ defineProps<Props>()
 
     <AssetImage
       class="relative max-h-[calc(100vh-100px)] rounded-12"
-      :src="getOptimizedImage(modal?.data?.asset, 500)"
+      :src="optimizedImage"
       @on-load="isLoaded = true"
     />
     <ModalCloseButton @click="closeModal" />

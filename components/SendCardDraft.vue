@@ -21,6 +21,9 @@ const asset = computed(() =>
 
 const assetImage = useAssetImage(asset, isToken(asset.value), 100)
 
+const backgroundImage = useProfileBackground(connectedProfile, 450)
+const avatarImage = useProfileAvatar(connectedProfile, 80)
+
 const handleSend = () => {
   onSend.value && onSend.value()
 }
@@ -78,8 +81,8 @@ watch(
   {{ sendLog('Current asset', toRaw(asset)) }}
   <lukso-card
     variant="profile-2"
-    :background-url="getOptimizedImage(connectedProfile?.backgroundImage, 450)"
-    :profile-url="getOptimizedImage(connectedProfile?.profileImage, 80)"
+    :background-url="backgroundImage"
+    :profile-url="avatarImage"
     :profile-address="connectedProfile?.address"
     is-full-width
   >

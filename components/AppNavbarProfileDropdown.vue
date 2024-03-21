@@ -9,6 +9,8 @@ const handleToggleDropdown = () => {
   isOpen.value = !isOpen.value
 }
 
+const avatarImage = useProfileAvatar(connectedProfile, 40)
+
 const handleDisconnect = async () => {
   disconnect()
 }
@@ -36,7 +38,7 @@ onUnmounted(() => {
   <div class="relative cursor-pointer">
     <lukso-profile
       size="small"
-      :profile-url="getOptimizedImage(connectedProfile?.profileImage, 40)"
+      :profile-url="avatarImage"
       @click="handleToggleDropdown"
       :profile-address="connectedProfile?.address"
       :data-profile-address="connectedProfile?.address"

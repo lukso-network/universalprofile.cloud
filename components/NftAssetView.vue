@@ -12,7 +12,7 @@ const token = useToken()(asset)
 const { showModal } = useModal()
 const { isConnected } = storeToRefs(useAppStore())
 const assetImage = useAssetImage(token, false, 260)
-
+const profileAvatar = useProfileAvatar(connectedProfile, 40)
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
@@ -96,9 +96,7 @@ const handlePreviewImage = () => {
           :balance="asset?.balance"
           :symbol="asset?.tokenSymbol"
           :decimals="0"
-          :profile-image-url="
-            getOptimizedImage(connectedProfile?.profileImage, 40)
-          "
+          :profile-image-url="profileAvatar"
           :message="$formatMessage('nft_details_own')"
         />
 

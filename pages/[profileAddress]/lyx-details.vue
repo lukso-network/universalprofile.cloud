@@ -7,6 +7,8 @@ const viewedProfile = useProfile().viewedProfile()
 const { isConnected } = storeToRefs(useAppStore())
 const asset = useLyxToken()
 
+const profileImage = useProfileAvatar(connectedProfile, 40)
+
 const links: LinkMetadata[] = [
   {
     title: 'www.lukso.network',
@@ -71,9 +73,7 @@ const handleBuyLyx = () => {
             :balance="asset.balance"
             :symbol="asset.tokenSymbol"
             :decimals="asset.decimals"
-            :profile-image-url="
-              getOptimizedImage(connectedProfile?.profileImage, 40)
-            "
+            :profile-image-url="profileImage"
             :message="$formatMessage('token_details_own')"
           />
 

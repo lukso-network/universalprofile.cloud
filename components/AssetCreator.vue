@@ -22,6 +22,7 @@ const issued = useIssuedAssets().validateAssets(
 const verified = computed(() => {
   return issued.value?.get(creator.value) || false
 })
+const profileImage = useProfileAvatar(creatorProfile, 24)
 </script>
 
 <template>
@@ -35,7 +36,7 @@ const verified = computed(() => {
       <div class="flex items-center">
         <lukso-profile
           size="x-small"
-          :profile-url="getOptimizedImage(creatorProfile?.profileImage, 24)"
+          :profile-url="profileImage"
           :profile-address="creatorProfile?.address"
           has-identicon
         ></lukso-profile>

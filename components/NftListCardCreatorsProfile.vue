@@ -8,6 +8,7 @@ type Props = {
 const props = defineProps<Props>()
 const address = computed(() => props.profileAddress)
 const creatorProfile = useProfile().getProfile(address)
+const profileAvatar = useProfileAvatar(creatorProfile, 24)
 </script>
 
 <template>
@@ -21,7 +22,7 @@ const creatorProfile = useProfile().getProfile(address)
     <lukso-profile
       v-else
       size="x-small"
-      :profile-url="getOptimizedImage(creatorProfile?.profileImage, 40)"
+      :profile-url="profileAvatar"
       :profile-address="creatorProfile?.address"
       has-identicon
     ></lukso-profile>
