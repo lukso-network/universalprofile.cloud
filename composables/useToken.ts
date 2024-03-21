@@ -3,8 +3,6 @@ import ABICoder from 'web3-eth-abi'
 
 import { browserProcessMetadata } from '@/utils/processMetadata'
 import { Priorities, type QFQueryOptions } from '@/utils/queryFunctions'
-import { LUKSO_PROXY_API } from '@/shared/config'
-import { tokenLog } from '@/shared/logger'
 
 import type {
   LSP4DigitalAssetMetadata,
