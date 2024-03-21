@@ -1,8 +1,6 @@
 import { toWei } from 'web3-utils'
 
 export const useNetworkConfig = (): NetworkInfo[] => {
-  const config = useRuntimeConfig()
-
   return [
     {
       id: 'testnet',
@@ -10,10 +8,7 @@ export const useNetworkConfig = (): NetworkInfo[] => {
       chainId: TESTNET_CHAIN_ID,
       rpcNodes: [
         {
-          host: `https://rpc.eu-central-1.gateway.fm/v4/lukso/non-archival/testnet?apiKey=${config.public.GATEWAY_TESTNET_API_KEY}`,
-        },
-        {
-          host: 'https://rpc.testnet.lukso.gateway.fm',
+          host: 'https://4201.rpc.thirdweb.com',
         },
       ],
       token: {
@@ -31,10 +26,7 @@ export const useNetworkConfig = (): NetworkInfo[] => {
       chainId: MAINNET_CHAIN_ID,
       rpcNodes: [
         {
-          host: `https://rpc.eu-central-1.gateway.fm/v4/lukso/non-archival/mainnet?apiKey=${config.public.GATEWAY_MAINNET_API_KEY}`,
-        },
-        {
-          host: 'https://rpc.lukso.gateway.fm',
+          host: 'https://42.rpc.thirdweb.com',
         },
         {
           host: 'https://rpc1.mainnet.lukso.dev',
