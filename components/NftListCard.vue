@@ -57,6 +57,9 @@ onMounted(() => {
       target,
       ([{ isIntersecting }], _observerElement) => {
         targetIsVisible.value = targetIsVisible.value || isIntersecting
+      },
+      {
+        rootMargin: '600px', // load images before they appear in viewport
       }
     )
   }, 1)
