@@ -26,10 +26,10 @@ export const useNetworkConfig = (): NetworkInfo[] => {
       chainId: MAINNET_CHAIN_ID,
       rpcNodes: [
         {
-          host: 'https://42.rpc.thirdweb.com',
+          host: 'https://rpc1.mainnet.lukso.dev',
         },
         {
-          host: 'https://rpc1.mainnet.lukso.dev',
+          host: 'https://42.rpc.thirdweb.com',
         },
       ],
       token: {
