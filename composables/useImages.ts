@@ -52,7 +52,6 @@ export const useAssetImage = (
 ) => {
   const assetIcon = computed(() => {
     const asset = isRef(_asset) ? _asset.value || null : _asset || null
-    console.log('asset', asset)
     const { resolvedMetadata } = asset || {}
     const { icon } = resolvedMetadata || {}
     return icon
@@ -74,13 +73,6 @@ export const useAssetImage = (
     if (assetIsNativeToken.value) {
       return ASSET_LYX_ICON_URL
     }
-    console.log({
-      image: assetImage.value,
-      icon: assetIcon.value,
-      currentImage: currentImage.value,
-      currentIcon: currentIcon.value,
-      isNativeToken: assetIsNativeToken.value,
-    })
     if (useIcon) {
       return currentIcon.value
     }

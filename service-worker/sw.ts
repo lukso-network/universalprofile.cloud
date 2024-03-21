@@ -5,9 +5,11 @@ import { clientsClaim } from 'workbox-core'
 import { registerRoute } from 'workbox-routing'
 import { keccak256 } from 'js-sha3'
 
+import { HASHED_IMAGE_CACHE_NAME } from '../shared/config'
 import { processMetadata } from '../utils/processMetadata'
 
 declare let self: ServiceWorkerGlobalScope
+self.__WB_DISABLE_DEV_LOGS = true
 
 // self.__WB_MANIFEST is default injection point
 precacheAndRoute(self.__WB_MANIFEST)
@@ -43,7 +45,7 @@ registerRoute(
 registerRoute(
   /\/hashed-images\/.*/,
   async ({ request }) => {
-    const cache = await caches.open('hashed-image-cache')
+    const cache = await caches.open(HASHED_IMAGE_CACHE_NAME)
     const responseFromCache = await cache.match(request)
     if (responseFromCache) {
       return responseFromCache.clone()
