@@ -10,9 +10,11 @@ import siteMeta from './site.meta.json'
 copyAssets('./public', assets)
 
 const isProduction = process.env.NODE_ENV === 'production'
+
 if (isProduction) {
   console.log('🚢 🚢 Building for Production')
 }
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: !isProduction },
@@ -134,8 +136,6 @@ export default defineNuxtConfig({
       BUILD_VERSION: process.env.NUXT_PUBLIC_BUILD_VERSION || 'debug',
       NOW_NODES_MAINNET_API_KEY:
         process.env.NUXT_PUBLIC_NOW_NODES_MAINNET_API_KEY,
-      GATEWAY_MAINNET_API_KEY: process.env.NUXT_PUBLIC_GATEWAY_MAINNET_API_KEY,
-      GATEWAY_TESTNET_API_KEY: process.env.NUXT_PUBLIC_GATEWAY_TESTNET_API_KEY,
     },
   },
   pwa: {
