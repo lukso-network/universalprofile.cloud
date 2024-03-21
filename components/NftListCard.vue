@@ -66,7 +66,7 @@ onMounted(() => {
   }, 1)
 })
 
-const isLoaded = computed(() => asset.value && !asset.value.isLoading)
+const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
 </script>
 
 <template>
@@ -95,16 +95,16 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
               class="relative top-[-40px] flex cursor-pointer flex-col gap-1 rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
             >
               <div class="paragraph-inter-14-semi-bold flex items-center gap-1">
-                <span v-if="isLoaded">{{ token?.tokenName }}</span>
+                <span v-if="isLoadedAsset">{{ token?.tokenName }}</span>
                 <AppPlaceholderLine v-else class="h-[22px] w-1/2" />
                 <span
-                  v-if="isLoaded"
+                  v-if="isLoadedAsset"
                   class="paragraph-inter-10-semi-bold text-neutral-60"
                   >{{ token?.tokenSymbol }}</span
                 >
                 <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
               </div>
-              <div v-if="isLoaded" class="paragraph-ptmono-10-bold">
+              <div v-if="isLoadedAsset" class="paragraph-ptmono-10-bold">
                 <span v-if="isLsp8(token) && asset?.tokenId">
                   {{ assetTokenId }}
                 </span>
@@ -118,7 +118,7 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
             <NftListCardCreators :asset="token" class="relative -top-4 -mt-2" />
             <div class="flex items-end">
               <div class="flex w-full justify-end">
-                <div v-if="isLoaded">
+                <div v-if="isLoadedAsset">
                   <lukso-button
                     v-if="
                       isConnected &&
@@ -139,7 +139,7 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
         <div class="flex justify-between px-4 py-3">
           <AssetStandardBadge :asset="asset" />
           <div
-            v-if="isLoaded && token?.address"
+            v-if="isLoadedAsset && token?.address"
             class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
           >
             <img
