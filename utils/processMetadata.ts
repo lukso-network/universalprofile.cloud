@@ -3,7 +3,11 @@
 import debug from 'debug'
 import { keccak256 } from 'web3-utils'
 
-import { TANSTACK_GC_TIME, LUKSO_PROXY_API } from '@/shared/config'
+import {
+  TANSTACK_GC_TIME,
+  LUKSO_PROXY_API,
+  HASHED_IMAGE_CACHE_NAME,
+} from '@/shared/config'
 
 const workersLog = debug('tanstack:workers')
 
@@ -22,7 +26,7 @@ export async function processMetadata(
       const [, mime, encoding, image] =
         data.url.match(/^data:(.*?);(.*?),(.*)$/) || []
       if (encoding && image) {
-        const cache = await caches.open('hashed-image-cache')
+        const cache = await caches.open(HASHED_IMAGE_CACHE_NAME)
         const imageBytes = encoding === 'base64' ? atob(image) : image
         const hash = keccak256(imageBytes)
         let verified: boolean | undefined = undefined
@@ -44,6 +48,7 @@ export async function processMetadata(
         await cache.put(
           key,
           new Response(imageBytes, {
+            status: 200,
             headers: {
               'Content-Type': mime,
               'X-Verified':
@@ -74,7 +79,7 @@ export async function processMetadata(
         .join('&')
 
       const newUrl = `${LUKSO_PROXY_API}/image/${data.url.replaceAll(/^ipfs:\/\/|\?.*?$/g, '')}?${queryParamsString}`
-      const cache = await caches.open('hashed-image-cache')
+      const cache = await caches.open(HASHED_IMAGE_CACHE_NAME)
       const imageResponse = await cache.match(newUrl)
       const verified = imageResponse?.headers.get('x-verified')
       return {
@@ -144,7 +149,7 @@ export async function resolveImageURL(
 ): Promise<string> {
   if (url.startsWith('cached://')) {
     const hash = url.slice(9)
-    const cache = await caches.open('image-cache')
+    const cache = await caches.open(HASHED_IMAGE_CACHE_NAME)
     const cachedImage = await cache.match(`/hashed-images/${hash}`)
     if (cachedImage) {
       return URL.createObjectURL(await cachedImage.blob())

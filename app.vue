@@ -197,6 +197,7 @@ useHead({
 </script>
 
 <template>
+  <NuxtPwaManifest />
   <div>
     <NuxtLayout>
       <NuxtPage />
