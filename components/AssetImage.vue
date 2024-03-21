@@ -11,13 +11,20 @@ type Emits = {
 const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
 const isImageLoading = ref(true)
+const hasImageError = ref(false)
 const imageSrc = ref()
 
 const handleError = () => {
   if (props.src) {
     isImageLoading.value = false
+    hasImageError.value = true
     imageSrc.value = IMAGE_ERROR_URL
   }
+}
+
+const handleLoad = () => {
+  isImageLoading.value = false
+  emits('on-load')
 }
 
 watchEffect(() => {
@@ -29,13 +36,9 @@ onMounted(() => {
 
   if (props.src) {
     imageSrc.value = props.src
+    hasImageError.value = false
   }
 })
-
-const handleLoad = () => {
-  isImageLoading.value = false
-  emits('on-load')
-}
 </script>
 
 <template>
