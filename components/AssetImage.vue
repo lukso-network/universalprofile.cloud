@@ -11,36 +11,24 @@ type Emits = {
 const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
 const isImageLoading = ref(true)
-const hasImageError = ref(false)
 const imageSrc = ref()
 
 const handleError = () => {
   if (props.src) {
     isImageLoading.value = false
-    hasImageError.value = true
-    imageSrc.value = ASSET_ERROR_ICON_URL
+    imageSrc.value = IMAGE_ERROR_URL
   }
 }
 
-watch(
-  () => props.src,
-  (newImg, oldImg) => {
-    if (newImg !== oldImg) {
-      imageSrc.value = newImg
-      isImageLoading.value = true
-      if (newImg) {
-        hasImageError.value = false
-      }
-    }
-  }
-)
+watchEffect(() => {
+  imageSrc.value = props.src
+})
 
 onMounted(() => {
   isImageLoading.value = true
 
   if (props.src) {
     imageSrc.value = props.src
-    hasImageError.value = false
   }
 })
 
