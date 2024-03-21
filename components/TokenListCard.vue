@@ -82,7 +82,8 @@ watch(
   }
 )
 
-const isLoaded = computed(() => token.value && !token.value.isLoading)
+const isLoadedToken = computed(() => token.value && !token.value.isLoading)
+const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
 </script>
 
 <template>
@@ -99,12 +100,12 @@ const isLoaded = computed(() => token.value && !token.value.isLoading)
         ref="contentRef"
       >
         <div class="flex h-7 items-start justify-end">
-          <AssetStandardBadge :asset="token" />
+          <AssetStandardBadge :asset="asset" />
         </div>
         <div class="flex gap-6">
           <div ref="logoRef" class="flex flex-col items-center gap-2 pl-2">
             <lukso-profile
-              v-if="isLoaded"
+              v-if="isLoadedToken"
               size="medium"
               :profile-address="token?.address"
               :profile-url="assetImage"
@@ -112,7 +113,7 @@ const isLoaded = computed(() => token.value && !token.value.isLoading)
             ></lukso-profile>
             <AppPlaceholderCircle v-else class="size-14" />
             <div
-              v-if="isLoaded"
+              v-if="isLoadedAsset"
               class="paragraph-ptmono-10-bold text-neutral-60"
             >
               #{{ token?.address?.slice(2, 8) }}
@@ -123,11 +124,11 @@ const isLoaded = computed(() => token.value && !token.value.isLoading)
             class="grid w-full grid-rows-[max-content,max-content,auto] gap-1"
           >
             <div class="heading-inter-14-bold">
-              <div v-if="isLoaded">{{ token?.tokenName }}</div>
+              <div v-if="isLoadedAsset">{{ token?.tokenName }}</div>
               <AppPlaceholderLine v-else class="h-[17px] w-1/3" />
             </div>
             <div
-              v-if="isLoaded"
+              v-if="isLoadedToken"
               class="heading-inter-21-semi-bold flex items-center"
             >
               <span
@@ -165,7 +166,7 @@ const isLoaded = computed(() => token.value && !token.value.isLoading)
               {{ $formatCurrency(token.balance, token.tokenSymbol) }}
             </div>
             <div class="flex w-full items-end justify-end">
-              <div v-if="isLoaded">
+              <div v-if="isLoadedAsset">
                 <lukso-button
                   v-if="
                     isConnected &&
