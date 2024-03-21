@@ -113,7 +113,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
                   {{ token.balance }}
                 </span>
               </div>
-              <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
+              <AppPlaceholderLine v-else class="h-[14px] w-1/4" />
             </div>
             <NftListCardCreators :asset="token" class="relative -top-4 -mt-2" />
             <div class="flex items-end">
@@ -149,7 +149,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
             />
             {{ token?.address?.slice(0, 6) }}
           </div>
-          <AppPlaceholderLine v-else class="h-[20px] w-1/6" />
+          <AppPlaceholderLine v-else class="h-[20px] w-1/5" />
         </div>
       </div>
     </lukso-card>

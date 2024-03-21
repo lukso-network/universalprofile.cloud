@@ -9,7 +9,7 @@ const standard = computed(() => props.asset?.standard)
 </script>
 
 <template>
-  <div v-if="isLoaded">
+  <div v-if="isLoaded" class="flex">
     <lukso-tag v-if="standard" size="x-small" background-color="lukso-90">{{
       STANDARDS_ABBREVIATIONS[standard as Standard]
     }}</lukso-tag>
