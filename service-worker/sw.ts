@@ -50,7 +50,7 @@ registerRoute(
     if (responseFromCache) {
       return responseFromCache.clone()
     }
-    return fetch('public/images/image-error.svg')
+    return fetch('public/images/image-error.svg', { redirect: 'follow' })
   },
   'GET'
 )
