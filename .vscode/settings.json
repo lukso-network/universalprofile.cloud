@@ -9,5 +9,6 @@
     "**/cypress/**",
     "**/tests/e2e/**",
     "**/.{idea,git,cache,output,temp}/**"
-  ]
+  ],
+  "cSpell.words": ["serviceworker"]
 }

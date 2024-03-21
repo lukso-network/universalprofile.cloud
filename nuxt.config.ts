@@ -147,12 +147,12 @@ export default defineNuxtConfig({
       theme_color: '#ffffff',
       icons: [
         {
-          src: 'public/favicon.png',
+          src: '/favicon.png',
           sizes: '256x256',
           type: 'image/png',
         },
         {
-          src: 'public/apple-touch-icon.png',
+          src: '/apple-touch-icon.png',
           sizes: '512x512',
           type: 'image/png',
           purpose: 'any maskable',
