@@ -22,12 +22,19 @@ const handleSelectAsset = (asset: Asset) => {
   assertAddress(connectedProfile?.value?.address, 'profile')
   sendLog('Selected asset', toRaw(asset))
 
-  let query: { asset?: string; tokenId?: string } = { asset: asset?.address }
+  let query: SendQueryParams = { asset: asset?.address }
 
   if (isLsp8(asset)) {
     query = {
       ...query,
       tokenId: asset?.tokenId,
+    }
+  }
+
+  if (isCollectible(asset)) {
+    query = {
+      ...query,
+      amount: '1', // prefill amount field for collectibles
     }
   }
 

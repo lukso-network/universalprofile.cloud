@@ -65,3 +65,9 @@ export type Asset = {
 export type TokenType = keyof typeof LSP4_TOKEN_TYPES
 export type TokenIdFormatKey = keyof typeof LSP8_TOKEN_ID_FORMAT
 export type TokenIdFormatValue = (typeof LSP8_TOKEN_ID_FORMAT)[TokenIdFormatKey]
+
+export type SendQueryParams = {
+  asset?: Address
+  tokenId?: string
+  amount?: string
+}

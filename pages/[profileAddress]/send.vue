@@ -14,7 +14,7 @@ const connectedProfile = useProfile().connectedProfile()
 const {
   asset: sendAsset,
   onSend,
-  amount,
+  amount: sendAmount,
   receiver,
   transactionHash,
 } = storeToRefs(useSendStore())
@@ -22,6 +22,7 @@ const { isLoadedApp, isConnected, hasSimpleNavbar } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { sendTransaction, contract } = useWeb3(PROVIDERS.INJECTED)
+const amount = computed(() => useRouter().currentRoute.value.query.amount)
 const assetAddress = computed(() => useRouter().currentRoute.value.query.asset)
 const tokenId = computed(() => useRouter().currentRoute.value.query.tokenId)
 const asset = useToken()(useAsset()(assetAddress, tokenId))
@@ -45,7 +46,7 @@ watchEffect(() => {
     return
   }
 
-  amount.value = undefined
+  sendAmount.value = amount.value
 
   if (!assetAddress.value) {
     sendAsset.value = lyxToken.value
@@ -72,7 +73,7 @@ const handleSend = async () => {
       const transaction = {
         from: connectedProfile.value?.address,
         to: receiver.value?.address as unknown as string,
-        value: toWei(amount.value || '0'),
+        value: toWei(sendAmount.value || '0'),
       } as TransactionConfig
       transactionsReceipt = await sendTransaction(transaction)
       transactionHash.value = transactionsReceipt.transactionHash
@@ -91,7 +92,10 @@ const handleSend = async () => {
             .transfer(
               connectedProfile.value.address,
               receiver.value?.address,
-              toWeiWithDecimals(amount.value || '0', sendAsset.value?.decimals),
+              toWeiWithDecimals(
+                sendAmount.value || '0',
+                sendAsset.value?.decimals
+              ),
               false,
               '0x'
             )
