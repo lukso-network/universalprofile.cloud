@@ -1,9 +1,9 @@
 // YOU CANNOT IMPORT ANYTHING WHICH USES Buffer or so.
 
 import debug from 'debug'
+import { keccak256 } from 'web3-utils'
 
 import { TANSTACK_GC_TIME, LUKSO_PROXY_API } from '@/shared/config'
-import { keccak256 } from 'web3-utils'
 
 const workersLog = debug('tanstack:workers')
 
