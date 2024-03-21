@@ -114,7 +114,10 @@ export async function browserProcessMetadata(data: any): Promise<any> {
       Accept: 'application/json',
     },
   }).then(async response => {
-    if (response.status !== 200) {
+    if (
+      response.status !== 200 ||
+      response.headers.get('Content-Type') !== 'application/json'
+    ) {
       // If the service worker does not exist or process this request
       // then we need to do local processing and will return "cached://HASH" urls instead.
       const result = await processMetadata(data, keccak256, 'cached://')
