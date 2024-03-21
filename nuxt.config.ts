@@ -11,11 +11,18 @@ copyAssets('./public', assets)
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+if (isProduction) {
+  console.log('🚢 🚢 Building for Production')
+}
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: false },
+  devtools: { enabled: !isProduction },
   app: {
     head: siteMeta,
+  },
+  typescript: {
+    strict: true,
   },
   modules: [
     '@nuxtjs/tailwindcss',
@@ -26,11 +33,13 @@ export default defineNuxtConfig({
     '@nuxtjs/algolia',
     '@pinia-orm/nuxt',
     '@nuxt/test-utils/module',
-    '@hebilicious/vue-query-nuxt',
+    '@vite-pwa/nuxt',
   ],
-  plausible: {
-    domain: 'wallet.universalprofile.cloud',
-  },
+  ...({
+    plausible: {
+      domain: 'wallet.universalprofile.cloud',
+    },
+  } as any),
   device: {
     refreshOnResize: true,
   },
@@ -51,10 +60,7 @@ export default defineNuxtConfig({
       // ↓ Needed for development mode
       !isProduction &&
         nodePolyfills({
-          include: [
-            'node_modules/**/*.js',
-            new RegExp('node_modules/.vite/.*js'),
-          ],
+          include: ['node_modules/**/*.js', /node_modules\/.vite\/.*js/],
         }),
       sentryVitePlugin({
         authToken: process.env.NUXT_PUBLIC_SENTRY_AUTH_TOKEN,
@@ -114,13 +120,7 @@ export default defineNuxtConfig({
     },
   },
   imports: {
-    dirs: [
-      'stores/**',
-      'shared/**',
-      'models/**',
-      'repositories/**',
-      'utils/**',
-    ],
+    dirs: ['stores/**', 'shared/**', 'utils/**', 'types/**'],
   },
   ssr: false,
   spaLoadingTemplate: 'public/loading-template.html',
@@ -133,6 +133,61 @@ export default defineNuxtConfig({
       SENTRY_DSN: process.env.NUXT_PUBLIC_SENTRY_DSN,
       SENTRY_ENVIRONMENT: process.env.NUXT_PUBLIC_SENTRY_ENVIRONMENT,
       TRANSAK_API_KEY: process.env.NUXT_PUBLIC_TRANSAK_API_KEY,
+      BUILD_VERSION: process.env.NUXT_PUBLIC_BUILD_VERSION || 'debug',
     },
+  },
+  pwa: {
+    strategies: 'injectManifest',
+    srcDir: 'service-worker',
+    filename: 'sw.ts',
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'Wallet Caching PWA',
+      short_name: 'wallet-pwa',
+      theme_color: '#ffffff',
+      icons: [
+        {
+          src: '/favicon.png',
+          sizes: '256x256',
+          type: 'image/png',
+        },
+        {
+          src: '/apple-touch-icon.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'any maskable',
+        },
+      ],
+    },
+    injectManifest: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+    },
+    client: {
+      installPrompt: true,
+      // you don't need to include this: only for testing purposes
+      // if enabling periodic sync for update use 1 hour or so (periodicSyncForUpdates: 3600)
+      // periodicSyncForUpdates: 20,
+    },
+    resolve: {
+      alias: {
+        process: 'process/browser',
+        stream: 'stream-browserify',
+        http: 'stream-http',
+        https: 'agent-base',
+        zlib: 'browserify-zlib',
+        util: 'util',
+        buffer: 'buffer',
+      },
+    },
+    devOptions: isProduction
+      ? {}
+      : {
+          enabled: true,
+          disableDevLogs: true,
+          suppressWarnings: true,
+          navigateFallback: '/',
+          navigateFallbackAllowlist: [/^\/$/],
+          type: 'module',
+        },
   },
 })

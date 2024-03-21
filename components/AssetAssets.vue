@@ -1,137 +1,51 @@
 <script setup lang="ts">
-const { viewedProfile } = useViewedProfile()
-
 type Props = {
-  assets: AssetMetadata[]
+  asset?: Asset
 }
 
-defineProps<Props>()
-const { formatMessage } = useIntl()
+const props = defineProps<Props>()
+const isLoaded = computed(() => props.asset && !props.asset?.isMetadataLoading)
+const assets = computed(() => props.asset?.resolvedMetadata?.assets)
 
 const assetFileType = (asset: AssetMetadata) => {
   const assetType = getAssetType(asset)
 
   return {
-    ['document']: () => ({
-      icon: 'document-outline',
-      text: formatMessage('token_asset_type_document'),
-    }),
-    ['video']: () => ({
-      icon: 'video-outline',
-      text: formatMessage('token_asset_type_video'),
-    }),
-    ['music']: () => ({
-      icon: 'headset-outline',
-      text: formatMessage('token_asset_type_music'),
-    }),
-    ['image']: () => ({
-      icon: 'document-outline',
-      text: formatMessage('token_asset_type_image'),
-    }),
-    ['3d']: () => ({
-      icon: 'cube-outline',
-      text: formatMessage('token_asset_type_3d'),
-    }),
-    ['contract']: () => ({
-      icon: 'smart-contract-doc',
-      text: formatMessage('token_asset_type_contract'),
-    }),
-    ['other']: () => ({
-      icon: 'document-outline',
-      text: formatMessage('token_asset_type_other'),
-    }),
-  }[assetType]()
-}
-
-const handlePreviewAsset = (asset: AssetMetadata) => {
-  const { showModal } = useModal()
-  const assetType = getAssetType(asset)
-
-  return {
-    ['document']: () => {
-      'url' in asset && window.open(asset.url, '_blank')
-    },
-    ['video']: () => {
-      showModal({
-        template: 'AssetVideo',
-        data: {
-          asset,
-        },
-        size: 'auto',
-      })
-    },
-    ['music']: () => {
-      showModal({
-        template: 'AssetAudio',
-        data: {
-          asset,
-        },
-        size: 'auto',
-      })
-    },
-    ['image']: () => {
-      showModal({
-        template: 'AssetImage',
-        data: {
-          asset,
-        },
-        size: 'auto',
-      })
-    },
-    ['3d']: () => {
-      showModal({
-        template: 'Asset3D',
-        data: {
-          asset,
-        },
-        size: 'auto',
-      })
-    },
-    ['contract']: async () => {
-      if (!('address' in asset)) {
-        return
-      }
-      const tokenId = 'tokenId' in asset && asset.tokenId ? asset.tokenId : '0x'
-      assertAddress(asset.address)
-      const [fetchedAsset] = await fetchAsset(
-        asset.address,
-        viewedProfile.value?.address,
-        [tokenId]
-      )
-
-      // anything that is not LSP7/8 we open in explorer
-      if (!isAsset(fetchedAsset)) {
-        return window.open(explorerContractUrl(asset.address), '_blank')
-      }
-
-      if (isCollectible(fetchedAsset) && fetchedAsset?.tokenId) {
-        navigateTo(nftRoute(asset.address, fetchedAsset.tokenId))
-      } else {
-        navigateTo(tokenRoute(asset.address))
-      }
-    },
-    ['other']: () => {
-      'url' in asset && window.open(asset.url, '_blank')
-    },
+    ['document']: () =>
+      defineAsyncComponent(() => import(`./AssetAssetsDocument.vue`)),
+    ['video']: () =>
+      defineAsyncComponent(() => import(`./AssetAssetsVideo.vue`)),
+    ['audio']: () =>
+      defineAsyncComponent(() => import(`./AssetAssetsAudio.vue`)),
+    ['image']: () =>
+      defineAsyncComponent(() => import(`./AssetAssetsImage.vue`)),
+    ['3d']: () => defineAsyncComponent(() => import(`./AssetAssets3D.vue`)),
+    ['contract']: () =>
+      defineAsyncComponent(() => import(`./AssetAssetsContract.vue`)),
+    ['other']: () =>
+      defineAsyncComponent(() => import(`./AssetAssetsOther.vue`)),
   }[assetType]()
 }
 </script>
 
 <template>
-  <div class="mb-8">
-    <div class="heading-inter-14-bold pb-3">
-      {{ $formatMessage('token_details_assets') }}
-    </div>
-    <div class="flex flex-wrap gap-4">
-      <div
-        v-for="(asset, index) in assets"
-        :key="index"
-        class="paragraph-inter-10-bold-uppercase flex h-14 w-14 cursor-pointer flex-col items-center justify-center rounded-8 border border-neutral-90 bg-neutral-100 bg-cover transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
-        @click="handlePreviewAsset(asset)"
-      >
-        <lukso-icon :name="assetFileType(asset).icon" class="mb-1"></lukso-icon>
-        {{ assetFileType(asset).text }}
+  <div v-if="isLoaded">
+    <div v-if="assets?.length" class="mb-8">
+      <div class="heading-inter-14-bold pb-3">
+        {{ $formatMessage('token_details_assets') }}
+      </div>
+      <div class="flex flex-wrap gap-4">
+        <component
+          v-for="(fileAsset, index) in assets"
+          :key="index"
+          :is="assetFileType(fileAsset)"
+          :asset="fileAsset"
+        >
+        </component>
       </div>
     </div>
   </div>
+  <AppPlaceholderSection v-else slot-class="flex gap-4">
+    <AppPlaceholderLine class="size-14" />
+  </AppPlaceholderSection>
 </template>

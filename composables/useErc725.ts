@@ -1,13 +1,11 @@
 import { ERC725, type ERC725JSONSchema } from '@erc725/erc725.js'
-import Web3 from 'web3'
 
 const getInstance = (address: string, schema: ERC725JSONSchema[]) => {
-  const { currentNetwork } = useAppStore()
   const config = {
     ipfsGateway: IPFS_URL,
   }
-  const provider = new Web3.providers.HttpProvider(currentNetwork.rpcHttp)
-  const erc725 = new ERC725(schema, address, provider, config)
+  const { getWeb3 } = useWeb3(PROVIDERS.RPC)
+  const erc725 = new ERC725(schema, address, getWeb3(), config)
 
   return erc725
 }

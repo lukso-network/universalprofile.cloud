@@ -1,24 +1,18 @@
 <script setup lang="ts">
-import { isAddress } from 'web3-utils'
-import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
-
 import { assertString } from '@/utils/validators'
 import { SUPPORTED_NETWORK_IDS } from '@/shared/config'
-
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+import { INJECTED_PROVIDER } from '@/shared/provider'
 
 if (typeof window !== 'undefined') {
   import('@lukso/web-components')
 }
 
 const { addWeb3, getWeb3 } = useWeb3Store()
-const { getNetworkByChainId, getNetworkById } = useAppStore()
-const { isLoadedApp, isLoadingProfile, selectedChainId, modal, isSearchOpen } =
+const { getNetworkById } = useAppStore()
+const { isLoadedApp, selectedChainId, isSearchOpen } =
   storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
-const router = useRouter()
-const profileRepo = useRepo(ProfileRepository)
 
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
@@ -42,46 +36,12 @@ const setupWeb3Instances = async () => {
     console.error('No browser extension provider found')
   }
 
-  // for chain interactions through RPC endpoint
-  addWeb3(PROVIDERS.RPC, getNetworkByChainId(selectedChainId.value).rpcHttp)
-}
+  const rpcNode = await selectRpcNode()
 
-/**
- * Load profile data when using back button
- * Useful especially after page refresh where store data is cleared
- */
-const routerBackProfileLoad = async () => {
-  router.beforeEach(
-    async (
-      to: RouteLocationNormalized,
-      from: RouteLocationNormalized,
-      next: NavigationGuardNext
-    ) => {
-      // we load profile only if going to the profile dashboard
-      if (to.name !== 'profileAddress') {
-        next()
-        return
-      }
-
-      const toProfileAddress = to.params?.profileAddress
-      assertAddress(toProfileAddress, 'profile')
-
-      const storeProfile = profileRepo.getProfile(toProfileAddress)
-
-      // only makes sense to load profile if it's not already loaded
-      if (!storeProfile) {
-        try {
-          isLoadingProfile.value = true
-          await fetchAndStoreProfile(toProfileAddress)
-          fetchAndStoreAssets(toProfileAddress)
-          isLoadingProfile.value = false
-        } catch (error) {
-          console.error(error)
-        }
-      }
-      next()
-    }
-  )
+  if (rpcNode) {
+    // for chain interactions through RPC endpoint
+    addWeb3(PROVIDERS.RPC, rpcNode?.host, { headers: rpcNode.headers })
+  }
 }
 
 /**
@@ -117,28 +77,6 @@ const setupCurrencies = async () => {
 }
 
 /**
- * Load profile data and assets
- *
- * @param profileAddress - the profile address to load
- */
-const setupProfile = async (profileAddress: Address) => {
-  // verify profile address
-  if (profileAddress) {
-    if (!isAddress(profileAddress)) {
-      return navigateTo(notFoundRoute())
-    }
-  } else {
-    return
-  }
-
-  // fetch profile metadata
-  await fetchAndStoreProfile(profileAddress)
-
-  // fetch asset metadata
-  fetchAndStoreAssets(profileAddress)
-}
-
-/**
  * Setup network based on `network` query param.
  * Check if dApp network match with extension and if not show network switch modal.
  */
@@ -163,21 +101,6 @@ const setupNetwork = async () => {
 }
 
 /**
- * Load viewed profile data
- */
-const setupViewedProfile = async () => {
-  const profileAddress = useRouter().currentRoute.value.params?.profileAddress
-
-  try {
-    await setupProfile(profileAddress)
-  } catch (error: unknown) {
-    if (error instanceof NotFoundIndexError) {
-      navigateTo(notFoundRoute())
-    }
-  }
-}
-
-/**
  * Load connected profile data, this is mainly when refreshing asset details
  * where we don't have reference to viewed profile
  */
@@ -193,7 +116,7 @@ const setupConnectedProfile = async () => {
 
   try {
     assertAddress(connectedProfileAddress.value)
-    await setupProfile(connectedProfileAddress.value)
+    // await setupProfile(connectedProfileAddress.value)
   } catch (error) {
     // if we can't find connected profile in the index we should disconnect it
     // it also happens when user redirect to different network through query param while being connected
@@ -203,18 +126,47 @@ const setupConnectedProfile = async () => {
   }
 }
 
+/**
+ * Check if user bought LYX
+ */
+const checkBuyLyx = () => {
+  // status and orderId are passed in redirect url query params after Transak order
+  const status = useRouter().currentRoute.value.query?.status as
+    | string
+    | undefined
+  const orderId = useRouter().currentRoute.value.query?.orderId as
+    | string
+    | undefined
+
+  if (status && orderId) {
+    console.debug('Transak order', orderId, status)
+
+    const { showModal } = useModal()
+    const { formatMessage } = useIntl()
+
+    showModal({
+      icon: '/images/lukso.svg',
+      title: formatMessage('transak_success_title'),
+      message: formatMessage('transak_success_message'),
+      confirmButtonText: formatMessage('transak_success_button'),
+      data: {
+        status,
+        orderId,
+      },
+    })
+  }
+}
+
 onMounted(async () => {
   setupTranslations()
   setupNetwork()
   await setupWeb3Instances()
   checkConnectionExpiry()
-  await routerBackProfileLoad()
-  await setupViewedProfile()
   await setupConnectedProfile()
-
   isLoadedApp.value = true
-
   await setupCurrencies()
+  window.scrollTo(0, 0)
+  checkBuyLyx()
 })
 
 onUnmounted(() => {
@@ -226,23 +178,31 @@ useHead({
   bodyAttrs: {
     // @ts-ignore
     class: computed(() => {
+      const bodyClass = []
+
       // prevent window scroll when modal is open
-      if (modal.value?.isOpen || isSearchOpen.value) {
-        return '!overflow-hidden'
+      if (isSearchOpen.value) {
+        bodyClass.push('!overflow-hidden')
       }
 
-      return ''
+      return bodyClass.join(' ')
     }),
   },
+  script: [
+    {
+      innerHTML: `if('serviceWorker' in navigator){window.addEventListener('load', () => {navigator.serviceWorker.register('/sw.js', { scope: '/' })})}`,
+    },
+  ],
 })
 </script>
 
 <template>
+  <NuxtPwaManifest />
   <div>
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
     <AppModal />
-    <VueQueryDevtools />
+    <!-- <VueQueryDevtools /> -->
   </div>
 </template>

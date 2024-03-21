@@ -1,28 +1,32 @@
-import type { ImageMetadata } from '@lukso/lsp-smart-contracts'
-import type { Asset } from '@/models/asset'
+import { LUKSO_PROXY_API } from '@/shared/config'
+
 import type { Image } from '@/types/image'
 
-const convertBlobToBase64 = (blob: Blob) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onerror = reject
-    reader.addEventListener('load', () => {
-      resolve(reader.result)
+const weakMap = new WeakMap<Image, MaybeRef<Image | null>>()
+
+/**
+ * Make the image reactive if needed
+ * @param imageObject
+ * @retursn reactive image object
+ */
+export const reactiveImageIfNeeded = (
+  imageObj: Image
+): MaybeRef<Image | null> => {
+  if (imageObj?.url?.startsWith('cached://')) {
+    if (weakMap.has(imageObj)) {
+      return weakMap.get(imageObj) as MaybeRef<Image | null>
+    }
+    const reference = ref<Image | null>(null)
+    weakMap.set(imageObj, reference)
+    resolveImageURL(imageObj?.url, IMAGE_ERROR_URL).then(url => {
+      reference.value = {
+        ...imageObj,
+        url,
+      }
     })
-    reader.readAsDataURL(blob)
-  })
-
-const fetchBlobAndConvertToBase64 = async (
-  request: Request
-): Promise<unknown> => {
-  return fetch(request)
-    .then(response => response.blob())
-    .then(convertBlobToBase64)
-}
-
-export const fetchAndConvertImage = async (imageUrl: string) => {
-  const request = new Request(resolveUrl(imageUrl))
-  return (await fetchBlobAndConvertToBase64(request)) as Base64EncodedImage
+    return reference as MaybeRef<Image | null>
+  }
+  return imageObj
 }
 
 /**
@@ -36,85 +40,89 @@ export const fetchAndConvertImage = async (imageUrl: string) => {
  * @returns url of the image
  */
 export const getImageBySize = (
-  images: ImageMetadata[],
-  height: number
-): ImageMetadata | undefined => {
-  const sortedImagesAscending = images.sort((a, b) => {
-    if (a.height < b.height) {
-      return -1
+  _images: MaybeRef<Image[] | null>,
+  width: number
+): MaybeRef<Image | null> => {
+  return computed(() => {
+    const images = isRef(_images) ? _images.value : _images
+    const sortedImagesAscending = (images || []).slice()
+    sortedImagesAscending.sort((a, b) => {
+      // reverse sort largest last
+      if (!a.width || !b.width) {
+        return 0
+      }
+      if (a.width < b.width) {
+        return -1
+      }
+      if (a.width > b.width) {
+        return 1
+      }
+      return 0
+    })
+    const dpr = window.devicePixelRatio || 1
+    const normalImage = sortedImagesAscending?.find(
+      image => image.width && image.width > width * dpr
+    )
+
+    if (normalImage) {
+      const image = reactiveImageIfNeeded(normalImage)
+      return isRef(image) ? image.value : image
     }
-    if (a.height > b.height) {
-      return 1
-    }
-    return 0
+
+    // lastly return biggest image available
+    const image = reactiveImageIfNeeded(sortedImagesAscending?.slice(-1)[0])
+    return isRef(image) ? image.value : image
   })
-
-  // check if we can get retina size image
-  const retinaImage = sortedImagesAscending.find(
-    image => image.height > height * 2
-  )
-
-  if (retinaImage) {
-    return retinaImage
-  }
-
-  // check if we can get normal size image
-  const normalImage = sortedImagesAscending.find(image => image.height > height)
-
-  if (normalImage) {
-    return normalImage
-  }
-
-  // lastly return biggest image available
-  return sortedImagesAscending.length > 0
-    ? sortedImagesAscending.pop()
-    : undefined
 }
 
+const EXTRACT_CID = new RegExp(
+  `^(ipfs://|${LUKSO_PROXY_API}/(ipfs|image)/)(?<cid>.*?)(\\?.*?)?$`
+)
+
 /**
- * Return asset thumb image for given sizes.
+ * Get optimized image using Cloudflare proxy
  *
- * @param asset
- * @param minWidth
- * @param minHeight
+ * @param profileImages
+ * @param width
  * @returns
  */
-export const getAssetThumb = (asset?: Asset, useIcon?: boolean) => {
-  if (!asset) {
-    return ''
-  }
+export const getOptimizedImage = (
+  image: MaybeRef<Image[] | null>,
+  width: number
+): ComputedRef<string | null> => {
+  const currentImage = getImageBySize(image, width) || {}
+  return computed<string | null>(() => {
+    const dpr = window.devicePixelRatio || 1
+    const { verification, url } = isRef(currentImage)
+      ? currentImage?.value || {}
+      : currentImage || {}
+    const { verified } = (verification || {}) as any
+    if (
+      url?.startsWith('ipfs://') ||
+      url?.startsWith(`${LUKSO_PROXY_API}/image/`)
+    ) {
+      const queryParams = {
+        ...(verified != null
+          ? {
+              /* this is already verified no need to verify it on the proxy */
+            }
+          : {
+              method: verification?.method || '0x00000000',
+              data: verification?.data || '0x',
+            }),
+        width: width * dpr,
+        ...(dpr !== 1 ? { dpr } : {}),
+      }
 
-  if (asset.isNativeToken) {
-    return ASSET_LYX_ICON_URL
-  }
+      const queryParamsString = Object.entries(queryParams)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&')
 
-  if (asset.icon && useIcon) {
-    const icon = asset.icon
-    return icon?.url
-  }
-
-  if (asset.images && asset.images.length > 0) {
-    const image = asset.images[0]
-    return image?.url
-  }
-
-  return ''
-}
-
-/**
- * Creates a Image model object
- *
- * @param image - image metadata array
- * @param height - image height (represents the desired image height)
- * @returns Image model object
- */
-export const createImageObject = (image: ImageMetadata[], height: number) => {
-  const optimalImage = getImageBySize(image, height)
-
-  if (optimalImage) {
-    return {
-      ...optimalImage,
-      url: resolveUrl(optimalImage.url),
-    } as Image
-  }
+      const { cid } = EXTRACT_CID.exec(url || '')?.groups || {}
+      if (cid) {
+        return `${LUKSO_PROXY_API}/image/${cid}?${queryParamsString}`
+      }
+    }
+    return url || null
+  })
 }

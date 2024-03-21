@@ -7,6 +7,7 @@ export type Image = {
   hashFunction?: string
   url?: string
   verification?: ImageMetadata['verification']
+  src?: string
 }
 
 export type Base64EncodedImage = `data:image/jpeg;base64${string}`

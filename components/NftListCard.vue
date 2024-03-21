@@ -1,25 +1,28 @@
 <script setup lang="ts">
 import makeBlockie from 'ethereum-blockies-base64'
-
-import { type Asset } from '@/models/asset'
+import { ref } from 'vue'
+import { useIntersectionObserver } from '@vueuse/core'
 
 type Props = {
   asset: Asset
-  hasAddress?: boolean
 }
 
 const props = defineProps<Props>()
 
 const { isConnected } = storeToRefs(useAppStore())
-const { connectedProfile } = useConnectedProfile()
-const { viewedProfile } = useViewedProfile()
+const connectedProfile = useProfile().connectedProfile()
+const targetIsVisible = ref(false)
+const target = ref<HTMLElement | null>(null)
+const asset = computed(() => (targetIsVisible.value ? props.asset : null))
+const token = useToken()(asset)
+const viewedProfileAddress = getCurrentProfileAddress()
+const assetImage = useAssetImage(token, false, 260)
 
 const handleShowAsset = () => {
   try {
     assertAddress(props.asset?.address)
-    assertString(props.asset.tokenId)
 
-    if (isCollectible(props.asset)) {
+    if (props.asset?.tokenId) {
       navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
     } else {
       navigateTo(tokenRoute(props.asset.address))
@@ -32,13 +35,23 @@ const handleShowAsset = () => {
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
-    assertAddress(connectedProfile.value?.address, 'profile')
+    assertAddress(connectedProfile?.value?.address, 'profile')
+
+    let query: SendQueryParams = {
+      asset: props.asset?.address,
+      tokenId: props.asset?.tokenId,
+    }
+
+    if (isCollectible(props.asset)) {
+      query = {
+        ...query,
+        amount: '1',
+      }
+    }
+
     navigateTo({
       path: sendRoute(connectedProfile.value.address),
-      query: {
-        asset: props.asset?.address,
-        tokenId: props.asset?.tokenId,
-      },
+      query,
     })
   } catch (error) {
     console.error(error)
@@ -48,84 +61,107 @@ const handleSendAsset = (event: Event) => {
 const assetTokenId = computed(() => {
   return prefixedTokenId(props.asset?.tokenId, props.asset?.tokenIdFormat, 24)
 })
+
+onMounted(() => {
+  setTimeout(() => {
+    useIntersectionObserver(
+      target,
+      ([{ isIntersecting }], _observerElement) => {
+        targetIsVisible.value = targetIsVisible.value || isIntersecting
+      },
+      {
+        rootMargin: '600px', // load images before they appear in viewport
+      }
+    )
+  }, 1)
+})
+
+const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
 </script>
 
 <template>
-  <lukso-card
-    size="small"
-    shadow="small"
-    is-hoverable
-    is-full-width
-    @click="handleShowAsset"
-    ><div
-      slot="content"
-      class="grid h-full grid-rows-[auto,max-content] rounded-12 bg-neutral-97"
-    >
-      <div
-        class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
+  <div ref="target" class="flex">
+    <lukso-card
+      border-radius="small"
+      shadow="small"
+      is-hoverable
+      is-full-width
+      @click="handleShowAsset"
+      ><div
+        slot="content"
+        class="grid h-full grid-rows-[auto,max-content] rounded-12 bg-neutral-97"
       >
-        <div class="rounded-t-12 bg-neutral-90">
-          <img
-            class="w-full rounded-t-12 bg-neutral-90 object-cover md:h-[260px]"
-            :src="getAssetThumb(asset, false)"
-            loading="lazy"
-            alt=""
-            onerror="this.style.opacity=0"
-          />
-        </div>
-        <div class="relative grid grid-rows-[max-content,max-content,auto] p-4">
-          <div
-            class="relative top-[-40px] flex cursor-pointer flex-col rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
-          >
-            <div class="paragraph-inter-14-semi-bold">
-              {{ asset?.name }}
-              <span
-                class="paragraph-inter-10-semi-bold relative bottom-[1px] text-neutral-60"
-                >{{ asset?.symbol }}</span
-              >
-            </div>
-            <div class="paragraph-ptmono-10-bold mt-1">
-              <span v-if="isLsp8(asset)">
-                {{ assetTokenId }}
-              </span>
-              <span v-else>
-                {{ $formatMessage('token_owned') }}
-                {{ asset?.balance }}
-              </span>
-            </div>
-          </div>
-          <NftListCardCreators :asset="asset" class="relative -top-4 -mt-2" />
-          <div class="flex items-end">
-            <div class="flex w-full justify-end">
-              <lukso-button
-                v-if="
-                  isConnected &&
-                  viewedProfile?.address === connectedProfile?.address
-                "
-                size="small"
-                variant="secondary"
-                @click="handleSendAsset"
-                class="transition-opacity hover:opacity-70"
-                >{{ $formatMessage('button_send') }}</lukso-button
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="flex justify-between px-4 py-3">
-        <AssetStandardBadge :standard="asset?.standard" />
         <div
-          class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
+          class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
         >
-          <img
-            v-if="asset?.address"
-            :src="makeBlockie(asset.address)"
-            alt=""
-            class="h-3 w-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
+          <AssetImage
+            :src="assetImage"
+            class="min-h-[260px] rounded-t-12 md:max-h-[260px]"
           />
-          {{ asset?.address?.slice(0, 6) }}
+          <div
+            class="relative grid grid-rows-[max-content,max-content,auto] p-4"
+          >
+            <div
+              class="relative top-[-40px] flex cursor-pointer flex-col gap-1 rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
+            >
+              <div class="paragraph-inter-14-semi-bold flex items-center gap-1">
+                <span v-if="isLoadedAsset">{{ token?.tokenName }}</span>
+                <AppPlaceholderLine v-else class="h-[22px] w-1/2" />
+                <span
+                  v-if="isLoadedAsset"
+                  class="paragraph-inter-10-semi-bold text-neutral-60"
+                  >{{ token?.tokenSymbol }}</span
+                >
+                <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
+              </div>
+              <div v-if="isLoadedAsset" class="paragraph-ptmono-10-bold">
+                <span v-if="isLsp8(token) && asset?.tokenId">
+                  {{ assetTokenId }}
+                </span>
+                <span v-else-if="token?.balance">
+                  {{ $formatMessage('token_owned') }}
+                  {{ token.balance }}
+                </span>
+              </div>
+              <AppPlaceholderLine v-else class="h-[14px] w-1/4" />
+            </div>
+            <NftListCardCreators :asset="token" class="relative -top-4 -mt-2" />
+            <div class="flex items-end">
+              <div class="flex w-full justify-end">
+                <div v-if="isLoadedAsset">
+                  <lukso-button
+                    v-if="
+                      isConnected &&
+                      viewedProfileAddress === connectedProfile?.address
+                    "
+                    size="small"
+                    variant="secondary"
+                    @click="handleSendAsset"
+                    class="transition-opacity hover:opacity-70"
+                    >{{ $formatMessage('button_send') }}</lukso-button
+                  >
+                </div>
+                <AppPlaceholderLine v-else class="h-[28px] w-[60px]" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between px-4 py-3">
+          <AssetStandardBadge :asset="asset" />
+          <div
+            v-if="isLoadedAsset && token?.address"
+            class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
+          >
+            <img
+              :src="makeBlockie(token.address)"
+              alt=""
+              class="size-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
+            />
+            {{ token?.address?.slice(0, 6) }}
+          </div>
+          <AppPlaceholderLine v-else class="h-[20px] w-1/5" />
         </div>
       </div>
-    </div>
-  </lukso-card>
+    </lukso-card>
+  </div>
 </template>

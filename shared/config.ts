@@ -1,48 +1,11 @@
-import { toWei } from 'web3-utils'
-
-import type { NetworkInfo } from '@/types/network'
-
 // chain id's
 export const TESTNET_CHAIN_ID = '0x1069'
 export const MAINNET_CHAIN_ID = '0x2a'
 export const DEFAULT_NETWORK_CHAIN_ID = MAINNET_CHAIN_ID
 export const SUPPORTED_NETWORK_IDS = ['mainnet', 'testnet'] as const
 
-// list of supported networks
-export const NETWORKS: NetworkInfo[] = [
-  {
-    id: 'testnet',
-    name: 'LUKSO Testnet',
-    chainId: TESTNET_CHAIN_ID,
-    rpcHttp: 'https://rpc.testnet.lukso.gateway.fm',
-    token: {
-      symbol: 'LYXt',
-      supply: toWei('42000000', 'ether'),
-      name: 'LUKSO',
-    },
-    indexName: 'prod_testnet_universal_profiles',
-    explorerUrl: 'https://explorer.execution.testnet.lukso.network',
-  },
-  {
-    id: 'mainnet',
-    name: 'LUKSO Mainnet',
-    chainId: MAINNET_CHAIN_ID,
-    rpcHttp: 'https://rpc.lukso.gateway.fm',
-    token: {
-      symbol: 'LYX',
-      supply: toWei('42000000', 'ether'),
-      name: 'LUKSO',
-    },
-    indexName: 'prod_mainnet_universal_profiles',
-    explorerUrl: 'https://explorer.execution.mainnet.lukso.network',
-  },
-]
-
 // name of default modal component name
 export const MODAL_DEFAULT_TEMPLATE = 'Default'
-
-// global provider object injected by browser extension
-export const INJECTED_PROVIDER = window?.lukso
 
 // connection expiry time
 export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 60 * 2 // 2 hours
@@ -56,11 +19,24 @@ export const ASSET_ICON_PLACEHOLDER_URL = '/images/token-default.svg'
 // lyx token icon
 export const ASSET_LYX_ICON_URL = '/images/lyx-token.svg'
 
+// error image placeholder
+export const IMAGE_ERROR_URL = '/images/image-error.svg'
+
 // number of decimal places for LYX token
 export const ASSET_LYX_DECIMALS = 18
 
+// the raw proxy URL
+export const LUKSO_PROXY_API = 'https://api.universalprofile.cloud'
+
+// the hashed image cache name
+export const HASHED_IMAGE_CACHE_NAME = 'hashed-images'
+
 // url of the ipfs gateway
-export const IPFS_URL = 'https://api.universalprofile.cloud/ipfs/'
+export const IPFS_URL = `${LUKSO_PROXY_API}/ipfs/`
+
+// Tanstack expirations. This is important because the sw.js has to cache longer than and no longer than the GC_TIME.
+export const TANSTACK_GC_TIME = 1000 * 60 * 60 * 24 * 7
+export const TANSTACK_DEFAULT_STALE_TIME = 1000 * 60 * 12
 
 // extension store links
 export const EXTENSION_STORE_LINKS = {
@@ -94,12 +70,6 @@ export const CURRENCY_API_LYX_TOKEN_NAME = 'LYX'
 
 // currency cache expiry time in minutes
 export const CURRENCY_CACHE_EXPIRY_IN_MINUTES = 60
-
-// Algolia API version
-export const INDEXER_API_VERSION = 'v1'
-
-// Algolia API url
-export const INDEXER_API_URL = 'https://api.universalprofile.cloud'
 
 // link to the testnet faucet
 export const TESTNET_FAUCET_URL = 'https://faucet.testnet.lukso.network'

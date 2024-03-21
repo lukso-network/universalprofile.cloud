@@ -1,16 +1,29 @@
 <script setup lang="ts">
-const { connectedProfile } = useConnectedProfile()
-const { currentNetwork, isConnected, isTestnet } = storeToRefs(useAppStore())
-const { viewedProfile } = useViewedProfile()
+import { useResizeObserver, useElementSize } from '@vueuse/core'
+
+const connectedProfile = useProfile().connectedProfile()
+const { isConnected, isTestnet } = storeToRefs(useAppStore())
+const viewedProfile = useProfile().viewedProfile()
 const contentRef = ref()
 const logoRef = ref()
 const symbolRef = ref()
 const balanceWidthPx = ref(0)
+const asset = useLyxToken()
+
+const calculateBalanceWidth = () => {
+  const SPACING = 24 + 32 // gap + padding
+  const { width: contentWidth } = useElementSize(contentRef.value)
+  const { width: logoWidth } = useElementSize(logoRef.value)
+  const { width: symbolWidth } = useElementSize(symbolRef.value)
+
+  balanceWidthPx.value =
+    contentWidth.value - logoWidth.value - symbolWidth.value - SPACING
+}
 
 const handleSendAsset = (event: Event) => {
   try {
     event.stopPropagation()
-    assertAddress(connectedProfile.value?.address, 'profile')
+    assertAddress(connectedProfile?.value?.address, 'profile')
     navigateTo(sendRoute(connectedProfile.value.address))
   } catch (error) {
     console.error(error)
@@ -19,7 +32,7 @@ const handleSendAsset = (event: Event) => {
 
 const handleShowLyxDetails = () => {
   try {
-    assertAddress(viewedProfile.value?.address, 'profile')
+    assertAddress(viewedProfile?.value?.address, 'profile')
     navigateTo(lyxDetailsRoute(viewedProfile.value.address))
   } catch (error) {
     console.error(error)
@@ -32,7 +45,7 @@ const handleBuyLyx = (event: Event) => {
     window.open(TESTNET_FAUCET_URL, '_blank')
   } else {
     try {
-      assertAddress(connectedProfile.value?.address, 'profile')
+      assertAddress(connectedProfile?.value?.address, 'profile')
       navigateTo(buyLyxRoute(connectedProfile.value.address))
     } catch (error) {
       console.error(error)
@@ -40,29 +53,26 @@ const handleBuyLyx = (event: Event) => {
   }
 }
 
-onMounted(async () => {
-  const resizeObserver = new ResizeObserver(() => {
-    const GAP = 24
-
-    balanceWidthPx.value =
-      contentRef.value?.clientWidth -
-      logoRef.value?.clientWidth -
-      symbolRef.value?.clientWidth -
-      GAP
+onMounted(() => {
+  useResizeObserver(contentRef, () => {
+    calculateBalanceWidth()
   })
-  resizeObserver.observe(contentRef.value)
 })
 </script>
 
 <template>
   <lukso-card
-    size="small"
+    border-radius="small"
     shadow="small"
     is-hoverable
     is-full-width
     @click="handleShowLyxDetails"
-    ><div slot="content" class="flex flex-col justify-center p-4 pt-11">
-      <div ref="contentRef" class="flex gap-6">
+    ><div
+      ref="contentRef"
+      slot="content"
+      class="flex flex-col justify-center p-4 pt-11"
+    >
+      <div class="flex gap-6">
         <div ref="logoRef" class="flex flex-col items-center pl-2">
           <div class="rounded-full border border-neutral-90 p-0.5">
             <lukso-profile
@@ -82,12 +92,12 @@ onMounted(async () => {
               }"
               :title="
                 $formatNumber(
-                  fromWeiWithDecimals(viewedProfile.balance, ASSET_LYX_DECIMALS)
+                  fromWeiWithDecimals(viewedProfile.balance, asset.decimals)
                 )
               "
               >{{
                 $formatNumber(
-                  fromWeiWithDecimals(viewedProfile.balance, ASSET_LYX_DECIMALS)
+                  fromWeiWithDecimals(viewedProfile.balance, asset.decimals)
                 )
               }}</span
             >
@@ -95,7 +105,7 @@ onMounted(async () => {
             <span
               ref="symbolRef"
               class="paragraph-inter-14-semi-bold pl-2 text-neutral-60"
-              >{{ currentNetwork.token.symbol }}</span
+              >{{ asset.tokenSymbol }}</span
             >
           </div>
           <div class="paragraph-inter-12-regular pb-4">

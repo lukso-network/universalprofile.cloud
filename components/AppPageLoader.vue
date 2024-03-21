@@ -8,11 +8,9 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { isLoading } = toRefs(props)
-const { isLoadedApp, isLoadingProfile } = storeToRefs(useAppStore())
+const { isLoadedApp } = storeToRefs(useAppStore())
 
-const isLoaded = computed(
-  () => isLoadedApp.value && !isLoading.value && !isLoadingProfile.value
-)
+const isLoaded = computed(() => isLoadedApp.value && !isLoading.value)
 </script>
 
 <template>

@@ -1,9 +1,28 @@
 <script setup lang="ts">
-const { connectedProfile } = useConnectedProfile()
-const { asset, receiver, receiverError, amount, onSend } =
-  storeToRefs(useSendStore())
+const connectedProfile = useProfile().connectedProfile()
+const {
+  asset: sendAsset,
+  receiver,
+  receiverError,
+  amount,
+  onSend,
+} = storeToRefs(useSendStore())
 const { isLoadedApp } = storeToRefs(useAppStore())
 const { showModal } = useModal()
+const { formatMessage } = useIntl()
+const address = computed(() => sendAsset.value?.address)
+const tokenId = computed(() => sendAsset.value?.tokenId)
+const _asset = useToken()(useAsset()(address, tokenId))
+const lyxToken = useLyxToken()
+
+const asset = computed(() =>
+  isLyx(sendAsset.value) ? lyxToken.value : _asset.value
+)
+
+const assetImage = useAssetImage(asset, isToken(asset.value), 100)
+
+const backgroundImage = useProfileBackground(connectedProfile, 450)
+const avatarImage = useProfileAvatar(connectedProfile, 80)
 
 const handleSend = () => {
   onSend.value && onSend.value()
@@ -17,19 +36,53 @@ const handleSelectAssets = () => {
 
 const handleBack = () => {
   try {
-    assertAddress(connectedProfile.value?.address, 'profile')
-    navigateTo(profileRoute(connectedProfile.value.address))
+    assertAddress(connectedProfile?.value?.address, 'profile')
+    navigateTo(profileRoute(connectedProfile?.value.address))
   } catch (error) {
     console.error(error)
   }
 }
+
+const checkBalance = () => {
+  if (asset.value?.isLoading) {
+    return
+  }
+
+  if (isLyx(asset.value)) {
+    return
+  }
+
+  if (
+    isLsp8(asset.value) &&
+    asset.value?.tokenId &&
+    asset.value?.tokenIdsOf?.includes(asset.value.tokenId)
+  ) {
+    return
+  }
+
+  if (isLsp7(asset.value) && asset.value?.balance !== '0') {
+    return
+  }
+
+  showModal({
+    message: formatMessage('no_asset_balance'),
+  })
+}
+
+watch(
+  () => asset.value?.isLoading,
+  () => {
+    checkBalance()
+  }
+)
 </script>
 
 <template>
+  {{ sendLog('Current asset', toRaw(asset)) }}
   <lukso-card
     variant="profile-2"
-    :background-url="connectedProfile?.backgroundImage?.url"
-    :profile-url="connectedProfile?.profileImage?.url"
+    :background-url="backgroundImage"
+    :profile-url="avatarImage"
     :profile-address="connectedProfile?.address"
     is-full-width
   >
@@ -54,7 +107,7 @@ const handleBack = () => {
           <div class="rounded-full shadow-neutral-above-shadow-1xl">
             <lukso-profile
               size="small"
-              :profile-url="getAssetThumb(asset, isToken(asset))"
+              :profile-url="assetImage"
               :profile-address="asset?.address"
               :has-identicon="isLyx(asset) ? undefined : true"
               :is-square="isCollectible(asset) ? true : undefined"
@@ -66,7 +119,7 @@ const handleBack = () => {
             class="paragraph-inter-14-semi-bold flex cursor-pointer items-center justify-between rounded-[0_12px_0_0] border border-neutral-90 px-4 py-3 transition hover:border-neutral-35"
             @click="handleSelectAssets"
           >
-            {{ asset?.name }}
+            {{ asset?.tokenName }}
             <lukso-icon name="arrow-down-lg"></lukso-icon>
           </div>
           <div class="rounded-[0_0_12px_0] border border-t-0 border-neutral-90">
@@ -87,11 +140,11 @@ const handleBack = () => {
     </div>
     <div slot="bottom" class="flex flex-col items-center p-6">
       <AppAvatar
-        :is-eoa="receiver?.type === 'EOA'"
+        :is-eoa="receiver?.standard === 'EOA'"
         :is-error="!!receiverError"
         :name="receiver?.name"
         :address="receiver?.address"
-        :profile-url="receiver?.profileImage?.url"
+        :profile-url="receiver?.profileImage?.[0].src"
       />
       <SendCardProfileSearch />
       <lukso-button
@@ -106,7 +159,7 @@ const handleBack = () => {
         >{{
           $formatMessage('send_button', {
             amount: !!Number(amount) ? $formatNumber(amount || '') : '',
-            symbol: asset?.symbol || '',
+            symbol: asset?.tokenSymbol || '',
           })
         }}</lukso-button
       >

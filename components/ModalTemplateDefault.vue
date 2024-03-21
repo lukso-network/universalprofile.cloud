@@ -13,7 +13,7 @@ defineProps<Props>()
     <img
       v-if="appStore.modal?.icon"
       :src="appStore.modal.icon"
-      class="mx-auto mb-6 w-[150px]"
+      class="mx-auto mb-6 max-w-[150px]"
       alt=""
     />
     <div class="heading-inter-21-semi-bold pb-4">

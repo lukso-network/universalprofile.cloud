@@ -12,7 +12,7 @@ const { amount, asset } = storeToRefs(useSendStore())
         {{
           $formatMessage('send_pending_title', {
             amount: amount || '0',
-            symbol: asset?.symbol || '',
+            symbol: asset?.tokenSymbol || '',
           })
         }}
       </div>

@@ -2,7 +2,6 @@
 import { isAddress } from 'web3-utils'
 
 import type { SearchProfileResult } from '@lukso/web-components'
-import type { IndexedProfile } from '@/models/profile'
 
 const { currentNetwork } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
@@ -61,7 +60,7 @@ const handleReceiverSearch = async (event: CustomEvent) => {
     if (await isEoA(searchTerm.value)) {
       receiver.value = {
         address: searchTerm.value,
-        type: 'EOA',
+        standard: 'EOA',
       }
       hasNoResults.value = false
       isSearchingReceiver.value = false
@@ -76,15 +75,17 @@ const handleReceiverSearch = async (event: CustomEvent) => {
 }
 
 const handleSelect = async (event: CustomEvent) => {
-  const selection = event.detail.value
+  const selection = event.detail.value as SearchProfileResult
   const { address, name, image } = selection
   searchTerm.value = address
   receiver.value = {
     address,
     name,
-    profileImage: {
-      url: image,
-    },
+    profileImage: [
+      {
+        src: image,
+      },
+    ],
   }
   receiverError.value = ''
   results.value = undefined

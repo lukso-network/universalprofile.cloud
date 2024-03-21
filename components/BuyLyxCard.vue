@@ -13,7 +13,12 @@ const handleBuyLyx = () => {
 </script>
 
 <template>
-  <lukso-card size="small" shadow="small" is-hoverable @click="handleBuyLyx">
+  <lukso-card
+    border-radius="small"
+    shadow="small"
+    is-hoverable
+    @click="handleBuyLyx"
+  >
     <div slot="content" class="p-6">
       <div class="flex justify-between">
         <img :src="logoUrl" class="h-8" />

@@ -36,6 +36,24 @@ It is possible to pass a network in query parameter to force viewing a profile o
 ?network=mainnet
 ```
 
+## Debug Logs
+
+At runtime we look at the Local Storage "debug" key to show various logs. The following log streams are
+available:
+
+- wallet:asset -> Show asset/token objects
+- wallet:profile -> Show profile objects
+- tanstack:query -> Show how queries as posted
+- tanstack:results -> Show results of queries
+
+You can use \* for any section or all. For example:
+
+- debug=\*
+- debug=wallet:\*,tanstack:query
+- debug=wallet:_,tanstack:_
+
+Use the Chrome debugger to add it to LocalStorage for the wallet site URL.
+
 ## 🧑🏻‍💻 Getting Started
 
 Install packages:

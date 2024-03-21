@@ -3,104 +3,125 @@ type Props = {
   asset: Asset
 }
 
-type VerifyStatus = 'verified' | 'unverified' | 'partial'
+export type VerifyStatus = 'verified' | 'unverified' | 'partial'
 
+const CREATOR_SHOW_LIMIT = 4
 const props = defineProps<Props>()
 
-const {
-  firstCreator,
-  restOfCreators,
-  isPending,
-  creatorAddressesOrOwner,
-  isVerified,
-} = useCreators(props.asset)
+const asset = computed(() => props.asset)
+const assetAddress = computed(() => asset.value?.address)
+const creators = computed(() => {
+  let items = (props.asset?.tokenCreators || []) as Address[]
+  if (items.length === 0 && props.asset?.owner) {
+    items = [asset.value?.owner as Address]
+  }
+  return items
+})
+
+const creatorsWithLimit = computed(() => {
+  if (tooManyCreators.value) {
+    return creators.value.slice(0, CREATOR_SHOW_LIMIT)
+  }
+  return creators.value.slice(1)
+})
+
+const issued = useIssuedAssets().validateAssets(creators, assetAddress)
 
 const verifyStatus = computed<VerifyStatus>(() => {
-  const profileRepo = useRepo(ProfileRepository)
-  const creators = creatorAddressesOrOwner.value?.map(creatorId =>
-    profileRepo.getProfile(creatorId)
-  )
-  const verifiedCreators = creators?.filter(creator =>
-    isVerified(creator)
-  ).length
-
-  if (verifiedCreators === 0) {
+  const array = Array.from(issued.value?.values() || [])
+  const hasSome = array?.some(info => info)
+  if (!hasSome) {
     return 'unverified'
   }
 
-  if (verifiedCreators === creators?.length) {
+  if (array.every(Boolean)) {
     return 'verified'
   }
 
   return 'partial'
 })
+
+const tooManyCreators = computed(
+  () => creators.value.length > CREATOR_SHOW_LIMIT
+)
+
+const isLoaded = computed(() => asset.value && !asset.value.isLoading)
 </script>
 
 <template>
-  <div v-if="isPending" class="flex h-6 animate-pulse items-center">
-    <lukso-profile size="x-small"></lukso-profile>
-    <div class="grid h-full grid-rows-2 gap-1 pl-1">
-      <div class="flex w-16 bg-neutral-90"></div>
-      <div class="flex w-20 bg-neutral-90"></div>
+  <div v-if="isLoaded">
+    <!--no creators at all including owner, might be that its EOA or not indexed -->
+    <div
+      v-if="(creators || []).length === 0"
+      class="grid grid-cols-[max-content,auto] gap-1"
+    ></div>
+    <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
+      <div class="flex space-x-[-14px]">
+        <NftListCardCreatorsProfile
+          v-for="(creatorAddress, index) in creatorsWithLimit || []"
+          :profile-address="creatorAddress"
+          :key="index"
+          class="relative"
+        />
+        <NftListCardCreatorsProfile
+          v-if="creators[0]"
+          :profile-address="creators[0]"
+          :count="tooManyCreators ? creators.length - CREATOR_SHOW_LIMIT : 0"
+          class="relative"
+          has-name
+        />
+      </div>
+      <div class="flex items-center justify-end">
+        <lukso-tooltip
+          v-if="verifyStatus === 'unverified'"
+          variant="danger"
+          :text="$formatMessage('asset_all_creators_unverified')"
+          class="ml-2"
+        >
+          <lukso-icon
+            name="cross-filled"
+            color="red-55"
+            secondary-color="neutral-100"
+            size="small"
+          ></lukso-icon>
+        </lukso-tooltip>
+        <lukso-tooltip
+          v-if="verifyStatus === 'partial'"
+          variant="danger"
+          :text="$formatMessage('asset_all_creators_partial')"
+          class="ml-2"
+        >
+          <lukso-icon
+            name="cross-filled"
+            color="red-55"
+            secondary-color="neutral-100"
+            size="small"
+          ></lukso-icon>
+        </lukso-tooltip>
+        <lukso-tooltip
+          v-if="verifyStatus === 'verified'"
+          variant="success"
+          :text="$formatMessage('asset_all_creators_verified')"
+          class="ml-2"
+        >
+          <lukso-icon
+            name="complete-filled"
+            color="green-54"
+            secondary-color="neutral-100"
+            size="small"
+          ></lukso-icon>
+        </lukso-tooltip>
+      </div>
     </div>
   </div>
-  <!--no creators at all including owner, might be that its EOA or not indexed -->
-  <div v-else-if="!firstCreator"></div>
-  <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
-    <div class="flex space-x-[-14px]">
-      <NftListCardCreatorsProfile
-        v-for="(creatorProfile, index) in restOfCreators"
-        :profile="creatorProfile"
-        :key="index"
-        class="relative"
-      />
-      <NftListCardCreatorsProfile
-        v-if="firstCreator"
-        :profile="firstCreator"
-        class="relative"
-        :has-name="true"
-      />
-    </div>
-    <div class="flex items-center justify-end">
-      <lukso-tooltip
-        v-if="verifyStatus === 'unverified'"
-        variant="danger"
-        :text="$formatMessage('asset_all_creators_unverified')"
-        class="ml-2"
-      >
-        <lukso-icon
-          name="cross-filled"
-          color="red-55"
-          secondary-color="neutral-100"
-          size="small"
-        ></lukso-icon>
-      </lukso-tooltip>
-      <lukso-tooltip
-        v-if="verifyStatus === 'partial'"
-        variant="danger"
-        :text="$formatMessage('asset_all_creators_partial')"
-        class="ml-2"
-      >
-        <lukso-icon
-          name="cross-filled"
-          color="red-55"
-          secondary-color="neutral-100"
-          size="small"
-        ></lukso-icon>
-      </lukso-tooltip>
-      <lukso-tooltip
-        v-if="verifyStatus === 'verified'"
-        variant="success"
-        :text="$formatMessage('asset_all_creators_verified')"
-        class="ml-2"
-      >
-        <lukso-icon
-          name="complete-filled"
-          color="green-54"
-          secondary-color="neutral-100"
-          size="small"
-        ></lukso-icon>
-      </lukso-tooltip>
+  <div
+    v-else
+    class="relative -top-4 -mt-2 grid grid-cols-[max-content,auto] gap-1"
+  >
+    <AppPlaceholderCircle class="size-6" />
+    <div class="grid w-full flex-col gap-1">
+      <AppPlaceholderLine class="w-1/3" />
+      <AppPlaceholderLine class="w-1/2" />
     </div>
   </div>
 </template>

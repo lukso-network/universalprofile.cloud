@@ -1,3 +1,5 @@
+import { INJECTED_PROVIDER } from '@/shared/provider'
+
 import type { ProviderAPI } from '@/types/provider'
 
 const openStoreLink = () => {
@@ -38,10 +40,6 @@ const connect = async () => {
 
     assertAddress(address, 'connection')
     connectedProfileAddress.value = address
-    // TODO try to refresh current page based on router params
-    await navigateTo(profileRoute(address))
-    await fetchAndStoreProfile(address)
-    fetchAndStoreAssets(address)
     setConnectionExpiry()
   } catch (error: any) {
     console.error(error)
@@ -84,8 +82,6 @@ const handleAccountsChanged = async (accounts: string[]) => {
     try {
       // TODO try to refresh current page based on router params
       await navigateTo(profileRoute(address))
-      await fetchAndStoreProfile(address)
-      fetchAndStoreAssets(address)
     } catch (error) {
       console.error(error)
     }

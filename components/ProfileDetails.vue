@@ -1,20 +1,23 @@
 <script setup lang="ts">
-const { viewedProfile } = useViewedProfile()
+const viewedProfile = useProfile().viewedProfile()
 
 const hasLinks = computed(
-  () => viewedProfile.value?.links && viewedProfile.value.links?.length > 0
+  () => viewedProfile?.value?.links && viewedProfile.value.links?.length > 0
 )
 const hasDescription = computed(
   () =>
-    viewedProfile.value?.description && viewedProfile.value.description !== ''
+    viewedProfile?.value?.description && viewedProfile.value.description !== ''
 )
 const hasTags = computed(
-  () => viewedProfile.value?.tags && viewedProfile.value.tags?.length > 0
+  () => viewedProfile?.value?.tags && viewedProfile.value.tags?.length > 0
 )
 </script>
 
 <template>
-  <div v-if="hasDescription || hasLinks || hasTags" class="mx-auto w-1/2 py-6">
+  <div
+    v-if="hasDescription || hasLinks || hasTags"
+    class="mx-auto py-6 sm:w-1/2"
+  >
     <ul
       v-if="hasTags"
       class="mb-6 flex flex-wrap justify-center gap-x-4 gap-y-2"
@@ -27,7 +30,10 @@ const hasTags = computed(
         <lukso-tag is-rounded>{{ tag }}</lukso-tag>
       </li>
     </ul>
-    <div v-if="hasDescription" class="paragraph-inter-12-medium text-center">
+    <div
+      v-if="hasDescription"
+      class="paragraph-inter-12-medium text-center break-word"
+    >
       {{ viewedProfile?.description }}
     </div>
     <ul

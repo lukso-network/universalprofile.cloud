@@ -1,8 +1,11 @@
 <script setup lang="ts">
 const { setStatus, clearSend } = useSendStore()
-const { transactionHash } = storeToRefs(useSendStore())
+const { asset: sendAsset, transactionHash } = storeToRefs(useSendStore())
 const { hasSimpleNavbar } = storeToRefs(useAppStore())
-const { connectedProfile } = useConnectedProfile()
+const connectedProfile = useProfile().connectedProfile()
+const asset = useToken()(
+  useAsset()(sendAsset.value?.address, sendAsset.value?.tokenId)
+)
 
 const handleSendMore = () => {
   clearSend()
@@ -34,9 +37,12 @@ const handleOpenProfile = () => {
         size="x-large"
         class="my-6"
       ></lukso-icon>
-      <lukso-button variant="secondary" @click="handleSendMore">{{
-        $formatMessage('send_success_button')
-      }}</lukso-button>
+      <lukso-button
+        v-if="isLyx(asset) || isToken(asset)"
+        variant="secondary"
+        @click="handleSendMore"
+        >{{ $formatMessage('send_success_button') }}</lukso-button
+      >
     </div>
   </lukso-card>
   <a

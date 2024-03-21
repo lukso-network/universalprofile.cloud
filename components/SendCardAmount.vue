@@ -3,6 +3,22 @@ import BigNumber from 'bignumber.js'
 
 const { asset, receiverError, amount } = storeToRefs(useSendStore())
 
+const balance = computed(() => {
+  if (
+    isLsp8(asset.value) &&
+    asset.value?.tokenId &&
+    asset.value?.tokenIdsOf?.includes(asset.value.tokenId)
+  ) {
+    return '1'
+  }
+
+  if (isLsp7(asset.value) || isLyx(asset.value)) {
+    return asset.value?.balance || '0'
+  }
+
+  return '0'
+})
+
 const handleKeyDown = (customEvent: CustomEvent) => {
   const numberRegex = /^[0-9]*\.?[0-9]*$/
   const event = customEvent.detail.event
@@ -10,10 +26,11 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   const key = event.key
   const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab']
   const realValueBN = new BigNumber(`${input.value}${key}`)
+
   const assetBalanceBN = new BigNumber(
-    `${fromWeiWithDecimals(asset.value?.balance || '0', asset.value?.decimals)}`
+    `${fromWeiWithDecimals(balance.value, asset.value?.decimals)}`
   )
-  const maxDecimalPlaces = asset.value?.decimals
+  const maxDecimalPlaces = asset.value?.decimals || 0
 
   // check for allowed keys or if user press CMD+A
   if (allowedKeys.includes(key) || (event.metaKey && key === 'a')) {
@@ -30,10 +47,7 @@ const handleKeyDown = (customEvent: CustomEvent) => {
 
   // when value is more then balance we set to max value
   if (realValueBN.gt(assetBalanceBN)) {
-    amount.value = fromWeiWithDecimals(
-      asset.value?.balance?.toString() || '0',
-      asset.value?.decimals
-    )
+    amount.value = fromWeiWithDecimals(balance.value, asset.value?.decimals)
     event.preventDefault()
   }
 
@@ -62,10 +76,7 @@ const handleKeyUp = (event: CustomEvent) => {
 }
 
 const handleUnitClick = () => {
-  const total = fromWeiWithDecimals(
-    asset.value?.balance?.toString() || '0',
-    asset.value?.decimals
-  )
+  const total = fromWeiWithDecimals(balance.value, asset.value?.decimals)
   amount.value = total
 }
 </script>
@@ -77,12 +88,12 @@ const handleUnitClick = () => {
     :unit="
       $formatMessage('profile_balance_of', {
         balance: $formatNumber(
-          fromWeiWithDecimals(asset?.balance || '0', asset?.decimals) || '',
+          fromWeiWithDecimals(balance, asset?.decimals) || '',
           {
             maximumFractionDigits: asset?.decimals,
           }
         ),
-        symbol: asset?.symbol || '',
+        symbol: asset?.tokenSymbol || '',
       })
     "
     borderless

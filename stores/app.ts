@@ -9,7 +9,8 @@ import type { NetworkInfo, NetworkId } from '@/types/network'
 export const useAppStore = defineStore(
   'app',
   () => {
-    const networks = ref<NetworkInfo[]>(NETWORKS)
+    const networkConfig = useNetworkConfig()
+    const networks = ref<NetworkInfo[]>(networkConfig)
     const selectedChainId = ref<string>(DEFAULT_NETWORK_CHAIN_ID)
     const modal = ref<Modal>()
     const connectedProfileAddress = ref<Address>()
@@ -18,8 +19,6 @@ export const useAppStore = defineStore(
 
     // statuses
     const isConnecting = ref(false)
-    const isLoadingProfile = ref(false)
-    const isLoadingAssets = ref(false)
     const isLoadedApp = ref(false)
     const isSearchOpen = ref(false)
 
@@ -77,8 +76,6 @@ export const useAppStore = defineStore(
       connectedProfileAddress,
       isConnected,
       isConnecting,
-      isLoadingProfile,
-      isLoadingAssets,
       isLoadedApp,
       assetFilter,
       isTestnet,

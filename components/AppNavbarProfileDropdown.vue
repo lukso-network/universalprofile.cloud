@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { connectedProfile } = useConnectedProfile()
+const connectedProfile = useProfile().connectedProfile()
 const { disconnect } = useBrowserExtension()
 
 const DROPDOWN_TRIGGER_TAG_NAME = 'LUKSO-PROFILE'
@@ -8,6 +8,8 @@ const isOpen = ref(false)
 const handleToggleDropdown = () => {
   isOpen.value = !isOpen.value
 }
+
+const avatarImage = useProfileAvatar(connectedProfile, 40)
 
 const handleDisconnect = async () => {
   disconnect()
@@ -36,7 +38,7 @@ onUnmounted(() => {
   <div class="relative cursor-pointer">
     <lukso-profile
       size="small"
-      :profile-url="connectedProfile?.profileImage?.url"
+      :profile-url="avatarImage"
       @click="handleToggleDropdown"
       :profile-address="connectedProfile?.address"
       :data-profile-address="connectedProfile?.address"
@@ -44,7 +46,7 @@ onUnmounted(() => {
     ></lukso-profile>
 
     <div
-      class="absolute right-0 z-[1000] mt-8 animate-fade-in select-none rounded-12 bg-neutral-100 shadow-pink-drop-shadow animation-duration-150 before:absolute before:right-0 before:top-0 before:-mt-1 before:mr-4 before:h-3 before:w-3 before:rotate-45 before:bg-neutral-100"
+      class="absolute right-0 z-[1000] mt-8 animate-fade-in select-none rounded-12 bg-neutral-100 shadow-pink-drop-shadow animation-duration-150 before:absolute before:right-0 before:top-0 before:-mt-1 before:mr-4 before:size-3 before:rotate-45 before:bg-neutral-100"
       :class="isOpen ? 'block' : 'hidden'"
     >
       <lukso-button

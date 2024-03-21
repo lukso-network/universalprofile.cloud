@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
-const { connectedProfile } = useConnectedProfile()
+const connectedProfile = useProfile().connectedProfile()
 const { currentNetwork, isTestnet } = storeToRefs(useAppStore())
-const { viewedProfile } = useViewedProfile()
+const viewedProfile = useProfile().viewedProfile()
 const { isConnected } = storeToRefs(useAppStore())
+const asset = useLyxToken()
+
+const profileImage = useProfileAvatar(connectedProfile, 40)
 
 const links: LinkMetadata[] = [
   {
@@ -46,7 +49,7 @@ const handleBuyLyx = () => {
       class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
     >
       <div>
-        <lukso-card is-full-width size="small" shadow="small">
+        <lukso-card is-full-width border-radius="small" shadow="small">
           <div
             slot="content"
             class="flex min-h-[260px] items-center justify-center p-6 sm:py-10 md:py-20"
@@ -67,22 +70,22 @@ const handleBuyLyx = () => {
         >
           <AssetOwnInfo
             :address="connectedProfile.address"
-            :balance="connectedProfile.balance"
-            :symbol="currentNetwork.token.symbol"
-            :decimals="ASSET_LYX_DECIMALS"
-            :profile-image-url="connectedProfile.profileImage?.url"
+            :balance="asset.balance"
+            :symbol="asset.tokenSymbol"
+            :decimals="asset.decimals"
+            :profile-image-url="profileImage"
             :message="$formatMessage('token_details_own')"
           />
 
           <div class="mt-12 flex flex-col gap-2">
             <lukso-button
-              v-if="connectedProfile?.balance !== '0'"
+              v-if="asset?.balance !== '0'"
               is-full-width
               variant="secondary"
               @click="handleSendLyx"
               >{{
                 $formatMessage('token_details_send', {
-                  token: currentNetwork.token.symbol,
+                  token: asset.tokenSymbol || '',
                 })
               }}</lukso-button
             >
@@ -104,14 +107,19 @@ const handleBuyLyx = () => {
           {{ $formatMessage('lyx_details_title') }}
         </div>
         <AssetTokenSupply
-          :token-supply="currentNetwork.token.supply"
-          :decimals="ASSET_LYX_DECIMALS"
-          class="pb-8"
+          :asset="{
+            totalSupply: currentNetwork.token.supply,
+            decimals: asset?.decimals,
+          }"
         />
         <AssetDescription
-          :description="$formatMessage('lyx_details_description')"
+          :asset="{
+            resolvedMetadata: {
+              description: $formatMessage('lyx_details_description'),
+            },
+          }"
         />
-        <AssetLinks :links="links" />
+        <AssetLinks :asset="{ resolvedMetadata: { links } }" />
       </div>
     </div>
   </AppPageLoader>

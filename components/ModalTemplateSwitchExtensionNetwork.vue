@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { INJECTED_PROVIDER } from '@/shared/provider'
+
 const { currentNetwork } = useAppStore()
 
 type Props = {

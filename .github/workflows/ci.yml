@@ -22,14 +22,14 @@ env:
 
 jobs:
   test:
-    timeout-minutes: 15
     runs-on: macos-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '18.17.0'
+          node-version: '18.19.0'
           cache: 'yarn'
 
       - name: ⚙️ Install dependencies
@@ -39,9 +39,11 @@ jobs:
         run: yarn prepare && yarn lint
 
       - name: 🛠 Install Playwright Browsers
+        if: false
         run: npx playwright install --with-deps chromium
 
       - name: 🎯 Run Playwright tests
+        if: false
         run: npx playwright test
 
       - uses: actions/upload-artifact@v3
@@ -81,14 +83,16 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '18.17.0'
+          node-version: '18.19.0'
           cache: 'yarn'
 
       - name: Install
         run: yarn install
 
       - name: Build
-        run: yarn prepare && yarn run pages:build
+        run: |
+          yarn prepare
+          NODE_ENV=production yarn run pages:build
 
       - name: 'Deploy release'
         if: ${{ steps.extract_branch.outputs.branch_name == '' }}

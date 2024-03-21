@@ -1,39 +1,73 @@
 <script setup lang="ts">
-import type { Asset } from '@/models/asset'
-
-const { currentNetwork } = useAppStore()
-const { connectedProfile } = useConnectedProfile()
+const connectedProfile = useProfile().connectedProfile()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
-const assetRepository = useRepo(AssetRepository)
-const ownedAssets = ref<Asset[]>([])
 
 type Props = {
   closeModal: () => void
 }
 
+const profileAddress = computed(() => connectedProfile.value?.address || null)
 const props = defineProps<Props>()
+const allTokens = useProfileAssets()(profileAddress)
 
 const handleSelectLyx = () => {
-  assertAddress(connectedProfile.value?.address, 'profile')
-  navigateTo(sendRoute(connectedProfile.value.address))
-  props.closeModal()
-}
-
-const handleSelectAsset = (asset: Asset) => {
-  assertAddress(connectedProfile.value?.address, 'profile')
+  assertAddress(connectedProfile?.value?.address, 'profile')
   navigateTo({
     path: sendRoute(connectedProfile.value.address),
-    query: {
-      asset: asset?.address,
-      tokenId: asset?.tokenId ? asset?.tokenId : undefined,
-    },
   })
   props.closeModal()
 }
 
-onMounted(async () => {
-  ownedAssets.value = assetRepository.getOwnedAssets()
-})
+const handleSelectAsset = (asset: Asset) => {
+  assertAddress(connectedProfile?.value?.address, 'profile')
+  sendLog('Selected asset', toRaw(asset))
+
+  let query: SendQueryParams = { asset: asset?.address }
+
+  if (isLsp8(asset)) {
+    query = {
+      ...query,
+      tokenId: asset?.tokenId,
+    }
+  }
+
+  if (isCollectible(asset)) {
+    query = {
+      ...query,
+      amount: '1', // prefill amount field for collectibles
+    }
+  }
+
+  navigateTo({
+    path: sendRoute(connectedProfile.value.address),
+    query,
+  })
+
+  props.closeModal()
+}
+
+const ownedAssets = computed(() =>
+  allTokens.value
+    ?.filter(
+      ({ isOwned, standard, balance }) =>
+        isOwned &&
+        (standard === 'LSP7DigitalAsset' ||
+          standard === 'LSP8IdentifiableDigitalAsset') &&
+        balance !== '0'
+    )
+    .sort((a: Asset, _b: Asset) => {
+      // put tokens first in the list
+      if (isToken(a)) {
+        return -1
+      }
+
+      if (isCollectible(a)) {
+        return 1
+      }
+
+      return 0
+    })
+)
 </script>
 
 <template>
@@ -50,27 +84,19 @@ onMounted(async () => {
     </div>
     <ul class="-mr-4 max-h-72 space-y-2 overflow-y-auto">
       <li class="mr-4">
-        <AssetListItem
-          :icon="ASSET_LYX_ICON_URL"
-          :name="currentNetwork.token.name"
-          :symbol="currentNetwork.token.symbol"
+        <SelectAssetsLyx
           :is-selected="selectedAsset?.isNativeToken"
           @click="handleSelectLyx"
         />
       </li>
       <li v-for="asset in ownedAssets" :key="asset?.address" class="mr-4">
-        <AssetListItem
-          :icon="getAssetThumb(asset, isLsp7(asset))"
-          :name="asset?.name"
-          :symbol="asset?.symbol"
-          :address="asset?.address"
-          :has-identicon="true"
-          :has-square-icon="isCollectible(asset)"
+        <SelectAssetsToken
+          :asset="asset"
           :is-selected="
             selectedAsset?.address === asset?.address &&
             selectedAsset?.tokenId === asset?.tokenId
           "
-          @click="handleSelectAsset(asset)"
+          @on-select="handleSelectAsset"
         />
       </li>
     </ul>

@@ -38,7 +38,7 @@ export const discoveryDappUrl = () => {
  * @returns
  */
 export const transakBuyLyxUrl = () => {
-  const { connectedProfile } = useConnectedProfile()
+  const connectedProfile = useProfile().connectedProfile()
   const { currentNetwork } = storeToRefs(useAppStore())
   const { formatMessage } = useIntl()
   const { $config } = useNuxtApp()
@@ -48,11 +48,11 @@ export const transakBuyLyxUrl = () => {
     network: 'lukso',
     defaultCryptoCurrency: 'LYX',
     productsAvailed: 'BUY',
-    walletAddress: connectedProfile.value?.address,
+    walletAddress: connectedProfile?.value?.address,
     isFeeCalculationHidden: 'true',
     defaultPaymentMethod: 'credit_debit_card',
     hideMenu: 'true',
-    redirectURL: `${BASE_WALLET_URL}/${connectedProfile.value?.address}?network=${currentNetwork.value.id}`,
+    redirectURL: `${BASE_WALLET_URL}/${connectedProfile?.value?.address}?network=${currentNetwork.value.id}`,
     themeColor: '243542', // neutral-20
     exchangeScreenTitle: formatMessage('transak_widget_title'),
   }

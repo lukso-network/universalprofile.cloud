@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import type { Standard } from '@/types/contract'
-
 type Props = {
-  standard?: Standard
+  asset?: Asset
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const isLoaded = computed(() => props.asset && !props.asset?.isLoading)
+const standard = computed(() => props.asset?.standard)
 </script>
 
 <template>
-  <lukso-tag v-if="standard" size="x-small" background-color="lukso-90">{{
-    STANDARDS_ABBREVIATIONS[standard]
-  }}</lukso-tag>
+  <div v-if="isLoaded" class="flex">
+    <lukso-tag v-if="standard" size="x-small" background-color="lukso-90">{{
+      STANDARDS_ABBREVIATIONS[standard as Standard]
+    }}</lukso-tag>
+  </div>
+  <AppPlaceholderLine v-else class="h-[20px] w-10" />
 </template>

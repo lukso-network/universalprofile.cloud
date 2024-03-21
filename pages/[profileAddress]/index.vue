@@ -1,23 +1,47 @@
 <script setup lang="ts">
-import { AssetRepository } from '@/repositories/asset'
+import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
-// import type { Asset } from '@/models/asset'
-
-const { assetFilter, isLoadingAssets } = storeToRefs(useAppStore())
-const { viewedProfile } = useViewedProfile()
-const assetRepository = useRepo(AssetRepository)
+const { assetFilter } = storeToRefs(useAppStore())
+const viewedProfileAddress = getCurrentProfileAddress()
 const { isMobile } = useDevice()
 
-const tokensOwned = computed(() => assetRepository.getOwnedTokens())
-const tokensCreated = computed(() => assetRepository.getIssuedTokens())
-const nftsOwned = computed(() => assetRepository.getOwnedNfts())
-const nftsCreated = computed(() => assetRepository.getIssuedNfts())
+const viewedProfile = useProfile().getProfile(viewedProfileAddress)
+const allTokens = useProfileAssets()(viewedProfileAddress)
+
+const tokensOwned = computed(() =>
+  allTokens.value?.filter(
+    ({ isOwned, standard, balance, tokenType }) =>
+      isOwned &&
+      standard === 'LSP7DigitalAsset' &&
+      balance !== '0' &&
+      tokenType === LSP4_TOKEN_TYPES.TOKEN
+  )
+)
+
+const tokensCreated = computed(() =>
+  allTokens.value?.filter(
+    ({ isIssued, standard, tokenType }) =>
+      isIssued &&
+      standard === 'LSP7DigitalAsset' &&
+      tokenType === LSP4_TOKEN_TYPES.TOKEN
+  )
+)
+
+const nftsOwned = computed(() =>
+  allTokens.value?.filter(
+    asset => asset.isOwned && isCollectible(asset) && asset.balance !== '0'
+  )
+)
+
+const nftsCreated = computed(() =>
+  allTokens.value?.filter(asset => asset.isIssued && isCollectible(asset))
+)
 
 // tokens
 const ownedTokensCount = computed(
   () =>
     (tokensOwned.value?.length || 0) +
-    (viewedProfile.value?.balance !== '0' ? 1 : 0) // +1 if user has LYX token
+    (viewedProfile?.value?.balance !== '0' ? 1 : 0) // +1 if user has LYX token
 )
 
 const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
@@ -25,9 +49,8 @@ const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
 const tokens = computed(() => {
   if (assetFilter.value === AssetFilter.owned) {
     return tokensOwned.value
-  } else {
-    return tokensCreated.value
   }
+  return tokensCreated.value
 })
 
 // NFTs
@@ -37,10 +60,9 @@ const createdNftsCount = computed(() => nftsCreated.value?.length || 0)
 
 const nfts = computed(() => {
   if (assetFilter.value === AssetFilter.owned) {
-    return nftsOwned.value
-  } else {
-    return nftsCreated.value
+    return nftsOwned.value || []
   }
+  return nftsCreated.value || []
 })
 
 // assets (tokens + NFTs)
@@ -72,19 +94,19 @@ const hasEmptyNfts = computed(
     (assetFilter.value === AssetFilter.created && createdNftsCount.value)
 )
 
-const showProfileDetails = computed(
-  () => useRouter().currentRoute.value.query.referrer === REFERRERS.INDEXER
+const isLoadingAssets = computed(() =>
+  allTokens.value?.some(asset => asset.isLoading)
 )
 </script>
 
 <template>
-  <AppPageLoader>
+  <AppPageLoader :is-loading="viewedProfile?.isLoading">
     <div
       v-if="viewedProfile?.standard === 'LSP3Profile'"
       class="mx-auto max-w-content"
     >
       <ProfileCard />
-      <ProfileDetails v-if="showProfileDetails" />
+      <ProfileDetails />
       <div>
         <div class="grid grid-cols-2 gap-4 pt-10 sm:flex">
           <lukso-button

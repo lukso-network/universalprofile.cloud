@@ -1,45 +1,68 @@
 <script setup lang="ts">
-const { viewedProfile } = useViewedProfile()
+const profile = useProfile().viewedProfile()
+const { isMobile } = useDevice()
+const { showModal } = useModal()
+
+const profileBackground = useProfileBackground(profile, 880)
+const profileAvatar = useProfileAvatar(profile, 96)
+
+const handlePreviewProfileImage = () => {
+  const image = profile.value?.profileImage
+
+  if (!image) {
+    return
+  }
+
+  showModal({
+    template: 'AssetImage',
+    data: {
+      asset: image,
+    },
+    size: 'auto',
+  })
+}
 </script>
 
 <template>
   <div class="relative">
     <lukso-card
       variant="hero"
-      :background-url="viewedProfile?.backgroundImage?.url"
+      :background-url="profileBackground"
       is-full-width
-      custom-class="rounded-24 shadow-neutral-drop-shadow"
-      class="mb-22"
+      shadow="small"
+      :border-radius="isMobile ? 'none' : 'medium'"
+      class="-mx-4 -mt-6 mb-22 w-screen sm:mx-0 sm:mt-0 sm:w-full"
     >
       <div slot="content" class="flex flex-col items-center">
         <div class="relative bottom-[-140px] text-center">
-          <div class="group flex cursor-pointer flex-col items-center">
+          <div class="flex cursor-pointer flex-col items-center">
+            <lukso-profile
+              :profile-url="profileAvatar"
+              :profile-address="profile?.address"
+              size="x-large"
+              has-identicon
+              class="relative z-[1] inline-flex rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"
+              @click="handlePreviewProfileImage"
+            >
+            </lukso-profile>
             <lukso-tooltip
               variant="light"
-              offset="15"
+              offset="110"
               is-clipboard-copy
               :copy-text="$formatMessage('profile_card_copy_address')"
-              :copy-value="viewedProfile?.address"
+              :copy-value="profile?.address"
             >
-              <lukso-profile
-                :profile-url="viewedProfile?.profileImage?.url"
-                :profile-address="viewedProfile?.address"
-                size="x-large"
-                has-identicon
-                class="relative z-[1] inline-flex rounded-full outline outline-4 outline-neutral-100 transition group-hover:scale-105"
-              >
-              </lukso-profile>
               <div
-                class="paragraph-ptmono-16-regular relative -top-10 h-0 text-14 opacity-10 transition group-hover:opacity-30 md:text-24"
+                class="paragraph-ptmono-16-regular relative -top-10 h-0 text-14 opacity-10 transition hover:opacity-30 md:text-24"
               >
-                {{ viewedProfile?.address }}
+                {{ profile?.address }}
               </div>
             </lukso-tooltip>
           </div>
           <lukso-username
-            v-if="viewedProfile?.name"
-            :name="viewedProfile?.name.toLowerCase()"
-            :address="viewedProfile?.address"
+            v-if="profile?.name"
+            :name="profile?.name.toLowerCase()"
+            :address="profile?.address"
             address-color="neutral-80"
             size="large"
             max-width="350"
@@ -48,7 +71,7 @@ const { viewedProfile } = useViewedProfile()
           <lukso-username
             v-else
             :name="$formatMessage('profile_default_name')"
-            :address="viewedProfile?.address"
+            :address="profile?.address"
             address-color="neutral-80"
             size="large"
             max-width="350"

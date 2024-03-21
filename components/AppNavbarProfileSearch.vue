@@ -2,7 +2,6 @@
 import { isAddress } from 'web3-utils'
 
 import type { SearchProfileResult } from '@lukso/web-components'
-import type { IndexedProfile } from '@/models/profile'
 
 const { currentNetwork, isSearchOpen } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
@@ -75,7 +74,6 @@ watchEffect(() => {
         .getElementById('mobile-search')
         ?.querySelector('lukso-search') as unknown as HTMLElement
       const inputElement = luksoSearch?.shadowRoot?.querySelector('input')
-
       inputElement?.focus()
     }, 10)
   }
