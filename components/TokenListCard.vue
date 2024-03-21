@@ -23,6 +23,8 @@ const logoRef = ref()
 const symbolRef = ref()
 const balanceWidthPx = ref(0)
 
+const assetImage = useAssetImage(token, true, 260)
+
 const calculateBalanceWidth = () => {
   const SPACING = 24 + 32 // gap + padding
   const { width: contentWidth } = useElementSize(contentRef.value)
@@ -105,9 +107,7 @@ const isLoaded = computed(() => token.value && !token.value.isLoading)
               v-if="isLoaded"
               size="medium"
               :profile-address="token?.address"
-              :profile-url="
-                getAssetThumb(token, true, 260) || ASSET_ICON_PLACEHOLDER_URL
-              "
+              :profile-url="assetImage"
               has-identicon
             ></lukso-profile>
             <AppPlaceholderCircle v-else class="size-14" />

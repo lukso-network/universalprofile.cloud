@@ -16,9 +16,9 @@ export const reactiveImageIfNeeded = (
       image =>
         image.url === imageObject.url && image.width === imageObject.width
     )
-    imageObject = images[index] = reactive(images[index])
-    imageObject.url = ASSET_ICON_PLACEHOLDER_URL // TODO: This should be the loading image but it probably doesn't matter
-    resolveImageURL(imageObject?.url, ASSET_ERROR_ICON_URL).then(url => {
+    imageObject = images[index] = reactive(Object.assign({}, images[index]))
+    imageObject.url = IMAGE_ERROR_URL // TODO: This should be the loading image but it probably doesn't matter
+    resolveImageURL(imageObject?.url, IMAGE_ERROR_URL).then(url => {
       imageObject.url = url
     })
     return imageObject
@@ -116,49 +116,4 @@ export const getOptimizedImage = (
     }
   }
   return url || ''
-}
-
-/**
- * Return image for given sizes bu checking within image or icon arrays
- *
- * @param asset
- * @param minWidth
- * @param minHeight
- * @returns
- */
-export const getAssetThumb = (
-  asset: Asset | null | undefined,
-  useIcon: boolean,
-  width: number,
-  hasImageError?: boolean
-): string => {
-  if (hasImageError) {
-    return ASSET_ERROR_ICON_URL
-  }
-
-  if (!asset) {
-    return ''
-  }
-
-  if (asset.isNativeToken) {
-    return ASSET_LYX_ICON_URL
-  }
-
-  const { icon, images } = asset.resolvedMetadata || {}
-
-  if (useIcon && icon) {
-    return getOptimizedImage(icon, width)
-  }
-
-  const image = images?.[0]
-
-  if (image) {
-    return getOptimizedImage(image, width)
-  }
-
-  if (icon) {
-    return getOptimizedImage(icon, width)
-  }
-
-  return ''
 }

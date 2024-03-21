@@ -19,6 +19,7 @@ const emits = defineEmits<Emits>()
 const hasSquareIcon = computed(() => isCollectible(props.asset))
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
+const assetImage = useAssetImage(token, !isCollectible(token.value), 80)
 </script>
 
 <template>
@@ -39,7 +40,7 @@ const token = useToken()(asset)
       >
         <lukso-profile
           size="small"
-          :profile-url="getAssetThumb(token, !isCollectible(token), 80)"
+          :profile-url="assetImage"
           :profile-address="asset?.address"
           has-identicon
           :is-square="hasSquareIcon ? true : undefined"

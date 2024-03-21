@@ -8,6 +8,7 @@ const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const { showModal } = useModal()
 const { isConnected } = storeToRefs(useAppStore())
+const assetImage = useAssetImage(token, isLsp7(token.value), 60)
 
 const handleSendAsset = (event: Event) => {
   try {
@@ -63,10 +64,7 @@ const handlePreviewImage = () => {
             <lukso-profile
               v-if="token"
               size="large"
-              :profile-url="
-                getAssetThumb(token, isLsp7(token), 60) ||
-                ASSET_ICON_PLACEHOLDER_URL
-              "
+              :profile-url="assetImage"
               class="rounded-full shadow-neutral-above-shadow-1xl"
             ></lukso-profile>
           </div>
@@ -97,7 +95,7 @@ const handlePreviewImage = () => {
         </div>
         <AssetTokenSupply :asset="asset" />
         <AssetDescription :asset="token" />
-        <AssetImages :asset="token" />
+        <AssetImagesList :asset="token" />
         <AssetAssets :asset="token" />
         <AssetAttributes :asset="token" />
         <AssetLinks :asset="token" />

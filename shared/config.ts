@@ -19,7 +19,8 @@ export const ASSET_ICON_PLACEHOLDER_URL = '/images/token-default.svg'
 // lyx token icon
 export const ASSET_LYX_ICON_URL = '/images/lyx-token.svg'
 
-export const ASSET_ERROR_ICON_URL = '/images/image-error.svg'
+// error image placeholder
+export const IMAGE_ERROR_URL = '/images/image-error.svg'
 
 // number of decimal places for LYX token
 export const ASSET_LYX_DECIMALS = 18

@@ -16,6 +16,7 @@ const target = ref<HTMLElement | null>(null)
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const token = useToken()(asset)
 const viewedProfileAddress = getCurrentProfileAddress()
+const assetImage = useAssetImage(token, false, 260)
 
 const handleShowAsset = () => {
   try {
@@ -84,7 +85,7 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
           class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
         >
           <AssetImage
-            :src="getAssetThumb(token, false, 260)"
+            :src="assetImage"
             class="min-h-[260px] rounded-t-12 md:max-h-[260px]"
           />
           <div

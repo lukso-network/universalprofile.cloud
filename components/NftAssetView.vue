@@ -11,6 +11,7 @@ const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const { showModal } = useModal()
 const { isConnected } = storeToRefs(useAppStore())
+const assetImage = useAssetImage(token, false, 260)
 
 const handleSendAsset = (event: Event) => {
   try {
@@ -60,7 +61,7 @@ const handlePreviewImage = () => {
         ><div slot="content">
           <AssetImage
             class="min-h-[260px] cursor-pointer rounded-t-12"
-            :src="getAssetThumb(token, false, 260)"
+            :src="assetImage"
             @click="handlePreviewImage"
           />
           <div class="relative p-4">
@@ -114,7 +115,7 @@ const handlePreviewImage = () => {
       <AssetCollectionSupply :asset="asset" />
       <AssetTokenId :asset="asset" />
       <AssetDescription :asset="token" />
-      <AssetImages :asset="token" />
+      <AssetImagesList :asset="token" />
       <AssetAssets :asset="token" />
       <AssetAttributes :asset="token" />
       <AssetCreators :asset="token" />

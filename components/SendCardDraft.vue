@@ -19,6 +19,8 @@ const asset = computed(() =>
   isLyx(sendAsset.value) ? lyxToken.value : _asset.value
 )
 
+const assetImage = useAssetImage(asset, isToken(asset.value), 100)
+
 const handleSend = () => {
   onSend.value && onSend.value()
 }
@@ -102,7 +104,7 @@ watch(
           <div class="rounded-full shadow-neutral-above-shadow-1xl">
             <lukso-profile
               size="small"
-              :profile-url="getAssetThumb(asset, isToken(asset), 100)"
+              :profile-url="assetImage"
               :profile-address="asset?.address"
               :has-identicon="isLyx(asset) ? undefined : true"
               :is-square="isCollectible(asset) ? true : undefined"
