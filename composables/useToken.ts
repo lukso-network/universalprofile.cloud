@@ -85,7 +85,7 @@ export function useToken() {
                             /^ipfs:\/\//,
                             `${LUKSO_PROXY_API}/ipfs/`
                           )
-                          return await fetch(url)
+                          return await fetch(url, { redirect: 'follow' })
                             .then(response => {
                               if (!response.ok) {
                                 throw new Error('Unable to fetch')
