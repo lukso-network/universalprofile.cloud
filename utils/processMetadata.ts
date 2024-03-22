@@ -1,7 +1,8 @@
 // YOU CANNOT IMPORT ANYTHING WHICH USES Buffer or so.
 
 import debug from 'debug'
-import { keccak256 } from 'web3-utils'
+import { bytesToHex } from 'web3-utils'
+import { Buffer } from 'buffer'
 
 import {
   TANSTACK_GC_TIME,
@@ -27,8 +28,9 @@ export async function processMetadata(
         data.url.match(/^data:(.*?);(.*?),(.*)$/) || []
       if (encoding && image) {
         const cache = await caches.open(HASHED_IMAGE_CACHE_NAME)
-        const imageBytes = encoding === 'base64' ? atob(image) : image
-        const hash = keccak256(imageBytes)
+        const imageBytes =
+          encoding === 'base64' ? Buffer.from(image, 'base64') : image
+        const hash = keccak256(imageBytes).replace(/^(0x)?/, '0x')
         let verified: boolean | undefined = undefined
         if (data.verification) {
           verified = data.verification?.data && hash === data.verification?.data

@@ -38,7 +38,7 @@ onUnmounted(() => {
   <div class="relative cursor-pointer">
     <lukso-profile
       size="small"
-      :profile-url="avatarImage"
+      :profile-url="avatarImage?.url"
       @click="handleToggleDropdown"
       :profile-address="connectedProfile?.address"
       :data-profile-address="connectedProfile?.address"

@@ -11,7 +11,7 @@ const profileAvatar = useProfileAvatar(connectedProfile, 260)
         :profile="connectedProfile"
         :name="connectedProfile?.name"
         :address="connectedProfile?.address"
-        :profile-url="profileAvatar"
+        :profile-url="profileAvatar?.url"
       />
     </div>
     <div class="flex items-center">

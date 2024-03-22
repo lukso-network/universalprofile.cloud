@@ -111,7 +111,7 @@ const isLoadedMetadata = computed(
               v-if="isLoadedMetadata"
               size="medium"
               :profile-address="token?.address"
-              :profile-url="assetImage"
+              :profile-url="assetImage?.url"
               has-identicon
             ></lukso-profile>
             <AppPlaceholderCircle v-else class="size-14" />
