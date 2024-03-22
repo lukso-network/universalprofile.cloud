@@ -1,7 +1,6 @@
 // YOU CANNOT IMPORT ANYTHING WHICH USES Buffer or so.
 
 import debug from 'debug'
-import { bytesToHex } from 'web3-utils'
 import { Buffer } from 'buffer'
 
 import {
@@ -127,6 +126,7 @@ export async function browserProcessMetadata(data: any): Promise<any> {
     ) {
       // If the service worker does not exist or process this request
       // then we need to do local processing and will return "cached://HASH" urls instead.
+      //@ts-ignore
       const result = await processMetadata(data, keccak256, 'cached://')
       workersLog('process-local', result)
       return result

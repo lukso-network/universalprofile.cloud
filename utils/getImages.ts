@@ -142,7 +142,11 @@ export const getOptimizedImage = (
         }
       })()
     }
-    return verified != null ? verified : promise.value || null
+    return verified != null
+      ? verified
+        ? 'verified'
+        : 'invalid'
+      : promise.value || null
   })
   return computed<ImageItem | null>(() => {
     const dpr = window.devicePixelRatio || 1
