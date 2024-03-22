@@ -1,3 +1,5 @@
+import { bytesToHex, keccak256 } from 'web3-utils'
+
 import { LUKSO_PROXY_API } from '@/shared/config'
 
 import type { Image } from '@/types/image'
@@ -7,7 +9,7 @@ const weakMap = new WeakMap<Image, MaybeRef<Image | null>>()
 /**
  * Make the image reactive if needed
  * @param imageObject
- * @retursn reactive image object
+ * @returns reactive image object
  */
 export const reactiveImageIfNeeded = (
   imageObj: Image
@@ -43,7 +45,7 @@ export const reactiveImageIfNeeded = (
 export const getImageBySize = (
   _images: MaybeRef<Image[] | null>,
   width: number
-): MaybeRef<Image | null> => {
+): Ref<Image | null> => {
   return computed(() => {
     const images = isRef(_images) ? _images.value : _images
     const sortedImagesAscending = (images || []).slice()
@@ -80,6 +82,11 @@ const EXTRACT_CID = new RegExp(
   `^(ipfs://|${LUKSO_PROXY_API}/(ipfs|image)/)(?<cid>.*?)(\\?.*?)?$`
 )
 
+export type ImageItem = {
+  url: string | null
+  verified: 'verified' | 'unverified' | 'invalid' | null
+}
+
 /**
  * Get optimized image using Cloudflare proxy
  *
@@ -90,19 +97,64 @@ const EXTRACT_CID = new RegExp(
 export const getOptimizedImage = (
   image: MaybeRef<Image[] | null>,
   width: number
-): ComputedRef<string | null> => {
+): Ref<ImageItem | null> => {
   const currentImage = getImageBySize(image, width) || {}
-
-  return computed<string | null>(() => {
+  const promise = ref<'verified' | 'unverified' | 'invalid' | null>(null)
+  const verifiedRef = computed(() => {
+    const { verification, url } = isRef(currentImage)
+      ? currentImage?.value || {}
+      : currentImage || {}
+    if (!url) {
+      return null
+    }
+    const { verified } = (verification || {}) as any
+    if (promise.value === null && verified == null) {
+      ;(async () => {
+        if (verified == null && url?.startsWith(LUKSO_PROXY_API)) {
+          const request = await fetch(url, { method: 'HEAD' })
+            .then(response => (response.ok ? response : null))
+            .catch(() => null)
+          const isVerified = request?.headers?.get('x-verified') || null
+          promise.value =
+            isVerified != null
+              ? isVerified === 'true'
+                ? 'verified'
+                : 'invalid'
+              : 'unverified'
+        } else if (
+          verification?.method != null &&
+          verification?.method !== '0x00000000' &&
+          verification?.data != null
+        ) {
+          const data = await fetch(url)
+            .then(response => (response.ok ? response.arrayBuffer() : null))
+            .then(buffer =>
+              buffer
+                ? bytesToHex(new Uint8Array(buffer) as unknown as number[])
+                : null
+            )
+            .catch(() => null)
+          const hash = data != null ? keccak256(data) : null
+          promise.value = hash === verification.data ? 'verified' : 'invalid'
+        } else if (
+          verification?.method != null &&
+          verification?.method !== '0x00000000' &&
+          verification?.data != null
+        ) {
+          promise.value = 'invalid'
+        } else {
+          promise.value = 'unverified'
+        }
+      })()
+    }
+    return verified != null ? verified : promise.value || null
+  })
+  return computed<ImageItem | null>(() => {
     const dpr = window.devicePixelRatio || 1
     const { verification, url } = isRef(currentImage)
       ? currentImage?.value || {}
       : currentImage || {}
-    const { verified } = (verification || {}) as any
-
-    // if not verified then do verification
-    console.log(verified, url)
-
+    const verified = verifiedRef.value
     if (
       url?.startsWith('ipfs://') ||
       url?.startsWith(`${LUKSO_PROXY_API}/image/`)
@@ -125,10 +177,15 @@ export const getOptimizedImage = (
       const { cid } = EXTRACT_CID.exec(url || '')?.groups || {}
 
       if (cid) {
-        return `${LUKSO_PROXY_API}/image/${cid}?${queryParamsString}`
+        return {
+          url: `${LUKSO_PROXY_API}/image/${cid}?${queryParamsString}`,
+          verified,
+        }
       }
     }
-
-    return url || null
+    return {
+      url: url || null,
+      verified,
+    }
   })
 }

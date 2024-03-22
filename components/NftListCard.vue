@@ -95,7 +95,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
           class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
         >
           <AssetImage
-            :src="assetImage"
+            :src="assetImage?.url"
             class="min-h-[260px] rounded-t-12 md:max-h-[260px]"
           />
           <div

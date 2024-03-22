@@ -24,7 +24,7 @@ const optimizedImage = useOptimizedImage(modal?.data?.asset, 500)
 
     <AssetImage
       class="relative max-h-[calc(100vh-100px)] rounded-12"
-      :src="optimizedImage"
+      :src="optimizedImage?.url"
       @on-load="isLoaded = true"
     />
     <ModalCloseButton @click="closeModal" />

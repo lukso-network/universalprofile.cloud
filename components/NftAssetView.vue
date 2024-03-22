@@ -72,7 +72,7 @@ const handlePreviewImage = () => {
         ><div slot="content">
           <AssetImage
             class="min-h-[260px] cursor-pointer rounded-t-12"
-            :src="assetImage"
+            :src="assetImage?.url"
             @click="handlePreviewImage"
           />
           <div class="relative p-4">
@@ -107,7 +107,7 @@ const handlePreviewImage = () => {
           :balance="asset?.balance"
           :symbol="asset?.tokenSymbol"
           :decimals="0"
-          :profile-image-url="profileAvatar"
+          :profile-image-url="profileAvatar?.url"
           :message="$formatMessage('nft_details_own')"
         />
 

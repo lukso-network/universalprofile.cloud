@@ -1,7 +1,7 @@
 export const useProfileAvatar = (
   profile: MaybeRef<Profile | null | undefined>,
   width: number
-) => {
+): Ref<ImageItem | null> => {
   const profileAvatar = computed(() => {
     const { profileImage } = unref(profile) || {}
     return profileImage
@@ -13,7 +13,7 @@ export const useProfileAvatar = (
 export const useProfileBackground = (
   profile: MaybeRef<Profile | null | undefined>,
   width: number
-) => {
+): Ref<ImageItem | null> => {
   const profileBackground = computed(() => {
     const { backgroundImage } = unref(profile) || {}
     return backgroundImage
@@ -25,15 +25,17 @@ export const useProfileBackground = (
 export const useOptimizedImages = (
   images: MaybeRef<Image[][] | null>,
   width: number
-) => {
+): Ref<Array<{ url: ImageItem | null; original: Image[] | null }>> => {
   return computed(() => {
-    return unref(images)?.map(image => {
-      const url = getOptimizedImage(image, width)
-      return {
-        url,
-        original: image,
-      }
-    })
+    return (
+      unref(images)?.map(image => {
+        const url = getOptimizedImage(image, width)
+        return {
+          url: isRef(url) ? url.value : url,
+          original: image,
+        }
+      }) || []
+    )
   })
 }
 
@@ -48,7 +50,7 @@ export const useAssetImage = (
   asset: MaybeRef<Asset | null | undefined>,
   useIcon: boolean,
   width: number
-) => {
+): Ref<ImageItem | null> => {
   const assetIcon = computed(() => {
     const { resolvedMetadata } = unref(asset) || {}
     const { icon } = resolvedMetadata || {}
@@ -68,7 +70,7 @@ export const useAssetImage = (
 
   return computed(() => {
     if (assetIsNativeToken.value) {
-      return ASSET_LYX_ICON_URL
+      return { url: ASSET_LYX_ICON_URL, verified: null }
     }
 
     if (useIcon) {
@@ -84,9 +86,8 @@ export const useAssetImage = (
     }
 
     if (!assetIcon.value && !assetImage.value) {
-      return ''
+      return { url: null, verified: null }
     }
-
-    return IMAGE_ERROR_URL
+    return { url: IMAGE_ERROR_URL, verified: null }
   })
 }

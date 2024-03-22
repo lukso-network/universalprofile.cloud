@@ -40,7 +40,7 @@ const assetImage = useAssetImage(token, !isCollectible(token.value), 80)
       >
         <lukso-profile
           size="small"
-          :profile-url="assetImage"
+          :profile-url="assetImage?.url"
           :profile-address="asset?.address"
           has-identicon
           :is-square="hasSquareIcon ? true : undefined"

@@ -81,8 +81,8 @@ watch(
   {{ sendLog('Current asset', toRaw(asset)) }}
   <lukso-card
     variant="profile-2"
-    :background-url="backgroundImage"
-    :profile-url="avatarImage"
+    :background-url="backgroundImage?.url"
+    :profile-url="avatarImage?.url"
     :profile-address="connectedProfile?.address"
     is-full-width
   >
@@ -107,7 +107,7 @@ watch(
           <div class="rounded-full shadow-neutral-above-shadow-1xl">
             <lukso-profile
               size="small"
-              :profile-url="assetImage"
+              :profile-url="assetImage?.url"
               :profile-address="asset?.address"
               :has-identicon="isLyx(asset) ? undefined : true"
               :is-square="isCollectible(asset) ? true : undefined"

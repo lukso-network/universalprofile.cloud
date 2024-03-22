@@ -27,7 +27,7 @@ const handlePreviewProfileImage = () => {
   <div class="relative">
     <lukso-card
       variant="hero"
-      :background-url="profileBackground"
+      :background-url="profileBackground?.url"
       is-full-width
       shadow="small"
       :border-radius="isMobile ? 'none' : 'medium'"
@@ -37,7 +37,7 @@ const handlePreviewProfileImage = () => {
         <div class="relative bottom-[-140px] text-center">
           <div class="flex cursor-pointer flex-col items-center">
             <lukso-profile
-              :profile-url="profileAvatar"
+              :profile-url="profileAvatar?.url"
               :profile-address="profile?.address"
               size="x-large"
               has-identicon
