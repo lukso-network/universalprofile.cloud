@@ -46,7 +46,7 @@ const handlePreviewImage = () => {
 </script>
 
 <template>
-  {{ console.debug(token?.tokenName, toRaw(token)) }}
+  {{ genericLog(token?.tokenName, toRaw(token)) }}
   <div class="relative">
     <div
       class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
