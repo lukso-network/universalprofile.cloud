@@ -72,7 +72,7 @@ const handlePreviewImage = () => {
         ><div slot="content">
           <AssetImage
             class="min-h-[260px] cursor-pointer rounded-t-12"
-            :src="assetImage?.url"
+            :image="assetImage"
             @click="handlePreviewImage"
           />
           <div class="relative p-4">

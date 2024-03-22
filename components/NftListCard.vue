@@ -95,14 +95,14 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
           class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
         >
           <AssetImage
-            :src="assetImage?.url"
+            :image="assetImage"
             class="min-h-[260px] rounded-t-12 md:max-h-[260px]"
           />
           <div
             class="relative grid grid-rows-[max-content,max-content,auto] p-4"
           >
             <div
-              class="relative top-[-40px] flex cursor-pointer flex-col gap-1 rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
+              class="relative top-[-40px] z-[2] flex cursor-pointer flex-col gap-1 rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
             >
               <div class="paragraph-inter-14-semi-bold flex items-center gap-1">
                 <span v-if="isLoadedAsset">{{ token?.tokenName }}</span>
