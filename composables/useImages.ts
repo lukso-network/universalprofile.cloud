@@ -1,34 +1,31 @@
 export const useProfileAvatar = (
-  _profile: MaybeRef<Profile | null | undefined>,
+  profile: MaybeRef<Profile | null | undefined>,
   width: number
 ) => {
   const profileAvatar = computed(() => {
-    const profile = isRef(_profile) ? _profile.value || null : _profile || null
-    const { profileImage } = profile || {}
+    const { profileImage } = unref(profile) || {}
     return profileImage
   }) as Ref<Image[] | null>
   return getOptimizedImage(profileAvatar, width)
 }
 
 export const useProfileBackground = (
-  _profile: MaybeRef<Profile | null | undefined>,
+  profile: MaybeRef<Profile | null | undefined>,
   width: number
 ) => {
   const profileBackground = computed(() => {
-    const profile = isRef(_profile) ? _profile.value || null : _profile || null
-    const { backgroundImage } = profile || {}
+    const { backgroundImage } = unref(profile) || {}
     return backgroundImage
   }) as Ref<Image[] | null>
   return getOptimizedImage(profileBackground, width)
 }
 
 export const useOptimizedImages = (
-  _images: MaybeRef<Image[][] | null>,
+  images: MaybeRef<Image[][] | null>,
   width: number
 ) => {
   return computed(() => {
-    const images = isRef(_images) ? _images.value || null : _images || null
-    return images?.map(image => {
+    return unref(images)?.map(image => {
       const url = getOptimizedImage(image, width)
       return {
         url,
@@ -46,27 +43,24 @@ export const useOptimizedImage = (
 }
 
 export const useAssetImage = (
-  _asset: MaybeRef<Asset | null | undefined>,
+  asset: MaybeRef<Asset | null | undefined>,
   useIcon: boolean,
   width: number
 ) => {
   const assetIcon = computed(() => {
-    const asset = isRef(_asset) ? _asset.value || null : _asset || null
-    const { resolvedMetadata } = asset || {}
+    const { resolvedMetadata } = unref(asset) || {}
     const { icon } = resolvedMetadata || {}
     return icon
   }) as Ref<Image[] | null>
   const assetImage = computed(() => {
-    const asset = isRef(_asset) ? _asset.value || null : _asset || null
-    const { resolvedMetadata } = asset || {}
+    const { resolvedMetadata } = unref(asset) || {}
     const { images } = resolvedMetadata || {}
     return images?.[0] || null
   }) as Ref<Image[] | null>
   const currentIcon = getOptimizedImage(assetIcon, width)
   const currentImage = getOptimizedImage(assetImage, width)
   const assetIsNativeToken = computed(() => {
-    const asset = isRef(_asset) ? _asset.value || null : _asset || null
-    const { isNativeToken } = asset || {}
+    const { isNativeToken } = unref(asset) || {}
     return isNativeToken
   })
   return computed(() => {
