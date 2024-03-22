@@ -43,6 +43,7 @@
   "token_asset_type_other": "OTHER",
   "profile_search_placeholder": "Search profiles",
   "token_details_send": "Send {token}",
+  "image_error_invalid_link": "invalid image link",
   "token_details_token_id": "Token ID",
   "send_button": "Send {amount} {symbol}",
   "asset_supply_title": "Total Token Supply",
