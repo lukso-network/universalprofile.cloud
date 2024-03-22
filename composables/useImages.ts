@@ -25,13 +25,13 @@ export const useProfileBackground = (
 export const useOptimizedImages = (
   images: MaybeRef<Image[][] | null>,
   width: number
-): Ref<Array<{ url: ImageItem | null; original: Image[] | null }>> => {
+): Ref<Array<{ optimized: ImageItem | null; original: Image[] | null }>> => {
   return computed(() => {
     return (
       unref(images)?.map(image => {
         const url = getOptimizedImage(image, width)
         return {
-          url: isRef(url) ? url.value : url,
+          optimized: unref(url),
           original: image,
         }
       }) || []
