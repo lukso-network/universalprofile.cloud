@@ -1,6 +1,10 @@
 <script setup lang="ts">
 type Props = {
-  src?: string
+  src?: string // TODO remove this after use image prop
+  image?: {
+    src?: string
+    verified?: ImageVerifiedStatus
+  }
   alt?: string
 }
 

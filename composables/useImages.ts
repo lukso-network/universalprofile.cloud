@@ -6,6 +6,7 @@ export const useProfileAvatar = (
     const { profileImage } = unref(profile) || {}
     return profileImage
   }) as Ref<Image[] | null>
+
   return getOptimizedImage(profileAvatar, width)
 }
 
@@ -17,6 +18,7 @@ export const useProfileBackground = (
     const { backgroundImage } = unref(profile) || {}
     return backgroundImage
   }) as Ref<Image[] | null>
+
   return getOptimizedImage(profileBackground, width)
 }
 
@@ -63,22 +65,28 @@ export const useAssetImage = (
     const { isNativeToken } = unref(asset) || {}
     return isNativeToken
   })
+
   return computed(() => {
     if (assetIsNativeToken.value) {
       return ASSET_LYX_ICON_URL
     }
+
     if (useIcon) {
       return currentIcon.value
     }
+
     if (currentImage.value) {
       return currentImage.value
     }
+
     if (currentImage.value) {
       return currentIcon.value
     }
+
     if (!assetIcon.value && !assetImage.value) {
       return ''
     }
+
     return IMAGE_ERROR_URL
   })
 }

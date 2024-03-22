@@ -16,6 +16,7 @@ export const reactiveImageIfNeeded = (
     if (weakMap.has(imageObj)) {
       return weakMap.get(imageObj) as MaybeRef<Image | null>
     }
+
     const reference = ref<Image | null>(null)
     weakMap.set(imageObj, reference)
     resolveImageURL(imageObj?.url, IMAGE_ERROR_URL).then(url => {
@@ -91,12 +92,17 @@ export const getOptimizedImage = (
   width: number
 ): ComputedRef<string | null> => {
   const currentImage = getImageBySize(image, width) || {}
+
   return computed<string | null>(() => {
     const dpr = window.devicePixelRatio || 1
     const { verification, url } = isRef(currentImage)
       ? currentImage?.value || {}
       : currentImage || {}
     const { verified } = (verification || {}) as any
+
+    // if not verified then do verification
+    console.log(verified, url)
+
     if (
       url?.startsWith('ipfs://') ||
       url?.startsWith(`${LUKSO_PROXY_API}/image/`)
@@ -113,16 +119,16 @@ export const getOptimizedImage = (
         width: width * dpr,
         ...(dpr !== 1 ? { dpr } : {}),
       }
-
       const queryParamsString = Object.entries(queryParams)
         .map(([key, value]) => `${key}=${value}`)
         .join('&')
-
       const { cid } = EXTRACT_CID.exec(url || '')?.groups || {}
+
       if (cid) {
         return `${LUKSO_PROXY_API}/image/${cid}?${queryParamsString}`
       }
     }
+
     return url || null
   })
 }
