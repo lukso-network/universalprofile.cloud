@@ -82,11 +82,6 @@ const EXTRACT_CID = new RegExp(
   `^(ipfs://|${LUKSO_PROXY_API}/(ipfs|image)/)(?<cid>.*?)(\\?.*?)?$`
 )
 
-export type ImageItem = {
-  url: string | null
-  verified: 'verified' | 'unverified' | 'invalid' | null
-}
-
 /**
  * Get optimized image using Cloudflare proxy
  *

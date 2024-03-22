@@ -11,3 +11,8 @@ export type Image = {
 }
 
 export type Base64EncodedImage = `data:image/jpeg;base64${string}`
+
+export type ImageItem = {
+  url: string | null
+  verified: ImageVerifiedStatus | null
+}
