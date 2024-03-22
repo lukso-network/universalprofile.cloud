@@ -94,7 +94,7 @@ export const getOptimizedImage = (
   width: number
 ): Ref<ImageItem | null> => {
   const currentImage = getImageBySize(image, width) || {}
-  const promise = ref<'verified' | 'unverified' | 'invalid' | null>(null)
+  const promise = ref<ImageVerifiedStatus | null>(null)
   const verifiedRef = computed(() => {
     const { verification, url } = isRef(currentImage)
       ? currentImage?.value || {}
