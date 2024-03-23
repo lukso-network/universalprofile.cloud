@@ -2,7 +2,11 @@ import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
 
 import { browserProcessMetadata } from '@/utils/processMetadata'
-import { Priorities, type QFQueryOptions } from '@/utils/queryFunctions'
+import {
+  Priorities,
+  queryNull,
+  type QFQueryOptions,
+} from '@/utils/queryFunctions'
 
 import type {
   LSP4DigitalAssetMetadata,
@@ -49,8 +53,30 @@ export function useToken() {
                 args: [profileAddress.value || address],
                 staleTime: 250,
               }),
+              tokenId && tokenIdFormat === 2
+                ? queryGetData({
+                    // 4
+                    chainId,
+                    address: ABICoder.decodeParameter(
+                      'address',
+                      tokenId
+                    ).toLowerCase() as Address,
+                    keyName: 'LSP8ReferenceContract',
+                  })
+                : queryNull(),
+              tokenId && tokenIdFormat === 2
+                ? queryGetData({
+                    // 5
+                    chainId,
+                    address: ABICoder.decodeParameter(
+                      'address',
+                      tokenId
+                    ).toLowerCase() as Address,
+                    keyName: 'LSP4Creators[]',
+                  })
+                : queryNull(),
               queryGetData({
-                // 4
+                // 6
                 chainId,
                 address,
                 keyName: 'LSP4Metadata',
@@ -58,87 +84,67 @@ export function useToken() {
                 aggregateLimit: 1,
                 priority: Priorities.Low,
               }),
-              ...(tokenId
-                ? [
-                    queryGetData({
-                      // 5
+              tokenId
+                ? queryGetData({
+                    // 7
+                    chainId,
+                    address,
+                    tokenId,
+                    keyName: 'LSP4Metadata',
+                    process: browserProcessMetadata,
+                    aggregateLimit: 1,
+                    priority: Priorities.Low,
+                  })
+                : queryNull(),
+              tokenId
+                ? {
+                    // 8
+                    queryKey: [
+                      'tokenJSON',
                       chainId,
-                      address,
+                      token?.address,
                       tokenId,
-                      keyName: 'LSP4Metadata',
-                      process: browserProcessMetadata,
-                      aggregateLimit: 1,
-                      priority: Priorities.Low,
-                    }),
-                    {
-                      // 6
-                      queryKey: [
-                        'tokenJSON',
-                        chainId,
-                        token?.address,
-                        tokenId,
-                        tokenDataURL,
-                      ],
-                      queryFn: async () => {
-                        if (tokenDataURL) {
-                          const url = tokenDataURL.replace(
-                            /^ipfs:\/\//,
-                            `${LUKSO_PROXY_API}/ipfs/`
-                          )
-                          return await fetch(url, { redirect: 'follow' })
-                            .then(response => {
-                              if (!response.ok) {
-                                throw new Error('Unable to fetch')
-                              }
-                              return response.json()
-                            })
-                            .then(async data => {
-                              return await browserProcessMetadata(data)
-                            })
-                            .catch(error => {
-                              console.error('Error fetching token data', error)
-                              throw error
-                            })
-                        }
-                        return null
-                      },
+                      tokenDataURL,
+                    ],
+                    queryFn: async () => {
+                      if (tokenDataURL) {
+                        const url = tokenDataURL.replace(
+                          /^ipfs:\/\//,
+                          `${LUKSO_PROXY_API}/ipfs/`
+                        )
+                        return await fetch(url, { redirect: 'follow' })
+                          .then(response => {
+                            if (!response.ok) {
+                              throw new Error('Unable to fetch')
+                            }
+                            return response.json()
+                          })
+                          .then(async data => {
+                            return await browserProcessMetadata(data)
+                          })
+                          .catch(error => {
+                            console.error('Error fetching token data', error)
+                            throw error
+                          })
+                      }
+                      return null
                     },
-                    ...(tokenId && tokenIdFormat === 2
-                      ? [
-                          queryGetData({
-                            // 7
-                            chainId,
-                            address: ABICoder.decodeParameter(
-                              'address',
-                              tokenId
-                            ).toLowerCase() as Address,
-                            keyName: 'LSP4Metadata',
-                            process: browserProcessMetadata,
-                            aggregateLimit: 1,
-                            priority: Priorities.Low,
-                          }),
-                          queryGetData({
-                            // 8
-                            chainId,
-                            address: ABICoder.decodeParameter(
-                              'address',
-                              tokenId
-                            ).toLowerCase() as Address,
-                            keyName: 'LSP8ReferenceContract',
-                          }),
-                          queryGetData({
-                            // 9
-                            chainId,
-                            address: ABICoder.decodeParameter(
-                              'address',
-                              tokenId
-                            ).toLowerCase() as Address,
-                            keyName: 'LSP4Creators[]',
-                          }),
-                        ]
-                      : []),
-                  ]
-                : []),
+                  }
+                : queryNull(),
+              tokenId && tokenIdFormat === 2
+                ? queryGetData({
+                    // 9
+                    chainId,
+                    address: ABICoder.decodeParameter(
+                      'address',
+                      tokenId
+                    ).toLowerCase() as Address,
+                    keyName: 'LSP4Metadata',
+                    process: browserProcessMetadata,
+                    aggregateLimit: 1,
+                    priority: Priorities.Low,
+                  })
+                : queryNull(),
             ]
           : []
       ) as QFQueryOptions[] & { token: Asset | null }
@@ -157,21 +163,12 @@ export function useToken() {
           return { isLoading: true } as Asset
         }
 
-        const { tokenId, tokenIdFormat } = token
-
         const resultsWithQuery = results.map((result, index) => {
           const query = queries.value[index]
           return { result, query }
         })
-        const metadataResults = resultsWithQuery.slice(
-          4,
-          tokenId && tokenIdFormat === 2 ? 8 : 7
-        )
-        const nonMetadataResults = resultsWithQuery.filter((_, index) => {
-          return !(
-            index >= 4 && index <= (tokenId && tokenIdFormat === 2 ? 7 : 6)
-          )
-        })
+        const metadataResults = resultsWithQuery.slice(6)
+        const nonMetadataResults = resultsWithQuery.slice(0, 6)
         const isLoading =
           token.isLoading ||
           nonMetadataResults.some(({ result }) => result.isLoading)
@@ -181,13 +178,14 @@ export function useToken() {
         const decimals = Number.parseInt((results[2].data as string) || '0')
         const tokenIdCreatorsCount = results[3]?.data || 0
         const tokenIdsOf = results[3]?.data as string[]
-        const _assetData = results[4]?.data as any
-        const forTokenData = results[5]?.data as any
-        const baseURIData = results[6]?.data as any
-        const lsp7Data =
-          tokenId && tokenIdFormat === 2 ? (results[7]?.data as any) : null
-        const referenceContract = results[8]?.data as any
-        const lsp7Creators = results[9]?.data as string[]
+        const referenceContract = results[4]?.data as any
+        const lsp7Creators = results[5]?.data as string[]
+
+        const _assetData = results[6]?.data as any
+        const forTokenData = results[7]?.data as any
+        const baseURIData = results[8]?.data as any
+        const lsp7Data = results[9]?.data as any
+
         const isMetadataLoading = metadataResults.some(({ result }) => {
           return result.isLoading
         })
