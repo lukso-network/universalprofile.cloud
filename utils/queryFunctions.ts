@@ -1095,6 +1095,13 @@ export type VerifiableURI = {
   url: string
 }
 
+export function queryNull(): QFQueryOptions<null> {
+  return {
+    queryKey: ['null'],
+    queryFn: async () => null,
+  }
+}
+
 export function queryGetData<T>({
   address,
   chainId,
