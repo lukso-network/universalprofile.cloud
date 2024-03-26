@@ -1,4 +1,4 @@
-import web3 from 'web3'
+import { isAddress } from 'web3-utils'
 
 /**
  * Remove padding from address
@@ -11,15 +11,17 @@ export const paddedToAddress = (address?: string) => {
     return ''
   }
 
+  let paddedAddress = ''
+
   // remove 0x
   if (address.startsWith('0x')) {
-    address = address.slice(2)
+    paddedAddress = address.slice(2)
   }
 
   // remove padding
-  while (address.slice(0, 2) === '00' && !web3.utils.isAddress(address)) {
-    address = address.slice(2)
+  while (paddedAddress.slice(0, 2) === '00' && !isAddress(paddedAddress)) {
+    paddedAddress = paddedAddress.slice(2)
   }
 
-  return '0x' + address
+  return `0x${paddedAddress}`
 }
