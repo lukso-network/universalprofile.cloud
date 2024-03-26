@@ -4,9 +4,7 @@ type Props = {
   alt?: string
 }
 
-type Emits = {
-  (event: 'on-load'): void
-}
+type Emits = (event: 'on-load') => void
 
 const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
