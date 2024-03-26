@@ -46,7 +46,7 @@ const handlePreviewImage = () => {
 </script>
 
 <template>
-  {{ console.debug(token?.tokenName, toRaw(token)) }}
+  {{ genericLog(token?.tokenName, toRaw(token)) }}
   <div class="relative">
     <div
       class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
@@ -66,7 +66,7 @@ const handlePreviewImage = () => {
             <lukso-profile
               v-if="token"
               size="large"
-              :profile-url="assetImage"
+              :profile-url="assetImage?.url"
               class="rounded-full shadow-neutral-above-shadow-1xl"
             ></lukso-profile>
           </div>
@@ -77,7 +77,7 @@ const handlePreviewImage = () => {
             :balance="token?.balance"
             :symbol="token?.tokenSymbol"
             :decimals="token?.decimals"
-            :profile-image-url="profileAvatar"
+            :profile-image-url="profileAvatar?.url"
             :message="$formatMessage('token_details_own')"
           />
 

@@ -36,7 +36,7 @@ const profileImage = useProfileAvatar(creatorProfile, 24)
       <div class="flex items-center">
         <lukso-profile
           size="x-small"
-          :profile-url="profileImage"
+          :profile-url="profileImage?.url"
           :profile-address="creatorProfile?.address"
           has-identicon
         ></lukso-profile>

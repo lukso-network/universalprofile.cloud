@@ -63,7 +63,7 @@ const handlePreviewImage = () => {
 </script>
 
 <template>
-  {{ console.debug(token?.tokenName, toRaw(token)) }}
+  {{ genericLog(token?.tokenName, toRaw(token)) }}
   <div
     class="relative mx-auto grid max-w-content gap-12 transition-opacity duration-300 md:grid-cols-[1fr,2fr]"
   >
@@ -72,7 +72,7 @@ const handlePreviewImage = () => {
         ><div slot="content">
           <AssetImage
             class="min-h-[260px] cursor-pointer rounded-t-12"
-            :src="assetImage"
+            :image="assetImage"
             @click="handlePreviewImage"
           />
           <div class="relative p-4">
@@ -107,7 +107,7 @@ const handlePreviewImage = () => {
           :balance="asset?.balance"
           :symbol="asset?.tokenSymbol"
           :decimals="0"
-          :profile-image-url="profileAvatar"
+          :profile-image-url="profileAvatar?.url"
           :message="$formatMessage('nft_details_own')"
         />
 

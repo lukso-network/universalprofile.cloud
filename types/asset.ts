@@ -71,3 +71,5 @@ export type SendQueryParams = {
   tokenId?: string
   amount?: string
 }
+
+export type ImageVerifiedStatus = 'verified' | 'invalid' | 'unverified'

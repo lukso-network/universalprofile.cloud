@@ -22,7 +22,7 @@ const profileAvatar = useProfileAvatar(creatorProfile, 24)
     <lukso-profile
       v-else
       size="x-small"
-      :profile-url="profileAvatar"
+      :profile-url="profileAvatar?.url"
       :profile-address="creatorProfile?.address"
       has-identicon
     ></lukso-profile>
