@@ -29,8 +29,6 @@ const handleNavigateRelayerDashboard = () => {
   window.open(relayerDappDashboardUrl(), '_self')
 }
 
-const isRelayerProfile = computed(() => true) // TODO add check
-
 onMounted(() => {
   window.addEventListener('click', handleOutsideDropdown)
 })
@@ -56,7 +54,6 @@ onUnmounted(() => {
       :class="isOpen ? 'block' : 'hidden'"
     >
       <lukso-button
-        v-if="isRelayerProfile"
         variant="text"
         custom-class="text-12 nav-apax-12-medium-uppercase"
         class="group"
