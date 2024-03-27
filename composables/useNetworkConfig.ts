@@ -28,7 +28,6 @@ export const useNetworkConfig = (): NetworkInfo[] => {
       chainId: MAINNET_CHAIN_ID,
       rpcNodes: [
         {
-          // host: 'https://lyx-lukso.nownodes.io',
           host: 'https://lukso.nownodes.io',
           headers: [
             {
