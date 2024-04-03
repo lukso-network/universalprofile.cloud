@@ -2,7 +2,6 @@
 
 ## Status
 
-- develop [![Lint, Test, Build](https://github.com/lukso-network/wallet.universalprofile.cloud/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/lukso-network/wallet.universalprofile.cloud/actions/workflows/ci.yml)
 - main [![Lint, Test, Build](https://github.com/lukso-network/wallet.universalprofile.cloud/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/lukso-network/wallet.universalprofile.cloud/actions/workflows/ci.yml)
 
 Wallet that will let you see the Tokens ([LSP7](https://docs.lukso.tech/standards/nft-2.0/LSP7-Digital-Asset)) and NFTs ([LSP8](https://docs.lukso.tech/standards/nft-2.0/LSP8-Identifiable-Digital-Asset)) associated to a specific LUKSO's Universal Profile address.
@@ -14,12 +13,6 @@ This project is deployed via [Cloudflare pages](https://pages.cloudflare.com/).
 ### Preview
 
 When you create a PR, a preview URL will be appended to the PR discussion.
-
-### Staging
-
-Branch: `develop`
-
-- <https://develop.wallet-universalprofile-cloud.pages.dev/>
 
 ### Production
 
