@@ -17,7 +17,8 @@ export async function resolveProfile(_address: string): Promise<{
       address: Address
       checksummed: Address
     }
-    return { address, checksummed, resolved, link }
+    // @ is a special character we don't want to escape
+    return { address, checksummed, resolved, link: link.replace(/%40/g, '@') }
   } catch {
     if (!isAddress(_address)) throw new Error('Invalid address')
     const checksummed = toChecksumAddress(_address) as Address

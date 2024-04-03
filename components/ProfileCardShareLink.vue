@@ -2,10 +2,9 @@
 import { useElementSize } from '@vueuse/core'
 
 type Props = {
-  resolvedName?: string
+  profile?: Profile
 }
 
-const config = useRuntimeConfig()
 const props = defineProps<Props>()
 const buttonRef = ref()
 const buttonWidth = ref('auto')
@@ -24,7 +23,7 @@ const handleCopy = () => {
 }
 
 const link = computed(() => {
-  return `${config.public.PROFILE_LINK_URL}/${props.resolvedName}`
+  return props.profile?.link || ''
 })
 
 onMounted(async () => {

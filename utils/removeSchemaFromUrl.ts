@@ -10,5 +10,5 @@ export const removeSchemaFromUrl = (url?: string): string => {
     return ''
   }
 
-  return encodeURI(url.replace(/(^\w+:|^)\/\//, ''))
+  return url.replace(/(^\w+:|^)\/\//, '')
 }

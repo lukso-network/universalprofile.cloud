@@ -34,7 +34,7 @@ const handlePreviewProfileImage = () => {
       class="-mx-4 -mt-6 mb-22 w-screen sm:mx-0 sm:mt-0 sm:w-full"
     >
       <div slot="content" class="relative flex size-full flex-col items-center">
-        <ProfileCardShareLink :resolved-name="profile?.resolved" />
+        <ProfileCardShareLink :profile="profile" />
         <div class="relative bottom-[-195px] text-center">
           <div class="flex cursor-pointer flex-col items-center">
             <lukso-profile
