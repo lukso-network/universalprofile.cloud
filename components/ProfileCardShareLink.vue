@@ -5,6 +5,7 @@ type Props = {
   resolvedName?: string
 }
 
+const config = useRuntimeConfig()
 const props = defineProps<Props>()
 const buttonRef = ref()
 const buttonWidth = ref('auto')
@@ -23,7 +24,7 @@ const handleCopy = () => {
 }
 
 const link = computed(() => {
-  return `https://m.profile.link/${props.resolvedName}`
+  return `${config.public.PROFILE_LINK_URL}/${props.resolvedName}`
 })
 
 onMounted(async () => {
