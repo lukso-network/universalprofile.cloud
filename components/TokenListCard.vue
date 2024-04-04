@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import {
-  useIntersectionObserver,
-  useResizeObserver,
-  useElementSize,
-} from '@vueuse/core'
+import { useIntersectionObserver, useElementSize } from '@vueuse/core'
 
 type Props = {
   asset: Asset
@@ -21,20 +17,11 @@ const token = useToken()(asset)
 const contentRef = ref()
 const symbolRef = ref()
 const balanceRef = ref()
-const balanceWidthPx = ref(0)
 
 const assetImage = useAssetImage(token, true, 260)
 
 const contentWidth = useElementSize(contentRef)
 const symbolWidth = useElementSize(symbolRef)
-
-const calculateBalanceWidth = () => {
-  const SPACING = 38
-  const rect = balanceRef.value?.getBoundingClientRect() || { left: 0 }
-  const left = rect.left - contentRef.value.offsetLeft + SPACING
-  balanceWidthPx.value =
-    contentWidth.width.value - left - symbolWidth.width.value
-}
 
 const handleShowAsset = () => {
   try {
@@ -60,10 +47,6 @@ const handleSendAsset = (event: Event) => {
   }
 }
 
-useResizeObserver(contentRef, () => {
-  calculateBalanceWidth()
-})
-
 onMounted(() => {
   setTimeout(() => {
     useIntersectionObserver(
@@ -75,13 +58,20 @@ onMounted(() => {
   }, 1)
 })
 
-watch(
-  () => token.value?.isLoading,
-  async () => {
-    await nextTick()
-    calculateBalanceWidth()
-  }
-)
+const balanceLeft = computed(() => {
+  contentWidth.width.value
+  const SPACING = 15 - 32 /* margin */
+  const left =
+    balanceRef.value?.offsetLeft - contentRef.value?.offsetLeft - SPACING
+  return left
+})
+
+const balanceWidthPx = computed(() => {
+  token.value?.isLoading
+  const width =
+    contentWidth.width.value - balanceLeft.value - symbolWidth.width.value
+  return width
+})
 
 const isLoadedToken = computed(() => token.value && !token.value.isLoading)
 const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
@@ -136,17 +126,16 @@ const isLoadedMetadata = computed(
               class="heading-inter-21-semi-bold flex items-center"
             >
               <span
-                ref="balanceRef"
                 v-if="token?.balance"
-                class="truncate"
+                ref="balanceRef"
+                class="justify-self-start truncate"
                 :style="{
                   'max-width': `${balanceWidthPx}px`,
                 }"
                 :title="
-                  (console.log(token),
                   $formatNumber(
                     fromWeiWithDecimals(token.balance, token.decimals)
-                  ))
+                  )
                 "
                 >{{
                   $formatNumber(
@@ -157,7 +146,7 @@ const isLoadedMetadata = computed(
               <span v-else>0</span>
               <span
                 ref="symbolRef"
-                class="paragraph-inter-14-semi-bold pl-2 text-neutral-60"
+                class="paragraph-inter-14-semi-bold justify-self-end pl-2 text-neutral-60"
                 >{{ token?.tokenSymbol }}</span
               >
             </div>

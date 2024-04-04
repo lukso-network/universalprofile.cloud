@@ -1,25 +1,32 @@
 <script setup lang="ts">
-import { useResizeObserver, useElementSize } from '@vueuse/core'
+import { useElementSize } from '@vueuse/core'
 
 const connectedProfile = useProfile().connectedProfile()
 const { isConnected, isTestnet } = storeToRefs(useAppStore())
 const viewedProfile = useProfile().viewedProfile()
 const contentRef = ref()
 const symbolRef = ref()
-const balanceWidthPx = ref(0)
 const balanceRef = ref()
 const asset = useLyxToken()
 
 const contentWidth = useElementSize(contentRef)
 const symbolWidth = useElementSize(symbolRef)
 
-const calculateBalanceWidth = () => {
-  const SPACING = 38
-  const rect = balanceRef.value?.getBoundingClientRect() || { left: 0 }
-  const left = rect.left - contentRef.value.offsetLeft + SPACING
-  balanceWidthPx.value =
-    contentWidth.width.value - left - symbolWidth.width.value
-}
+const balanceLeft = computed(() => {
+  contentWidth.width.value
+  const SPACING = 15 /* margin */
+  const left =
+    balanceRef.value?.offsetLeft - contentRef.value?.offsetLeft - SPACING
+  return left
+})
+
+const balanceWidthPx = computed(() => {
+  viewedProfile.value?.balance
+  asset.value?.decimals
+  const width =
+    contentWidth.width.value - balanceLeft.value - symbolWidth.width.value
+  return width
+})
 
 const handleSendAsset = (event: Event) => {
   try {
@@ -53,10 +60,6 @@ const handleBuyLyx = (event: Event) => {
     }
   }
 }
-
-useResizeObserver(contentRef, () => {
-  calculateBalanceWidth()
-})
 </script>
 
 <template>
@@ -82,13 +85,11 @@ useResizeObserver(contentRef, () => {
         </div>
         <div class="flex w-full flex-col">
           <div class="heading-inter-14-bold pb-1">LUKSO</div>
-          <div
-            ref="balanceRef"
-            class="heading-inter-21-semi-bold flex items-center pb-1"
-          >
+          <div class="heading-inter-21-semi-bold flex items-center pb-1">
             <span
               v-if="viewedProfile?.balance"
-              class="truncate"
+              ref="balanceRef"
+              class="justify-self-start truncate"
               :style="{
                 'max-width': `${balanceWidthPx}px`,
               }"
@@ -106,7 +107,7 @@ useResizeObserver(contentRef, () => {
             <span v-else>0</span>
             <span
               ref="symbolRef"
-              class="paragraph-inter-14-semi-bold pl-2 text-neutral-60"
+              class="paragraph-inter-14-semi-bold justify-self-end pl-2 text-neutral-60"
               >{{ asset.tokenSymbol }}</span
             >
           </div>
