@@ -1,6 +1,7 @@
 // YOU CANNOT IMPORT ANYTHING WHICH USES Buffer or so.
 
 import debug from 'debug'
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import { Buffer } from 'buffer'
 
 import {
