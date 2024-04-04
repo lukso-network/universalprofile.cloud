@@ -61,7 +61,7 @@ const handleBuyLyx = (event: Event) => {
         <div class="flex w-full flex-col">
           <div class="heading-inter-14-bold pb-1">LUKSO</div>
           <div
-            class="heading-inter-21-semi-bold grid grid-cols-[auto,max-content] items-center pb-1"
+            class="heading-inter-21-semi-bold grid grid-cols-[minmax(auto,max-content),max-content] items-center pb-1"
           >
             <span
               v-if="viewedProfile?.balance"

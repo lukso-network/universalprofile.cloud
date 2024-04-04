@@ -101,7 +101,7 @@ const isLoadedMetadata = computed(
             </div>
             <div
               v-if="isLoadedToken"
-              class="heading-inter-21-semi-bold grid grid-cols-[auto,max-content] items-center"
+              class="heading-inter-21-semi-bold grid grid-cols-[minmax(auto,max-content),max-content] items-center"
             >
               <span
                 v-if="token?.balance"
