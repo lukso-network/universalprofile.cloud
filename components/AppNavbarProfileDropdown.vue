@@ -39,7 +39,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="relative cursor-pointer">
+  <div class="relative cursor-pointer pl-4">
     <lukso-profile
       size="small"
       :profile-url="avatarImage?.url"
