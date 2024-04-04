@@ -15,7 +15,6 @@ import {
 import { type AbiItem, type Hex, toNumber } from 'web3-utils'
 import ABICoder from 'web3-eth-abi'
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
-import { INTERFACE_IDS as INTERFACE_IDS_v12 } from '@lukso/lsp-smart-contracts-12'
 
 import LSP2FetcherWithMulticall3Contract from '@/shared/abis/LSP2FetcherWithMulticall3.json'
 import { LUKSO_PROXY_API } from '@/shared/config'
@@ -906,32 +905,46 @@ async function doQueries() {
   }
 }
 
+// TODO: import this from next release of `@lukso/lsp-smart-contracts@0.15.0
+const INTERFACE_ID_LSP7_PREVIOUS = {
+  '0xb3c4928f': 'v0.14.0',
+  '0xdaa746b7': 'v0.12.0',
+}
+
+// TODO: import this from next release of `@lukso/lsp-smart-contracts@0.15.0
+const INTERFACE_ID_LSP8_PREVIOUS = {
+  '0xecad9f75': 'v0.13.0',
+  '0x30dc5278': 'v0.12.0',
+}
+
+const LSP7_INTERFACE_IDS = [
+  INTERFACE_IDS.LSP7DigitalAsset,
+  ...Object.keys(INTERFACE_ID_LSP7_PREVIOUS),
+] as `0x${string}`[]
+
+const LSP8_INTERFACE_IDS = [
+  INTERFACE_IDS.LSP8IdentifiableDigitalAsset,
+  ...Object.keys(INTERFACE_ID_LSP8_PREVIOUS),
+] as `0x${string}`[]
+
 export type Interface = {
   interfaceId: `0x${string}`
   standard: 'LSP3Profile' | 'LSP7DigitalAsset' | 'LSP8IdentifiableDigitalAsset'
 }
+
 export const interfacesToCheck: Interface[] = [
   {
     interfaceId: INTERFACE_IDS.LSP0ERC725Account as `0x${string}`,
     standard: 'LSP3Profile',
   },
-  {
-    interfaceId: INTERFACE_IDS.LSP7DigitalAsset as `0x${string}`,
+  ...LSP7_INTERFACE_IDS.map<Interface>(interfaceId => ({
+    interfaceId,
     standard: 'LSP7DigitalAsset',
-  },
-  {
-    interfaceId: INTERFACE_IDS_v12.LSP7DigitalAsset as `0x${string}`,
-    standard: 'LSP7DigitalAsset',
-  },
-  {
-    interfaceId: INTERFACE_IDS.LSP8IdentifiableDigitalAsset as `0x${string}`,
+  })),
+  ...LSP8_INTERFACE_IDS.map<Interface>(interfaceId => ({
+    interfaceId,
     standard: 'LSP8IdentifiableDigitalAsset',
-  },
-  {
-    interfaceId:
-      INTERFACE_IDS_v12.LSP8IdentifiableDigitalAsset as `0x${string}`,
-    standard: 'LSP8IdentifiableDigitalAsset',
-  },
+  })),
 ]
 
 export function triggerQuery() {
