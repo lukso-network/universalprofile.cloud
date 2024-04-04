@@ -67,13 +67,12 @@ onMounted(async () => {
       <div
         ref="buttonRef"
         class="paragraph-inter-12-medium transition-all duration-500 ease-out"
-        :style="{
-          width: hover ? buttonFullWidth : buttonWidth,
-        }"
       >
-        <div class="invisible flex text-nowrap text-left group-hover:visible">
+        <div
+          class="flex w-0 items-center text-nowrap text-left group-hover:w-full"
+        >
           {{ $formatMessage('share_link_copy') }}
-          <div class="ml-1 text-neutral-50">
+          <div class="m-1 mr-1.5 text-neutral-50">
             {{ removeSchemaFromUrl(link) }}
           </div>
         </div>
