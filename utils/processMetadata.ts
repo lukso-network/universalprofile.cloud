@@ -111,7 +111,10 @@ export async function processMetadata(
  * @param data JSON data to process
  * @returns processed JSON data
  */
-export async function browserProcessMetadata(data: any): Promise<any> {
+export async function browserProcessMetadata(
+  data: any,
+  keccak256: (data: string) => string
+): Promise<any> {
   return await fetch('/hash-images', {
     method: 'POST',
     body: JSON.stringify(data),

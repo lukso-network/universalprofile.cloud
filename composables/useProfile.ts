@@ -1,4 +1,5 @@
 import { useQueries } from '@tanstack/vue-query'
+import { keccak256 } from 'web3-utils'
 
 import { browserProcessMetadata } from '@/utils/processMetadata'
 
@@ -32,7 +33,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               chainId,
               address: profileAddress,
               keyName: 'LSP3Profile',
-              process: browserProcessMetadata,
+              process: data => browserProcessMetadata(data, keccak256),
             }),
             // 2
             queryGetData({
