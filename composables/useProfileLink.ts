@@ -7,11 +7,9 @@ export async function resolveProfile(_address: string): Promise<{
   address: Address
   checksummed: Address
 }> {
-  const config = useRuntimeConfig()
-
   try {
     const { resolved, link, address, checksummed } = (await fetcher({
-      url: `${config.public.PROFILE_LINK_URL}/${_address}/resolve`,
+      url: `${BASE_PROFILE_LINK_URL}/${_address}/resolve`,
       method: 'GET',
     })) as {
       resolved: string
@@ -28,7 +26,7 @@ export async function resolveProfile(_address: string): Promise<{
       address: _address as Address,
       checksummed: checksummed,
       resolved: _address as string,
-      link: `${config.public.PROFILE_LINK_URL}/${checksummed}`,
+      link: `${BASE_PROFILE_LINK_URL}/${checksummed}`,
     }
   }
 }

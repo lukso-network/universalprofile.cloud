@@ -62,6 +62,8 @@ export const BASE_RELAYER_DAPP_URL = 'https://my.universalprofile.cloud'
 // base wallet address
 export const BASE_WALLET_URL = 'https://wallet.universalprofile.cloud'
 
+export const BASE_PROFILE_LINK_URL = 'https://profile.link'
+
 // default currency symbol
 export const DEFAULT_CURRENCY_SYMBOL = 'USD'
 
