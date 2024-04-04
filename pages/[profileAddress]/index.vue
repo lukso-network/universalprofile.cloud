@@ -108,7 +108,7 @@ const isLoadingAssets = computed(() =>
       <ProfileCard />
       <ProfileDetails />
       <div>
-        <ul class="grid grid-cols-2 gap-4 pt-10 sm:flex">
+        <ul class="grid grid-cols-2 gap-4 pt-6 sm:flex sm:pt-10">
           <li>
             <lukso-button
               :size="isMobile ? 'medium' : 'small'"

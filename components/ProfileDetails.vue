@@ -39,7 +39,7 @@ const hasTags = computed(
     </div>
     <ul
       v-if="hasLinks"
-      class="mt-3 flex flex-col flex-wrap justify-center gap-x-4 gap-y-2 sm:flex-row"
+      class="mt-4 flex flex-col flex-wrap justify-center gap-x-4 gap-y-2 sm:flex-row"
     >
       <li
         v-for="(link, index) in viewedProfile?.links"
