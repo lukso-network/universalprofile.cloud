@@ -5456,6 +5456,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/mime-types@npm:^2":
+  version: 2.1.4
+  resolution: "@types/mime-types@npm:2.1.4"
+  checksum: f8c521c54ee0c0b9f90a65356a80b1413ed27ccdc94f5c7ebb3de5d63cedb559cd2610ea55b4100805c7349606a920d96e54f2d16b2f0afa6b7cd5253967ccc9
+  languageName: node
+  linkType: hard
+
 "@types/ms@npm:*":
   version: 0.7.34
   resolution: "@types/ms@npm:0.7.34"
@@ -14072,23 +14079,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime-db@npm:~1.24.0":
-  version: 1.24.0
-  resolution: "mime-db@npm:1.24.0"
-  checksum: dac6a23b77c236175fd9755dcb185813640d4bb42fd3e31cbe3f3d0a9826942ecce05ab790d70d8cf1a3689602d23ff3ea51382b59cd91892c8dbecdee2d4930
-  languageName: node
-  linkType: hard
-
-"mime-to-extensions@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "mime-to-extensions@npm:1.0.2"
-  dependencies:
-    mime-db: "npm:~1.24.0"
-  checksum: 869efbbc806c38f0114ead24099c9bdd2492eb88a07e720d5d9c4684e2de99da5214bbebae0632ffc359c1eed4ad03889420561a864c19cbb311bc9e6bbb9a8d
-  languageName: node
-  linkType: hard
-
-"mime-types@npm:^2.1.12, mime-types@npm:^2.1.16, mime-types@npm:^2.1.18, mime-types@npm:~2.1.19, mime-types@npm:~2.1.24, mime-types@npm:~2.1.34":
+"mime-types@npm:^2.1.12, mime-types@npm:^2.1.16, mime-types@npm:^2.1.18, mime-types@npm:^2.1.35, mime-types@npm:~2.1.19, mime-types@npm:~2.1.24, mime-types@npm:~2.1.34":
   version: 2.1.35
   resolution: "mime-types@npm:2.1.35"
   dependencies:
@@ -20666,6 +20657,7 @@ __metadata:
     "@typechain/web3-v1": "npm:^6.0.7"
     "@types/debug": "npm:^4"
     "@types/fs-extra": "npm:11.0.4"
+    "@types/mime-types": "npm:^2"
     "@types/node": "npm:^20.11.24"
     "@types/randombytes": "npm:2.0.3"
     "@types/three": "npm:^0.162.0"
@@ -20697,7 +20689,7 @@ __metadata:
     js-sha3: "npm:^0.9.3"
     limiter: "npm:^2.1.0"
     lint-staged: "npm:15.2.2"
-    mime-to-extensions: "npm:^1.0.2"
+    mime-types: "npm:^2.1.35"
     npm-run-all: "npm:4.1.5"
     nuxt: "npm:^3.10.3"
     pinia: "npm:^2.1.7"

@@ -38,4 +38,6 @@ test('getFileExtension', () => {
   expect(getFileExtension('video/x-msvideo')).toEqual('avi')
   expect(getFileExtension('image/png')).toEqual('png')
   expect(getFileExtension('png')).toEqual('png')
+  expect(getFileExtension('png')).toEqual('png')
+  expect(getFileExtension('model/gltf-binary')).toEqual('glb')
 })
