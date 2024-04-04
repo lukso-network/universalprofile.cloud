@@ -1,5 +1,6 @@
 import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
+import { keccak256 } from 'web3-utils'
 
 import { browserProcessMetadata } from '@/utils/processMetadata'
 import {
@@ -12,7 +13,6 @@ import type {
   LSP4DigitalAssetMetadata,
   LSP4DigitalAssetMetadataJSON,
 } from '@/types/asset'
-import { keccak256 } from 'web3-utils'
 
 export function useToken() {
   return (_token?: MaybeRef<Asset | null | undefined>) => {
