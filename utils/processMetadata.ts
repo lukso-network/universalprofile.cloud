@@ -31,7 +31,7 @@ export async function processMetadata(
           encoding === 'base64' ? Buffer.from(image, 'base64') : image
         const hash = keccak256(imageBytes).replace(/^(0x)?/, '0x')
         let verified: boolean | undefined = undefined
-        if (data.verification) {
+        if (data.verification && data.verification.method !== '0x00000000') {
           verified = data.verification?.data && hash === data.verification?.data
         }
         const key = `/hashed-images/${hash}`

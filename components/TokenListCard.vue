@@ -25,14 +25,18 @@ const balanceWidthPx = ref(0)
 
 const assetImage = useAssetImage(token, true, 260)
 
+const contentWidth = useElementSize(contentRef.value)
+const logoWidth = useElementSize(logoRef.value)
+const symbolWidth = useElementSize(symbolRef.value)
+
 const calculateBalanceWidth = () => {
   const SPACING = 24 + 32 // gap + padding
-  const { width: contentWidth } = useElementSize(contentRef.value)
-  const { width: logoWidth } = useElementSize(logoRef.value)
-  const { width: symbolWidth } = useElementSize(symbolRef.value)
 
   balanceWidthPx.value =
-    contentWidth.value - logoWidth.value - symbolWidth.value - SPACING
+    contentWidth.width.value -
+    logoWidth.width.value -
+    symbolWidth.width.value -
+    SPACING
 }
 
 const handleShowAsset = () => {
@@ -59,6 +63,10 @@ const handleSendAsset = (event: Event) => {
   }
 }
 
+useResizeObserver(contentRef, () => {
+  calculateBalanceWidth()
+})
+
 onMounted(() => {
   setTimeout(() => {
     useIntersectionObserver(
@@ -68,10 +76,6 @@ onMounted(() => {
       }
     )
   }, 1)
-
-  useResizeObserver(contentRef, () => {
-    calculateBalanceWidth()
-  })
 })
 
 watch(

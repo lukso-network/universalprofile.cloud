@@ -10,14 +10,18 @@ const symbolRef = ref()
 const balanceWidthPx = ref(0)
 const asset = useLyxToken()
 
+const contentWidth = useElementSize(contentRef.value)
+const logoWidth = useElementSize(logoRef.value)
+const symbolWidth = useElementSize(symbolRef.value)
+
 const calculateBalanceWidth = () => {
   const SPACING = 24 + 32 // gap + padding
-  const { width: contentWidth } = useElementSize(contentRef.value)
-  const { width: logoWidth } = useElementSize(logoRef.value)
-  const { width: symbolWidth } = useElementSize(symbolRef.value)
 
   balanceWidthPx.value =
-    contentWidth.value - logoWidth.value - symbolWidth.value - SPACING
+    contentWidth.width.value -
+    logoWidth.width.value -
+    symbolWidth.width.value -
+    SPACING
 }
 
 const handleSendAsset = (event: Event) => {
@@ -53,10 +57,8 @@ const handleBuyLyx = (event: Event) => {
   }
 }
 
-onMounted(() => {
-  useResizeObserver(contentRef, () => {
-    calculateBalanceWidth()
-  })
+useResizeObserver(contentRef, () => {
+  calculateBalanceWidth()
 })
 </script>
 

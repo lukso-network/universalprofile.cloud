@@ -41,12 +41,16 @@ const linkLabel = computed(() => {
   return props.profile?.address
 })
 
+const buttonSize = useElementSize(buttonRef)
+
+watch(buttonSize, () => {
+  buttonFullWidth.value = `${buttonSize.width.value + 10}px`
+})
+
 onMounted(async () => {
   await nextTick()
 
   buttonWidth.value = '0px'
-  const { width } = useElementSize(buttonRef.value)
-  buttonFullWidth.value = `${width.value + 10}px`
 })
 </script>
 

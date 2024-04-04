@@ -40,10 +40,10 @@ const isVerificationInvalid = computed(
   () => unref(props.image)?.verified === 'invalid'
 )
 
-const isLarge = computed(() => {
-  const { width } = useElementSize(contentRef.value)
+const contentWidth = useElementSize(contentRef.value)
 
-  return width.value > 150
+const isLarge = computed(() => {
+  return contentWidth.width.value > 150
 })
 
 watchEffect(() => {
