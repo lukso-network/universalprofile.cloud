@@ -58,6 +58,8 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               queryFn: async () => {
                 return await resolveProfile(profileAddress)
               },
+              refetchInterval: 120_000,
+              staleTime: 250,
             },
             // 5-10
             ...interfacesToCheck.map(({ interfaceId }) =>

@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import {
-  useIntersectionObserver,
-  useResizeObserver,
-  useElementSize,
-} from '@vueuse/core'
+import { useIntersectionObserver } from '@vueuse/core'
 
 type Props = {
   asset: Asset
@@ -18,23 +14,8 @@ const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const token = useToken()(asset)
-const contentRef = ref()
-const symbolRef = ref()
-const balanceRef = ref()
-const balanceWidthPx = ref(0)
 
 const assetImage = useAssetImage(token, true, 260)
-
-const contentWidth = useElementSize(contentRef)
-const symbolWidth = useElementSize(symbolRef)
-
-const calculateBalanceWidth = () => {
-  const SPACING = 38
-  const rect = balanceRef.value?.getBoundingClientRect() || { left: 0 }
-  const left = rect.left - contentRef.value.offsetLeft + SPACING
-  balanceWidthPx.value =
-    contentWidth.width.value - left - symbolWidth.width.value
-}
 
 const handleShowAsset = () => {
   try {
@@ -60,10 +41,6 @@ const handleSendAsset = (event: Event) => {
   }
 }
 
-useResizeObserver(contentRef, () => {
-  calculateBalanceWidth()
-})
-
 onMounted(() => {
   setTimeout(() => {
     useIntersectionObserver(
@@ -74,14 +51,6 @@ onMounted(() => {
     )
   }, 1)
 })
-
-watch(
-  () => token.value?.isLoading,
-  async () => {
-    await nextTick()
-    calculateBalanceWidth()
-  }
-)
 
 const isLoadedToken = computed(() => token.value && !token.value.isLoading)
 const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
@@ -101,7 +70,6 @@ const isLoadedMetadata = computed(
       ><div
         slot="content"
         class="grid h-full grid-rows-[max-content,auto] overflow-hidden p-4"
-        ref="contentRef"
       >
         <div class="flex h-7 items-start justify-end">
           <AssetStandardBadge :asset="asset" />
@@ -133,20 +101,15 @@ const isLoadedMetadata = computed(
             </div>
             <div
               v-if="isLoadedToken"
-              class="heading-inter-21-semi-bold flex items-center"
+              class="heading-inter-21-semi-bold grid grid-cols-[minmax(auto,max-content),max-content] items-center"
             >
               <span
-                ref="balanceRef"
                 v-if="token?.balance"
                 class="truncate"
-                :style="{
-                  'max-width': `${balanceWidthPx}px`,
-                }"
                 :title="
-                  (console.log(token),
                   $formatNumber(
                     fromWeiWithDecimals(token.balance, token.decimals)
-                  ))
+                  )
                 "
                 >{{
                   $formatNumber(
@@ -155,11 +118,9 @@ const isLoadedMetadata = computed(
                 }}</span
               >
               <span v-else>0</span>
-              <span
-                ref="symbolRef"
-                class="paragraph-inter-14-semi-bold pl-2 text-neutral-60"
-                >{{ token?.tokenSymbol }}</span
-              >
+              <span class="paragraph-inter-14-semi-bold pl-2 text-neutral-60">{{
+                token?.tokenSymbol
+              }}</span>
             </div>
             <div v-else class="grid grid-cols-[2fr,1fr] items-center gap-2">
               <AppPlaceholderLine class="h-[26px] w-full" />

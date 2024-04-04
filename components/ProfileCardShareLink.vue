@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useElementSize } from '@vueuse/core'
-
 type Props = {
   profile?: Profile
 }
@@ -8,7 +6,6 @@ type Props = {
 const props = defineProps<Props>()
 const buttonRef = ref()
 const buttonWidth = ref('auto')
-const buttonFullWidth = ref('auto')
 const hover = ref(false)
 const isCopied = ref(false)
 const { currentNetwork } = storeToRefs(useAppStore())
@@ -41,14 +38,9 @@ const linkLabel = computed(() => {
   return props.profile?.address
 })
 
-const buttonSize = useElementSize(buttonRef)
+// const buttonSize = useElementSize(buttonRef)
 
-watch(
-  () => buttonSize.width.value,
-  () => {
-    buttonFullWidth.value = `${buttonSize.width.value + 10}px`
-  }
-)
+// const buttonFullWidth = computed(() => `${buttonSize.width.value + 10}px`)
 
 onMounted(async () => {
   await nextTick()

@@ -133,7 +133,7 @@ export default defineNuxtConfig({
       SENTRY_DSN: process.env.NUXT_PUBLIC_SENTRY_DSN,
       SENTRY_ENVIRONMENT: process.env.NUXT_PUBLIC_SENTRY_ENVIRONMENT,
       TRANSAK_API_KEY: process.env.NUXT_PUBLIC_TRANSAK_API_KEY,
-      BUILD_VERSION: process.env.NUXT_PUBLIC_BUILD_VERSION || 'debug',
+      BUILD_VERSION: process.env.GITHUB_SHA || 'debug',
     },
   },
   pwa: {

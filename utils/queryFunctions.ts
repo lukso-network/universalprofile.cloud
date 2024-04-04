@@ -15,6 +15,8 @@ import {
 import { type AbiItem, type Hex, toNumber } from 'web3-utils'
 import ABICoder from 'web3-eth-abi'
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import { Buffer } from 'buffer'
 
 import LSP2FetcherWithMulticall3Contract from '@/shared/abis/LSP2FetcherWithMulticall3.json'
 import { LUKSO_PROXY_API } from '@/shared/config'
@@ -185,7 +187,8 @@ async function convert<T = any>(
       const [, encoding, data] =
         (info[0]?.value as any)?.url.match(/^data:.*?;(.*?),(.*)$/) || []
       if (data) {
-        let output = encoding === 'base64' ? atob(data) : data
+        let output =
+          encoding === 'base64' ? Buffer.from(data, 'base64').toString() : data
         try {
           output = JSON.parse(output)
         } catch {

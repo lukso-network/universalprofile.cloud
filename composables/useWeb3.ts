@@ -56,7 +56,7 @@ export default function useWeb3(providerName: string) {
     sendTransaction: async (transaction: TransactionConfig) => {
       return await getWeb3()
         .eth.sendTransaction(transaction)
-        .on('receipt', function (receipt: any) {
+        .on('receipt', (receipt: any) => {
           console.log(receipt)
         })
         .once('sending', payload => {
