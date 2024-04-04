@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const viewedProfile = useProfile().viewedProfile()
+const { isMobile } = useDevice()
 
 const hasLinks = computed(
   () => viewedProfile?.value?.links && viewedProfile.value.links?.length > 0
@@ -46,14 +47,15 @@ const hasTags = computed(
         class="inline-flex"
       >
         <lukso-button
-          size="small"
+          :size="isMobile ? 'medium' : 'small'"
           :href="link.url"
           is-link
           variant="secondary"
           class="transition hover:opacity-70"
           is-full-width
-          >{{ link.title }}
-          <lukso-icon name="link-3" size="small" class="ml-2"></lukso-icon>
+        >
+          <lukso-icon name="link" size="medium" class="mr-2"></lukso-icon>
+          {{ link.title }}
         </lukso-button>
       </li>
     </ul>

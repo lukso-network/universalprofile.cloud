@@ -3,6 +3,7 @@ import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
 const { assetFilter } = storeToRefs(useAppStore())
 const viewedProfileAddress = getCurrentProfileAddress()
+const { isMobile } = useDevice()
 
 const viewedProfile = useProfile().getProfile(viewedProfileAddress)
 const allTokens = useProfileAssets()(viewedProfileAddress)
@@ -110,7 +111,7 @@ const isLoadingAssets = computed(() =>
         <ul class="grid grid-cols-2 gap-4 pt-10 sm:flex">
           <li>
             <lukso-button
-              size="small"
+              :size="isMobile ? 'medium' : 'small'"
               variant="secondary"
               :is-active="assetFilter === AssetFilter.owned ? true : undefined"
               is-full-width
@@ -121,7 +122,7 @@ const isLoadingAssets = computed(() =>
           </li>
           <li>
             <lukso-button
-              size="small"
+              :size="isMobile ? 'medium' : 'small'"
               variant="secondary"
               :is-active="
                 assetFilter === AssetFilter.created ? true : undefined
