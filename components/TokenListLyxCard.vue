@@ -5,23 +5,20 @@ const connectedProfile = useProfile().connectedProfile()
 const { isConnected, isTestnet } = storeToRefs(useAppStore())
 const viewedProfile = useProfile().viewedProfile()
 const contentRef = ref()
-const logoRef = ref()
 const symbolRef = ref()
 const balanceWidthPx = ref(0)
+const balanceRef = ref()
 const asset = useLyxToken()
 
-const contentWidth = useElementSize(contentRef.value)
-const logoWidth = useElementSize(logoRef.value)
-const symbolWidth = useElementSize(symbolRef.value)
+const contentWidth = useElementSize(contentRef)
+const symbolWidth = useElementSize(symbolRef)
 
 const calculateBalanceWidth = () => {
-  const SPACING = 24 + 32 // gap + padding
-
+  const SPACING = 38
+  const rect = balanceRef.value?.getBoundingClientRect() || { left: 0 }
+  const left = rect.left - contentRef.value.offsetLeft + SPACING
   balanceWidthPx.value =
-    contentWidth.width.value -
-    logoWidth.width.value -
-    symbolWidth.width.value -
-    SPACING
+    contentWidth.width.value - left - symbolWidth.width.value
 }
 
 const handleSendAsset = (event: Event) => {
@@ -72,10 +69,10 @@ useResizeObserver(contentRef, () => {
     ><div
       ref="contentRef"
       slot="content"
-      class="flex flex-col justify-center p-4 pt-11"
+      class="flex flex-col justify-center overflow-hidden p-4 pt-11"
     >
       <div class="flex gap-6">
-        <div ref="logoRef" class="flex flex-col items-center pl-2">
+        <div class="flex flex-col items-center pl-2">
           <div class="rounded-full border border-neutral-90 p-0.5">
             <lukso-profile
               size="medium"
@@ -85,7 +82,10 @@ useResizeObserver(contentRef, () => {
         </div>
         <div class="flex w-full flex-col">
           <div class="heading-inter-14-bold pb-1">LUKSO</div>
-          <div class="heading-inter-21-semi-bold flex items-center pb-1">
+          <div
+            ref="balanceRef"
+            class="heading-inter-21-semi-bold flex items-center pb-1"
+          >
             <span
               v-if="viewedProfile?.balance"
               class="truncate"

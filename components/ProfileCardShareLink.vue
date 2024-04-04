@@ -43,9 +43,12 @@ const linkLabel = computed(() => {
 
 const buttonSize = useElementSize(buttonRef)
 
-watch(buttonSize, () => {
-  buttonFullWidth.value = `${buttonSize.width.value + 10}px`
-})
+watch(
+  () => buttonSize.width.value,
+  () => {
+    buttonFullWidth.value = `${buttonSize.width.value + 10}px`
+  }
+)
 
 onMounted(async () => {
   await nextTick()

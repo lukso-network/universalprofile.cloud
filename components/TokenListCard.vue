@@ -19,24 +19,21 @@ const target = ref<HTMLElement | null>(null)
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const token = useToken()(asset)
 const contentRef = ref()
-const logoRef = ref()
 const symbolRef = ref()
+const balanceRef = ref()
 const balanceWidthPx = ref(0)
 
 const assetImage = useAssetImage(token, true, 260)
 
-const contentWidth = useElementSize(contentRef.value)
-const logoWidth = useElementSize(logoRef.value)
-const symbolWidth = useElementSize(symbolRef.value)
+const contentWidth = useElementSize(contentRef)
+const symbolWidth = useElementSize(symbolRef)
 
 const calculateBalanceWidth = () => {
-  const SPACING = 24 + 32 // gap + padding
-
+  const SPACING = 38
+  const rect = balanceRef.value?.getBoundingClientRect() || { left: 0 }
+  const left = rect.left - contentRef.value.offsetLeft + SPACING
   balanceWidthPx.value =
-    contentWidth.width.value -
-    logoWidth.width.value -
-    symbolWidth.width.value -
-    SPACING
+    contentWidth.width.value - left - symbolWidth.width.value
 }
 
 const handleShowAsset = () => {
@@ -103,14 +100,14 @@ const isLoadedMetadata = computed(
       @click="handleShowAsset"
       ><div
         slot="content"
-        class="grid h-full grid-rows-[max-content,auto] p-4"
+        class="grid h-full grid-rows-[max-content,auto] overflow-hidden p-4"
         ref="contentRef"
       >
         <div class="flex h-7 items-start justify-end">
           <AssetStandardBadge :asset="asset" />
         </div>
         <div class="flex gap-6">
-          <div ref="logoRef" class="flex flex-col items-center gap-2 pl-2">
+          <div class="flex flex-col items-center gap-2 pl-2">
             <lukso-profile
               v-if="isLoadedMetadata"
               size="medium"
@@ -139,15 +136,17 @@ const isLoadedMetadata = computed(
               class="heading-inter-21-semi-bold flex items-center"
             >
               <span
+                ref="balanceRef"
                 v-if="token?.balance"
                 class="truncate"
                 :style="{
                   'max-width': `${balanceWidthPx}px`,
                 }"
                 :title="
+                  (console.log(token),
                   $formatNumber(
                     fromWeiWithDecimals(token.balance, token.decimals)
-                  )
+                  ))
                 "
                 >{{
                   $formatNumber(
