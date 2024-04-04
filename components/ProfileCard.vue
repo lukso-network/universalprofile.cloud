@@ -33,8 +33,9 @@ const handlePreviewProfileImage = () => {
       :border-radius="isMobile ? 'none' : 'medium'"
       class="-mx-4 -mt-6 mb-22 w-screen sm:mx-0 sm:mt-0 sm:w-full"
     >
-      <div slot="content" class="flex flex-col items-center">
-        <div class="relative bottom-[-140px] text-center">
+      <div slot="content" class="relative flex size-full flex-col items-center">
+        <ProfileCardShareLink :profile="profile" />
+        <div class="relative bottom-[-195px] text-center">
           <div class="flex cursor-pointer flex-col items-center">
             <lukso-profile
               :profile-url="profileAvatar?.url"

@@ -1,5 +1,6 @@
 import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
+import { keccak256 } from 'web3-utils'
 
 import { browserProcessMetadata } from '@/utils/processMetadata'
 import {
@@ -80,7 +81,7 @@ export function useToken() {
                 chainId,
                 address,
                 keyName: 'LSP4Metadata',
-                process: browserProcessMetadata,
+                process: data => browserProcessMetadata(data, keccak256),
                 aggregateLimit: 1,
                 priority: Priorities.Low,
               }),
@@ -91,7 +92,7 @@ export function useToken() {
                     address,
                     tokenId,
                     keyName: 'LSP4Metadata',
-                    process: browserProcessMetadata,
+                    process: data => browserProcessMetadata(data, keccak256),
                     aggregateLimit: 1,
                     priority: Priorities.Low,
                   })
@@ -120,7 +121,7 @@ export function useToken() {
                             return response.json()
                           })
                           .then(async data => {
-                            return await browserProcessMetadata(data)
+                            return await browserProcessMetadata(data, keccak256)
                           })
                           .catch(error => {
                             console.error('Error fetching token data', error)
@@ -140,7 +141,7 @@ export function useToken() {
                       tokenId
                     ).toLowerCase() as Address,
                     keyName: 'LSP4Metadata',
-                    process: browserProcessMetadata,
+                    process: data => browserProcessMetadata(data, keccak256),
                     aggregateLimit: 1,
                     priority: Priorities.Low,
                   })

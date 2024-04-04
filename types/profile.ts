@@ -18,8 +18,7 @@ export type Profile = {
   profileImage?: Image[]
   backgroundImage?: Image[]
   isLoading?: boolean
-  link: string
-  resolved: string
+  profileLink: ProfileLink
 }
 
 export type IndexedProfile = {
@@ -40,4 +39,12 @@ export type IndexedProfile = {
   updatedAtBlock: number
   chainId: number
   lastUpdatedAt: string
+}
+
+export type ProfileLink = {
+  resolved: string
+  link: string
+  address: Address
+  checksummed: Address
+  isResolved: boolean
 }
