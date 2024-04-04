@@ -5,6 +5,7 @@ import { browserProcessMetadata } from '@/utils/processMetadata'
 
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
+import type { ProfileLink } from '@/types/profile'
 
 export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
   const { currentNetwork } = storeToRefs(useAppStore())
@@ -85,8 +86,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
       const profileData = results[1].data as LSP3ProfileMetadataJSON
       const receivedAssets = results[2].data as Address[]
       const issuedAssets = results[3].data as Address[]
-      const { link, resolved } =
-        (results[4].data as { link: string; resolved: string }) || {}
+      const profileLink = (results[4].data as ProfileLink) || {}
       const { supportsInterfaces, standard } = interfacesToCheck.reduce(
         (
           { supportsInterfaces, standard },
@@ -122,8 +122,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
         links,
         description,
         tags,
-        link,
-        resolved,
+        profileLink,
       } as Profile
       if (!profile.isLoading && profileLog.enabled) {
         profileLog('profile', profile)

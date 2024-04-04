@@ -11,9 +11,10 @@ const buttonWidth = ref('auto')
 const buttonFullWidth = ref('auto')
 const hover = ref(false)
 const isCopied = ref(false)
+const { currentNetwork } = storeToRefs(useAppStore())
 
 const handleCopy = () => {
-  navigator.clipboard.writeText(link.value)
+  navigator.clipboard.writeText(linkUrl.value)
   isCopied.value = true
 
   setTimeout(() => {
@@ -22,8 +23,22 @@ const handleCopy = () => {
   }, 500)
 }
 
-const link = computed(() => {
-  return props.profile?.link || ''
+const linkUrl = computed(() => {
+  if (props.profile?.profileLink?.isResolved) {
+    return props.profile?.profileLink?.link || ''
+  }
+
+  // if we can't resolve we just link to the wallet
+  return `${BASE_WALLET_URL}/${props.profile?.address}/?network=${currentNetwork.value.id}`
+})
+
+const linkLabel = computed(() => {
+  if (props.profile?.profileLink?.isResolved) {
+    return props.profile?.profileLink?.link || ''
+  }
+
+  // non resolved links we show as just an address
+  return props.profile?.address
 })
 
 onMounted(async () => {
@@ -73,7 +88,7 @@ onMounted(async () => {
         >
           {{ $formatMessage('share_link_copy') }}
           <div class="m-1 mr-1.5 text-neutral-50">
-            {{ removeSchemaFromUrl(link) }}
+            {{ removeSchemaFromUrl(linkLabel) }}
           </div>
         </div>
       </div></lukso-button
