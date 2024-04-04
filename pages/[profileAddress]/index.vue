@@ -108,26 +108,32 @@ const isLoadingAssets = computed(() =>
       <ProfileCard />
       <ProfileDetails />
       <div>
-        <div class="grid grid-cols-2 gap-4 pt-10 sm:flex">
-          <lukso-button
-            size="small"
-            variant="secondary"
-            :is-active="assetFilter === AssetFilter.owned ? true : undefined"
-            :is-full-width="isMobile ? true : undefined"
-            :count="ownedAssetsCount"
-            @click="assetFilter = AssetFilter.owned"
-            >{{ $formatMessage('asset_filter_owned_assets') }}</lukso-button
-          >
-          <lukso-button
-            size="small"
-            variant="secondary"
-            :is-active="assetFilter === AssetFilter.created ? true : undefined"
-            :is-full-width="isMobile ? true : undefined"
-            :count="createdAssetsCount"
-            @click="assetFilter = AssetFilter.created"
-            >{{ $formatMessage('asset_filter_created_assets') }}</lukso-button
-          >
-        </div>
+        <ul class="grid gap-2 pt-6 sm:flex sm:grid-cols-2 sm:gap-4 sm:pt-10">
+          <li>
+            <lukso-button
+              :size="isMobile ? 'medium' : 'small'"
+              variant="secondary"
+              :is-active="assetFilter === AssetFilter.owned ? true : undefined"
+              is-full-width
+              :count="ownedAssetsCount"
+              @click="assetFilter = AssetFilter.owned"
+              >{{ $formatMessage('asset_filter_owned_assets') }}</lukso-button
+            >
+          </li>
+          <li>
+            <lukso-button
+              :size="isMobile ? 'medium' : 'small'"
+              variant="secondary"
+              :is-active="
+                assetFilter === AssetFilter.created ? true : undefined
+              "
+              is-full-width
+              :count="createdAssetsCount"
+              @click="assetFilter = AssetFilter.created"
+              >{{ $formatMessage('asset_filter_created_assets') }}</lukso-button
+            >
+          </li>
+        </ul>
 
         <div v-if="hasEmptyCreators" class="pt-8">
           <h3 class="heading-inter-17-semi-bold pb-2">

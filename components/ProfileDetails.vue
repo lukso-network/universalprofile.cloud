@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const viewedProfile = useProfile().viewedProfile()
+const { isMobile } = useDevice()
 
 const hasLinks = computed(
   () => viewedProfile?.value?.links && viewedProfile.value.links?.length > 0
@@ -38,7 +39,7 @@ const hasTags = computed(
     </div>
     <ul
       v-if="hasLinks"
-      class="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-2"
+      class="mt-4 flex flex-col flex-wrap justify-center gap-x-4 gap-y-2 sm:flex-row"
     >
       <li
         v-for="(link, index) in viewedProfile?.links"
@@ -46,13 +47,15 @@ const hasTags = computed(
         class="inline-flex"
       >
         <lukso-button
-          size="small"
+          :size="isMobile ? 'medium' : 'small'"
           :href="link.url"
           is-link
           variant="secondary"
           class="transition hover:opacity-70"
-          >{{ link.title }}
-          <lukso-icon name="link-3" size="small" class="ml-2"></lukso-icon>
+          is-full-width
+        >
+          <lukso-icon name="link" size="medium" class="mr-2"></lukso-icon>
+          {{ link.title }}
         </lukso-button>
       </li>
     </ul>
