@@ -1,4 +1,7 @@
-import type { LSP3ProfileMetadata, LinkMetadata } from '@lukso/lsp3-contracts'
+import type {
+  LSP3ProfileMetadata,
+  LinkMetadata,
+} from '@lukso/lsp-smart-contracts'
 
 export type Profile = {
   address?: Address
