@@ -1,7 +1,7 @@
 import type {
-  LSP4_TOKEN_TYPES,
-  LSP8_TOKEN_ID_FORMAT,
   LinkMetadata,
+  LSP8_TOKEN_ID_FORMAT,
+  LSP4_TOKEN_TYPES,
 } from '@lukso/lsp-smart-contracts'
 
 // TODO use type from lsp package when it's released
@@ -53,7 +53,7 @@ export type Asset = {
     tokenMetadata?: LSP4DigitalAssetMetadata
   }
   tokenIdCreatorCount?: number
-  lsp7Creators?: any[]
+  lsp7Creators?: Address[]
   isNativeToken?: boolean
   isOwned?: boolean
   isIssued?: boolean
