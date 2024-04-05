@@ -1,7 +1,7 @@
 {
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "editor.defaultFormatter": "biomejs.biome",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "vitest.enable": true,
   "vitest.commandLine": "yarn dotenv -- vitest",
   "vitest.debugExclude": ["<node_internals>/**", "**/node_modules/**"],
@@ -14,7 +14,7 @@
   ],
   "cSpell.words": ["serviceworker"],
   "[typescript]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "typescript.format.enable": false,
   "javascript.format.enable": false,
@@ -23,6 +23,6 @@
     "source.organizeImports.biome": "explicit"
   },
   "[vue]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
