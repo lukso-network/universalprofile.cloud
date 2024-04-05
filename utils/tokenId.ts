@@ -53,7 +53,7 @@ export const prefixedTokenId = (
   let parsedTokenId = parseTokenId(tokenId, tokenIdFormat)
 
   // no prefix for hex token ids
-  if (!parsedTokenId?.startsWith('0x')) {
+  if (parsedTokenId && !parsedTokenId?.startsWith('0x')) {
     parsedTokenId = `#${parsedTokenId}`
   }
 
@@ -65,9 +65,9 @@ export const prefixedTokenId = (
   // for other (hex) types we add ... in the middle
   if (isStringFormat(tokenIdFormat) || isNumberFormat(tokenIdFormat)) {
     return `${parsedTokenId.substring(0, maxLength - 3)}...`
-  } else {
-    return sliceAddress(parsedTokenId, Math.ceil((maxLength - 5) / 2))
   }
+
+  return sliceAddress(parsedTokenId, Math.ceil((maxLength - 5) / 2))
 }
 
 /**

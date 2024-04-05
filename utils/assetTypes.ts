@@ -1,5 +1,5 @@
 import { isAddress } from 'web3-utils'
-import mime from 'mime-to-extensions'
+import mime from 'mime-types'
 
 const DOCUMENT_FILE_EXTENSIONS = ['doc', 'docx', 'pdf', 'txt']
 const AUDIO_FILE_EXTENSIONS = ['mp3', 'wav', 'mpga']
