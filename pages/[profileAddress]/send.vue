@@ -21,7 +21,7 @@ const {
 const { isLoadedApp, isConnected, hasSimpleNavbar } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
-const { sendTransaction, contract } = useWeb3(PROVIDERS.INJECTED)
+const { sendTransaction, contract, isEoA } = useWeb3(PROVIDERS.INJECTED)
 const amount = computed(() => useRouter().currentRoute.value.query.amount)
 const assetAddress = computed(() => useRouter().currentRoute.value.query.asset)
 const tokenId = computed(() => useRouter().currentRoute.value.query.tokenId)
@@ -96,7 +96,7 @@ const handleSend = async () => {
                 sendAmount.value || '0',
                 sendAsset.value?.decimals
               ),
-              false,
+              isEoA(receiver.value?.address),
               '0x'
             )
             .send({ from: connectedProfile.value.address })
@@ -116,7 +116,7 @@ const handleSend = async () => {
               connectedProfile.value.address,
               receiver.value?.address,
               sendAsset.value.tokenId,
-              false,
+              isEoA(receiver.value?.address),
               '0x'
             )
             .send({ from: connectedProfile.value.address })
