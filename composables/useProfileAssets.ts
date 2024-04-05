@@ -7,8 +7,7 @@ import type { Asset, ReferenceContract } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
 type AdditionalQueryOptions = {
-  issuedAssets: Address[]
-  receivedAssets: Address[]
+  receivedAssetCount: number
   allAddresses: Address[]
 }
 
@@ -19,6 +18,7 @@ export function useProfileAssets() {
     const queries: ComputedRef<Array<QFQueryOptions> & AdditionalQueryOptions> =
       computed(() => {
         const { value: { chainId } = { chainId: '' } } = currentNetwork
+        const receivedAssetCount = profile?.value?.receivedAssets?.length || 0
         const allAddresses = ([] as `0x${string}`[]).concat(
           profile?.value?.receivedAssets || [],
           profile?.value?.issuedAssets || []
@@ -98,8 +98,7 @@ export function useProfileAssets() {
             ]
           }) as Array<QFQueryOptions> & AdditionalQueryOptions
         // Trick to keep additional query options attached to the current queries list.
-        queries.issuedAssets = profile?.value?.issuedAssets || []
-        queries.receivedAssets = profile?.value?.receivedAssets || []
+        queries.receivedAssetCount = receivedAssetCount
         queries.allAddresses = allAddresses
         return queries as Array<QFQueryOptions> & AdditionalQueryOptions
       })
@@ -117,8 +116,7 @@ export function useProfileAssets() {
         return (queries.value.allAddresses.flatMap((address, _assetIndex) => {
           const assetIndex =
             _assetIndex * (prefixLength + interfacesToCheck.length)
-          const isIssued = queries.value.issuedAssets.includes(address)
-          const isOwned = queries.value.receivedAssets.includes(address)
+          const isIssued = _assetIndex >= queries.value.receivedAssetCount
           const tokenIds = results[assetIndex + 0].data as string[]
           const balance = results[assetIndex + 1].data as string
           const tokenName = results[assetIndex + 2].data as string
@@ -180,7 +178,7 @@ export function useProfileAssets() {
               }
               const asset = {
                 isLoading,
-                isOwned,
+                isOwned: !isIssued,
                 isIssued,
                 address,
                 tokenURI,

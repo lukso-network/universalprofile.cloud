@@ -225,7 +225,7 @@ export function useToken() {
             ? resolvedMetadata?.name
             : token.tokenName,
         } as Asset
-        if (!isLoading && assetLog.enabled) {
+        if (!isLoading && tokenLog.enabled) {
           tokenLog('token', asset)
         }
         return asset
