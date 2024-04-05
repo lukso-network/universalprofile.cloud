@@ -1,3 +1,4 @@
+import type { Address } from 'web3-types'
 import { toChecksumAddress } from 'web3-utils'
 import { isAddress } from 'web3-validator'
 

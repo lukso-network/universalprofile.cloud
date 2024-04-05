@@ -8,15 +8,14 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:{biome,css,fmt,types}\"",
     "lint:fix": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:*:fix\"",
-    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:{eslint,css,fmt,types}\"",
-    "lint:eslint": "eslint --ext '.js,.vue,.ts' .",
+    "lint:biome": "biome check .",
+    "lint:fmt": "prettier --check --log-level=warn .",
+    "lint:fmt:fix": "prettier --write .",
     "lint:eslint:fix": "eslint --ext '.js,.vue,.ts' . --fix",
     "lint:css": "stylelint \"**/*.{scss,css,vue}\"",
     "lint:css:fix": "stylelint \"**/*.{scss,css,vue}\" --fix",
-    "lint:fmt": "prettier --check --log-level=warn .",
-    "lint:fmt:fix": "prettier --write .",
-    "lint:types": "tsc --noEmit --project tsconfig.json",
     "prepare": "npm-run-all nuxt:prepare typechain && husky install",
     "yata-fetch": "dotenv -- yata-fetch --config .yata.json",
     "test": "npm-run-all test:unit:ci test:e2e",
@@ -31,6 +30,7 @@
     "typechain": "typechain --target web3-v1 --out-dir contracts/ './shared/abis/LSP2FetcherWithMulticall3.json' && typechain --target web3-v1 --out-dir contracts/ './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.6.4",
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.9",
     "@google/model-viewer": "^3.4.0",
@@ -116,27 +116,23 @@
     "yata-fetch": "2.1.5"
   },
   "resolutions": {
-    "@erc725/erc725.js": "./erc725-erc725.js-0.23.0.tgz",
     "@tanstack/query-core": "^5.20.5",
     "web3-bzz": "~1.10.3",
     "web3-shh": "~1.10.3",
     "web3": "~1.10.3"
   },
   "lint-staged": {
-    "*.{ts,js,vue}": [
-      "prettier --list-different",
-      "eslint"
+    "*.{ts,js,vue,json,yaml,yml}": [
+      "biome check"
     ],
-    "*.json": "prettier --list-different",
-    "*.ya?ml": "prettier --list-different",
     "*.{scss,css,vue}": [
-      "prettier --list-different",
+      "biome check",
       "stylelint"
     ]
   },
   "version": "1.0.0",
   "dependencies": {
-    "@erc725/erc725.js": "./erc725-erc725.js-0.23.0.tgz",
+    "@erc725/erc725.js": "^0.24.1",
     "@tanstack/query-async-storage-persister": "^5.25.0",
     "@tanstack/query-core": "^5.25.0",
     "@tanstack/query-persist-client-core": "^5.25.0",

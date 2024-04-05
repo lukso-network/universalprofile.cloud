@@ -1,22 +1,22 @@
-import debug from 'debug'
-import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
-import LSP7DigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
-import LSP4DigitalAssetMetadataContract from '@lukso/lsp-smart-contracts/artifacts/LSP4DigitalAssetMetadata.json'
-import LSP4Schema from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json'
-import LSP3Schema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
-import LSP8Schema from '@erc725/erc725.js/schemas/LSP8IdentifiableDigitalAsset.json'
-import { RateLimiter } from 'limiter'
-import {
-  decodeData,
-  getDataFromExternalSources,
-  encodeKeyName,
-  type ERC725JSONSchema,
-} from '@erc725/erc725.js'
-import { type AbiItem, type Hex, toNumber } from 'web3-utils'
-import ABICoder from 'web3-eth-abi'
-import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import { Buffer } from 'buffer'
+import {
+  type ERC725JSONSchema,
+  decodeData,
+  encodeKeyName,
+  getDataFromExternalSources,
+} from '@erc725/erc725.js'
+import LSP3Schema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json'
+import LSP4Schema from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json'
+import LSP8Schema from '@erc725/erc725.js/schemas/LSP8IdentifiableDigitalAsset.json'
+import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts'
+import LSP4DigitalAssetMetadataContract from '@lukso/lsp-smart-contracts/artifacts/LSP4DigitalAssetMetadata.json'
+import LSP7DigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
+import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
+import debug from 'debug'
+import { RateLimiter } from 'limiter'
+import ABICoder from 'web3-eth-abi'
+import type { Address } from 'web3-types'
+import { type AbiItem, type Hex, toNumber } from 'web3-utils'
 
 import LSP2FetcherWithMulticall3Contract from '@/shared/abis/LSP2FetcherWithMulticall3.json'
 import { LUKSO_PROXY_API } from '@/shared/config'
@@ -272,7 +272,9 @@ async function doQueries() {
     if (queryLog.enabled) {
       queryLog(
         'doQueries',
-        `digested ${startLength - queryList.length} queries into ${queries.length} queries and ${singleCallQueries.length} single queries`,
+        `digested ${startLength - queryList.length} queries into ${
+          queries.length
+        } queries and ${singleCallQueries.length} single queries`,
         toRaw(queries),
         toRaw(singleCallQueries)
       )

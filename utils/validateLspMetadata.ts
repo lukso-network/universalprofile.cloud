@@ -1,6 +1,6 @@
 import type {
+  AssetMetadata,
   LSP3ProfileMetadata,
-  Verification,
 } from '@lukso/lsp-smart-contracts'
 
 /**
@@ -152,7 +152,6 @@ export const validateHash = (getDataObject: any) => {
     typeof getDataObject === 'object' &&
     typeof getDataObject?.value === 'object' &&
     getDataObject?.value !== null &&
-    'hash' in getDataObject.value &&
     typeof getDataObject.value?.hash === 'string'
     ? (getDataObject.value?.hash as string)
     : undefined
@@ -168,14 +167,12 @@ export const validateHash = (getDataObject: any) => {
 export const validateVerification = (getDataObject: any) => {
   return !!getDataObject &&
     typeof getDataObject === 'object' &&
-    'value' in getDataObject &&
     typeof getDataObject?.value === 'object' &&
     getDataObject?.value !== null &&
-    'verification' in getDataObject.value &&
-    typeof getDataObject?.value.verification === 'object' &&
-    'data' in getDataObject.value.verification &&
-    'method' in getDataObject.value.verification
-    ? (getDataObject.value?.verification as Verification)
+    getDataObject?.value?.verification &&
+    getDataObject?.value?.verification?.data &&
+    getDataObject?.value?.verification?.method
+    ? (getDataObject.value?.verification as AssetMetadata['verification'])
     : undefined
 }
 

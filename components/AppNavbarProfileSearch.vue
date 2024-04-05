@@ -26,9 +26,8 @@ const searchResults = async () => {
     hasNoResults.value = true
     isSearching.value = false
     return
-  } else {
-    hasNoResults.value = false
   }
+  hasNoResults.value = false
 
   results.value = searchResults.hits.map(hit => {
     return {

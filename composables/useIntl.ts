@@ -1,8 +1,8 @@
 import {
-  createIntl,
   type FormatNumberOptions,
   type IntlConfig,
   type IntlShape,
+  createIntl,
 } from '@formatjs/intl'
 import { fromWei } from 'web3-utils'
 
@@ -43,9 +43,8 @@ const setupIntl = (config: IntlConfig) => {
 const formatMessage = (key: string, options?: Record<string, string>) => {
   if (options) {
     return intl.value?.formatMessage({ id: key }, options) || ''
-  } else {
-    return intl.value?.formatMessage({ id: key }) || ''
   }
+  return intl.value?.formatMessage({ id: key }) || ''
 }
 
 /**
@@ -103,7 +102,7 @@ const formatCurrency = (value: string, symbol: string) => {
     return ''
   }
 
-  const currencyValue = parseFloat(fromWei(value)) * currencyMultiplier
+  const currencyValue = Number.parseFloat(fromWei(value)) * currencyMultiplier
 
   return formatNumber(currencyValue, {
     maximumFractionDigits: 2,

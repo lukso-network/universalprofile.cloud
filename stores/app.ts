@@ -1,5 +1,5 @@
 import type { Modal } from '@/types/modal'
-import type { NetworkInfo, NetworkId } from '@/types/network'
+import type { NetworkId, NetworkInfo } from '@/types/network'
 
 /**
  * App store

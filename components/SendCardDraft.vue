@@ -25,7 +25,7 @@ const backgroundImage = useProfileBackground(connectedProfile, 450)
 const avatarImage = useProfileAvatar(connectedProfile, 80)
 
 const handleSend = () => {
-  onSend.value && onSend.value()
+  onSend?.value?.()
 }
 
 const handleSelectAssets = () => {

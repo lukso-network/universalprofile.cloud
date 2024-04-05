@@ -1,4 +1,5 @@
 import { useQueries } from '@tanstack/vue-query'
+import type { Address } from 'web3-types'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 
 import { LUKSO_PROXY_API } from '@/shared/config'

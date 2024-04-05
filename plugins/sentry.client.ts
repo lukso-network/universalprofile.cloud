@@ -5,8 +5,8 @@ import {
 import * as Sentry from '@sentry/vue'
 import { Scope, withScope } from '@sentry/vue'
 
-import type { NuxtApp } from 'nuxt/app'
 import type { Breadcrumb, CaptureContext, Primitive, User } from '@sentry/types'
+import type { NuxtApp } from 'nuxt/app'
 import type { Router } from 'vue-router'
 
 export default defineNuxtPlugin({

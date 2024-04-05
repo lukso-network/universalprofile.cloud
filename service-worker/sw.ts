@@ -1,9 +1,9 @@
+import { keccak256 } from 'js-sha3'
+import { clientsClaim } from 'workbox-core'
 /// <reference lib="WebWorker" />
 /// <reference types="vite/client" />
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
-import { clientsClaim } from 'workbox-core'
 import { registerRoute } from 'workbox-routing'
-import { keccak256 } from 'js-sha3'
 
 import { HASHED_IMAGE_CACHE_NAME } from '../shared/config'
 import { processMetadata } from '../utils/processMetadata'

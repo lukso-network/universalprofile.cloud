@@ -1,13 +1,12 @@
 // YOU CANNOT IMPORT ANYTHING WHICH USES Buffer or so.
 
-import debug from 'debug'
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import { Buffer } from 'buffer'
+import debug from 'debug'
 
 import {
-  TANSTACK_GC_TIME,
-  LUKSO_PROXY_API,
   HASHED_IMAGE_CACHE_NAME,
+  LUKSO_PROXY_API,
+  TANSTACK_GC_TIME,
 } from '@/shared/config'
 
 const workersLog = debug('tanstack:workers')
@@ -55,7 +54,9 @@ export async function processMetadata(
               'Content-Type': mime,
               'X-Verified':
                 verified != null ? (verified ? 'true' : 'false') : '',
-              'Cache-Control': `public, max-age=${Math.round(TANSTACK_GC_TIME / 1000) + 60}, immutable`,
+              'Cache-Control': `public, max-age=${
+                Math.round(TANSTACK_GC_TIME / 1000) + 60
+              }, immutable`,
             },
           })
         )
@@ -80,7 +81,10 @@ export async function processMetadata(
         .map(([key, value]) => `${key}=${value}`)
         .join('&')
 
-      const newUrl = `${LUKSO_PROXY_API}/image/${data.url.replaceAll(/^ipfs:\/\/|\?.*?$/g, '')}?${queryParamsString}`
+      const newUrl = `${LUKSO_PROXY_API}/image/${data.url.replaceAll(
+        /^ipfs:\/\/|\?.*?$/g,
+        ''
+      )}?${queryParamsString}`
       const cache = await caches.open(HASHED_IMAGE_CACHE_NAME)
       const imageResponse = await cache.match(newUrl)
       const verified = imageResponse?.headers.get('x-verified')

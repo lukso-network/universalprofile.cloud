@@ -1,5 +1,7 @@
+import type { AssetMetadata } from '@lukso/lsp-smart-contracts'
+import mime from 'mime-to-extensions'
+import type { Address } from 'web3-types'
 import { isAddress } from 'web3-utils'
-import mime from 'mime-types'
 
 const DOCUMENT_FILE_EXTENSIONS = ['doc', 'docx', 'pdf', 'txt']
 const AUDIO_FILE_EXTENSIONS = ['mp3', 'wav', 'mpga']
@@ -31,7 +33,7 @@ export type AssetFileType =
  * @param asset
  */
 export const getAssetType = (asset: AssetMetadata): AssetFileType => {
-  if ('address' in asset && isAddress(asset.address)) {
+  if ('address' in asset && isAddress(asset.address as Address)) {
     return 'contract'
   }
 

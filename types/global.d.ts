@@ -1,3 +1,5 @@
+export type {}
+
 declare global {
   type Address = `0x${string}`
 
@@ -19,7 +21,7 @@ declare global {
   type AssetMetadata = FileAsset | ContractAsset
 
   type FileAsset = {
-    verification?: Verification
+    verification?: AssetMetadata['verification']
     url: string
     fileType: string
   }
@@ -29,5 +31,3 @@ declare global {
     tokenId?: string
   }
 }
-
-export {}

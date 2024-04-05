@@ -1,12 +1,13 @@
 import { useQueries } from '@tanstack/vue-query'
 import ABICoder from 'web3-eth-abi'
+import type { Address } from 'web3-types'
 import { keccak256 } from 'web3-utils'
 
 import { browserProcessMetadata } from '@/utils/processMetadata'
 import {
   Priorities,
-  queryNull,
   type QFQueryOptions,
+  queryNull,
 } from '@/utils/queryFunctions'
 
 import type {

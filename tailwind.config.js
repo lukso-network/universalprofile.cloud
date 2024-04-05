@@ -1,8 +1,8 @@
 const plugin = require('tailwindcss/plugin')
 
-const wordBreakPlugin = plugin(function ({ addUtilities, theme, e }) {
+const wordBreakPlugin = plugin(({ addUtilities, theme, e }) => {
   const values = theme('wordBreak')
-  var utilities = Object.entries(values).map(([key, value]) => {
+  const utilities = Object.entries(values).map(([key, value]) => {
     return {
       [`.${e(`break-${key}`)}`]: { wordBreak: `${value}` },
     }

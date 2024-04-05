@@ -1,6 +1,6 @@
 import { type TestInfo, test as base } from '@playwright/test'
 
-interface TestFixtures {}
+type TestFixtures = Record<string, unknown>
 
 export const test = base.extend<TestFixtures>({
   // overrides default page fixture

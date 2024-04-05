@@ -17,7 +17,9 @@ export const useSendStore = defineStore('send', () => {
   const isSuccess = computed(() => status.value === 'success')
 
   // actions
-  const setStatus = (newStatus: SendStatus) => (status.value = newStatus)
+  const setStatus = (newStatus: SendStatus) => {
+    status.value = newStatus
+  }
 
   const clearSend = () => {
     receiver.value = undefined
