@@ -3104,19 +3104,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/lsp-smart-contracts-12@npm:@lukso/lsp-smart-contracts@0.12.1":
-  version: 0.12.1
-  resolution: "@lukso/lsp-smart-contracts@npm:0.12.1"
-  dependencies:
-    "@account-abstraction/contracts": "npm:^0.6.0"
-    "@erc725/smart-contracts": "npm:^6.0.0"
-    "@openzeppelin/contracts": "npm:^4.9.2"
-    "@openzeppelin/contracts-upgradeable": "npm:^4.9.2"
-    solidity-bytes-utils: "npm:0.8.0"
-  checksum: 7a604134af74b0257ac1f181e26749f89e5025ac445c8437904b46f0773e126eb0990a2031b60c0dd93692faaffd41bd1cf00d3b1cd5d1cf70627364169e4b94
-  languageName: node
-  linkType: hard
-
 "@lukso/lsp-smart-contracts@npm:0.15.0-rc.5":
   version: 0.15.0-rc.5
   resolution: "@lukso/lsp-smart-contracts@npm:0.15.0-rc.5"
@@ -20656,7 +20643,6 @@ __metadata:
     "@formatjs/intl": "npm:^2.9.9"
     "@google/model-viewer": "npm:^3.4.0"
     "@lukso/lsp-smart-contracts": "npm:0.15.0-rc.5"
-    "@lukso/lsp-smart-contracts-12": "npm:@lukso/lsp-smart-contracts@0.12.1"
     "@lukso/web-components": "npm:1.63.0"
     "@nuxt/test-utils": "npm:^3.11.0"
     "@nuxtjs/algolia": "npm:^1.10.1"

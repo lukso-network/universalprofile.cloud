@@ -1,4 +1,4 @@
-import { LSP8_TOKEN_ID_FORMAT } from '@lukso/lsp8-contracts'
+import { LSP8_TOKEN_ID_FORMAT } from '@lukso/lsp-smart-contracts'
 import { hexToNumber, hexToUtf8 } from 'web3-utils'
 import { sliceAddress } from '@lukso/web-components/tools'
 

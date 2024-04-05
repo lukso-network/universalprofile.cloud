@@ -35,7 +35,6 @@
     "@formatjs/intl": "^2.9.9",
     "@google/model-viewer": "^3.4.0",
     "@lukso/lsp-smart-contracts": "0.15.0-rc.5",
-    "@lukso/lsp-smart-contracts-12": "npm:@lukso/lsp-smart-contracts@0.12.1",
     "@lukso/web-components": "1.63.0",
     "@nuxt/test-utils": "^3.11.0",
     "@nuxtjs/algolia": "^1.10.1",

@@ -1,5 +1,7 @@
-import type { LSP3ProfileMetadata } from '@lukso/lsp3-contracts'
-import type { Verification } from '@lukso/lsp2-contracts'
+import type {
+  LSP3ProfileMetadata,
+  Verification,
+} from '@lukso/lsp-smart-contracts'
 
 /**
  * Check and return valid LSP3 metadata

@@ -1,4 +1,4 @@
-import type { ImageMetadata } from '@lukso/lsp3-contracts'
+import type { ImageMetadata } from '@lukso/lsp-smart-contracts'
 
 export type Image = {
   hash?: string
