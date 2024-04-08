@@ -54,7 +54,11 @@ const hasTags = computed(
           class="transition hover:opacity-70"
           is-full-width
         >
-          <lukso-icon name="link" size="medium" class="mr-2"></lukso-icon>
+          <lukso-icon
+            name="link"
+            :size="isMobile ? 'medium' : 'small'"
+            class="mr-2"
+          ></lukso-icon>
           {{ link.title }}
         </lukso-button>
       </li>
