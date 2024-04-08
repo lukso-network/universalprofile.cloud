@@ -1,23 +1,52 @@
 <script setup lang="ts">
+// import { useElementSize } from '@vueuse/core'
+
 type Props = {
   profile?: Profile
 }
 
 const props = defineProps<Props>()
-const buttonRef = ref()
-const buttonWidth = ref('auto')
-const hover = ref(false)
 const isCopied = ref(false)
+const isCopying = ref(false)
 const { currentNetwork } = storeToRefs(useAppStore())
+const expandedRef = ref<HTMLDivElement>()
+const copyRef = ref<HTMLDivElement>()
+const expandedWidth = ref(0)
+const copyWidth = ref(0)
+const buttonWidth = ref('auto')
 
-const handleCopy = () => {
+const handleCopy = async () => {
+  isCopying.value = true
   navigator.clipboard.writeText(linkUrl.value)
   isCopied.value = true
+  buttonWidth.value = `${copyWidth.value}px` // set width to copy text
+  await sleep(500)
+  buttonWidth.value = '0px'
+  isCopying.value = false
+}
 
-  setTimeout(() => {
-    hover.value = false
-    isCopied.value = false
-  }, 500)
+// if we keep cursor on button after copy we can re-open with click
+const handleAfterCopy = () => {
+  isCopied.value = false
+  isCopying.value = false
+}
+
+const handleMouseOver = () => {
+  if (isCopied.value) {
+    return
+  }
+
+  buttonWidth.value = `${expandedWidth.value}px`
+  copyRef.value?.classList.add('hidden')
+}
+
+const handleMouseLeave = () => {
+  if (isCopying.value) {
+    return
+  }
+
+  isCopied.value = false
+  buttonWidth.value = '0px'
 }
 
 const linkUrl = computed(() => {
@@ -38,56 +67,71 @@ const linkLabel = computed(() => {
   return props.profile?.address
 })
 
-// const buttonSize = useElementSize(buttonRef)
-
-// const buttonFullWidth = computed(() => `${buttonSize.width.value + 10}px`)
-
 onMounted(async () => {
-  await nextTick()
+  // we need slight delay to make sure that the elements are rendered before we can get their width
+  await sleep(100)
+  expandedWidth.value = expandedRef.value?.clientWidth || 0
+  copyWidth.value = copyRef.value?.clientWidth || 0
 
-  buttonWidth.value = '0px'
+  copyRef.value?.classList.add('hidden') // after we measure copy text we hide it
+  buttonWidth.value = '0px' // also collapse button
 })
 </script>
 
 <template>
-  <div v-if="isCopied" class="absolute right-4 top-4">
-    <lukso-button
-      size="small"
-      variant="secondary"
-      class="group"
-      custom-class="px-0 overflow-hidden"
-      @click="handleCopy"
-      ><lukso-icon name="link-1" size="small" class="mx-1.5"></lukso-icon>
-      <div
-        class="paragraph-inter-12-medium pl-1 pr-3 transition-all duration-500 ease-out"
-      >
-        {{ $formatMessage('share_link_copied') }}
-      </div></lukso-button
-    >
-  </div>
   <div
-    v-else
     class="absolute right-4 top-4"
-    @mouseover="hover = true"
-    @mouseleave="hover = false"
+    @mouseover="handleMouseOver"
+    @mouseleave="handleMouseLeave"
   >
     <lukso-button
+      v-if="isCopied"
       size="small"
       variant="secondary"
-      class="group"
+      custom-class="px-0 overflow-hidden"
+      @click="handleAfterCopy"
+      ><lukso-icon
+        size="small"
+        name="transaction-send"
+        class="mx-1.5"
+      ></lukso-icon>
+      <div
+        class="paragraph-inter-12-medium transition-width duration-500 ease-out"
+        :style="{
+          width: buttonWidth,
+        }"
+      >
+        <div class="mr-1.5 inline-flex">
+          {{ $formatMessage('share_link_copied') }}
+        </div>
+      </div></lukso-button
+    >
+    <lukso-button
+      v-else
+      size="small"
+      variant="secondary"
       custom-class="px-0 overflow-hidden"
       @click="handleCopy"
-      ><lukso-icon name="link-1" size="small" class="mx-1.5"></lukso-icon>
+      ><lukso-icon
+        size="small"
+        name="transaction-send"
+        class="mx-1.5"
+      ></lukso-icon>
       <div
-        ref="buttonRef"
-        class="paragraph-inter-12-medium transition-all duration-500 ease-out"
+        class="paragraph-inter-12-medium transition-width duration-500 ease-out"
+        :style="{
+          width: buttonWidth,
+        }"
       >
-        <div
-          class="flex w-0 items-center text-nowrap text-left group-hover:w-full"
-        >
+        <div ref="expandedRef" class="inline-flex items-center text-nowrap">
           {{ $formatMessage('share_link_copy') }}
           <div class="m-1 mr-1.5 text-neutral-50">
             {{ removeSchemaFromUrl(linkLabel) }}
+          </div>
+        </div>
+        <div ref="copyRef" class="inline-flex">
+          <div class="mr-1.5">
+            {{ $formatMessage('share_link_copied') }}
           </div>
         </div>
       </div></lukso-button
