@@ -26,6 +26,9 @@ export const useNetworkConfig = (): NetworkInfo[] => {
       chainId: MAINNET_CHAIN_ID,
       rpcNodes: [
         {
+          host: 'https://lukso.rpc.hypersync.xyz',
+        },
+        {
           host: 'https://rpc1.mainnet.lukso.dev',
         },
         {
