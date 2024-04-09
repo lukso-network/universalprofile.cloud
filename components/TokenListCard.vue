@@ -108,12 +108,12 @@ const isLoadedMetadata = computed(
                 class="truncate"
                 :title="
                   $formatNumber(
-                    fromWeiWithDecimals(token.balance, token.decimals)
+                    fromTokenUnitWithDecimals(token.balance, token.decimals)
                   )
                 "
                 >{{
                   $formatNumber(
-                    fromWeiWithDecimals(token.balance, token.decimals)
+                    fromTokenUnitWithDecimals(token.balance, token.decimals)
                   )
                 }}</span
               >

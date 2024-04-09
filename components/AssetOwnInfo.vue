@@ -31,7 +31,7 @@ defineProps<Props>()
         </div>
         <div class="paragraph-inter-12-semi-bold">
           <span v-if="balance">{{
-            $formatNumber(fromWeiWithDecimals(balance, decimals), {
+            $formatNumber(fromTokenUnitWithDecimals(balance, decimals), {
               maximumFractionDigits: decimals,
             })
           }}</span>
