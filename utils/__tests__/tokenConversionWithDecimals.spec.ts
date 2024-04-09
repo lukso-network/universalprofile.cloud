@@ -4,7 +4,7 @@ import {
   toTokenUnitWithDecimals,
 } from '../tokenConversionWithDecimals'
 
-describe('weiWithDecimals', () => {
+describe('fromTokenUnitWithDecimals', () => {
   it('should convert from wei with 18 decimals', () => {
     const value = '1000000000000000000'
     const expected = '1'
@@ -25,7 +25,9 @@ describe('weiWithDecimals', () => {
     const result = fromTokenUnitWithDecimals(value, 2)
     expect(result).toEqual(expected)
   })
+})
 
+describe('toTokenUnitWithDecimals', () => {
   it('should convert to wei with 18 decimals', () => {
     const value = '1'
     const expected = '1000000000000000000'
