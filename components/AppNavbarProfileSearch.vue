@@ -26,10 +26,9 @@ const searchResults = async () => {
     hasNoResults.value = true
     isSearching.value = false
     return
-  } else {
-    hasNoResults.value = false
   }
 
+  hasNoResults.value = false
   results.value = searchResults.hits.map(hit => {
     return {
       name: hit.LSP3Profile?.name,
@@ -75,7 +74,7 @@ watchEffect(() => {
         ?.querySelector('lukso-search') as unknown as HTMLElement
       const inputElement = luksoSearch?.shadowRoot?.querySelector('input')
       inputElement?.focus()
-    }, 10)
+    }, 100)
   }
 })
 </script>
