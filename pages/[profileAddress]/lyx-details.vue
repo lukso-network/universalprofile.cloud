@@ -103,7 +103,7 @@ const handleBuyLyx = () => {
         </div>
       </div>
       <div>
-        <div class="heading-apax-24-medium pb-8">
+        <div class="heading-apax-24-medium pb-2">
           {{ $formatMessage('lyx_details_title') }}
         </div>
         <AssetTokenSupply

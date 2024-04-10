@@ -14,7 +14,9 @@ const decimals = computed(() => props.asset?.decimals)
     <div class="paragraph-ptmono-14-regular pb-8" v-if="totalSupply">
       {{
         $formatMessage('token_details_total_supply_of', {
-          count: $formatNumber(fromWeiWithDecimals(totalSupply, decimals)),
+          count: $formatNumber(
+            fromTokenUnitWithDecimals(totalSupply, decimals)
+          ),
         })
       }}
     </div>

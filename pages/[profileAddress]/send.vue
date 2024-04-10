@@ -92,7 +92,7 @@ const handleSend = async () => {
             .transfer(
               connectedProfile.value.address,
               receiver.value?.address,
-              toWeiWithDecimals(
+              toTokenUnitWithDecimals(
                 sendAmount.value || '0',
                 sendAsset.value?.decimals
               ),

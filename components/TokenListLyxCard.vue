@@ -68,12 +68,18 @@ const handleBuyLyx = (event: Event) => {
               class="truncate"
               :title="
                 $formatNumber(
-                  fromWeiWithDecimals(viewedProfile.balance, asset.decimals)
+                  fromTokenUnitWithDecimals(
+                    viewedProfile.balance,
+                    asset.decimals
+                  )
                 )
               "
               >{{
                 $formatNumber(
-                  fromWeiWithDecimals(viewedProfile.balance, asset.decimals)
+                  fromTokenUnitWithDecimals(
+                    viewedProfile.balance,
+                    asset.decimals
+                  )
                 )
               }}</span
             >

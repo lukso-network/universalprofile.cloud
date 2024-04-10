@@ -93,7 +93,7 @@ const handlePreviewImage = () => {
           <AssetName :asset="asset" />
           <AssetStandardBadge :asset="asset" />
         </div>
-        <AssetTokenSupply :asset="asset" />
+        <AssetTokenSupply :asset="token" />
         <AssetDescription :asset="token" />
         <AssetImagesList :asset="token" />
         <AssetAssets :asset="token" />
