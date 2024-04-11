@@ -11,7 +11,9 @@ const { amount, asset } = storeToRefs(useSendStore())
       <div class="heading-inter-17-semi-bold">
         {{
           $formatMessage('send_pending_title', {
-            amount: amount || '0',
+            amount: $formatNumber(amount || '0', {
+              maximumFractionDigits: asset?.decimals,
+            }),
             symbol: asset?.tokenSymbol || '',
           })
         }}
