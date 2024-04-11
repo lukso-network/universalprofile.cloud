@@ -147,8 +147,10 @@ export function useProfileAssets() {
             }
           )
           const isLoading = results.some(result => result.isLoading)
+          let tokenIdsData: Asset[] | undefined
+
           if (tokenIds && tokenIds.length > 0) {
-            return tokenIds.map(tokenId => {
+            tokenIdsData = tokenIds.map(tokenId => {
               let tokenURI = undefined
               let tokenDataURL = undefined
               try {
@@ -204,7 +206,13 @@ export function useProfileAssets() {
               }
               return asset
             })
+
+            // when there is only 1 token id we just show it
+            if (tokenIds.length === 1) {
+              return tokenIdsData
+            }
           }
+
           const asset = {
             isLoading,
             isOwned: !isIssued,
@@ -224,10 +232,13 @@ export function useProfileAssets() {
             tokenType,
             supportsInterfaces,
             decimals,
+            tokenIdsData,
           } as Asset
+
           if (!isLoading && assetLog.enabled) {
             assetLog('profile-asset', asset)
           }
+
           return asset
         }) || []) as Asset[]
       },

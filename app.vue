@@ -8,11 +8,12 @@ if (typeof window !== 'undefined') {
 }
 
 const { addWeb3, getWeb3 } = useWeb3Store()
-const { getNetworkById } = useAppStore()
-const { isLoadedApp, selectedChainId, isSearchOpen } =
+const { getNetworkById, setModal } = useAppStore()
+const { isLoadedApp, selectedChainId, isSearchOpen, modal } =
   storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
+const router = useRouter()
 
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
@@ -157,6 +158,11 @@ const checkBuyLyx = () => {
   }
 }
 
+router.beforeEach(() => {
+  // hide modals when there is router transition
+  setModal({ isOpen: false })
+})
+
 onMounted(async () => {
   setupTranslations()
   setupNetwork()
@@ -180,8 +186,8 @@ useHead({
     class: computed(() => {
       const bodyClass = []
 
-      // prevent window scroll when modal is open
-      if (isSearchOpen.value) {
+      // prevent window scroll when search modal is open
+      if (isSearchOpen.value || modal.value?.isOpen) {
         bodyClass.push('!overflow-hidden')
       }
 

@@ -45,6 +45,7 @@ export type Asset = {
   tokenURI?: string
   tokenCreators?: Address[]
   totalSupply?: string
+  tokenIdsData?: Asset[]
   resolvedMetadata?: LSP4DigitalAssetMetadata
   rawMetadata?: {
     lsp7Data?: LSP4DigitalAssetMetadata

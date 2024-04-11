@@ -17,16 +17,27 @@ const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const token = useToken()(asset)
 const viewedProfileAddress = getCurrentProfileAddress()
 const assetImage = useAssetImage(token, false, 260)
+const { showModal } = useModal()
 
 const handleShowAsset = () => {
   try {
     assertAddress(props.asset?.address)
 
-    if (props.asset?.tokenId) {
-      navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
-    } else {
-      navigateTo(tokenRoute(props.asset.address))
+    if (isCollection(props.asset)) {
+      return showModal({
+        template: 'TokenCollection',
+        data: {
+          asset: props.asset,
+        },
+        size: 'medium',
+      })
     }
+
+    if (props.asset?.tokenId) {
+      return navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
+    }
+
+    navigateTo(tokenRoute(props.asset.address))
   } catch (error) {
     console.error(error)
   }
@@ -115,7 +126,14 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
                 <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
               </div>
               <div v-if="isLoadedAsset" class="paragraph-ptmono-10-bold">
-                <span v-if="isLsp8(token) && asset?.tokenId">
+                <span v-if="isCollection(token)">
+                  {{
+                    $formatMessage('token_collection_of', {
+                      count: asset?.tokenIdsData?.length.toString() || '0',
+                    })
+                  }}
+                </span>
+                <span v-else-if="isLsp8(token) && asset?.tokenId">
                   {{ assetTokenId }}
                 </span>
                 <span v-else-if="token?.balance">
@@ -127,7 +145,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
             </div>
             <NftListCardCreators :asset="token" class="relative -top-4 -mt-2" />
             <div class="flex items-end">
-              <div class="flex w-full justify-end">
+              <div v-if="!isCollection(asset)" class="flex w-full justify-end">
                 <div v-if="isLoadedAsset">
                   <lukso-button
                     v-if="
