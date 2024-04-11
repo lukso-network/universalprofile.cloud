@@ -48,6 +48,18 @@ const handleSelectAsset = (asset: Asset) => {
 
 const ownedAssets = computed(() =>
   allTokens.value
+    // unwrap token Ids into main array
+    ?.flatMap(token => {
+      if (isLsp8(token)) {
+        return token?.tokenIdsData?.map(tokenIdsData => ({
+          ...tokenIdsData,
+        }))
+      }
+      return [token]
+    })
+    // remove potential undefined from array
+    ?.filter(item => item !== undefined)
+    // pick only the ones with balance/owned/in right standard
     ?.filter(
       ({ isOwned, standard, balance }) =>
         isOwned &&
@@ -55,8 +67,8 @@ const ownedAssets = computed(() =>
           standard === 'LSP8IdentifiableDigitalAsset') &&
         balance !== '0'
     )
+    // sort so LSP7 tokens are first in the list
     .sort((a: Asset, _b: Asset) => {
-      // put tokens first in the list
       if (isToken(a)) {
         return -1
       }
