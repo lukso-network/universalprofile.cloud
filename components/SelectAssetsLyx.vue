@@ -5,6 +5,8 @@ type Props = {
 
 defineProps<Props>()
 const { currentNetwork } = storeToRefs(useAppStore())
+const connectedProfile = useProfile().connectedProfile()
+const token = useLyxToken()
 </script>
 
 <template>
@@ -25,10 +27,23 @@ const { currentNetwork } = storeToRefs(useAppStore())
     <div class="grid grid-cols-[auto,max-content] items-center">
       <div class="flex flex-col text-left">
         <div class="paragraph-inter-14-semi-bold">
-          {{ currentNetwork.token.name }}
+          <span>
+            {{ currentNetwork.token.name }}
+          </span>
+          <span class="paragraph-inter-12-semi-bold ml-1 text-neutral-60">
+            {{ currentNetwork.token.symbol }}
+          </span>
         </div>
-        <div class="paragraph-inter-12-semi-bold text-neutral-60">
-          {{ currentNetwork.token.symbol }}
+        <div class="paragraph-ptmono-10-bold">
+          {{ $formatMessage('token_owned') }}
+          {{
+            $formatNumber(
+              fromWeiWithDecimals(
+                connectedProfile?.balance?.toString() || '0',
+                token.decimals
+              )
+            )
+          }}
         </div>
       </div>
       <lukso-icon
