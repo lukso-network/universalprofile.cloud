@@ -76,11 +76,7 @@ const ownedAssets = computed(() =>
       class="heading-inter-21-semi-bold flex items-center justify-between pb-6"
     >
       {{ $formatMessage('modal_select_assets_title') }}
-      <lukso-icon
-        name="close-lg"
-        class="cursor-pointer"
-        @click="closeModal"
-      ></lukso-icon>
+      <ModalCloseButton @click="closeModal" />
     </div>
     <ul class="-mr-4 max-h-72 space-y-2 overflow-y-auto">
       <li class="mr-4">

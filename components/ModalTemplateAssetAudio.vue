@@ -27,6 +27,6 @@ const isLoaded = ref(false)
     >
       <source :src="modal?.data?.asset?.url" />
     </audio>
-    <ModalCloseButton @click="closeModal" />
+    <ModalCloseCircleButton @click="closeModal" />
   </div>
 </template>
