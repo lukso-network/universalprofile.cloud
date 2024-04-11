@@ -11,6 +11,7 @@ import BigNumber from 'bignumber.js'
 export const fromTokenUnitWithDecimals = (value: string, decimals = 18) => {
   const mintValueBN = new BigNumber(value)
   const divValue = new BigNumber('10').exponentiatedBy(decimals.toString())
+
   return mintValueBN.div(divValue).toString()
 }
 
@@ -25,5 +26,8 @@ export const toTokenUnitWithDecimals = (value: string, decimals = 18) => {
   assert(decimals >= 0, 'Decimals should be greater than or equal to 0')
   const mintValueBN = new BigNumber(value)
   const divValue = new BigNumber('10').exponentiatedBy(new BigNumber(decimals))
-  return mintValueBN.multipliedBy(divValue).toString()
+
+  return mintValueBN
+    .multipliedBy(divValue)
+    .toFormat({ decimalSeparator: ',', groupSeparator: '' })
 }
