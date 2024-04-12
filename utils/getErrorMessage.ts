@@ -37,5 +37,5 @@ export const getErrorMessage = (error: unknown) => {
   }
 
   // generic message for unknowns errors
-  return formatMessage('web3_connect_error')
+  return formatMessage('error_generic')
 }
