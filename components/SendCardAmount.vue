@@ -19,7 +19,12 @@ const balance = computed(() => {
   return '0'
 })
 
-const handleKeyDown = (customEvent: CustomEvent) => {
+/**
+ * Key down handled does input field validation
+ *
+ * @param customEvent
+ */
+const handleKeyDown = async (customEvent: CustomEvent) => {
   const numberRegex = /^[0-9]*\.?[0-9]*$/
   const event = customEvent.detail.event
   const input = event.target as HTMLInputElement
@@ -32,12 +37,28 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   )
   const maxDecimalPlaces = asset.value?.decimals || 0
 
-  // check for allowed keys or if user press CMD+A
-  if (allowedKeys.includes(key) || (event.metaKey && key === 'a')) {
+  // check for allowed keys or if user press CMD+A (selection, CMD+V (paste) or CMD+C (copy)
+  if (
+    allowedKeys.includes(key) ||
+    (event.metaKey && key === 'a') ||
+    (event.metaKey && key === 'c')
+  ) {
     return
   }
 
-  // allow only numbers
+  // allow paste only numbers
+  if (event.metaKey && key === 'v') {
+    const pastedValue = await navigator.clipboard.readText()
+    const pastedValueParsed = parseValue(pastedValue)
+
+    if (!numberRegex.test(pastedValueParsed)) {
+      await sleep(1)
+      input.value = ''
+      event.preventDefault()
+    }
+  }
+
+  // allow type only numbers
   if (!numberRegex.test(key)) {
     event.preventDefault()
   } else {
@@ -73,9 +94,17 @@ const handleKeyDown = (customEvent: CustomEvent) => {
   }
 }
 
+// when user paste value with comma 123,44 we swap to dot notation 123.44
+const parseValue = (value: string) => String(value).replace(',', '.')
+
+/**
+ * Key up handled updates input field
+ *
+ * @param event
+ */
 const handleKeyUp = (event: CustomEvent) => {
   const input = event.detail.event.target
-  amount.value = input.value
+  amount.value = parseValue(input.value)
 }
 
 const handleUnitClick = () => {
