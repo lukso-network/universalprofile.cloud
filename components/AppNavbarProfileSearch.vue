@@ -3,6 +3,8 @@ import { isAddress } from 'web3-utils'
 
 import type { SearchProfileResult } from '@lukso/web-components'
 
+const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
+
 const { currentNetwork, isSearchOpen } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
   currentNetwork.value.indexName
@@ -74,7 +76,7 @@ watchEffect(() => {
         ?.querySelector('lukso-search') as unknown as HTMLElement
       const inputElement = luksoSearch?.shadowRoot?.querySelector('input')
       inputElement?.focus()
-    }, 100)
+    }, INPUT_FOCUS_DELAY)
   }
 })
 </script>
