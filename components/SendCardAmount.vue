@@ -119,11 +119,14 @@ const handleUnitClick = () => {
     :value="amount"
     :unit="
       $formatMessage('profile_balance_of', {
-        balance: $formatNumber(
-          fromTokenUnitWithDecimals(balance, asset?.decimals) || '',
-          {
-            maximumFractionDigits: asset?.decimals,
-          }
+        balance: truncate(
+          $formatNumber(
+            fromTokenUnitWithDecimals(balance, asset?.decimals) || '',
+            {
+              maximumFractionDigits: asset?.decimals,
+            }
+          ),
+          10
         ),
         symbol: asset?.tokenSymbol || '',
       })
