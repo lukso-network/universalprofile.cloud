@@ -48,6 +48,18 @@ const handleSelectAsset = (asset: Asset) => {
 
 const ownedAssets = computed(() =>
   allTokens.value
+    // unwrap token Ids into main array
+    ?.flatMap(token => {
+      if (isLsp8(token)) {
+        return token?.tokenIdsData?.map(tokenIdsData => ({
+          ...tokenIdsData,
+        }))
+      }
+      return [token]
+    })
+    // remove potential undefined from array
+    ?.filter(item => item !== undefined)
+    // pick only the ones with balance/owned/in right standard
     ?.filter(
       ({ isOwned, standard, balance }) =>
         isOwned &&
@@ -55,8 +67,8 @@ const ownedAssets = computed(() =>
           standard === 'LSP8IdentifiableDigitalAsset') &&
         balance !== '0'
     )
+    // sort so LSP7 tokens are first in the list
     .sort((a: Asset, _b: Asset) => {
-      // put tokens first in the list
       if (isToken(a)) {
         return -1
       }
@@ -76,11 +88,7 @@ const ownedAssets = computed(() =>
       class="heading-inter-21-semi-bold flex items-center justify-between pb-6"
     >
       {{ $formatMessage('modal_select_assets_title') }}
-      <lukso-icon
-        name="close-lg"
-        class="cursor-pointer"
-        @click="closeModal"
-      ></lukso-icon>
+      <ModalCloseButton @click="closeModal" />
     </div>
     <ul class="-mr-4 max-h-72 space-y-2 overflow-y-auto">
       <li class="mr-4">

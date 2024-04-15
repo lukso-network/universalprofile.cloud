@@ -10,9 +10,20 @@ const standard = computed(() => props.asset?.standard)
 
 <template>
   <div v-if="isLoaded" class="flex">
-    <lukso-tag v-if="standard" size="x-small" background-color="lukso-90">{{
-      STANDARDS_ABBREVIATIONS[standard as Standard]
-    }}</lukso-tag>
+    <lukso-tag
+      v-if="isCollection(asset)"
+      size="x-small"
+      background-color="lukso-90"
+      >{{
+        $formatMessage('asset_standard_badge_collection_contract')
+      }}</lukso-tag
+    >
+    <lukso-tag
+      v-else-if="standard"
+      size="x-small"
+      background-color="lukso-90"
+      >{{ STANDARDS_ABBREVIATIONS[standard as Standard] }}</lukso-tag
+    >
   </div>
   <AppPlaceholderLine v-else class="h-[20px] w-10" />
 </template>

@@ -28,6 +28,6 @@ const isLoaded = ref(false)
     >
       <source :src="modal?.data?.asset?.src" />
     </video>
-    <ModalCloseButton @click="closeModal" />
+    <ModalCloseCircleButton @click="closeModal" />
   </div>
 </template>

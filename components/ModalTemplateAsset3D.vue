@@ -37,6 +37,6 @@ const isLoaded = ref(false)
       shadow-intensity="1"
       @load="isLoaded = true"
     ></model-viewer>
-    <ModalCloseButton @click="closeModal" />
+    <ModalCloseCircleButton @click="closeModal" />
   </div>
 </template>

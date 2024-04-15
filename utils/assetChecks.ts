@@ -61,3 +61,12 @@ export const hasTokenId = (asset?: Asset | null) =>
  */
 export const isAsset = (asset?: Asset | null) =>
   asset?.standard === STANDARDS.LSP7 || asset?.standard === STANDARDS.LSP8
+
+/**
+ * Check if passed asset is LSP8 collection
+ *
+ * @param asset
+ * @returns
+ */
+export const isCollection = (asset?: Asset | null) =>
+  isLsp8(asset) && !!asset?.tokenIdsData?.length

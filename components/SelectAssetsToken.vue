@@ -10,9 +10,7 @@ type Props = {
   isSelected?: boolean
 }
 
-type Emits = {
-  (event: 'on-select', asset: Asset | null): void
-}
+type Emits = (event: 'on-select', asset: Asset | null) => void
 
 const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
@@ -20,6 +18,10 @@ const hasSquareIcon = computed(() => isCollectible(props.asset))
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const assetImage = useAssetImage(token, !isCollectible(token.value), 80)
+
+const assetTokenId = computed(() => {
+  return prefixedTokenId(token.value?.tokenId, token.value?.tokenIdFormat, 24)
+})
 </script>
 
 <template>
@@ -49,11 +51,24 @@ const assetImage = useAssetImage(token, !isCollectible(token.value), 80)
     </div>
     <div class="grid grid-cols-[auto,max-content] items-center">
       <div class="flex flex-col text-left">
-        <div class="paragraph-inter-14-semi-bold">
-          {{ token?.tokenName }}
+        <div class="paragraph-inter-14-semi-bold items-center">
+          <span>
+            {{ token?.tokenName }}
+          </span>
+          <span class="paragraph-inter-12-semi-bold ml-1 text-neutral-60">
+            {{ token?.tokenSymbol }}
+          </span>
         </div>
-        <div class="paragraph-inter-12-semi-bold text-neutral-60">
-          {{ token?.tokenSymbol }}
+        <div class="paragraph-ptmono-10-bold">
+          <span v-if="isLsp8(token) && token?.tokenId">
+            {{ assetTokenId }}
+          </span>
+          <span v-else-if="token?.balance">
+            {{ $formatMessage('token_owned') }}
+            {{
+              $formatNumber(fromWeiWithDecimals(token.balance, token.decimals))
+            }}
+          </span>
         </div>
       </div>
       <lukso-icon

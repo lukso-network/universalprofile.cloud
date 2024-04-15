@@ -7,6 +7,7 @@ import {
   isLsp7,
   isLsp8,
   hasTokenId,
+  isCollection,
 } from '../assetChecks'
 import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
@@ -178,6 +179,41 @@ describe('isAsset', () => {
     expect(
       isAsset({
         standard: STANDARDS.LSP3,
+      } as Asset)
+    ).toBe(false)
+    expect(hasTokenId({} as Asset)).toBe(false)
+  })
+})
+
+describe('isCollection', () => {
+  test('should return true if the asset is LSP8 collection', async () => {
+    expect(
+      isCollection({
+        standard: STANDARDS.LSP8,
+        tokenIdsData: [
+          {
+            standard: STANDARDS.LSP8,
+          },
+        ],
+      } as Asset)
+    ).toBe(true)
+  })
+
+  test('should return false if the asset is not LSP8 collection', async () => {
+    expect(
+      isCollection({
+        standard: STANDARDS.LSP8,
+        tokenIdsData: [],
+      } as Asset)
+    ).toBe(false)
+    expect(
+      isCollection({
+        standard: STANDARDS.LSP8,
+      } as Asset)
+    ).toBe(false)
+    expect(
+      isCollection({
+        standard: STANDARDS.LSP7,
       } as Asset)
     ).toBe(false)
     expect(hasTokenId({} as Asset)).toBe(false)

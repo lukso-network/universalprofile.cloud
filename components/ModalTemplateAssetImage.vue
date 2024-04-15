@@ -27,6 +27,6 @@ const optimizedImage = useOptimizedImage(modal?.data?.asset, 1000)
       :image="optimizedImage"
       @on-load="isLoaded = true"
     />
-    <ModalCloseButton @click="closeModal" />
+    <ModalCloseCircleButton @click="closeModal" />
   </div>
 </template>
