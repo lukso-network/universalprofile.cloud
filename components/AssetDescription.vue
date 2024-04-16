@@ -14,7 +14,7 @@ const description = computed(() => props.asset?.resolvedMetadata?.description)
       <div class="heading-inter-14-bold pb-3">
         {{ $formatMessage('token_details_description') }}
       </div>
-      <div class="paragraph-inter-12-regular break-word">
+      <div class="paragraph-inter-12-regular whitespace-pre-line break-word">
         {{ description }}
       </div>
     </div>

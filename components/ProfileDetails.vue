@@ -33,7 +33,7 @@ const hasTags = computed(
     </ul>
     <div
       v-if="hasDescription"
-      class="paragraph-inter-12-medium text-center break-word"
+      class="paragraph-inter-12-medium whitespace-pre-line text-center break-word"
     >
       {{ viewedProfile?.description }}
     </div>
