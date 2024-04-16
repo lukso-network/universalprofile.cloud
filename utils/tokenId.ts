@@ -1,6 +1,6 @@
 import { LSP8_TOKEN_ID_FORMAT } from '@lukso/lsp-smart-contracts'
-import { hexToNumber, hexToUtf8 } from 'web3-utils'
 import { sliceAddress } from '@lukso/web-components/tools'
+import { hexToNumber, hexToUtf8 } from 'web3-utils'
 
 /**
  * Parse token ID based on the format

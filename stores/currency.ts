@@ -14,9 +14,7 @@ export const useCurrencyStore = defineStore(
 
     const getCurrencyMultiplier = () => {
       return (symbol: string) =>
-        currencyList.value &&
-        currencyList.value[symbol] &&
-        currencyList.value[symbol][currentCurrencySymbol.value]
+        currencyList.value?.[symbol]?.[currentCurrencySymbol.value]
     }
 
     return {

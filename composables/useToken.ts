@@ -5,8 +5,8 @@ import { keccak256 } from 'web3-utils'
 import { browserProcessMetadata } from '@/utils/processMetadata'
 import {
   Priorities,
-  queryNull,
   type QFQueryOptions,
+  queryNull,
 } from '@/utils/queryFunctions'
 
 import type {

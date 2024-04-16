@@ -5,7 +5,7 @@ const fetchCurrencies = async () => {
   const compareTokens = [CURRENCY_API_LYX_TOKEN_NAME] // we can add more tokens here if needed
   const url = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${compareTokens.join(
     ','
-  )}&tsyms=${CURRENCY_API_SYMBOLS.join(`,`)}`
+  )}&tsyms=${CURRENCY_API_SYMBOLS.join(',')}`
   const cacheData = await cache.match(url)
 
   if (cacheData) {
@@ -13,9 +13,8 @@ const fetchCurrencies = async () => {
 
     if (cacheDataJson.expires > Date.now()) {
       return cacheDataJson.currencies
-    } else {
-      caches.delete(url)
     }
+    caches.delete(url)
   }
 
   const currencies = await fetcher<CurrencyList, Record<string, never>>({

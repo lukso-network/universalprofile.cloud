@@ -1,15 +1,15 @@
-import {
-  VueQueryPlugin,
-  QueryClient,
-  hydrate,
-  dehydrate,
-} from '@tanstack/vue-query'
-import { persistQueryClient } from '@tanstack/query-persist-client-core'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+import { persistQueryClient } from '@tanstack/query-persist-client-core'
+import {
+  QueryClient,
+  VueQueryPlugin,
+  dehydrate,
+  hydrate,
+} from '@tanstack/vue-query'
 import debug from 'debug'
 
 // import { defaultQueryFn } from '@/utils/queryFunctions'
-import { TANSTACK_GC_TIME, TANSTACK_DEFAULT_STALE_TIME } from '@/shared/config'
+import { TANSTACK_DEFAULT_STALE_TIME, TANSTACK_GC_TIME } from '@/shared/config'
 
 import type {
   DehydratedState,
