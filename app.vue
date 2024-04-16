@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { assertString } from '@/utils/validators'
 import { SUPPORTED_NETWORK_IDS } from '@/shared/config'
 import { INJECTED_PROVIDER } from '@/shared/provider'
+import { assertString } from '@/utils/validators'
 
 if (typeof window !== 'undefined') {
   import('@lukso/web-components')

@@ -17,6 +17,8 @@
     "lint:fmt": "prettier --check --log-level=warn .",
     "lint:fmt:fix": "prettier --write .",
     "lint:types": "tsc --noEmit --project tsconfig.json",
+    "lint:biome": "biome check .",
+    "lint:biome:fix": "biome check . --apply",
     "prepare": "npm-run-all nuxt:prepare typechain && husky install",
     "yata-fetch": "dotenv -- yata-fetch --config .yata.json",
     "test": "npm-run-all test:unit:ci test:e2e",
@@ -31,6 +33,7 @@
     "typechain": "typechain --target web3-v1 --out-dir contracts/ './shared/abis/LSP2FetcherWithMulticall3.json' && typechain --target web3-v1 --out-dir contracts/ './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.7.0",
     "@esbuild-plugins/node-globals-polyfill": "0.2.3",
     "@formatjs/intl": "^2.9.9",
     "@google/model-viewer": "^3.4.0",
@@ -126,13 +129,15 @@
     "web3": "~1.10.3"
   },
   "lint-staged": {
-    "*.{ts,js,vue}": [
+    "*.{ts,js,vue,json,yaml,yml}": [
+      "biome check",
       "prettier --list-different",
       "eslint"
     ],
     "*.json": "prettier --list-different",
     "*.ya?ml": "prettier --list-different",
     "*.{scss,css,vue}": [
+      "biome check",
       "prettier --list-different",
       "stylelint"
     ]
