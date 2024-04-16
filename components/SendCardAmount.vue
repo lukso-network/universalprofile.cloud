@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BigNumber from 'bignumber.js'
 
-const { asset, receiverError, amount } = storeToRefs(useSendStore())
+const { asset, amount, tempAmount } = storeToRefs(useSendStore())
 
 const balance = computed(() => {
   if (
@@ -19,60 +19,35 @@ const balance = computed(() => {
   return '0'
 })
 
+const balanceInUnits = computed(() =>
+  fromTokenUnitWithDecimals(balance.value, asset.value?.decimals)
+)
+
 /**
- * Key down handled does input field validation
+ * Input field validation
  *
  * @param customEvent
  */
-const handleKeyDown = async (customEvent: CustomEvent) => {
+const handleInput = async (customEvent: CustomEvent) => {
   const numberRegex = /^[0-9]*\.?[0-9]*$/
   const event = customEvent.detail.event
   const input = event.target as HTMLInputElement
-  const key = event.key
-  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab']
-  const realValueBN = new BigNumber(`${input.value}${key}`)
+  const key = input.value.slice(-1)
+  const realValueBN = new BigNumber(input.value)
 
-  const assetBalanceBN = new BigNumber(
-    `${fromTokenUnitWithDecimals(balance.value, asset.value?.decimals)}`
-  )
+  const assetBalanceBN = new BigNumber(balanceInUnits.value)
   const maxDecimalPlaces = asset.value?.decimals || 0
-
-  // check for allowed keys or if user press CMD+A (selection, CMD+V (paste) or CMD+C (copy)
-  if (
-    allowedKeys.includes(key) ||
-    (event.metaKey && key === 'a') ||
-    (event.metaKey && key === 'c')
-  ) {
-    return
-  }
-
-  // allow paste only numbers
-  if (event.metaKey && key === 'v') {
-    const pastedValue = await navigator.clipboard.readText()
-    const pastedValueParsed = parseValue(pastedValue)
-
-    if (!numberRegex.test(pastedValueParsed)) {
-      await sleep(1)
-      input.value = ''
-      event.preventDefault()
-    }
-  }
 
   // allow type only numbers
   if (!numberRegex.test(key)) {
-    event.preventDefault()
-  } else {
-    // Did it like this otherwise, if a user presses Esc or any non digit key, it would reset the error message
-    receiverError.value = ''
+    return rollbackAmount(input)
   }
 
   // when value is more then balance we set to max value
   if (realValueBN.gt(assetBalanceBN)) {
-    amount.value = fromTokenUnitWithDecimals(
-      balance.value,
-      asset.value?.decimals
-    )
-    event.preventDefault()
+    amount.value = balanceInUnits.value
+    tempAmount.value = balanceInUnits.value
+    return rollbackAmount(input)
   }
 
   // when asset use 0 decimals we should only allow integers
@@ -80,35 +55,50 @@ const handleKeyDown = async (customEvent: CustomEvent) => {
     asset.value?.decimals === 0 &&
     (key === '.' || (key === '0' && input.value === ''))
   ) {
-    event.preventDefault()
+    return rollbackAmount(input)
   }
 
-  // allow only one dot in the value, but not as first character
-  if (key === '.' && (input.value.includes('.') || input.value === '')) {
-    event.preventDefault()
+  // dot not as first character
+  if (key === '.' && input.value === '.') {
+    return rollbackAmount(input)
+  }
+
+  // allow only one dot
+  if (key === '.' && input.value.split('.').length > 2) {
+    return rollbackAmount(input)
   }
 
   // check for max decimal places
-  if (input.value.toString().split('.')[1]?.length >= maxDecimalPlaces) {
-    event.preventDefault()
+  if (input.value.toString().split('.')[1]?.length > maxDecimalPlaces) {
+    return rollbackAmount(input)
   }
-}
 
-// when user paste value with comma 123,44 we swap to dot notation 123.44
-const parseValue = (value: string) => String(value).replace(',', '.')
-
-/**
- * Key up handled updates input field
- *
- * @param event
- */
-const handleKeyUp = (event: CustomEvent) => {
-  const input = event.detail.event.target
+  tempAmount.value = parseValue(input.value)
   amount.value = parseValue(input.value)
 }
 
+/**
+ * Rollback input value to temp value
+ *
+ * @param input HTMLInputElement
+ * @returns {void}
+ */
+const rollbackAmount = (input: HTMLInputElement) => {
+  amount.value = tempAmount.value
+  input.value = tempAmount.value
+}
+
+/**
+ *  When user paste value with comma 123, 44 we swap to dot notation 123.44
+ *
+ * @param value
+ * @returns {string}
+ */
+const parseValue = (value: string) => String(value).replace(',', '.')
+
 const handleUnitClick = () => {
-  const total = fromTokenUnitWithDecimals(balance.value, asset.value?.decimals)
+  const total = balanceInUnits.value
+  tempAmount.value = total
   amount.value = total
 }
 </script>
@@ -120,12 +110,9 @@ const handleUnitClick = () => {
     :unit="
       $formatMessage('profile_balance_of', {
         balance: truncate(
-          $formatNumber(
-            fromTokenUnitWithDecimals(balance, asset?.decimals) || '',
-            {
-              maximumFractionDigits: asset?.decimals,
-            }
-          ),
+          $formatNumber(balanceInUnits || '', {
+            maximumFractionDigits: asset?.decimals,
+          }),
           10
         ),
         symbol: asset?.tokenSymbol || '',
@@ -134,8 +121,7 @@ const handleUnitClick = () => {
     borderless
     is-full-width
     autofocus
-    @on-key-down="handleKeyDown"
-    @on-key-up="handleKeyUp"
+    @on-input="handleInput"
     @on-unit-click="handleUnitClick"
   ></lukso-input>
 </template>

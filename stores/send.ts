@@ -4,7 +4,8 @@ export const useSendStore = defineStore('send', () => {
   const asset = ref<Asset | null>()
   const receiver = ref<Profile>()
   const receiverError = ref<string>()
-  const amount = ref<string>()
+  const amount = ref<string>('')
+  const tempAmount = ref<string>('')
   const status = ref<SendStatus>('draft')
   const onSend = ref<() => Promise<void>>()
   const transactionHash = ref<string>()
@@ -17,11 +18,14 @@ export const useSendStore = defineStore('send', () => {
   const isSuccess = computed(() => status.value === 'success')
 
   // actions
-  const setStatus = (newStatus: SendStatus) => (status.value = newStatus)
+  const setStatus = (newStatus: SendStatus) => {
+    status.value = newStatus
+  }
 
   const clearSend = () => {
     receiver.value = undefined
-    amount.value = undefined
+    amount.value = ''
+    tempAmount.value = ''
     receiverError.value = undefined
   }
 
@@ -30,6 +34,7 @@ export const useSendStore = defineStore('send', () => {
     receiver,
     receiverError,
     amount,
+    tempAmount,
     status,
     isDraft,
     isPending,
