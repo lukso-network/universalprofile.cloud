@@ -8,6 +8,9 @@ export const useNetworkConfig = (): NetworkInfo[] => {
       chainId: TESTNET_CHAIN_ID,
       rpcNodes: [
         {
+          host: 'https://rpc.testnet.lukso.network',
+        },
+        {
           host: 'https://4201.rpc.thirdweb.com',
         },
       ],
