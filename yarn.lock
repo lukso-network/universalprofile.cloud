@@ -20673,7 +20673,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wallet.universalprofile.cloud@workspace:."
   dependencies:
-    "@erc725/erc725.js": ./erc725-erc725.js-0.23.0.tgz
+    "@erc725/erc725.js": "npm:^0.24.2"
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
     "@formatjs/intl": "npm:^2.9.9"
     "@google/model-viewer": "npm:^3.4.0"

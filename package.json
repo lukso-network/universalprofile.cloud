@@ -139,7 +139,7 @@
   },
   "version": "1.0.0",
   "dependencies": {
-    "@erc725/erc725.js": "./erc725-erc725.js-0.23.0.tgz",
+    "@erc725/erc725.js": "^0.24.2",
     "@tanstack/query-async-storage-persister": "^5.25.0",
     "@tanstack/query-core": "^5.25.0",
     "@tanstack/query-persist-client-core": "^5.25.0",
