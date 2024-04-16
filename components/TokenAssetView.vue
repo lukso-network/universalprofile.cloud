@@ -83,7 +83,7 @@ const handlePreviewImage = () => {
 
           <lukso-button is-full-width class="mt-12" @click="handleSendAsset">{{
             $formatMessage('token_details_send', {
-              token: token?.tokenSymbol || '',
+              token: truncate(token?.tokenSymbol, 10) || '',
             })
           }}</lukso-button>
         </div>

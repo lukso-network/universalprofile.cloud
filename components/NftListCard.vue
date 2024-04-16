@@ -115,8 +115,12 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
             <div
               class="relative top-[-40px] z-[2] flex cursor-pointer flex-col gap-1 rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
             >
-              <div class="paragraph-inter-14-semi-bold flex items-center gap-1">
-                <span v-if="isLoadedAsset">{{ token?.tokenName }}</span>
+              <div
+                class="paragraph-inter-14-semi-bold flex flex-wrap items-center gap-x-1 gap-y-0.5 break-word"
+              >
+                <span v-if="isLoadedAsset" class="">{{
+                  token?.tokenName
+                }}</span>
                 <AppPlaceholderLine v-else class="h-[22px] w-1/2" />
                 <span
                   v-if="isLoadedAsset"

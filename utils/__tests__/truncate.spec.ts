@@ -14,4 +14,8 @@ describe('truncate', () => {
     expect(truncate('Hello world', 0)).toBe('')
     expect(truncate('Hello world', -1)).toBe('')
   })
+
+  it('should return original string if no length provided', () => {
+    expect(truncate('Hello world')).toBe('Hello world')
+  })
 })

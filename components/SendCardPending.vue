@@ -8,7 +8,7 @@ const { amount, asset } = storeToRefs(useSendStore())
       <SendCardHeader />
     </div>
     <div slot="content" class="flex flex-col items-center p-8">
-      <div class="heading-inter-17-semi-bold">
+      <div class="heading-inter-17-semi-bold break-word">
         {{
           $formatMessage('send_pending_title', {
             amount: $formatNumber(amount || '0', {

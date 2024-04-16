@@ -76,16 +76,17 @@ const handlePreviewImage = () => {
             @click="handlePreviewImage"
           />
           <div class="relative p-4">
-            <div class="paragraph-inter-14-semi-bold flex items-center gap-1">
-              <div v-if="asset">{{ asset?.tokenName }}</div>
+            <div
+              class="paragraph-inter-14-semi-bold flex flex-wrap items-center gap-1 break-word"
+            >
+              <span v-if="asset">{{ asset?.tokenName }}</span>
               <AppPlaceholderLine v-else class="h-[22px] w-1/2" />
-
-              <div
+              <span
                 v-if="asset"
                 class="paragraph-inter-10-semi-bold text-neutral-60"
               >
                 {{ asset?.tokenSymbol }}
-              </div>
+              </span>
               <AppPlaceholderLine v-else class="h-[12px] w-1/6" />
             </div>
             <div v-if="asset" class="paragraph-ptmono-10-bold mt-1">

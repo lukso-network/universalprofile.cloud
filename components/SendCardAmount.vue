@@ -115,7 +115,7 @@ const handleUnitClick = () => {
           }),
           10
         ),
-        symbol: asset?.tokenSymbol || '',
+        symbol: truncate(asset?.tokenSymbol, 10) || '',
       })
     "
     borderless
