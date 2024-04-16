@@ -1,14 +1,3 @@
-<script setup lang="ts">
-const { isConnected } = storeToRefs(useAppStore())
-
-watchEffect(() => {
-  // when not connected then navigate to home
-  if (!isConnected.value) {
-    navigateTo(homeRoute())
-  }
-})
-</script>
-
 <template>
   <div class="relative">
     <AppPageLoader>
