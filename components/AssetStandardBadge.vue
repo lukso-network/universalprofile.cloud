@@ -9,7 +9,7 @@ const standard = computed(() => props.asset?.standard)
 </script>
 
 <template>
-  <div v-if="isLoaded" class="flex">
+  <div v-if="isLoaded" class="flex whitespace-nowrap">
     <lukso-tag
       v-if="isCollection(asset)"
       size="x-small"
