@@ -1,15 +1,15 @@
+import { describe, expect, test } from 'vitest'
 import {
-  validateAttributes,
-  validateLinks,
   validateAssets,
-  validateIcon,
-  validateTags,
-  validateName,
+  validateAttributes,
   validateDescription,
+  validateIcon,
   validateImages,
+  validateLinks,
+  validateName,
+  validateTags,
   validateVerification,
 } from '../validateLspMetadata'
-import { expect, test, describe } from 'vitest'
 
 test('validateAttribute', () => {
   expect(validateAttributes([])).toEqual([])

@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { useIntersectionObserver } from '@vueuse/core'
 import makeBlockie from 'ethereum-blockies-base64'
 import { ref } from 'vue'
-import { useIntersectionObserver } from '@vueuse/core'
 
 type Props = {
   asset: Asset

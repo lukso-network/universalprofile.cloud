@@ -3,9 +3,9 @@ import { keccak256 } from 'web3-utils'
 
 import { browserProcessMetadata } from '@/utils/processMetadata'
 
-import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
-import type { QFQueryOptions } from '@/utils/queryFunctions'
 import type { ProfileLink } from '@/types/profile'
+import type { QFQueryOptions } from '@/utils/queryFunctions'
+import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 
 export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
   const { currentNetwork } = storeToRefs(useAppStore())

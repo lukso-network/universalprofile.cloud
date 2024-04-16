@@ -1,9 +1,9 @@
-import nodePolyfills from 'rollup-plugin-polyfill-node'
-import { copyAssets } from '@lukso/web-components/tools/copy-assets'
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 // @ts-ignore
 import { assets } from '@lukso/web-components/tools/assets'
-import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+import { copyAssets } from '@lukso/web-components/tools/copy-assets'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
+import nodePolyfills from 'rollup-plugin-polyfill-node'
 
 import siteMeta from './site.meta.json'
 

@@ -1,15 +1,15 @@
-import { expect, test, describe } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
+import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 import {
-  isLyx,
+  hasTokenId,
   isCollectible,
-  isToken,
+  isCollection,
   isLsp7,
   isLsp8,
-  hasTokenId,
-  isCollection,
+  isLyx,
+  isToken,
 } from '../assetChecks'
-import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
 describe('isLyx', () => {
   test('should return true if the asset is a LYX', async () => {

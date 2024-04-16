@@ -1,8 +1,8 @@
 import Web3 from 'web3'
 
-import type { AbiItem } from 'web3-utils'
-import type { ContractOptions } from 'web3-eth-contract'
 import type { TransactionConfig } from 'web3-core'
+import type { ContractOptions } from 'web3-eth-contract'
+import type { AbiItem } from 'web3-utils'
 
 export default function useWeb3(providerName: string) {
   const web3Store = useWeb3Store()
