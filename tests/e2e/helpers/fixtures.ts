@@ -1,6 +1,8 @@
 import { type TestInfo, test as base } from '@playwright/test'
 
-export const test = base.extend<any>({
+type TestFixtures = Record<string, unknown>
+
+export const test = base.extend<TestFixtures>({
   // overrides default page fixture
   page: async ({ page }, use, testInfo: TestInfo) => {
     const originalSnapshotPath = testInfo.snapshotPath
