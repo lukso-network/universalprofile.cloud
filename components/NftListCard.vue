@@ -125,7 +125,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
                 <span
                   v-if="isLoadedAsset"
                   class="paragraph-inter-10-semi-bold text-neutral-60"
-                  >{{ token?.tokenSymbol }}</span
+                  >{{ truncate(token?.tokenSymbol, 8) }}</span
                 >
                 <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
               </div>

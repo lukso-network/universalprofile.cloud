@@ -23,7 +23,9 @@ const handleViewEntireCollection = () => {
 <template>
   <div class="relative rounded-12 bg-neutral-100 p-6">
     <div class="flex items-center justify-between pb-6">
-      <div class="heading-inter-21-semi-bold flex items-center gap-3">
+      <div
+        class="heading-inter-21-semi-bold flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3"
+      >
         <AssetName :asset="asset" />
         <AssetStandardBadge :asset="asset" />
       </div>
