@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { isMobile } = useDevice()
+const { formatMessage } = useIntl()
 
 type Props = {
   asset?: Asset
@@ -18,13 +19,20 @@ const tokenLength = computed(() => {
   return tokenLength
 })
 
-const tooltipContent = ref<HTMLElement>()
-
-onMounted(() => {
-  tooltipContent.value = document?.getElementById(
-    'tooltip-token-id'
-  ) as HTMLElement
-})
+const tooltipOptions = computed(() =>
+  JSON.stringify([
+    {
+      id: 'copy_parsed',
+      text: formatMessage('tooltip_text_copy'),
+      value: parseTokenId(props.asset?.tokenId, props.asset?.tokenIdFormat),
+    },
+    {
+      id: 'copy_raw',
+      text: formatMessage('tooltip_text_copy_raw'),
+      value: props.asset?.tokenId,
+    },
+  ])
+)
 </script>
 
 <template>
@@ -40,7 +48,7 @@ onMounted(() => {
           variant="white"
           trigger="mouseenter"
           offset="15"
-          :text="tooltipContent"
+          :options="tooltipOptions"
         >
           <lukso-icon
             name="copy"
@@ -48,20 +56,6 @@ onMounted(() => {
             class="cursor-pointer transition-opacity hover:opacity-70"
           ></lukso-icon>
         </lukso-tooltip>
-        <div id="tooltip-token-id" class="text-center">
-          <div
-            class="mb-1 rounded-4 px-2 py-1 hover:cursor-pointer hover:bg-neutral-95"
-            :onclick="`navigator.clipboard.writeText('${parseTokenId(asset?.tokenId, asset?.tokenIdFormat)}')`"
-          >
-            {{ $formatMessage('tooltip_text_copy') }}
-          </div>
-          <div
-            class="rounded-4 px-2 py-1 hover:cursor-pointer hover:bg-neutral-95"
-            :onclick="`navigator.clipboard.writeText('${asset?.tokenId}')`"
-          >
-            {{ $formatMessage('tooltip_text_copy_raw') }}
-          </div>
-        </div>
       </div>
     </lukso-tag>
   </div>
