@@ -23,7 +23,7 @@ const optimizedImage = useOptimizedImage(modal?.data?.asset, 1000)
     ></lukso-icon>
 
     <AssetImage
-      class="relative max-h-[calc(100vh-100px)] min-h-[200px] w-full min-w-[200px] max-w-[calc(100vw-100px)] rounded-12 lg:max-h-[1000px] lg:max-w-[1000px]"
+      class="relative max-h-[calc(100vh-100px)] rounded-12"
       :image="optimizedImage"
       @on-load="isLoaded = true"
     />

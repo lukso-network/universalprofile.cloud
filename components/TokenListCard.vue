@@ -95,13 +95,13 @@ const isLoadedMetadata = computed(
           <div
             class="grid w-full grid-rows-[max-content,max-content,auto] gap-1"
           >
-            <div class="heading-inter-14-bold">
+            <div class="heading-inter-14-bold break-word">
               <div v-if="isLoadedAsset">{{ token?.tokenName }}</div>
               <AppPlaceholderLine v-else class="h-[17px] w-1/3" />
             </div>
             <div
               v-if="isLoadedToken"
-              class="heading-inter-21-semi-bold grid grid-cols-[minmax(auto,max-content),max-content] items-center"
+              class="heading-inter-21-semi-bold grid grid-cols-[minmax(auto,max-content),max-content] flex-wrap items-center"
             >
               <span
                 v-if="token?.balance"
@@ -119,7 +119,7 @@ const isLoadedMetadata = computed(
               >
               <span v-else>0</span>
               <span class="paragraph-inter-14-semi-bold pl-2 text-neutral-60">{{
-                token?.tokenSymbol
+                truncate(token?.tokenSymbol, 8)
               }}</span>
             </div>
             <div v-else class="grid grid-cols-[2fr,1fr] items-center gap-2">

@@ -25,7 +25,7 @@ const backgroundImage = useProfileBackground(connectedProfile, 450)
 const avatarImage = useProfileAvatar(connectedProfile, 80)
 
 const handleSend = () => {
-  onSend.value && onSend.value()
+  onSend.value?.()
 }
 
 const handleSelectAssets = () => {
@@ -116,7 +116,7 @@ watch(
         </div>
         <div class="flex w-full flex-col">
           <div
-            class="paragraph-inter-14-semi-bold flex cursor-pointer items-center justify-between rounded-[0_12px_0_0] border border-neutral-90 px-4 py-3 transition hover:border-neutral-35"
+            class="paragraph-inter-14-semi-bold flex cursor-pointer items-center justify-between rounded-[0_12px_0_0] border border-neutral-90 px-4 py-3 transition break-word hover:border-neutral-35"
             @click="handleSelectAssets"
           >
             {{ asset?.tokenName }}
@@ -159,7 +159,7 @@ watch(
         >{{
           $formatMessage('send_button', {
             amount: !!Number(amount) ? $formatNumber(amount || '') : '',
-            symbol: asset?.tokenSymbol || '',
+            symbol: truncate(asset?.tokenSymbol, 10) || '',
           })
         }}</lukso-button
       >

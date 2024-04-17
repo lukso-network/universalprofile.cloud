@@ -38,7 +38,7 @@ const token = useLyxToken()
           {{ $formatMessage('token_owned') }}
           {{
             $formatNumber(
-              fromWeiWithDecimals(
+              fromTokenUnitWithDecimals(
                 connectedProfile?.balance?.toString() || '0',
                 token.decimals
               )

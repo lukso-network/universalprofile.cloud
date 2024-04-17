@@ -29,8 +29,8 @@ const handleBuyLyx = (event: Event) => {
     window.open(TESTNET_FAUCET_URL, '_blank')
   } else {
     try {
-      assertAddress(connectedProfile?.value?.address, 'profile')
-      navigateTo(buyLyxRoute(connectedProfile.value.address))
+      assertAddress(viewedProfile?.value?.address, 'profile')
+      navigateTo(buyLyxRoute(viewedProfile.value.address))
     } catch (error) {
       console.error(error)
     }
@@ -100,9 +100,6 @@ const handleBuyLyx = (event: Event) => {
       </div>
       <div class="flex w-full justify-end gap-2">
         <lukso-button
-          v-if="
-            isConnected && viewedProfile?.address === connectedProfile?.address
-          "
           size="small"
           variant="secondary"
           @click="handleBuyLyx"
