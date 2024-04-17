@@ -34,8 +34,8 @@ const handleBuyLyx = () => {
     window.open(TESTNET_FAUCET_URL, '_blank')
   } else {
     try {
-      assertAddress(connectedProfile.value?.address, 'profile')
-      navigateTo(buyLyxRoute(connectedProfile.value.address))
+      assertAddress(viewedProfile.value?.address, 'profile')
+      navigateTo(buyLyxRoute(viewedProfile.value.address))
     } catch (error) {
       console.error(error)
     }
@@ -61,45 +61,42 @@ const handleBuyLyx = () => {
             ></lukso-profile>
           </div>
         </lukso-card>
-        <div
+        <AssetOwnInfo
           v-if="
             isConnected &&
             connectedProfile &&
             viewedProfile?.address === connectedProfile?.address
           "
-        >
-          <AssetOwnInfo
-            :address="connectedProfile.address"
-            :balance="asset.balance"
-            :symbol="asset.tokenSymbol"
-            :decimals="asset.decimals"
-            :profile-image-url="profileImage?.url"
-            :message="$formatMessage('token_details_own')"
-          />
+          :address="connectedProfile.address"
+          :balance="asset.balance"
+          :symbol="asset.tokenSymbol"
+          :decimals="asset.decimals"
+          :profile-image-url="profileImage?.url"
+          :message="$formatMessage('token_details_own')"
+        />
 
-          <div class="mt-12 flex flex-col gap-2">
-            <lukso-button
-              v-if="asset?.balance !== '0'"
-              is-full-width
-              variant="secondary"
-              @click="handleSendLyx"
-              >{{
-                $formatMessage('token_details_send', {
-                  token: asset.tokenSymbol || '',
-                })
-              }}</lukso-button
-            >
-            <lukso-button
-              is-full-width
-              variant="primary"
-              @click="handleBuyLyx"
-              >{{
-                isTestnet
-                  ? $formatMessage('token_details_get_lyx')
-                  : $formatMessage('token_details_buy_lyx')
-              }}</lukso-button
-            >
-          </div>
+        <div class="mt-12 flex flex-col gap-2">
+          <lukso-button
+            v-if="
+              isConnected &&
+              connectedProfile &&
+              viewedProfile?.address === connectedProfile?.address &&
+              asset?.balance !== '0'
+            "
+            is-full-width
+            variant="secondary"
+            @click="handleSendLyx"
+            >{{
+              $formatMessage('token_details_send', {
+                token: asset.tokenSymbol || '',
+              })
+            }}</lukso-button
+          >
+          <lukso-button is-full-width variant="primary" @click="handleBuyLyx">{{
+            isTestnet
+              ? $formatMessage('token_details_get_lyx')
+              : $formatMessage('token_details_buy_lyx')
+          }}</lukso-button>
         </div>
       </div>
       <div>
