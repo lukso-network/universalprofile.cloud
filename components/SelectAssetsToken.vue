@@ -51,11 +51,13 @@ const assetTokenId = computed(() => {
     </div>
     <div class="grid grid-cols-[auto,max-content] items-center">
       <div class="flex flex-col text-left">
-        <div class="paragraph-inter-14-semi-bold items-center">
+        <div
+          class="paragraph-inter-14-semi-bold flex flex-wrap items-center gap-x-1 break-word"
+        >
           <span>
             {{ token?.tokenName }}
           </span>
-          <span class="paragraph-inter-12-semi-bold ml-1 text-neutral-60">
+          <span class="paragraph-inter-12-semi-bold text-neutral-60">
             {{ token?.tokenSymbol }}
           </span>
         </div>
@@ -66,7 +68,9 @@ const assetTokenId = computed(() => {
           <span v-else-if="token?.balance">
             {{ $formatMessage('token_owned') }}
             {{
-              $formatNumber(fromWeiWithDecimals(token.balance, token.decimals))
+              $formatNumber(
+                fromTokenUnitWithDecimals(token.balance, token.decimals)
+              )
             }}
           </span>
         </div>

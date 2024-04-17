@@ -29,14 +29,16 @@ defineProps<Props>()
         <div class="paragraph-inter-10-semi-bold pb-1">
           {{ message }}
         </div>
-        <div class="paragraph-inter-12-semi-bold">
+        <div
+          class="paragraph-inter-12-semi-bold flex flex-wrap gap-x-1 leading-15"
+        >
           <span v-if="balance">{{
             $formatNumber(fromTokenUnitWithDecimals(balance, decimals), {
               maximumFractionDigits: decimals,
             })
           }}</span>
           <span v-else>0</span>
-          <span class="ml-1 text-neutral-60">{{ symbol }}</span>
+          <span class="text-neutral-60 break-word">{{ symbol }}</span>
         </div>
       </div>
     </div>

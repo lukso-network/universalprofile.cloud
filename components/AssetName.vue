@@ -9,7 +9,7 @@ const name = computed(() => props.asset?.tokenName)
 </script>
 
 <template>
-  <div v-if="isLoaded">
+  <div v-if="isLoaded" class="break-word">
     {{ name }}
   </div>
   <AppPlaceholderLine v-else class="h-[28px] w-1/3" />
