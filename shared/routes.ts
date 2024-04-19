@@ -1,3 +1,6 @@
+// biome-ignore lint/style/useNodejsImportProtocol: conflicts with node assert
+import assert from 'assert'
+
 export const tokenRoute = (tokenAddress: Address) => `/asset/${tokenAddress}`
 
 export const nftRoute = (nftAddress: Address, tokenId: string) =>
@@ -7,7 +10,10 @@ export const gotoContract = (address: Address) => `/contract/${address}`
 
 export const profileRoute = (profileAddress: Address) => `/${profileAddress}`
 
-export const sendRoute = (profileAddress: Address) => `/${profileAddress}/send`
+export const sendRoute = (profileAddress?: Address) => {
+  assert(profileAddress, 'Missing profile address in route')
+  return `/${profileAddress}/send`
+}
 
 export const homeRoute = () => '/'
 

@@ -15,30 +15,24 @@ const assetImage = useAssetImage(token, false, 260)
 const profileAvatar = useProfileAvatar(connectedProfile, 40)
 
 const handleSendAsset = (event: Event) => {
-  try {
-    event.stopPropagation()
-    assertAddress(connectedProfile?.value?.address, 'profile')
-    assertAddress(token.value?.address, 'nft')
+  event.stopPropagation()
 
-    let query: SendQueryParams = {
-      asset: props.asset?.address,
-      tokenId: props.asset?.tokenId,
-    }
-
-    if (isCollectible(props.asset)) {
-      query = {
-        ...query,
-        amount: '1', // prefill amount field for collectibles
-      }
-    }
-
-    navigateTo({
-      path: sendRoute(connectedProfile.value.address),
-      query,
-    })
-  } catch (error) {
-    console.error(error)
+  let query: SendQueryParams = {
+    asset: props.asset?.address,
+    tokenId: props.asset?.tokenId,
   }
+
+  if (isCollectible(props.asset)) {
+    query = {
+      ...query,
+      amount: '1', // prefill amount field for collectibles
+    }
+  }
+
+  navigateTo({
+    path: sendRoute(connectedProfile.value?.address),
+    query,
+  })
 }
 
 const assetTokenId = computed(() => {

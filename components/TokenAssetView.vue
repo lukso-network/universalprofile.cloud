@@ -13,19 +13,13 @@ const assetImage = useAssetImage(token, isLsp7(token.value), 60)
 const profileAvatar = useProfileAvatar(connectedProfile, 260)
 
 const handleSendAsset = (event: Event) => {
-  try {
-    event.stopPropagation()
-    assertAddress(connectedProfile.value?.address, 'profile')
-    assertAddress(token.value?.address, 'token')
-    navigateTo({
-      path: sendRoute(connectedProfile.value.address),
-      query: {
-        asset: token.value.address,
-      },
-    })
-  } catch (error) {
-    console.error(error)
-  }
+  event.stopPropagation()
+  navigateTo({
+    path: sendRoute(connectedProfile.value?.address),
+    query: {
+      asset: token.value?.address,
+    },
+  })
 }
 
 const handlePreviewImage = () => {

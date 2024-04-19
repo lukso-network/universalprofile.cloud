@@ -2,12 +2,7 @@
 const connectedProfile = useProfile().connectedProfile()
 
 const handleNavigateSend = () => {
-  try {
-    assertAddress(connectedProfile.value?.address, 'profile')
-    navigateTo(sendRoute(connectedProfile.value.address))
-  } catch (error) {
-    console.error(error)
-  }
+  navigateTo(sendRoute(connectedProfile.value?.address))
 }
 </script>
 
