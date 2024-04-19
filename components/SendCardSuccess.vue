@@ -8,6 +8,12 @@ const asset = useToken()(
 )
 
 const handleSendMore = () => {
+  if (!isToken(asset.value) || asset.value?.balance === '0') {
+    navigateTo({
+      path: sendRoute(connectedProfile.value?.address),
+    })
+  }
+
   clearSend()
   setStatus('draft')
   hasSimpleNavbar.value = false
@@ -37,12 +43,9 @@ const handleOpenProfile = () => {
         size="x-large"
         class="my-6"
       ></lukso-icon>
-      <lukso-button
-        v-if="isLyx(asset) || isToken(asset)"
-        variant="secondary"
-        @click="handleSendMore"
-        >{{ $formatMessage('send_success_button') }}</lukso-button
-      >
+      <lukso-button variant="secondary" @click="handleSendMore">{{
+        $formatMessage('send_success_button')
+      }}</lukso-button>
     </div>
   </lukso-card>
   <a
