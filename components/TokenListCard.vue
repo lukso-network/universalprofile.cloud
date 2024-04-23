@@ -27,18 +27,13 @@ const handleShowAsset = () => {
 }
 
 const handleSendAsset = (event: Event) => {
-  try {
-    event.stopPropagation()
-    assertAddress(connectedProfile?.value?.address, 'profile')
-    navigateTo({
-      path: sendRoute(connectedProfile.value.address),
-      query: {
-        asset: props.asset?.address,
-      },
-    })
-  } catch (error) {
-    console.error(error)
-  }
+  event.stopPropagation()
+  navigateTo({
+    path: sendRoute(connectedProfile.value?.address),
+    query: {
+      asset: props.asset?.address,
+    },
+  })
 }
 
 onMounted(() => {

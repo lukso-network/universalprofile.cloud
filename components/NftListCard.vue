@@ -44,29 +44,24 @@ const handleShowAsset = () => {
 }
 
 const handleSendAsset = (event: Event) => {
-  try {
-    event.stopPropagation()
-    assertAddress(connectedProfile?.value?.address, 'profile')
+  event.stopPropagation()
 
-    let query: SendQueryParams = {
-      asset: props.asset?.address,
-      tokenId: props.asset?.tokenId,
-    }
-
-    if (isCollectible(props.asset)) {
-      query = {
-        ...query,
-        amount: '1',
-      }
-    }
-
-    navigateTo({
-      path: sendRoute(connectedProfile.value.address),
-      query,
-    })
-  } catch (error) {
-    console.error(error)
+  let query: SendQueryParams = {
+    asset: props.asset?.address,
+    tokenId: props.asset?.tokenId,
   }
+
+  if (isCollectible(props.asset)) {
+    query = {
+      ...query,
+      amount: '1',
+    }
+  }
+
+  navigateTo({
+    path: sendRoute(connectedProfile.value?.address),
+    query,
+  })
 }
 
 const assetTokenId = computed(() => {

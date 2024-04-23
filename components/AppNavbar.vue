@@ -22,12 +22,7 @@ const handleNavigateProfile = async () => {
 }
 
 const handleNavigateSend = () => {
-  try {
-    assertAddress(connectedProfile.value?.address, 'profile')
-    navigateTo(sendRoute(connectedProfile.value.address))
-  } catch (error) {
-    console.error(error)
-  }
+  navigateTo(sendRoute(connectedProfile.value?.address))
 }
 
 const handleConnect = async () => {
@@ -44,6 +39,10 @@ const handleNavigationDiscovery = () => {
 
 const handleMobileSearch = () => {
   isSearchOpen.value = !isSearchOpen.value
+}
+
+const handleNavigateSettings = () => {
+  navigateTo(settingsRoute(connectedProfile.value?.address))
 }
 
 const extensionStoreData = () => {
@@ -150,6 +149,16 @@ const browserSupportExtension = extensionStore.url !== ''
             }"
           >
             {{ $formatMessage('header_my_profile') }}
+          </span>
+        </lukso-button>
+        <lukso-button
+          variant="text"
+          custom-class="text-12 nav-apax-12-medium-uppercase"
+          class="group"
+          @click="handleNavigateSettings"
+        >
+          <span class="text-purple-63 transition group-hover:text-purple-41">
+            {{ $formatMessage('header_settings') }}
           </span>
         </lukso-button>
         <lukso-button
