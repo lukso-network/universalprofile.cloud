@@ -24,10 +24,12 @@
   "asset_standard_badge_collection_contract": "LSP8 COLLECTION",
   "tooltip_text_copy_raw": "Copy raw",
   "transak_success_message": "Please note that it can take some time for your balance to update.",
+  "missing_asset_label_added": "Added",
   "error_no_accounts": "Account not found.",
   "asset_all_creators_unverified": "Un-verified creators",
   "not_up_description": "This does not seem to be a Universal Profile address. View this address on block explorer to find out more information.",
   "modal_switch_application_network_title": "Change application network",
+  "add_missing_assets_add_another_button": "Add another missing asset",
   "send_pending_title": "Sending {amount} {symbol}",
   "buy_lyx_title": "Use the below services to <strong>buy LYX</strong> for your Universal Profile",
   "assets_empty_state_title": "No created assets",
@@ -49,6 +51,7 @@
   "add_missing_assets_cancel_button": "Cancel",
   "not_found_title": "Oops!",
   "landing_hero_supported_browsers": "Supported Browsers",
+  "success_missing_assets_title": "Check missing asset",
   "image_error_invalid_documentation_link": "Visit the documentation",
   "share_link_copy": "Copy",
   "not_found_get_help_url": "https://support.lukso.network/",
@@ -118,6 +121,7 @@
   "buy_lyx_card_transak_description": "Transak provides leading Web3 on-ramp services, enabling users from over 180 countries to access LYX through various fiat payment methods.",
   "footer_docs_text": "DOCS",
   "errors_not_owner": "You do not own this token. Try a different token contract address",
+  "missing_asset_label_missing": "Missing",
   "buy_lyx_card_buy_button": "Buy LYX",
   "error_unknown_standard": "Couldn't detect standard for this asset.",
   "not_found_get_help": "Get some help",
@@ -148,5 +152,6 @@
   "error_generic": "There was error while performing your request. Please try again later or contact the support.",
   "token_details_images": "Token Images",
   "profile_search_no_results": "No profile found",
-  "profile_card_copy_address": "UP address copied!"
+  "profile_card_copy_address": "UP address copied!",
+  "success_missing_assets_description": "The below asset has been added to your profile."
 }

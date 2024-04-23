@@ -41,5 +41,14 @@ export const settingsMissingAssetsAddRoute = (
 ) => {
   assert(profileAddress, 'Missing profile address in route')
   assert(assetAddress, 'Missing asset address in route')
-  return `/${profileAddress}/settings/missing-assets/add/${assetAddress}`
+  return `/${profileAddress}/settings/missing-assets/${assetAddress}/add`
+}
+
+export const settingsMissingAssetsSuccessRoute = (
+  profileAddress?: Address,
+  assetAddress?: Address
+) => {
+  assert(profileAddress, 'Missing profile address in route')
+  assert(assetAddress, 'Missing asset address in route')
+  return `/${profileAddress}/settings/missing-assets/${assetAddress}/success`
 }
