@@ -15,6 +15,7 @@ const hasImageError = ref(false)
 const imageSrc = ref()
 const contentRef = ref()
 const contentWidth = ref(0)
+const LARGE_IMAGE_BREAKPOINT = 150
 
 const handleError = () => {
   if (unref(props.image?.url)) {
@@ -41,7 +42,7 @@ const isVerificationInvalid = computed(
   () => unref(props.image)?.verified === 'invalid'
 )
 
-const isLarge = computed(() => contentWidth.value > 150)
+const isLarge = computed(() => contentWidth.value > LARGE_IMAGE_BREAKPOINT)
 
 watchEffect(() => {
   imageSrc.value = unref(props.image?.url)
