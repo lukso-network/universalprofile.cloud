@@ -29,6 +29,10 @@ const handleNavigateRelayerDashboard = () => {
   window.open(relayerDappDashboardUrl(), '_self')
 }
 
+const handleNavigateSettings = () => {
+  navigateTo(settingsRoute(connectedProfile.value?.address))
+}
+
 onMounted(() => {
   window.addEventListener('click', handleOutsideDropdown)
 })
@@ -61,6 +65,16 @@ onUnmounted(() => {
       >
         <span class="text-purple-63 transition group-hover:text-purple-41">
           {{ $formatMessage('header_relayer_dashboard') }}
+        </span>
+      </lukso-button>
+      <lukso-button
+        variant="text"
+        custom-class="text-12 nav-apax-12-medium-uppercase"
+        class="group"
+        @click="handleNavigateSettings"
+      >
+        <span class="text-purple-63 transition group-hover:text-purple-41">
+          {{ $formatMessage('header_settings') }}
         </span>
       </lukso-button>
       <lukso-button

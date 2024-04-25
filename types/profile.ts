@@ -18,7 +18,7 @@ export type Profile = {
   profileImage?: Image[]
   backgroundImage?: Image[]
   isLoading?: boolean
-  profileLink: ProfileLink
+  profileLink?: ProfileLink
 }
 
 export type IndexedProfile = {

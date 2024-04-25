@@ -11,15 +11,13 @@ const props = defineProps<Props>()
 const allTokens = useProfileAssets()(profileAddress)
 
 const handleSelectLyx = () => {
-  assertAddress(connectedProfile?.value?.address, 'profile')
   navigateTo({
-    path: sendRoute(connectedProfile.value.address),
+    path: sendRoute(connectedProfile.value?.address),
   })
   props.closeModal()
 }
 
 const handleSelectAsset = (asset: Asset) => {
-  assertAddress(connectedProfile?.value?.address, 'profile')
   sendLog('Selected asset', toRaw(asset))
 
   let query: SendQueryParams = { asset: asset?.address }
@@ -39,7 +37,7 @@ const handleSelectAsset = (asset: Asset) => {
   }
 
   navigateTo({
-    path: sendRoute(connectedProfile.value.address),
+    path: sendRoute(connectedProfile.value?.address),
     query,
   })
 

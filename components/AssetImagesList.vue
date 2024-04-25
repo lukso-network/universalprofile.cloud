@@ -37,7 +37,7 @@ const handlePreviewImage = (image: Image[]) => {
         >
           <AssetImage
             class="!size-14 min-h-14 cursor-pointer rounded-8"
-            :image="image.optimized"
+            :image="image.optimized.value"
             @click="handlePreviewImage(image.original || [])"
           />
         </div>

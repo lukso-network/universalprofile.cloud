@@ -2241,16 +2241,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@erc725/erc725.js@npm:^0.24.2":
-  version: 0.24.2
-  resolution: "@erc725/erc725.js@npm:0.24.2"
+"@erc725/erc725.js@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "@erc725/erc725.js@npm:0.25.0"
   dependencies:
     add: "npm:^2.0.6"
     ethereumjs-util: "npm:^7.1.5"
     web3-eth-abi: "npm:^1.10.0"
     web3-providers-http: "npm:^1.10.0"
     web3-utils: "npm:^1.10.0"
-  checksum: 40b073ab90f77ff9110d529a29ed0cf19830af126b9c04aaba1593d0196aee0885c4be3483b717aec98c7cef1fad38aef83b6a0c0d01ba0a8eef303212bec745
+  checksum: efce788171febc2cef48e14236ad901799fa99198e3f3c8bef18415f580433da92fa959e5765f3604b1aefa4b1e1978c90fcd7f4016f54922b097d88890c21a0
   languageName: node
   linkType: hard
 
@@ -20668,7 +20668,7 @@ __metadata:
   resolution: "wallet.universalprofile.cloud@workspace:."
   dependencies:
     "@biomejs/biome": "npm:^1.7.0"
-    "@erc725/erc725.js": "npm:^0.24.2"
+    "@erc725/erc725.js": "npm:^0.25.0"
     "@esbuild-plugins/node-globals-polyfill": "npm:0.2.3"
     "@formatjs/intl": "npm:^2.9.9"
     "@google/model-viewer": "npm:^3.4.0"

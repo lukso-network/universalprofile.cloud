@@ -102,7 +102,7 @@ export const getOptimizedImage = (
     if (!url) {
       return null
     }
-    const { verified } = (verification || {}) as any
+    const { verified } = (verification || {}) as ImageItem
     if (promise.value === null && verified == null) {
       ;(async () => {
         if (verified == null && url?.startsWith(LUKSO_PROXY_API)) {

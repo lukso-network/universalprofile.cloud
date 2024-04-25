@@ -1,11 +1,10 @@
 import { ERC725, type ERC725JSONSchema } from '@erc725/erc725.js'
 
-const getInstance = (address: string, schema: ERC725JSONSchema[]) => {
+const getInstance = (address: Address, schema: ERC725JSONSchema[]) => {
   const config = {
     ipfsGateway: IPFS_URL,
   }
-  const { getWeb3 } = useWeb3(PROVIDERS.RPC)
-  const erc725 = new ERC725(schema, address, getWeb3(), config)
+  const erc725 = new ERC725(schema, address, PROVIDERS.RPC, config)
 
   return erc725
 }

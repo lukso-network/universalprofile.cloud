@@ -5,13 +5,8 @@ const viewedProfile = useProfile().viewedProfile()
 const asset = useLyxToken()
 
 const handleSendAsset = (event: Event) => {
-  try {
-    event.stopPropagation()
-    assertAddress(connectedProfile?.value?.address, 'profile')
-    navigateTo(sendRoute(connectedProfile.value.address))
-  } catch (error) {
-    console.error(error)
-  }
+  event.stopPropagation()
+  navigateTo(sendRoute(connectedProfile.value?.address))
 }
 
 const handleShowLyxDetails = () => {

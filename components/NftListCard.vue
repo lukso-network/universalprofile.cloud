@@ -44,29 +44,24 @@ const handleShowAsset = () => {
 }
 
 const handleSendAsset = (event: Event) => {
-  try {
-    event.stopPropagation()
-    assertAddress(connectedProfile?.value?.address, 'profile')
+  event.stopPropagation()
 
-    let query: SendQueryParams = {
-      asset: props.asset?.address,
-      tokenId: props.asset?.tokenId,
-    }
-
-    if (isCollectible(props.asset)) {
-      query = {
-        ...query,
-        amount: '1',
-      }
-    }
-
-    navigateTo({
-      path: sendRoute(connectedProfile.value.address),
-      query,
-    })
-  } catch (error) {
-    console.error(error)
+  let query: SendQueryParams = {
+    asset: props.asset?.address,
+    tokenId: props.asset?.tokenId,
   }
+
+  if (isCollectible(props.asset)) {
+    query = {
+      ...query,
+      amount: '1',
+    }
+  }
+
+  navigateTo({
+    path: sendRoute(connectedProfile.value?.address),
+    query,
+  })
 }
 
 const assetTokenId = computed(() => {
@@ -125,7 +120,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
                 <span
                   v-if="isLoadedAsset"
                   class="paragraph-inter-10-semi-bold text-neutral-60"
-                  >{{ token?.tokenSymbol }}</span
+                  >{{ truncate(token?.tokenSymbol, 8) }}</span
                 >
                 <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
               </div>
