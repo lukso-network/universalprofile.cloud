@@ -8,8 +8,23 @@ const { isMobile } = useDevice()
 const viewedProfile = useProfile().getProfile(viewedProfileAddress)
 const allTokens = useProfileAssets()(viewedProfileAddress)
 
+/**
+ * Sort assets ascending (A-Z) by their name
+ *
+ * @returns
+ */
+const allTokensSorted = computed(
+  () =>
+    allTokens.value?.slice().sort((a, b) => {
+      const tokenNameA = a.tokenName || ''
+      const tokenNameB = b.tokenName || ''
+
+      return tokenNameA.localeCompare(tokenNameB)
+    }) || []
+)
+
 const tokensOwned = computed(() =>
-  allTokens.value?.filter(
+  allTokensSorted.value?.filter(
     ({ isOwned, standard, balance, tokenType }) =>
       isOwned &&
       standard === 'LSP7DigitalAsset' &&
@@ -19,7 +34,7 @@ const tokensOwned = computed(() =>
 )
 
 const tokensCreated = computed(() =>
-  allTokens.value?.filter(
+  allTokensSorted.value?.filter(
     ({ isIssued, standard, tokenType }) =>
       isIssued &&
       standard === 'LSP7DigitalAsset' &&
@@ -28,13 +43,13 @@ const tokensCreated = computed(() =>
 )
 
 const nftsOwned = computed(() =>
-  allTokens.value?.filter(
+  allTokensSorted.value?.filter(
     asset => asset.isOwned && isCollectible(asset) && asset.balance !== '0'
   )
 )
 
 const nftsCreated = computed(() =>
-  allTokens.value?.filter(asset => asset.isIssued && isCollectible(asset))
+  allTokensSorted.value?.filter(asset => asset.isIssued && isCollectible(asset))
 )
 
 // tokens
