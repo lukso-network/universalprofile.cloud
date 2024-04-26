@@ -5,7 +5,6 @@ import type { AbiItem } from 'web3-utils'
 import type { UniversalProfile } from '@/contracts'
 
 const connectedProfile = useProfile().connectedProfile()
-const { isConnected } = storeToRefs(useAppStore())
 const assetAddress = useRouter().currentRoute.value.params?.assetAddress
 const isPending = ref(false)
 
@@ -51,12 +50,7 @@ const handleAddAsset = async () => {
 
 const isLoaded = computed(() => asset.value && !asset.value.isLoading)
 
-watchEffect(() => {
-  // when not connected then navigate to home
-  if (!isConnected.value) {
-    navigateTo(homeRoute())
-  }
-})
+useProtectedRoute()
 </script>
 
 <template>

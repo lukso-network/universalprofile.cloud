@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const connectedProfile = useProfile().connectedProfile()
-const { isConnected } = storeToRefs(useAppStore())
 const assetAddress = useRouter().currentRoute.value.params?.assetAddress
 
 const asset = useAsset()(assetAddress)
@@ -13,12 +12,7 @@ const handleAddAnotherAsset = () => {
   navigateTo(settingsMissingAssetsRoute())
 }
 
-watchEffect(() => {
-  // when not connected then navigate to home
-  if (!isConnected.value) {
-    navigateTo(homeRoute())
-  }
-})
+useProtectedRoute()
 </script>
 
 <template>

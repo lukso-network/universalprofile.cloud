@@ -7,7 +7,6 @@ import type { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/contracts'
 
 const connectedProfile = useProfile().connectedProfile()
 const { formatMessage } = useIntl()
-const { isConnected } = storeToRefs(useAppStore())
 const checkError = ref('')
 const assetAddress = ref('')
 
@@ -71,12 +70,7 @@ const hasError = computed(() => {
   return !!checkError.value || !assetAddress.value
 })
 
-watchEffect(() => {
-  // when not connected then navigate to home
-  if (!isConnected.value) {
-    navigateTo(homeRoute())
-  }
-})
+useProtectedRoute()
 </script>
 
 <template>

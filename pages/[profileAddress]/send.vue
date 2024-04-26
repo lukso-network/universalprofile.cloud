@@ -18,7 +18,7 @@ const {
   receiver,
   transactionHash,
 } = storeToRefs(useSendStore())
-const { isLoadedApp, isConnected, hasSimpleNavbar } = storeToRefs(useAppStore())
+const { isLoadedApp, hasSimpleNavbar } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { sendTransaction, contract, isEoA } = useWeb3(PROVIDERS.INJECTED)
@@ -52,11 +52,6 @@ watchEffect(() => {
     sendAsset.value = lyxToken.value
   } else {
     sendAsset.value = asset.value
-  }
-
-  // when not connected then navigate to home
-  if (!isConnected.value) {
-    navigateTo(homeRoute())
   }
 })
 
@@ -140,6 +135,8 @@ const handleSend = async () => {
     })
   }
 }
+
+useProtectedRoute()
 </script>
 
 <template>
