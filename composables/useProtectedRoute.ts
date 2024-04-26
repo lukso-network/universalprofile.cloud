@@ -1,6 +1,7 @@
 export const useProtectedRoute = () => {
   const { isConnected } = storeToRefs(useAppStore())
-  const profileAddress = useRouter().currentRoute.value.params?.profileAddress
+  const profileAddress = useRouter().currentRoute.value.params
+    ?.profileAddress as Address | undefined
 
   watchEffect(() => {
     if (isConnected.value) {

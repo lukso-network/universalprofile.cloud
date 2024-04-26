@@ -41,7 +41,7 @@ const connect = async () => {
     assertAddress(address, 'connection')
     connectedProfileAddress.value = address
     setConnectionExpiry()
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error)
     disconnect()
 
