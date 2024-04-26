@@ -21,7 +21,7 @@ const handleViewEntireCollection = () => {
 </script>
 
 <template>
-  <div class="relative rounded-12 bg-neutral-100 p-6">
+  <div class="relative rounded-12 bg-neutral-100 p-6 pb-2">
     <div class="flex items-center justify-between pb-6">
       <div
         class="heading-inter-21-semi-bold flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3"
@@ -64,7 +64,7 @@ const handleViewEntireCollection = () => {
       </lukso-button>
     </div>
     <div
-      class="-mr-4 grid max-h-[calc(100vh-300px)] grid-cols-1 gap-6 overflow-y-auto pb-2 pr-4 sm:grid-cols-2 md:grid-cols-3"
+      class="-mx-4 grid max-h-[calc(100vh-300px)] grid-cols-1 gap-6 overflow-y-auto px-4 pb-6 sm:grid-cols-2 md:grid-cols-3"
     >
       <NftListCard
         v-for="(token, index) in tokenIdsData"
