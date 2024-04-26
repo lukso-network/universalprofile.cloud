@@ -8,7 +8,10 @@ export const nftRoute = (nftAddress: Address, tokenId: string) =>
 
 export const gotoContract = (address: Address) => `/contract/${address}`
 
-export const profileRoute = (profileAddress: Address) => `/${profileAddress}`
+export const profileRoute = (profileAddress?: Address) => {
+  assert(profileAddress, 'Missing profile address in route')
+  return `/${profileAddress}`
+}
 
 export const sendRoute = (profileAddress?: Address) => {
   assert(profileAddress, 'Missing profile address in route')

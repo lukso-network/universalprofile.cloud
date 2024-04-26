@@ -12,12 +12,7 @@ const supportedBrowsers = Object.entries(EXTENSION_STORE_LINKS)
 
 watchEffect(() => {
   if (isConnected.value) {
-    try {
-      assertAddress(connectedProfileAddress.value, 'profile')
-      navigateTo(profileRoute(connectedProfileAddress.value))
-    } catch (error) {
-      console.error(error)
-    }
+    navigateTo(profileRoute(connectedProfileAddress.value))
   }
 })
 </script>

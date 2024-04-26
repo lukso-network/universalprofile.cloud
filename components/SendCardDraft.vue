@@ -35,12 +35,7 @@ const handleSelectAssets = () => {
 }
 
 const handleBack = () => {
-  try {
-    assertAddress(connectedProfile?.value?.address, 'profile')
-    navigateTo(profileRoute(connectedProfile?.value.address))
-  } catch (error) {
-    console.error(error)
-  }
+  navigateTo(profileRoute(connectedProfile?.value?.address))
 }
 
 const checkBalance = () => {
