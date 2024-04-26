@@ -1894,12 +1894,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.23.5":
-  version: 7.23.7
-  resolution: "@babel/runtime@npm:7.23.7"
+"@babel/runtime@npm:^7.24.1":
+  version: 7.24.4
+  resolution: "@babel/runtime@npm:7.24.4"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
-  checksum: b29cf3ca6277aea8c5c823d9b86e7f7153757f07eaaa81d726f125de00ac0e7451c90845770f919826a94ade8f71a6bda9c0421410dfcc285ee17a40f8f8ca00
+  checksum: 8ec8ce2c145bc7e31dd39ab66df124f357f65c11489aefacb30f431bae913b9aaa66aa5efe5321ea2bf8878af3fcee338c87e7599519a952e3a6f83aa1b03308
   languageName: node
   linkType: hard
 
@@ -3458,16 +3458,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@npm:1.66.0":
-  version: 1.66.0
-  resolution: "@lukso/web-components@npm:1.66.0"
+"@lukso/web-components@npm:1.68.0":
+  version: 1.68.0
+  resolution: "@lukso/web-components@npm:1.68.0"
   dependencies:
     clsx: "npm:^2.0.0"
     ethereum-blockies-base64: "npm:^1.0.2"
     tailwind-merge: "npm:^2.0.0"
     tailwind-variants: "npm:^0.1.18"
     tippy.js: "npm:^6.3.7"
-  checksum: 9d42980767a95996f7592c8f637a7ebdb316707dcfef29fec213e91707577d0dee83b797b6e56ef4c768929fd75e8e0b719cb0adf5dcb1a896dcd15b899078ad
+  checksum: 88417aac25a3aae70bab5f5ef6025e509d927347ad49abba13d756f906492fae9c03ed8b81764b7c2052eff796e4a2fb1e3667cd6b41897562592d6e0c61731b
   languageName: node
   linkType: hard
 
@@ -18901,22 +18901,22 @@ __metadata:
   linkType: hard
 
 "tailwind-merge@npm:^2.0.0":
-  version: 2.2.0
-  resolution: "tailwind-merge@npm:2.2.0"
+  version: 2.3.0
+  resolution: "tailwind-merge@npm:2.3.0"
   dependencies:
-    "@babel/runtime": "npm:^7.23.5"
-  checksum: ec2a249da3c7afc2df935f93dd896843c719a701bd692cf051eafb2b2350989da158e7af9cc976227e49c833501a91b06c42b80aa6721457eec2187a999c9be7
+    "@babel/runtime": "npm:^7.24.1"
+  checksum: cf3b126bee82bc9ff3f60f9601b66925418db6906544198b637487b25fba1c9c307734ca37ccb8fa2355f69ad0c5aff34c5dce460809addb459a93205d9a0abe
   languageName: node
   linkType: hard
 
 "tailwind-variants@npm:^0.1.18":
-  version: 0.1.19
-  resolution: "tailwind-variants@npm:0.1.19"
+  version: 0.1.20
+  resolution: "tailwind-variants@npm:0.1.20"
   dependencies:
     tailwind-merge: "npm:^1.14.0"
   peerDependencies:
     tailwindcss: "*"
-  checksum: 60ddf9f6a84506dbaf5e4e8b5c7971bbe77879473c7f194c1578d86f1ab56116af68f799b52531255f522350f23b3f79ad0200f25e2060d6fa037ce3a50c7ace
+  checksum: 5661454ec9148c3dacd77ac01aeef906a18733295b546081ed0e146d8c258db37d405356a23643a4be7741c4933dea2dd71c5d04bffad7911b1e1873eb053f06
   languageName: node
   linkType: hard
 
@@ -20673,7 +20673,7 @@ __metadata:
     "@formatjs/intl": "npm:^2.9.9"
     "@google/model-viewer": "npm:^3.4.0"
     "@lukso/lsp-smart-contracts": "npm:0.15.0-rc.5"
-    "@lukso/web-components": "npm:1.66.0"
+    "@lukso/web-components": "npm:1.68.0"
     "@nuxt/test-utils": "npm:^3.11.0"
     "@nuxtjs/algolia": "npm:^1.10.1"
     "@nuxtjs/device": "npm:^3.1.1"

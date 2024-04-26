@@ -20,7 +20,7 @@ export const parseTokenId = (
   switch (tokenIdFormat) {
     case LSP8_TOKEN_ID_FORMAT.STRING:
       // decode hex value to string
-      return encodeURI(hexToUtf8(tokenId))
+      return hexToUtf8(tokenId)
     case LSP8_TOKEN_ID_FORMAT.NUMBER:
       // convert hex value to number
       return hexToNumber(tokenId).toString()
