@@ -45,7 +45,10 @@ const isVerificationInvalid = computed(
 const isLarge = computed(() => contentWidth.value > LARGE_IMAGE_BREAKPOINT)
 
 watchEffect(() => {
-  imageSrc.value = unref(props.image?.url)
+  if (props.image?.url) {
+    imageSrc.value = unref(props.image?.url)
+    hasImageError.value = false
+  }
 })
 
 onMounted(async () => {
