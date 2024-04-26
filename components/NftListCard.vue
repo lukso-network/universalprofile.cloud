@@ -86,12 +86,13 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
 </script>
 
 <template>
-  <div ref="target" class="flex">
+  <div ref="target" class="relative flex">
     <lukso-card
       border-radius="small"
       shadow="small"
       is-hoverable
       is-full-width
+      class="relative z-10"
       @click="handleShowAsset"
       ><div
         slot="content"
@@ -180,5 +181,21 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
         </div>
       </div>
     </lukso-card>
+    <div class="absolute bottom-0 w-full px-3">
+      <lukso-card
+        border-radius="small"
+        shadow="small"
+        v-if="isCollection(asset)"
+        class="relative bottom-[-44px] mx-3 w-[calc(100%-24px)]"
+        ><div slot="content" class="h-6 w-full rounded-12 bg-neutral-97"></div
+      ></lukso-card>
+      <lukso-card
+        border-radius="small"
+        shadow="small"
+        v-if="isCollection(asset)"
+        class="relative bottom-[-10px]"
+        ><div slot="content" class="h-6 w-full rounded-12 bg-neutral-97"></div
+      ></lukso-card>
+    </div>
   </div>
 </template>
