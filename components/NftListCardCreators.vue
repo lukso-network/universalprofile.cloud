@@ -114,10 +114,7 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
       </div>
     </div>
   </div>
-  <div
-    v-else
-    class="relative -top-4 -mt-2 grid grid-cols-[max-content,auto] gap-1"
-  >
+  <div v-else class="my-4 grid grid-cols-[max-content,auto] gap-1">
     <AppPlaceholderCircle class="size-6" />
     <div class="grid w-full flex-col gap-1">
       <AppPlaceholderLine class="w-1/3" />

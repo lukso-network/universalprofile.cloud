@@ -134,7 +134,6 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
             </span>
           </div>
           <AppPlaceholderLine v-else class="h-[14px] w-1/4" />
-
           <NftListCardCreators :asset="token" class="my-4" />
           <div class="flex items-end">
             <div v-if="!isCollection(asset)" class="flex w-full justify-end">
