@@ -42,7 +42,7 @@ const handleMobileSearch = () => {
 }
 
 const handleNavigateSettings = () => {
-  navigateTo(settingsRoute(connectedProfile.value?.address))
+  navigateTo(settingsRoute())
 }
 
 const extensionStoreData = () => {

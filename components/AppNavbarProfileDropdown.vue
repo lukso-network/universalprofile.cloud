@@ -30,7 +30,7 @@ const handleNavigateRelayerDashboard = () => {
 }
 
 const handleNavigateSettings = () => {
-  navigateTo(settingsRoute(connectedProfile.value?.address))
+  navigateTo(settingsRoute())
 }
 
 onMounted(() => {

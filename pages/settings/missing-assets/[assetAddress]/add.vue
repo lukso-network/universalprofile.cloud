@@ -12,11 +12,11 @@ const isPending = ref(false)
 const asset = useAsset()(assetAddress)
 
 const handleBackToSettings = () => {
-  navigateTo(settingsRoute(connectedProfile.value?.address))
+  navigateTo(settingsRoute())
 }
 
 const handleCancel = () => {
-  navigateTo(settingsMissingAssetsRoute(connectedProfile.value?.address))
+  navigateTo(settingsMissingAssetsRoute())
 }
 
 const handleAddAsset = async () => {
@@ -41,12 +41,7 @@ const handleAddAsset = async () => {
     await profileContract.methods
       .setDataBatch(keys, values)
       .send({ from: profileAddress })
-    navigateTo(
-      settingsMissingAssetsSuccessRoute(
-        connectedProfile.value?.address,
-        assetAddress
-      )
-    )
+    navigateTo(settingsMissingAssetsSuccessRoute(assetAddress))
   } catch (error) {
     console.error(error)
   } finally {

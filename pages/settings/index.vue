@@ -3,7 +3,7 @@ const connectedProfile = useProfile().connectedProfile()
 const { isConnected } = storeToRefs(useAppStore())
 
 const handleOpenAddMissingAssets = () => {
-  navigateTo(settingsMissingAssetsRoute(connectedProfile.value?.address))
+  navigateTo(settingsMissingAssetsRoute())
 }
 
 watchEffect(() => {

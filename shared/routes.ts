@@ -25,30 +25,20 @@ export const lyxDetailsRoute = (profileAddress: Address) =>
 export const buyLyxRoute = (profileAddress: Address) =>
   `/${profileAddress}/buy-lyx`
 
-export const settingsRoute = (profileAddress?: Address) => {
-  assert(profileAddress, 'Missing profile address in route')
-  return `/${profileAddress}/settings`
+export const settingsRoute = () => {
+  return '/settings'
 }
 
-export const settingsMissingAssetsRoute = (profileAddress?: Address) => {
-  assert(profileAddress, 'Missing profile address in route')
-  return `/${profileAddress}/settings/missing-assets`
+export const settingsMissingAssetsRoute = () => {
+  return '/settings/missing-assets'
 }
 
-export const settingsMissingAssetsAddRoute = (
-  profileAddress?: Address,
-  assetAddress?: Address
-) => {
-  assert(profileAddress, 'Missing profile address in route')
+export const settingsMissingAssetsAddRoute = (assetAddress?: Address) => {
   assert(assetAddress, 'Missing asset address in route')
-  return `/${profileAddress}/settings/missing-assets/${assetAddress}/add`
+  return `/settings/missing-assets/${assetAddress}/add`
 }
 
-export const settingsMissingAssetsSuccessRoute = (
-  profileAddress?: Address,
-  assetAddress?: Address
-) => {
-  assert(profileAddress, 'Missing profile address in route')
+export const settingsMissingAssetsSuccessRoute = (assetAddress?: Address) => {
   assert(assetAddress, 'Missing asset address in route')
-  return `/${profileAddress}/settings/missing-assets/${assetAddress}/success`
+  return `/settings/missing-assets/${assetAddress}/success`
 }

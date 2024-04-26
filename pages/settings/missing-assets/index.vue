@@ -12,17 +12,12 @@ const checkError = ref('')
 const assetAddress = ref('')
 
 const handleBackToSettings = () => {
-  navigateTo(settingsRoute(connectedProfile.value?.address))
+  navigateTo(settingsRoute())
 }
 
 const handleCheckOwnership = () => {
   assertAddress(assetAddress.value)
-  navigateTo(
-    settingsMissingAssetsAddRoute(
-      connectedProfile.value?.address,
-      assetAddress.value
-    )
-  )
+  navigateTo(settingsMissingAssetsAddRoute(assetAddress.value))
 }
 
 const handleInput = async (customEvent: CustomEvent) => {

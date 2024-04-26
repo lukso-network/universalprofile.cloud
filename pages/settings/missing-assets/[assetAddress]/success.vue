@@ -6,11 +6,11 @@ const assetAddress = useRouter().currentRoute.value.params?.assetAddress
 const asset = useAsset()(assetAddress)
 
 const handleBackToSettings = () => {
-  navigateTo(settingsRoute(connectedProfile.value?.address))
+  navigateTo(settingsRoute())
 }
 
 const handleAddAnotherAsset = () => {
-  navigateTo(settingsMissingAssetsRoute(connectedProfile.value?.address))
+  navigateTo(settingsMissingAssetsRoute())
 }
 
 watchEffect(() => {
