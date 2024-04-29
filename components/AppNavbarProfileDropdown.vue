@@ -25,8 +25,8 @@ const handleOutsideDropdown = (event: Event) => {
   isOpen.value = false
 }
 
-const handleNavigateRelayerDashboard = () => {
-  window.open(relayerDappDashboardUrl(), '_self')
+const handleNavigateMyUpDashboard = () => {
+  window.open(myUpDappDashboardUrl(), '_self')
 }
 
 const handleNavigateSettings = () => {
@@ -61,7 +61,7 @@ onUnmounted(() => {
         variant="text"
         custom-class="text-12 nav-apax-12-medium-uppercase"
         class="group"
-        @click="handleNavigateRelayerDashboard"
+        @click="handleNavigateMyUpDashboard"
       >
         <span class="text-purple-63 transition group-hover:text-purple-41">
           {{ $formatMessage('header_relayer_dashboard') }}

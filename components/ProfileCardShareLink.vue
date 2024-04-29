@@ -53,7 +53,7 @@ const linkUrl = computed(() => {
   }
 
   // if we can't resolve we just link to the wallet
-  return `${BASE_WALLET_URL}/${props.profile?.address}/?network=${currentNetwork.value.id}`
+  return `${BASE_DAPP_URL}/${props.profile?.address}/?network=${currentNetwork.value.id}`
 })
 
 const linkLabel = computed(() => {
