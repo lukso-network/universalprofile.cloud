@@ -109,7 +109,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
             class="paragraph-inter-14-semi-bold flex flex-wrap items-center gap-x-1 gap-y-0.5 break-word"
           >
             <span v-if="isLoadedAsset" class="">{{ token?.tokenName }}</span>
-            <AppPlaceholderLine v-else class="h-[22px] w-1/2" />
+            <AppPlaceholderLine v-else class="my-[2px] h-[18px] w-1/2" />
             <span
               v-if="isLoadedAsset"
               class="paragraph-inter-10-semi-bold text-neutral-60"
@@ -133,16 +133,17 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
               {{ token.balance }}
             </span>
           </div>
-          <AppPlaceholderLine v-else class="h-[14px] w-1/4" />
-          <NftListCardCreators :asset="token" class="my-4" />
-          <div class="flex items-end">
+          <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
+          <NftListCardCreators :asset="token" class="mt-4" />
+          <div
+            class="mt-4 flex items-end"
+            v-if="
+              isConnected && viewedProfileAddress === connectedProfile?.address
+            "
+          >
             <div v-if="!isCollection(asset)" class="flex w-full justify-end">
               <div v-if="isLoadedAsset">
                 <lukso-button
-                  v-if="
-                    isConnected &&
-                    viewedProfileAddress === connectedProfile?.address
-                  "
                   size="small"
                   variant="secondary"
                   @click="handleSendAsset"
