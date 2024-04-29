@@ -7,22 +7,16 @@ import type { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/contracts'
 
 const connectedProfile = useProfile().connectedProfile()
 const { formatMessage } = useIntl()
-const { isConnected } = storeToRefs(useAppStore())
 const checkError = ref('')
 const assetAddress = ref('')
 
 const handleBackToSettings = () => {
-  navigateTo(settingsRoute(connectedProfile.value?.address))
+  navigateTo(settingsRoute())
 }
 
 const handleCheckOwnership = () => {
   assertAddress(assetAddress.value)
-  navigateTo(
-    settingsMissingAssetsAddRoute(
-      connectedProfile.value?.address,
-      assetAddress.value
-    )
-  )
+  navigateTo(settingsMissingAssetsAddRoute(assetAddress.value))
 }
 
 const handleInput = async (customEvent: CustomEvent) => {
@@ -76,12 +70,7 @@ const hasError = computed(() => {
   return !!checkError.value || !assetAddress.value
 })
 
-watchEffect(() => {
-  // when not connected then navigate to home
-  if (!isConnected.value) {
-    navigateTo(homeRoute())
-  }
-})
+useProtectedRoute()
 </script>
 
 <template>

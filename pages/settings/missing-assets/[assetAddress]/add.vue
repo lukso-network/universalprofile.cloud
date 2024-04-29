@@ -5,18 +5,17 @@ import type { AbiItem } from 'web3-utils'
 import type { UniversalProfile } from '@/contracts'
 
 const connectedProfile = useProfile().connectedProfile()
-const { isConnected } = storeToRefs(useAppStore())
 const assetAddress = useRouter().currentRoute.value.params?.assetAddress
 const isPending = ref(false)
 
 const asset = useAsset()(assetAddress)
 
 const handleBackToSettings = () => {
-  navigateTo(settingsRoute(connectedProfile.value?.address))
+  navigateTo(settingsRoute())
 }
 
 const handleCancel = () => {
-  navigateTo(settingsMissingAssetsRoute(connectedProfile.value?.address))
+  navigateTo(settingsMissingAssetsRoute())
 }
 
 const handleAddAsset = async () => {
@@ -41,12 +40,7 @@ const handleAddAsset = async () => {
     await profileContract.methods
       .setDataBatch(keys, values)
       .send({ from: profileAddress })
-    navigateTo(
-      settingsMissingAssetsSuccessRoute(
-        connectedProfile.value?.address,
-        assetAddress
-      )
-    )
+    navigateTo(settingsMissingAssetsSuccessRoute(assetAddress))
   } catch (error) {
     console.error(error)
   } finally {
@@ -56,12 +50,7 @@ const handleAddAsset = async () => {
 
 const isLoaded = computed(() => asset.value && !asset.value.isLoading)
 
-watchEffect(() => {
-  // when not connected then navigate to home
-  if (!isConnected.value) {
-    navigateTo(homeRoute())
-  }
-})
+useProtectedRoute()
 </script>
 
 <template>
