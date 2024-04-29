@@ -58,6 +58,7 @@ export const BASE_MY_UP_CLOUD_URL = 'https://my.universalprofile.cloud'
 export const BASE_DAPP_URL = 'https://wallet.universalprofile.cloud' // TODO remove subdomain after domain is switched
 export const BASE_PROFILE_LINK_URL = 'https://profile.link'
 export const BASE_L14_UP_CLOUD_URL = 'https://l14.universalprofile.cloud/'
+export const TXS_APP_LUKSO_PAGE_URL = 'https://txs.app/lukso'
 
 // default currency symbol
 export const DEFAULT_CURRENCY_SYMBOL = 'USD'
@@ -76,3 +77,10 @@ export const TESTNET_FAUCET_URL = 'https://faucet.testnet.lukso.network'
 
 // transak api key, for staging tests you can use 'https://global-stg.transak.com'
 export const TRANSAK_HOST = 'https://global.transak.com'
+
+// profile showcase params
+export const PROFILE_SHOWCASE_LIMIT = 4
+export const PROFILE_SHOWCASE_POOL_SIZE = 500
+
+// number of dApps in showcase
+export const DAPP_SHOWCASE_COUNT = 3

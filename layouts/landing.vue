@@ -5,7 +5,9 @@
     <div
       class="absolute inset-x-0 h-full bg-gradient-to-b from-transparent to-slate-50/100"
     ></div>
-    <div class="relative z-[1]">
+    <div
+      class="relative z-[1] grid min-h-screen grid-rows-[max-content,auto,max-content]"
+    >
       <AppNavbarLanding />
       <slot />
       <AppFooter />
