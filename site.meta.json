@@ -28,7 +28,7 @@
     },
     {
       "property": "og:url",
-      "content": "https://wallet.universalprofile.cloud"
+      "content": "https://universalprofile.cloud"
     },
     {
       "property": "og:type",
@@ -44,7 +44,7 @@
     },
     {
       "property": "og:image",
-      "content": "https://wallet.universalprofile.cloud/images/social-share.jpg"
+      "content": "https://universalprofile.cloud/images/social-share.jpg"
     },
     {
       "name": "twitter:card",
@@ -52,7 +52,7 @@
     },
     {
       "name": "twitter:domain",
-      "content": "wallet.universalprofile.cloud"
+      "content": "universalprofile.cloud"
     },
     {
       "name": "twitter:title",

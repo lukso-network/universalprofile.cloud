@@ -1,10 +1,14 @@
-# 💳 wallet.universalprofile.cloud
+# 🆙 universalprofile.cloud
 
-## Status
+[![Lint, Test, Build](https://github.com/lukso-network/wallet.universalprofile.cloud/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/lukso-network/wallet.universalprofile.cloud/actions/workflows/ci.yml)
 
-- main [![Lint, Test, Build](https://github.com/lukso-network/wallet.universalprofile.cloud/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/lukso-network/wallet.universalprofile.cloud/actions/workflows/ci.yml)
+This dApp runs on [LUKSO](https://lukso.network/) network. It allows to:
 
-Wallet that will let you see the Tokens ([LSP7](https://docs.lukso.tech/standards/nft-2.0/LSP7-Digital-Asset)) and NFTs ([LSP8](https://docs.lukso.tech/standards/nft-2.0/LSP8-Identifiable-Digital-Asset)) associated to a specific LUKSO's Universal Profile address.
+- browse [Universal Profiles (UP)](https://docs.lukso.tech/learn/concepts#universal-profile)
+- see UP associated assets (tokens and NFTs) and profile metadata
+- see network activity
+- connect and send assets
+- buy native LYX token on LUKSO network
 
 ## 🚀 Deployments
 
@@ -18,7 +22,7 @@ When you create a PR, a preview URL will be appended to the PR discussion.
 
 Branch: `main`
 
-- <https://wallet.universalprofile.cloud/>
+- <https://universalprofile.cloud/>
 
 ## 🔌 Network switch
 
@@ -34,18 +38,18 @@ It is possible to pass a network in query parameter to force viewing a profile o
 At runtime we look at the Local Storage "debug" key to show various logs. The following log streams are
 available:
 
-- `wallet:asset` -> Show asset/token objects
-- `wallet:profile` -> Show profile objects
+- `dapp:asset` -> Show asset/token objects
+- `dapp:profile` -> Show profile objects
 - `tanstack:query` -> Show how queries as posted
 - `tanstack:results` -> Show results of queries
 
 You can use \* for any section or all. For example:
 
 - `debug=\*`
-- `debug=wallet:\*,tanstack:query`
-- `debug=wallet:,tanstack:`
+- `debug=dapp:\*,tanstack:query`
+- `debug=dapp:,tanstack:`
 
-Use the Chrome debugger to add it to LocalStorage for the wallet site URL.
+Use the Chrome debugger to add it to LocalStorage for the dApp site URL.
 
 ## 🧑🏻‍💻 Getting Started
 

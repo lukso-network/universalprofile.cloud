@@ -28,7 +28,7 @@ const setupWeb3Instances = async () => {
   const provider = INJECTED_PROVIDER
 
   if (provider) {
-    // for chain interactions through wallet
+    // for chain interactions through dapp
     addWeb3(PROVIDERS.INJECTED, provider)
     await addProviderEvents(provider)
     // expose web3 instance to global scope for console access

@@ -37,7 +37,7 @@ export default defineNuxtConfig({
   ],
   ...({
     plausible: {
-      domain: 'wallet.universalprofile.cloud',
+      domain: 'universalprofile.cloud',
     },
   } as any),
   device: {
@@ -142,8 +142,8 @@ export default defineNuxtConfig({
     filename: 'sw.ts',
     registerType: 'autoUpdate',
     manifest: {
-      name: 'Wallet Caching PWA',
-      short_name: 'wallet-pwa',
+      name: 'UP dApp Caching PWA',
+      short_name: 'up-dapp-pwa',
       theme_color: '#ffffff',
       icons: [
         {
