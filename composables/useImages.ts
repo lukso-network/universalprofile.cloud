@@ -70,21 +70,25 @@ export const useAssetImage = (
       return { url: ASSET_LYX_ICON_URL, verified: null }
     }
 
+    // force flag to use icon image
     if (useIcon) {
       return currentIcon.value
     }
 
-    if (currentImage.value) {
+    // by default use first image from collection
+    if (currentImage.value?.url) {
       return currentImage.value
     }
 
-    if (currentImage.value) {
+    // otherwise use icon
+    if (currentIcon.value?.url) {
       return currentIcon.value
     }
 
     if (!assetIcon.value && !assetImage.value) {
       return { url: null, verified: null }
     }
+
     return { url: IMAGE_ERROR_URL, verified: null }
   })
 }
