@@ -14,6 +14,8 @@ const isImageLoading = ref(true)
 const hasImageError = ref(false)
 const imageSrc = ref()
 const contentRef = ref()
+const contentWidth = ref(0)
+const LARGE_IMAGE_BREAKPOINT = 150
 
 const handleError = () => {
   if (unref(props.image?.url)) {
@@ -40,23 +42,25 @@ const isVerificationInvalid = computed(
   () => unref(props.image)?.verified === 'invalid'
 )
 
-const contentWidth = useElementSize(contentRef.value)
-
-const isLarge = computed(() => {
-  return contentWidth.width.value > 150
-})
+const isLarge = computed(() => contentWidth.value > LARGE_IMAGE_BREAKPOINT)
 
 watchEffect(() => {
-  imageSrc.value = unref(props.image?.url)
+  if (props.image?.url) {
+    imageSrc.value = unref(props.image?.url)
+    hasImageError.value = false
+  }
 })
 
-onMounted(() => {
+onMounted(async () => {
   isImageLoading.value = true
 
   if (props.image?.url) {
     imageSrc.value = unref(props.image?.url)
     hasImageError.value = false
   }
+
+  await nextTick() // wait for the content to be rendered for the width to be calculated
+  contentWidth.value = useElementSize(contentRef.value).width.value
 })
 </script>
 
