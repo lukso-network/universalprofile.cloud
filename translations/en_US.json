@@ -103,7 +103,7 @@
   "header_my_profile": "Wallet",
   "missing_assets_token_address": "Token contract address",
   "missing_assets_description": "Find the token contract address of the asset you want to add and enter it below.",
-  "token_collection_of": "Collection of {count}",
+  "token_collection_of": "Owns {count}",
   "send_success_button": "Send another token",
   "modal_switch_network_description": "To continue using this application you will need to change the browser extension network to {name}.",
   "send_success_title": "Sending complete!",
