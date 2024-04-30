@@ -63,6 +63,7 @@ const assetTokenId = computed(() => {
         </div>
         <div class="paragraph-ptmono-10-bold">
           <span v-if="isLsp8(token) && token?.tokenId">
+            {{ $formatMessage('token_owned') }}
             {{ assetTokenId }}
           </span>
           <span v-else-if="token?.balance">
