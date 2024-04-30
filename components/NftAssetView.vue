@@ -87,10 +87,6 @@ const handlePreviewImage = () => {
               <span v-if="isLsp8(asset)">
                 {{ assetTokenId }}
               </span>
-              <span v-else-if="asset.balance">
-                {{ $formatMessage('token_owned') }}
-                {{ asset?.balance }}
-              </span>
             </div>
             <AppPlaceholderLine v-else class="mt-1 h-[11px] w-1/6" />
           </div>

@@ -86,84 +86,79 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
 </script>
 
 <template>
-  <div ref="target" class="flex">
+  <div ref="target" class="relative flex">
     <lukso-card
       border-radius="small"
       shadow="small"
       is-hoverable
       is-full-width
+      class="relative z-10"
       @click="handleShowAsset"
       ><div
         slot="content"
-        class="grid h-full grid-rows-[auto,max-content] rounded-12 bg-neutral-97"
+        class="grid h-full grid-rows-[max-content,auto,max-content] rounded-12 bg-neutral-100"
       >
+        <AssetImage
+          :image="assetImage"
+          class="min-h-[260px] rounded-t-12 md:max-h-[260px]"
+        />
         <div
-          class="grid grid-rows-[max-content,auto] rounded-12 bg-neutral-100 shadow-neutral-drop-shadow"
+          class="relative grid grid-rows-[max-content,max-content,auto] p-4 pt-2"
         >
-          <AssetImage
-            :image="assetImage"
-            class="min-h-[260px] rounded-t-12 md:max-h-[260px]"
-          />
           <div
-            class="relative grid grid-rows-[max-content,max-content,auto] p-4"
+            class="paragraph-inter-14-semi-bold flex flex-wrap items-center gap-x-1 gap-y-0.5 break-word"
           >
-            <div
-              class="relative top-[-40px] z-[2] flex cursor-pointer flex-col gap-1 rounded-4 bg-neutral-100 p-2 pr-6 shadow-neutral-drop-shadow"
+            <span v-if="isLoadedAsset" class="">{{ token?.tokenName }}</span>
+            <AppPlaceholderLine v-else class="my-[2px] h-[18px] w-1/2" />
+            <span
+              v-if="isLoadedAsset"
+              class="paragraph-inter-10-semi-bold text-neutral-60"
+              >{{ truncate(token?.tokenSymbol, 8) }}</span
             >
-              <div
-                class="paragraph-inter-14-semi-bold flex flex-wrap items-center gap-x-1 gap-y-0.5 break-word"
-              >
-                <span v-if="isLoadedAsset" class="">{{
-                  token?.tokenName
-                }}</span>
-                <AppPlaceholderLine v-else class="h-[22px] w-1/2" />
-                <span
-                  v-if="isLoadedAsset"
-                  class="paragraph-inter-10-semi-bold text-neutral-60"
-                  >{{ truncate(token?.tokenSymbol, 8) }}</span
+            <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
+          </div>
+          <div v-if="isLoadedAsset" class="paragraph-ptmono-10-bold">
+            <span v-if="isCollection(token)">
+              {{
+                $formatMessage('token_collection_of', {
+                  count: asset?.tokenIdsData?.length.toString() || '0',
+                })
+              }}
+            </span>
+            <span v-else-if="isLsp8(token) && asset?.tokenId">
+              {{ $formatMessage('token_owned') }}
+              {{ assetTokenId }}
+            </span>
+            <span v-else-if="token?.balance">
+              {{ $formatMessage('token_owned') }}
+              {{ token.balance }}
+            </span>
+          </div>
+          <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
+          <NftListCardCreators :asset="token" class="mt-4" />
+          <div
+            class="mt-4 flex items-end"
+            v-if="
+              isConnected && viewedProfileAddress === connectedProfile?.address
+            "
+          >
+            <div v-if="!isCollection(asset)" class="flex w-full justify-end">
+              <div v-if="isLoadedAsset">
+                <lukso-button
+                  size="small"
+                  variant="secondary"
+                  @click="handleSendAsset"
+                  class="transition-opacity hover:opacity-70"
+                  >{{ $formatMessage('button_send') }}</lukso-button
                 >
-                <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
               </div>
-              <div v-if="isLoadedAsset" class="paragraph-ptmono-10-bold">
-                <span v-if="isCollection(token)">
-                  {{
-                    $formatMessage('token_collection_of', {
-                      count: asset?.tokenIdsData?.length.toString() || '0',
-                    })
-                  }}
-                </span>
-                <span v-else-if="isLsp8(token) && asset?.tokenId">
-                  {{ assetTokenId }}
-                </span>
-                <span v-else-if="token?.balance">
-                  {{ $formatMessage('token_owned') }}
-                  {{ token.balance }}
-                </span>
-              </div>
-              <AppPlaceholderLine v-else class="h-[14px] w-1/4" />
-            </div>
-            <NftListCardCreators :asset="token" class="relative -top-4 -mt-2" />
-            <div class="flex items-end">
-              <div v-if="!isCollection(asset)" class="flex w-full justify-end">
-                <div v-if="isLoadedAsset">
-                  <lukso-button
-                    v-if="
-                      isConnected &&
-                      viewedProfileAddress === connectedProfile?.address
-                    "
-                    size="small"
-                    variant="secondary"
-                    @click="handleSendAsset"
-                    class="transition-opacity hover:opacity-70"
-                    >{{ $formatMessage('button_send') }}</lukso-button
-                  >
-                </div>
-                <AppPlaceholderLine v-else class="h-[28px] w-[60px]" />
-              </div>
+              <AppPlaceholderLine v-else class="h-[28px] w-[60px]" />
             </div>
           </div>
         </div>
-        <div class="flex justify-between px-4 py-3">
+        <div
+          class="mx-4 flex justify-between border-t border-t-neutral-90 py-3"
+        >
           <AssetStandardBadge :asset="asset" />
           <div
             v-if="isLoadedAsset && token?.address"
@@ -180,5 +175,21 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
         </div>
       </div>
     </lukso-card>
+    <div class="absolute bottom-0 w-full px-3">
+      <lukso-card
+        border-radius="small"
+        shadow="small"
+        v-if="isCollection(asset)"
+        class="relative bottom-[-44px] mx-3 w-[calc(100%-24px)]"
+        ><div slot="content" class="h-6 w-full rounded-12 bg-neutral-97"></div
+      ></lukso-card>
+      <lukso-card
+        border-radius="small"
+        shadow="small"
+        v-if="isCollection(asset)"
+        class="relative bottom-[-10px]"
+        ><div slot="content" class="h-6 w-full rounded-12 bg-neutral-97"></div
+      ></lukso-card>
+    </div>
   </div>
 </template>
