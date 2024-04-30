@@ -40,7 +40,6 @@ export const discoveryDappUrl = () => {
  */
 export const transakBuyLyxUrl = () => {
   const connectedProfile = useProfile().connectedProfile()
-  const { currentNetwork } = storeToRefs(useAppStore())
   const { formatMessage } = useIntl()
   const { $config } = useNuxtApp()
   const walletAddress = connectedProfile?.value?.address || ''
@@ -54,16 +53,32 @@ export const transakBuyLyxUrl = () => {
     isFeeCalculationHidden: 'true',
     defaultPaymentMethod: 'credit_debit_card',
     hideMenu: 'true',
-    redirectURL: `${BASE_WALLET_URL}/${walletAddress}?network=${currentNetwork.value.id}`,
+    redirectURL: `${BASE_WALLET_URL}/${walletAddress}?buyLyx=transak`,
     themeColor: '243542', // neutral-20
-    exchangeScreenTitle: formatMessage('transak_widget_title'),
+    exchangeScreenTitle: formatMessage('buy_lyx_widget_title'),
   }
 
-  const queryParamsString = Object.entries(queryParams)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&')
+  return `${TRANSAK_HOST}/?${queryParamsString(queryParams)}`
+}
 
-  return `${TRANSAK_HOST}/?${queryParamsString}`
+export const rampBuyLyxUrl = () => {
+  const connectedProfile = useProfile().connectedProfile()
+  const { formatMessage } = useIntl()
+  const { $config } = useNuxtApp()
+  const userAddress = connectedProfile?.value?.address || ''
+
+  const queryParams = {
+    hostApiKey: $config.public.RAMP_API_KEY,
+    hostAppName: formatMessage('buy_lyx_widget_title'),
+    hostLogoUrl: `${window.location.origin}/favicon.png`,
+    userAddress,
+    defaultAsset: 'LUKSO_LYX',
+    defaultFlow: 'ONRAMP',
+    finalUrl: `${BASE_WALLET_URL}/${userAddress}?buyLyx=ramp`,
+    paymentMethodType: 'CARD',
+  }
+
+  return `${RAMP_HOST}/?${queryParamsString(queryParams)}`
 }
 
 /**

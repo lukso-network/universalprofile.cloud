@@ -79,5 +79,8 @@ export const CURRENCY_CACHE_EXPIRY_IN_MINUTES = 60
 // link to the testnet faucet
 export const TESTNET_FAUCET_URL = 'https://faucet.testnet.lukso.network'
 
-// transak api key, for staging tests you can use 'https://global-stg.transak.com'
+// Transak host address, for staging tests you can use 'https://global-stg.transak.com'
 export const TRANSAK_HOST = 'https://global.transak.com'
+
+// Ramp host address
+export const RAMP_HOST = 'https://app.ramp.network'
