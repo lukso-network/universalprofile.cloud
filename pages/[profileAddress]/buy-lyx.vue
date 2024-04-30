@@ -15,6 +15,12 @@
               :buy-url="transakBuyLyxUrl()"
               :description="$formatMessage('buy_lyx_card_transak_description')"
             ></BuyLyxCard>
+            <BuyLyxCard
+              logo-url="/images/ramp-logo.png"
+              :buy-url="rampBuyLyxUrl()"
+              :description="$formatMessage('buy_lyx_card_ramp_description')"
+              class="hidden"
+            ></BuyLyxCard>
           </div>
         </div>
       </div>

@@ -131,16 +131,12 @@ const setupConnectedProfile = async () => {
  * Check if user bought LYX
  */
 const checkBuyLyx = () => {
-  // status and orderId are passed in redirect url query params after Transak order
-  const status = useRouter().currentRoute.value.query?.status as
-    | string
-    | undefined
-  const orderId = useRouter().currentRoute.value.query?.orderId as
+  const buyLyx = useRouter().currentRoute.value.query?.buyLyx as
     | string
     | undefined
 
-  if (status && orderId) {
-    genericLog('Transak order', orderId, status)
+  if (buyLyx) {
+    genericLog('Buy lyx order', buyLyx)
 
     const { showModal } = useModal()
     const { formatMessage } = useIntl()
@@ -150,10 +146,6 @@ const checkBuyLyx = () => {
       title: formatMessage('transak_success_title'),
       message: formatMessage('transak_success_message'),
       confirmButtonText: formatMessage('transak_success_button'),
-      data: {
-        status,
-        orderId,
-      },
     })
   }
 }
