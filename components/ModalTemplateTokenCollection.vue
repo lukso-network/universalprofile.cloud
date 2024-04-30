@@ -9,6 +9,7 @@ type Props = {
 
 defineProps<Props>()
 const viewedProfile = useProfile().viewedProfile()
+const connectedProfile = useProfile().connectedProfile()
 const profileAvatar = useProfileAvatar(viewedProfile, 24)
 const { isConnected } = storeToRefs(useAppStore())
 
@@ -39,7 +40,12 @@ const handleViewEntireCollection = () => {
           :profile-address="viewedProfile?.address"
           has-identicon
         ></lukso-profile>
-        <div v-if="isConnected" class="paragraph-inter-10-semi-bold">
+        <div
+          v-if="
+            isConnected && viewedProfile?.address === connectedProfile?.address
+          "
+          class="paragraph-inter-10-semi-bold"
+        >
           {{ $formatMessage('collection_connected_own_info') }}
         </div>
         <div v-else class="flex flex-col justify-center">
