@@ -9,11 +9,9 @@ const { isConnecting, isConnected, isTestnet, hasSimpleNavbar, isSearchOpen } =
 const handleNavigateProfile = async () => {
   try {
     if (isConnected.value) {
-      assertAddress(connectedProfile.value?.address, 'profile')
-      navigateTo(profileRoute(connectedProfile.value.address))
+      navigateTo(profileRoute(connectedProfile.value?.address))
     } else {
-      assertAddress(viewedProfile.value?.address, 'profile')
-      navigateTo(profileRoute(viewedProfile.value.address))
+      navigateTo(profileRoute(viewedProfile.value?.address))
     }
   } catch (error) {
     console.error(error)
@@ -42,7 +40,7 @@ const handleMobileSearch = () => {
 }
 
 const handleNavigateSettings = () => {
-  navigateTo(settingsRoute(connectedProfile.value?.address))
+  navigateTo(settingsRoute())
 }
 
 const extensionStoreData = () => {

@@ -20,8 +20,8 @@ const handleBuyLyx = () => {
     @click="handleBuyLyx"
   >
     <div slot="content" class="p-6">
-      <div class="flex justify-between">
-        <img :src="logoUrl" class="h-8" />
+      <div class="grid grid-cols-[auto,max-content]">
+        <img :src="logoUrl" class="max-w-[100px]" />
         <lukso-button
           size="small"
           :href="buyUrl"
