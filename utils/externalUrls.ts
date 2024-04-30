@@ -70,7 +70,7 @@ export const rampBuyLyxUrl = () => {
   const queryParams = {
     hostApiKey: $config.public.RAMP_API_KEY,
     hostAppName: formatMessage('buy_lyx_widget_title'),
-    hostLogoUrl: `${window.location.origin}/favicon.png`,
+    hostLogoUrl: `${window.location.origin}/images/lukso.svg`,
     userAddress,
     defaultAsset: 'LUKSO_LYX',
     defaultFlow: 'ONRAMP',
