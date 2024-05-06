@@ -157,7 +157,7 @@ router.beforeEach(() => {
 
 onMounted(async () => {
   setupTranslations()
-  setupNetwork()
+  await setupNetwork()
   await setupWeb3Instances()
   checkConnectionExpiry()
   await setupConnectedProfile()

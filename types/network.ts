@@ -1,5 +1,4 @@
-import { SUPPORTED_NETWORK_IDS } from '@/shared/config'
-
+import type { SUPPORTED_NETWORK_IDS } from '@/shared/config'
 import type { HttpHeader } from 'web3-core-helpers'
 import type { BrowserName } from './device'
 

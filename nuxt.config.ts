@@ -34,6 +34,7 @@ export default defineNuxtConfig({
     '@pinia-orm/nuxt',
     '@nuxt/test-utils/module',
     '@vite-pwa/nuxt',
+    'nuxt-graphql-client',
   ],
   ...({
     plausible: {
@@ -190,5 +191,12 @@ export default defineNuxtConfig({
           navigateFallbackAllowlist: [/^\/$/],
           type: 'module',
         },
+  },
+  'graphql-client': {
+    watch: true,
+    autoImport: true,
+    functionPrefix: 'Gql',
+    documentPaths: ['./'],
+    preferGETQueries: false,
   },
 })
