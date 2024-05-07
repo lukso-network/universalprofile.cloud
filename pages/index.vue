@@ -3,73 +3,93 @@ definePageMeta({
   layout: 'landing',
 })
 
-const { isConnected, connectedProfileAddress } = storeToRefs(useAppStore())
-const { isUniversalProfileExtension } = useBrowserExtension()
+const { currentNetwork } = storeToRefs(useAppStore())
+const { search } = useAlgoliaSearch<IndexedProfile>(
+  currentNetwork.value.indexName
+)
+const { isTestnet } = storeToRefs(useAppStore())
 
-const supportedBrowsers = Object.entries(EXTENSION_STORE_LINKS)
-  .filter(entry => entry[1] !== '')
-  .map(browser => browser[0])
+const numberOfProfiles = ref<number>()
 
-watchEffect(() => {
-  if (isConnected.value) {
-    navigateTo(profileRoute(connectedProfileAddress.value))
-  }
+const getNumberOfProfiles = async () => {
+  const profiles = await search({
+    query: '',
+    requestOptions: {
+      hitsPerPage: 0,
+      attributesToRetrieve: undefined,
+    },
+  })
+  numberOfProfiles.value = profiles.nbHits
+}
+
+onMounted(async () => {
+  await getNumberOfProfiles()
 })
 </script>
 
 <template>
   <AppPageLoader>
     <div
-      class="relative mx-auto grid h-full max-w-[950px] grid-cols-1 gap-7 px-4 py-20 sm:grid-cols-2 sm:items-center sm:pt-24"
+      class="mx-auto flex max-w-[1200px] flex-col items-center px-6 transition-opacity duration-300 lg:px-4"
     >
-      <div class="hidden sm:block">
-        <img
-          src="/images/wallet.png"
-          alt=""
-          class="max-w-full lg:max-w-[484px]"
-        />
-      </div>
-      <div>
-        <lukso-card is-full-width>
-          <div slot="content" class="relative p-10 pt-16">
-            <img
-              src="/images/up-cube.png"
-              alt=""
-              class="absolute top-[-50px] w-[100px]"
-            />
-            <div class="heading-apax-24-medium">
-              {{ $formatMessage('landing_hero_title') }}
-            </div>
-            <div class="paragraph-inter-16-regular pt-6">
-              <lukso-sanitize
-                v-if="isUniversalProfileExtension()"
-                :html-content="
-                  $formatMessage('landing_hero_description_not_connected')
-                "
-              ></lukso-sanitize>
-              <lukso-sanitize
-                v-else
-                :html-content="
-                  $formatMessage('landing_hero_description_no_extension')
-                "
-              ></lukso-sanitize>
-            </div>
-            <AppButtonConnectOrInstall />
-          </div>
-        </lukso-card>
+      <AppTestnetWarning v-if="isTestnet" class="-mb-6" />
+      <h1 class="flex flex-col justify-center pt-16 text-center">
+        <div class="heading-apax-48-regular">
+          {{ $formatMessage('hero_title_01') }}
+        </div>
+        <div class="heading-apax-48-bold">
+          {{ $formatMessage('hero_title_02') }}
+        </div>
+      </h1>
+      <div
+        class="mb-20 mt-8 flex w-full flex-col items-center justify-center sm:mb-28 sm:w-1/2 lg:w-2/5"
+      >
+        <AppNavbarProfileSearch class="w-full" />
         <div
-          class="paragraph-inter-12-regular flex items-center justify-center gap-2 pt-6"
+          class="paragraph-inter-14-regular mt-6 text-center text-neutral-40"
         >
-          <span>{{ $formatMessage('landing_hero_supported_browsers') }}</span>
-          <lukso-icon
-            v-for="browser in supportedBrowsers"
-            :key="browser"
-            :name="`logo-${browser}`"
-            color="neutral-20"
-            secondary-color="neutral-100"
-          />
+          <lukso-sanitize
+            :html-content="
+              $formatMessage('erc725account_info_part1', {
+                numberOfProfiles: `<strong>${numberOfProfiles?.toLocaleString()}</strong>`,
+                luksoWebsiteLink: `<strong>on <a
+          class='underline hover:text-neutral-20'
+          href='https://lukso.network/'
+          target='_blank'
+          >LUKSO</a></strong>`,
+              })
+            "
+          ></lukso-sanitize>
+          <br />
+          <lukso-sanitize
+            :html-content="
+              $formatMessage('erc725account_info_part2', {
+                erc725accountLink: `<a
+          class='underline hover:text-neutral-20'
+          href='https://docs.lukso.tech/standards/introduction/'
+          target='_blank'
+          >ERC725Account</a
+        >`,
+                createUPlink: `<a
+          class='underline hover:text-neutral-20'
+          href='https://my.universalprofile.cloud'
+          target='_blank'
+          >${$formatMessage('erc725account_info_part3')}</a
+        >`,
+              })
+            "
+          ></lukso-sanitize>
         </div>
       </div>
+      <CreateProfileBox />
+      <div
+        class="relative grid w-full grid-cols-1 gap-12 pb-20 md:pb-0"
+        :class="{ 'md:grid-cols-1': isTestnet, 'md:grid-cols-2': !isTestnet }"
+      >
+        <ProfileShowcase />
+        <ActivityList v-if="!isTestnet" />
+      </div>
+      <DappShowcase />
     </div>
   </AppPageLoader>
 </template>

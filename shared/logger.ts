@@ -1,16 +1,16 @@
 import debug from 'debug'
 
 // Logger for any generic stuff
-export const genericLog = debug('wallet:generic')
+export const genericLog = debug('dapp:generic')
 
 // Logger for assets
-export const assetLog = debug('wallet:asset')
+export const assetLog = debug('dapp:asset')
 
 // Logger for assets
-export const tokenLog = debug('wallet:token')
+export const tokenLog = debug('dapp:token')
 
 // Logger for profile
-export const profileLog = debug('wallet:profile')
+export const profileLog = debug('dapp:profile')
 
 // Logger for sending assets
-export const sendLog = debug('wallet:send')
+export const sendLog = debug('dapp:send')

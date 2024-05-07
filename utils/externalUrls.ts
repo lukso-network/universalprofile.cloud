@@ -23,17 +23,6 @@ export const explorerContractUrl = (address?: string | Address) => {
 }
 
 /**
- * URL to Discovery dApp aka. universalprofile.cloud
- *
- * @returns
- */
-export const discoveryDappUrl = () => {
-  const { currentNetwork } = storeToRefs(useAppStore())
-
-  return `${BASE_UP_CLOUD_URL}?network=${currentNetwork.value.id}`
-}
-
-/**
  * URL to Transak to buy LYX
  *
  * @returns
@@ -53,7 +42,7 @@ export const transakBuyLyxUrl = () => {
     isFeeCalculationHidden: 'true',
     defaultPaymentMethod: 'credit_debit_card',
     hideMenu: 'true',
-    redirectURL: `${BASE_WALLET_URL}/${walletAddress}?buyLyx=transak`,
+    redirectURL: `${BASE_DAPP_URL}/${walletAddress}?buyLyx=transak`,
     themeColor: '243542', // neutral-20
     exchangeScreenTitle: formatMessage('buy_lyx_widget_title'),
   }
@@ -74,7 +63,7 @@ export const rampBuyLyxUrl = () => {
     userAddress,
     defaultAsset: 'LUKSO_LYX',
     defaultFlow: 'ONRAMP',
-    finalUrl: `${BASE_WALLET_URL}/${userAddress}?buyLyx=ramp`,
+    finalUrl: `${BASE_DAPP_URL}/${userAddress}?buyLyx=ramp`,
     paymentMethodType: 'CARD',
   }
 
@@ -82,12 +71,23 @@ export const rampBuyLyxUrl = () => {
 }
 
 /**
- * URL to Relayer dashboard on my.universalprofile.cloud
+ * URL to profile dashboard on my.universalprofile.cloud
  *
  * @returns
  */
-export const relayerDappDashboardUrl = () => {
+export const myUpDappDashboardUrl = () => {
   const { currentNetwork } = storeToRefs(useAppStore())
 
-  return `${BASE_RELAYER_DAPP_URL}/dashboard?network=${currentNetwork.value.id}`
+  return `${BASE_MY_UP_CLOUD_URL}/dashboard?network=${currentNetwork.value.id}`
+}
+
+/**
+ * URL to landing page on my.universalprofile.cloud
+ *
+ * @returns
+ */
+export const myUpDappBaseUrl = () => {
+  const { currentNetwork } = storeToRefs(useAppStore())
+
+  return `${BASE_MY_UP_CLOUD_URL}?network=${currentNetwork.value.id}`
 }

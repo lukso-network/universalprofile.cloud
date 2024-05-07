@@ -53,16 +53,12 @@ export const EXTENSION_STORE_LINKS = {
 // search params
 export const SEARCH_RESULTS_LIMIT = 100
 
-// base universalprofile address
-export const BASE_UP_CLOUD_URL = 'https://universalprofile.cloud'
-
-// base universalprofile address
-export const BASE_RELAYER_DAPP_URL = 'https://my.universalprofile.cloud'
-
-// base wallet address
-export const BASE_WALLET_URL = 'https://wallet.universalprofile.cloud'
-
+// base urls
+export const BASE_MY_UP_CLOUD_URL = 'https://my.universalprofile.cloud'
+export const BASE_DAPP_URL = 'https://wallet.universalprofile.cloud' // TODO remove subdomain after domain is switched
 export const BASE_PROFILE_LINK_URL = 'https://profile.link'
+export const BASE_L14_UP_CLOUD_URL = 'https://l14.universalprofile.cloud/'
+export const TXS_APP_LUKSO_PAGE_URL = 'https://txs.app/lukso'
 
 // default currency symbol
 export const DEFAULT_CURRENCY_SYMBOL = 'USD'
@@ -84,3 +80,10 @@ export const TRANSAK_HOST = 'https://global.transak.com'
 
 // Ramp host address
 export const RAMP_HOST = 'https://app.ramp.network'
+
+// profile showcase params
+export const PROFILE_SHOWCASE_LIMIT = 4
+export const PROFILE_SHOWCASE_POOL_SIZE = 500
+
+// number of dApps in showcase
+export const DAPP_SHOWCASE_COUNT = 3

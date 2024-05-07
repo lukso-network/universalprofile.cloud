@@ -31,8 +31,8 @@ const handleDisconnect = async () => {
   disconnect()
 }
 
-const handleNavigationDiscovery = () => {
-  window.open(discoveryDappUrl(), '_self')
+const handleNavigateLanding = () => {
+  navigateTo(homeRoute())
 }
 
 const handleMobileSearch = () => {
@@ -66,7 +66,7 @@ const browserSupportExtension = extensionStore.url !== ''
     :has-menu="!hasSimpleNavbar ? true : undefined"
     :is-center="hasSimpleNavbar ? true : undefined"
     mobile-breakpoint="lg"
-    @on-brand-click="handleNavigationDiscovery"
+    @on-brand-click="handleNavigateLanding"
     @on-icon-click="handleNavigateProfile"
   >
     <div class="flex items-center justify-end" slot="desktop-menu">
