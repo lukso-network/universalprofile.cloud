@@ -1,0 +1,33 @@
+fragment avatars on Profile {
+  avatars {
+    url
+    fileType
+    contentToken {
+      id
+      tokenId
+      images {
+        url
+        width
+        height
+      }
+      icons {
+        url
+        width
+        height
+      }
+    }
+    contentAsset {
+      id
+      images {
+        url
+        width
+        height
+      }
+      icons {
+        url
+        width
+        height
+      }
+    }
+  }
+}

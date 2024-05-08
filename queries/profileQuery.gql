@@ -1,0 +1,29 @@
+query profile($id: ID!) {
+  profile(id: $id) {
+    fullName
+    description
+    name
+    id
+    links {
+      title
+      url
+    }
+    backgroundImages {
+      url
+      height
+      width
+    }
+    profileImages {
+      width
+      url
+      height
+    }
+    lsp5ReceivedAssets {
+      id
+    }
+    lsp12IssuedAssets {
+      id
+    }
+    ...avatars
+  }
+}

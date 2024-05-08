@@ -1,22 +1,22 @@
-import { useQueries } from '@tanstack/vue-query'
-import { keccak256 } from 'web3-utils'
+import { useQueries, useQueryClient } from '@tanstack/vue-query'
+import { keccak256, toChecksumAddress } from 'web3-utils'
 
 import { browserProcessMetadata } from '@/utils/processMetadata'
 
 import type { ProfileLink } from '@/types/profile'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
-import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
+import type { ProfileQuery } from '@/.nuxt/gql/default'
 
 export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
   const { currentNetwork } = storeToRefs(useAppStore())
+  const profileAddress = unref(_profile)
+  const enableRpc = ref(false)
+  const queryClient = useQueryClient()
 
   const queries = computed(() => {
     const { value: { chainId } = { chainId: '' } } = currentNetwork
-    const profileAddress = isRef(_profile)
-      ? _profile.value || null
-      : _profile || null
 
-    const queries: QFQueryOptions[] & { profileAddress: Address | null } = (
+    const queries: QFQueryOptions[] & { profileAddress?: Address } = (
       profileAddress
         ? [
             {
@@ -35,6 +35,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               address: profileAddress,
               keyName: 'LSP3Profile',
               process: data => browserProcessMetadata(data, keccak256),
+              enabled: enableRpc,
             }),
             // 2
             queryGetData({
@@ -43,6 +44,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               keyName: 'LSP5ReceivedAssets[]',
               refetchInterval: 120_000,
               staleTime: 250,
+              enabled: enableRpc,
             }),
             // 3
             queryGetData({
@@ -51,6 +53,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               keyName: 'LSP12IssuedAssets[]',
               refetchInterval: 120_000,
               staleTime: 250,
+              enabled: enableRpc,
             }),
             {
               // 4
@@ -60,6 +63,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               },
               refetchInterval: 120_000,
               staleTime: 250,
+              enabled: enableRpc,
             },
             // 5-10
             ...interfacesToCheck.map(({ interfaceId }) =>
@@ -72,14 +76,65 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
             ),
           ]
         : []
-    ) as QFQueryOptions[] & { profileAddress: Address | null }
+    ) as QFQueryOptions[] & { profileAddress?: Address }
     queries.profileAddress = profileAddress
     return queries
   })
+
+  // we call Graph to get all data before enabling RPC calls
+  if (profileAddress) {
+    GqlProfile({
+      id: profileAddress.toLowerCase(),
+    }).then(({ profile }: ProfileQuery) => {
+      // 1 LSP3Profile
+      const profileDataKey = queries.value[1].queryKey
+      const profileData: LSP3ProfileMetadataJSON = {
+        LSP3Profile: validateLsp3Metadata({
+          name: profile?.name || '',
+          backgroundImage: profile?.backgroundImages || [],
+          profileImage: profile?.profileImages,
+          description: profile?.description,
+          // @ts-ignore // TODO remove this when Graph is updated with missing field
+          tags: profile?.tags,
+          avatar: profile?.avatars, // TODO properly re-map avatars from Graph when they are supported
+          links: profile?.links,
+        }),
+      }
+
+      queryClient.setQueryData(profileDataKey, profileData)
+
+      // 2 LSP5ReceivedAssets
+      const receivedAssetsKey = queries.value[2].queryKey
+      const receivedAssets: Address[] | undefined =
+        profile?.lsp5ReceivedAssets?.map(asset => asset.id as Address)
+      queryClient.setQueryData(receivedAssetsKey, receivedAssets)
+
+      // 3 LSP12IssuedAssets
+      const issuedAssetsKey = queries.value[3].queryKey
+      const issuedAssets: Address[] | undefined =
+        profile?.lsp12IssuedAssets?.map(asset => asset.id as Address)
+      queryClient.setQueryData(issuedAssetsKey, issuedAssets)
+
+      // 4 ProfileLink
+      const profileLinkKey = queries.value[4].queryKey
+      const checksummed = toChecksumAddress(profileAddress) as Address
+      const profileLink: ProfileLink | undefined = {
+        address: profileAddress,
+        resolved: profileAddress,
+        link: profile?.fullName || `${BASE_PROFILE_LINK_URL}/${checksummed}`,
+        checksummed,
+        isResolved: !!profile?.fullName,
+      }
+      queryClient.setQueryData(profileLinkKey, profileLink)
+
+      enableRpc.value = true
+    })
+  }
+
   return useQueries({
     queries,
     combine: results => {
-      const profileAddress: Address | null = queries.value.profileAddress
+      const profileAddress: Address | undefined = queries.value.profileAddress
       if (!profileAddress) {
         return null
       }

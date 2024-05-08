@@ -1005,6 +1005,7 @@ export type QFQueryOptions<T = unknown> = {
   staleTime?: number
   refetchInterval?: number
   retry?: number | boolean
+  enabled?: MaybeRef<boolean>
 }
 
 export type CallContractQueryOptions = {
@@ -1019,6 +1020,7 @@ export type CallContractQueryOptions = {
   aggregateLimit?: number
   priority?: number
   process?: (data: any) => Promise<any>
+  enabled?: MaybeRef<boolean>
 }
 
 export function queryCallContract<T>({
@@ -1033,6 +1035,7 @@ export function queryCallContract<T>({
   refetchInterval,
   retry,
   process,
+  enabled,
 }: CallContractQueryOptions): QFQueryOptions<T> {
   const methodName = method.replace(/\(.*$/, '')
   const methodItem = (abi || defaultAbi).find(item => {
@@ -1086,6 +1089,7 @@ export function queryCallContract<T>({
       triggerQuery()
       return query.promise
     },
+    enabled,
   }
 }
 
@@ -1101,6 +1105,7 @@ export type GetDataQueryOptions = {
   aggregateLimit?: number
   priority?: number
   process?: (data: any) => Promise<any>
+  enabled: MaybeRef<boolean>
 }
 
 export type VerifiableURI = {
@@ -1130,6 +1135,7 @@ export function queryGetData<T>({
   aggregateLimit = MAX_AGGREGATE_COUNT,
   priority = Priorities.Normal,
   process,
+  enabled,
 }: GetDataQueryOptions): QFQueryOptions<T> {
   const schemaItem = (schema || defaultSchema).find(
     ({ name }) => name === keyName
@@ -1163,5 +1169,6 @@ export function queryGetData<T>({
       triggerQuery()
       return query.promise as Promise<T>
     },
+    enabled,
   }
 }
