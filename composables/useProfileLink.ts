@@ -22,7 +22,7 @@ export async function resolveProfile(_address: string): Promise<ProfileLink> {
 
     return {
       address: _address as Address,
-      checksummed: checksummed,
+      checksummed,
       resolved: _address as string,
       link: `${BASE_PROFILE_LINK_URL}/${checksummed}`,
       isResolved: false,
