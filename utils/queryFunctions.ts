@@ -1105,7 +1105,7 @@ export type GetDataQueryOptions = {
   aggregateLimit?: number
   priority?: number
   process?: (data: any) => Promise<any>
-  enabled: MaybeRef<boolean>
+  enabled?: MaybeRef<boolean>
 }
 
 export type VerifiableURI = {
