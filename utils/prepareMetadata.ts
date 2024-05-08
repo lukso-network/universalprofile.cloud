@@ -1,12 +1,11 @@
 import { LUKSO_PROXY_API } from '@/shared/config'
 
 export const prepareMetadata = (metadata: LSP4DigitalAssetMetadataJSON) => {
-  const validatedMetadata = validateLsp4Metadata(metadata)
+  const validatedMetadata = validateLsp4Metadata(metadata.LSP4Metadata)
 
-  const { links, description, attributes } =
-    validatedMetadata.LSP4Metadata || {}
+  const { links, description, attributes } = validatedMetadata || {}
   const assets =
-    validatedMetadata?.LSP4Metadata?.assets?.map((asset: AssetMetadata) => {
+    validatedMetadata?.assets?.map((asset: AssetMetadata) => {
       const { url } = asset as FileAsset
 
       // TODO add url verification check
@@ -17,8 +16,8 @@ export const prepareMetadata = (metadata: LSP4DigitalAssetMetadataJSON) => {
           } as AssetMetadata & { src: string })
         : asset
     }) || []
-  const images = prepareImagesNested(validatedMetadata?.LSP4Metadata?.images)
-  const icon = prepareImages(validatedMetadata?.LSP4Metadata?.icon)
+  const images = prepareImagesNested(validatedMetadata?.images)
+  const icon = prepareImages(validatedMetadata?.icon)
 
   return {
     images,
