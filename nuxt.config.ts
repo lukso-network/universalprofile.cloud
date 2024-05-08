@@ -198,5 +198,6 @@ export default defineNuxtConfig({
     functionPrefix: 'Gql',
     documentPaths: ['./'],
     preferGETQueries: false,
+    codegen: true,
   },
 })
