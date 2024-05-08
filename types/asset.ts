@@ -1,4 +1,5 @@
 import type {
+  ImageMetadata,
   LSP4_TOKEN_TYPES,
   LSP8_TOKEN_ID_FORMAT,
   LinkMetadata,
@@ -6,8 +7,8 @@ import type {
 
 // TODO use type from lsp package when it's released
 export type LSP4DigitalAssetMetadata = {
-  images?: Image[][]
-  icon?: Image[]
+  images?: ImageMetadata[][]
+  icon?: ImageMetadata[]
   description?: string
   assets?: AssetMetadata[]
   attributes?: AttributeMetadata[]
@@ -17,6 +18,20 @@ export type LSP4DigitalAssetMetadata = {
 
 export type LSP4DigitalAssetMetadataJSON = {
   LSP4Metadata: LSP4DigitalAssetMetadata
+}
+
+export type LSP3ProfileMetadata = {
+  name: string
+  description: string
+  profileImage?: ImageMetadata[]
+  backgroundImage?: ImageMetadata[]
+  tags?: string[]
+  links?: LinkMetadata[]
+  avatar?: AssetMetadata[]
+}
+
+export type LSP3ProfileMetadataJSON = {
+  LSP3Profile: LSP3ProfileMetadata
 }
 
 export type ReferenceContract = {
