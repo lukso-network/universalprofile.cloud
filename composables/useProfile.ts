@@ -1,4 +1,4 @@
-import { useQueries, useQueryClient } from '@tanstack/vue-query'
+import { useQueries, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { keccak256, toChecksumAddress } from 'web3-utils'
 
 import { browserProcessMetadata } from '@/utils/processMetadata'
@@ -10,7 +10,6 @@ import type { ProfileQuery } from '@/.nuxt/gql/default'
 export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
   const { currentNetwork } = storeToRefs(useAppStore())
   const profileAddress = unref(_profile)
-  const enableRpc = ref(false)
   const queryClient = useQueryClient()
 
   const queries = computed(() => {
@@ -27,7 +26,8 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
                 return profileAddress ? await getBalance(profileAddress) : 0
               },
               refetchInterval: 120_000,
-              staleTime: 250,
+              staleTime: isPending.value ? TANSTACK_DEFAULT_STALE_TIME : 250,
+              enabled: !isPending,
             },
             // 1
             queryGetData({
@@ -35,7 +35,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               address: profileAddress,
               keyName: 'LSP3Profile',
               process: data => browserProcessMetadata(data, keccak256),
-              enabled: enableRpc,
+              enabled: !isPending,
             }),
             // 2
             queryGetData({
@@ -43,8 +43,8 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               address: profileAddress,
               keyName: 'LSP5ReceivedAssets[]',
               refetchInterval: 120_000,
-              staleTime: 250,
-              enabled: enableRpc,
+              staleTime: isPending.value ? TANSTACK_DEFAULT_STALE_TIME : 250,
+              enabled: !isPending,
             }),
             // 3
             queryGetData({
@@ -52,8 +52,8 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               address: profileAddress,
               keyName: 'LSP12IssuedAssets[]',
               refetchInterval: 120_000,
-              staleTime: 250,
-              enabled: enableRpc,
+              staleTime: isPending.value ? TANSTACK_DEFAULT_STALE_TIME : 250,
+              enabled: !isPending,
             }),
             {
               // 4
@@ -62,8 +62,8 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
                 return await resolveProfile(profileAddress)
               },
               refetchInterval: 120_000,
-              staleTime: 250,
-              enabled: enableRpc,
+              staleTime: isPending.value ? TANSTACK_DEFAULT_STALE_TIME : 250,
+              enabled: !isPending,
             },
             // 5-10
             ...interfacesToCheck.map(({ interfaceId }) =>
@@ -72,6 +72,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
                 address: profileAddress as Address,
                 method: 'supportsInterface(bytes4)',
                 args: [interfaceId],
+                enabled: !isPending,
               })
             ),
           ]
@@ -82,10 +83,21 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
   })
 
   // we call Graph to get all data before enabling RPC calls
-  if (profileAddress) {
-    GqlProfile({
-      id: profileAddress.toLowerCase(),
-    }).then(({ profile }: ProfileQuery) => {
+  const { isPending } = useQuery({
+    queryKey: ['graph-profile', profileAddress],
+    queryFn: async () => {
+      const { Profile_by_pk: profile }: ProfileQuery = await GqlProfile({
+        id: profileAddress?.toLowerCase(),
+      })
+
+      if (!profileAddress) {
+        return {}
+      }
+
+      if (graphLog.enabled) {
+        graphLog('profile', profile)
+      }
+
       // 1 LSP3Profile
       const profileDataKey = queries.value[1].queryKey
       const profileData: LSP3ProfileMetadataJSON = {
@@ -100,7 +112,6 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
           links: profile?.links,
         }),
       }
-
       queryClient.setQueryData(profileDataKey, profileData)
 
       // 2 LSP5ReceivedAssets
@@ -127,9 +138,20 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
       }
       queryClient.setQueryData(profileLinkKey, profileLink)
 
-      enableRpc.value = true
-    })
-  }
+      // 5+ supportsInterface(bytes4)
+      interfacesToCheck.map(({ standard, interfaceId }, index) => {
+        const supportsInterfaceKey = queries.value[index + 5].queryKey
+        const supportsInterface =
+          profile?.standard === standard &&
+          profile?.interfaces.includes(interfaceId)
+        queryClient.setQueryData(supportsInterfaceKey, supportsInterface)
+      })
+
+      return {}
+    },
+    staleTime: TANSTACK_DEFAULT_STALE_TIME,
+    enabled: computed(() => !!profileAddress),
+  })
 
   return useQueries({
     queries,

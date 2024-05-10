@@ -932,13 +932,16 @@ const LSP8_INTERFACE_IDS = [
 
 export type Interface = {
   interfaceId: `0x${string}`
-  standard: 'LSP3Profile' | 'LSP7DigitalAsset' | 'LSP8IdentifiableDigitalAsset'
+  standard:
+    | 'LSP0ERC725Account'
+    | 'LSP7DigitalAsset'
+    | 'LSP8IdentifiableDigitalAsset'
 }
 
 export const interfacesToCheck: Interface[] = [
   {
     interfaceId: INTERFACE_IDS.LSP0ERC725Account as `0x${string}`,
-    standard: 'LSP3Profile',
+    standard: 'LSP0ERC725Account',
   },
   ...LSP7_INTERFACE_IDS.map<Interface>(interfaceId => ({
     interfaceId,

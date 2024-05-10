@@ -1,9 +1,11 @@
-query profile($id: ID!) {
-  profile(id: $id) {
+query profile($id: String!) {
+  Profile_by_pk(id: $id) {
     fullName
     description
     name
     id
+    standard
+    interfaces
     links {
       title
       url
