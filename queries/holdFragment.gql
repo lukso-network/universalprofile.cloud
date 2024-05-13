@@ -1,0 +1,20 @@
+fragment hold on Hold {
+  asset {
+    ...asset
+  }
+  token {
+    lsp4TokenName
+    lsp4TokenSymbol
+    images {
+      url
+      width
+      height
+    }
+    baseAsset {
+      ...asset
+    }
+    lsp4TokenType
+    lsp8TokenIdFormat
+    tokenId
+  }
+}

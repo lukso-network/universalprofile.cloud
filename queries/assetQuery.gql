@@ -1,0 +1,12 @@
+query asset($address: String) {
+  Hold(
+    where: {
+      _or: {
+        asset_id: { _eq: $address }
+        token: { baseAsset_id: { _eq: $address } }
+      }
+    }
+  ) {
+    ...hold
+  }
+}

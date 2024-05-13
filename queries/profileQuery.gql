@@ -27,5 +27,15 @@ query profile($id: String!) {
       id
     }
     ...avatars
+    holds {
+      asset {
+        id
+      }
+      token {
+        baseAsset {
+          id
+        }
+      }
+    }
   }
 }
