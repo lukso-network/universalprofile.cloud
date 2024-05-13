@@ -1,12 +1,12 @@
 import { useQueries, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
+import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
 import { LUKSO_PROXY_API } from '@/shared/config'
 
 import type { Asset, ReferenceContract } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 import type { ProfileAssetsQuery } from '@/.nuxt/gql/default'
-import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
 type AdditionalQueryOptions = {
   receivedAssetCount: number
@@ -50,8 +50,7 @@ export function useProfileAssets() {
               method: 'balanceOf(address)',
               args: [profileAddress],
               refetchInterval: 120_000,
-              staleTime: isPending.value ? TANSTACK_DEFAULT_STALE_TIME : 250,
-              enabled: !isPending,
+              staleTime: 250,
             }),
             queryGetData({
               // 2
@@ -127,12 +126,13 @@ export function useProfileAssets() {
           return {}
         }
 
-        const { Hold: holds }: ProfileAssetsQuery = await GqlProfileAssets({
-          profile: profileAddress,
+        const { Asset: assets }: ProfileAssetsQuery = await GqlProfileAssets({
+          id: profileAddress,
+          assets: queries.value.allAddresses,
         })
 
         if (graphLog.enabled) {
-          graphLog('holds', holds)
+          graphLog('assets', assets)
         }
 
         const prefixLength = queries.value.findIndex(
@@ -140,48 +140,38 @@ export function useProfileAssets() {
             type === 'call' && call === 'supportsInterface(bytes4)'
         )
 
-        for (let _assetIndex = 0; _assetIndex < holds.length; _assetIndex++) {
-          const hold = holds[_assetIndex]
-          const { asset, token } = hold
+        for (let _assetIndex = 0; _assetIndex < assets.length; _assetIndex++) {
+          const asset = assets[_assetIndex]
           const assetIndex =
             _assetIndex * (prefixLength + interfacesToCheck.length)
 
           // 0 tokenIdsOf(address)
           const tokenIdsKey = queries.value[assetIndex + 0].queryKey
-          const tokenIds = asset
-            ? []
-            : holds
-                .filter(
-                  _hold => _hold?.token?.baseAsset?.id === token?.baseAsset?.id
-                )
-                .map(_hold => _hold?.token?.tokenId)
+          const tokenIds = asset?.tokens.map(token => token.tokenId)
           queryClient.setQueryData(tokenIdsKey, tokenIds)
 
           // 2 LSP4TokenName
           const tokenNameKey = queries.value[assetIndex + 2].queryKey
-          const tokenName = asset ? asset?.lsp4TokenName : token?.lsp4TokenName
+          const tokenName = asset?.lsp4TokenName
           queryClient.setQueryData(tokenNameKey, tokenName)
 
           // 3 LSP4TokenSymbol
           const tokenSymbolKey = queries.value[assetIndex + 3].queryKey
-          const tokenSymbol = asset
-            ? asset?.lsp4TokenSymbol
-            : token?.lsp4TokenSymbol
+          const tokenSymbol = asset?.lsp4TokenSymbol
           queryClient.setQueryData(tokenSymbolKey, tokenSymbol)
 
           // 4 LSP4TokenType
           const tokenTypeKey = queries.value[assetIndex + 4].queryKey
-          const tokenType = asset
-            ? asset?.lsp4TokenType || LSP4_TOKEN_TYPES.TOKEN
-            : token?.lsp4TokenType || LSP4_TOKEN_TYPES.NFT
-          // console.log('graph', tokenType)
+          const tokenType =
+            asset?.lsp4TokenType ||
+            (asset.standard === STANDARDS.LSP7
+              ? LSP4_TOKEN_TYPES.TOKEN
+              : LSP4_TOKEN_TYPES.NFT)
           queryClient.setQueryData(tokenTypeKey, tokenType)
 
           // 5 LSP8TokenMetadataBaseURI
           const tokenMetadataBaseURIKey = queries.value[assetIndex + 5].queryKey
-          const tokenMetadataBaseURI = asset
-            ? asset?.lsp8TokenMetadataBaseURI
-            : token?.baseAsset?.lsp8TokenMetadataBaseURI
+          const tokenMetadataBaseURI = asset?.lsp8TokenMetadataBaseURI
           queryClient.setQueryData(
             tokenMetadataBaseURIKey,
             tokenMetadataBaseURI
@@ -189,30 +179,21 @@ export function useProfileAssets() {
 
           // 6 LSP8TokenIdFormat
           const tokenIdFormatKey = queries.value[assetIndex + 6].queryKey
-          const tokenIdFormat = asset
-            ? asset?.lsp8TokenIdFormat
-            : token?.lsp8TokenIdFormat
+          const tokenIdFormat = asset?.lsp8TokenIdFormat
           queryClient.setQueryData(tokenIdFormatKey, tokenIdFormat)
 
           // 7 decimals()
           const decimalsKey = queries.value[assetIndex + 7].queryKey
-          const decimals = asset ? asset?.decimals : token?.baseAsset?.decimals
+          const decimals = asset?.decimals
           queryClient.setQueryData(decimalsKey, decimals)
-
-          // 8 LSP8ReferenceContract
-          const referenceContractKey = queries.value[assetIndex + 8].queryKey
-          const referenceContract = asset ? null : token?.baseAsset?.id
-          queryClient.setQueryData(referenceContractKey, referenceContract)
 
           // 9+ supportsInterface(bytes4)
           interfacesToCheck.map(({ standard, interfaceId }, index) => {
             const supportsInterfaceKey =
               queries.value[assetIndex + index + prefixLength].queryKey
-            const supportsInterface = asset
-              ? asset?.standard === standard &&
-                asset?.interfaces?.includes(interfaceId)
-              : token?.baseAsset?.standard === standard &&
-                token?.baseAsset?.interfaces?.includes(interfaceId)
+            const supportsInterface =
+              asset?.standard === standard &&
+              asset?.interfaces?.includes(interfaceId)
             queryClient.setQueryData(supportsInterfaceKey, supportsInterface)
           })
         }
@@ -220,7 +201,7 @@ export function useProfileAssets() {
         return {}
       },
       staleTime: TANSTACK_GRAPH_STALE_TIME,
-      enabled: computed(() => !!profileAddress),
+      enabled: computed(() => !!profileAddress && queries.value.length > 0),
     })
 
     isPending.value = _isPending.value

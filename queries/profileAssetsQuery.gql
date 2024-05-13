@@ -1,5 +1,8 @@
-query profileAssets($profile: String) {
-  Hold(where: { profile_id: { _eq: $profile } }) {
-    ...hold
+query profileAssets($id: String!, $assets: [String!]) {
+  Asset(where: { id: { _in: $assets } }) {
+    ...asset
+    tokens(where: { holders: { profile_id: { _eq: $id } } }) {
+      tokenId
+    }
   }
 }
