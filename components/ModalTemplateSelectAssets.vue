@@ -59,11 +59,11 @@ const ownedAssets = computed(() =>
     ?.filter(item => item !== undefined)
     // pick only the ones with balance/owned/in right standard
     ?.filter(
-      ({ isOwned, standard, balance }) =>
-        isOwned &&
-        (standard === 'LSP7DigitalAsset' ||
-          standard === 'LSP8IdentifiableDigitalAsset') &&
-        balance !== '0'
+      asset =>
+        asset.isOwned &&
+        (asset.standard === 'LSP7DigitalAsset' ||
+          asset.standard === 'LSP8IdentifiableDigitalAsset') &&
+        hasBalance(asset)
     )
     // sort so LSP7 tokens are first in the list
     .sort((a: Asset, _b: Asset) => {

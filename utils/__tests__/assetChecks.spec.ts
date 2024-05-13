@@ -9,6 +9,7 @@ import {
   isLsp8,
   isLyx,
   isToken,
+  hasBalance,
 } from '../assetChecks'
 
 describe('isLyx', () => {
@@ -217,5 +218,31 @@ describe('isCollection', () => {
       } as Asset)
     ).toBe(false)
     expect(hasTokenId({} as Asset)).toBe(false)
+  })
+})
+
+describe('hasBalance function', () => {
+  test('returns true when asset has a balance greater than 0', () => {
+    const assetWithBalance = { balance: '100' }
+    expect(hasBalance(assetWithBalance)).toBe(true)
+  })
+
+  test('returns false when asset has a balance equal to 0', () => {
+    const assetWithZeroBalance = { balance: '0' }
+    expect(hasBalance(assetWithZeroBalance)).toBe(false)
+  })
+
+  test('returns false when asset has no balance', () => {
+    const assetWithoutBalance = { balance: undefined }
+    expect(hasBalance(assetWithoutBalance)).toBe(false)
+  })
+
+  test('returns false when asset is null', () => {
+    const nullAsset = null
+    expect(hasBalance(nullAsset)).toBe(false)
+  })
+
+  test('returns false when asset is not provided', () => {
+    expect(hasBalance()).toBe(false)
   })
 })

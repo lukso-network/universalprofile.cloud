@@ -92,7 +92,7 @@ const handlePreviewImage = () => {
           </div>
         </div>
       </lukso-card>
-      <div v-if="asset?.balance !== '0' && isConnected">
+      <div v-if="hasBalance(asset) && isConnected">
         <AssetOwnInfo
           :address="connectedProfile?.address"
           :balance="asset?.balance"

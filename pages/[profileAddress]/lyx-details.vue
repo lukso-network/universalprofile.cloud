@@ -76,7 +76,7 @@ const handleBuyLyx = () => {
               isConnected &&
               connectedProfile &&
               viewedProfile?.address === connectedProfile?.address &&
-              asset?.balance !== '0'
+              hasBalance(asset)
             "
             is-full-width
             variant="secondary"

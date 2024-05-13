@@ -70,3 +70,12 @@ export const isAsset = (asset?: Asset | null) =>
  */
 export const isCollection = (asset?: Asset | null) =>
   isLsp8(asset) && !!asset?.tokenIdsData?.length
+
+/**
+ *  Checks if the asset has a balance
+ *
+ * @param asset
+ * @returns
+ */
+export const hasBalance = (asset?: Asset | Profile | null) =>
+  !!asset?.balance && asset.balance !== '0'

@@ -25,11 +25,11 @@ const allTokensSorted = computed(
 
 const tokensOwned = computed(() =>
   allTokensSorted.value?.filter(
-    ({ isOwned, standard, balance, tokenType }) =>
-      isOwned &&
-      standard === 'LSP7DigitalAsset' &&
-      balance !== '0' &&
-      tokenType === LSP4_TOKEN_TYPES.TOKEN
+    asset =>
+      asset.isOwned &&
+      asset.standard === 'LSP7DigitalAsset' &&
+      hasBalance(asset) &&
+      asset.tokenType === LSP4_TOKEN_TYPES.TOKEN
   )
 )
 
@@ -44,7 +44,7 @@ const tokensCreated = computed(() =>
 
 const nftsOwned = computed(() =>
   allTokensSorted.value?.filter(
-    asset => asset.isOwned && isCollectible(asset) && asset.balance !== '0'
+    asset => asset.isOwned && isCollectible(asset) && hasBalance(asset)
   )
 )
 
@@ -56,7 +56,7 @@ const nftsCreated = computed(() =>
 const ownedTokensCount = computed(
   () =>
     (tokensOwned.value?.length || 0) +
-    (viewedProfile?.value?.balance !== '0' ? 1 : 0) // +1 if user has LYX token
+    (hasBalance(viewedProfile?.value) ? 1 : 0) // +1 if user has LYX token
 )
 
 const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
