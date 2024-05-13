@@ -7,6 +7,8 @@ import type { ProfileLink } from '@/types/profile'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 import type { ProfileQuery } from '@/.nuxt/gql/default'
 
+type AdditionalQueryOptions = { profileAddress?: Address }
+
 export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
   const { currentNetwork } = storeToRefs(useAppStore())
   const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
@@ -16,7 +18,7 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
   const queries = computed(() => {
     const { value: { chainId } = { chainId: '' } } = currentNetwork
 
-    const queries: QFQueryOptions[] & { profileAddress?: Address } = (
+    const queries: QFQueryOptions[] & AdditionalQueryOptions = (
       profileAddress
         ? [
             {
@@ -78,7 +80,7 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
             ),
           ]
         : []
-    ) as QFQueryOptions[] & { profileAddress?: Address }
+    ) as QFQueryOptions[] & AdditionalQueryOptions
     queries.profileAddress = profileAddress
     return queries
   })
@@ -161,7 +163,7 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
       return {}
     },
     staleTime: TANSTACK_GRAPH_STALE_TIME,
-    enabled: computed(() => !!profileAddress),
+    enabled: computed(() => !!profileAddress && queries.value.length > 0),
   })
 
   isPending.value = _isPending.value
