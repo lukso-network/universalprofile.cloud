@@ -35,8 +35,9 @@ export const HASHED_IMAGE_CACHE_NAME = 'hashed-images'
 export const IPFS_URL = `${LUKSO_PROXY_API}/ipfs/`
 
 // Tanstack expirations. This is important because the sw.js has to cache longer than and no longer than the GC_TIME.
-export const TANSTACK_GC_TIME = 1000 * 60 * 60 * 24 * 7
-export const TANSTACK_DEFAULT_STALE_TIME = 1000 * 60 * 12
+export const TANSTACK_GC_TIME = 1000 * 60 * 60 * 24 * 7 // 7 days
+export const TANSTACK_DEFAULT_STALE_TIME = 1000 * 60 * 12 // 12 minutes
+export const TANSTACK_GRAPH_STALE_TIME = 1000 * 10 // 10 seconds
 
 // extension store links
 export const EXTENSION_STORE_LINKS = {

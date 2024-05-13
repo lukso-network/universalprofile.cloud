@@ -7,9 +7,10 @@ import type { ProfileLink } from '@/types/profile'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 import type { ProfileQuery } from '@/.nuxt/gql/default'
 
-export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
+export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
   const { currentNetwork } = storeToRefs(useAppStore())
-  const profileAddress = unref(_profile)
+  const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
+  const isPending = ref(false)
   const queryClient = useQueryClient()
 
   const queries = computed(() => {
@@ -83,16 +84,16 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
   })
 
   // we call Graph to get all data before enabling RPC calls
-  const { isPending } = useQuery({
+  const { isPending: _isPending } = useQuery({
     queryKey: ['graph-profile', profileAddress],
     queryFn: async () => {
-      const { Profile_by_pk: profile }: ProfileQuery = await GqlProfile({
-        id: profileAddress?.toLowerCase(),
-      })
-
       if (!profileAddress) {
         return {}
       }
+
+      const { Profile_by_pk: profile }: ProfileQuery = await GqlProfile({
+        id: profileAddress,
+      })
 
       if (graphLog.enabled) {
         graphLog('profile', profile)
@@ -116,8 +117,18 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
 
       // 2 LSP5ReceivedAssets
       const receivedAssetsKey = queries.value[2].queryKey
-      const receivedAssets: Address[] | undefined =
-        profile?.lsp5ReceivedAssets?.map(asset => asset.id as Address)
+      // TODO this is workaround for getting received assets from holds before we get proper data from lsp5ReceivedAssets
+      const receivedAssets: string[] = Array.from(
+        new Set(
+          (
+            profile?.holds?.map(
+              ({ asset, token }) => asset?.id || token?.baseAsset?.id || ''
+            ) || []
+          ).filter(address => !!address)
+        )
+      )
+      // const receivedAssets: Address[] | undefined =
+      //   profile?.lsp5ReceivedAssets?.map(asset => asset.id as Address)
       queryClient.setQueryData(receivedAssetsKey, receivedAssets)
 
       // 3 LSP12IssuedAssets
@@ -149,9 +160,11 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
 
       return {}
     },
-    staleTime: TANSTACK_DEFAULT_STALE_TIME,
+    staleTime: TANSTACK_GRAPH_STALE_TIME,
     enabled: computed(() => !!profileAddress),
   })
+
+  isPending.value = _isPending.value
 
   return useQueries({
     queries,
@@ -181,7 +194,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
         },
         { supportsInterfaces: {}, standard: null } as {
           supportsInterfaces: Record<string, boolean>
-          standard: string | null
+          standard: Standard | null
         }
       )
       const { name, profileImage, backgroundImage, links, description, tags } =
@@ -191,7 +204,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
         isLoading,
         address: profileAddress,
         name,
-        standard: standard as Standard,
+        standard,
         supportsInterfaces,
         receivedAssets,
         issuedAssets,
