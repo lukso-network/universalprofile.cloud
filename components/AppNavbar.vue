@@ -62,11 +62,9 @@ const browserSupportExtension = extensionStore.url !== ''
     is-sticky
     :title="$formatMessage('header_title')"
     :is-testnet="isTestnet ? true : undefined"
-    icon="wallet-outline"
     has-menu
     mobile-breakpoint="lg"
     @on-brand-click="handleNavigateLanding"
-    @on-icon-click="handleNavigateProfile"
   >
     <div class="flex items-center justify-end" slot="desktop-menu">
       <AppNavbarSendButton v-if="isConnected" />
