@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const { setStatus, clearSend } = useSendStore()
 const { asset: sendAsset, transactionHash } = storeToRefs(useSendStore())
-const { hasSimpleNavbar } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
 const asset = useToken()(
   useAsset()(sendAsset.value?.address, sendAsset.value?.tokenId)
@@ -16,7 +15,6 @@ const handleSendMore = () => {
 
   clearSend()
   setStatus('draft')
-  hasSimpleNavbar.value = false
 }
 
 const handleOpenProfile = () => {

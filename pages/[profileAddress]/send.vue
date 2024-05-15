@@ -18,7 +18,7 @@ const {
   receiver,
   transactionHash,
 } = storeToRefs(useSendStore())
-const { isLoadedApp, hasSimpleNavbar } = storeToRefs(useAppStore())
+const { isLoadedApp } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
 const { sendTransaction, contract, isEoA } = useWeb3(PROVIDERS.INJECTED)
@@ -36,7 +36,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   setStatus('draft')
-  hasSimpleNavbar.value = false
   clearSend()
 })
 
@@ -60,7 +59,6 @@ const handleSend = async () => {
 
   try {
     setStatus('pending')
-    hasSimpleNavbar.value = true
     let transactionsReceipt: TransactionReceipt
 
     // native token transfer
@@ -128,7 +126,6 @@ const handleSend = async () => {
   } catch (error: unknown) {
     console.error(error)
     setStatus('draft')
-    hasSimpleNavbar.value = false
 
     showModal({
       message: getErrorMessage(error),

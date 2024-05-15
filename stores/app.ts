@@ -15,7 +15,6 @@ export const useAppStore = defineStore(
     const modal = ref<Modal>()
     const connectedProfileAddress = ref<Address>()
     const assetFilter = ref(AssetFilter.owned)
-    const hasSimpleNavbar = ref<boolean>(false)
 
     // statuses
     const isConnecting = ref(false)
@@ -79,7 +78,6 @@ export const useAppStore = defineStore(
       isLoadedApp,
       assetFilter,
       isTestnet,
-      hasSimpleNavbar,
       isSearchOpen,
     }
   },
