@@ -1,0 +1,8 @@
+query token($address: String!, $tokenId: String!) {
+  Asset(where: { id: { _eq: $address } }) {
+    ...asset
+    tokens(where: { tokenId: { _eq: $tokenId } }) {
+      ...token
+    }
+  }
+}

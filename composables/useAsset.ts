@@ -1,4 +1,4 @@
-import { useQueries } from '@tanstack/vue-query'
+import { useQueries, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 
 import { LUKSO_PROXY_API } from '@/shared/config'
@@ -6,31 +6,29 @@ import { queryNull } from '@/utils/queryFunctions'
 
 import type { Asset } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
+import type { TokenQuery } from '@/.nuxt/gql/default'
+
+type AdditionalQueryOptions = {
+  address: Address | undefined
+  tokenId: string | undefined
+}
 
 export function useAsset() {
   return (
     _address?: MaybeRef<Address | undefined>,
     _tokenId?: MaybeRef<string | undefined>
   ) => {
+    const { currentNetwork } = storeToRefs(useAppStore())
+    const chainId = currentNetwork.value?.chainId || ''
     const connectedProfile = useProfile().connectedProfile()
     const profileAddress = computed(() => connectedProfile.value?.address)
-    const { currentNetwork } = storeToRefs(useAppStore())
-    const queries: ComputedRef<
-      QFQueryOptions[] & {
-        address: Address | undefined
-        tokenId: string | undefined
-      }
-    > = computed(() => {
-      const chainId = currentNetwork.value?.chainId || ''
-      const tokenId = isRef(_tokenId) ? _tokenId.value : _tokenId
-      const address: Address | undefined = isRef(_address)
-        ? _address.value
-        : _address
+    const isPending = ref(false)
+    const queryClient = useQueryClient()
 
-      const queries: QFQueryOptions[] & {
-        address: Address | undefined
-        tokenId: string | undefined
-      } = (
+    const queries = computed(() => {
+      const tokenId = unref(_tokenId)
+      const address = unref(_address)
+      const queries: QFQueryOptions[] & AdditionalQueryOptions = (
         address
           ? [
               queryGetData({
@@ -38,36 +36,42 @@ export function useAsset() {
                 chainId,
                 address,
                 keyName: 'LSP4TokenName',
+                enabled: !isPending,
               }),
               queryGetData({
                 // 1
                 chainId,
                 address,
                 keyName: 'LSP4TokenSymbol',
+                enabled: !isPending,
               }),
               queryGetData({
                 // 2
                 chainId,
                 address,
                 keyName: 'LSP4TokenType',
+                enabled: !isPending,
               }),
               queryGetData({
                 // 3
                 chainId,
                 address,
                 keyName: 'LSP8TokenMetadataBaseURI',
+                enabled: !isPending,
               }),
               queryGetData({
                 // 4
                 chainId,
                 address,
                 keyName: 'LSP8TokenIdFormat',
+                enabled: !isPending,
               }),
               queryCallContract({
                 // 5
                 chainId,
                 address,
                 method: 'totalSupply()',
+                enabled: !isPending,
               }),
               profileAddress.value
                 ? queryCallContract({
@@ -76,30 +80,105 @@ export function useAsset() {
                     address,
                     method: 'balanceOf(address)',
                     args: [profileAddress.value],
-                    staleTime: 250,
+                    staleTime: isPending.value
+                      ? TANSTACK_DEFAULT_STALE_TIME
+                      : 250,
+                    enabled: !isPending,
                   })
                 : queryNull(),
               ...interfacesToCheck.map(({ interfaceId }) => {
                 return queryCallContract({
-                  // 7 / 8
+                  // 7+
                   chainId,
                   address: address || '0x0',
                   method: 'supportsInterface(bytes4)',
                   args: [interfaceId],
+                  enabled: !isPending,
                 })
               }),
             ]
           : []
-      ) as QFQueryOptions[] & {
-        address: Address | undefined
-        tokenId: string | undefined
-      }
+      ) as QFQueryOptions[] & AdditionalQueryOptions
       queries.tokenId = tokenId
       queries.address = address
       return queries
-      // Trick to keep the right receivedAssetCount and allAddresses attached
-      // to the current queries list.
     })
+
+    const tokenId = unref(_tokenId)
+    const address = unref(_address)?.toLowerCase() as Address | undefined
+    const { isPending: _isPending } = useQuery({
+      queryKey: ['graph-asset', address, tokenId],
+      queryFn: async () => {
+        if (!address) {
+          return
+        }
+
+        const { Asset: assets }: TokenQuery = await GqlToken({
+          address,
+          tokenId: tokenId || '',
+        })
+
+        const [asset] = assets // since we use `where` in query we pick first asset
+
+        if (!asset) {
+          return {}
+        }
+
+        const [token] = asset.tokens // since we use `where` in query we pick first token
+
+        // 0 LSP4TokenName
+        const tokenNameKey = queries.value[0].queryKey
+        const tokenName = asset ? asset?.lsp4TokenName : token?.lsp4TokenName
+        queryClient.setQueryData(tokenNameKey, tokenName)
+
+        // 1 LSP4TokenSymbol
+        const tokenSymbolKey = queries.value[1].queryKey
+        const tokenSymbol = token
+          ? token?.lsp4TokenSymbol
+          : asset?.lsp4TokenSymbol
+        queryClient.setQueryData(tokenSymbolKey, tokenSymbol)
+
+        // 2 LSP4TokenType
+        const tokenTypeKey = queries.value[2].queryKey
+        const tokenType = token ? token?.lsp4TokenType : asset?.lsp4TokenType
+        queryClient.setQueryData(tokenTypeKey, tokenType)
+
+        // 3 LSP8TokenMetadataBaseURI
+        const tokenMetadataBaseURIKey = queries.value[3].queryKey
+        const tokenMetadataBaseURI = token
+          ? token.baseAsset?.lsp8TokenMetadataBaseURI
+          : asset?.lsp8TokenMetadataBaseURI
+        queryClient.setQueryData(tokenMetadataBaseURIKey, tokenMetadataBaseURI)
+
+        // 4 LSP8TokenIdFormat
+        const tokenIdFormatKey = queries.value[4].queryKey
+        const tokenIdFormat = token
+          ? token.baseAsset?.lsp8TokenIdFormat
+          : asset?.lsp8TokenIdFormat
+        queryClient.setQueryData(tokenIdFormatKey, tokenIdFormat)
+
+        // 5 totalSupply
+        // const totalSupplyKey = queries.value[5].queryKey
+        // const totalSupply = asset ? asset?.totalSupply : token?.totalSupply
+        // queryClient.setQueryData(totalSupplyKey, totalSupply)
+
+        // 7+ supportsInterface(bytes4)
+        interfacesToCheck.map(({ standard, interfaceId }, index) => {
+          const supportsInterfaceKey = queries.value[7 + index].queryKey
+          const supportsInterface =
+            asset?.standard === standard &&
+            asset?.interfaces?.includes(interfaceId)
+          queryClient.setQueryData(supportsInterfaceKey, supportsInterface)
+        })
+
+        return {}
+      },
+      staleTime: TANSTACK_GRAPH_STALE_TIME,
+      enabled: computed(() => !!address && queries.value.length > 0),
+    })
+
+    isPending.value = _isPending.value
+
     return useQueries({
       queries,
       combine: results => {

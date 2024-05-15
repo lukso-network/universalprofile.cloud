@@ -1,18 +1,17 @@
-fragment asset on Asset {
-  id # address
+fragment token on Token {
   lsp4TokenName
   lsp4TokenSymbol
+  baseAsset {
+    ...asset
+  }
   lsp4TokenType
   lsp8TokenIdFormat
-  lsp8TokenMetadataBaseURI
-  decimals
-  interfaces
-  standard
+  tokenId
+  baseAsset {
+    lsp8TokenMetadataBaseURI
+  }
 
   # creators
-  owner {
-    ...creator
-  }
   lsp4Creators {
     profile {
       ...creator
@@ -36,5 +35,18 @@ fragment asset on Asset {
     width
     height
   }
-  ...fileAssets
+  assets {
+    fileType
+    url
+    contentAsset {
+      id
+    }
+    contentToken {
+      tokenId
+      baseAsset {
+        id
+      }
+    }
+  }
+  # attributes
 }

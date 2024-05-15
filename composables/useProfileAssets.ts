@@ -19,13 +19,13 @@ export function useProfileAssets() {
     const profile = useProfile().getProfile(
       _profileAddress as MaybeRef<Address>
     )
-    const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
     const isPending = ref(false)
     const queryClient = useQueryClient()
 
     const queries = computed(() => {
       const { value: { chainId } = { chainId: '' } } = currentNetwork
       const receivedAssetCount = profile?.value?.receivedAssets?.length || 0
+      const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
       const allAddresses = ([] as `0x${string}`[]).concat(
         profile?.value?.receivedAssets || [],
         profile?.value?.issuedAssets || []
@@ -118,7 +118,7 @@ export function useProfileAssets() {
       return queries
     })
 
-    // we call Graph to get all data before enabling RPC calls
+    const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
     const { isPending: _isPending } = useQuery({
       queryKey: ['graph-profile-assets', profileAddress],
       queryFn: async () => {

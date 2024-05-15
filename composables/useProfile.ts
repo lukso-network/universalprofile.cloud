@@ -11,12 +11,12 @@ type AdditionalQueryOptions = { profileAddress?: Address }
 
 export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
   const { currentNetwork } = storeToRefs(useAppStore())
-  const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
+  const chainId = currentNetwork.value?.chainId || ''
   const isPending = ref(false)
   const queryClient = useQueryClient()
 
   const queries = computed(() => {
-    const { value: { chainId } = { chainId: '' } } = currentNetwork
+    const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
 
     const queries: QFQueryOptions[] & AdditionalQueryOptions = (
       profileAddress
@@ -85,7 +85,7 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
     return queries
   })
 
-  // we call Graph to get all data before enabling RPC calls
+  const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
   const { isPending: _isPending } = useQuery({
     queryKey: ['graph-profile', profileAddress],
     queryFn: async () => {
