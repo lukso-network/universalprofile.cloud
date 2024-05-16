@@ -3,7 +3,7 @@ const { connect, disconnect, isUniversalProfileExtension } =
   useBrowserExtension()
 const viewedProfile = useProfile().viewedProfile()
 const connectedProfile = useProfile().connectedProfile()
-const { isConnecting, isConnected, isTestnet, hasSimpleNavbar, isSearchOpen } =
+const { isConnecting, isConnected, isTestnet, isSearchOpen } =
   storeToRefs(useAppStore())
 
 const handleNavigateProfile = async () => {
@@ -62,12 +62,9 @@ const browserSupportExtension = extensionStore.url !== ''
     is-sticky
     :title="$formatMessage('header_title')"
     :is-testnet="isTestnet ? true : undefined"
-    icon="wallet-outline"
-    :has-menu="!hasSimpleNavbar ? true : undefined"
-    :is-center="hasSimpleNavbar ? true : undefined"
+    has-menu
     mobile-breakpoint="lg"
     @on-brand-click="handleNavigateLanding"
-    @on-icon-click="handleNavigateProfile"
   >
     <div class="flex items-center justify-end" slot="desktop-menu">
       <AppNavbarSendButton v-if="isConnected" />
@@ -150,6 +147,7 @@ const browserSupportExtension = extensionStore.url !== ''
           </span>
         </lukso-button>
         <lukso-button
+          v-if="isConnected"
           variant="text"
           custom-class="text-12 nav-apax-12-medium-uppercase"
           class="group"

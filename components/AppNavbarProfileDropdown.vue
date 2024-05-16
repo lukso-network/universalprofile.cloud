@@ -33,6 +33,10 @@ const handleNavigateSettings = () => {
   navigateTo(settingsRoute())
 }
 
+const handleNavigateProfile = async () => {
+  navigateTo(profileRoute(connectedProfile.value?.address))
+}
+
 onMounted(() => {
   window.addEventListener('click', handleOutsideDropdown)
 })
@@ -52,11 +56,21 @@ onUnmounted(() => {
       :data-profile-address="connectedProfile?.address"
       has-identicon
     ></lukso-profile>
-
     <div
       class="absolute right-0 z-[1000] mt-8 animate-fade-in select-none rounded-12 bg-neutral-100 shadow-pink-drop-shadow animation-duration-150 before:absolute before:right-0 before:top-0 before:-mt-1 before:mr-4 before:size-3 before:rotate-45 before:bg-neutral-100"
       :class="isOpen ? 'block' : 'hidden'"
     >
+      <lukso-button
+        v-if="activePage('index')"
+        variant="text"
+        custom-class="text-12 nav-apax-12-medium-uppercase"
+        class="group"
+        @click="handleNavigateProfile"
+      >
+        <span class="text-purple-63 transition group-hover:text-purple-41">
+          {{ $formatMessage('header_my_profile') }}
+        </span>
+      </lukso-button>
       <lukso-button
         variant="text"
         custom-class="text-12 nav-apax-12-medium-uppercase"
