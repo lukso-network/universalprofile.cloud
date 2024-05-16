@@ -92,6 +92,7 @@ const handlePreviewImage = () => {
         <AssetImagesList :asset="token" />
         <AssetAssets :asset="token" />
         <AssetAttributes :asset="token" />
+        <AssetCreators :asset="token" />
         <AssetLinks :asset="token" />
         <AssetAddress :asset="asset" />
       </div>
