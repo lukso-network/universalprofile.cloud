@@ -18,6 +18,8 @@ logs
 .idea
 /public/assets/*
 /contracts
+*.code-workspace
+vitest.workspace.js
 
 # Local env files
 .env
