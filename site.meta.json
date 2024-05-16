@@ -24,7 +24,7 @@
   "meta": [
     {
       "name": "description",
-      "content": "View all your assets in one place as well as send and receive tokens to other Universal Profile users."
+      "content": "Explore Universal Profiles and view all your assets in one place as well as send and receive tokens to other Universal Profile users."
     },
     {
       "property": "og:url",
@@ -40,7 +40,7 @@
     },
     {
       "property": "og:description",
-      "content": "View all your assets in one place as well as send and receive tokens to other Universal Profile users."
+      "content": "Explore Universal Profiles and view all your assets in one place as well as send and receive tokens to other Universal Profile users."
     },
     {
       "property": "og:image",
@@ -60,7 +60,7 @@
     },
     {
       "name": "twitter:description",
-      "content": "View all your assets in one place as well as send and receive tokens to other Universal Profile users."
+      "content": "Explore Universal Profiles and view all your assets in one place as well as send and receive tokens to other Universal Profile users."
     }
   ]
 }
