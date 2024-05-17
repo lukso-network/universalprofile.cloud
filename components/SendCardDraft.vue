@@ -64,6 +64,10 @@ const checkBalance = () => {
   })
 }
 
+const assetTokenId = computed(() => {
+  return prefixedTokenId(asset.value?.tokenId, asset.value?.tokenIdFormat, 24)
+})
+
 watch(
   () => asset.value?.isLoading,
   () => {
@@ -90,7 +94,7 @@ watch(
     </div>
     <div slot="content" class="relative p-6 pt-0">
       <div
-        class="relative z-[1] grid grid-cols-[max-content,auto] grid-rows-1 transition"
+        class="relative z-[1] grid min-h-[100px] grid-cols-[max-content,auto] grid-rows-1 transition"
         :class="{
           'invisible opacity-0': !isLoadedApp,
           'visible opacity-100': isLoadedApp,
@@ -111,13 +115,39 @@ watch(
         </div>
         <div class="flex w-full flex-col">
           <div
-            class="paragraph-inter-14-semi-bold flex cursor-pointer items-center justify-between rounded-[0_12px_0_0] border border-neutral-90 px-4 py-3 transition break-word hover:border-neutral-35"
+            v-if="isLsp8(asset)"
+            class="paragraph-inter-14-semi-bold grid h-full cursor-pointer grid-cols-[auto,max-content] items-center rounded-r-12 border border-neutral-90 px-4 py-3 text-left transition hover:border-neutral-35"
+            @click="handleSelectAssets"
+          >
+            <div>
+              <div
+                class="flex flex-wrap items-center gap-x-1 gap-y-0.5 break-word"
+              >
+                <span>
+                  {{ asset?.tokenName }}
+                </span>
+                <span class="paragraph-inter-10-semi-bold text-neutral-60">{{
+                  truncate(asset?.tokenSymbol, 8)
+                }}</span>
+              </div>
+              <div class="paragraph-ptmono-10-bold">
+                {{ assetTokenId }}
+              </div>
+            </div>
+            <lukso-icon name="arrow-down-lg"></lukso-icon>
+          </div>
+          <div
+            v-else
+            class="paragraph-inter-14-semi-bold flex h-full cursor-pointer items-center justify-between rounded-[0_12px_0_0] border border-neutral-90 px-4 py-3 transition break-word hover:border-neutral-35"
             @click="handleSelectAssets"
           >
             {{ asset?.tokenName }}
             <lukso-icon name="arrow-down-lg"></lukso-icon>
           </div>
-          <div class="rounded-[0_0_12px_0] border border-t-0 border-neutral-90">
+          <div
+            v-if="!isLsp8(asset)"
+            class="rounded-[0_0_12px_0] border border-t-0 border-neutral-90"
+          >
             <SendCardAmount />
           </div>
         </div>
