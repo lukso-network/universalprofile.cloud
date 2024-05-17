@@ -74,3 +74,13 @@ export type SendQueryParams = {
 }
 
 export type ImageVerifiedStatus = 'verified' | 'invalid' | 'unverified'
+
+export type IndexedAsset = {
+  address: Address
+  LSP4Metadata?: LSP4DigitalAssetMetadata
+  LSP4TokenName?: string
+  LSP4TokenSymbol?: string
+  LSPStandard?: Standard
+  LSP4Creators?: string[]
+  hasAssetImage?: boolean
+}

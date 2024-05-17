@@ -90,6 +90,7 @@ onMounted(async () => {
         <ActivityList v-if="!isTestnet" />
       </div>
       <DappShowcase />
+      <AssetShowcase />
     </div>
   </AppPageLoader>
 </template>
