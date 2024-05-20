@@ -1,5 +1,8 @@
 <script setup lang="ts">
-const { search } = useAlgoliaSearch<IndexedAsset>('prod_mainnet_assets')
+const { currentNetwork } = storeToRefs(useAppStore())
+const { search } = useAlgoliaSearch<IndexedAsset>(
+  currentNetwork.value.assetIndexName
+)
 
 const isLoading = ref(false)
 const assetsPool = ref<IndexedAsset[]>([])
