@@ -21,7 +21,8 @@ export interface NetworkInfo {
     supply: string
     name: string
   }
-  indexName: string
+  profileIndexName: string
+  assetIndexName: string
   explorerUrl: string
   customLSP2ContractAddress: string
 }

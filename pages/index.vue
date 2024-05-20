@@ -5,7 +5,7 @@ definePageMeta({
 
 const { currentNetwork } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
-  currentNetwork.value.indexName
+  currentNetwork.value.profileIndexName
 )
 const { isTestnet } = storeToRefs(useAppStore())
 
@@ -90,6 +90,7 @@ onMounted(async () => {
         <ActivityList v-if="!isTestnet" />
       </div>
       <DappShowcase />
+      <AssetShowcase />
     </div>
   </AppPageLoader>
 </template>
