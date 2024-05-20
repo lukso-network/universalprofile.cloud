@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { currentNetwork, isTestnet } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
-  currentNetwork.value.profileIndexName
+  currentNetwork.value.indexName
 )
 const isLoading = ref(false)
 const profilePool = ref<IndexedProfile[]>([])

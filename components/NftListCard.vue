@@ -5,7 +5,6 @@ import { ref } from 'vue'
 
 type Props = {
   asset: Asset
-  noOwnsInfo?: boolean
 }
 
 const props = defineProps<Props>()
@@ -87,7 +86,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
 </script>
 
 <template>
-  <div ref="target" class="relative flex size-full">
+  <div ref="target" class="relative flex">
     <lukso-card
       border-radius="small"
       shadow="small"
@@ -135,10 +134,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
               {{ token.balance }}
             </span>
           </div>
-          <AppPlaceholderLine
-            v-else-if="!isLoadedAsset && !noOwnsInfo"
-            class="my-[1px] h-[12px] w-1/4"
-          />
+          <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
           <NftListCardCreators :asset="token" class="mt-4" />
           <div
             class="mt-4 flex items-end"

@@ -7,7 +7,7 @@ const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element ren
 
 const { currentNetwork, isSearchOpen } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
-  currentNetwork.value.profileIndexName
+  currentNetwork.value.indexName
 )
 const isSearching = ref<boolean>(false)
 const searchTerm = ref<string | Address | undefined>()

@@ -5,7 +5,7 @@ import type { SearchProfileResult } from '@lukso/web-components'
 
 const { currentNetwork } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
-  currentNetwork.value.profileIndexName
+  currentNetwork.value.indexName
 )
 const { receiver, receiverError } = storeToRefs(useSendStore())
 const { isEoA } = useWeb3(PROVIDERS.RPC)
