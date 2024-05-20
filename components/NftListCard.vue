@@ -87,7 +87,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
 </script>
 
 <template>
-  <div ref="target" class="relative flex w-full">
+  <div ref="target" class="relative flex size-full">
     <lukso-card
       border-radius="small"
       shadow="small"
