@@ -41,7 +41,7 @@ const cacheValue = async <T>(
     return value
   } catch (error) {
     console.error('Cache fetch error', error)
-    return Promise.reject(error)
+    return
   }
 }
 

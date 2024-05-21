@@ -19,10 +19,11 @@ const getNumberOfProfiles = async () => {
 }
 
 onMounted(async () => {
-  numberOfProfiles.value = await cacheValue<number>(getNumberOfProfiles, {
-    key: 'profile-number',
-    expiryAfter: PROFILE_NUMBER_CACHE_EXPIRY,
-  })
+  numberOfProfiles.value =
+    (await cacheValue<number>(getNumberOfProfiles, {
+      key: 'profile-number',
+      expiryAfter: PROFILE_NUMBER_CACHE_EXPIRY,
+    })) || 0
 })
 </script>
 

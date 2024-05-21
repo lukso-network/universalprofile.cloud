@@ -21,10 +21,11 @@ const queryProfiles = async () => {
 
 const getProfiles = async () => {
   isLoading.value = true
-  profilePool.value = await cacheValue<IndexedProfile[]>(queryProfiles, {
-    key: 'profiles',
-    expiryAfter: PROFILES_CACHE_EXPIRY,
-  })
+  profilePool.value =
+    (await cacheValue<IndexedProfile[]>(queryProfiles, {
+      key: 'profiles',
+      expiryAfter: PROFILES_CACHE_EXPIRY,
+    })) || []
   isLoading.value = false
 }
 
