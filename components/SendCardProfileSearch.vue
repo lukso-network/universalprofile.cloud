@@ -3,6 +3,8 @@ import { isAddress } from 'web3-utils'
 
 import type { SearchProfileResult } from '@lukso/web-components'
 
+const BLUR_DELAY = 100
+
 const { currentNetwork } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
   currentNetwork.value.indexName
@@ -118,16 +120,18 @@ const handleSelect = async (event: CustomEvent) => {
   searchTerm.value = address
 }
 
-const handleBlur = () => {
+const handleBlur = async (customEvent: CustomEvent) => {
+  const address = customEvent.detail.value as Address
+
   // we add slight delay to allow `on-select` to be triggered first
   setTimeout(async () => {
-    if (searchTerm.value && !isAddress(searchTerm.value)) {
+    if (address && !isAddress(address)) {
       receiverError.value = formatMessage('errors_invalid_address')
     } else {
       receiverError.value = ''
-      await selectProfile(searchTerm.value as Address)
+      await selectProfile(address)
     }
-  }, 100)
+  }, BLUR_DELAY)
 }
 </script>
 
