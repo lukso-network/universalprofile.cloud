@@ -3,28 +3,7 @@ definePageMeta({
   layout: 'landing',
 })
 
-const { currentNetwork } = storeToRefs(useAppStore())
-const { search } = useAlgoliaSearch<IndexedProfile>(
-  currentNetwork.value.indexName
-)
 const { isTestnet } = storeToRefs(useAppStore())
-
-const numberOfProfiles = ref<number>()
-
-const getNumberOfProfiles = async () => {
-  const profiles = await search({
-    query: '',
-    requestOptions: {
-      hitsPerPage: 0,
-      attributesToRetrieve: undefined,
-    },
-  })
-  numberOfProfiles.value = profiles.nbHits
-}
-
-onMounted(async () => {
-  await getNumberOfProfiles()
-})
 </script>
 
 <template>
@@ -48,37 +27,7 @@ onMounted(async () => {
         <div
           class="paragraph-inter-14-regular mt-6 text-center text-neutral-40"
         >
-          <lukso-sanitize
-            :html-content="
-              $formatMessage('erc725account_info_part1', {
-                numberOfProfiles: `<strong>${numberOfProfiles?.toLocaleString()}</strong>`,
-                luksoWebsiteLink: `<strong>on <a
-          class='underline hover:text-neutral-20'
-          href='https://lukso.network/'
-          target='_blank'
-          >LUKSO</a></strong>`,
-              })
-            "
-          ></lukso-sanitize>
-          <br />
-          <lukso-sanitize
-            :html-content="
-              $formatMessage('erc725account_info_part2', {
-                erc725accountLink: `<a
-          class='underline hover:text-neutral-20'
-          href='https://docs.lukso.tech/standards/introduction/'
-          target='_blank'
-          >ERC725Account</a
-        >`,
-                createUPlink: `<a
-          class='underline hover:text-neutral-20'
-          href='https://my.universalprofile.cloud'
-          target='_blank'
-          >${$formatMessage('erc725account_info_part3')}</a
-        >`,
-              })
-            "
-          ></lukso-sanitize>
+          <ProfileInfo />
         </div>
       </div>
       <CreateProfileBox />
