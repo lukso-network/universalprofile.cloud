@@ -61,13 +61,16 @@ export const TXS_APP_LUKSO_PAGE_URL = 'https://txs.app/lukso'
 export const DEFAULT_CURRENCY_SYMBOL = 'USD'
 
 // list of currencies to fetch from the api
+export const CURRENCY_API_URL = 'https://min-api.cryptocompare.com'
+
+// list of currencies to fetch from the api
 export const CURRENCY_API_SYMBOLS = ['USD', 'EUR', 'GBP', 'PLN']
 
 // token to compare
 export const CURRENCY_API_LYX_TOKEN_NAME = 'LYX'
 
 // currency cache expiry time in minutes
-export const CURRENCY_CACHE_EXPIRY_IN_MINUTES = 60
+export const CURRENCY_CACHE_EXPIRY = 1000 * 60 * 60 // 1 hour
 
 // currency cache expiry time in minutes
 export const PROFILE_NUMBER_CACHE_EXPIRY = 1000 * 60 * 5 // 5 minutes
