@@ -4,13 +4,14 @@ export enum PROVIDERS {
 }
 
 export enum STORAGE_KEY {
-  CONNECTION_EXPIRY = 'LW:connectionExpiry',
-  CURRENCY_STORE = 'LW:currency',
-  APP_STORE = 'LW:app',
+  CONNECTION_EXPIRY = 'connectionExpiry',
+  CURRENCY_STORE = 'currency',
+  APP_STORE = 'app',
 }
 
 export enum CACHE_KEY {
-  CURRENCY_CACHE = 'LW:currency',
+  SETTINGS = 'settings',
+  HASHED_IMAGE = 'hashed-images',
 }
 
 export enum AssetFilter {
