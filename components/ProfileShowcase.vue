@@ -6,10 +6,9 @@ const { search } = useAlgoliaSearch<IndexedProfile>(
 const isLoading = ref(false)
 const profilePool = ref<IndexedProfile[]>([])
 const profilesOnDisplay = ref<IndexedProfile[]>([])
+const { cacheValue } = useCache()
 
-const getProfiles = async () => {
-  isLoading.value = true
-
+const queryProfiles = async () => {
   const profiles = await search({
     query: '',
     requestOptions: {
@@ -17,7 +16,15 @@ const getProfiles = async () => {
     },
   })
 
-  profilePool.value = profiles.hits
+  return profiles.hits
+}
+
+const getProfiles = async () => {
+  isLoading.value = true
+  profilePool.value = await cacheValue<IndexedProfile[]>(queryProfiles, {
+    key: 'profiles',
+    expiryAfter: PROFILES_CACHE_EXPIRY,
+  })
   isLoading.value = false
 }
 

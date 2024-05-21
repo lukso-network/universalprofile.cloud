@@ -75,6 +75,9 @@ export const CURRENCY_CACHE_EXPIRY = 1000 * 60 * 60 // 1 hour
 // currency cache expiry time in minutes
 export const PROFILE_NUMBER_CACHE_EXPIRY = 1000 * 60 * 5 // 5 minutes
 
+// profiles cache expiry time in minutes
+export const PROFILES_CACHE_EXPIRY = 1000 * 60 * 1 // 1 minute
+
 // link to the testnet faucet
 export const TESTNET_FAUCET_URL = 'https://faucet.testnet.lukso.network'
 
