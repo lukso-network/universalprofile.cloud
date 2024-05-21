@@ -69,6 +69,9 @@ export const CURRENCY_API_LYX_TOKEN_NAME = 'LYX'
 // currency cache expiry time in minutes
 export const CURRENCY_CACHE_EXPIRY_IN_MINUTES = 60
 
+// currency cache expiry time in minutes
+export const PROFILE_NUMBER_CACHE_EXPIRY = 1000 * 60 * 5 // 5 minutes
+
 // link to the testnet faucet
 export const TESTNET_FAUCET_URL = 'https://faucet.testnet.lukso.network'
 

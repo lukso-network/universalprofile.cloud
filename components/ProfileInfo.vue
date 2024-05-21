@@ -3,7 +3,7 @@ const { currentNetwork } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
   currentNetwork.value.indexName
 )
-
+const { cacheValue } = useCache()
 const numberOfProfiles = ref<number>()
 
 const getNumberOfProfiles = async () => {
@@ -14,11 +14,15 @@ const getNumberOfProfiles = async () => {
       attributesToRetrieve: undefined,
     },
   })
-  numberOfProfiles.value = profiles.nbHits
+
+  return profiles.nbHits
 }
 
 onMounted(async () => {
-  await getNumberOfProfiles()
+  numberOfProfiles.value = await cacheValue<number>(getNumberOfProfiles, {
+    key: 'profile-number',
+    expiryAfter: PROFILE_NUMBER_CACHE_EXPIRY,
+  })
 })
 </script>
 
