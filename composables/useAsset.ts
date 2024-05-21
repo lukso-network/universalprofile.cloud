@@ -1,9 +1,6 @@
 import { useQueries } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 
-import { LUKSO_PROXY_API } from '@/shared/config'
-import { queryNull } from '@/utils/queryFunctions'
-
 import type { Asset } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 

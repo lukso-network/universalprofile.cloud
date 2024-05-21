@@ -4,6 +4,9 @@
 import { Buffer } from 'buffer'
 import debug from 'debug'
 
+import { CACHE_KEY } from '@/shared/enums'
+import { LUKSO_PROXY_API, TANSTACK_GC_TIME } from '@/shared/config'
+
 const workersLog = debug('tanstack:workers')
 
 export async function processMetadata(

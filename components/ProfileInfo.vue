@@ -1,21 +1,20 @@
 <script setup lang="ts">
 const { currentNetwork } = storeToRefs(useAppStore())
-const { search } = useAlgoliaSearch<IndexedProfile>(
-  currentNetwork.value.indexName
-)
 const { cacheValue } = useCache()
 const numberOfProfiles = ref<number>()
 
+type IndexerStats = {
+  name: string
+  entries: number
+}[]
+
 const getNumberOfProfiles = async () => {
-  const profiles = await search({
-    query: '',
-    requestOptions: {
-      hitsPerPage: 0,
-      attributesToRetrieve: undefined,
-    },
+  const [, profileStats] = await fetcher<IndexerStats, Record<string, never>>({
+    url: `${LUKSO_PROXY_API}/v1/${currentNetwork.value.chainId}/stats`,
+    method: 'GET',
   })
 
-  return profiles.nbHits
+  return profileStats.entries
 }
 
 onMounted(async () => {
