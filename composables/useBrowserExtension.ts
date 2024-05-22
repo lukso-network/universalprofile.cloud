@@ -41,6 +41,7 @@ const connect = async () => {
     assertAddress(address, 'connection')
     connectedProfileAddress.value = address
     setConnectionExpiry()
+    navigateTo(profileRoute(address))
   } catch (error: unknown) {
     console.error(error)
     disconnect()
