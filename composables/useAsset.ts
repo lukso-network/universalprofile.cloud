@@ -155,9 +155,11 @@ export function useAsset() {
         queryClient.setQueryData(tokenIdFormatKey, tokenIdFormat)
 
         // 5 totalSupply
-        // const totalSupplyKey = queries.value[5].queryKey
-        // const totalSupply = asset ? asset?.totalSupply : token?.totalSupply
-        // queryClient.setQueryData(totalSupplyKey, totalSupply)
+        const totalSupplyKey = queries.value[5].queryKey
+        const totalSupply = asset
+          ? asset?.totalSupply
+          : token.baseAsset?.totalSupply
+        queryClient.setQueryData(totalSupplyKey, totalSupply)
 
         // 7+ supportsInterface(bytes4)
         interfacesToCheck.map(({ standard, interfaceId }, index) => {
