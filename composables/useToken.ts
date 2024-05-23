@@ -172,7 +172,7 @@ export function useToken() {
     })
 
     const token = unref(_token)
-    const { tokenId } = token || {}
+    const { tokenId, tokenIdFormat } = token || {}
     const address = token?.address?.toLowerCase() as Address | undefined
     const { isPending: _isPending } = useQuery({
       queryKey: ['graph-token', address, tokenId],
@@ -217,34 +217,37 @@ export function useToken() {
         // TODO
 
         // 6 LSP4Metadata
-        const metadataKey = queries.value[6].queryKey
-        const metadata = {
+        const assetMetadataKey = queries.value[6].queryKey
+        const assetMetadata = {
           LSP4Metadata: {
-            // name: asset?.name, // TODO
+            name: asset?.name,
             description: asset?.description,
             links: asset?.links,
             icon: asset?.icons,
-            images: asset?.images,
-            assets: asset?.assets, // TODO support contract asset
-            // attributes: asset?.attributes // TODO
+            images: unflatArray(asset?.images),
+            assets: asset?.assets,
+            attributes: asset?.attributes,
           },
         }
-        queryClient.setQueryData(metadataKey, metadata)
+        queryClient.setQueryData(assetMetadataKey, assetMetadata)
+        console.log(assetMetadataKey, assetMetadata)
 
         // 7 LSP4Metadata for token id
         if (tokenId) {
           const tokenMetadataKey = queries.value[7].queryKey
-          // const tokenMetadata = {
-          //   // name: token?.name, // TODO
-          //   description: token?.description,
-          //   links: token?.links,
-          //   icon: token?.icons,
-          //   images: token?.images,
-          //   assets: token?.assets, // TODO support contract asset
-          //   // attributes: token?.attributes // TODO
-          // }
-          queryClient.setQueryData(tokenMetadataKey, undefined)
-          // console.log(tokenMetadataKey, tokenMetadata)
+          const tokenMetadata = {
+            LSP4Metadata: {
+              name: token?.name,
+              description: token?.description,
+              links: token?.links,
+              icon: token?.icons,
+              images: unflatArray(token?.images),
+              assets: token?.assets,
+              attributes: token?.attributes,
+            },
+          }
+          queryClient.setQueryData(tokenMetadataKey, tokenMetadata)
+          console.log(tokenMetadataKey, tokenMetadata)
         }
 
         // 8 lsp8TokenMetadataBaseURI
@@ -259,17 +262,22 @@ export function useToken() {
         }
 
         // 9 LSP4Metadata base URI
-        const tokenMetadataKey = queries.value[9].queryKey
-        // const tokenMetadata = {
-        //   // name: token?.name, // TODO
-        //   description: token?.description,
-        //   links: token?.links,
-        //   icon: token?.icons,
-        //   images: token?.images,
-        //   assets: token?.assets, // TODO support contract asset
-        //   // attributes: token?.attributes // TODO
-        // }
-        queryClient.setQueryData(tokenMetadataKey, undefined)
+        if (tokenId && tokenIdFormat === LSP8_TOKEN_ID_FORMAT.ADDRESS) {
+          const tokenMetadataKey = queries.value[9].queryKey
+          const tokenMetadata = {
+            LSP4Metadata: {
+              name: token?.name,
+              description: token?.description,
+              links: token?.links,
+              icon: token?.icons,
+              images: unflatArray(token?.images),
+              assets: token?.assets,
+              attributes: token?.attributes,
+            },
+          }
+          queryClient.setQueryData(tokenMetadataKey, tokenMetadata)
+          console.log(tokenMetadataKey, tokenMetadata)
+        }
 
         return {}
       },
