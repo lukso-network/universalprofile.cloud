@@ -6,16 +6,24 @@ const viewedProfileAddress = getCurrentProfileAddress()
 const { isMobile } = useDevice()
 
 const viewedProfile = useProfile().getProfile(viewedProfileAddress)
-const allTokens = useProfileAssets()(viewedProfileAddress)
+const allAssets = useProfileAssets()(viewedProfileAddress)
+
+/**
+ * Filter assets that are valid:
+ * - have LSP7 or LSP8 standard
+ */
+const validAssets = computed(() =>
+  allAssets.value?.filter(asset => isAsset(asset))
+)
 
 /**
  * Sort assets ascending (A-Z) by their name
  *
  * @returns
  */
-const allTokensSorted = computed(
+const allAssetsSorted = computed(
   () =>
-    allTokens.value?.slice().sort((a, b) => {
+    validAssets.value?.slice().sort((a, b) => {
       const tokenNameA = a.tokenName || ''
       const tokenNameB = b.tokenName || ''
 
@@ -24,32 +32,32 @@ const allTokensSorted = computed(
 )
 
 const tokensOwned = computed(() =>
-  allTokensSorted.value?.filter(
+  allAssetsSorted.value?.filter(
     asset =>
       asset.isOwned &&
-      asset.standard === 'LSP7DigitalAsset' &&
+      isLsp7(asset) &&
       hasBalance(asset) &&
       asset.tokenType === LSP4_TOKEN_TYPES.TOKEN
   )
 )
 
 const tokensCreated = computed(() =>
-  allTokensSorted.value?.filter(
-    ({ isIssued, standard, tokenType }) =>
-      isIssued &&
-      standard === 'LSP7DigitalAsset' &&
-      tokenType === LSP4_TOKEN_TYPES.TOKEN
+  allAssetsSorted.value?.filter(
+    asset =>
+      asset.isIssued &&
+      isLsp7(asset) &&
+      asset.tokenType === LSP4_TOKEN_TYPES.TOKEN
   )
 )
 
 const nftsOwned = computed(() =>
-  allTokensSorted.value?.filter(
+  allAssetsSorted.value?.filter(
     asset => asset.isOwned && isCollectible(asset) && hasBalance(asset)
   )
 )
 
 const nftsCreated = computed(() =>
-  allTokensSorted.value?.filter(asset => asset.isIssued && isCollectible(asset))
+  allAssetsSorted.value?.filter(asset => asset.isIssued && isCollectible(asset))
 )
 
 // tokens
@@ -110,7 +118,7 @@ const hasEmptyNfts = computed(
 )
 
 const isLoadingAssets = computed(() =>
-  allTokens.value?.some(asset => asset.isLoading)
+  allAssets.value?.some(asset => asset.isLoading)
 )
 </script>
 
