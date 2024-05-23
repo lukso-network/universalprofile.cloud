@@ -14,6 +14,8 @@ const { isLoadedApp, selectedChainId, isSearchOpen, modal } =
 const { addProviderEvents, removeProviderEvents, disconnect } =
   useBrowserExtension()
 const router = useRouter()
+const { cacheValue } = useCache()
+const { currencyList } = storeToRefs(useCurrencyStore())
 
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
@@ -71,10 +73,18 @@ const checkConnectionExpiry = () => {
  * Setup currencies that are fetched from cryptocompare API
  */
 const setupCurrencies = async () => {
-  const { currencyList } = storeToRefs(useCurrencyStore())
-  const { fetchCurrencies } = useCurrency()
+  const getCurrencies = async () => {
+    const currencies = await fetcher<CurrencyList, Record<string, never>>({
+      url: `${CURRENCY_API_URL}/data/pricemulti?fsyms=${CURRENCY_API_LYX_TOKEN_NAME}&tsyms=${CURRENCY_API_SYMBOLS.join(',')}`,
+      method: 'GET',
+    })
+    return currencies
+  }
 
-  currencyList.value = await fetchCurrencies()
+  currencyList.value = await cacheValue<CurrencyList>(getCurrencies, {
+    key: 'currencies',
+    expiryAfter: CURRENCY_CACHE_EXPIRY,
+  })
 }
 
 /**

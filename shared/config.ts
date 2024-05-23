@@ -28,9 +28,6 @@ export const ASSET_LYX_DECIMALS = 18
 // the raw proxy URL
 export const LUKSO_PROXY_API = 'https://api.universalprofile.cloud'
 
-// the hashed image cache name
-export const HASHED_IMAGE_CACHE_NAME = 'hashed-images'
-
 // url of the ipfs gateway
 export const IPFS_URL = `${LUKSO_PROXY_API}/ipfs/`
 
@@ -64,13 +61,22 @@ export const TXS_APP_LUKSO_PAGE_URL = 'https://txs.app/lukso'
 export const DEFAULT_CURRENCY_SYMBOL = 'USD'
 
 // list of currencies to fetch from the api
+export const CURRENCY_API_URL = 'https://min-api.cryptocompare.com'
+
+// list of currencies to fetch from the api
 export const CURRENCY_API_SYMBOLS = ['USD', 'EUR', 'GBP', 'PLN']
 
 // token to compare
 export const CURRENCY_API_LYX_TOKEN_NAME = 'LYX'
 
 // currency cache expiry time in minutes
-export const CURRENCY_CACHE_EXPIRY_IN_MINUTES = 60
+export const CURRENCY_CACHE_EXPIRY = 1000 * 60 * 60 // 1 hour
+
+// currency cache expiry time in minutes
+export const PROFILE_NUMBER_CACHE_EXPIRY = 1000 * 60 * 5 // 5 minutes
+
+// profiles cache expiry time in minutes
+export const PROFILES_CACHE_EXPIRY = 1000 * 60 * 1 // 1 minute
 
 // link to the testnet faucet
 export const TESTNET_FAUCET_URL = 'https://faucet.testnet.lukso.network'
