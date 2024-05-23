@@ -1,14 +1,12 @@
 fragment token on Token {
   lsp4TokenName
   lsp4TokenSymbol
-  baseAsset {
-    ...asset
-  }
   lsp4TokenType
   lsp8TokenIdFormat
   tokenId
+
   baseAsset {
-    lsp8TokenMetadataBaseURI
+    ...asset
   }
 
   # creators
@@ -19,7 +17,7 @@ fragment token on Token {
   }
 
   # LSP4 metadata
-  # name # TODO add this when in index
+  name
   description
   links {
     url
@@ -29,6 +27,7 @@ fragment token on Token {
     url
     width
     height
+    index
   }
   icons {
     url
@@ -48,5 +47,8 @@ fragment token on Token {
       }
     }
   }
-  # attributes
+  attributes {
+    value
+    key
+  }
 }

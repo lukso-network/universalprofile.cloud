@@ -8,6 +8,7 @@ fragment asset on Asset {
   decimals
   interfaces
   standard
+  totalSupply
 
   # creators
   owner {
@@ -20,7 +21,7 @@ fragment asset on Asset {
   }
 
   # LSP4 metadata
-  # name # TODO add this when in index
+  name
   description
   links {
     url
@@ -30,6 +31,7 @@ fragment asset on Asset {
     url
     width
     height
+    index
   }
   icons {
     url
@@ -37,4 +39,8 @@ fragment asset on Asset {
     height
   }
   ...fileAssets
+  attributes {
+    value
+    key
+  }
 }
