@@ -2,8 +2,6 @@ import { useQueries, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
-import { LUKSO_PROXY_API } from '@/shared/config'
-
 import type { Asset, ReferenceContract } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 import type { ProfileAssetsQuery } from '@/.nuxt/gql/default'

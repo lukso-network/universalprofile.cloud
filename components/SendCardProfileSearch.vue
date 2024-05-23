@@ -3,34 +3,31 @@ import { isAddress } from 'web3-utils'
 
 import type { SearchProfileResult } from '@lukso/web-components'
 
+const BLUR_DELAY = 100
+
 const { currentNetwork } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
   currentNetwork.value.indexName
 )
 const { receiver, receiverError } = storeToRefs(useSendStore())
 const { isEoA } = useWeb3(PROVIDERS.RPC)
+const { formatMessage } = useIntl()
 const isSearchingReceiver = ref<boolean>(false)
 const searchTerm = ref<string | Address | undefined>(receiver.value?.address)
 const hasNoResults = ref<boolean>(false)
 const results = ref<SearchProfileResult[]>()
 
 const searchResults = async () => {
-  const searchResults = await search({
-    query: searchTerm.value || '',
-    requestOptions: {
-      hitsPerPage: SEARCH_RESULTS_LIMIT,
-      page: 0,
-    },
-  })
+  const searchResults = await searchProfile(searchTerm.value)
 
-  if (searchResults.hits.length === 0) {
+  if (searchResults?.hits.length === 0) {
     hasNoResults.value = true
     return
   }
 
   hasNoResults.value = false
 
-  results.value = searchResults.hits.map(hit => {
+  results.value = searchResults?.hits.map(hit => {
     return {
       name: hit.LSP3Profile?.name,
       address: hit.address,
@@ -74,16 +71,27 @@ const handleReceiverSearch = async (event: CustomEvent) => {
   isSearchingReceiver.value = false
 }
 
-const handleSelect = async (event: CustomEvent) => {
-  const selection = event.detail.value as SearchProfileResult
-  const { address, name, image } = selection
-  searchTerm.value = address
+const selectProfile = async (address?: Address) => {
+  const searchResults = await searchProfile(address)
+
+  if (!searchResults || searchResults.hits.length === 0) {
+    return
+  }
+
+  const [selectedProfile] = searchResults.hits.map(hit => {
+    return {
+      name: hit.LSP3Profile?.name,
+      address: hit.address,
+      image: hit.profileImageUrl,
+    }
+  })
+
   receiver.value = {
     address,
-    name,
+    name: selectedProfile.name,
     profileImage: [
       {
-        src: image,
+        src: selectedProfile.image,
       },
     ],
   }
@@ -91,17 +99,39 @@ const handleSelect = async (event: CustomEvent) => {
   results.value = undefined
 }
 
-const handleBlur = () => {
-  const { formatMessage } = useIntl()
+const searchProfile = async (searchTerm?: string) => {
+  if (!searchTerm) {
+    return
+  }
+
+  return await search({
+    query: searchTerm,
+    requestOptions: {
+      hitsPerPage: SEARCH_RESULTS_LIMIT,
+      page: 0,
+    },
+  })
+}
+
+const handleSelect = async (event: CustomEvent) => {
+  const selection = event.detail.value as SearchProfileResult
+  const { address } = selection
+  await selectProfile(address)
+  searchTerm.value = address
+}
+
+const handleBlur = async (customEvent: CustomEvent) => {
+  const address = customEvent.detail.value as Address
 
   // we add slight delay to allow `on-select` to be triggered first
-  setTimeout(() => {
-    if (searchTerm.value && !isAddress(searchTerm.value)) {
+  setTimeout(async () => {
+    if (address && !isAddress(address)) {
       receiverError.value = formatMessage('errors_invalid_address')
     } else {
       receiverError.value = ''
+      await selectProfile(address)
     }
-  }, 300)
+  }, BLUR_DELAY)
 }
 </script>
 

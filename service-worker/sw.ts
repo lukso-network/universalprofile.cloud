@@ -5,7 +5,7 @@ import { clientsClaim } from 'workbox-core'
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 
-import { HASHED_IMAGE_CACHE_NAME } from '../shared/config'
+import { CACHE_KEY } from '../shared/enums'
 import { processMetadata } from '../utils/processMetadata'
 
 declare let self: ServiceWorkerGlobalScope
@@ -46,7 +46,7 @@ registerRoute(
 registerRoute(
   /\/hashed-images\/.*/,
   async ({ request }) => {
-    const cache = await caches.open(HASHED_IMAGE_CACHE_NAME)
+    const cache = await caches.open(CACHE_KEY.HASHED_IMAGE)
     const responseFromCache = await cache.match(request)
     if (responseFromCache) {
       return responseFromCache.clone()
