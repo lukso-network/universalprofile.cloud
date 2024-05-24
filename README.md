@@ -38,8 +38,12 @@ It is possible to pass a network in query parameter to force viewing a profile o
 At runtime we look at the Local Storage "debug" key to show various logs. The following log streams are
 available:
 
-- `dapp:asset` -> Show asset/token objects
+- `dapp:asset` -> Show asset objects
+- `dapp:token` -> Show token objects
 - `dapp:profile` -> Show profile objects
+- `dapp:generic` -> Generic logs
+- `dapp:send` -> Send logs
+- `dapp:graph` -> GraphQL logs
 - `tanstack:query` -> Show how queries as posted
 - `tanstack:results` -> Show results of queries
 
