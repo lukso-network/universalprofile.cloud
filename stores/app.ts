@@ -14,7 +14,6 @@ export const useAppStore = defineStore(
     const selectedChainId = ref<string>(DEFAULT_NETWORK_CHAIN_ID)
     const modal = ref<Modal>()
     const connectedProfileAddress = ref<Address>()
-    const assetFilter = ref(AssetFilter.owned)
 
     // statuses
     const isConnecting = ref(false)
@@ -76,7 +75,6 @@ export const useAppStore = defineStore(
       isConnected,
       isConnecting,
       isLoadedApp,
-      assetFilter,
       isTestnet,
       isSearchOpen,
     }
