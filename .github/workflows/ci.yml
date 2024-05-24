@@ -36,8 +36,14 @@ jobs:
       - name: ⚙️ Install dependencies
         run: yarn install --inline-builds
 
+      - name: Prepare
+        run: yarn prepare
+
+      - name: Build
+        run: NODE_ENV=production yarn run pages:build
+
       - name: 🎨 Lint
-        run: yarn prepare && yarn lint
+        run: yarn lint
 
       - name: 🛠 Install Playwright Browsers
         if: false
