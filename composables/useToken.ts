@@ -230,7 +230,6 @@ export function useToken() {
           },
         }
         queryClient.setQueryData(assetMetadataKey, assetMetadata)
-        console.log(assetMetadataKey, assetMetadata)
 
         // 7 LSP4Metadata for token id
         if (tokenId) {
@@ -247,7 +246,6 @@ export function useToken() {
             },
           }
           queryClient.setQueryData(tokenMetadataKey, tokenMetadata)
-          console.log(tokenMetadataKey, tokenMetadata)
         }
 
         // 8 lsp8TokenMetadataBaseURI
@@ -276,7 +274,6 @@ export function useToken() {
             },
           }
           queryClient.setQueryData(tokenMetadataKey, tokenMetadata)
-          console.log(tokenMetadataKey, tokenMetadata)
         }
 
         return {}
