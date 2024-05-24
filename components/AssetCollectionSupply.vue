@@ -20,7 +20,7 @@ const totalSupply = computed(() => props.asset?.totalSupply)
     >
       {{
         $formatMessage('token_details_collection_of', {
-          count: totalSupply,
+          count: $formatNumber(totalSupply),
         })
       }}
     </div>
