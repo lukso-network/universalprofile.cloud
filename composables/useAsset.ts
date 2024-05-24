@@ -115,6 +115,10 @@ export function useAsset() {
           tokenId: tokenId || '',
         })
 
+        if (graphLog.enabled) {
+          graphLog('asset', assets)
+        }
+
         const [asset] = assets // since we use `where` in query we pick first asset
 
         if (!asset) {

@@ -185,6 +185,11 @@ export function useToken() {
           address,
           tokenId: tokenId || '',
         })
+
+        if (graphLog.enabled) {
+          graphLog('token', assets)
+        }
+
         const [asset] = assets // since we use `where` in query we pick first asset
         const [token] = asset.tokens // since we use `where` in query we pick first token
 
