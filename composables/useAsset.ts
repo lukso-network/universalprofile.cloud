@@ -3,7 +3,7 @@ import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 
 import type { Asset } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
-import type { TokenQuery } from '@/.nuxt/gql'
+import type { TokenQuery } from '@/.nuxt/gql/default'
 
 type AdditionalQueryOptions = {
   address: Address | undefined

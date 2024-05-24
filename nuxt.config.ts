@@ -97,6 +97,9 @@ export default defineNuxtConfig({
         buffer: 'buffer',
       },
     },
+    alias: {
+      '#gql/*': '.nuxt/gql/*',
+    },
     optimizeDeps: {
       esbuildOptions: {
         // Node.js global to browser globalThis
