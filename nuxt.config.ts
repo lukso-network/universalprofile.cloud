@@ -95,7 +95,6 @@ export default defineNuxtConfig({
         zlib: 'browserify-zlib',
         util: 'util',
         buffer: 'buffer',
-        '#gql/*': '.nuxt/gql/*',
       },
     },
     optimizeDeps: {
