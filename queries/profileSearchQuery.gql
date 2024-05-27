@@ -3,6 +3,6 @@ query profileSearch($search: String) {
     where: { _or: [{ id: { _ilike: $search } }, { name: { _ilike: $search } }] }
     limit: 100
   ) {
-    ...profile
+    ...basicProfile
   }
 }

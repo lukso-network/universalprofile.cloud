@@ -1,0 +1,14 @@
+fragment basicProfile on Profile {
+  name
+  id
+  backgroundImages(limit: 1) {
+    url
+    height
+    width
+  }
+  profileImages(limit: 1) {
+    width
+    url
+    height
+  }
+}
