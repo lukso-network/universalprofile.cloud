@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
-const { assetFilter } = storeToRefs(useAppStore())
+const { isOwned, isCreated, setFilters } = useFilters()
 const viewedProfileAddress = getCurrentProfileAddress()
 const { isMobile } = useDevice()
 
@@ -70,7 +70,7 @@ const ownedTokensCount = computed(
 const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
 
 const tokens = computed(() => {
-  if (assetFilter.value === AssetFilter.owned) {
+  if (isOwned.value) {
     return tokensOwned.value
   }
   return tokensCreated.value
@@ -82,7 +82,7 @@ const ownedNftsCount = computed(() => nftsOwned.value?.length || 0)
 const createdNftsCount = computed(() => nftsCreated.value?.length || 0)
 
 const nfts = computed(() => {
-  if (assetFilter.value === AssetFilter.owned) {
+  if (isOwned.value) {
     return nftsOwned.value || []
   }
   return nftsCreated.value || []
@@ -99,22 +99,17 @@ const createdAssetsCount = computed(
 
 // empty states
 const hasEmptyCreators = computed(
-  () =>
-    assetFilter.value === AssetFilter.created &&
-    !createdNftsCount.value &&
-    !createdTokensCount.value
+  () => isCreated.value && !createdNftsCount.value && !createdTokensCount.value
 )
 
 const hasEmptyTokens = computed(
-  () =>
-    assetFilter.value === AssetFilter.owned ||
-    (assetFilter.value === AssetFilter.created && createdTokensCount.value)
+  () => isOwned.value || (isCreated && createdTokensCount.value)
 )
 
 const hasEmptyNfts = computed(
   () =>
-    (assetFilter.value === AssetFilter.owned && ownedNftsCount.value) ||
-    (assetFilter.value === AssetFilter.created && createdNftsCount.value)
+    (isOwned.value && ownedNftsCount.value) ||
+    (isCreated && createdNftsCount.value)
 )
 
 const isLoadingAssets = computed(() =>
@@ -136,10 +131,10 @@ const isLoadingAssets = computed(() =>
             <lukso-button
               :size="isMobile ? 'medium' : 'small'"
               variant="secondary"
-              :is-active="assetFilter === AssetFilter.owned ? true : undefined"
+              :is-active="isOwned ? true : undefined"
               is-full-width
               :count="ownedAssetsCount"
-              @click="assetFilter = AssetFilter.owned"
+              @click="setFilters({ assetType: 'owned' })"
               >{{ $formatMessage('asset_filter_owned_assets') }}</lukso-button
             >
           </li>
@@ -147,12 +142,10 @@ const isLoadingAssets = computed(() =>
             <lukso-button
               :size="isMobile ? 'medium' : 'small'"
               variant="secondary"
-              :is-active="
-                assetFilter === AssetFilter.created ? true : undefined
-              "
+              :is-active="isCreated ? true : undefined"
               is-full-width
               :count="createdAssetsCount"
-              @click="assetFilter = AssetFilter.created"
+              @click="setFilters({ assetType: 'created' })"
               >{{ $formatMessage('asset_filter_created_assets') }}</lukso-button
             >
           </li>

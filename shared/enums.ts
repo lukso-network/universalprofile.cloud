@@ -14,11 +14,6 @@ export enum CACHE_KEY {
   HASHED_IMAGE = 'hashed-images',
 }
 
-export enum AssetFilter {
-  owned = 'owned',
-  created = 'created',
-}
-
 export enum STANDARDS {
   EOA = 'EOA',
   LSP3 = 'LSP0ERC725Account',
