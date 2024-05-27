@@ -5,6 +5,7 @@ fragment profile on Profile {
   id
   standard
   interfaces
+  blockNumber
   links {
     title
     url
