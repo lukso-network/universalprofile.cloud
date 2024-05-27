@@ -30,7 +30,6 @@ export default defineNuxtConfig({
     '@pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/device',
     '@nuxtjs/plausible',
-    '@nuxtjs/algolia',
     '@pinia-orm/nuxt',
     '@nuxt/test-utils/module',
     '@vite-pwa/nuxt',
