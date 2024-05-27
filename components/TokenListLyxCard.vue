@@ -39,7 +39,6 @@ const handleBuyLyx = (event: Event) => {
     shadow="small"
     is-hoverable
     is-full-width
-    class="transition active:scale-[0.99]"
     @click="handleShowLyxDetails"
     ><div
       slot="content"

@@ -61,7 +61,6 @@ const isLoadedMetadata = computed(
       shadow="small"
       is-hoverable
       is-full-width
-      class="transition active:scale-[0.99]"
       @click="handleShowAsset"
       ><div
         slot="content"

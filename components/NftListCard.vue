@@ -92,7 +92,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
       shadow="small"
       is-hoverable
       is-full-width
-      class="relative z-10 transition active:scale-[0.99]"
+      class="relative z-10"
       @click="handleShowAsset"
       ><div
         slot="content"
