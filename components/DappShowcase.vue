@@ -23,7 +23,7 @@ const handleCardClick = (url: string) => {
         @click="
           () => handleCardClick($formatMessage(`dapp_showcase_0${index}_url`))
         "
-        class="transition hover:scale-[1.005]"
+        class="transition hover:scale-[1.01] active:scale-[1.005]"
       >
         <div slot="content" class="px-6 py-4">
           <div class="paragraph-inter-16-semi-bold flex justify-between">
