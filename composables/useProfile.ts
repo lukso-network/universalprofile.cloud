@@ -30,7 +30,6 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
               },
               refetchInterval: 120_000,
               staleTime: isPending.value ? TANSTACK_DEFAULT_STALE_TIME : 250,
-              enabled: !isPending,
             },
             // 1
             queryGetData({
