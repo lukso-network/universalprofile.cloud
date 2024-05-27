@@ -3,7 +3,6 @@ const connectedProfile = useProfile().connectedProfile()
 const {
   asset: sendAsset,
   receiver,
-  receiverError,
   amount,
   onSend,
 } = storeToRefs(useSendStore())
@@ -171,7 +170,6 @@ watch(
     <div slot="bottom" class="flex flex-col items-center p-6">
       <AppAvatar
         :is-eoa="receiver?.standard === 'EOA'"
-        :is-error="!!receiverError"
         :name="receiver?.name"
         :address="receiver?.address"
         :profile-url="receiver?.profileImage?.[0].src"
@@ -179,11 +177,7 @@ watch(
       <SendCardProfileSearch />
       <lukso-button
         class="mt-4 w-full"
-        :disabled="
-          !receiver?.address || receiverError || !Number(amount)
-            ? true
-            : undefined
-        "
+        :disabled="!receiver?.address || !Number(amount) ? true : undefined"
         @click="handleSend"
         is-full-width
         >{{
