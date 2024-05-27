@@ -1,41 +1,5 @@
 query profile($id: String!) {
   Profile_by_pk(id: $id) {
-    fullName
-    description
-    name
-    id
-    standard
-    interfaces
-    links {
-      title
-      url
-    }
-    backgroundImages {
-      url
-      height
-      width
-    }
-    profileImages {
-      width
-      url
-      height
-    }
-    lsp5ReceivedAssets {
-      id
-    }
-    lsp12IssuedAssets {
-      id
-    }
-    ...avatars
-    holds {
-      asset {
-        id
-      }
-      token {
-        baseAsset {
-          id
-        }
-      }
-    }
+    ...profile
   }
 }

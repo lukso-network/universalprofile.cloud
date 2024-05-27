@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import { isAddress } from 'web3-utils'
+import { isAddress, keccak256 } from 'web3-utils'
 
 import type { SearchProfileResult } from '@lukso/web-components'
+import type { ProfileSearchQuery } from '@/.nuxt/gql/default'
 
 const BLUR_DELAY = 100
 
-const { currentNetwork } = storeToRefs(useAppStore())
-const { search } = useAlgoliaSearch<IndexedProfile>(
-  currentNetwork.value.indexName
-)
-const { receiver, receiverError } = storeToRefs(useSendStore())
+const { receiver } = storeToRefs(useSendStore())
 const { isEoA } = useWeb3(PROVIDERS.RPC)
-const { formatMessage } = useIntl()
 const isSearchingReceiver = ref<boolean>(false)
 const searchTerm = ref<string | Address | undefined>(receiver.value?.address)
 const hasNoResults = ref<boolean>(false)
@@ -20,20 +16,26 @@ const results = ref<SearchProfileResult[]>()
 const searchResults = async () => {
   const searchResults = await searchProfile(searchTerm.value)
 
-  if (searchResults?.hits.length === 0) {
+  if (!searchResults || searchResults?.length === 0) {
     hasNoResults.value = true
     return
   }
 
   hasNoResults.value = false
+  results.value = []
 
-  results.value = searchResults?.hits.map(hit => {
-    return {
-      name: hit.LSP3Profile?.name,
-      address: hit.address,
-      image: hit.profileImageUrl,
-    }
-  })
+  for (const hit of searchResults) {
+    const metadata = validateLsp3Metadata({
+      name: hit.name,
+      profileImage: hit.profileImages,
+    })
+    const profile = await browserProcessMetadata(metadata, keccak256)
+    results.value.push({
+      name: profile?.name,
+      address: hit?.id as Address,
+      image: profile.profileImage?.[0]?.url,
+    })
+  }
 }
 
 const handleReceiverSearch = async (event: CustomEvent) => {
@@ -74,29 +76,36 @@ const handleReceiverSearch = async (event: CustomEvent) => {
 const selectProfile = async (address?: Address) => {
   const searchResults = await searchProfile(address)
 
-  if (!searchResults || searchResults.hits.length === 0) {
+  if (!searchResults || searchResults.length === 0) {
     return
   }
 
-  const [selectedProfile] = searchResults.hits.map(hit => {
-    return {
-      name: hit.LSP3Profile?.name,
-      address: hit.address,
-      image: hit.profileImageUrl,
+  results.value = undefined
+
+  const selectedProfile = await (async () => {
+    for (const hit of searchResults) {
+      const metadata = validateLsp3Metadata({
+        name: hit.name,
+        profileImage: hit.profileImages,
+      })
+      const profile = await browserProcessMetadata(metadata, keccak256)
+      return {
+        name: profile?.name,
+        address: hit?.id as Address,
+        image: profile.profileImage?.[0]?.url,
+      }
     }
-  })
+  })()
 
   receiver.value = {
     address,
-    name: selectedProfile.name,
+    name: selectedProfile?.name,
     profileImage: [
       {
-        src: selectedProfile.image,
+        src: selectedProfile?.image,
       },
     ],
   }
-  receiverError.value = ''
-  results.value = undefined
 }
 
 const searchProfile = async (searchTerm?: string) => {
@@ -104,20 +113,24 @@ const searchProfile = async (searchTerm?: string) => {
     return
   }
 
-  return await search({
-    query: searchTerm,
-    requestOptions: {
-      hitsPerPage: SEARCH_RESULTS_LIMIT,
-      page: 0,
-    },
-  })
+  const { Profile: searchResults }: ProfileSearchQuery = await GqlProfileSearch(
+    {
+      search: `%${searchTerm}%`,
+    }
+  )
+
+  if (graphLog.enabled) {
+    graphLog('profileSearch', searchResults)
+  }
+
+  return searchResults
 }
 
 const handleSelect = async (event: CustomEvent) => {
   const selection = event.detail.value as SearchProfileResult
   const { address } = selection
-  await selectProfile(address)
   searchTerm.value = address
+  await selectProfile(address)
 }
 
 const handleBlur = async (customEvent: CustomEvent) => {
@@ -126,9 +139,8 @@ const handleBlur = async (customEvent: CustomEvent) => {
   // we add slight delay to allow `on-select` to be triggered first
   setTimeout(async () => {
     if (address && !isAddress(address)) {
-      receiverError.value = formatMessage('errors_invalid_address')
+      hasNoResults.value = false
     } else {
-      receiverError.value = ''
       await selectProfile(address)
     }
   }, BLUR_DELAY)
@@ -140,7 +152,6 @@ const handleBlur = async (customEvent: CustomEvent) => {
     name="receiver"
     :value="searchTerm"
     :placeholder="$formatMessage('send_input_placeholder')"
-    :error="receiverError"
     :results="JSON.stringify(results)"
     :is-searching="isSearchingReceiver ? 'true' : undefined"
     :show-no-results="hasNoResults ? 'true' : undefined"
