@@ -21,7 +21,9 @@ const standard = computed(() => props.asset?.standard)
     <lukso-tag
       v-else-if="standard"
       size="x-small"
-      background-color="lukso-90"
+      :background-color="
+        standard === STANDARDS.UNKNOWN ? 'neutral-90' : 'lukso-90'
+      "
       >{{ STANDARDS_ABBREVIATIONS[standard as Standard] }}</lukso-tag
     >
   </div>
