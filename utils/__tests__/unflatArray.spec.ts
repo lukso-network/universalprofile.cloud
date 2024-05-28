@@ -42,9 +42,6 @@ test('handles missing indexes', () => {
 })
 
 test('handles empty array', () => {
-  const input: any[] = []
-
-  const expectedOutput: any[] = []
-
-  expect(unflatArray(input)).toEqual(expectedOutput)
+  expect(unflatArray([])).toEqual([])
+  expect(unflatArray(undefined)).toEqual([])
 })

@@ -19,7 +19,7 @@ export enum STANDARDS {
   LSP3 = 'LSP0ERC725Account',
   LSP7 = 'LSP7DigitalAsset',
   LSP8 = 'LSP8IdentifiableDigitalAsset',
-  UNKNOWN = 'UnknownDataType',
+  UNKNOWN = 'UnknownContract',
 }
 
 export const STANDARDS_ABBREVIATIONS = {
@@ -27,5 +27,5 @@ export const STANDARDS_ABBREVIATIONS = {
   LSP7DigitalAsset: 'LSP7',
   LSP8IdentifiableDigitalAsset: 'LSP8',
   LSP0ERC725Account: 'LSP3',
-  UnknownDataType: 'UNKNOWN',
+  UnknownContract: 'UNKNOWN',
 }

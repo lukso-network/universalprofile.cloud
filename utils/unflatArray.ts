@@ -3,7 +3,11 @@ type IndexedImageMetadata = Record<any, any> & {
   index?: number | null
 }
 
-export const unflatArray = (array: IndexedImageMetadata[]) => {
+export const unflatArray = (array?: IndexedImageMetadata[]) => {
+  if (!array) {
+    return []
+  }
+
   const result = []
   let currentGroup: any[] = []
 

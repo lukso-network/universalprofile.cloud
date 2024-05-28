@@ -94,3 +94,7 @@ export const PROFILE_SHOWCASE_POOL_SIZE = 500
 
 // number of dApps in showcase
 export const DAPP_SHOWCASE_COUNT = 3
+
+// asset showcase params
+export const ASSET_SHOWCASE_LIMIT = 4
+export const ASSET_SHOWCASE_POOL_SIZE = 500
