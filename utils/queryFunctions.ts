@@ -1,4 +1,3 @@
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import { Buffer } from 'buffer'
 import {
   type ERC725JSONSchema,
@@ -15,14 +14,15 @@ import LSP7DigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP7D
 import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 import debug from 'debug'
 import { RateLimiter } from 'limiter'
-import ABICoder from 'web3-eth-abi'
-import { type AbiItem, type Hex, toNumber } from 'web3-utils'
+import { decodeParameters, encodeFunctionCall } from 'web3-eth-abi'
+import { toNumber } from 'web3-utils'
 
 import LSP2FetcherWithMulticall3Contract from '@/shared/abis/LSP2FetcherWithMulticall3.json'
 import { LUKSO_PROXY_API } from '@/shared/config'
 
 import type { LSP2FetcherWithMulticall3 } from '@/contracts/LSP2FetcherWithMulticall3'
 import type { QueryFunction } from '@tanstack/query-core'
+import type { AbiFunctionFragment } from 'web3-types'
 
 const queryLog = debug('tanstack:query')
 const resultsLog = debug('tanstack:results')
@@ -37,7 +37,7 @@ export type QueryPromiseCallOptions = {
   chainId: string
   address: Address
   method: string
-  abi?: AbiItem
+  abi?: AbiFunctionFragment
   args: readonly unknown[]
   queryKey?: readonly unknown[]
   priority?: number
@@ -131,10 +131,10 @@ export const defaultSchema: readonly ERC725JSONSchema[] = [
   ...LSP3Schema,
   ...LSP8Schema,
 ]
-export const defaultAbi: readonly AbiItem[] = [
-  ...(LSP8IdentifiableDigitalAssetContract.abi as AbiItem[]),
-  ...(LSP7DigitalAssetContract.abi as AbiItem[]),
-  ...(LSP4DigitalAssetMetadataContract.abi as AbiItem[]),
+export const defaultAbi: readonly AbiFunctionFragment[] = [
+  ...(LSP8IdentifiableDigitalAssetContract.abi as AbiFunctionFragment[]),
+  ...(LSP7DigitalAssetContract.abi as AbiFunctionFragment[]),
+  ...(LSP4DigitalAssetMetadataContract.abi as AbiFunctionFragment[]),
 ]
 
 // Allow 150 requests per hour (the Twitter search limit). Also understands
@@ -222,7 +222,7 @@ async function doQueries() {
       currentNetwork.value
     const { contract, getWeb3 } = useWeb3(PROVIDERS.RPC)
     const lsp2CustomContract = contract<LSP2FetcherWithMulticall3>(
-      LSP2FetcherWithMulticall3Contract.abi as AbiItem[],
+      LSP2FetcherWithMulticall3Contract.abi as AbiFunctionFragment[],
       LSP2ContractAddress
     )
     const web3 = getWeb3()
@@ -348,8 +348,8 @@ async function doQueries() {
                 item.name === 'getDataBatchForTokenIds'
             )
             if (abi) {
-              const call = ABICoder.encodeFunctionCall(
-                abi as unknown as AbiItem,
+              const call = encodeFunctionCall(
+                abi as unknown as AbiFunctionFragment,
                 [
                   tokenQueries.map(
                     ({ tokenId }) => tokenId
@@ -368,7 +368,7 @@ async function doQueries() {
                     return null
                   }
                   try {
-                    return ABICoder.decodeParameters(
+                    return decodeParameters(
                       (abi?.outputs || []).slice(),
                       data
                     )[0]
@@ -396,8 +396,8 @@ async function doQueries() {
             const abi = LSP8IdentifiableDigitalAssetContract.abi.find(
               ({ name }) => name === 'getDataBatch'
             )
-            const call = ABICoder.encodeFunctionCall(
-              abi as AbiItem,
+            const call = encodeFunctionCall(
+              abi as AbiFunctionFragment,
               [
                 plainKeys.map(({ keyName, dynamicKeyParts }) =>
                   encodeKeyName(keyName, dynamicKeyParts)
@@ -412,7 +412,7 @@ async function doQueries() {
                 if (data === '0x') {
                   return null
                 }
-                return ABICoder.decodeParameters(abi?.outputs || [], data)[0]
+                return decodeParameters(abi?.outputs || [], data)[0]
               },
             })
           }
@@ -422,7 +422,7 @@ async function doQueries() {
               const abi = LSP2FetcherWithMulticall3Contract.abi.find(
                 ({ name }) => name === 'fetchArrayWithElements'
               )
-              const call = ABICoder.encodeFunctionCall(abi as AbiItem, [
+              const call = encodeFunctionCall(abi as AbiFunctionFragment, [
                 address,
                 encodeKeyName(keyName, dynamicKeyParts),
               ])
@@ -437,10 +437,7 @@ async function doQueries() {
                     }
                     return null
                   }
-                  const result = ABICoder.decodeParameters(
-                    abi?.outputs || [],
-                    data
-                  )[0]
+                  const result = decodeParameters(abi?.outputs || [], data)[0]
                   if (resultsLog.enabled) {
                     resultsLog('array', { query, data, result })
                   }
@@ -466,8 +463,8 @@ async function doQueries() {
                 )
               })
               if (abi) {
-                const call = ABICoder.encodeFunctionCall(
-                  abi as AbiItem,
+                const call = encodeFunctionCall(
+                  abi as AbiFunctionFragment,
                   (query.args || []) as string[]
                 )
                 multicall.push({
@@ -475,8 +472,8 @@ async function doQueries() {
                   call,
                   query,
                   selector(data: string) {
-                    return ABICoder.decodeParameters(
-                      abi?.outputs || [],
+                    return decodeParameters(
+                      (abi?.outputs || []).slice(),
                       data
                     )[0]
                   },
@@ -499,8 +496,8 @@ async function doQueries() {
                   )
                 })
               if (abi) {
-                const call = ABICoder.encodeFunctionCall(
-                  abi as AbiItem,
+                const call = encodeFunctionCall(
+                  abi as AbiFunctionFragment,
                   (query.args || []) as string[]
                 )
                 multicall.push({
@@ -511,7 +508,7 @@ async function doQueries() {
                     if (data === '0x') {
                       return null
                     }
-                    return ABICoder.decodeParameters(
+                    return decodeParameters(
                       (abi?.outputs || []) as any,
                       data
                     )[0]
@@ -532,8 +529,8 @@ async function doQueries() {
             ({ name }) => name === (tokenId ? 'getDataForTokenId' : 'getData')
           )
           const key = encodeKeyName(keyName, dynamicKeyParts)
-          const call = ABICoder.encodeFunctionCall(
-            abi as AbiItem,
+          const call = encodeFunctionCall(
+            abi as AbiFunctionFragment,
             (tokenId ? [tokenId, key] : [key]) as unknown as string[]
           )
           singlecall.push({
@@ -544,10 +541,7 @@ async function doQueries() {
               if (data === '0x') {
                 return null
               }
-              return ABICoder.decodeParameters(
-                (abi?.outputs || []) as any,
-                data
-              )[0]
+              return decodeParameters((abi?.outputs || []) as any, data)[0]
             },
           })
         } else if (type === 'call') {
@@ -565,8 +559,8 @@ async function doQueries() {
               )
             })
           if (abi) {
-            const call = ABICoder.encodeFunctionCall(
-              abi as AbiItem,
+            const call = encodeFunctionCall(
+              abi as AbiFunctionFragment,
               (query.args || []) as string[]
             )
             singlecall.push({
@@ -577,10 +571,7 @@ async function doQueries() {
                 if (data === '0x') {
                   return null
                 }
-                return ABICoder.decodeParameters(
-                  (abi?.outputs || []) as any,
-                  data
-                )[0]
+                return decodeParameters((abi?.outputs || []) as any, data)[0]
               },
             })
           } else {
@@ -652,7 +643,7 @@ async function doQueries() {
               for (const [i, multiItem] of currentMulticalls.entries()) {
                 const { query, queries, selector, extract } = multiItem
                 const [_success, , _data] = result[i]
-                const success = toNumber(_success, false) as number
+                const success = toNumber(_success) as number
                 if (success === 3) {
                   multicall.push(multiItem)
                   triggerQuery()
@@ -772,7 +763,7 @@ async function doQueries() {
                         (query?.schema as ERC725JSONSchema[]) || defaultSchema
                       ).find(({ name }) => name === query?.keyName)
                       if (schema && schema.keyType === 'Array') {
-                        const array = ABICoder.decodeParameters(
+                        const array = decodeParameters(
                           ['bytes[]'],
                           item
                         )[0] as string[]
@@ -1008,7 +999,7 @@ export type QFQueryOptions<T = unknown> = {
 }
 
 export type CallContractQueryOptions = {
-  abi?: readonly AbiItem[]
+  abi?: readonly AbiFunctionFragment[]
   address: Address
   method: string
   args?: readonly unknown[]
@@ -1105,8 +1096,8 @@ export type GetDataQueryOptions = {
 
 export type VerifiableURI = {
   verification: {
-    method: Hex | 'keccak256(utf8)' | 'keccak256(bytes)'
-    data: Hex
+    method: string | 'keccak256(utf8)' | 'keccak256(bytes)'
+    data: string
   }
   url: string
 }

@@ -1,6 +1,6 @@
 import { useQueries } from '@tanstack/vue-query'
-import { hexToAscii, toNumber } from 'web3-utils'
 import { stripHexPrefix } from 'web3-eth-accounts'
+import { hexToAscii, toNumber } from 'web3-utils'
 
 import type { Asset } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'

@@ -124,9 +124,7 @@ export const getOptimizedImage = (
           const data = await fetch(url)
             .then(response => (response.ok ? response.arrayBuffer() : null))
             .then(buffer =>
-              buffer
-                ? bytesToHex(new Uint8Array(buffer) as unknown as number[])
-                : null
+              buffer ? bytesToHex(new Uint8Array(buffer)) : null
             )
             .catch(() => null)
           const hash = data != null ? keccak256(data) : null

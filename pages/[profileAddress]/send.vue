@@ -7,7 +7,6 @@ import type {
   LSP7DigitalAsset,
   LSP8IdentifiableDigitalAsset,
 } from '@/contracts'
-import type { TransactionReceipt } from 'web3-eth'
 import type { Transaction } from 'web3'
 
 const connectedProfile = useProfile().connectedProfile()
@@ -59,7 +58,7 @@ const handleSend = async () => {
 
   try {
     setStatus('pending')
-    let transactionsReceipt: TransactionReceipt
+    let transactionsReceipt: any
 
     // native token transfer
     if (isLyx(sendAsset.value)) {
