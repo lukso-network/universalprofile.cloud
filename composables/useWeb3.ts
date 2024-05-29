@@ -1,7 +1,5 @@
-import Web3 from 'web3'
+import Web3, { type ContractInitOptions, type Transaction } from 'web3'
 
-import type { TransactionConfig } from 'web3-core'
-import type { ContractOptions } from 'web3-eth-contract'
 import type { AbiItem } from 'web3-utils'
 
 export default function useWeb3(providerName: string) {
@@ -22,7 +20,7 @@ export default function useWeb3(providerName: string) {
     contract: <T>(
       jsonInterface: AbiItem[],
       address?: string,
-      options?: ContractOptions
+      options?: ContractInitOptions
     ) => {
       const web3 = getWeb3()
       return new web3.eth.Contract(jsonInterface, address, options) as T
@@ -53,7 +51,7 @@ export default function useWeb3(providerName: string) {
     getBalance: async (address: Address) => {
       return await getWeb3().eth.getBalance(address)
     },
-    sendTransaction: async (transaction: TransactionConfig) => {
+    sendTransaction: async (transaction: Transaction) => {
       return await getWeb3()
         .eth.sendTransaction(transaction)
         .on('receipt', (receipt: any) => {

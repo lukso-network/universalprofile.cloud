@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isAddress } from 'web3-utils'
+import { isAddress } from 'web3-validator'
 
 import { balanceOfABI } from '@/shared/abis/balanceOfABI'
 

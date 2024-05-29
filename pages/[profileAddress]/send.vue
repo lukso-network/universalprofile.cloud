@@ -7,8 +7,8 @@ import type {
   LSP7DigitalAsset,
   LSP8IdentifiableDigitalAsset,
 } from '@/contracts'
-import type { TransactionConfig } from 'web3-core'
 import type { TransactionReceipt } from 'web3-eth'
+import type { Transaction } from 'web3'
 
 const connectedProfile = useProfile().connectedProfile()
 const {
@@ -66,8 +66,8 @@ const handleSend = async () => {
       const transaction = {
         from: connectedProfile.value?.address,
         to: receiver.value?.address as unknown as string,
-        value: toWei(sendAmount.value || '0'),
-      } as TransactionConfig
+        value: toWei(sendAmount.value || '0', 'ether'),
+      } as Transaction
       transactionsReceipt = await sendTransaction(transaction)
       transactionHash.value = transactionsReceipt.transactionHash
     } else {
