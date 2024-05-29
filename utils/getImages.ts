@@ -62,7 +62,7 @@ export const getImageBySize = (
       }
       return 0
     })
-    const dpr = window.devicePixelRatio || 1
+    const dpr = globalThis?.window?.devicePixelRatio || 1
     const normalImage = sortedImagesAscending?.find(
       image => image.width && image.width > width * dpr
     )
@@ -149,7 +149,7 @@ export const getOptimizedImage = (
       : promise.value || null
   })
   return computed<ImageItem | null>(() => {
-    const dpr = window.devicePixelRatio || 1
+    const dpr = globalThis?.window?.devicePixelRatio || 1
     const { verification, url } = isRef(currentImage)
       ? currentImage?.value || {}
       : currentImage || {}

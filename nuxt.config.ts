@@ -122,7 +122,7 @@ export default defineNuxtConfig({
   imports: {
     dirs: ['stores/**', 'shared/**', 'utils/**', 'types/**'],
   },
-  ssr: false,
+  ssr: true,
   spaLoadingTemplate: 'public/loading-template.html',
   piniaPersistedstate: {
     storage: 'localStorage',
