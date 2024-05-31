@@ -14,7 +14,6 @@ import LSP7DigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP7D
 import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 import debug from 'debug'
 import { RateLimiter } from 'limiter'
-import { Contract } from 'web3'
 import { decodeParameters, encodeFunctionCall } from 'web3-eth-abi'
 import { toNumber } from 'web3-utils'
 
