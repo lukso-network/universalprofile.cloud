@@ -1,7 +1,5 @@
 import Web3, { type EIP1193Provider, type Web3APISpec } from 'web3'
 
-import type { HttpProviderOptions } from 'web3-core-helpers'
-
 export const useWeb3Store = defineStore('web3', () => {
   const web3Instances = ref<Record<string, Web3>>({})
 
@@ -14,7 +12,7 @@ export const useWeb3Store = defineStore('web3', () => {
   const addWeb3 = (
     providerName: string,
     provider: EIP1193Provider<Web3APISpec>,
-    _options?: HttpProviderOptions
+    _options?: any
   ) => {
     if (!provider) {
       return

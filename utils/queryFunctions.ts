@@ -14,13 +14,13 @@ import LSP7DigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP7D
 import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 import debug from 'debug'
 import { RateLimiter } from 'limiter'
+import { Contract } from 'web3'
 import { decodeParameters, encodeFunctionCall } from 'web3-eth-abi'
 import { toNumber } from 'web3-utils'
 
 import LSP2FetcherWithMulticall3Contract from '@/shared/abis/LSP2FetcherWithMulticall3.json'
 import { LUKSO_PROXY_API } from '@/shared/config'
 
-import type { LSP2FetcherWithMulticall3 } from '@/contracts/LSP2FetcherWithMulticall3'
 import type { QueryFunction } from '@tanstack/query-core'
 import type { AbiFunctionFragment } from 'web3-types'
 
@@ -220,12 +220,12 @@ async function doQueries() {
     const { currentNetwork } = storeToRefs(useAppStore())
     const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
       currentNetwork.value
-    const { contract, getWeb3 } = useWeb3(PROVIDERS.RPC)
-    const lsp2CustomContract = contract<LSP2FetcherWithMulticall3>(
-      LSP2FetcherWithMulticall3Contract.abi as AbiFunctionFragment[],
-      LSP2ContractAddress
-    )
+    const { getWeb3 } = useWeb3(PROVIDERS.RPC)
     const web3 = getWeb3()
+    const lsp2CustomContract = new Contract<
+      typeof LSP2FetcherWithMulticall3Contract.abi
+    >(LSP2FetcherWithMulticall3Contract.abi, LSP2ContractAddress)
+    lsp2CustomContract.setProvider(web3.currentProvider)
     if (!web3.currentProvider) {
       return
     }
@@ -638,197 +638,198 @@ async function doQueries() {
             MAX_AGGREGATE_DATA_LIMIT
           )
           .call()
-          .then(
-            async (result: [string | number, string | number, string][]) => {
-              for (const [i, multiItem] of currentMulticalls.entries()) {
-                const { query, queries, selector, extract } = multiItem
-                const [_success, , _data] = result[i]
-                const success = toNumber(_success) as number
-                if (success === 3) {
-                  multicall.push(multiItem)
-                  triggerQuery()
+          .then(async (_result: any) => {
+            const result = _result as [
+              string | number,
+              string | number,
+              string,
+            ][]
+            for (const [i, multiItem] of currentMulticalls.entries()) {
+              const { query, queries, selector, extract } = multiItem
+              const _success = result[i][0]
+              const _data = result[i][2]
+              const success = toNumber(_success) as number
+              if (success === 3) {
+                multicall.push(multiItem)
+                triggerQuery()
+                continue
+              }
+              if (success === 2) {
+                const _queries = query ? [query] : queries || []
+                for (const query of _queries) {
+                  query.aggregateLimit = 1
+                  queryList.splice(0, 0, query)
+                }
+                triggerQuery()
+                continue
+              }
+              let rawData = _data
+              if (extract) {
+                rawData = extract.call(multiItem, rawData)
+                if (resultsLog.enabled) {
+                  resultsLog('extract', { data: rawData, origin: _data })
+                }
+              }
+              const data = rawData
+              if (queries) {
+                if (!success) {
+                  for (const query of queries) {
+                    // Normal success=false means the call is not supported
+                    if (resultsLog.enabled) {
+                      resolved?.push({
+                        query,
+                        error: 'not successful (assume null)',
+                      })
+                    }
+                    query.resolve(null)
+                  }
                   continue
                 }
-                if (success === 2) {
-                  const _queries = query ? [query] : queries || []
-                  for (const query of _queries) {
-                    query.aggregateLimit = 1
-                    queryList.splice(0, 0, query)
+                let items = data
+                try {
+                  if (selector) {
+                    items = selector.call(multiItem, data)
+                    if (resultsLog.enabled) {
+                      resultsLog('item-selector', { items, data })
+                    }
                   }
-                  triggerQuery()
+                } catch (error) {
+                  for (const query of queries) {
+                    if (resultsLog.enabled) {
+                      resolved?.push({
+                        query,
+                        error,
+                      })
+                    }
+                    query.reject(error)
+                  }
                   continue
                 }
-                let rawData = _data
-                if (extract) {
-                  rawData = extract.call(multiItem, rawData)
-                  if (resultsLog.enabled) {
-                    resultsLog('extract', { data: rawData, origin: _data })
-                  }
-                }
-                const data = rawData
-                if (queries) {
-                  if (!success) {
-                    for (const query of queries) {
+                for (const [j, query] of queries.entries()) {
+                  let item: string | null = items?.[j] || null
+                  const _data = item
+                  try {
+                    if ('getData' === query.type) {
+                      item = await convert(
+                        query as QueryPromise<unknown, QueryPromiseDataOptions>,
+                        item
+                      )
+                    }
+                    if (success) {
+                      if (resultsLog.enabled) {
+                        resolved?.push({
+                          query,
+                          data: item,
+                          raw: _data,
+                          items,
+                        })
+                      }
+                      query.resolve(item)
+                    } else {
                       // Normal success=false means the call is not supported
                       if (resultsLog.enabled) {
                         resolved?.push({
                           query,
                           error: 'not successful (assume null)',
+                          raw: _data,
+                          items,
+                          index: j,
                         })
                       }
                       query.resolve(null)
                     }
-                    continue
-                  }
-                  let items = data
-                  try {
-                    if (selector) {
-                      items = selector.call(multiItem, data)
-                      if (resultsLog.enabled) {
-                        resultsLog('item-selector', { items, data })
-                      }
-                    }
                   } catch (error) {
-                    for (const query of queries) {
+                    try {
                       if (resultsLog.enabled) {
                         resolved?.push({
                           query,
                           error,
+                          raw: _data,
+                          items,
+                          index: j,
                         })
                       }
                       query.reject(error)
-                    }
-                    continue
-                  }
-                  for (const [j, query] of queries.entries()) {
-                    let item: string | null = items?.[j] || null
-                    const _data = item
-                    try {
-                      if ('getData' === query.type) {
-                        item = await convert(
-                          query as QueryPromise<
-                            unknown,
-                            QueryPromiseDataOptions
-                          >,
-                          item
-                        )
-                      }
-                      if (success) {
-                        if (resultsLog.enabled) {
-                          resolved?.push({
-                            query,
-                            data: item,
-                            raw: _data,
-                            items,
-                          })
-                        }
-                        query.resolve(item)
-                      } else {
-                        // Normal success=false means the call is not supported
-                        if (resultsLog.enabled) {
-                          resolved?.push({
-                            query,
-                            error: 'not successful (assume null)',
-                            raw: _data,
-                            items,
-                            index: j,
-                          })
-                        }
-                        query.resolve(null)
-                      }
-                    } catch (error) {
-                      try {
-                        if (resultsLog.enabled) {
-                          resolved?.push({
-                            query,
-                            error,
-                            raw: _data,
-                            items,
-                            index: j,
-                          })
-                        }
-                        query.reject(error)
-                      } catch {
-                        // Really ignore, we tried our best
-                      }
+                    } catch {
+                      // Really ignore, we tried our best
                     }
                   }
-                  continue
                 }
-                try {
-                  if (success) {
-                    let item: string | null = data
-                    if ('getData' === query?.type) {
-                      let schema = (
-                        (query?.schema as ERC725JSONSchema[]) || defaultSchema
-                      ).find(({ name }) => name === query?.keyName)
-                      if (schema && schema.keyType === 'Array') {
-                        const array = decodeParameters(
-                          ['bytes[]'],
-                          item
-                        )[0] as string[]
-                        schema = { ...schema, keyType: 'Singleton' }
-                        query?.resolve(
-                          await Promise.all(
-                            array.map(value =>
-                              convert(
-                                query as QueryPromise<
-                                  unknown,
-                                  QueryPromiseDataOptions
-                                >,
-                                value,
-                                schema ? [schema] : undefined
-                              )
+                continue
+              }
+              try {
+                if (success) {
+                  let item: string | null = data
+                  if ('getData' === query?.type) {
+                    let schema = (
+                      (query?.schema as ERC725JSONSchema[]) || defaultSchema
+                    ).find(({ name }) => name === query?.keyName)
+                    if (schema && schema.keyType === 'Array') {
+                      const array = decodeParameters(
+                        ['bytes[]'],
+                        item
+                      )[0] as string[]
+                      schema = { ...schema, keyType: 'Singleton' }
+                      query?.resolve(
+                        await Promise.all(
+                          array.map(value =>
+                            convert(
+                              query as QueryPromise<
+                                unknown,
+                                QueryPromiseDataOptions
+                              >,
+                              value,
+                              schema ? [schema] : undefined
                             )
                           )
                         )
-                        continue
-                      }
-                      if (selector) {
-                        item = selector.call(multiItem, item)
-                      }
-                      item = await convert(
-                        query as QueryPromise<unknown, QueryPromiseDataOptions>,
-                        item
                       )
-                    } else if (selector) {
+                      continue
+                    }
+                    if (selector) {
                       item = selector.call(multiItem, item)
                     }
-                    if (resultsLog.enabled) {
-                      resolved?.push({
-                        query,
-                        data: item,
-                        raw: _data,
-                      })
-                    }
-                    query?.resolve(item)
-                  } else {
-                    // Normal success=false means the call is not supported
+                    item = await convert(
+                      query as QueryPromise<unknown, QueryPromiseDataOptions>,
+                      item
+                    )
+                  } else if (selector) {
+                    item = selector.call(multiItem, item)
+                  }
+                  if (resultsLog.enabled) {
                     resolved?.push({
                       query,
-                      error: 'not successful (assume null)',
+                      data: item,
                       raw: _data,
                     })
-                    query?.resolve(null)
                   }
-                } catch (error) {
-                  try {
-                    // This is an actual error so reject
-                    if (resultsLog.enabled) {
-                      resolved?.push({
-                        query,
-                        error,
-                        raw: _data,
-                      })
-                    }
-                    query?.reject(error)
-                  } catch {
-                    // Really ignore, we tried our best
+                  query?.resolve(item)
+                } else {
+                  // Normal success=false means the call is not supported
+                  resolved?.push({
+                    query,
+                    error: 'not successful (assume null)',
+                    raw: _data,
+                  })
+                  query?.resolve(null)
+                }
+              } catch (error) {
+                try {
+                  // This is an actual error so reject
+                  if (resultsLog.enabled) {
+                    resolved?.push({
+                      query,
+                      error,
+                      raw: _data,
+                    })
                   }
+                  query?.reject(error)
+                } catch {
+                  // Really ignore, we tried our best
                 }
               }
             }
-          )
+          })
           .catch((error: Error) => {
             // console.error(
             //   'failure',

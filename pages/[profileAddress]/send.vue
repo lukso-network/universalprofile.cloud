@@ -1,13 +1,8 @@
 <script setup lang="ts">
 import LSP7Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP7Mintable.json'
 import LSP8Mintable from '@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json'
-import { type AbiItem, toWei } from 'web3-utils'
-
-import type {
-  LSP7DigitalAsset,
-  LSP8IdentifiableDigitalAsset,
-} from '@/contracts'
-import type { Transaction } from 'web3'
+import { Contract, type Transaction } from 'web3'
+import { toWei } from 'web3-utils'
 
 const connectedProfile = useProfile().connectedProfile()
 const {
@@ -20,7 +15,7 @@ const {
 const { isLoadedApp } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
-const { sendTransaction, contract, isEoA } = useWeb3(PROVIDERS.INJECTED)
+const { sendTransaction, isEoA } = useWeb3(PROVIDERS.INJECTED)
 const amount = computed(() => useRouter().currentRoute.value.query.amount)
 const assetAddress = computed(() => useRouter().currentRoute.value.query.asset)
 const tokenId = computed(() => useRouter().currentRoute.value.query.tokenId)
@@ -73,8 +68,8 @@ const handleSend = async () => {
       // custom token transfer
       switch (sendAsset.value?.standard) {
         case STANDARDS.LSP7: {
-          const tokenContract = contract<LSP7DigitalAsset>(
-            LSP7Mintable.abi as AbiItem[],
+          const tokenContract = new Contract<typeof LSP7Mintable.abi>(
+            LSP7Mintable.abi,
             sendAsset.value?.address
           )
 
@@ -96,8 +91,8 @@ const handleSend = async () => {
           break
         }
         case STANDARDS.LSP8: {
-          const nftContract = contract<LSP8IdentifiableDigitalAsset>(
-            LSP8Mintable.abi as AbiItem[],
+          const nftContract = new Contract<typeof LSP8Mintable.abi>(
+            LSP8Mintable.abi,
             sendAsset.value?.address
           )
 

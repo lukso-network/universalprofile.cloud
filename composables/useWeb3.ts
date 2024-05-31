@@ -17,13 +17,13 @@ export default function useWeb3(providerName: string) {
 
   return {
     getWeb3,
-    contract: <T>(
+    contract: (
       jsonInterface: AbiItem[],
       address?: string,
       options?: ContractInitOptions
     ) => {
       const web3 = getWeb3()
-      return new web3.eth.Contract(jsonInterface, address, options) as T
+      return new web3.eth.Contract(jsonInterface, address, options)
     },
     requestAccounts: async (): Promise<Address[]> => {
       const addresses = await getWeb3().eth.requestAccounts()
