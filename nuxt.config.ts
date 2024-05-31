@@ -84,6 +84,7 @@ export default defineNuxtConfig({
         transformMixedEsModules: true,
       },
       sourcemap: true,
+      target: ['esnext'],
     },
     resolve: {
       alias: {
@@ -109,6 +110,10 @@ export default defineNuxtConfig({
             buffer: true, // fixes `Buffer is not defined` error
           }),
         ],
+        target: 'esnext',
+        supported: {
+          bigint: true,
+        },
       },
     },
   },
@@ -190,5 +195,12 @@ export default defineNuxtConfig({
           navigateFallbackAllowlist: [/^\/$/],
           type: 'module',
         },
+  },
+  nitro: {
+    esbuild: {
+      options: {
+        target: 'esnext',
+      },
+    },
   },
 })
