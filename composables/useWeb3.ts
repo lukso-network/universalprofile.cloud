@@ -1,6 +1,9 @@
-import Web3, { type ContractInitOptions, type Transaction } from 'web3'
-
-import type { AbiItem } from 'web3-utils'
+import Web3, {
+  Contract,
+  type ContractAbi,
+  type ContractInitOptions,
+  type Transaction,
+} from 'web3'
 
 export default function useWeb3(providerName: string) {
   const web3Store = useWeb3Store()
@@ -17,13 +20,15 @@ export default function useWeb3(providerName: string) {
 
   return {
     getWeb3,
-    contract: (
-      jsonInterface: AbiItem[],
+    contract: <T extends ContractAbi>(
+      jsonInterface: T,
       address?: string,
       options?: ContractInitOptions
     ) => {
-      const web3 = getWeb3()
-      return new web3.eth.Contract(jsonInterface, address, options)
+      const contract = new Contract<T>(jsonInterface, address, options)
+      contract.setProvider(getWeb3().currentProvider)
+
+      return contract
     },
     requestAccounts: async (): Promise<Address[]> => {
       const addresses = await getWeb3().eth.requestAccounts()
@@ -63,6 +68,9 @@ export default function useWeb3(providerName: string) {
     },
     getChainId: async () => {
       return await getWeb3().eth.getChainId()
+    },
+    getProvider: () => {
+      return getWeb3().currentProvider
     },
   }
 }

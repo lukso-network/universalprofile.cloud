@@ -14,7 +14,6 @@ import LSP7DigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP7D
 import LSP8IdentifiableDigitalAssetContract from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 import debug from 'debug'
 import { RateLimiter } from 'limiter'
-import { Contract } from 'web3'
 import { decodeParameters, encodeFunctionCall } from 'web3-eth-abi'
 import { toNumber } from 'web3-utils'
 
@@ -220,15 +219,15 @@ async function doQueries() {
     const { currentNetwork } = storeToRefs(useAppStore())
     const { customLSP2ContractAddress: LSP2ContractAddress, chainId } =
       currentNetwork.value
-    const { getWeb3 } = useWeb3(PROVIDERS.RPC)
-    const web3 = getWeb3()
-    const lsp2CustomContract = new Contract<
+    const { getWeb3, getProvider, contract } = useWeb3(PROVIDERS.RPC)
+    const lsp2CustomContract = contract<
       typeof LSP2FetcherWithMulticall3Contract.abi
     >(LSP2FetcherWithMulticall3Contract.abi, LSP2ContractAddress)
-    lsp2CustomContract.setProvider(web3.currentProvider)
-    if (!web3.currentProvider) {
+
+    if (!getProvider()) {
       return
     }
+
     const startLength = queryList.length
     const singleCallQueries: QueryPromise<
       unknown,
