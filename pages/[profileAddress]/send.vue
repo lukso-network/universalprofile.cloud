@@ -62,6 +62,7 @@ const handleSend = async () => {
         from: connectedProfile.value?.address,
         to: receiver.value?.address as unknown as string,
         value: toWei(sendAmount.value || '0', 'ether'),
+        gasLimit: GAS_LIMIT,
       } as Transaction
       transactionsReceipt = await sendTransaction(transaction)
       transactionHash.value = transactionsReceipt.transactionHash
