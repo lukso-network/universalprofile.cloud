@@ -112,7 +112,7 @@ const isLoadingAssets = computed(() =>
 <template>
   <AppPageLoader :is-loading="viewedProfile?.isLoading">
     <div
-      v-if="viewedProfile?.standard === 'LSP3Profile'"
+      v-if="viewedProfile?.standard === STANDARDS.LSP3"
       class="mx-auto max-w-content"
     >
       <ProfileCard />
