@@ -1,4 +1,4 @@
-import { isAddress } from 'web3-validator'
+import { isAddress } from 'web3-utils'
 
 /**
  * Remove padding from address

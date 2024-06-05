@@ -1,5 +1,5 @@
 import { useQueries } from '@tanstack/vue-query'
-import { decodeParameter } from 'web3-eth-abi'
+import ABICoder from 'web3-eth-abi'
 import { keccak256 } from 'web3-utils'
 
 import { browserProcessMetadata } from '@/utils/processMetadata'
@@ -58,8 +58,9 @@ export function useToken() {
                 ? queryGetData({
                     // 4
                     chainId,
-                    address: (
-                      decodeParameter('address', tokenId) as string
+                    address: ABICoder.decodeParameter(
+                      'address',
+                      tokenId
                     ).toLowerCase() as Address,
                     keyName: 'LSP8ReferenceContract',
                   })
@@ -68,8 +69,9 @@ export function useToken() {
                 ? queryGetData({
                     // 5
                     chainId,
-                    address: (
-                      decodeParameter('address', tokenId) as string
+                    address: ABICoder.decodeParameter(
+                      'address',
+                      tokenId
                     ).toLowerCase() as Address,
                     keyName: 'LSP4Creators[]',
                   })
@@ -134,8 +136,9 @@ export function useToken() {
                 ? queryGetData({
                     // 9
                     chainId,
-                    address: (
-                      decodeParameter('address', tokenId) as string
+                    address: ABICoder.decodeParameter(
+                      'address',
+                      tokenId
                     ).toLowerCase() as Address,
                     keyName: 'LSP4Metadata',
                     process: data => browserProcessMetadata(data, keccak256),

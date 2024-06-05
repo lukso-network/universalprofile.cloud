@@ -6,7 +6,7 @@ import { INJECTED_PROVIDER } from '@/shared/provider'
  *
  * @returns
  */
-export const checkExtensionNetwork = async (): Promise<undefined | never> => {
+export const checkExtensionNetwork = async (): Promise<void | never> => {
   const { currentNetwork } = useAppStore()
   const { showModal } = useModal()
   const chainId = (await INJECTED_PROVIDER?.request({
