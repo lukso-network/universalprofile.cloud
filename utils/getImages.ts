@@ -62,7 +62,7 @@ export const getImageBySize = (
       }
       return 0
     })
-    const dpr = globalThis?.window?.devicePixelRatio || 1
+    const dpr = window.devicePixelRatio || 1
     const normalImage = sortedImagesAscending?.find(
       image => image.width && image.width > width * dpr
     )
@@ -124,7 +124,9 @@ export const getOptimizedImage = (
           const data = await fetch(url)
             .then(response => (response.ok ? response.arrayBuffer() : null))
             .then(buffer =>
-              buffer ? bytesToHex(new Uint8Array(buffer)) : null
+              buffer
+                ? bytesToHex(new Uint8Array(buffer) as unknown as number[])
+                : null
             )
             .catch(() => null)
           const hash = data != null ? keccak256(data) : null
@@ -147,7 +149,7 @@ export const getOptimizedImage = (
       : promise.value || null
   })
   return computed<ImageItem | null>(() => {
-    const dpr = globalThis?.window?.devicePixelRatio || 1
+    const dpr = window.devicePixelRatio || 1
     const { verification, url } = isRef(currentImage)
       ? currentImage?.value || {}
       : currentImage || {}

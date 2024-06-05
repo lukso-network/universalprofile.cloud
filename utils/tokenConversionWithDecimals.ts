@@ -1,3 +1,4 @@
+// biome-ignore lint/style/useNodejsImportProtocol: conflicts with node assert
 import assert from 'assert'
 import BigNumber from 'bignumber.js'
 

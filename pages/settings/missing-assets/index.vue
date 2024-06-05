@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Contract } from 'web3'
-import { isAddress } from 'web3-validator'
+import { isAddress } from 'web3-utils'
 
 import { balanceOfABI } from '@/shared/abis/balanceOfABI'
+
+import type { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/contracts'
 
 const connectedProfile = useProfile().connectedProfile()
 const { formatMessage } = useIntl()
@@ -37,16 +38,17 @@ const handleInput = async (customEvent: CustomEvent) => {
 
   // check if user is owner of the asset (both LSP7 and LSP8 return balance)
   try {
-    const assetContract = new Contract<typeof balanceOfABI>(
+    const { contract } = useWeb3(PROVIDERS.RPC)
+    const assetContract = contract<LSP7DigitalAssetInterface>(
       balanceOfABI,
       assetAddress.value
     )
     assertString(connectedProfile.value?.address)
-    const balance = (await assetContract.methods
+    const balance = await assetContract.methods
       .balanceOf(connectedProfile.value?.address)
-      .call()) as bigint
+      .call()
 
-    if (balance === 0n) {
+    if (balance === '0') {
       checkError.value = formatMessage('errors_not_owner')
       return
     }

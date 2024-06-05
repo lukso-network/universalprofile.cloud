@@ -10,8 +10,5 @@
     "types": [
       "node",
     ],
-  },
-  "exclude": [
-    "contracts/**"
-  ]
+  }
 }

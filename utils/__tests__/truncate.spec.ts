@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { expect, it, describe } from 'vitest'
 import { truncate } from '../truncate'
 
 describe('truncate', () => {
