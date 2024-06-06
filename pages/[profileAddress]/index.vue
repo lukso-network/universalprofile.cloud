@@ -118,6 +118,7 @@ const isLoadingAssets = computed(() =>
       <ProfileCard />
       <ProfileDetails />
       <div
+        v-if="nftsCreated.length > 0"
         class="heading-inter-17-semi-bold my-10 flex items-center justify-center"
       >
         {{ $formatMessage('asset_creations') }}

@@ -23,6 +23,15 @@ module.exports = {
       transitionProperty: {
         width: 'width',
       },
+      animation: {
+        'fade-in-20': 'fade-in-20 0.5s ease-in-out',
+      },
+      keyframes: {
+        'fade-in-20': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '0.2' },
+        },
+      },
     },
   },
   plugins: [wordBreakPlugin],

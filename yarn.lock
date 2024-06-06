@@ -18917,7 +18917,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwind-merge@npm:^2.0.0":
+"tailwind-merge@npm:^2.0.0, tailwind-merge@npm:^2.2.0":
   version: 2.3.0
   resolution: "tailwind-merge@npm:2.3.0"
   dependencies:
@@ -18934,6 +18934,17 @@ __metadata:
   peerDependencies:
     tailwindcss: "*"
   checksum: 5661454ec9148c3dacd77ac01aeef906a18733295b546081ed0e146d8c258db37d405356a23643a4be7741c4933dea2dd71c5d04bffad7911b1e1873eb053f06
+  languageName: node
+  linkType: hard
+
+"tailwind-variants@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "tailwind-variants@npm:0.2.1"
+  dependencies:
+    tailwind-merge: "npm:^2.2.0"
+  peerDependencies:
+    tailwindcss: "*"
+  checksum: 061b9fdb56bca0d49da24d67131014e61602ea2a6e9fe098550fd8d06a799a1196ba441e72a9d44c4424a5339397685332962d20e789a82061192ae026be9a8b
   languageName: node
   linkType: hard
 
@@ -19915,6 +19926,7 @@ __metadata:
     stylelint-config-standard-scss: "npm:13.0.0"
     stylelint-prettier: "npm:5.0.0"
     stylelint-scss: "npm:6.2.1"
+    tailwind-variants: "npm:^0.2.1"
     three: "npm:^0.162.0"
     typechain: "npm:^8.3.2"
     typescript: "npm:5.3.3"

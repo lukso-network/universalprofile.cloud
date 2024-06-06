@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { EffectCoverflow, Navigation } from 'swiper/modules'
+import { tv } from 'tailwind-variants'
+
+import type { Swiper } from 'swiper'
 
 type Props = {
   assets: Asset[]
@@ -7,12 +10,14 @@ type Props = {
 
 const props = defineProps<Props>()
 const { isMobile } = useDevice()
+const activeIndex = ref(0)
 
 const handleCardClick = (asset: Asset) => {
   navigateTo(tokenRoute(asset.address))
 }
 
 const isLoading = computed(() => props.assets?.some(asset => asset.isLoading))
+const SLIDES_PER_VIEW = 3
 
 const coverflowEffectOptions = {
   rotate: 50,
@@ -21,24 +26,110 @@ const coverflowEffectOptions = {
   modifier: 1,
   slideShadows: false,
 }
+
+const handleInit = (swiper: Swiper) => {
+  activeIndex.value = swiper.activeIndex
+}
+
+const handleSlideChange = (swiper: Swiper) => {
+  activeIndex.value = swiper.activeIndex
+}
+
+const styleVariants = tv({
+  slots: {
+    bottomShadow:
+      'absolute bottom-0 h-[50px] rounded-[850px] bg-neutral-20 opacity-30 blur-[34px] transition-width',
+    leftShadow:
+      'absolute bottom-[30px] left-[60px] h-[305px] w-[272px] rotate-90 animate-fade-in-20 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px] transition',
+    rightShadow:
+      'absolute bottom-[30px] right-[60px] h-[305px] w-[272px] rotate-90 animate-fade-in-20 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px] transition',
+    leftNavigation:
+      'absolute left-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.05] hover:border-neutral-80 active:scale-[0.99] lg:left-[-20px]',
+    rightNavigation:
+      'absolute right-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.05] hover:border-neutral-80 active:scale-[0.99] lg:right-[-20px]',
+  },
+  variants: {
+    isLastSlide: {
+      true: {
+        bottomShadow: 'w-2/3',
+        rightShadow: 'hidden',
+      },
+    },
+    isFirstSlide: {
+      true: {
+        bottomShadow: 'right-0 w-2/3',
+        leftShadow: 'hidden',
+      },
+    },
+    isSingleSlide: {
+      true: {
+        bottomShadow: 'left-[calc(50%-200px)] w-[400px]',
+      },
+    },
+    isLoading: {
+      true: {
+        leftNavigation: 'hidden',
+        rightNavigation: 'hidden',
+      },
+    },
+    isMobile: {
+      true: {
+        bottomShadow: '!w-full',
+        leftShadow: '!hidden',
+        rightShadow: '!hidden',
+      },
+    },
+  },
+  compoundVariants: [
+    {
+      isLastSlide: false,
+      isFirstSlide: false,
+      isSingleSlide: false,
+      class: {
+        bottomShadow: 'w-full',
+      },
+    },
+    {
+      isLoading: true,
+      class: {
+        bottomShadow: 'left-0 w-full',
+        leftShadow: '!block',
+        rightShadow: '!block',
+      },
+    },
+  ],
+})
+
+const styles = computed(() => {
+  return styleVariants({
+    isLastSlide: activeIndex.value + 1 === props.assets.length,
+    isFirstSlide: activeIndex.value === 0,
+    isSingleSlide: props.assets.length === 1,
+    isLoading: isLoading.value,
+    isMobile,
+  })
+})
 </script>
 
 <template>
   <div class="relative">
+    <!-- placeholder swiper when items are loading -->
     <Swiper
       v-if="isLoading"
       effect="coverflow"
-      :centered-slides="true"
+      :grab-cursor="true"
+      :centered-slides="false"
       :coverflow-effect="coverflowEffectOptions"
       :modules="[EffectCoverflow]"
-      :slides-per-view="isMobile ? 1 : 3"
-      :loop="true"
+      :slides-per-view="isMobile ? 1 : SLIDES_PER_VIEW"
+      :loop="false"
       class="w-[calc(100vw-48px)] lg:w-full"
     >
       <SwiperSlide v-for="index in 6" :key="index" class="cursor-pointer pb-3"
         ><NftCard
       /></SwiperSlide>
     </Swiper>
+    <!-- actual swiper with loaded items -->
     <Swiper
       v-else
       effect="coverflow"
@@ -46,47 +137,41 @@ const coverflowEffectOptions = {
       :centered-slides="true"
       :coverflow-effect="coverflowEffectOptions"
       :modules="[EffectCoverflow, Navigation]"
-      :slides-per-view="isMobile ? 1 : 3"
-      :loop="true"
+      :slides-per-view="isMobile ? 1 : SLIDES_PER_VIEW"
+      :initial-slide="1"
+      :loop="false"
       :navigation="{
         prevEl: '#prev',
         nextEl: '#next',
+        disabledClass: 'hidden',
       }"
       class="w-[calc(100vw-48px)] lg:w-full"
+      @init="handleInit"
+      @slide-change="handleSlideChange"
     >
       <SwiperSlide
         v-for="asset in assets"
         :key="asset.address"
-        class="cursor-pointer pb-3"
+        class="cursor-pointer select-none pb-3"
         ><NftCard :asset="asset" @on-card-click="handleCardClick"
       /></SwiperSlide>
     </Swiper>
-    <div v-if="!isLoading">
-      <lukso-icon
-        name="arrow-left-lg"
-        id="prev"
-        class="absolute left-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.03] hover:border-neutral-80 active:scale-[0.99] lg:left-[-20px]"
-      ></lukso-icon>
-      <lukso-icon
-        name="arrow-right-lg"
-        id="next"
-        class="absolute right-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.03] hover:border-neutral-80 active:scale-[0.99] lg:right-[-20px]"
-      ></lukso-icon>
-    </div>
-    <div v-if="assets.length > 1">
-      <div
-        class="absolute bottom-[30px] left-[60px] h-[305px] w-[272px] rotate-90 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px]"
-      ></div>
-      <div
-        class="absolute bottom-[30px] right-[60px] h-[305px] w-[272px] rotate-90 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px]"
-      ></div>
-    </div>
-    <div
-      class="absolute bottom-0 h-[50px] w-full rounded-[850px] bg-neutral-20 opacity-30 blur-[34px]"
-      :class="{
-        'w-full': assets.length > 1,
-        'left-[calc(50%-200px)] w-[400px]': assets.length === 1,
-      }"
-    ></div>
+    <!-- navigation -->
+    <lukso-icon
+      name="arrow-left-lg"
+      id="prev"
+      :class="styles.leftNavigation()"
+    ></lukso-icon>
+    <lukso-icon
+      name="arrow-right-lg"
+      id="next"
+      :class="styles.rightNavigation()"
+    ></lukso-icon>
+
+    <!-- circle shadows behind cards -->
+    <div :class="styles.leftShadow()"></div>
+    <div :class="styles.rightShadow()"></div>
+    <!-- line shadow under cards -->
+    <div :class="styles.bottomShadow()"></div>
   </div>
 </template>
