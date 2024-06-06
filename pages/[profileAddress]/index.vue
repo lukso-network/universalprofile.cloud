@@ -126,7 +126,11 @@ const isLoadingAssets = computed(() =>
           >{{ nftsCreated.length }}</span
         >
       </div>
-      <CreationsCarousel v-if="nftsCreated.length > 0" :assets="nftsCreated" />
+      <CreationsCarousel
+        v-if="nftsCreated.length > 0"
+        :assets="nftsCreated"
+        class="mb-10"
+      />
       <div>
         <ul class="grid gap-2 pt-6 sm:flex sm:grid-cols-2 sm:gap-4 sm:pt-10">
           <li>
