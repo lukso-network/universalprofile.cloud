@@ -73,14 +73,20 @@ const coverflowEffectOptions = {
         class="absolute right-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.03] hover:border-neutral-80 active:scale-[0.99] lg:right-[-20px]"
       ></lukso-icon>
     </div>
+    <div v-if="assets.length > 1">
+      <div
+        class="absolute bottom-[30px] left-[60px] h-[305px] w-[272px] rotate-90 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px]"
+      ></div>
+      <div
+        class="absolute bottom-[30px] right-[60px] h-[305px] w-[272px] rotate-90 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px]"
+      ></div>
+    </div>
     <div
       class="absolute bottom-0 h-[50px] w-full rounded-[850px] bg-neutral-20 opacity-30 blur-[34px]"
-    ></div>
-    <div
-      class="absolute bottom-[30px] left-[60px] h-[305px] w-[272px] rotate-90 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px]"
-    ></div>
-    <div
-      class="absolute bottom-[30px] right-[60px] h-[305px] w-[272px] rotate-90 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px]"
+      :class="{
+        'w-full': assets.length > 1,
+        'left-[calc(50%-200px)] w-[400px]': assets.length === 1,
+      }"
     ></div>
   </div>
 </template>
