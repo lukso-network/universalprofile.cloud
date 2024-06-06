@@ -1,7 +1,9 @@
-// biome-ignore lint/style/useNodejsImportProtocol: conflicts with node assert
 import assert from 'assert'
 
-export const tokenRoute = (tokenAddress: Address) => `/asset/${tokenAddress}`
+export const tokenRoute = (assetAddress?: Address) => {
+  assert(assetAddress, 'Missing asset address in route')
+  return `/asset/${assetAddress}`
+}
 
 export const nftRoute = (nftAddress: Address, tokenId: string) =>
   `/asset/${nftAddress}/tokenId/${tokenId}`

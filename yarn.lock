@@ -15154,6 +15154,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nuxt-swiper@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "nuxt-swiper@npm:1.2.2"
+  dependencies:
+    "@nuxt/kit": "npm:^3.7.0"
+    swiper: "npm:^10.2.0"
+  checksum: 461fea7e8c29b627b6299fd436bb793fa96b826c79f3b8f4448a0c0d683c218aa0fde4f0881f9d6650fa904d96f3356e8dc08c60f491a608e820891d7b79608f
+  languageName: node
+  linkType: hard
+
 "nuxt@npm:^3.10.3":
   version: 3.10.3
   resolution: "nuxt@npm:3.10.3"
@@ -18847,6 +18857,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"swiper@npm:^10.2.0":
+  version: 10.3.1
+  resolution: "swiper@npm:10.3.1"
+  checksum: 979c23ff3965a0583f75e65b788269f78f9e65f3089f20747216a6334ee7a1d5bee361ee698e7acc6060a140b5443801aec6fcd6f3095ee3acc31771b425124e
+  languageName: node
+  linkType: hard
+
 "table-layout@npm:^1.0.2":
   version: 1.0.2
   resolution: "table-layout@npm:1.0.2"
@@ -19880,6 +19897,7 @@ __metadata:
     mime-types: "npm:^2.1.35"
     npm-run-all: "npm:4.1.5"
     nuxt: "npm:^3.10.3"
+    nuxt-swiper: "npm:^1.2.2"
     pinia: "npm:^2.1.7"
     pinia-orm: "npm:^1.7.2"
     playwright-core: "npm:^1.42.1"

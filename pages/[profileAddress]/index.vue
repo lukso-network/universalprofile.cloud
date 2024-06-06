@@ -117,6 +117,16 @@ const isLoadingAssets = computed(() =>
     >
       <ProfileCard />
       <ProfileDetails />
+      <div
+        class="heading-inter-17-semi-bold my-10 flex items-center justify-center"
+      >
+        {{ $formatMessage('asset_creations') }}
+        <span
+          class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 bg-neutral-20 px-[2px] py-[1px] text-neutral-100"
+          >{{ nftsCreated.length }}</span
+        >
+      </div>
+      <CreationsCarousel v-if="nftsCreated.length > 0" :assets="nftsCreated" />
       <div>
         <ul class="grid gap-2 pt-6 sm:flex sm:grid-cols-2 sm:gap-4 sm:pt-10">
           <li>
