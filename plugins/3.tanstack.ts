@@ -17,7 +17,7 @@ import type {
 } from '@tanstack/vue-query'
 import type { NuxtApp } from 'nuxt/app'
 
-debug.enable(globalThis?.localStorage?.getItem('debug') || '')
+debug.enable(localStorage.getItem('debug') || '')
 
 export default defineNuxtPlugin((nuxt: NuxtApp) => {
   const vueQueryState = useState<DehydratedState | null>('vue-query')
@@ -42,9 +42,7 @@ export default defineNuxtPlugin((nuxt: NuxtApp) => {
     clientPersister: queryClient =>
       persistQueryClient({
         queryClient,
-        persister: createAsyncStoragePersister({
-          storage: typeof window !== 'undefined' ? localStorage : undefined,
-        }),
+        persister: createAsyncStoragePersister({ storage: localStorage }),
         buster: buster as string,
       }),
   }

@@ -7,11 +7,10 @@ import type { NuxtApp } from 'nuxt/app'
  * @param nuxtApp - nuxt app instance
  */
 export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
-  const navigatorBrave = globalThis?.navigator as NavigatorExtended
+  const navigatorBrave = navigator as NavigatorExtended
 
   if (nuxtApp?.$device) {
     ;(nuxtApp.$device as DeviceExtended).isBrave =
-      (navigatorBrave?.brave && (await navigatorBrave?.brave.isBrave())) ||
-      false
+      (navigatorBrave.brave && (await navigatorBrave.brave.isBrave())) || false
   }
 })

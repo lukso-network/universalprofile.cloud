@@ -1,22 +1,22 @@
 export const setItem = (key: string, value: string) => {
-  if (globalThis?.localStorage) {
-    return globalThis?.localStorage.setItem(key, value)
+  if (localStorage) {
+    return localStorage.setItem(key, value)
   }
 
   throw new Error('No local storage')
 }
 
 export const getItem = (key: string): string | null => {
-  if (globalThis?.localStorage) {
-    return globalThis?.localStorage.getItem(key)
+  if (localStorage) {
+    return localStorage.getItem(key)
   }
 
   throw new Error('No local storage')
 }
 
 export const removeItem = (key: string) => {
-  if (globalThis?.localStorage) {
-    return globalThis?.localStorage.removeItem(key)
+  if (localStorage) {
+    return localStorage.removeItem(key)
   }
 
   throw new Error('No local storage')
