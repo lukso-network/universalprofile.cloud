@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import UniversalProfileJson from '@lukso/lsp-smart-contracts/artifacts/UniversalProfile.json'
 
-import type { AbiItem } from 'web3-utils'
 import type { UniversalProfile } from '@/contracts'
+import type { AbiItem } from 'web3-utils'
 
 const connectedProfile = useProfile().connectedProfile()
 const assetAddress = useRouter().currentRoute.value.params?.assetAddress
