@@ -1,0 +1,5 @@
+query profileAssets($id: String!) {
+  Hold(where: { profile_id: { _eq: $id } }) {
+    ...hold
+  }
+}

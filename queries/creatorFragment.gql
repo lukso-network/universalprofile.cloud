@@ -1,0 +1,9 @@
+fragment creator on Profile {
+  id
+  name
+  profileImages {
+    url
+    width
+    height
+  }
+}
