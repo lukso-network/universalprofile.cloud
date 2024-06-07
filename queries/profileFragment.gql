@@ -10,7 +10,7 @@ fragment profile on Profile {
     title
     url
   }
-  # tags
+  tags
   backgroundImages {
     url
     height

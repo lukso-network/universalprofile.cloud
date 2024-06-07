@@ -5,6 +5,8 @@ import type { ProfileQuery } from '@/.nuxt/gql/default'
 import type { ProfileLink } from '@/types/profile'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
+type AdditionalQueryOptions = { profileAddress?: Address | null }
+
 export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
   const { currentNetwork } = storeToRefs(useAppStore())
   const { value: { chainId } = { chainId: '' } } = currentNetwork
@@ -12,7 +14,7 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
   const queries = computed(() => {
     const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
 
-    const queries: QFQueryOptions[] & { profileAddress?: Address | null } = (
+    const queries: QFQueryOptions[] & AdditionalQueryOptions = (
       profileAddress
         ? [
             {
@@ -41,7 +43,7 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
             },
           ]
         : []
-    ) as QFQueryOptions[] & { profileAddress?: Address | null }
+    ) as QFQueryOptions[] & AdditionalQueryOptions
     queries.profileAddress = profileAddress
     return queries
   })
@@ -56,7 +58,7 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
       }
 
       const isLoading = results.some(result => result.isLoading)
-      const balance = results[0].data as bigint
+      const balance = results[0].data as string
       const profileData = results[1].data as ProfileQuery['Profile_by_pk']
       const {
         name,
@@ -65,7 +67,7 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
         backgroundImages: backgroundImage,
         links,
         description,
-        // tags,
+        tags,
         fullName,
       } = profileData || {}
       const checksummed = toChecksumAddress(profileAddress) as Address
@@ -87,7 +89,7 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
         balance,
         links,
         description,
-        // tags,
+        tags,
         profileLink,
       } as Profile
       if (!profile.isLoading && profileLog.enabled) {
