@@ -1,9 +1,9 @@
-export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
+export const getProfile = (profileAddress: MaybeRef<Address | undefined>) => {
   if (fetchFromRpc()) {
-    return useProfileRpc().getProfile(_profile)
+    return useProfileRpc().getProfile(profileAddress)
   }
 
-  return useProfileGraph().getProfile(_profile)
+  return useProfileGraph().getProfile(profileAddress)
 }
 
 /**
