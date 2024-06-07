@@ -24,11 +24,17 @@ Branch: `main`
 
 - <https://universalprofile.cloud/>
 
+## Fetch data mode
+
+App supports data fetching through RPC or using GraphQL indexer. By default it uses Graph mode unless it's specified explicitly in env through `FETCH_DATA_PROVIDER=graph|rpc` variable. It can be also changed on per client basis using Local Storage `fetch-data-provider=graph|rpc` variable.
+
+While RPC mode is more up-to-date but this comes at the cost of loading speed. It also limits amount of available features that are not possible in this mode.
+
 ## 🔌 Network switch
 
 It is possible to pass a network in query parameter to force viewing a profile on a given network:
 
-```
+```text
 ?network=testnet
 ?network=mainnet
 ```
