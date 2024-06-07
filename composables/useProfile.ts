@@ -1,5 +1,7 @@
 export const getProfile = (profileAddress: MaybeRef<Address | undefined>) => {
-  if (fetchFromRpc()) {
+  const { isRpc } = useDataProvider()
+
+  if (isRpc) {
     return useProfileRpc().getProfile(profileAddress)
   }
 
