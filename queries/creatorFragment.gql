@@ -7,6 +7,8 @@ fragment creator on Profile {
     height
   }
   lsp12IssuedAssets {
-    id
+    asset {
+      id
+    }
   }
 }

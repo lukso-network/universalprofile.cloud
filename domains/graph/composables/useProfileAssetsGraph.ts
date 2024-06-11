@@ -169,7 +169,7 @@ const createAssetObject = (
       name: receivedAsset?.owner?.name,
       profileImage: prepareImages(receivedAsset?.owner?.profileImages),
       issuedAssets: receivedAsset?.owner?.lsp12IssuedAssets?.map(
-        asset => asset.id
+        asset => asset?.asset?.id
       ),
     },
     resolvedMetadata: metadata,
@@ -189,7 +189,7 @@ const createAssetObject = (
         name: creator?.profile?.name,
         profileImage: prepareImages(creator?.profile?.profileImages),
         issuedAssets: receivedAsset?.owner?.lsp12IssuedAssets?.map(
-          asset => asset.id
+          asset => asset?.asset?.id
         ),
       }
     }),
