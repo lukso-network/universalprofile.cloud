@@ -14,7 +14,7 @@ import type {
   LSP4DigitalAssetMetadataJSON,
 } from '@/types/asset'
 
-export function useToken() {
+export function useTokenRpc() {
   return (_token?: MaybeRef<Asset | null | undefined>) => {
     const connectedProfile = useProfile().connectedProfile()
     const profileAddress = computed(() => connectedProfile.value?.address)

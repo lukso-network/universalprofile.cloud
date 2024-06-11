@@ -57,13 +57,13 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
     ></div>
     <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
       <div class="flex space-x-[-14px]">
-        <NftListCardCreatorsProfile
+        <NftListCardCreatorsProfileRpc
           v-for="(creatorAddress, index) in creatorsWithLimit || []"
           :profile-address="creatorAddress"
           :key="index"
           class="relative"
         />
-        <NftListCardCreatorsProfile
+        <NftListCardCreatorsProfileRpc
           v-if="creators[0]"
           :profile-address="creators[0]"
           :count="tooManyCreators ? creators.length - CREATOR_SHOW_LIMIT : 0"

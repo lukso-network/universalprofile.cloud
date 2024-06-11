@@ -4,7 +4,8 @@ import { hexToAscii, stripHexPrefix, toNumber } from 'web3-utils'
 import type { Asset } from '@/types/asset'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
-export function useAsset() {
+// TODO refactor into graph
+export function useAssetGraph() {
   return (
     _address?: MaybeRef<Address | undefined>,
     _tokenId?: MaybeRef<string | undefined>

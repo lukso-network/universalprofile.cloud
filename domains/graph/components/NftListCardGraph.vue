@@ -14,7 +14,7 @@ const connectedProfile = useProfile().connectedProfile()
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
-const token = useToken()(asset)
+const token = asset
 const viewedProfileAddress = getCurrentProfileAddress()
 const assetImage = useAssetImage(token, false, 260)
 const { showModal } = useModal()
@@ -135,7 +135,7 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
             </span>
           </div>
           <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
-          <NftListCardCreators :asset="token" class="mt-4" />
+          <NftListCardCreatorsGraph :asset="token" class="mt-4" />
           <div
             class="mt-4 flex items-end"
             v-if="

@@ -6,7 +6,9 @@ const viewedProfileAddress = getCurrentProfileAddress()
 const { isMobile } = useDevice()
 
 const viewedProfile = useProfile().getProfile(viewedProfileAddress)
-const allTokens = useProfileAssets()(viewedProfileAddress)
+const allTokens = useProfileAssetsGraph()({
+  profileAddress: viewedProfileAddress,
+})
 
 /**
  * Sort assets ascending (A-Z) by their name
@@ -110,6 +112,8 @@ const isLoadingAssets = computed(() =>
 </script>
 
 <template>
+  {{ console.log(allTokens) }}
+  {{ console.log(tokensOwned) }}
   <AppPageLoader :is-loading="viewedProfile?.isLoading">
     <div
       v-if="viewedProfile?.standard === STANDARDS.LSP3"
@@ -152,8 +156,8 @@ const isLoadingAssets = computed(() =>
           ></lukso-sanitize>
         </div>
         <div v-else>
-          <TokenList v-if="hasEmptyTokens" :tokens="tokens" />
-          <NftList v-if="hasEmptyNfts" :nfts="nfts" />
+          <TokenListGraph v-if="hasEmptyTokens" :tokens="tokens" />
+          <NftListGraph v-if="hasEmptyNfts" :nfts="nfts" />
           <AppLoader
             v-if="isLoadingAssets"
             class="relative left-[calc(50%-20px)] mt-20"

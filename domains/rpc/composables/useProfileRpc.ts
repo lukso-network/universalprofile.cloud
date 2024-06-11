@@ -7,6 +7,8 @@ import type { ProfileLink } from '@/types/profile'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 
+type AdditionalQueryOptions = { profileAddress?: Address | null }
+
 export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
   const { currentNetwork } = storeToRefs(useAppStore())
   const { value: { chainId } = { chainId: '' } } = currentNetwork
@@ -14,7 +16,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
   const queries = computed(() => {
     const profileAddress = unref(_profile)
 
-    const queries: QFQueryOptions[] & { profileAddress?: Address | null } = (
+    const queries: QFQueryOptions[] & AdditionalQueryOptions = (
       profileAddress
         ? [
             {
@@ -70,7 +72,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
             ),
           ]
         : []
-    ) as QFQueryOptions[] & { profileAddress?: Address | null }
+    ) as QFQueryOptions[] & AdditionalQueryOptions
     queries.profileAddress = profileAddress
     return queries
   })

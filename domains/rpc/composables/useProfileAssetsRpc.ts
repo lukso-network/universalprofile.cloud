@@ -9,7 +9,7 @@ type AdditionalQueryOptions = {
   allAddresses: Address[]
 }
 
-export function useProfileAssets() {
+export function useProfileAssetsRpc() {
   return (profileAddress?: MaybeRef<Address | null>) => {
     const { currentNetwork } = storeToRefs(useAppStore())
     const profile = useProfile().getProfile(profileAddress as MaybeRef<Address>)

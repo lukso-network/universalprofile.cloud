@@ -152,8 +152,8 @@ const isLoadingAssets = computed(() =>
           ></lukso-sanitize>
         </div>
         <div v-else>
-          <TokenList v-if="hasEmptyTokens" :tokens="tokens" />
-          <NftList v-if="hasEmptyNfts" :nfts="nfts" />
+          <TokenListRpc v-if="hasEmptyTokens" :tokens="tokens" />
+          <NftListRpc v-if="hasEmptyNfts" :nfts="nfts" />
           <AppLoader
             v-if="isLoadingAssets"
             class="relative left-[calc(50%-20px)] mt-20"

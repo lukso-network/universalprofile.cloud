@@ -36,6 +36,10 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
                     id: profileAddress,
                   })
 
+                if (graphLog.enabled) {
+                  graphLog('profile', profile)
+                }
+
                 return profile
               },
               refetchInterval: 120_000,
