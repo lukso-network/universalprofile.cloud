@@ -5,7 +5,7 @@ import {
 } from '@lukso/lsp-smart-contracts'
 import { useQueries } from '@tanstack/vue-query'
 
-import type { ProfileReceivedAssetsQuery } from '@/.nuxt/gql/default'
+import type { ProfileAssetsQuery } from '@/.nuxt/gql/default'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
 type FiltersProfileAssets = {
@@ -14,13 +14,15 @@ type FiltersProfileAssets = {
 
 type AdditionalQueryOptions = { profileAddress?: Address | null }
 
-type QueryResult = ProfileReceivedAssetsQuery
-type QueryResultProfile = ProfileReceivedAssetsQuery['Profile']
+type QueryResult = ProfileAssetsQuery
+type QueryResultProfile = ProfileAssetsQuery['Profile']
 type QueryResultReceivedAsset =
-  ProfileReceivedAssetsQuery['Profile'][0]['receivedAssets'][0]['asset']
-type QueryResultHolds = ProfileReceivedAssetsQuery['Profile'][0]['holds']
+  ProfileAssetsQuery['Profile'][0]['receivedAssets'][0]['asset']
+type QueryResultIssuedAsset =
+  ProfileAssetsQuery['Profile'][0]['lsp12IssuedAssets'][0]['asset']
+type QueryResultHolds = ProfileAssetsQuery['Profile'][0]['holds']
 type QueryResultHoldToken =
-  ProfileReceivedAssetsQuery['Profile'][0]['holds'][0]['token']
+  ProfileAssetsQuery['Profile'][0]['holds'][0]['token']
 
 export function useProfileAssetsGraph() {
   return ({ profileAddress: _profileAddress }: FiltersProfileAssets) => {
@@ -42,7 +44,7 @@ export function useProfileAssetsGraph() {
                 ],
                 queryFn: async () => {
                   const { Profile: profiles }: QueryResult =
-                    await GqlProfileReceivedAssets({
+                    await GqlProfileAssets({
                       address: profileAddress,
                     })
 
@@ -68,48 +70,80 @@ export function useProfileAssetsGraph() {
 
         const profilesData = data?.[0]
 
-        const { receivedAssets, holds } = profilesData || {}
+        const {
+          receivedAssets: lsp5ReceivedAssets,
+          holds,
+          lsp12IssuedAssets,
+        } = profilesData || {}
 
-        const assets = receivedAssets?.flatMap(receivedAsset => {
-          const tokenIdsData: Asset[] = []
+        const receivedAssets =
+          lsp5ReceivedAssets?.flatMap(receivedAsset => {
+            const tokenIdsData: Asset[] = []
 
-          if (receivedAsset.asset?.standard === STANDARDS.LSP8) {
-            holds?.filter(hold => {
-              if (hold.token?.baseAsset?.id === receivedAsset.asset?.id) {
-                tokenIdsData.push(
-                  createAssetObject(
-                    receivedAsset.asset,
-                    hold?.token,
-                    [],
-                    hold.balance,
-                    hold.token?.tokenId
-                  )
-                )
-              }
-            })
-          }
+            if (receivedAsset.asset?.standard === STANDARDS.LSP8) {
+              holds?.filter(hold => {
+                if (hold.token?.baseAsset?.id === receivedAsset.asset?.id) {
+                  tokenIdsData.push({
+                    ...createAssetObject(
+                      receivedAsset.asset,
+                      hold?.token,
+                      [],
+                      hold.balance,
+                      hold.token?.tokenId
+                    ),
+                    isOwned: true,
+                    isIssued: false,
+                  })
+                }
+              })
+            }
 
-          if (tokenIdsData.length === 1) {
-            return tokenIdsData
-          }
+            if (tokenIdsData.length === 1) {
+              return tokenIdsData
+            }
 
-          return createAssetObject(
-            receivedAsset.asset,
-            receivedAsset.asset,
-            tokenIdsData,
-            getBalanceForHold(holds, receivedAsset?.asset?.id) || '0'
-          )
-        })
+            return {
+              ...createAssetObject(
+                receivedAsset.asset,
+                receivedAsset.asset,
+                tokenIdsData,
+                getBalanceForHold(holds, receivedAsset?.asset?.id) || '0'
+              ),
+              isOwned: true,
+              isIssued: false,
+            }
+          }) || []
 
-        return assets
+        const issuedAssets =
+          lsp12IssuedAssets?.flatMap(issuedAsset => {
+            return {
+              ...createAssetObject(
+                issuedAsset.asset,
+                issuedAsset.asset,
+                [],
+                getBalanceForHold(holds, issuedAsset?.asset?.id) || '0'
+              ),
+              isOwned: false,
+              isIssued: true,
+            }
+          }) || []
+
+        if (graphLog.enabled) {
+          graphLog('profile-assets', [...receivedAssets, ...issuedAssets])
+        }
+
+        return [...receivedAssets, ...issuedAssets]
       },
     })
   }
 }
 
 const createAssetObject = (
-  receivedAsset: QueryResultReceivedAsset,
-  rawMetadata: QueryResultReceivedAsset | QueryResultHoldToken,
+  receivedAsset: QueryResultReceivedAsset | QueryResultIssuedAsset,
+  rawMetadata:
+    | QueryResultReceivedAsset
+    | QueryResultIssuedAsset
+    | QueryResultHoldToken,
   tokenIdsData: Asset[],
   balance: string,
   tokenId?: string
@@ -126,8 +160,6 @@ const createAssetObject = (
   })
 
   const asset = {
-    isOwned: true,
-    isIssued: false,
     address: receivedAsset?.id,
     balance,
     standard: receivedAsset?.standard,
@@ -158,10 +190,6 @@ const createAssetObject = (
     tokenId,
     tokenIdsData,
   } as Asset
-
-  if (graphLog.enabled) {
-    graphLog('profile-assets', asset)
-  }
 
   return asset
 }

@@ -1,6 +1,12 @@
-query profileReceivedAssets($address: String!) {
+query profileAssets($address: String!) {
   Profile(where: { id: { _ilike: $address } }) {
     receivedAssets {
+      asset {
+        ...asset
+      }
+    }
+
+    lsp12IssuedAssets {
       asset {
         ...asset
       }

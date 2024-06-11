@@ -112,8 +112,6 @@ const isLoadingAssets = computed(() =>
 </script>
 
 <template>
-  {{ console.log(allTokens) }}
-  {{ console.log(tokensOwned) }}
   <AppPageLoader :is-loading="viewedProfile?.isLoading">
     <div
       v-if="viewedProfile?.standard === STANDARDS.LSP3"
