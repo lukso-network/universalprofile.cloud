@@ -168,6 +168,9 @@ const createAssetObject = (
       address: receivedAsset?.owner?.id,
       name: receivedAsset?.owner?.name,
       profileImage: prepareImages(receivedAsset?.owner?.profileImages),
+      issuedAssets: receivedAsset?.owner?.lsp12IssuedAssets?.map(
+        asset => asset.id
+      ),
     },
     resolvedMetadata: metadata,
     decimals: receivedAsset?.decimals,
@@ -185,6 +188,9 @@ const createAssetObject = (
         address: creator?.profile?.id,
         name: creator?.profile?.name,
         profileImage: prepareImages(creator?.profile?.profileImages),
+        issuedAssets: receivedAsset?.owner?.lsp12IssuedAssets?.map(
+          asset => asset.id
+        ),
       }
     }),
     tokenId,

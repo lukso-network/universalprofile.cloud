@@ -15,7 +15,7 @@ const handleOpenProfile = (address?: Address) => {
   }
 }
 
-const issued = useIssuedAssets().validateAssets(
+const issued = useIssuedAssetsRpc().validateAssets(
   props.creator ? [props.creator] : [],
   props.asset
 )

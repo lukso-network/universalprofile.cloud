@@ -6,4 +6,7 @@ fragment creator on Profile {
     width
     height
   }
+  lsp12IssuedAssets {
+    id
+  }
 }

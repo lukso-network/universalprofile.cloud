@@ -49,4 +49,7 @@ export type ProfileLink = {
   isResolved: boolean
 }
 
-export type Creator = Pick<Profile, 'name' | 'address' | 'profileImage'>
+export type Creator = Pick<
+  Profile,
+  'name' | 'address' | 'profileImage' | 'issuedAssets'
+>

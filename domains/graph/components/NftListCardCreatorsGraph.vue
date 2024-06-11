@@ -11,10 +11,12 @@ const props = defineProps<Props>()
 const asset = computed(() => props.asset)
 const assetAddress = computed(() => asset.value?.address)
 const creators = computed(() => {
-  let items = (props.asset?.tokenCreators || []) as Address[]
-  if (items.length === 0 && props.asset?.owner) {
-    items = [asset.value?.owner as Address]
+  let items = props.asset?.tokenCreatorsData || []
+
+  if (items.length === 0 && props.asset?.ownerData) {
+    items = [asset.value?.ownerData as Creator]
   }
+
   return items
 })
 
@@ -25,7 +27,7 @@ const creatorsWithLimit = computed(() => {
   return creators.value.slice(1)
 })
 
-const issued = useIssuedAssets().validateAssets(creators, assetAddress)
+const issued = useIssuedAssetsGraph().validateAssets(creators, assetAddress)
 
 const verifyStatus = computed<VerifyStatus>(() => {
   const array = Array.from(issued.value?.values() || [])
@@ -58,14 +60,14 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
     <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
       <div class="flex space-x-[-14px]">
         <NftListCardCreatorsProfileGraph
-          v-for="(creatorAddress, index) in creatorsWithLimit || []"
-          :profile-address="creatorAddress"
+          v-for="(creator, index) in creatorsWithLimit || []"
+          :creator="creator"
           :key="index"
           class="relative"
         />
         <NftListCardCreatorsProfileGraph
           v-if="creators[0]"
-          :profile-address="creators[0]"
+          :creator="creators[0]"
           :count="tooManyCreators ? creators.length - CREATOR_SHOW_LIMIT : 0"
           class="relative"
           has-name

@@ -25,7 +25,7 @@ const creatorsWithLimit = computed(() => {
   return creators.value.slice(1)
 })
 
-const issued = useIssuedAssets().validateAssets(creators, assetAddress)
+const issued = useIssuedAssetsRpc().validateAssets(creators, assetAddress)
 
 const verifyStatus = computed<VerifyStatus>(() => {
   const array = Array.from(issued.value?.values() || [])

@@ -34,7 +34,7 @@ export type Asset = {
   rootReferenceContract?: ReferenceContract
   baseURI?: any
   owner?: Address
-  Creator?: Creator
+  ownerData?: Creator
   tokenIdFormat?: number
   tokenName?: string
   tokenSymbol?: string

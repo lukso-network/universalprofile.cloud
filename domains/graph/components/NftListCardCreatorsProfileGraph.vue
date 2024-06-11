@@ -1,14 +1,12 @@
 <script setup lang="ts">
 type Props = {
-  profileAddress?: Address
+  creator?: Creator
   hasName?: boolean
   count?: number
 }
 
 const props = defineProps<Props>()
-const address = computed(() => props.profileAddress)
-const creatorProfile = useProfile().getProfile(address)
-const profileAvatar = useProfileAvatar(creatorProfile, 24)
+const profileAvatar = useProfileAvatar(props.creator, 24)
 </script>
 
 <template>
@@ -23,7 +21,7 @@ const profileAvatar = useProfileAvatar(creatorProfile, 24)
       v-else
       size="x-small"
       :profile-url="profileAvatar?.url"
-      :profile-address="creatorProfile?.address"
+      :profile-address="creator?.address"
       has-identicon
     ></lukso-profile>
     <div class="pl-1" v-if="hasName">
@@ -31,8 +29,8 @@ const profileAvatar = useProfileAvatar(creatorProfile, 24)
         {{ $formatMessage('asset_created_by') }}
       </div>
       <lukso-username
-        :name="creatorProfile?.name"
-        :address="creatorProfile?.address"
+        :name="creator?.name"
+        :address="creator?.address"
         size="x-small"
         class="flex"
         name-color="neutral-20"
