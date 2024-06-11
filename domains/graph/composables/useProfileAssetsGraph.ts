@@ -1,9 +1,9 @@
-import { useQueries } from '@tanstack/vue-query'
 import {
   LSP4_TOKEN_TYPES,
   LSP8_TOKEN_ID_FORMAT,
   type LinkMetadata,
 } from '@lukso/lsp-smart-contracts'
+import { useQueries } from '@tanstack/vue-query'
 
 import type { ProfileReceivedAssetsQuery } from '@/.nuxt/gql/default'
 import type { QFQueryOptions } from '@/utils/queryFunctions'

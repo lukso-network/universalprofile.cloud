@@ -1,5 +1,5 @@
-import { describe, expect, test, vi } from 'vitest'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
+import { describe, expect, test, vi } from 'vitest'
 import { useDataProvider } from '../useDataProvider'
 
 describe('useDataProvider', () => {
