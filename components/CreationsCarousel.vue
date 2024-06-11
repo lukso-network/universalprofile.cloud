@@ -38,11 +38,11 @@ const handleSlideChange = (swiper: Swiper) => {
 const styleVariants = tv({
   slots: {
     bottomShadow:
-      'absolute bottom-0 h-[50px] rounded-[850px] bg-neutral-20 opacity-30 blur-[34px] transition-width',
+      'absolute bottom-0 h-[50px] rounded-[850px] bg-neutral-20 opacity-30 blur-[34px]',
     leftShadow:
-      'absolute bottom-[30px] left-[60px] h-[305px] w-[272px] rotate-90 animate-fade-in-20 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px] transition',
+      'absolute bottom-[30px] left-[60px] h-[305px] w-[272px] rotate-90 animate-fade-in-20 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px]',
     rightShadow:
-      'absolute bottom-[30px] right-[60px] h-[305px] w-[272px] rotate-90 animate-fade-in-20 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px] transition',
+      'absolute bottom-[30px] right-[60px] h-[305px] w-[272px] rotate-90 animate-fade-in-20 rounded-[305px] bg-neutral-20 opacity-20 blur-[34px]',
     leftNavigation:
       'absolute left-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.05] hover:border-neutral-80 active:scale-[0.99] lg:left-[-20px]',
     rightNavigation:
