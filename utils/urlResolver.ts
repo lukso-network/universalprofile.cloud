@@ -13,13 +13,14 @@ export class UrlConverter {
   constructor(destination: string | URL, match?: RegExp | string) {
     this.destination =
       destination instanceof URL ? destination.toString() : destination
-    if (this.destination.slice(-1) != '/') {
+    if (this.destination.slice(-1) !== '/') {
       this.destination += '/'
     }
     this.match = match
   }
 
-  resolveUrl(match: RegExp | string, url: string): string {
+  resolveUrl(_match: RegExp | string, url: string): string {
+    let match = _match
     match = this.match || match
     return url.replaceAll(match, this.destination.toString())
   }
@@ -33,7 +34,7 @@ export class UrlResolver {
   constructor(converters: Array<[string | RegExp, UrlConverter | string]>) {
     for (const item of converters) {
       const [match, _converter] = item
-      if (match == undefined) {
+      if (match === undefined) {
         throw new TypeError('Match criteria not defined')
       }
       const converter =
@@ -47,12 +48,13 @@ export class UrlResolver {
     }
   }
 
-  resolveUrl(url: string): string {
+  resolveUrl(_url: string): string {
     const current = new Set<{
       match: string | RegExp
       converter: UrlConverter
     }>(this.converters)
     let found = true
+    let url = _url
     while (found) {
       found = false
       for (const entry of current) {
