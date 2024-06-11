@@ -34,6 +34,7 @@ export type Asset = {
   rootReferenceContract?: ReferenceContract
   baseURI?: any
   owner?: Address
+  Creator?: Creator
   tokenIdFormat?: number
   tokenName?: string
   tokenSymbol?: string
@@ -44,6 +45,7 @@ export type Asset = {
   tokenIdsOf?: string[]
   tokenURI?: string
   tokenCreators?: Address[]
+  tokenCreatorsData?: Creator[]
   totalSupply?: string
   tokenIdsData?: Asset[]
   resolvedMetadata?: LSP4DigitalAssetMetadata

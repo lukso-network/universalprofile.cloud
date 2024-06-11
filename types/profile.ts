@@ -48,3 +48,5 @@ export type ProfileLink = {
   checksummed: Address
   isResolved: boolean
 }
+
+export type Creator = Pick<Profile, 'name' | 'address' | 'profileImage'>
