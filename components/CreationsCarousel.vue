@@ -100,7 +100,7 @@ const styles = computed(() => {
       class="w-[calc(100vw-48px)] lg:w-full"
     >
       <SwiperSlide v-for="index in 6" :key="index" class="cursor-pointer pb-3"
-        ><NftCard
+        ><NftCard is-fixed-height
       /></SwiperSlide>
     </Swiper>
     <!-- actual swiper with loaded items -->
@@ -127,7 +127,10 @@ const styles = computed(() => {
         v-for="asset in assets"
         :key="asset.address"
         class="cursor-pointer select-none pb-3"
-        ><NftCard :asset="asset" @on-card-click="handleCardClick"
+        ><NftCard
+          :asset="asset"
+          @on-card-click="handleCardClick"
+          is-fixed-height
       /></SwiperSlide>
     </Swiper>
     <!-- navigation -->
