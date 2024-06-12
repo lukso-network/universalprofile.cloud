@@ -1,7 +1,7 @@
 <script setup lang="ts">
 type Props = {
   asset: Asset
-  isFixedHeight: boolean
+  isFixedHeight?: boolean
 }
 
 type Emits = {
