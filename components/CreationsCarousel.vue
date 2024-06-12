@@ -91,7 +91,8 @@ const styles = computed(() => {
     <Swiper
       v-if="isLoading"
       effect="coverflow"
-      :grab-cursor="true"
+      :grab-cursor="false"
+      :allow-touch-move="false"
       :centered-slides="false"
       :coverflow-effect="coverflowEffectOptions"
       :modules="[EffectCoverflow]"
@@ -107,7 +108,8 @@ const styles = computed(() => {
     <Swiper
       v-else
       effect="coverflow"
-      :grab-cursor="true"
+      :grab-cursor="false"
+      :allow-touch-move="false"
       :centered-slides="true"
       :coverflow-effect="coverflowEffectOptions"
       :modules="[EffectCoverflow, Navigation]"
