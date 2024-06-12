@@ -1,12 +1,12 @@
 <script setup lang="ts">
 type Props = {
-  asset: Asset
+  asset?: Asset
   isFixedHeight?: boolean
 }
 
 type Emits = {
-  (event: 'on-card-click', asset: Asset): void
-  (event: 'on-image-click', asset: Asset): void
+  (event: 'on-card-click', asset?: Asset): void
+  (event: 'on-image-click', asset?: Asset): void
 }
 
 const props = defineProps<Props>()
