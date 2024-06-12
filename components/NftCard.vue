@@ -26,9 +26,9 @@ const assetTokenId = computed(() => {
     @click="emits('on-card-click', asset)"
     ><div slot="content">
       <AssetImage
-        class="min-h-[260px] cursor-pointer rounded-t-12"
+        class="min-h-[260px] rounded-t-12"
         :image="assetImage"
-        @click="emits('on-image-click', asset)"
+        @on-click="emits('on-image-click', asset)"
       />
       <div class="relative p-4">
         <div

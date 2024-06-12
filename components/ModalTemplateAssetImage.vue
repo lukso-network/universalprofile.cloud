@@ -25,6 +25,7 @@ const optimizedImage = useOptimizedImage(modal?.data?.asset, 1000)
     <AssetImage
       class="relative max-h-[calc(100vh-100px)] rounded-12"
       :image="optimizedImage"
+      :has-blur="false"
       @on-load="isLoaded = true"
     />
     <ModalCloseCircleButton @click="closeModal" />
