@@ -9,11 +9,16 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { isMobile } = useDevice()
+const { isMobile, isSafari } = useDevice()
 const activeIndex = ref(0)
+const activeAddress = ref<Address>()
 
-const handleCardClick = (asset: Asset) => {
-  navigateTo(tokenRoute(asset.address))
+const handleCardClick = (swiper: Swiper) => {
+  const _address = swiper?.clickedSlide?.dataset?.address as Address | undefined
+  // to fix safari bug where `clickedSlide` is undefined
+  const address = isSafari ? _address || activeAddress.value : _address
+
+  navigateTo(tokenRoute(address))
 }
 
 const isLoading = computed(() => props.assets?.some(asset => asset.isLoading))
@@ -33,6 +38,10 @@ const handleInit = (swiper: Swiper) => {
 
 const handleSlideChange = (swiper: Swiper) => {
   activeIndex.value = swiper.activeIndex
+  const address = swiper.slides[swiper.activeIndex].dataset.address as
+    | Address
+    | undefined
+  activeAddress.value = address
 }
 
 const styleVariants = tv({
@@ -92,7 +101,6 @@ const styles = computed(() => {
       v-if="isLoading"
       effect="coverflow"
       :grab-cursor="false"
-      :allow-touch-move="false"
       :centered-slides="false"
       :coverflow-effect="coverflowEffectOptions"
       :modules="[EffectCoverflow]"
@@ -109,7 +117,6 @@ const styles = computed(() => {
       v-else
       effect="coverflow"
       :grab-cursor="false"
-      :allow-touch-move="false"
       :centered-slides="true"
       :coverflow-effect="coverflowEffectOptions"
       :modules="[EffectCoverflow, Navigation]"
@@ -124,17 +131,17 @@ const styles = computed(() => {
       class="w-[calc(100vw-48px)] lg:w-full"
       @init="handleInit"
       @slide-change="handleSlideChange"
+      @click="handleCardClick"
     >
       <SwiperSlide
         v-for="asset in assets"
         :key="asset.address"
+        :data-address="asset.address"
         class="cursor-pointer select-none pb-3"
-        ><NftCard
-          :asset="asset"
-          @on-card-click="handleCardClick"
-          is-fixed-height
+        ><NftCard :asset="asset" is-fixed-height
       /></SwiperSlide>
     </Swiper>
+
     <!-- navigation -->
     <lukso-icon
       name="arrow-left-lg"

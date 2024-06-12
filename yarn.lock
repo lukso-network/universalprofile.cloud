@@ -18857,10 +18857,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swiper@npm:^10.2.0":
-  version: 10.3.1
-  resolution: "swiper@npm:10.3.1"
-  checksum: 979c23ff3965a0583f75e65b788269f78f9e65f3089f20747216a6334ee7a1d5bee361ee698e7acc6060a140b5443801aec6fcd6f3095ee3acc31771b425124e
+"swiper@npm:11.1.4":
+  version: 11.1.4
+  resolution: "swiper@npm:11.1.4"
+  checksum: c4ecf10dc447921ec8c58a8f9a2b76f1ca6dddbc81aff1caafb8c8504460c9e934a9f709113a757ca91dd0305d2e25337fc512206813ea333492415d7a144757
   languageName: node
   linkType: hard
 
@@ -19926,6 +19926,7 @@ __metadata:
     stylelint-config-standard-scss: "npm:13.0.0"
     stylelint-prettier: "npm:5.0.0"
     stylelint-scss: "npm:6.2.1"
+    swiper: "npm:11.1.4"
     tailwind-variants: "npm:^0.2.1"
     three: "npm:^0.162.0"
     typechain: "npm:^8.3.2"
