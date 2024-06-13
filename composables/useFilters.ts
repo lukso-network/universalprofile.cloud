@@ -1,10 +1,9 @@
 export const useFilters = () => {
   const route = useRoute()
-  const viewedProfile = useProfile().viewedProfile()
 
   // filters and their defaults
   const filters = reactive<Filters>({
-    assetType: viewedProfile.value?.issuedAssets?.length ? 'created' : 'owned', // if profile has creations we show this as default
+    assetType: 'owned',
   })
 
   //--- getters
