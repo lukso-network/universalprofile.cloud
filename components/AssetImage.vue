@@ -7,10 +7,7 @@ type Props = {
   hasVerification?: boolean
 }
 
-type Emits = {
-  (event: 'on-load'): void
-  (event: 'on-click'): void
-}
+type Emits = (event: 'on-load') => void
 
 const props = withDefaults(defineProps<Props>(), {
   image: undefined,
