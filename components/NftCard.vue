@@ -30,7 +30,7 @@ const assetTokenId = computed(() => {
         class="min-h-[360px] cursor-pointer rounded-t-12 md:min-h-[260px]"
         :class="{ 'max-h-[360px] md:max-h-[260px]': isFixedHeight }"
         :image="assetImage"
-        @on-click="emits('on-image-click', asset)"
+        @click="emits('on-image-click', asset)"
       />
       <div class="relative p-4">
         <div

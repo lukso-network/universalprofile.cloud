@@ -4,7 +4,7 @@ import { useElementSize } from '@vueuse/core'
 type Props = {
   image?: ImageItem
   alt?: string
-  hasBlur?: boolean
+  hasVerification?: boolean
 }
 
 type Emits = {
@@ -15,7 +15,7 @@ type Emits = {
 const props = withDefaults(defineProps<Props>(), {
   image: undefined,
   alt: '',
-  hasBlur: true,
+  hasVerification: true,
 })
 const emits = defineEmits<Emits>()
 const isImageLoading = ref(true)
@@ -23,7 +23,7 @@ const hasImageError = ref(false)
 const imageSrc = ref()
 const contentRef = ref()
 const contentWidth = ref(0)
-const hasBlur = ref(props.hasBlur)
+const hasVerification = ref(props.hasVerification)
 const LARGE_IMAGE_BREAKPOINT = 150
 
 const handleError = () => {
@@ -47,13 +47,8 @@ const handleOpenVerificationDocs = (event: Event) => {
   )
 }
 
-const handleRemoveBlur = (event: Event) => {
-  event.stopPropagation()
-  hasBlur.value = false
-}
-
 const isVerificationInvalid = computed(
-  () => unref(props.image)?.verified === 'invalid' && hasBlur.value
+  () => unref(props.image)?.verified === 'invalid' && hasVerification.value
 )
 
 const isLarge = computed(() => contentWidth.value > LARGE_IMAGE_BREAKPOINT)
@@ -113,14 +108,6 @@ onMounted(async () => {
       }"
     >
       <div class="absolute inset-0 bg-neutral-20/20"></div>
-      <lukso-icon
-        v-if="isLarge"
-        name="close-lg"
-        color="neutral-100"
-        size="large"
-        class="absolute right-3 top-4 cursor-pointer hover:scale-105"
-        @click="handleRemoveBlur"
-      ></lukso-icon>
       <div class="z-[1] flex flex-col items-center">
         <img
           src="/images/image-error-icon-white.svg"
@@ -150,7 +137,7 @@ onMounted(async () => {
       </div>
     </div>
     <img
-      class="max-h-[inherit] min-h-[inherit] w-full cursor-pointer bg-neutral-90 object-cover opacity-0 animation-fill-forwards"
+      class="max-h-[inherit] min-h-[inherit] w-full bg-neutral-90 object-cover opacity-0 animation-fill-forwards"
       :class="{
         'animate-fade-in': !isImageLoading,
         blur: isVerificationInvalid,
@@ -158,7 +145,6 @@ onMounted(async () => {
       :src="imageSrc"
       @load="handleLoad"
       @error="handleError"
-      @click="emits('on-click')"
       loading="lazy"
       :alt="alt"
     />
