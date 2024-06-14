@@ -106,9 +106,10 @@ const styles = computed(() => {
       :modules="[EffectCoverflow]"
       :slides-per-view="isMobile ? 1 : SLIDES_PER_VIEW"
       :loop="false"
+      :enabled="false"
       class="w-[calc(100vw-48px)] lg:w-full"
     >
-      <SwiperSlide v-for="index in 6" :key="index" class="cursor-pointer pb-3"
+      <SwiperSlide v-for="index in 6" :key="index" class="pb-3"
         ><NftCard is-fixed-height
       /></SwiperSlide>
     </Swiper>

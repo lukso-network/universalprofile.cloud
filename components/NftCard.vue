@@ -27,8 +27,11 @@ const assetTokenId = computed(() => {
     @click="emits('on-card-click', asset)"
     ><div slot="content">
       <AssetImage
-        class="min-h-[360px] cursor-pointer rounded-t-12 md:min-h-[260px]"
-        :class="{ 'max-h-[360px] md:max-h-[260px]': isFixedHeight }"
+        class="min-h-[360px] rounded-t-12 md:min-h-[260px]"
+        :class="{
+          'max-h-[360px] md:max-h-[260px]': isFixedHeight,
+          'cursor-pointer': asset?.address,
+        }"
         :image="assetImage"
         @click="emits('on-image-click', asset)"
       />
