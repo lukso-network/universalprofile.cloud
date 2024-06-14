@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module',
     '@vite-pwa/nuxt',
     'nuxt-graphql-client',
+    'nuxt-swiper',
   ],
   ...({
     plausible: {

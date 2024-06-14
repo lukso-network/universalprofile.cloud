@@ -99,8 +99,8 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
         class="grid h-full grid-rows-[max-content,auto,max-content] rounded-12 bg-neutral-100"
       >
         <AssetImage
-          :image="assetImage"
-          class="min-h-[260px] rounded-t-12 md:max-h-[260px]"
+          :image="isLoadedAsset ? assetImage : undefined"
+          class="max-h-[360px] min-h-[360px] rounded-t-12 md:max-h-[260px] md:min-h-[260px]"
         />
         <div
           class="relative grid grid-rows-[max-content,max-content,auto] p-4 pt-2"
