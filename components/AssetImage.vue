@@ -4,17 +4,23 @@ import { useElementSize } from '@vueuse/core'
 type Props = {
   image?: ImageItem
   alt?: string
+  hasVerification?: boolean
 }
 
 type Emits = (event: 'on-load') => void
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  image: undefined,
+  alt: '',
+  hasVerification: true,
+})
 const emits = defineEmits<Emits>()
 const isImageLoading = ref(true)
 const hasImageError = ref(false)
 const imageSrc = ref()
 const contentRef = ref()
 const contentWidth = ref(0)
+const hasVerification = ref(props.hasVerification)
 const LARGE_IMAGE_BREAKPOINT = 150
 
 const handleError = () => {
@@ -39,7 +45,7 @@ const handleOpenVerificationDocs = (event: Event) => {
 }
 
 const isVerificationInvalid = computed(
-  () => unref(props.image)?.verified === 'invalid'
+  () => unref(props.image)?.verified === 'invalid' && hasVerification.value
 )
 
 const isLarge = computed(() => contentWidth.value > LARGE_IMAGE_BREAKPOINT)
