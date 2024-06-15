@@ -77,16 +77,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div
-    class="absolute right-4 top-4"
-    @mouseover="handleMouseOver"
-    @mouseleave="handleMouseLeave"
-  >
+  <div @mouseover="handleMouseOver" @mouseleave="handleMouseLeave">
     <lukso-button
       v-if="isCopied"
       size="small"
       variant="secondary"
-      custom-class="px-0 overflow-hidden"
+      custom-class="px-0 overflow-hidden size-[30px]"
+      class=""
       @click="handleAfterCopy"
       ><lukso-icon
         size="small"
@@ -108,7 +105,7 @@ onMounted(async () => {
       v-else
       size="small"
       variant="secondary"
-      custom-class="px-0 overflow-hidden"
+      custom-class="px-0 overflow-hidden size-[30px]"
       @click="handleCopy"
       ><lukso-icon
         size="small"
