@@ -1,8 +1,3 @@
-import {
-  LSP4_TOKEN_TYPES,
-  LSP8_TOKEN_ID_FORMAT,
-  type LinkMetadata,
-} from '@lukso/lsp-smart-contracts'
 import { useQueries } from '@tanstack/vue-query'
 
 import type { ProfileAssetsQuery } from '@/.nuxt/gql/default'
@@ -16,13 +11,7 @@ type AdditionalQueryOptions = { profileAddress?: Address | null }
 
 type QueryResult = ProfileAssetsQuery
 type QueryResultProfile = ProfileAssetsQuery['Profile']
-type QueryResultReceivedAsset =
-  ProfileAssetsQuery['Profile'][0]['receivedAssets'][0]['asset']
-type QueryResultIssuedAsset =
-  ProfileAssetsQuery['Profile'][0]['lsp12IssuedAssets'][0]['asset']
 type QueryResultHolds = ProfileAssetsQuery['Profile'][0]['holds']
-type QueryResultHoldToken =
-  ProfileAssetsQuery['Profile'][0]['holds'][0]['token']
 
 export function useProfileAssetsGraph() {
   return ({ profileAddress: _profileAddress }: FiltersProfileAssets) => {
@@ -37,11 +26,7 @@ export function useProfileAssetsGraph() {
           ? [
               {
                 // 0
-                queryKey: [
-                  'profile-received-assets-graph',
-                  profileAddress,
-                  chainId,
-                ],
+                queryKey: ['profile-assets-graph', profileAddress, chainId],
                 queryFn: async () => {
                   const { Profile: profiles }: QueryResult =
                     await GqlProfileAssets({
@@ -49,7 +34,7 @@ export function useProfileAssetsGraph() {
                     })
 
                   if (graphLog.enabled) {
-                    graphLog('received-assets', profiles)
+                    graphLog('profile-assets', profiles)
                   }
 
                   return profiles as QueryResultProfile
@@ -136,68 +121,6 @@ export function useProfileAssetsGraph() {
       },
     })
   }
-}
-
-const createAssetObject = (
-  receivedAsset: QueryResultReceivedAsset | QueryResultIssuedAsset,
-  rawMetadata:
-    | QueryResultReceivedAsset
-    | QueryResultIssuedAsset
-    | QueryResultHoldToken,
-  tokenIdsData: Asset[],
-  balance: string,
-  tokenId?: string
-) => {
-  const metadata = prepareMetadata({
-    LSP4Metadata: {
-      images: unflatArray(rawMetadata?.images as Image[][]),
-      icon: rawMetadata?.icons as Image[],
-      description: rawMetadata?.description as string,
-      assets: rawMetadata?.assets as AssetMetadata[],
-      attributes: rawMetadata?.attributes as AttributeMetadata[],
-      links: rawMetadata?.links as LinkMetadata[],
-    },
-  })
-
-  const asset = {
-    address: receivedAsset?.id,
-    balance,
-    standard: receivedAsset?.standard,
-    owner: receivedAsset?.owner?.id,
-    ownerData: {
-      address: receivedAsset?.owner?.id,
-      name: receivedAsset?.owner?.name,
-      profileImage: prepareImages(receivedAsset?.owner?.profileImages),
-      issuedAssets: receivedAsset?.owner?.lsp12IssuedAssets?.map(
-        asset => asset?.asset?.id
-      ),
-    },
-    resolvedMetadata: metadata,
-    decimals: receivedAsset?.decimals,
-    totalSupply: receivedAsset?.totalSupply,
-    tokenName: receivedAsset?.lsp4TokenName,
-    tokenSymbol: receivedAsset?.lsp4TokenSymbol,
-    tokenType: receivedAsset?.lsp4TokenType || LSP4_TOKEN_TYPES.TOKEN,
-    tokenIdFormat:
-      receivedAsset?.lsp8TokenIdFormat || LSP8_TOKEN_ID_FORMAT.NUMBER,
-    tokenCreators: receivedAsset?.lsp4Creators.map(
-      creator => creator?.profile?.id
-    ),
-    tokenCreatorsData: receivedAsset?.lsp4Creators.map(creator => {
-      return {
-        address: creator?.profile?.id,
-        name: creator?.profile?.name,
-        profileImage: prepareImages(creator?.profile?.profileImages),
-        issuedAssets: receivedAsset?.owner?.lsp12IssuedAssets?.map(
-          asset => asset?.asset?.id
-        ),
-      }
-    }),
-    tokenId,
-    tokenIdsData,
-  } as Asset
-
-  return asset
 }
 
 const getBalanceForHold = (holds?: QueryResultHolds, _address?: string) => {
