@@ -83,8 +83,8 @@ onMounted(async () => {
       v-if="isCopied"
       size="small"
       variant="secondary"
-      custom-class="px-0 overflow-hidden size-[30px]"
-      class=""
+      custom-class="px-0 overflow-hidden h-[30px]"
+      class="h-[30px] min-w-[30px]"
       @click="handleAfterCopy"
       ><lukso-icon
         size="small"
@@ -106,7 +106,8 @@ onMounted(async () => {
       v-else
       size="small"
       variant="secondary"
-      custom-class="px-0 overflow-hidden size-[30px]"
+      custom-class="px-0 overflow-hidden  h-[30px]"
+      class="h-[30px] min-w-[30px]"
       @click="handleCopy"
       ><lukso-icon
         size="small"

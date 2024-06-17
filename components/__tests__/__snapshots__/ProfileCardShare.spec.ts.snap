@@ -4,7 +4,7 @@ exports[`ProfileCardShare > should render 1`] = `
 "<div id="test-wrapper">
   <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
     <div>
-      <lukso-button size="small" variant="secondary" custom-class="px-0 overflow-hidden size-[30px]">
+      <lukso-button size="small" variant="secondary" custom-class="px-0 overflow-hidden  h-[30px]" class="h-[30px] min-w-[30px]">
         <lukso-icon size="small" name="transaction-send" class="mx-1.5"></lukso-icon>
         <div class="paragraph-inter-12-medium transition-width duration-500 ease-out" style="width: auto;">
           <div class="inline-flex items-center text-nowrap">
