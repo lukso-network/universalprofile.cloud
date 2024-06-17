@@ -74,6 +74,7 @@ const isLoadedMetadata = computed(
               size="medium"
               :profile-address="asset?.address"
               :profile-url="assetImage?.url"
+              placeholder="/assets/images/token-default.svg"
               has-identicon
             ></lukso-profile>
             <AppPlaceholderCircle v-else class="size-14" />

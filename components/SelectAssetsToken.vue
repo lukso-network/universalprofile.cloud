@@ -46,6 +46,11 @@ const assetTokenId = computed(() => {
           :profile-address="asset?.address"
           has-identicon
           :is-square="hasSquareIcon ? true : undefined"
+          :placeholder="
+            isCollectible(token)
+              ? undefined
+              : '/assets/images/token-default.svg'
+          "
         ></lukso-profile>
       </div>
     </div>
