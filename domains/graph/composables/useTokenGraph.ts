@@ -1,5 +1,4 @@
 import { useQueries } from '@tanstack/vue-query'
-import ABICoder from 'web3-eth-abi'
 import { keccak256 } from 'web3-utils'
 
 import { browserProcessMetadata } from '@/utils/processMetadata'
@@ -59,7 +58,7 @@ export function useTokenGraph() {
                 ? queryGetData({
                     // 4
                     chainId,
-                    address: ABICoder.decodeParameter(
+                    address: decodeParameter(
                       'address',
                       tokenId
                     ).toLowerCase() as Address,
@@ -70,7 +69,7 @@ export function useTokenGraph() {
                 ? queryGetData({
                     // 5
                     chainId,
-                    address: ABICoder.decodeParameter(
+                    address: decodeParameter(
                       'address',
                       tokenId
                     ).toLowerCase() as Address,
@@ -137,7 +136,7 @@ export function useTokenGraph() {
                 ? queryGetData({
                     // 9
                     chainId,
-                    address: ABICoder.decodeParameter(
+                    address: decodeParameter(
                       'address',
                       tokenId
                     ).toLowerCase() as Address,

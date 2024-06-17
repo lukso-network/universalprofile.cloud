@@ -1,12 +1,12 @@
 <script setup lang="ts">
 type Props = {
-  asset: Asset
-  isFixedHeight: boolean
+  asset?: Asset
+  isFixedHeight?: boolean
 }
 
 type Emits = {
-  (event: 'on-card-click', asset: Asset): void
-  (event: 'on-image-click', asset: Asset): void
+  (event: 'on-card-click', asset?: Asset): void
+  (event: 'on-image-click', asset?: Asset): void
 }
 
 const props = defineProps<Props>()
@@ -27,8 +27,11 @@ const assetTokenId = computed(() => {
     @click="emits('on-card-click', asset)"
     ><div slot="content">
       <AssetImage
-        class="min-h-[360px] cursor-pointer rounded-t-12 md:min-h-[260px]"
-        :class="{ 'max-h-[360px] md:max-h-[260px]': isFixedHeight }"
+        class="min-h-[360px] rounded-t-12 md:min-h-[260px]"
+        :class="{
+          'max-h-[360px] md:max-h-[260px]': isFixedHeight,
+          'cursor-pointer': asset?.address,
+        }"
         :image="assetImage"
         @click="emits('on-image-click', asset)"
       />
