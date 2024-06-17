@@ -13,9 +13,8 @@ const viewedProfileAddress = getCurrentProfileAddress()
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
-const token = asset
 
-const assetImage = useAssetImage(token, true, 260)
+const assetImage = useAssetImage(asset, true, 260)
 
 const handleShowAsset = () => {
   try {
@@ -47,10 +46,9 @@ onMounted(() => {
   }, 1)
 })
 
-const isLoadedToken = computed(() => token.value && !token.value.isLoading)
 const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
 const isLoadedMetadata = computed(
-  () => token.value && !token.value.isMetadataLoading
+  () => asset.value && !asset.value.isMetadataLoading
 )
 </script>
 
@@ -74,7 +72,7 @@ const isLoadedMetadata = computed(
             <lukso-profile
               v-if="isLoadedMetadata"
               size="medium"
-              :profile-address="token?.address"
+              :profile-address="asset?.address"
               :profile-url="assetImage?.url"
               has-identicon
             ></lukso-profile>
@@ -83,7 +81,7 @@ const isLoadedMetadata = computed(
               v-if="isLoadedAsset"
               class="paragraph-ptmono-10-bold text-neutral-60"
             >
-              #{{ token?.address?.slice(2, 8) }}
+              #{{ asset?.address?.slice(2, 8) }}
             </div>
             <AppPlaceholderLine v-else class="h-[14px] w-full" />
           </div>
@@ -91,30 +89,30 @@ const isLoadedMetadata = computed(
             class="grid w-full grid-rows-[max-content,max-content,auto] gap-1"
           >
             <div class="heading-inter-14-bold break-word">
-              <div v-if="isLoadedAsset">{{ token?.tokenName }}</div>
+              <div v-if="isLoadedAsset">{{ asset?.tokenName }}</div>
               <AppPlaceholderLine v-else class="h-[17px] w-1/3" />
             </div>
             <div
-              v-if="isLoadedToken"
+              v-if="isLoadedAsset"
               class="heading-inter-21-semi-bold grid grid-cols-[minmax(auto,max-content),max-content] flex-wrap items-center"
             >
               <span
-                v-if="token?.balance"
+                v-if="asset?.balance"
                 class="truncate"
                 :title="
                   $formatNumber(
-                    fromTokenUnitWithDecimals(token.balance, token.decimals)
+                    fromTokenUnitWithDecimals(asset.balance, asset.decimals)
                   )
                 "
                 >{{
                   $formatNumber(
-                    fromTokenUnitWithDecimals(token.balance, token.decimals)
+                    fromTokenUnitWithDecimals(asset.balance, asset.decimals)
                   )
                 }}</span
               >
               <span v-else>0</span>
               <span class="paragraph-inter-14-semi-bold pl-2 text-neutral-60">{{
-                truncate(token?.tokenSymbol, 8)
+                truncate(asset?.tokenSymbol, 8)
               }}</span>
             </div>
             <div v-else class="grid grid-cols-[2fr,1fr] items-center gap-2">
@@ -122,10 +120,10 @@ const isLoadedMetadata = computed(
               <AppPlaceholderLine class="h-[22px] w-full" />
             </div>
             <div
-              v-if="token?.balance && token.tokenSymbol"
+              v-if="asset?.balance && asset.tokenSymbol"
               class="paragraph-inter-12-regular"
             >
-              {{ $formatCurrency(token.balance, token.tokenSymbol) }}
+              {{ $formatCurrency(asset.balance, asset.tokenSymbol) }}
             </div>
             <div class="flex w-full items-end justify-end">
               <div v-if="isLoadedAsset">
