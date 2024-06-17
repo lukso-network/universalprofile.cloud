@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ProfileCardShareLink > should render 1`] = `
+"<div id="test-wrapper">
+  <div>
+    <lukso-button size="small" variant="secondary" custom-class="px-0 overflow-hidden size-[30px]">
+      <lukso-icon size="small" name="transaction-send" class="mx-1.5"></lukso-icon>
+      <div class="paragraph-inter-12-medium transition-width duration-500 ease-out" style="width: auto;">
+        <div class="inline-flex items-center text-nowrap">
+          <div class="m-1 mr-1.5 text-neutral-50">universalswaps.io/social/{address}</div>
+        </div>
+        <div class="inline-flex">
+          <div class="mr-1.5"></div>
+        </div>
+      </div>
+    </lukso-button>
+  </div>
+</div>"
+`;

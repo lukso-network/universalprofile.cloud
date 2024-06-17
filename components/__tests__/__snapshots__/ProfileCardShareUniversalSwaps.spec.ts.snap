@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ProfileCardShareUniversalSwaps > should render 1`] = `
+"<div id="test-wrapper">
+  <lukso-tooltip variant="white" text="universalswaps.io" placement="left">
+    <lukso-button size="small" variant="secondary" custom-class="px-0 overflow-hidden size-full" class="group size-[30px]"><img src="/images/universalswaps-logo.png" alt="" class="max-h-4 max-w-[20px] grayscale transition group-hover:grayscale-0"></lukso-button>
+  </lukso-tooltip>
+</div>"
+`;

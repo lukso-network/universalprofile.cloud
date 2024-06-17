@@ -34,6 +34,7 @@ export default defineNuxtConfig({
     '@pinia-orm/nuxt',
     '@nuxt/test-utils/module',
     '@vite-pwa/nuxt',
+    '@nuxt/test-utils/module',
     'nuxt-swiper',
   ],
   ...({

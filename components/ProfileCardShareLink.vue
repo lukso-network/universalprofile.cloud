@@ -12,6 +12,7 @@ const copyRef = ref<HTMLDivElement>()
 const expandedWidth = ref(0)
 const copyWidth = ref(0)
 const buttonWidth = ref('auto')
+const { formatMessage } = useIntl()
 
 const handleCopy = async () => {
   isCopying.value = true
@@ -97,7 +98,7 @@ onMounted(async () => {
         }"
       >
         <div class="mr-1.5 inline-flex">
-          {{ $formatMessage('share_link_copied') }}
+          {{ formatMessage('share_link_copied') }}
         </div>
       </div></lukso-button
     >
@@ -119,14 +120,14 @@ onMounted(async () => {
         }"
       >
         <div ref="expandedRef" class="inline-flex items-center text-nowrap">
-          {{ $formatMessage('share_link_copy') }}
+          {{ formatMessage('share_link_copy') }}
           <div class="m-1 mr-1.5 text-neutral-50">
             {{ removeSchemaFromUrl(linkLabel) }}
           </div>
         </div>
         <div ref="copyRef" class="inline-flex">
           <div class="mr-1.5">
-            {{ $formatMessage('share_link_copied') }}
+            {{ formatMessage('share_link_copied') }}
           </div>
         </div>
       </div></lukso-button
