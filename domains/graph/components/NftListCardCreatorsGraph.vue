@@ -27,9 +27,8 @@ const creatorsWithLimit = computed(() => {
   return creators.value.slice(1)
 })
 
-const issued = useIssuedAssetsGraph().validateAssets(creators, assetAddress)
-
 const verifyStatus = computed<VerifyStatus>(() => {
+  const issued = useIssuedAssetsGraph().validateAssets(creators, assetAddress)
   const array = Array.from(issued.value?.values() || [])
   const hasSome = array?.some(info => info)
   if (!hasSome) {
