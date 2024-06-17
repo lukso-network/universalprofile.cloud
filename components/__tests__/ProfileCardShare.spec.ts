@@ -1,7 +1,7 @@
+import { renderSuspended } from '@nuxt/test-utils/runtime'
+import { screen } from '@testing-library/vue'
 // @vitest-environment nuxt
 import { describe, expect, it, vi } from 'vitest'
-import { screen } from '@testing-library/vue'
-import { renderSuspended } from '@nuxt/test-utils/runtime'
 
 import ProfileCardShare from '@/components/ProfileCardShare.vue'
 

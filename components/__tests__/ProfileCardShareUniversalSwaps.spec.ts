@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from 'vitest'
-import { screen } from '@testing-library/vue'
 import { renderSuspended } from '@nuxt/test-utils/runtime'
+import { screen } from '@testing-library/vue'
+import { describe, expect, it, vi } from 'vitest'
 
 import ProfileCardShareUniversalSwaps from '@/components/ProfileCardShareUniversalSwaps.vue'
 
