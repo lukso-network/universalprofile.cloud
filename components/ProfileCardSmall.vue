@@ -1,30 +1,23 @@
 <script setup lang="ts">
 type Props = {
-  address: Address
+  profile: Profile
 }
 
 const props = defineProps<Props>()
-const profile = useProfile().getProfile(props.address)
-const profileBackground = useProfileBackground(profile, 300)
-const profileAvatar = useProfileAvatar(profile, 80)
-
-const isLoading = computed(() => {
-  return profile.value?.isLoading
-})
+const profileBackground = useProfileBackground(props.profile, 300)
+const profileAvatar = useProfileAvatar(props.profile, 80)
 </script>
 
 <template>
-  <NuxtLink :to="profileRoute(address)" class="flex w-full">
+  <NuxtLink :to="profileRoute(profile.address)" class="flex w-full">
     <lukso-card
-      v-if="!isLoading"
       variant="profile"
       :background-url="profileBackground?.url"
       :profile-url="profileAvatar?.url"
-      :profile-address="isLoading ? '' : address"
       shadow="small"
       is-hoverable
       custom-class="rounded-24"
-      class="transition hover:scale-[1.01]"
+      class="transition hover:scale-[1.02] active:scale-[1.01]"
       height="230"
     >
       <div slot="content" class="flex flex-col items-center px-4 pb-8 pt-1">
@@ -32,32 +25,19 @@ const isLoading = computed(() => {
           <lukso-username
             v-if="profile?.name"
             :name="profile?.name.toLowerCase()"
-            :address="address"
+            :address="profile.address"
             size="large"
             max-width="220"
           ></lukso-username>
           <lukso-username
             v-else
             name="anonymous-profile"
-            :address="address"
+            :address="profile.address"
             size="large"
             max-width="220"
             hide-prefix
           ></lukso-username>
         </div>
-      </div>
-    </lukso-card>
-    <lukso-card
-      v-else
-      variant="profile"
-      size="small"
-      is-hoverable
-      custom-class="rounded-24 shadow-neutral-drop-shadow"
-      class="transition hover:scale-[1.01]"
-      height="230"
-    >
-      <div slot="content" class="flex flex-col items-center px-4 pb-8 pt-1">
-        <AppPlaceholderLine class="h-[22px] w-1/2" />
       </div>
     </lukso-card>
   </NuxtLink>
