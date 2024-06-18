@@ -10,18 +10,6 @@ query profileShowcase {
       ]
     }
   ) {
-    # ...profile
-    name
-    id
-    backgroundImages(limit: 1) {
-      url
-      height
-      width
-    }
-    profileImages(limit: 1) {
-      width
-      url
-      height
-    }
+    ...basicProfile
   }
 }
