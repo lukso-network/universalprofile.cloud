@@ -1,6 +1,6 @@
 # 🆙 universalprofile.cloud
 
-[![Lint, Test, Build](https://github.com/lukso-network/wallet.universalprofile.cloud/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/lukso-network/wallet.universalprofile.cloud/actions/workflows/ci.yml)
+[![Lint, Test, Build](https://github.com/lukso-network/universalprofile.cloud/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/lukso-network/universalprofile.cloud/actions/workflows/ci.yml)
 
 This dApp runs on [LUKSO](https://lukso.network/) network. It allows to:
 
