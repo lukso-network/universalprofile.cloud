@@ -141,7 +141,7 @@ export function useProfileAssetsRpc() {
             },
             { supportsInterfaces: {}, standard: null } as {
               supportsInterfaces: Record<string, boolean>
-              standard: string | null
+              standard: Standard | null
             }
           )
           const isLoading = results.some(result => result.isLoading)

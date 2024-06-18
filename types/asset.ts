@@ -28,7 +28,7 @@ export type Asset = {
   address?: Address
   balance?: string
   decimals?: number
-  standard?: string
+  standard?: Standard
   supportsInterfaces?: Record<string, boolean>
   referenceContract?: ReferenceContract
   rootReferenceContract?: ReferenceContract
