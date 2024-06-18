@@ -15,9 +15,9 @@ query aggregates($address: String!) {
       }
     }
 
-    # count all LSP7 assets that are `tokens` that has a balance on the profile
-    # by `token` we understand LSP7 with `lsp4TokenType = 1`,
-    # we also consider `null` since it might be not set
+    # count all LSP7 assets that are tokens that has a balance on the profile
+    # by token we understand LSP7 with lsp4TokenType = 1,
+    # we also consider null since it might be not set
     ownedTokens: holds_aggregate(
       where: {
         _or: [
@@ -78,9 +78,9 @@ query aggregates($address: String!) {
       }
     }
 
-    # count all LSP7 assets assets that are `tokens` that has been issued by the profile
-    # by `token` we understand LSP7 with `lsp4TokenType = 1`,
-    # we also consider `null` since it might be not set
+    # count all LSP7 assets assets that are tokens that has been issued by the profile
+    # by token we understand LSP7 with lsp4TokenType = 1,
+    # we also consider null since it might be not set
     issuedTokens: lsp12IssuedAssets_aggregate(
       where: {
         _or: [
