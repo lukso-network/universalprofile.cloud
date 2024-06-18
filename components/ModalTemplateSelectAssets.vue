@@ -8,7 +8,10 @@ type Props = {
 
 const profileAddress = computed(() => connectedProfile.value?.address || null)
 const props = defineProps<Props>()
-const allTokens = useProfileAssets()(profileAddress)
+const allAssets = useProfileHolds()(profileAddress)
+const isLoadingAssets = computed(() =>
+  allAssets.value?.some(asset => asset.isLoading)
+)
 
 const handleSelectLyx = () => {
   navigateTo({
@@ -44,8 +47,8 @@ const handleSelectAsset = (asset: Asset) => {
   props.closeModal()
 }
 
-const ownedAssets = computed(() =>
-  allTokens.value
+const ownedAssets = computed(() => {
+  const allAssetsFiltered = allAssets.value
     // unwrap token Ids into main array
     ?.flatMap(token => {
       if (isLsp8(token)) {
@@ -65,19 +68,31 @@ const ownedAssets = computed(() =>
           standard === 'LSP8IdentifiableDigitalAsset') &&
         balance !== '0'
     )
-    // sort so LSP7 tokens are first in the list
-    .sort((a: Asset, _b: Asset) => {
-      if (isToken(a)) {
-        return -1
-      }
 
-      if (isCollectible(a)) {
-        return 1
-      }
+  const allTokens =
+    allAssetsFiltered
+      ?.filter(asset => isToken(asset))
+      // sort by name
+      ?.sort((a: Asset, b: Asset) => {
+        const tokenNameA = a.tokenName || ''
+        const tokenNameB = b.tokenName || ''
 
-      return 0
-    })
-)
+        return tokenNameA.localeCompare(tokenNameB)
+      }) || []
+
+  const allCollectibles =
+    allAssetsFiltered
+      ?.filter(asset => isCollectible(asset))
+      // sort by name
+      ?.sort((a: Asset, b: Asset) => {
+        const tokenNameA = a.tokenName || ''
+        const tokenNameB = b.tokenName || ''
+
+        return tokenNameA.localeCompare(tokenNameB)
+      }) || []
+
+  return [...allTokens, ...allCollectibles]
+})
 </script>
 
 <template>
@@ -88,7 +103,10 @@ const ownedAssets = computed(() =>
       {{ $formatMessage('modal_select_assets_title') }}
       <ModalCloseButton @click="closeModal" />
     </div>
-    <ul class="-mr-4 max-h-72 space-y-2 overflow-y-auto">
+    <div v-if="isLoadingAssets" class="relative h-72">
+      <AppLoader class="absolute left-[calc(50%-20px)] top-[calc(50%-20px)]" />
+    </div>
+    <ul v-else class="-mr-4 max-h-72 space-y-2 overflow-y-auto">
       <li class="mr-4">
         <SelectAssetsLyx
           :is-selected="selectedAsset?.isNativeToken"

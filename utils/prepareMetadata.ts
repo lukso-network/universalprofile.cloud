@@ -17,28 +17,8 @@ export const prepareMetadata = (metadata: LSP4DigitalAssetMetadataJSON) => {
           } as AssetMetadata & { src: string })
         : asset
     }) || []
-  const images =
-    validatedMetadata?.LSP4Metadata?.images?.map((images: any) => {
-      return images.map((image: any) => {
-        const { verification, url } = image
-        return {
-          ...image,
-          src: url.startsWith('ipfs://')
-            ? `${LUKSO_PROXY_API}/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-            : url,
-        } as Image & { src: string }
-      })
-    }) || []
-  const icon =
-    validatedMetadata?.LSP4Metadata?.icon?.map((image: any) => {
-      const { verification, url } = image
-      return {
-        ...image,
-        src: url.startsWith('ipfs://')
-          ? `${LUKSO_PROXY_API}/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
-          : url,
-      } as Image & { src: string }
-    }) || []
+  const images = prepareImagesNested(validatedMetadata?.LSP4Metadata?.images)
+  const icon = prepareImages(validatedMetadata?.LSP4Metadata?.icon)
 
   return {
     images,
@@ -48,4 +28,35 @@ export const prepareMetadata = (metadata: LSP4DigitalAssetMetadataJSON) => {
     links,
     assets,
   } as LSP4DigitalAssetMetadata
+}
+
+export const prepareImage = (image: any) => {
+  const { verification, url } = image
+
+  return {
+    ...image,
+    src: url.startsWith('ipfs://')
+      ? `${LUKSO_PROXY_API}/image/${url.replace(/^ipfs:\/\//, '')}?method=${verification?.method || '0x00000000'}&data=${verification?.data || '0x'}`
+      : url,
+  } as Image & { src: string }
+}
+
+export const prepareImages = (images?: any[]) => {
+  return (
+    images?.map((image: any) => {
+      return prepareImage(image)
+    }) || []
+  )
+}
+
+export const prepareImagesNested = (imagesNested?: any[][]) => {
+  return (
+    imagesNested?.map((images: any) => {
+      return (
+        images?.map((image: any) => {
+          return prepareImage(image)
+        }) || []
+      )
+    }) || []
+  )
 }

@@ -110,6 +110,11 @@ watch(
               :profile-address="asset?.address"
               :has-identicon="isLyx(asset) ? undefined : true"
               :is-square="isCollectible(asset) ? true : undefined"
+              :placeholder="
+                isCollectible(asset)
+                  ? undefined
+                  : '/assets/images/token-default.svg'
+              "
             ></lukso-profile>
           </div>
         </div>

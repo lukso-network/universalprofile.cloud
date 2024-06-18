@@ -14,9 +14,8 @@ const connectedProfile = useProfile().connectedProfile()
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
-const token = useToken()(asset)
 const viewedProfileAddress = getCurrentProfileAddress()
-const assetImage = useAssetImage(token, false, 260)
+const assetImage = useAssetImage(asset, false, 260)
 const { showModal } = useModal()
 
 const handleShowAsset = () => {
@@ -99,8 +98,8 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
         class="grid h-full grid-rows-[max-content,auto,max-content] rounded-12 bg-neutral-100"
       >
         <AssetImage
-          :image="isLoadedAsset ? assetImage : undefined"
-          class="max-h-[360px] min-h-[360px] rounded-t-12 md:max-h-[260px] md:min-h-[260px]"
+          :image="assetImage"
+          class="min-h-[260px] rounded-t-12 md:max-h-[260px]"
         />
         <div
           class="relative grid grid-rows-[max-content,max-content,auto] p-4 pt-2"
@@ -108,34 +107,34 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
           <div
             class="paragraph-inter-14-semi-bold flex flex-wrap items-center gap-x-1 gap-y-0.5 break-word"
           >
-            <span v-if="isLoadedAsset">{{ token?.tokenName }}</span>
+            <span v-if="isLoadedAsset">{{ asset?.tokenName }}</span>
             <AppPlaceholderLine v-else class="my-[2px] h-[18px] w-1/2" />
             <span
               v-if="isLoadedAsset"
               class="paragraph-inter-10-semi-bold text-neutral-60"
-              >{{ truncate(token?.tokenSymbol, 8) }}</span
+              >{{ truncate(asset?.tokenSymbol, 8) }}</span
             >
             <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
           </div>
           <div v-if="isLoadedAsset" class="paragraph-ptmono-10-bold">
-            <span v-if="isCollection(token)">
+            <span v-if="isCollection(asset)">
               {{
                 $formatMessage('token_collection_of', {
                   count: asset?.tokenIdsData?.length.toString() || '0',
                 })
               }}
             </span>
-            <span v-else-if="isLsp8(token) && asset?.tokenId">
+            <span v-else-if="isLsp8(asset) && asset?.tokenId">
               {{ $formatMessage('token_owned') }}
               {{ assetTokenId }}
             </span>
-            <span v-else-if="token?.balance">
+            <span v-else-if="asset?.balance">
               {{ $formatMessage('token_owned') }}
-              {{ token.balance }}
+              {{ asset.balance }}
             </span>
           </div>
           <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
-          <NftListCardCreators :asset="token" class="mt-4" />
+          <NftListCardCreatorsGraph :asset="asset" class="mt-4" />
           <div
             class="mt-4 flex items-end"
             v-if="
@@ -161,15 +160,15 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
         >
           <AssetStandardBadge :asset="asset" />
           <div
-            v-if="isLoadedAsset && token?.address"
+            v-if="isLoadedAsset && asset?.address"
             class="paragraph-ptmono-10-bold flex items-center gap-1 text-neutral-60"
           >
             <img
-              :src="makeBlockie(token.address)"
+              :src="makeBlockie(asset.address)"
               alt=""
               class="size-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
             />
-            {{ token?.address?.slice(0, 6) }}
+            {{ asset?.address?.slice(0, 6) }}
           </div>
           <AppPlaceholderLine v-else class="h-[20px] w-1/5" />
         </div>
