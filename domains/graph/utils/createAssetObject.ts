@@ -6,11 +6,17 @@ import {
 
 export const createAssetObject = (
   receivedAsset: any,
-  rawMetadata: any,
-  tokenIdsData: Asset[],
-  balance: string,
+  _rawMetadata?: any,
+  tokenIdsData: Asset[] = [],
+  balance?: string,
   tokenId?: string
 ) => {
+  let rawMetadata = receivedAsset
+
+  if (_rawMetadata) {
+    rawMetadata = _rawMetadata
+  }
+
   const metadata = prepareMetadata({
     LSP4Metadata: {
       images: unflatArray(rawMetadata?.images as Image[][]),
