@@ -12,6 +12,7 @@ const copyRef = ref<HTMLDivElement>()
 const expandedWidth = ref(0)
 const copyWidth = ref(0)
 const buttonWidth = ref('auto')
+const { formatMessage } = useIntl()
 
 const handleCopy = async () => {
   isCopying.value = true
@@ -77,16 +78,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div
-    class="absolute right-4 top-4"
-    @mouseover="handleMouseOver"
-    @mouseleave="handleMouseLeave"
-  >
+  <div @mouseover="handleMouseOver" @mouseleave="handleMouseLeave">
     <lukso-button
       v-if="isCopied"
       size="small"
       variant="secondary"
-      custom-class="px-0 overflow-hidden"
+      custom-class="px-0 overflow-hidden h-[30px]"
+      class="h-[30px] min-w-[30px]"
       @click="handleAfterCopy"
       ><lukso-icon
         size="small"
@@ -100,7 +98,7 @@ onMounted(async () => {
         }"
       >
         <div class="mr-1.5 inline-flex">
-          {{ $formatMessage('share_link_copied') }}
+          {{ formatMessage('share_link_copied') }}
         </div>
       </div></lukso-button
     >
@@ -108,7 +106,8 @@ onMounted(async () => {
       v-else
       size="small"
       variant="secondary"
-      custom-class="px-0 overflow-hidden"
+      custom-class="px-0 overflow-hidden  h-[30px]"
+      class="h-[30px] min-w-[30px]"
       @click="handleCopy"
       ><lukso-icon
         size="small"
@@ -122,14 +121,14 @@ onMounted(async () => {
         }"
       >
         <div ref="expandedRef" class="inline-flex items-center text-nowrap">
-          {{ $formatMessage('share_link_copy') }}
+          {{ formatMessage('share_link_copy') }}
           <div class="m-1 mr-1.5 text-neutral-50">
             {{ removeSchemaFromUrl(linkLabel) }}
           </div>
         </div>
         <div ref="copyRef" class="inline-flex">
           <div class="mr-1.5">
-            {{ $formatMessage('share_link_copied') }}
+            {{ formatMessage('share_link_copied') }}
           </div>
         </div>
       </div></lukso-button
