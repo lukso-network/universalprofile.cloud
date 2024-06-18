@@ -7,6 +7,7 @@ import type { ProfileSearchQuery } from '@/.nuxt/gql/default'
 const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
 
 const { isSearchOpen } = storeToRefs(useAppStore())
+const { formatMessage } = useIntl()
 const isSearching = ref<boolean>(false)
 const searchTerm = ref<string | Address | undefined>()
 const hasNoResults = ref<boolean>(false)
@@ -97,11 +98,11 @@ watchEffect(() => {
   <lukso-search
     name="profile-search"
     :value="searchTerm"
-    :placeholder="$formatMessage('profile_search_placeholder')"
+    :placeholder="formatMessage('profile_search_placeholder')"
     :results="JSON.stringify(results)"
     :is-searching="isSearching ? 'true' : undefined"
     :show-no-results="hasNoResults ? 'true' : undefined"
-    :no-results-text="$formatMessage('profile_search_no_results')"
+    :no-results-text="formatMessage('profile_search_no_results')"
     is-full-width
     class="w-full"
     @on-search="handleSearch"
