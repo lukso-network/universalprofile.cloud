@@ -4,7 +4,6 @@ definePageMeta({
 })
 
 const { isTestnet } = storeToRefs(useAppStore())
-const { isGraph } = useDataProvider()
 </script>
 
 <template>
@@ -40,7 +39,7 @@ const { isGraph } = useDataProvider()
         <ActivityList v-if="!isTestnet" />
       </div>
       <DappShowcase />
-      <AssetShowcaseGraph v-if="isGraph" />
+      <AssetShowcaseGraph />
     </div>
   </AppPageLoader>
 </template>
