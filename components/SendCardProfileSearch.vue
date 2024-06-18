@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { isAddress, keccak256 } from 'web3-utils'
 
-import type { SearchProfileResult } from '@lukso/web-components'
 import type { ProfileSearchQuery } from '@/.nuxt/gql/default'
+import type { SearchProfileResult } from '@lukso/web-components'
 
 const BLUR_DELAY = 100
 

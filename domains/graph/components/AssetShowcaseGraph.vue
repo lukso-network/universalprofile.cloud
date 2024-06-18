@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { keccak256 } from 'web3-utils'
-
 import type { AssetShowcaseQuery } from '@/.nuxt/gql/default'
 
 const isLoading = ref(false)
