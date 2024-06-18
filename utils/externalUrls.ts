@@ -1,3 +1,6 @@
+import assert from 'assert'
+import { isAddress } from 'web3-utils'
+
 /**
  * URL to transaction on blockchain explorer
  *
@@ -90,4 +93,26 @@ export const myUpDappBaseUrl = () => {
   const { currentNetwork } = storeToRefs(useAppStore())
 
   return `${BASE_MY_UP_CLOUD_URL}?network=${currentNetwork.value.id}`
+}
+
+/**
+ * URL to profile page on universal.page
+ *
+ * @returns
+ */
+export const universalPageProfileUrl = (address?: Address) => {
+  assert(address, 'Address is required')
+  assert(isAddress(address), 'Address is not a valid address')
+  return `https://universal.page/profiles/lukso/${address}`
+}
+
+/**
+ * URL to profile page on universalswaps.io
+ *
+ * @returns
+ */
+export const universalSwapsProfileUrl = (address?: Address) => {
+  assert(address, 'Address is required')
+  assert(isAddress(address), 'Address is not a valid address')
+  return `https://universalswaps.io/social/${address}`
 }
