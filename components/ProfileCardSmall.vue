@@ -17,7 +17,7 @@ const profileAvatar = useProfileAvatar(props.profile, 80)
       shadow="small"
       is-hoverable
       custom-class="rounded-24"
-      class="transition hover:scale-[1.02] active:scale-[1.01]"
+      class="transition hover:scale-[1.01] active:scale-100"
       height="230"
     >
       <div slot="content" class="flex flex-col items-center px-4 pb-8 pt-1">

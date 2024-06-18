@@ -28,8 +28,8 @@ const shuffleProfiles = async () => {
     profilePool.value.length - 1,
     isTestnet.value ? PROFILE_SHOWCASE_LIMIT * 2 : PROFILE_SHOWCASE_LIMIT
   )
-
   const randomProfiles = []
+
   for (const index of profileIndexes) {
     const profileAtIndex = profilePool.value[index]
     const metadata = validateLsp3Metadata({

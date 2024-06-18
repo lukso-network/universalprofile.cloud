@@ -90,7 +90,7 @@ export function useProfileAssetsGraph() {
             return {
               ...createAssetObject(
                 receivedAsset.asset,
-                receivedAsset.asset,
+                null,
                 tokenIdsData,
                 getBalanceForHold(holds, receivedAsset?.asset?.id) || '0'
               ),
@@ -104,7 +104,7 @@ export function useProfileAssetsGraph() {
             return {
               ...createAssetObject(
                 issuedAsset.asset,
-                issuedAsset.asset,
+                null,
                 [],
                 getBalanceForHold(holds, issuedAsset?.asset?.id) || '0'
               ),
