@@ -9,6 +9,9 @@ const viewedProfile = useProfile().getProfile(viewedProfileAddress)
 const allTokens = useProfileAssetsGraph()({
   profileAddress: viewedProfileAddress,
 })
+const aggregates = useAggregatesGraph()({
+  profileAddress: viewedProfileAddress,
+})
 
 /**
  * Sort assets ascending (A-Z) by their name
@@ -44,24 +47,24 @@ const tokensCreated = computed(() =>
   )
 )
 
-const nftsOwned = computed(() =>
+const collectiblesOwned = computed(() =>
   allTokensSorted.value?.filter(
     asset => asset.isOwned && isCollectible(asset) && asset.balance !== '0'
   )
 )
 
-const nftsCreated = computed(() =>
+const collectiblesCreated = computed(() =>
   allTokensSorted.value?.filter(asset => asset.isIssued && isCollectible(asset))
 )
 
 // tokens
 const ownedTokensCount = computed(
   () =>
-    (tokensOwned.value?.length || 0) +
+    aggregates.value.ownedTokensCount +
     (viewedProfile?.value?.balance !== '0' ? 1 : 0) // +1 if user has LYX token
 )
 
-const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
+const createdTokensCount = computed(() => aggregates.value.issuedTokensCount)
 
 const tokens = computed(() => {
   if (isOwned.value) {
@@ -70,40 +73,47 @@ const tokens = computed(() => {
   return tokensCreated.value
 })
 
-// NFTs
-const ownedNftsCount = computed(() => nftsOwned.value?.length || 0)
+// collectibles
+const ownedCollectiblesCount = computed(
+  () => aggregates.value.ownedCollectiblesCount
+)
 
-const createdNftsCount = computed(() => nftsCreated.value?.length || 0)
+const createdCollectiblesCount = computed(
+  () => aggregates.value.issuedCollectiblesCount
+)
 
-const nfts = computed(() => {
+const collectibles = computed(() => {
   if (isOwned.value) {
-    return nftsOwned.value || []
+    return collectiblesOwned.value || []
   }
-  return nftsCreated.value || []
+  return collectiblesCreated.value || []
 })
 
-// assets (tokens + NFTs)
+// assets (tokens + collectibles)
 const ownedAssetsCount = computed(
-  () => ownedTokensCount.value + ownedNftsCount.value
+  () => ownedTokensCount.value + ownedCollectiblesCount.value
 )
 
 const createdAssetsCount = computed(
-  () => createdTokensCount.value + createdNftsCount.value
+  () => createdTokensCount.value + createdCollectiblesCount.value
 )
 
 // empty states
 const hasEmptyCreators = computed(
-  () => isCreated.value && !createdNftsCount.value && !createdTokensCount.value
+  () =>
+    isCreated.value &&
+    !createdCollectiblesCount.value &&
+    !createdTokensCount.value
 )
 
 const hasEmptyTokens = computed(
   () => isOwned.value || (isCreated && createdTokensCount.value)
 )
 
-const hasEmptyNfts = computed(
+const hasEmptyCollectibles = computed(
   () =>
-    (isOwned.value && ownedNftsCount.value) ||
-    (isCreated && createdNftsCount.value)
+    (isOwned.value && ownedCollectiblesCount.value) ||
+    (isCreated && createdCollectiblesCount.value)
 )
 
 const isLoadingAssets = computed(() =>
@@ -120,18 +130,18 @@ const isLoadingAssets = computed(() =>
       <ProfileCard />
       <ProfileDetails />
       <div
-        v-if="nftsCreated.length > 0"
+        v-if="createdCollectiblesCount > 0"
         class="heading-inter-17-semi-bold my-10 flex items-center justify-center"
       >
         {{ $formatMessage('asset_creations') }}
         <span
           class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 bg-neutral-20 px-[2px] py-[1px] text-neutral-100"
-          >{{ nftsCreated.length }}</span
+          >{{ createdCollectiblesCount }}</span
         >
       </div>
       <CreationsCarousel
-        v-if="nftsCreated.length > 0"
-        :assets="nftsCreated"
+        v-if="createdCollectiblesCount > 0"
+        :assets="collectiblesCreated"
         class="mb-10"
       />
       <div>
@@ -170,7 +180,7 @@ const isLoadingAssets = computed(() =>
         </div>
         <div v-else>
           <TokenListGraph v-if="hasEmptyTokens" :tokens="tokens" />
-          <NftListGraph v-if="hasEmptyNfts" :nfts="nfts" />
+          <NftListGraph v-if="hasEmptyCollectibles" :nfts="collectibles" />
           <AppLoader
             v-if="isLoadingAssets"
             class="relative left-[calc(50%-20px)] mt-20"
