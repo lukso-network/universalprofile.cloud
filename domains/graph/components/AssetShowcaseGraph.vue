@@ -32,22 +32,7 @@ const shuffleAssets = async () => {
 
   for (const index of assetIndexes) {
     const assetAtIndex = assetsPool.value[index]
-    const metadata = {
-      icon: assetAtIndex?.icons,
-      images: unflatArray(assetAtIndex.images),
-    }
-    const asset = await browserProcessMetadata(metadata, keccak256)
-
-    randomAssets.push({
-      address: assetAtIndex.id,
-      tokenName: assetAtIndex.lsp4TokenName,
-      tokenSymbol: assetAtIndex.lsp4TokenSymbol,
-      standard: assetAtIndex.standard,
-      resolvedMetadata: {
-        icon: asset.icon,
-        images: asset.images,
-      },
-    } as Asset)
+    randomAssets.push(createAssetObject(assetAtIndex))
   }
 
   assetsOnDisplay.value = randomAssets
@@ -77,7 +62,7 @@ onMounted(async () => {
     <div
       class="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3 xl:grid-cols-4 xl:gap-12"
     >
-      <AssetShowcaseItem
+      <AssetShowcaseItemGraph
         v-for="asset in assetsOnDisplay"
         :key="asset.address"
         :asset="asset"

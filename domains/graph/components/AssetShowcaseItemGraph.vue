@@ -63,7 +63,7 @@ const assetTokenId = computed(() => {
               {{ asset.balance }}
             </span>
           </div>
-          <NftListCardCreators :asset="asset" class="mt-4" />
+          <NftListCardCreatorsGraph :asset="asset" class="mt-4" />
         </div>
         <div
           class="mx-4 flex justify-between border-t border-t-neutral-90 py-3"
