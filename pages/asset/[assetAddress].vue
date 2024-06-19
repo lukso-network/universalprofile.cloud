@@ -1,8 +1,8 @@
 <script setup lang="ts">
-const tokenAddress = computed(
-  () => useRouter().currentRoute.value.params?.tokenAddress
+const assetAddress = computed(
+  () => useRouter().currentRoute.value.params?.assetAddress
 )
-const asset = useAsset()(tokenAddress)
+const asset = useAsset()(assetAddress.value)
 
 onMounted(() => {
   if (isCollectible(asset.value)) {
