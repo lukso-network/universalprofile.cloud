@@ -14,11 +14,7 @@ defineProps<Props>()
     <div
       class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3"
     >
-      <NftListCardRpc
-        v-for="(asset, index) in nfts"
-        :key="index"
-        :asset="asset"
-      />
+      <NftListCard v-for="(asset, index) in nfts" :key="index" :asset="asset" />
     </div>
   </div>
 </template>

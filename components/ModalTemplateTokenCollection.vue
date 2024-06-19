@@ -22,6 +22,7 @@ const handleViewEntireCollection = () => {
 </script>
 
 <template>
+  {{ genericLog(asset?.tokenName, toRaw(asset)) }}
   <div class="relative rounded-12 bg-neutral-100 p-6 pb-2">
     <div class="flex items-center justify-between pb-6">
       <div
