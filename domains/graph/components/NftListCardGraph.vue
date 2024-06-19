@@ -19,27 +19,17 @@ const assetImage = useAssetImage(asset, false, 260)
 const { showModal } = useModal()
 
 const handleShowAsset = () => {
-  try {
-    assertAddress(props.asset?.address)
-
-    if (isCollection(props.asset)) {
-      return showModal({
-        template: 'TokenCollection',
-        data: {
-          asset: props.asset,
-        },
-        size: 'medium',
-      })
-    }
-
-    if (props.asset?.tokenId) {
-      return navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
-    }
-
-    navigateTo(tokenRoute(props.asset.address))
-  } catch (error) {
-    console.error(error)
+  if (isCollection(props.asset)) {
+    return showModal({
+      template: 'TokenCollection',
+      data: {
+        asset: props.asset,
+      },
+      size: 'medium',
+    })
   }
+
+  navigateTo(assetRoute(props.asset.address, props.asset.tokenId))
 }
 
 const handleSendAsset = (event: Event) => {

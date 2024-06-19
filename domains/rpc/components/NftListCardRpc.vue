@@ -32,11 +32,7 @@ const handleShowAsset = () => {
       })
     }
 
-    if (props.asset?.tokenId) {
-      return navigateTo(nftRoute(props.asset.address, props.asset.tokenId))
-    }
-
-    navigateTo(tokenRoute(props.asset.address))
+    navigateTo(assetRoute(props.asset.address, props.asset.tokenId))
   } catch (error) {
     console.error(error)
   }

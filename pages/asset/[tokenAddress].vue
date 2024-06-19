@@ -6,7 +6,7 @@ const asset = useAsset()(tokenAddress)
 
 onMounted(() => {
   if (isCollectible(asset.value)) {
-    navigateTo(tokenRoute(asset.value?.address as Address))
+    navigateTo(assetRoute(asset.value?.address as Address))
   }
 })
 </script>

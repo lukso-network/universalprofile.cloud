@@ -18,12 +18,7 @@ const token = useToken()(asset)
 const assetImage = useAssetImage(token, true, 260)
 
 const handleShowAsset = () => {
-  try {
-    assertAddress(props.asset?.address, 'asset')
-    navigateTo(tokenRoute(props.asset.address))
-  } catch (error) {
-    console.error(error)
-  }
+  navigateTo(assetRoute(props.asset.address))
 }
 
 const handleSendAsset = (event: Event) => {

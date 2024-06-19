@@ -11,7 +11,7 @@ const target = ref<HTMLElement | null>(null)
 const assetImage = useAssetImage(props.asset, false, 260)
 
 const handleShowAsset = () => {
-  navigateTo(tokenRoute(props.asset.address))
+  navigateTo(assetRoute(props.asset.address))
 }
 
 const assetTokenId = computed(() => {
