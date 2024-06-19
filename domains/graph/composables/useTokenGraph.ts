@@ -18,8 +18,7 @@ export function useTokenGraph() {
   return (_token?: MaybeRef<Asset | null | undefined>) => {
     const connectedProfile = useProfile().connectedProfile()
     const profileAddress = computed(() => connectedProfile.value?.address)
-    const { currentNetwork } = storeToRefs(useAppStore())
-    const { value: { chainId } = { chainId: '' } } = currentNetwork
+    const { selectedChainId: chainId } = useAppStore()
     const queries = computed(() => {
       const token: Asset | null = isRef(_token)
         ? _token.value || null

@@ -14,8 +14,7 @@ type QueryResultProfile = AggregatesQuery['Profile']
 
 export function useAggregatesGraph() {
   return ({ profileAddress: _profileAddress }: FiltersProfileAssets) => {
-    const { currentNetwork } = storeToRefs(useAppStore())
-    const { value: { chainId } = { chainId: '' } } = currentNetwork
+    const { selectedChainId: chainId } = useAppStore()
 
     const queries = computed(() => {
       const profileAddress = unref(_profileAddress)
@@ -33,7 +32,7 @@ export function useAggregatesGraph() {
                     })
 
                   if (graphLog.enabled) {
-                    graphLog('aggregates', profiles)
+                    graphLog('aggregates-raw', profiles)
                   }
 
                   return profiles as QueryResultProfile
