@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const address = useRouter().currentRoute.value.params?.nftAddress
+const address = useRouter().currentRoute.value.params?.assetAddress
 const tokenId = useRouter().currentRoute.value.params?.tokenId
 const asset = useAsset()(address, tokenId)
 </script>
