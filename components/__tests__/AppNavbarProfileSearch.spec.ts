@@ -1,7 +1,6 @@
-import { mountSuspended, renderSuspended } from '@nuxt/test-utils/runtime'
+import { renderSuspended } from '@nuxt/test-utils/runtime'
 import { fireEvent, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { shadowRoot } from './../../node_modules/happy-dom/src/PropertySymbol'
 
 import AppNavbarProfileSearch from '@/components/AppNavbarProfileSearch.vue'
 

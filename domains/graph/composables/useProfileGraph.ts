@@ -1,5 +1,4 @@
 import { useQueries } from '@tanstack/vue-query'
-import { toChecksumAddress } from 'web3-utils'
 
 import type { ProfileQuery } from '@/.nuxt/gql/default'
 import type { ProfileLink } from '@/types/profile'

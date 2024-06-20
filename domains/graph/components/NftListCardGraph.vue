@@ -115,7 +115,9 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
               }}
             </span>
             <span v-else-if="isLsp8(asset) && asset?.tokenId">
-              {{ $formatMessage('token_owned') }}
+              <span v-if="asset.isOwned">{{
+                $formatMessage('token_owned')
+              }}</span>
               {{ assetTokenId }}
             </span>
             <span v-else-if="asset?.balance">

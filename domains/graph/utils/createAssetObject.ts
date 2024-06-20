@@ -8,8 +8,7 @@ export const createAssetObject = (
   receivedAsset: any,
   _rawMetadata?: any,
   tokenIdsData: Asset[] = [],
-  balance?: string,
-  tokenId?: string
+  balance?: string
 ) => {
   let rawMetadata = receivedAsset
 
@@ -62,7 +61,7 @@ export const createAssetObject = (
         ),
       }
     }),
-    tokenId,
+    tokenId: rawMetadata?.tokenId,
     tokenIdsData,
   } as Asset
 
