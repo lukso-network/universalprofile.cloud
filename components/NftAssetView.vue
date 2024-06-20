@@ -49,6 +49,10 @@ const handlePreviewImage = () => {
     size: 'auto',
   })
 }
+
+const handleViewCollection = () => {
+  navigateTo(collectionRoute(props.asset?.address))
+}
 </script>
 
 <template>
@@ -58,19 +62,29 @@ const handlePreviewImage = () => {
   >
     <div>
       <NftCard :asset="asset" @on-image-click="handlePreviewImage" />
-      <div v-if="asset?.balance !== '0' && isConnected">
-        <AssetOwnInfo
-          :address="connectedProfile?.address"
-          :balance="asset?.balance"
-          :symbol="asset?.tokenSymbol"
-          :decimals="0"
-          :profile-image-url="profileAvatar?.url"
-          :message="$formatMessage('nft_details_own')"
-        />
-
-        <lukso-button is-full-width class="mt-12" @click="handleSendAsset">{{
-          $formatMessage('token_details_send_collectible')
-        }}</lukso-button>
+      <AssetOwnInfo
+        v-if="asset?.balance !== '0' && isConnected"
+        :address="connectedProfile?.address"
+        :balance="asset?.balance"
+        :symbol="asset?.tokenSymbol"
+        :decimals="0"
+        :profile-image-url="profileAvatar?.url"
+        :message="$formatMessage('nft_details_own')"
+      />
+      <div class="mt-12 flex flex-col gap-2">
+        <lukso-button
+          v-if="isLsp8(token)"
+          variant="secondary"
+          is-full-width
+          @click="handleViewCollection"
+          >{{ $formatMessage('token_details_show_collection') }}</lukso-button
+        >
+        <lukso-button
+          v-if="asset?.balance !== '0' && isConnected"
+          is-full-width
+          @click="handleSendAsset"
+          >{{ $formatMessage('token_details_send_collectible') }}</lukso-button
+        >
       </div>
     </div>
     <div>

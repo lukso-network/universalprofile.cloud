@@ -6,6 +6,7 @@ export function useToken() {
       return useTokenRpc()(asset)
     }
 
-    return useTokenGraph()(asset)
+    // since in graph we already have all the data we pass through
+    return toRef(asset)
   }
 }

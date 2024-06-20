@@ -65,21 +65,26 @@ const handlePreviewImage = () => {
             ></lukso-profile>
           </div>
         </lukso-card>
-        <div v-if="token?.balance !== '0' && isConnected">
-          <AssetOwnInfo
-            :address="connectedProfile?.address"
-            :balance="token?.balance"
-            :symbol="token?.tokenSymbol"
-            :decimals="token?.decimals"
-            :profile-image-url="profileAvatar?.url"
-            :message="$formatMessage('token_details_own')"
-          />
-
-          <lukso-button is-full-width class="mt-12" @click="handleSendAsset">{{
-            $formatMessage('token_details_send', {
-              token: truncate(token?.tokenSymbol, 10) || '',
-            })
-          }}</lukso-button>
+        <AssetOwnInfo
+          v-if="token?.balance !== '0' && isConnected"
+          :address="connectedProfile?.address"
+          :balance="token?.balance"
+          :symbol="token?.tokenSymbol"
+          :decimals="token?.decimals"
+          :profile-image-url="profileAvatar?.url"
+          :message="$formatMessage('token_details_own')"
+        />
+        <div class="mt-12 flex flex-col gap-2">
+          <lukso-button
+            v-if="asset?.balance !== '0' && isConnected"
+            is-full-width
+            @click="handleSendAsset"
+            >{{
+              $formatMessage('token_details_send', {
+                token: truncate(token?.tokenSymbol, 10) || '',
+              })
+            }}</lukso-button
+          >
         </div>
       </div>
       <div>
