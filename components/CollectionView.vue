@@ -5,10 +5,17 @@ type Props = {
 
 const props = defineProps<Props>()
 const { isMobile } = useDevice()
+const { isRpc } = useDataProvider()
 const asset = computed(() => props.asset)
-const assetImage = useAssetImage(asset, false, 880)
+const token = useToken()(asset)
+const assetImage = useAssetImage(token, false, 880)
 
 const loadMore = async (): Promise<LoadMoreParams> => {
+  if (isRpc) {
+    // we cannot fetch collection using RPC
+    return { data: [], meta: { total: 0 } }
+  }
+
   const { collection: data, meta } = await useCollectionGraph({
     address: asset.value?.address,
     limit: limit.value,
@@ -22,8 +29,8 @@ const { offset, limit, isLoading, hasData, data } = useLoadMoreData(loadMore)
 
 const hasLinks = computed(
   () =>
-    asset?.value?.resolvedMetadata?.links &&
-    asset?.value?.resolvedMetadata?.links?.length > 0
+    token?.value?.resolvedMetadata?.links &&
+    token?.value?.resolvedMetadata?.links?.length > 0
 )
 </script>
 
@@ -46,14 +53,14 @@ const hasLinks = computed(
           <div><!-- TBA --></div>
         </div>
         <div class="paragraph-inter-12-regular whitespace-pre-line break-word">
-          {{ asset?.resolvedMetadata?.description }}
+          {{ token?.resolvedMetadata?.description }}
         </div>
         <ul
           v-if="hasLinks"
           class="mt-4 flex flex-col flex-wrap gap-x-4 gap-y-2 sm:flex-row"
         >
           <li
-            v-for="(link, index) in asset?.resolvedMetadata?.links"
+            v-for="(link, index) in token?.resolvedMetadata?.links"
             :key="index"
             class="inline-flex"
           >
