@@ -1,4 +1,4 @@
-import { useDebounceFn, useInfiniteScroll } from '@vueuse/core'
+import { useInfiniteScroll } from '@vueuse/core'
 
 export type LoadMoreParams = {
   data: any[]
@@ -33,12 +33,13 @@ export const useLoadMoreData = (
   const el = ref<Document | null>(null)
   const hasData = computed(() => data.value.length > 0)
 
-  const loadMore = useDebounceFn(async () => {
+  const loadMore = async () => {
     if (total.value !== null && offset.value >= total.value) {
       return
     }
 
     isLoading.value = true
+    await sleep(delay)
 
     try {
       const { data: _data, meta } = await queryCall()
@@ -50,7 +51,7 @@ export const useLoadMoreData = (
     }
 
     isLoading.value = false
-  }, delay)
+  }
 
   useInfiniteScroll(el, loadMore, { distance })
 
