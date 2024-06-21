@@ -29,7 +29,7 @@ export const createAssetObject = (
 
   const asset = {
     address: receivedAsset?.id,
-    balance: balance || '0',
+    balance,
     standard: receivedAsset?.standard,
     owner: receivedAsset?.owner?.id,
     ownerData: {

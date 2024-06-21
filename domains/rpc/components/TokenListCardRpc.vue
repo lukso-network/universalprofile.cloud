@@ -94,16 +94,22 @@ const isLoadedMetadata = computed(
               class="heading-inter-21-semi-bold grid grid-cols-[minmax(auto,max-content),max-content] flex-wrap items-center"
             >
               <span
-                v-if="token?.balance"
+                v-if="hasBalance(token)"
                 class="truncate"
                 :title="
                   $formatNumber(
-                    fromTokenUnitWithDecimals(token.balance, token.decimals)
+                    fromTokenUnitWithDecimals(
+                      getBalance(token),
+                      token?.decimals
+                    )
                   )
                 "
                 >{{
                   $formatNumber(
-                    fromTokenUnitWithDecimals(token.balance, token.decimals)
+                    fromTokenUnitWithDecimals(
+                      getBalance(token),
+                      token?.decimals
+                    )
                   )
                 }}</span
               >
@@ -117,10 +123,10 @@ const isLoadedMetadata = computed(
               <AppPlaceholderLine class="h-[22px] w-full" />
             </div>
             <div
-              v-if="token?.balance && token.tokenSymbol"
+              v-if="hasBalance(token) && token?.tokenSymbol"
               class="paragraph-inter-12-regular"
             >
-              {{ $formatCurrency(token.balance, token.tokenSymbol) }}
+              {{ $formatCurrency(getBalance(token), token.tokenSymbol) }}
             </div>
             <div class="flex w-full items-end justify-end">
               <div v-if="isLoadedAsset">

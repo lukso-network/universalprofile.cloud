@@ -66,9 +66,9 @@ const handlePreviewImage = () => {
           </div>
         </lukso-card>
         <AssetOwnInfo
-          v-if="token?.balance !== '0' && isConnected"
+          v-if="hasBalance(token) && isConnected"
           :address="connectedProfile?.address"
-          :balance="token?.balance"
+          :balance="getBalance(token)"
           :symbol="token?.tokenSymbol"
           :decimals="token?.decimals"
           :profile-image-url="profileAvatar?.url"
@@ -76,7 +76,7 @@ const handlePreviewImage = () => {
         />
         <div class="mt-12 flex flex-col gap-2">
           <lukso-button
-            v-if="asset?.balance !== '0' && isConnected"
+            v-if="hasBalance(asset) && isConnected"
             is-full-width
             @click="handleSendAsset"
             >{{
