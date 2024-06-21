@@ -1,5 +1,5 @@
 query assetShowcase {
-  Asset(
+  assets: Asset(
     limit: 500
     distinct_on: lsp4TokenName
     order_by: [{ lsp4TokenName: asc }, { blockNumber: desc }]

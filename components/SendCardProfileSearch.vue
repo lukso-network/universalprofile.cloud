@@ -113,17 +113,15 @@ const searchProfile = async (searchTerm?: string) => {
     return
   }
 
-  const { Profile: searchResults }: ProfileSearchQuery = await GqlProfileSearch(
-    {
-      search: `%${searchTerm}%`,
-    }
-  )
+  const { profiles }: ProfileSearchQuery = await GqlProfileSearch({
+    search: `%${searchTerm}%`,
+  })
 
   if (graphLog.enabled) {
-    graphLog('profileSearch', searchResults)
+    graphLog('profileSearch', profiles)
   }
 
-  return searchResults
+  return profiles
 }
 
 const handleSelect = async (event: CustomEvent) => {
