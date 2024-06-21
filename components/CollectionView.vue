@@ -4,7 +4,6 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { isMobile } = useDevice()
 const { isRpc } = useDataProvider()
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
@@ -26,12 +25,6 @@ const loadMore = async (): Promise<LoadMoreParams> => {
 }
 
 const { offset, limit, isLoading, hasData, data } = useLoadMoreData(loadMore)
-
-const hasLinks = computed(
-  () =>
-    token?.value?.resolvedMetadata?.links &&
-    token?.value?.resolvedMetadata?.links?.length > 0
-)
 </script>
 
 <template>
@@ -52,35 +45,13 @@ const hasLinks = computed(
           </div>
           <div><!-- TBA --></div>
         </div>
-        <div class="paragraph-inter-12-regular whitespace-pre-line break-word">
-          {{ token?.resolvedMetadata?.description }}
-        </div>
-        <ul
-          v-if="hasLinks"
-          class="mt-4 flex flex-col flex-wrap gap-x-4 gap-y-2 sm:flex-row"
-        >
-          <li
-            v-for="(link, index) in token?.resolvedMetadata?.links"
-            :key="index"
-            class="inline-flex"
-          >
-            <lukso-button
-              :size="isMobile ? 'medium' : 'small'"
-              :href="link.url"
-              is-link
-              variant="secondary"
-              class="transition hover:opacity-70"
-              is-full-width
-            >
-              <lukso-icon
-                name="link"
-                :size="isMobile ? 'medium' : 'small'"
-                class="mr-2"
-              ></lukso-icon>
-              {{ link.title }}
-            </lukso-button>
-          </li>
-        </ul>
+        <AssetDescription :asset="token" without-title />
+        <AssetLinks
+          :asset="token"
+          without-title
+          button-size="small"
+          class="mt-4"
+        />
       </div>
     </lukso-card>
     <div v-if="hasData">

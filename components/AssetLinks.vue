@@ -1,9 +1,16 @@
 <script setup lang="ts">
+import type { ButtonSize } from '@lukso/web-components'
+
 type Props = {
   asset?: Asset
+  buttonSize?: ButtonSize
+  withoutTitle?: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  asset: undefined,
+  buttonSize: 'medium',
+})
 const { isMobile } = useDevice()
 const isLoaded = computed(() => props.asset && !props.asset?.isMetadataLoading)
 const links = computed(() => props.asset?.resolvedMetadata?.links)
@@ -11,14 +18,15 @@ const links = computed(() => props.asset?.resolvedMetadata?.links)
 
 <template>
   <div v-if="isLoaded">
-    <div v-if="links?.length" class="mb-8">
-      <div class="heading-inter-14-bold pb-2">
+    <div v-if="links?.length">
+      <div v-if="!withoutTitle" class="heading-inter-14-bold pb-2">
         {{ $formatMessage('asset_links_title') }}
       </div>
       <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
         <div v-for="(link, index) in links" :key="index" class="inline-flex">
           <lukso-button
             variant="secondary"
+            :size="buttonSize"
             is-link
             :href="link.url"
             :is-full-width="isMobile ? true : undefined"
@@ -34,7 +42,17 @@ const links = computed(() => props.asset?.resolvedMetadata?.links)
     </div>
   </div>
   <AppPlaceholderSection v-else slot-class="flex gap-4">
-    <AppPlaceholderLine class="h-[48px] w-[170px]" />
-    <AppPlaceholderLine class="h-[48px] w-[140px]" />
+    <AppPlaceholderLine
+      :class="{
+        'h-[48px] w-[170px]': buttonSize === 'medium',
+        'h-[24px] w-[90px]': buttonSize === 'small',
+      }"
+    />
+    <AppPlaceholderLine
+      :class="{
+        'h-[48px] w-[170px]': buttonSize === 'medium',
+        'h-[24px] w-[90px]': buttonSize === 'small',
+      }"
+    />
   </AppPlaceholderSection>
 </template>
