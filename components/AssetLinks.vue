@@ -10,8 +10,10 @@ type Props = {
 const props = withDefaults(defineProps<Props>(), {
   asset: undefined,
   buttonSize: 'medium',
+  withoutTitle: false,
 })
 const { isMobile } = useDevice()
+const { formatMessage } = useIntl()
 const isLoaded = computed(() => props.asset && !props.asset?.isMetadataLoading)
 const links = computed(() => props.asset?.resolvedMetadata?.links)
 </script>
@@ -20,7 +22,7 @@ const links = computed(() => props.asset?.resolvedMetadata?.links)
   <div v-if="isLoaded">
     <div v-if="links?.length">
       <div v-if="!withoutTitle" class="heading-inter-14-bold pb-2">
-        {{ $formatMessage('asset_links_title') }}
+        {{ formatMessage('asset_links_title') }}
       </div>
       <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
         <div v-for="(link, index) in links" :key="index" class="inline-flex">
