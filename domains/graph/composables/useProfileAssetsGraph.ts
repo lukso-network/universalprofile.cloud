@@ -15,8 +15,7 @@ type QueryResultHolds = ProfileAssetsQuery['profiles'][0]['holds']
 
 export function useProfileAssetsGraph() {
   return ({ profileAddress: _profileAddress }: FiltersProfileAssets) => {
-    const { currentNetwork } = storeToRefs(useAppStore())
-    const { value: { chainId } = { chainId: '' } } = currentNetwork
+    const { selectedChainId: chainId } = useAppStore()
 
     const queries = computed(() => {
       const profileAddress = unref(_profileAddress)
@@ -33,7 +32,7 @@ export function useProfileAssetsGraph() {
                   })
 
                   if (graphLog.enabled) {
-                    graphLog('profile-assets', profiles)
+                    graphLog('profile-assets-raw', profiles)
                   }
 
                   return profiles as QueryResultProfile
@@ -51,7 +50,6 @@ export function useProfileAssetsGraph() {
       queries,
       combine: results => {
         const data = results[0]?.data as QueryResultProfile | undefined
-
         const profilesData = data?.[0]
 
         const {
@@ -72,8 +70,7 @@ export function useProfileAssetsGraph() {
                       receivedAsset.asset,
                       hold?.token,
                       [],
-                      hold.balance,
-                      hold.token?.tokenId
+                      hold.balance
                     ),
                     isOwned: true,
                     isIssued: false,

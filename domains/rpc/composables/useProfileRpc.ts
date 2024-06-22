@@ -10,8 +10,7 @@ import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 type AdditionalQueryOptions = { profileAddress?: Address | null }
 
 export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
-  const { currentNetwork } = storeToRefs(useAppStore())
-  const { value: { chainId } = { chainId: '' } } = currentNetwork
+  const { selectedChainId: chainId } = useAppStore()
 
   const queries = computed(() => {
     const profileAddress = unref(_profile)

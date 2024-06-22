@@ -10,6 +10,11 @@ export const assetRoute = (assetAddress?: Address, tokenId?: string) => {
   return `/asset/${assetAddress}`
 }
 
+export const collectionRoute = (assetAddress?: Address) => {
+  assert(assetAddress, 'Missing asset address in route')
+  return `/collection/${assetAddress}`
+}
+
 export const gotoContract = (address: Address) => `/contract/${address}`
 
 export const profileRoute = (profileAddress?: Address) => {

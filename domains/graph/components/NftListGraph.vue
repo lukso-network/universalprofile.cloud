@@ -1,6 +1,7 @@
 <script setup lang="ts">
 type Props = {
   nfts?: Asset[]
+  withoutTitle?: boolean
 }
 
 defineProps<Props>()
@@ -8,7 +9,7 @@ defineProps<Props>()
 
 <template>
   <div class="pt-8">
-    <h3 class="heading-inter-17-semi-bold pb-4">
+    <h3 v-if="!withoutTitle" class="heading-inter-17-semi-bold pb-4">
       {{ $formatMessage('collectibles_title') }}
     </h3>
     <div

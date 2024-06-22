@@ -11,11 +11,10 @@ type AdditionalQueryOptions = {
 
 export function useProfileAssetsRpc() {
   return (profileAddress?: MaybeRef<Address | null>) => {
-    const { currentNetwork } = storeToRefs(useAppStore())
+    const { selectedChainId: chainId } = useAppStore()
     const profile = useProfile().getProfile(profileAddress as MaybeRef<Address>)
     const queries: ComputedRef<Array<QFQueryOptions> & AdditionalQueryOptions> =
       computed(() => {
-        const { value: { chainId } = { chainId: '' } } = currentNetwork
         const receivedAssetCount = profile?.value?.receivedAssets?.length || 0
         const allAddresses = ([] as `0x${string}`[]).concat(
           profile?.value?.receivedAssets || [],

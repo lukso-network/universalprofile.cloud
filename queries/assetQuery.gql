@@ -1,0 +1,5 @@
+query asset($address: String!) {
+  asset: Asset(where: { id: { _ilike: $address } }, limit: 1) {
+    ...asset
+  }
+}

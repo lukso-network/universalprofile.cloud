@@ -17,7 +17,7 @@ const asset = computed(() => modal?.data?.asset)
 const tokenIdsData = computed(() => asset.value?.tokenIdsData)
 
 const handleViewEntireCollection = () => {
-  // TBA later
+  navigateTo(collectionRoute(asset.value.address))
 }
 </script>
 
@@ -63,7 +63,6 @@ const handleViewEntireCollection = () => {
       <lukso-button
         variant="secondary"
         size="small"
-        class="hidden"
         @click="handleViewEntireCollection"
       >
         <lukso-icon size="small" name="eye-show" class="mr-2"></lukso-icon>
@@ -79,7 +78,7 @@ const handleViewEntireCollection = () => {
         :asset="token"
       />
       <div
-        class="paragraph-inter-16-semi-bold hidden min-h-[300px] cursor-pointer items-center justify-center rounded-12 border border-neutral-90 bg-neutral-100 p-6 transition hover:shadow-neutral-drop-shadow-1xl"
+        class="paragraph-inter-16-semi-bold flex min-h-[300px] cursor-pointer items-center justify-center rounded-12 border border-neutral-90 bg-neutral-100 p-6 transition hover:shadow-neutral-drop-shadow-1xl"
         @click="handleViewEntireCollection"
       >
         <lukso-icon size="medium" name="eye-show" class="mr-2"></lukso-icon>

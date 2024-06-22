@@ -115,7 +115,9 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
               }}
             </span>
             <span v-else-if="isLsp8(asset) && asset?.tokenId">
-              {{ $formatMessage('token_owned') }}
+              <span v-if="asset.isOwned">{{
+                $formatMessage('token_owned')
+              }}</span>
               {{ assetTokenId }}
             </span>
             <span v-else-if="asset?.balance">
@@ -137,7 +139,6 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
                   size="small"
                   variant="secondary"
                   @click="handleSendAsset"
-                  class="transition-opacity hover:opacity-70"
                   >{{ $formatMessage('button_send') }}</lukso-button
                 >
               </div>

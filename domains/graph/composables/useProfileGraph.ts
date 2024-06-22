@@ -1,5 +1,4 @@
 import { useQueries } from '@tanstack/vue-query'
-import { toChecksumAddress } from 'web3-utils'
 
 import type { ProfileQuery } from '@/.nuxt/gql/default'
 import type { ProfileLink } from '@/types/profile'
@@ -8,8 +7,7 @@ import type { QFQueryOptions } from '@/utils/queryFunctions'
 type AdditionalQueryOptions = { profileAddress?: Address | null }
 
 export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
-  const { currentNetwork } = storeToRefs(useAppStore())
-  const { value: { chainId } = { chainId: '' } } = currentNetwork
+  const { selectedChainId: chainId } = useAppStore()
 
   const queries = computed(() => {
     const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
@@ -36,7 +34,7 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
                 })
 
                 if (graphLog.enabled) {
-                  graphLog('profile', profile)
+                  graphLog('profile-raw', profile)
                 }
 
                 return profile

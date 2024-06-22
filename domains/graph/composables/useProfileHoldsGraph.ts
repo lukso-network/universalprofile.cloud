@@ -14,8 +14,7 @@ type QueryResultProfile = ProfileHoldsQuery['profiles']
 
 export function useProfileHoldsGraph() {
   return ({ profileAddress: _profileAddress }: FiltersProfileAssets) => {
-    const { currentNetwork } = storeToRefs(useAppStore())
-    const { value: { chainId } = { chainId: '' } } = currentNetwork
+    const { selectedChainId: chainId } = useAppStore()
 
     const queries = computed(() => {
       const profileAddress = unref(_profileAddress)
@@ -32,7 +31,7 @@ export function useProfileHoldsGraph() {
                   })
 
                   if (graphLog.enabled) {
-                    graphLog('profile-holds', profiles)
+                    graphLog('profile-holds-raw', profiles)
                   }
 
                   return profiles as QueryResultProfile
