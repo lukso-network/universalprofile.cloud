@@ -131,7 +131,7 @@ const isLoadedMetadata = computed(
                   size="small"
                   variant="secondary"
                   @click="handleSendAsset"
-                  class="mt-4 transition-opacity hover:opacity-70"
+                  class="mt-4"
                   >{{ $formatMessage('button_send') }}</lukso-button
                 >
               </div>

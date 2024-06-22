@@ -11,14 +11,13 @@ const profilesOnDisplay = ref()
 
 const getProfiles = async () => {
   isLoading.value = true
-  const { Profile: searchResults }: ProfileShowcaseQuery =
-    await GqlProfileShowcase()
+  const { profiles }: ProfileShowcaseQuery = await GqlProfileShowcase()
 
   if (graphLog.enabled) {
-    graphLog('profileShowcase', searchResults)
+    graphLog('profileShowcase', profiles)
   }
 
-  profilePool.value = searchResults
+  profilePool.value = profiles
   isLoading.value = false
 }
 

@@ -20,17 +20,15 @@ const searchResults = async () => {
 
   isSearching.value = true
 
-  const { Profile: searchResults }: ProfileSearchQuery = await GqlProfileSearch(
-    {
-      search: `%${searchTerm.value}%`,
-    }
-  )
+  const { profiles }: ProfileSearchQuery = await GqlProfileSearch({
+    search: `%${searchTerm.value}%`,
+  })
 
   if (graphLog.enabled) {
-    graphLog('profileSearch', searchResults)
+    graphLog('profileSearch', profiles)
   }
 
-  if (searchResults.length === 0) {
+  if (profiles.length === 0) {
     hasNoResults.value = true
     isSearching.value = false
     return
@@ -39,7 +37,7 @@ const searchResults = async () => {
   hasNoResults.value = false
   results.value = []
 
-  for (const hit of searchResults) {
+  for (const hit of profiles) {
     const metadata = validateLsp3Metadata({
       name: hit.name,
       profileImage: hit.profileImages,

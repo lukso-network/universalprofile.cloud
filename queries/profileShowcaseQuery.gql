@@ -1,5 +1,5 @@
 query profileShowcase {
-  Profile(
+  profiles: Profile(
     limit: 500
     where: {
       _and: [

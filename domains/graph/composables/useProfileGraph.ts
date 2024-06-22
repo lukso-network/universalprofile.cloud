@@ -29,10 +29,9 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
               // 1
               queryKey: ['profile-graph', profileAddress, chainId],
               queryFn: async () => {
-                const { Profile_by_pk: profile }: ProfileQuery =
-                  await GqlProfile({
-                    id: profileAddress,
-                  })
+                const { profile }: ProfileQuery = await GqlProfile({
+                  id: profileAddress,
+                })
 
                 if (graphLog.enabled) {
                   graphLog('profile-raw', profile)
@@ -61,7 +60,7 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
 
       const isLoading = results.some(result => result.isLoading)
       const balance = results[0].data as string
-      const profileData = results[1].data as ProfileQuery['Profile_by_pk']
+      const profileData = results[1].data as ProfileQuery['profile']
       const {
         name,
         standard,

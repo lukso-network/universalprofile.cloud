@@ -139,7 +139,6 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
                   size="small"
                   variant="secondary"
                   @click="handleSendAsset"
-                  class="transition-opacity hover:opacity-70"
                   >{{ $formatMessage('button_send') }}</lukso-button
                 >
               </div>

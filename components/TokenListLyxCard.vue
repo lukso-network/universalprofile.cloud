@@ -94,17 +94,11 @@ const handleBuyLyx = (event: Event) => {
         </div>
       </div>
       <div class="flex w-full justify-end gap-2">
-        <lukso-button
-          size="small"
-          variant="secondary"
-          @click="handleBuyLyx"
-          class="transition-opacity hover:opacity-70"
-          >{{
-            isTestnet
-              ? $formatMessage('button_get_lyx')
-              : $formatMessage('button_buy_lyx')
-          }}</lukso-button
-        >
+        <lukso-button size="small" variant="secondary" @click="handleBuyLyx">{{
+          isTestnet
+            ? $formatMessage('button_get_lyx')
+            : $formatMessage('button_buy_lyx')
+        }}</lukso-button>
         <lukso-button
           v-if="
             isConnected && viewedProfile?.address === connectedProfile?.address
@@ -112,7 +106,6 @@ const handleBuyLyx = (event: Event) => {
           size="small"
           variant="secondary"
           @click="handleSendAsset"
-          class="transition-opacity hover:opacity-70"
           >{{ $formatMessage('button_send') }}</lukso-button
         >
       </div>
