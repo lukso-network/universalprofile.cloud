@@ -10,7 +10,7 @@ type FiltersProfileAssets = {
 type AdditionalQueryOptions = { profileAddress?: Address | null }
 
 type QueryResult = ProfileHoldsQuery
-type QueryResultProfile = ProfileHoldsQuery['Profile']
+type QueryResultProfile = ProfileHoldsQuery['profiles']
 
 export function useProfileHoldsGraph() {
   return ({ profileAddress: _profileAddress }: FiltersProfileAssets) => {
@@ -27,10 +27,9 @@ export function useProfileHoldsGraph() {
                 // 0
                 queryKey: ['profile-holds-graph', profileAddress, chainId],
                 queryFn: async () => {
-                  const { Profile: profiles }: QueryResult =
-                    await GqlProfileHolds({
-                      address: profileAddress,
-                    })
+                  const { profiles }: QueryResult = await GqlProfileHolds({
+                    address: profileAddress,
+                  })
 
                   if (graphLog.enabled) {
                     graphLog('profile-holds', profiles)

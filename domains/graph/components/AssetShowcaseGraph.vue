@@ -2,17 +2,17 @@
 import type { AssetShowcaseQuery } from '@/.nuxt/gql/default'
 
 const isLoading = ref(false)
-const assetsPool = ref<AssetShowcaseQuery['Asset']>()
+const assetsPool = ref<AssetShowcaseQuery['assets']>()
 const assetsOnDisplay = ref<Asset[]>([])
 
 const getAssets = async () => {
   isLoading.value = true
-  const { Asset: searchResults }: AssetShowcaseQuery = await GqlAssetShowcase()
+  const { assets }: AssetShowcaseQuery = await GqlAssetShowcase()
 
   if (graphLog.enabled) {
-    graphLog('assetShowcase', searchResults)
+    graphLog('assetShowcase', assets)
   }
-  assetsPool.value = searchResults
+  assetsPool.value = assets
   isLoading.value = false
 }
 

@@ -1,5 +1,5 @@
 query profileHolds($address: String!) {
-  Profile(where: { id: { _ilike: $address } }) {
+  profiles: Profile(where: { id: { _ilike: $address } }) {
     holds {
       ...hold
     }

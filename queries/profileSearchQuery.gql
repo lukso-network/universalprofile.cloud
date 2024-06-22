@@ -1,5 +1,5 @@
 query profileSearch($search: String) {
-  Profile(
+  profiles: Profile(
     where: { _or: [{ id: { _ilike: $search } }, { name: { _ilike: $search } }] }
     limit: 100
   ) {
