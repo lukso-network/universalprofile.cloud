@@ -54,7 +54,7 @@ export function useAssetGraph() {
           assetData,
           tokenData,
           [],
-          holdData?.balance
+          getBalance(holdData)
         )
 
         if (graphLog.enabled) {
