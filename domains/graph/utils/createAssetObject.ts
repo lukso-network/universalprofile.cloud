@@ -28,9 +28,10 @@ export const createAssetObject = (
   })
 
   // TODO due to duplicate creator bug we need to add additional filter, remove this after indexer is fixed
-  const creators = receivedAsset?.lsp4Creators?.filter(
-    (creator: any) => creator?.interfaceId
-  )
+  const creators: Creator[] =
+    receivedAsset?.lsp4Creators?.filter(
+      (creator: any) => creator?.interfaceId
+    ) || []
 
   const asset = {
     address: receivedAsset?.id,
