@@ -51,6 +51,7 @@ export function useProfileAssetsGraph() {
       combine: results => {
         const data = results[0]?.data as QueryResultProfile | undefined
         const profilesData = data?.[0]
+        const isLoading = results.some(result => result.isLoading)
 
         const {
           receivedAssets: lsp5ReceivedAssets,
@@ -74,6 +75,8 @@ export function useProfileAssetsGraph() {
                     ),
                     isOwned: true,
                     isIssued: false,
+                    isLoading,
+                    isMetadataLoading: isLoading,
                   })
                 }
               })
@@ -92,6 +95,8 @@ export function useProfileAssetsGraph() {
               ),
               isOwned: true,
               isIssued: false,
+              isLoading,
+              isMetadataLoading: isLoading,
             }
           }) || []
 

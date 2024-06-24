@@ -49,15 +49,16 @@ export function useProfileHoldsGraph() {
       queries,
       combine: results => {
         const data = results[0]?.data as QueryResultProfile | undefined
-
         const profilesData = data?.[0]
-
         const { holds } = profilesData || {}
+        const isLoading = results.some(result => result.isLoading)
 
         const holdsAssets = holds?.flatMap(hold => {
           return {
             ...createAssetObject(hold.asset, hold?.token, [], getBalance(hold)),
             isOwned: true,
+            isLoading,
+            isMetadataLoading: isLoading,
           }
         })
 

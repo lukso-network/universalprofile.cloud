@@ -21,7 +21,13 @@ export function useAssetGraph() {
         ? [
             {
               // 0
-              queryKey: ['asset-graph', assetAddress, chainId, profileAddress],
+              queryKey: [
+                'asset-graph',
+                assetAddress,
+                chainId,
+                tokenId,
+                profileAddress,
+              ],
               queryFn: async () => {
                 const queryResult: QueryResult = await GqlAsset({
                   assetAddress,
@@ -49,13 +55,13 @@ export function useAssetGraph() {
         const assetData = data?.asset?.[0]
         const tokenData = data?.token?.[0]
         const holdData = data?.hold?.[0]
+        const isLoading = results.some(result => result.isLoading)
 
-        const asset = createAssetObject(
-          assetData,
-          tokenData,
-          [],
-          getBalance(holdData)
-        )
+        const asset = {
+          ...createAssetObject(assetData, tokenData, [], getBalance(holdData)),
+          isLoading,
+          isMetadataLoading: isLoading,
+        }
 
         if (assetLog.enabled) {
           assetLog('asset', asset)
