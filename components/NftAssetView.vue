@@ -63,9 +63,9 @@ const handleViewCollection = () => {
     <div>
       <NftCard :asset="asset" @on-image-click="handlePreviewImage" />
       <AssetOwnInfo
-        v-if="asset?.balance !== '0' && isConnected"
+        v-if="hasBalance(asset) && isConnected"
         :address="connectedProfile?.address"
-        :balance="asset?.balance"
+        :balance="getBalance(asset)"
         :symbol="asset?.tokenSymbol"
         :decimals="0"
         :profile-image-url="profileAvatar?.url"
@@ -80,7 +80,7 @@ const handleViewCollection = () => {
           >{{ $formatMessage('token_details_show_collection') }}</lukso-button
         >
         <lukso-button
-          v-if="asset?.balance !== '0' && isConnected"
+          v-if="hasBalance(asset) && isConnected"
           is-full-width
           @click="handleSendAsset"
           >{{ $formatMessage('token_details_send_collectible') }}</lukso-button

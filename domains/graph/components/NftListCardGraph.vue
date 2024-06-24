@@ -120,9 +120,9 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
               }}</span>
               {{ assetTokenId }}
             </span>
-            <span v-else-if="asset?.balance">
+            <span v-else-if="hasBalance(asset)">
               {{ $formatMessage('token_owned') }}
-              {{ asset.balance }}
+              {{ $formatNumber(getBalance(asset)) }}
             </span>
           </div>
           <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />

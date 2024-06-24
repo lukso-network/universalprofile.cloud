@@ -63,7 +63,7 @@ const handleBuyLyx = () => {
             viewedProfile?.address === connectedProfile?.address
           "
           :address="connectedProfile.address"
-          :balance="asset.balance"
+          :balance="getBalance(asset)"
           :symbol="asset.tokenSymbol"
           :decimals="asset.decimals"
           :profile-image-url="profileImage?.url"
@@ -76,7 +76,7 @@ const handleBuyLyx = () => {
               isConnected &&
               connectedProfile &&
               viewedProfile?.address === connectedProfile?.address &&
-              asset?.balance !== '0'
+              hasBalance(asset)
             "
             is-full-width
             variant="secondary"

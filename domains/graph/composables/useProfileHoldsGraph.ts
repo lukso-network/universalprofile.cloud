@@ -56,7 +56,7 @@ export function useProfileHoldsGraph() {
 
         const holdsAssets = holds?.flatMap(hold => {
           return {
-            ...createAssetObject(hold.asset, hold?.token, [], hold.balance),
+            ...createAssetObject(hold.asset, hold?.token, [], getBalance(hold)),
             isOwned: true,
           }
         })

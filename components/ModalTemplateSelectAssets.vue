@@ -62,11 +62,7 @@ const ownedAssets = computed(() => {
     ?.filter(item => item !== undefined)
     // pick only the ones with balance/owned/in right standard
     ?.filter(
-      ({ isOwned, standard, balance }) =>
-        isOwned &&
-        (standard === 'LSP7DigitalAsset' ||
-          standard === 'LSP8IdentifiableDigitalAsset') &&
-        balance !== '0'
+      asset => asset.isOwned && isSupportedAsset(asset) && hasBalance(asset)
     )
 
   const allTokens =
