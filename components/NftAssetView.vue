@@ -35,7 +35,9 @@ const handleSendAsset = (event: Event) => {
 }
 
 const handlePreviewImage = () => {
-  const image = token.value?.resolvedMetadata?.images?.[0]
+  const image =
+    token.value?.resolvedMetadata?.images?.[0] ||
+    token.value?.resolvedMetadata?.icon
 
   if (!image) {
     return
