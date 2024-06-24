@@ -93,14 +93,16 @@ const handleViewCollection = () => {
         <AssetStandardBadge :asset="asset" />
       </div>
       <AssetCollectionSupply :asset="asset" />
-      <AssetTokenId :asset="asset" />
-      <AssetDescription :asset="token" class="mb-8" />
-      <AssetImagesList :asset="token" />
-      <AssetAssets :asset="token" />
-      <AssetAttributes :asset="token" />
-      <AssetCreators :asset="token" />
-      <AssetLinks :asset="token" class="mb-8" />
-      <AssetAddress :asset="asset" />
+      <div class="flex flex-col gap-8">
+        <AssetTokenId :asset="asset" />
+        <AssetDescription :asset="token" />
+        <AssetImagesList :asset="token" />
+        <AssetAssets :asset="token" />
+        <AssetAttributes :asset="token" />
+        <AssetCreators :asset="token" />
+        <AssetLinks :asset="token" />
+        <AssetAddress :asset="asset" />
+      </div>
     </div>
   </div>
 </template>

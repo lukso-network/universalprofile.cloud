@@ -2,30 +2,26 @@
 
 exports[`AssetLinks > should render for no links 1`] = `
 "<div id="test-wrapper">
-  <div>
-    <!--v-if-->
-  </div>
+  <!--v-if-->
 </div>"
 `;
 
 exports[`AssetLinks > should render links for medium buttons 1`] = `
 "<div id="test-wrapper">
   <div>
-    <div>
-      <div class="heading-inter-14-bold pb-2">Links</div>
-      <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
-        <div class="inline-flex">
-          <lukso-button variant="secondary" size="small" is-link="" href="https://link1.example.com" custom-class="paragraph-inter-14-medium">
-            <div class="flex w-full items-center text-left">Link 1 <lukso-icon name="link-1" size="small" class="ml-2"></lukso-icon>
-            </div>
-          </lukso-button>
-        </div>
-        <div class="inline-flex">
-          <lukso-button variant="secondary" size="small" is-link="" href="https://link2.example.com" custom-class="paragraph-inter-14-medium">
-            <div class="flex w-full items-center text-left">Link 2 <lukso-icon name="link-1" size="small" class="ml-2"></lukso-icon>
-            </div>
-          </lukso-button>
-        </div>
+    <div class="heading-inter-14-bold pb-2">Links</div>
+    <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
+      <div class="inline-flex">
+        <lukso-button variant="secondary" size="small" is-link="" href="https://link1.example.com" custom-class="paragraph-inter-14-medium">
+          <div class="flex w-full items-center text-left">Link 1 <lukso-icon name="link-1" size="small" class="ml-2"></lukso-icon>
+          </div>
+        </lukso-button>
+      </div>
+      <div class="inline-flex">
+        <lukso-button variant="secondary" size="small" is-link="" href="https://link2.example.com" custom-class="paragraph-inter-14-medium">
+          <div class="flex w-full items-center text-left">Link 2 <lukso-icon name="link-1" size="small" class="ml-2"></lukso-icon>
+          </div>
+        </lukso-button>
       </div>
     </div>
   </div>
@@ -35,21 +31,19 @@ exports[`AssetLinks > should render links for medium buttons 1`] = `
 exports[`AssetLinks > should render links for small buttons 1`] = `
 "<div id="test-wrapper">
   <div>
-    <div>
-      <div class="heading-inter-14-bold pb-2">Links</div>
-      <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
-        <div class="inline-flex">
-          <lukso-button variant="secondary" size="small" is-link="" href="https://link1.example.com" custom-class="paragraph-inter-14-medium">
-            <div class="flex w-full items-center text-left">Link 1 <lukso-icon name="link-1" size="small" class="ml-2"></lukso-icon>
-            </div>
-          </lukso-button>
-        </div>
-        <div class="inline-flex">
-          <lukso-button variant="secondary" size="small" is-link="" href="https://link2.example.com" custom-class="paragraph-inter-14-medium">
-            <div class="flex w-full items-center text-left">Link 2 <lukso-icon name="link-1" size="small" class="ml-2"></lukso-icon>
-            </div>
-          </lukso-button>
-        </div>
+    <div class="heading-inter-14-bold pb-2">Links</div>
+    <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
+      <div class="inline-flex">
+        <lukso-button variant="secondary" size="small" is-link="" href="https://link1.example.com" custom-class="paragraph-inter-14-medium">
+          <div class="flex w-full items-center text-left">Link 1 <lukso-icon name="link-1" size="small" class="ml-2"></lukso-icon>
+          </div>
+        </lukso-button>
+      </div>
+      <div class="inline-flex">
+        <lukso-button variant="secondary" size="small" is-link="" href="https://link2.example.com" custom-class="paragraph-inter-14-medium">
+          <div class="flex w-full items-center text-left">Link 2 <lukso-icon name="link-1" size="small" class="ml-2"></lukso-icon>
+          </div>
+        </lukso-button>
       </div>
     </div>
   </div>
@@ -58,7 +52,7 @@ exports[`AssetLinks > should render links for small buttons 1`] = `
 
 exports[`AssetLinks > should render loading state for medium buttons 1`] = `
 "<div id="test-wrapper">
-  <div class="mb-8">
+  <div>
     <div class="mb-3 h-[17px] w-1/2 animate-pulse rounded-4 bg-neutral-90"></div>
     <div class="flex gap-4">
       <div class="animate-pulse rounded-4 bg-neutral-90 h-[48px] w-[170px]"></div>
@@ -70,7 +64,7 @@ exports[`AssetLinks > should render loading state for medium buttons 1`] = `
 
 exports[`AssetLinks > should render loading state for small buttons 1`] = `
 "<div id="test-wrapper">
-  <div class="mb-8">
+  <div>
     <div class="mb-3 h-[17px] w-1/2 animate-pulse rounded-4 bg-neutral-90"></div>
     <div class="flex gap-4">
       <div class="animate-pulse rounded-4 bg-neutral-90 h-[24px] w-[90px]"></div>
@@ -83,15 +77,13 @@ exports[`AssetLinks > should render loading state for small buttons 1`] = `
 exports[`AssetLinks > should render without title 1`] = `
 "<div id="test-wrapper">
   <div>
-    <div>
-      <!--v-if-->
-      <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
-        <div class="inline-flex">
-          <lukso-button variant="secondary" size="medium" is-link="" href="https://link1.example.com" custom-class="paragraph-inter-14-medium">
-            <div class="flex w-full items-center text-left">Link 1 <lukso-icon name="link-1" size="small" class="ml-2"></lukso-icon>
-            </div>
-          </lukso-button>
-        </div>
+    <!--v-if-->
+    <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
+      <div class="inline-flex">
+        <lukso-button variant="secondary" size="medium" is-link="" href="https://link1.example.com" custom-class="paragraph-inter-14-medium">
+          <div class="flex w-full items-center text-left">Link 1 <lukso-icon name="link-1" size="small" class="ml-2"></lukso-icon>
+          </div>
+        </lukso-button>
       </div>
     </div>
   </div>

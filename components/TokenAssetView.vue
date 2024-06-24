@@ -92,14 +92,16 @@ const handlePreviewImage = () => {
           <AssetName :asset="asset" />
           <AssetStandardBadge :asset="asset" />
         </div>
-        <AssetTokenSupply :asset="token" />
-        <AssetDescription :asset="token" class="mb-8" />
-        <AssetImagesList :asset="token" />
-        <AssetAssets :asset="token" />
-        <AssetAttributes :asset="token" />
-        <AssetCreators :asset="token" />
-        <AssetLinks :asset="token" class="mb-8" />
-        <AssetAddress :asset="asset" />
+        <div class="flex flex-col gap-8">
+          <AssetTokenSupply :asset="token" />
+          <AssetDescription :asset="token" />
+          <AssetImagesList :asset="token" />
+          <AssetAssets :asset="token" />
+          <AssetAttributes :asset="token" />
+          <AssetCreators :asset="token" />
+          <AssetLinks :asset="token" />
+          <AssetAddress :asset="asset" />
+        </div>
       </div>
     </div>
   </div>

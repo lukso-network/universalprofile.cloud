@@ -15,12 +15,12 @@ const creators = computed(() => {
 </script>
 
 <template>
-  <div v-if="isLoaded">
+  <template v-if="isLoaded">
     <div class="animate-fade-in">
       <div class="heading-inter-14-bold pb-2">
         {{ $formatMessage('asset_creators_title') }}
       </div>
-      <div class="mb-8 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
+      <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
         <AssetCreator
           v-for="(creator, index) in creators"
           :key="index"
@@ -29,7 +29,7 @@ const creators = computed(() => {
         />
       </div>
     </div>
-  </div>
+  </template>
   <AppPlaceholderSection v-else slot-class="flex gap-4">
     <AppPlaceholderLine class="h-[48px] w-[170px]" />
     <AppPlaceholderLine class="h-[48px] w-[140px]" />
