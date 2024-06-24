@@ -1,0 +1,14 @@
+fragment creator on Profile {
+  id
+  name
+  profileImages {
+    url
+    width
+    height
+  }
+  lsp12IssuedAssets {
+    asset {
+      id
+    }
+  }
+}

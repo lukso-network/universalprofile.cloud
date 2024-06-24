@@ -3,7 +3,31 @@ import { isAddress } from 'web3-validator'
 
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 
-function getIssuedAssets(_profiles: MaybeRef<Address[]>) {
+export function useIssuedAssetsRpc() {
+  return {
+    getIssuedAssets,
+    validateAssets(
+      _profiles: MaybeRef<Address[]>,
+      _assetAddress?: MaybeRef<Address | undefined>
+    ): ComputedRef<Map<Address, boolean>> {
+      const profiles = computed(() => unref(_profiles))
+      const issuedAssets = getIssuedAssets(profiles)
+
+      return computed(() => {
+        const assetAddress = unref(_assetAddress)
+
+        return new Map<Address, boolean>(
+          Object.entries(issuedAssets.value || {})?.map(([address, assets]) => [
+            address as Address,
+            assetAddress ? assets.has(assetAddress) : false,
+          ])
+        )
+      })
+    },
+  }
+}
+
+const getIssuedAssets = (_profiles: MaybeRef<Address[]>) => {
   const { currentNetwork } = storeToRefs(useAppStore())
   const queries: ComputedRef<
     QFQueryOptions[] & {
@@ -12,8 +36,7 @@ function getIssuedAssets(_profiles: MaybeRef<Address[]>) {
     }
   > = computed(() => {
     const chainId = currentNetwork.value?.chainId || ''
-    const allProfiles: (Address | null)[] =
-      (isRef(_profiles) ? _profiles.value : _profiles) || []
+    const allProfiles: (Address | null)[] = unref(_profiles) || []
     const profiles: Address[] = allProfiles.filter(
       profile => profile && isAddress(profile)
     ) as Address[]
@@ -34,8 +57,10 @@ function getIssuedAssets(_profiles: MaybeRef<Address[]>) {
     }
     queries.allProfiles = allProfiles
     queries.profiles = profiles
+
     return queries
   })
+
   return useQueries({
     queries,
     combine: results => {
@@ -48,38 +73,14 @@ function getIssuedAssets(_profiles: MaybeRef<Address[]>) {
           return [profile, set]
         })
       )
+
       for (const profile of allProfiles) {
         if (profile && !output[profile]) {
           output[profile] = new Set()
         }
       }
+
       return output
     },
   })
-}
-
-export function useIssuedAssets() {
-  return {
-    getIssuedAssets,
-    validateAssets(
-      _profiles: MaybeRef<Address[]>,
-      _assetAddress?: MaybeRef<Address | undefined>
-    ): ComputedRef<Map<Address, boolean>> {
-      const profiles = computed(() =>
-        isRef(_profiles) ? _profiles.value : _profiles
-      )
-      const issuedAssets = getIssuedAssets(profiles)
-      return computed(() => {
-        const assetAddress = isRef(_assetAddress)
-          ? _assetAddress.value
-          : _assetAddress
-        return new Map<Address, boolean>(
-          Object.entries(issuedAssets.value || {})?.map(([address, assets]) => [
-            address as Address,
-            assetAddress ? assets.has(assetAddress) : false,
-          ])
-        )
-      })
-    },
-  }
 }

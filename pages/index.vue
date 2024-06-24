@@ -33,12 +33,13 @@ const { isTestnet } = storeToRefs(useAppStore())
       <CreateProfileBox />
       <div
         class="relative grid w-full grid-cols-1 gap-12 pb-20 md:pb-0"
-        :class="{ 'md:grid-cols-1': isTestnet, 'md:grid-cols-2': !isTestnet }"
+        :class="{ 'lg:grid-cols-1': isTestnet, 'lg:grid-cols-2': !isTestnet }"
       >
-        <ProfileShowcase />
+        <ProfileShowcaseGraph />
         <ActivityList v-if="!isTestnet" />
       </div>
       <DappShowcase />
+      <AssetShowcaseGraph />
     </div>
   </AppPageLoader>
 </template>

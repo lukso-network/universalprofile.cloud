@@ -30,11 +30,11 @@ export default defineNuxtConfig({
     '@pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/device',
     '@nuxtjs/plausible',
-    '@nuxtjs/algolia',
     '@pinia-orm/nuxt',
     '@nuxt/test-utils/module',
     '@vite-pwa/nuxt',
     '@nuxt/test-utils/module',
+    'nuxt-graphql-client',
     'nuxt-swiper',
   ],
   ...({
@@ -137,6 +137,7 @@ export default defineNuxtConfig({
       TRANSAK_API_KEY: process.env.NUXT_PUBLIC_TRANSAK_API_KEY,
       RAMP_API_KEY: process.env.NUXT_PUBLIC_RAMP_API_KEY,
       BUILD_VERSION: process.env.GITHUB_SHA || 'debug',
+      FETCH_DATA_PROVIDER: process.env.FETCH_DATA_PROVIDER,
     },
   },
   pwa: {
@@ -193,4 +194,20 @@ export default defineNuxtConfig({
           type: 'module',
         },
   },
+  nitro: {
+    esbuild: {
+      options: {
+        target: 'esnext',
+      },
+    },
+  },
+  'graphql-client': {
+    watch: true,
+    autoImport: true,
+    functionPrefix: 'Gql',
+    documentPaths: ['./'],
+    preferGETQueries: false,
+    codegen: true,
+  },
+  extends: ['./domains/rpc', './domains/graph'],
 })
