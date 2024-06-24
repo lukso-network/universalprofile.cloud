@@ -77,8 +77,8 @@ export function useAggregatesGraph() {
           issuedCollectiblesCount,
         }
 
-        if (graphLog.enabled) {
-          graphLog('aggregates', aggregates)
+        if (assetLog.enabled) {
+          assetLog('aggregates', aggregates)
         }
 
         return aggregates

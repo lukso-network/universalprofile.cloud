@@ -4,8 +4,8 @@ import type { Asset } from '@/types/asset'
 type Props = {
   asset?: Asset | null
 }
-const props = defineProps<Props>()
 
+const props = defineProps<Props>()
 const connectedProfile = useProfile().connectedProfile()
 const asset = computed(() => props.asset)
 const token = useToken()(asset)

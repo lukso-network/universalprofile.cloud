@@ -61,8 +61,8 @@ export function useProfileHoldsGraph() {
           }
         })
 
-        if (graphLog.enabled) {
-          graphLog('profile-holds', holdsAssets)
+        if (assetLog.enabled) {
+          assetLog('profile-holds', holdsAssets)
         }
 
         return holdsAssets

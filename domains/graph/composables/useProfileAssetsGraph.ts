@@ -109,8 +109,8 @@ export function useProfileAssetsGraph() {
             }
           }) || []
 
-        if (graphLog.enabled) {
-          graphLog('profile-assets', [...receivedAssets, ...issuedAssets])
+        if (assetLog.enabled) {
+          assetLog('profile-assets', [...receivedAssets, ...issuedAssets])
         }
 
         return [...receivedAssets, ...issuedAssets]

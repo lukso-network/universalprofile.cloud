@@ -57,8 +57,8 @@ export function useAssetGraph() {
           getBalance(holdData)
         )
 
-        if (graphLog.enabled) {
-          graphLog('asset', asset)
+        if (assetLog.enabled) {
+          assetLog('asset', asset)
         }
 
         return asset
