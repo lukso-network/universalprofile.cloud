@@ -1,14 +1,7 @@
 <script setup lang="ts">
-const assetAddress = computed(
-  () => useRouter().currentRoute.value.params?.assetAddress
-)
-const asset = useAsset()(assetAddress.value)
-
-onMounted(() => {
-  if (isCollectible(asset.value)) {
-    navigateTo(assetRoute(asset.value?.address as Address))
-  }
-})
+const address = useRouter().currentRoute.value.params?.assetAddress
+const tokenId = useRouter().currentRoute.value.params?.tokenId
+const asset = useAsset()(address, tokenId)
 </script>
 
 <template>

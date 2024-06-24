@@ -58,9 +58,9 @@ const assetTokenId = computed(() => {
             <span v-else-if="isLsp8(asset) && asset?.tokenId">
               {{ assetTokenId }}
             </span>
-            <span v-else-if="asset?.balance">
+            <span v-else-if="hasBalance(asset)">
               {{ $formatMessage('token_owned') }}
-              {{ asset.balance }}
+              {{ $formatNumber(getBalance(asset)) }}
             </span>
           </div>
           <NftListCardCreatorsGraph :asset="asset" class="mt-4" />

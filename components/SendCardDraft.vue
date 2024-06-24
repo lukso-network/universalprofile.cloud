@@ -54,7 +54,7 @@ const checkBalance = () => {
     return
   }
 
-  if (isLsp7(asset.value) && asset.value?.balance !== '0') {
+  if (isLsp7(asset.value) && hasBalance(asset.value)) {
     return
   }
 

@@ -70,7 +70,7 @@ export function useProfileAssetsGraph() {
                       receivedAsset.asset,
                       hold?.token,
                       [],
-                      hold.balance
+                      getBalance(hold)
                     ),
                     isOwned: true,
                     isIssued: false,

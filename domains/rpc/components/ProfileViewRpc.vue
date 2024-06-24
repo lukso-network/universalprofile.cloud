@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
-
 const { isOwned, isCreated, setFilters } = useFilters()
 const viewedProfileAddress = getCurrentProfileAddress()
 const { isMobile } = useDevice()
@@ -25,26 +23,20 @@ const allTokensSorted = computed(
 
 const tokensOwned = computed(() =>
   allTokensSorted.value?.filter(
-    ({ isOwned, standard, balance, tokenType }) =>
-      isOwned &&
-      standard === 'LSP7DigitalAsset' &&
-      balance !== '0' &&
-      tokenType === LSP4_TOKEN_TYPES.TOKEN
+    asset =>
+      asset.isOwned && isLsp7(asset) && hasBalance(asset) && isToken(asset)
   )
 )
 
 const tokensCreated = computed(() =>
   allTokensSorted.value?.filter(
-    ({ isIssued, standard, tokenType }) =>
-      isIssued &&
-      standard === 'LSP7DigitalAsset' &&
-      tokenType === LSP4_TOKEN_TYPES.TOKEN
+    asset => asset.isIssued && isLsp7(asset) && isToken(asset)
   )
 )
 
 const nftsOwned = computed(() =>
   allTokensSorted.value?.filter(
-    asset => asset.isOwned && isCollectible(asset) && asset.balance !== '0'
+    asset => asset.isOwned && isCollectible(asset) && hasBalance(asset)
   )
 )
 
@@ -56,7 +48,7 @@ const nftsCreated = computed(() =>
 const ownedTokensCount = computed(
   () =>
     (tokensOwned.value?.length || 0) +
-    (viewedProfile?.value?.balance !== '0' ? 1 : 0) // +1 if user has LYX token
+    (hasBalance(viewedProfile?.value) ? 1 : 0) // +1 if user has LYX token
 )
 
 const createdTokensCount = computed(() => tokensCreated.value?.length || 0)

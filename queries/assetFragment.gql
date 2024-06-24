@@ -4,7 +4,6 @@ fragment asset on Asset {
   lsp4TokenSymbol
   lsp4TokenType
   lsp8TokenIdFormat
-  lsp8TokenMetadataBaseURI
   decimals
   interfaces
   standard

@@ -3,32 +3,37 @@ import { useQueries } from '@tanstack/vue-query'
 import type { AssetQuery } from '@/.nuxt/gql/default'
 
 type QueryResult = AssetQuery
-type QueryResultAsset = AssetQuery['asset']
 
 export function useAssetGraph() {
-  return (_address?: MaybeRef<Address | undefined>) => {
+  return (
+    _assetAddress?: MaybeRef<Address | undefined>,
+    _tokenId?: MaybeRef<string | undefined>
+  ) => {
     const connectedProfile = useProfile().connectedProfile()
-    const profileAddress = computed(() => connectedProfile.value?.address)
     const { selectedChainId: chainId } = useAppStore()
 
     const queries = computed(() => {
-      const address: Address | undefined = unref(_address)
+      const assetAddress = unref(_assetAddress) || ''
+      const profileAddress = connectedProfile.value?.address || ''
+      const tokenId: string = unref(_tokenId) || ''
 
-      const queries = address
+      const queries = assetAddress
         ? [
             {
               // 0
-              queryKey: ['asset-graph', address, chainId, profileAddress],
+              queryKey: ['asset-graph', assetAddress, chainId, profileAddress],
               queryFn: async () => {
-                const { asset }: QueryResult = await GqlAsset({
-                  address,
+                const queryResult: QueryResult = await GqlAsset({
+                  assetAddress,
+                  profileAddress,
+                  tokenId,
                 })
 
                 if (graphLog.enabled) {
-                  graphLog('asset-raw', asset)
+                  graphLog('asset-raw', queryResult)
                 }
 
-                return asset as QueryResultAsset
+                return queryResult
               },
               refetchInterval: 120_000,
               staleTime: 250,
@@ -40,10 +45,17 @@ export function useAssetGraph() {
     return useQueries({
       queries,
       combine: results => {
-        const data = results[0]?.data as QueryResultAsset | undefined
-        const assetData = data?.[0]
+        const data = results[0]?.data as QueryResult | undefined
+        const assetData = data?.asset?.[0]
+        const tokenData = data?.token?.[0]
+        const holdData = data?.hold?.[0]
 
-        const asset = createAssetObject(assetData)
+        const asset = createAssetObject(
+          assetData,
+          tokenData,
+          [],
+          getBalance(holdData)
+        )
 
         if (graphLog.enabled) {
           graphLog('asset', asset)
