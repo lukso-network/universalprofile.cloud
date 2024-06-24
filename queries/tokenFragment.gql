@@ -11,6 +11,7 @@ fragment token on Token {
 
   # creators
   lsp4Creators {
+    interfaceId
     profile {
       ...creator
     }

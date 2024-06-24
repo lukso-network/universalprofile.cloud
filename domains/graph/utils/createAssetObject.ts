@@ -27,6 +27,11 @@ export const createAssetObject = (
     },
   })
 
+  // TODO due to duplicate creator bug we need to add additional filter, remove this after indexer is fixed
+  const creators = receivedAsset?.lsp4Creators?.filter(
+    (creator: any) => creator?.interfaceId
+  )
+
   const asset = {
     address: receivedAsset?.id,
     balance,
@@ -48,10 +53,8 @@ export const createAssetObject = (
     tokenType: receivedAsset?.lsp4TokenType || LSP4_TOKEN_TYPES.TOKEN,
     tokenIdFormat:
       receivedAsset?.lsp8TokenIdFormat || LSP8_TOKEN_ID_FORMAT.NUMBER,
-    tokenCreators: receivedAsset?.lsp4Creators.map(
-      (creator: any) => creator?.profile?.id
-    ),
-    tokenCreatorsData: receivedAsset?.lsp4Creators.map((creator: any) => {
+    tokenCreators: creators.map((creator: any) => creator?.profile?.id),
+    tokenCreatorsData: creators.map((creator: any) => {
       return {
         address: creator?.profile?.id,
         name: creator?.profile?.name,
