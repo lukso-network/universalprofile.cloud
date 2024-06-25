@@ -18,6 +18,10 @@ export async function useCollectionGraph(filters: CollectionFilters) {
       offset: filters.offset,
     })
 
+  if (graphLog.enabled) {
+    graphLog('collection', collectionData, metaData)
+  }
+
   const collection =
     collectionData?.map(assetData =>
       createAssetObject(assetData.baseAsset, assetData)
@@ -27,8 +31,8 @@ export async function useCollectionGraph(filters: CollectionFilters) {
     total: metaData.aggregate?.count || 0,
   }
 
-  if (graphLog.enabled) {
-    graphLog('collection', collection, meta)
+  if (assetLog.enabled) {
+    assetLog('collection', collection, meta)
   }
 
   return {

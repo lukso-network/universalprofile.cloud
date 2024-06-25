@@ -45,13 +45,15 @@ const { offset, limit, isLoading, hasData, data } = useLoadMoreData(loadMore)
           </div>
           <div><!-- TBA --></div>
         </div>
-        <AssetDescription :asset="token" without-title />
-        <AssetLinks
-          :asset="token"
-          without-title
-          button-size="small"
-          class="mt-4"
-        />
+        <div class="flex flex-col gap-4">
+          <AssetDescription :asset="token" without-title />
+          <AssetLinks
+            :asset="token"
+            without-title
+            button-size="small"
+            class="mt-4"
+          />
+        </div>
       </div>
     </lukso-card>
     <div v-if="hasData">

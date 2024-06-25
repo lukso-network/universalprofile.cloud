@@ -9,7 +9,11 @@ const profileAvatar = useProfileAvatar(props.profile, 80)
 </script>
 
 <template>
-  <NuxtLink :to="profileRoute(profile.address)" class="flex w-full">
+  <NuxtLink
+    v-if="profile"
+    :to="profileRoute(profile.address)"
+    class="flex w-full"
+  >
     <lukso-card
       variant="profile"
       :background-url="profileBackground?.url"
@@ -25,14 +29,14 @@ const profileAvatar = useProfileAvatar(props.profile, 80)
           <lukso-username
             v-if="profile?.name"
             :name="profile?.name.toLowerCase()"
-            :address="profile.address"
+            :address="profile?.address"
             size="large"
             max-width="220"
           ></lukso-username>
           <lukso-username
             v-else
             name="anonymous-profile"
-            :address="profile.address"
+            :address="profile?.address"
             size="large"
             max-width="220"
             hide-prefix

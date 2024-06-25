@@ -6,6 +6,7 @@ type Props = {
 
 const props = defineProps<Props>()
 const { isMobile } = useDevice()
+const { formatMessage } = useIntl()
 const creator = computed(() => props.creator)
 const creatorProfile = useProfile().getProfile(creator)
 
@@ -15,11 +16,12 @@ const handleOpenProfile = (address?: Address) => {
   }
 }
 
-const issued = useIssuedAssetsRpc().validateAssets(
-  props.creator ? [props.creator] : [],
-  props.asset
-)
 const verified = computed(() => {
+  const issued = useIssuedAssetsRpc().validateAssets(
+    props.creator ? [props.creator] : [],
+    props.asset
+  )
+
   return issued.value?.get(creator.value) || false
 })
 const profileImage = useProfileAvatar(creatorProfile, 24)
@@ -52,7 +54,7 @@ const profileImage = useProfileAvatar(creatorProfile, 24)
         <lukso-tooltip
           v-if="verified"
           variant="success"
-          :text="$formatMessage('asset_creators_verified')"
+          :text="formatMessage('asset_creators_verified')"
           class="ml-2"
         >
           <lukso-icon
@@ -65,7 +67,7 @@ const profileImage = useProfileAvatar(creatorProfile, 24)
         <lukso-tooltip
           v-else
           variant="danger"
-          :text="$formatMessage('asset_creators_unverified')"
+          :text="formatMessage('asset_creators_unverified')"
           class="ml-2"
         >
           <lukso-icon

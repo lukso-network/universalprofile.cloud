@@ -10,15 +10,20 @@ const profilePool = ref()
 const profilesOnDisplay = ref()
 
 const getProfiles = async () => {
-  isLoading.value = true
-  const { profiles }: ProfileShowcaseQuery = await GqlProfileShowcase()
+  try {
+    isLoading.value = true
+    const { profiles }: ProfileShowcaseQuery = await GqlProfileShowcase()
 
-  if (graphLog.enabled) {
-    graphLog('profileShowcase', profiles)
+    if (graphLog.enabled) {
+      graphLog('profileShowcase', profiles)
+    }
+
+    profilePool.value = profiles
+  } catch (error) {
+    console.error(error)
+  } finally {
+    isLoading.value = false
   }
-
-  profilePool.value = profiles
-  isLoading.value = false
 }
 
 const shuffleProfiles = async () => {
@@ -76,7 +81,7 @@ onMounted(async () => {
         class="grid grid-cols-1 items-start justify-items-center gap-12 sm:grid-cols-2"
         :class="{ 'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4': isTestnet }"
       >
-        <ProfileCardSmall
+        <ProfileShowcaseCardGraph
           v-for="profile in profilesOnDisplay"
           :key="profile.address"
           :profile="profile"

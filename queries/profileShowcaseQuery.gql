@@ -9,6 +9,7 @@ query profileShowcase {
         { name: { _neq: "" } }
       ]
     }
+    order_by: { blockNumber: desc }
   ) {
     ...basicProfile
   }

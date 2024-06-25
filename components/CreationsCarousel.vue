@@ -38,7 +38,7 @@ const handleInit = (swiper: Swiper) => {
 
 const handleSlideChange = (swiper: Swiper) => {
   activeIndex.value = swiper.activeIndex
-  activeAddress.value = swiper.slides[swiper.activeIndex].dataset.address as
+  activeAddress.value = swiper.slides[swiper.activeIndex]?.dataset?.address as
     | Address
     | undefined
 }

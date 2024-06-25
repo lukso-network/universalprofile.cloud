@@ -12,6 +12,6 @@ query assetShowcase {
       ]
     }
   ) {
-    ...asset
+    ...basicAsset
   }
 }

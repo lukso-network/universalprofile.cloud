@@ -1,7 +1,7 @@
 fragment creator on Profile {
   id
   name
-  profileImages {
+  profileImages(order_by: { width: desc }) {
     url
     width
     height
