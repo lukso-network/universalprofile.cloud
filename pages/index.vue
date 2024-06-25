@@ -39,7 +39,7 @@ const { isTestnet } = storeToRefs(useAppStore())
         <ActivityList v-if="!isTestnet" />
       </div>
       <DappShowcase />
-      <AssetShowcaseGraph />
+      <AssetShowcase />
     </div>
   </AppPageLoader>
 </template>
