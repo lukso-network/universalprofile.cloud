@@ -35,7 +35,7 @@ const { isTestnet } = storeToRefs(useAppStore())
         class="relative grid w-full grid-cols-1 gap-12 pb-20 md:pb-0"
         :class="{ 'lg:grid-cols-1': isTestnet, 'lg:grid-cols-2': !isTestnet }"
       >
-        <ProfileShowcaseGraph />
+        <ProfileShowcase />
         <ActivityList v-if="!isTestnet" />
       </div>
       <DappShowcase />
