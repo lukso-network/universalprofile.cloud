@@ -1,16 +1,4 @@
 <script setup lang="ts">
-import type { LSP3ProfileMetadata } from '@lukso/lsp-smart-contracts'
-
-export type IndexedProfile = {
-  address: Address
-  LSP3Profile?: LSP3ProfileMetadata
-  profileImageUrl?: string
-  LSPStandard: Standard
-  type: Standard // TODO this is legacy type field, we keep it until indexer fully migrate to `LSPStandard`
-  hasProfileImage?: boolean
-  hasBackgroundImage?: boolean
-}
-
 const { currentNetwork, isTestnet } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
   currentNetwork.value.indexName

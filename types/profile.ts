@@ -1,4 +1,7 @@
-import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
+import type {
+  LinkMetadata,
+  LSP3ProfileMetadata,
+} from '@lukso/lsp-smart-contracts'
 
 export type Profile = {
   address?: Address
@@ -30,3 +33,13 @@ export type Creator = Pick<
   Profile,
   'name' | 'address' | 'profileImage' | 'issuedAssets'
 >
+
+export type IndexedProfile = {
+  address: Address
+  LSP3Profile?: LSP3ProfileMetadata
+  profileImageUrl?: string
+  LSPStandard: Standard
+  type: Standard
+  hasProfileImage?: boolean
+  hasBackgroundImage?: boolean
+}

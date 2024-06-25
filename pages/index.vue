@@ -23,7 +23,7 @@ const { isTestnet } = storeToRefs(useAppStore())
       <div
         class="mb-20 mt-8 flex w-full flex-col items-center justify-center sm:mb-28 sm:w-1/2 lg:w-2/5"
       >
-        <AppNavbarProfileSearch class="w-full" />
+        <AppNavbarProfileSearch />
         <div
           class="paragraph-inter-14-regular mt-6 text-center text-neutral-40"
         >
