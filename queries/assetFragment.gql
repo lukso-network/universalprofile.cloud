@@ -27,13 +27,13 @@ fragment asset on Asset {
     url
     title
   }
-  images {
+  images(order_by: { width: desc }) {
     url
     width
     height
     index
   }
-  icons {
+  icons(order_by: { width: desc }) {
     url
     width
     height

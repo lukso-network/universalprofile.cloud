@@ -24,13 +24,13 @@ fragment token on Token {
     url
     title
   }
-  images {
+  images(order_by: { width: desc }) {
     url
     width
     height
     index
   }
-  icons {
+  icons(order_by: { width: desc }) {
     url
     width
     height
