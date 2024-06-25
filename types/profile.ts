@@ -1,6 +1,6 @@
 import type {
-  LinkMetadata,
   LSP3ProfileMetadata,
+  LinkMetadata,
 } from '@lukso/lsp-smart-contracts'
 
 export type Profile = {
