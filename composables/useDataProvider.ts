@@ -34,7 +34,8 @@ const getDataProvider = () => {
 }
 
 export const useDataProvider = () => {
-  const dataProvider = getDataProvider()
+  const { isTestnet } = storeToRefs(useAppStore())
+  const dataProvider = isTestnet.value ? 'rpc' : getDataProvider() // Testnet currently works only in RPC mode
 
   const isRpc = dataProvider === 'rpc'
   const isGraph = dataProvider === 'graph'
