@@ -40,6 +40,7 @@
     "@lukso/lsp-smart-contracts": "0.15.0-rc.5",
     "@lukso/web-components": "1.71.4",
     "@nuxt/test-utils": "^3.13.1",
+    "@nuxtjs/algolia": "^1.10.2",
     "@nuxtjs/device": "^3.1.1",
     "@nuxtjs/plausible": "^0.2.4",
     "@nuxtjs/tailwindcss": "^6.11.4",
