@@ -19,7 +19,7 @@ const links = computed(() => props.asset?.resolvedMetadata?.links)
 </script>
 
 <template>
-  <div v-if="isLoaded">
+  <template v-if="isLoaded">
     <div v-if="links?.length">
       <div v-if="!withoutTitle" class="heading-inter-14-bold pb-2">
         {{ formatMessage('asset_links_title') }}
@@ -42,7 +42,7 @@ const links = computed(() => props.asset?.resolvedMetadata?.links)
         </div>
       </div>
     </div>
-  </div>
+  </template>
   <AppPlaceholderSection v-else slot-class="flex gap-4">
     <AppPlaceholderLine
       :class="{

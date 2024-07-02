@@ -98,21 +98,23 @@ const handleBuyLyx = () => {
         <div class="heading-apax-24-medium pb-2">
           {{ $formatMessage('lyx_details_title') }}
         </div>
-        <AssetTokenSupply
-          :asset="{
-            totalSupply: currentNetwork.token.supply,
-            decimals: asset?.decimals,
-          }"
-        />
-        <AssetDescription
-          :asset="{
-            resolvedMetadata: {
-              description: $formatMessage('lyx_details_description'),
-            },
-          }"
-          class="mb-8"
-        />
-        <AssetLinks :asset="{ resolvedMetadata: { links } }" class="mb-8" />
+        <div class="flex flex-col gap-8">
+          <AssetTokenSupply
+            :asset="{
+              totalSupply: currentNetwork.token.supply,
+              decimals: asset?.decimals,
+            }"
+          />
+          <AssetDescription
+            :asset="{
+              resolvedMetadata: {
+                description: $formatMessage('lyx_details_description'),
+              },
+            }"
+            class="mb-8"
+          />
+          <AssetLinks :asset="{ resolvedMetadata: { links } }" class="mb-8" />
+        </div>
       </div>
     </div>
   </AppPageLoader>

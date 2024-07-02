@@ -11,7 +11,7 @@ const description = computed(() => props.asset?.resolvedMetadata?.description)
 </script>
 
 <template>
-  <div v-if="isLoaded">
+  <template v-if="isLoaded">
     <div v-if="description">
       <div v-if="!withoutTitle" class="heading-inter-14-bold pb-3">
         {{ formatMessage('token_details_description') }}
@@ -20,6 +20,6 @@ const description = computed(() => props.asset?.resolvedMetadata?.description)
         {{ description }}
       </div>
     </div>
-  </div>
+  </template>
   <AppPlaceholderMultiline v-else />
 </template>
