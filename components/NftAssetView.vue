@@ -94,7 +94,14 @@ const handleViewCollection = () => {
         <AssetName :asset="asset" />
         <AssetStandardBadge :asset="asset" />
       </div>
-      <AssetCollectionSupply :asset="asset" />
+      <div
+        :class="{
+          'mb-4': hasTokenId(asset),
+          'mb-8': !hasTokenId(asset),
+        }"
+      >
+        <AssetCollectionSupply :asset="asset" />
+      </div>
       <div class="flex flex-col gap-8">
         <AssetTokenId :asset="asset" />
         <AssetDescription :asset="token" />

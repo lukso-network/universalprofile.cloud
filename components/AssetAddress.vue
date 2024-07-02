@@ -4,10 +4,12 @@ import makeBlockie from 'ethereum-blockies-base64'
 
 type Props = {
   asset?: Asset
+  withoutTitle?: boolean
 }
 
 const props = defineProps<Props>()
 const { isMobile } = useDevice()
+const { formatMessage } = useIntl()
 const isLoaded = computed(() => props.asset)
 const address = computed(() => props.asset?.address)
 
@@ -32,12 +34,12 @@ const truncateAddress = computed(() => {
 
 <template>
   <template v-if="isLoaded">
-    <div>
-      <div class="heading-inter-14-bold pb-2">
-        {{ $formatMessage('token_details_contract_address') }}
+    <div v-if="address">
+      <div v-if="!withoutTitle" class="heading-inter-14-bold pb-2">
+        {{ formatMessage('token_details_contract_address') }}
       </div>
       <div class="rounded-12 border border-neutral-90 bg-neutral-100 px-4 py-3">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-2">
           <div class="flex items-center">
             <img
               v-if="address"
@@ -54,7 +56,7 @@ const truncateAddress = computed(() => {
               variant="light"
               offset="15"
               is-clipboard-copy
-              :copy-text="$formatMessage('asset_address_copied_tooltip')"
+              :copy-text="formatMessage('asset_address_copied_tooltip')"
               :copy-value="address"
             >
               <lukso-icon
