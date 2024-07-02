@@ -33,8 +33,6 @@ const setupWeb3Instances = async () => {
     // for chain interactions through dapp
     addWeb3(PROVIDERS.INJECTED, provider)
     await addProviderEvents(provider)
-    // expose web3 instance to global scope for console access
-    window.web3 = getWeb3(PROVIDERS.INJECTED)
   } else {
     console.error('No browser extension provider found')
   }
@@ -44,6 +42,8 @@ const setupWeb3Instances = async () => {
   if (rpcNode) {
     // for chain interactions through RPC endpoint
     addWeb3(PROVIDERS.RPC, rpcNode?.host, { headers: rpcNode.headers })
+    // expose web3 instance to global scope for console access
+    window.web3 = getWeb3(PROVIDERS.RPC)
   }
 }
 

@@ -26,8 +26,10 @@ export const useWeb3Store = defineStore('web3', () => {
     if (typeof provider === 'string') {
       const httpProvider = new Web3.providers.HttpProvider(provider, options)
       web3 = new Web3(httpProvider)
-    } else {
+    } else if (typeof provider === 'object') {
       web3 = new Web3(provider)
+    } else {
+      web3 = new Web3()
     }
 
     web3Instances.value = {
