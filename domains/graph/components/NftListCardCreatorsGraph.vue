@@ -1,12 +1,19 @@
 <script setup lang="ts">
 type Props = {
-  asset: Asset
+  asset?: Asset
+  isSmall?: boolean
+  hasVerification?: boolean
 }
 
 export type VerifyStatus = 'verified' | 'unverified' | 'partial'
 
 const CREATOR_SHOW_LIMIT = 4
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  asset: undefined,
+  isSmall: true,
+  hasVerification: true,
+})
+const { formatMessage } = useIntl()
 
 const asset = computed(() => props.asset)
 const assetAddress = computed(() => asset.value?.address)
@@ -57,26 +64,31 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
       class="grid grid-cols-[max-content,auto] gap-1"
     ></div>
     <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
-      <div class="flex space-x-[-14px]">
+      <div
+        class="flex"
+        :class="{ 'space-x-[-14px]': isSmall, 'space-x-[-26px]': !isSmall }"
+      >
         <NftListCardCreatorsProfileGraph
           v-for="(creator, index) in creatorsWithLimit || []"
           :creator="creator"
           :key="index"
+          :is-small="isSmall"
           class="relative"
         />
         <NftListCardCreatorsProfileGraph
           v-if="creators[0]"
           :creator="creators[0]"
           :count="tooManyCreators ? creators.length - CREATOR_SHOW_LIMIT : 0"
+          :is-small="isSmall"
           class="relative"
           has-name
         />
       </div>
-      <div class="flex items-center justify-end">
+      <div v-if="hasVerification" class="flex items-center justify-end">
         <lukso-tooltip
           v-if="verifyStatus === 'unverified'"
           variant="danger"
-          :text="$formatMessage('asset_all_creators_unverified')"
+          :text="formatMessage('asset_all_creators_unverified')"
           class="ml-2"
         >
           <lukso-icon
@@ -89,7 +101,7 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
         <lukso-tooltip
           v-if="verifyStatus === 'partial'"
           variant="danger"
-          :text="$formatMessage('asset_all_creators_partial')"
+          :text="formatMessage('asset_all_creators_partial')"
           class="ml-2"
         >
           <lukso-icon
@@ -102,7 +114,7 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
         <lukso-tooltip
           v-if="verifyStatus === 'verified'"
           variant="success"
-          :text="$formatMessage('asset_all_creators_verified')"
+          :text="formatMessage('asset_all_creators_verified')"
           class="ml-2"
         >
           <lukso-icon
@@ -115,11 +127,23 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
       </div>
     </div>
   </div>
-  <div v-else class="mt-4 grid grid-cols-[max-content,auto] gap-1">
-    <AppPlaceholderCircle class="size-6" />
-    <div class="grid w-full flex-col gap-1">
-      <AppPlaceholderLine class="w-1/3" />
-      <AppPlaceholderLine class="w-1/2" />
+  <div v-else class="grid grid-cols-[max-content,auto] gap-1">
+    <AppPlaceholderCircle :class="{ 'size-6': isSmall, 'size-10': !isSmall }" />
+    <div
+      class="grid w-full flex-col items-center gap-1"
+      :class="{
+        'pl-1': isSmall,
+        'pl-2': !isSmall,
+      }"
+    >
+      <AppPlaceholderLine
+        class="h-3"
+        :class="{ 'w-[40px]': isSmall, 'w-[60px]': !isSmall }"
+      />
+      <AppPlaceholderLine
+        class="h-3"
+        :class="{ 'w-[80px]': isSmall, 'w-[120px]': !isSmall }"
+      />
     </div>
   </div>
 </template>

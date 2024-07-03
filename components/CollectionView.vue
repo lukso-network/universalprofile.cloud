@@ -47,7 +47,13 @@ const { offset, limit, isLoading, hasData, data } = useLoadMoreData(loadMore)
               </div>
               <AssetCollectionSupply :asset="asset" />
             </div>
-            <div><!-- TBA --></div>
+            <div>
+              <NftListCardCreators
+                :asset="token"
+                :has-verification="false"
+                :is-small="false"
+              />
+            </div>
           </div>
           <div class="flex justify-start">
             <AssetAddress :asset="asset" without-title />
