@@ -55,7 +55,9 @@ export function useAssetGraph() {
         const assetData = data?.asset?.[0]
         const tokenData = data?.token?.[0]
         const holdData = data?.hold?.[0]
-        const isLoading = results.some(result => result.isLoading)
+        const isLoading = !results.length
+          ? true
+          : results?.some(result => result.isLoading)
 
         const asset = {
           ...createAssetObject(assetData, tokenData, [], getBalance(holdData)),
