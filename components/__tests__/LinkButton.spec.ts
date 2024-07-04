@@ -45,10 +45,9 @@ describe('LinkButton', () => {
   it('should fallback to url when no title', async () => {
     const component = await renderSuspended(LinkButton, {
       props: {
-        // @ts-expect-error
         link: {
           url: 'https://example.com',
-        },
+        } as LinkMetadataSocialMedia,
       },
     })
 
