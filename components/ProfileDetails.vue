@@ -37,31 +37,33 @@ const hasTags = computed(
     >
       {{ viewedProfile?.description }}
     </div>
-    <ul
-      v-if="hasLinks"
-      class="mt-4 flex flex-col flex-wrap justify-center gap-x-4 gap-y-2 sm:flex-row"
-    >
-      <li
-        v-for="(link, index) in viewedProfile?.links"
-        :key="index"
-        class="inline-flex"
-      >
-        <lukso-button
-          :size="isMobile ? 'medium' : 'small'"
-          :href="link.url"
-          is-link
-          variant="secondary"
-          class="transition hover:opacity-70"
-          is-full-width
+    <AppLinks :links="viewedProfile?.links">
+      <template #default="{ socialMediaLinks, otherLinks }">
+        <ul
+          v-if="socialMediaLinks"
+          class="mt-4 flex flex-col flex-wrap justify-center gap-x-4 gap-y-2 sm:flex-row"
         >
-          <lukso-icon
-            name="link"
-            :size="isMobile ? 'medium' : 'small'"
-            class="mr-2"
-          ></lukso-icon>
-          {{ link.title }}
-        </lukso-button>
-      </li>
-    </ul>
+          <li
+            v-for="(link, index) in socialMediaLinks"
+            :key="index"
+            class="inline-flex"
+          >
+            <LinkButton :link="link" :size="isMobile ? 'medium' : 'small'" />
+          </li>
+        </ul>
+        <ul
+          v-if="otherLinks"
+          class="mt-4 flex flex-col flex-wrap justify-center gap-x-4 gap-y-2 sm:flex-row"
+        >
+          <li
+            v-for="(link, index) in otherLinks"
+            :key="index"
+            class="inline-flex"
+          >
+            <LinkButton :link="link" :size="isMobile ? 'medium' : 'small'" />
+          </li>
+        </ul>
+      </template>
+    </AppLinks>
   </div>
 </template>
