@@ -38,7 +38,7 @@
     "@formatjs/intl": "^2.9.9",
     "@google/model-viewer": "^3.4.0",
     "@lukso/lsp-smart-contracts": "0.15.0-rc.5",
-    "@lukso/web-components": "1.71.4",
+    "@lukso/web-components": "1.70.0",
     "@nuxt/test-utils": "^3.13.1",
     "@nuxtjs/algolia": "^1.10.1",
     "@nuxtjs/device": "^3.1.1",
@@ -129,8 +129,7 @@
     "web3-bzz": "~1.10.3",
     "web3-shh": "~1.10.3",
     "web3": "~1.10.3",
-    "swiper": "~11.1.4",
-    "@lukso/web-components": "portal:/Users/dominik/www/lukso/tools-web-components/package"
+    "swiper": "~11.1.4"
   },
   "lint-staged": {
     "*.{ts,js,vue,json,yaml,yml}": [
