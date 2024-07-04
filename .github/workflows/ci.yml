@@ -30,7 +30,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '18.19.0'
+          node-version: '20.0.0'
           cache: 'yarn'
 
       - name: ⚙️ Install dependencies
@@ -84,7 +84,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '18.19.0'
+          node-version: '20.0.0'
           cache: 'yarn'
 
       - name: Install
