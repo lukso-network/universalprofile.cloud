@@ -3467,18 +3467,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@npm:1.70.0":
-  version: 1.70.0
-  resolution: "@lukso/web-components@npm:1.70.0"
+"@lukso/web-components@portal:/Users/dominik/www/lukso/tools-web-components/package::locator=universalprofile.cloud%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@lukso/web-components@portal:/Users/dominik/www/lukso/tools-web-components/package::locator=universalprofile.cloud%40workspace%3A."
   dependencies:
     clsx: "npm:^2.0.0"
     ethereum-blockies-base64: "npm:^1.0.2"
     tailwind-merge: "npm:^2.0.0"
-    tailwind-variants: "npm:^0.1.18"
+    tailwind-variants: "npm:^0.2.1"
     tippy.js: "npm:^6.3.7"
-  checksum: bcc546bc2493257d6b6ee9c353e70b725c1b6aeea20caff654c39c5d10f91fa533a4ec43f1e233f53ad0bce7755e6e6273d473283ccb1ff40a6599593e588386
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@mapbox/node-pre-gyp@npm:^1.0.5":
   version: 1.0.11
@@ -19384,30 +19383,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwind-merge@npm:^1.14.0":
-  version: 1.14.0
-  resolution: "tailwind-merge@npm:1.14.0"
-  checksum: 35ff3c3a7f89111acbdef879130064229ce7deee017fd75f17d07135aa4bcc213e049c35d6bd5000de4dc3219e25f7a03295952736d1fee1423535c55775b1e7
-  languageName: node
-  linkType: hard
-
 "tailwind-merge@npm:^2.0.0, tailwind-merge@npm:^2.2.0":
   version: 2.3.0
   resolution: "tailwind-merge@npm:2.3.0"
   dependencies:
     "@babel/runtime": "npm:^7.24.1"
   checksum: cf3b126bee82bc9ff3f60f9601b66925418db6906544198b637487b25fba1c9c307734ca37ccb8fa2355f69ad0c5aff34c5dce460809addb459a93205d9a0abe
-  languageName: node
-  linkType: hard
-
-"tailwind-variants@npm:^0.1.18":
-  version: 0.1.20
-  resolution: "tailwind-variants@npm:0.1.20"
-  dependencies:
-    tailwind-merge: "npm:^1.14.0"
-  peerDependencies:
-    tailwindcss: "*"
-  checksum: 5661454ec9148c3dacd77ac01aeef906a18733295b546081ed0e146d8c258db37d405356a23643a4be7741c4933dea2dd71c5d04bffad7911b1e1873eb053f06
   languageName: node
   linkType: hard
 
