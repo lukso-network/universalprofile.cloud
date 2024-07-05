@@ -129,8 +129,7 @@
     "web3-bzz": "~1.10.3",
     "web3-shh": "~1.10.3",
     "web3": "~1.10.3",
-    "swiper": "~11.1.4",
-    "@lukso/web-components": "portal:/Users/dominik/www/lukso/tools-web-components/package"
+    "swiper": "~11.1.4"
   },
   "lint-staged": {
     "*.{ts,js,vue,json,yaml,yml}": [
