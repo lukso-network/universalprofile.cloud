@@ -209,6 +209,11 @@ export default defineNuxtConfig({
     documentPaths: ['./'],
     preferGETQueries: false,
     codegen: true,
+    clients: {
+      default: {
+        host: 'https://envio-testing.mainnet.lukso.dev/v1/graphql',
+      },
+    },
   },
   extends: ['./domains/rpc', './domains/graph'],
 })
