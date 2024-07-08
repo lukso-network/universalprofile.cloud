@@ -1,14 +1,3 @@
 {
-  "editor.formatOnSave": true,
-  "vitest.enable": true,
-  "vitest.commandLine": "yarn dotenv -- vitest",
-  "vitest.debugExclude": ["<node_internals>/**", "**/node_modules/**"],
-  "vitest.exclude": [
-    "**/node_modules/**",
-    "**/dist/**",
-    "**/cypress/**",
-    "**/tests/e2e/**",
-    "**/.{idea,git,cache,output,temp}/**"
-  ],
-  "cSpell.words": ["serviceworker"]
+  "editor.formatOnSave": true
 }
