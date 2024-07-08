@@ -47,13 +47,11 @@ const handlePreviewImage = (image: Image[]) => {
           :file-types="['image', '3d']"
         >
           <template #default="{ filteredAssets }">
-            <component
+            <AssetAssetsItem
               v-for="(fileAsset, index) in filteredAssets"
               :key="index"
-              :is="assetFileComponent(fileAsset)"
-              :asset="fileAsset"
-            >
-            </component>
+              :file-asset="fileAsset"
+            />
           </template>
         </AssetAssetsWrapper>
       </div>

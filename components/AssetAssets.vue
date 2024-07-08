@@ -20,13 +20,11 @@ const assets = computed(() => props.asset?.resolvedMetadata?.assets)
             {{ $formatMessage('token_details_assets') }}
           </div>
           <div class="flex flex-wrap gap-4">
-            <component
+            <AssetAssetsItem
               v-for="(fileAsset, index) in filteredAssets"
               :key="index"
-              :is="assetFileComponent(fileAsset)"
-              :asset="fileAsset"
-            >
-            </component>
+              :file-asset="fileAsset"
+            />
           </div>
         </div>
       </template>

@@ -1,10 +1,11 @@
-/**
- * Resolve the file asset component based on the type
- *
- * @param asset
- * @returns
- */
-export const assetFileComponent = (asset: AssetMetadata) => {
+<script setup lang="ts">
+type Props = {
+  fileAsset?: AssetMetadata
+}
+
+defineProps<Props>()
+
+const assetFileComponent = (asset: AssetMetadata) => {
   const assetType = getAssetType(asset)
 
   return {
@@ -28,3 +29,13 @@ export const assetFileComponent = (asset: AssetMetadata) => {
       defineAsyncComponent(() => import('@/components/AssetAssetsOther.vue')),
   }[assetType]()
 }
+</script>
+
+<template>
+  <component
+    v-if="fileAsset"
+    :is="assetFileComponent(fileAsset)"
+    :asset="fileAsset"
+  >
+  </component>
+</template>
