@@ -1,12 +1,18 @@
 <script setup lang="ts">
 type Props = {
-  asset: Asset
+  asset?: Asset
+  isSmall?: boolean
+  hasVerification?: boolean
 }
 
 export type VerifyStatus = 'verified' | 'unverified' | 'partial'
 
 const CREATOR_SHOW_LIMIT = 4
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  asset: undefined,
+  isSmall: true,
+  hasVerification: true,
+})
 
 const asset = computed(() => props.asset)
 const assetAddress = computed(() => asset.value?.address)
@@ -56,22 +62,27 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
       class="grid grid-cols-[max-content,auto] gap-1"
     ></div>
     <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">
-      <div class="flex space-x-[-14px]">
+      <div
+        class="flex"
+        :class="{ 'space-x-[-14px]': isSmall, 'space-x-[-26px]': !isSmall }"
+      >
         <NftListCardCreatorsProfileRpc
           v-for="(creatorAddress, index) in creatorsWithLimit || []"
           :profile-address="creatorAddress"
           :key="index"
+          :is-small="isSmall"
           class="relative"
         />
         <NftListCardCreatorsProfileRpc
           v-if="creators[0]"
           :profile-address="creators[0]"
           :count="tooManyCreators ? creators.length - CREATOR_SHOW_LIMIT : 0"
+          :is-small="isSmall"
           class="relative"
           has-name
         />
       </div>
-      <div class="flex items-center justify-end">
+      <div v-if="hasVerification" class="flex items-center justify-end">
         <lukso-tooltip
           v-if="verifyStatus === 'unverified'"
           variant="danger"
@@ -114,11 +125,21 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
       </div>
     </div>
   </div>
-  <div v-else class="mt-4 grid grid-cols-[max-content,auto] gap-1">
-    <AppPlaceholderCircle class="size-6" />
-    <div class="grid h-6 w-full flex-col gap-1">
-      <AppPlaceholderLine class="w-1/3" />
-      <AppPlaceholderLine class="w-1/2" />
+  <div v-else class="grid grid-cols-[max-content,auto] gap-1">
+    <AppPlaceholderCircle :class="{ 'size-6': isSmall, 'size-10': !isSmall }" />
+    <div
+      class="grid w-full flex-col items-center gap-1"
+      :class="{
+        'pl-1': isSmall,
+        'pl-2': !isSmall,
+      }"
+    >
+      <AppPlaceholderLine
+        :class="{ 'h-2 w-[40px]': isSmall, 'h-3 w-[60px]': !isSmall }"
+      />
+      <AppPlaceholderLine
+        :class="{ 'h-2 w-[80px]': isSmall, 'h-3 w-[120px]': !isSmall }"
+      />
     </div>
   </div>
 </template>

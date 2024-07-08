@@ -36,14 +36,28 @@ const { offset, limit, isLoading, hasData, data } = useLoadMoreData(loadMore)
       class="mb-4"
     >
       <div slot="content" class="break-words p-6">
-        <div class="grid grid-cols-1 sm:grid-cols-[auto,max-content]">
-          <div
-            class="heading-inter-17-semi-bold mb-4 flex flex-col gap-2 border-b border-b-neutral-90 pb-4 sm:flex-row sm:items-center sm:gap-3"
-          >
-            <AssetName :asset="asset" />
-            <AssetStandardBadge :asset="asset" />
+        <div
+          class="mb-4 flex flex-col gap-2 border-b border-b-neutral-90 pb-4 sm:gap-3"
+        >
+          <div class="grid grid-cols-1 sm:grid-cols-[auto,max-content]">
+            <div class="flex flex-col gap-2">
+              <div class="heading-inter-17-semi-bold flex gap-2">
+                <AssetName :asset="asset" />
+                <AssetStandardBadge :asset="asset" />
+              </div>
+              <AssetCollectionSupply :asset="asset" />
+            </div>
+            <div>
+              <NftListCardCreators
+                :asset="token"
+                :has-verification="false"
+                :is-small="false"
+              />
+            </div>
           </div>
-          <div><!-- TBA --></div>
+          <div class="flex justify-start">
+            <AssetAddress :asset="asset" without-title />
+          </div>
         </div>
         <div class="flex flex-col gap-4">
           <AssetDescription :asset="token" without-title />
