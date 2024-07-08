@@ -41,6 +41,21 @@ const handlePreviewImage = (image: Image[]) => {
             @click="handlePreviewImage(image.original || [])"
           />
         </div>
+        <!-- we show 3d file assets in images list -->
+        <AssetAssetsWrapper
+          :assets="asset?.resolvedMetadata?.assets"
+          :file-types="['image', '3d']"
+        >
+          <template #default="{ filteredAssets }">
+            <component
+              v-for="(fileAsset, index) in filteredAssets"
+              :key="index"
+              :is="assetFileComponent(fileAsset)"
+              :asset="fileAsset"
+            >
+            </component>
+          </template>
+        </AssetAssetsWrapper>
       </div>
     </div>
   </div>
