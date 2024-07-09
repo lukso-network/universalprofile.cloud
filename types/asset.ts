@@ -74,3 +74,7 @@ export type SendQueryParams = {
 }
 
 export type ImageVerifiedStatus = 'verified' | 'invalid' | 'unverified'
+
+export type LinkMetadataSocialMedia = LinkMetadata & {
+  socialMediaName?: string
+}
