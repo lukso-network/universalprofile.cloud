@@ -33,7 +33,7 @@ const { offset, limit, isLoading, hasData, data } = useLoadMoreData(loadMore)
       variant="dapp"
       :background-url="assetImage?.url"
       shadow="small"
-      class="mb-4"
+      class="mb-12"
     >
       <div slot="content" class="break-words p-6">
         <div
@@ -70,6 +70,7 @@ const { offset, limit, isLoading, hasData, data } = useLoadMoreData(loadMore)
         </div>
       </div>
     </lukso-card>
+    <div class="pb-4"></div>
     <div v-if="hasData">
       <NftListGraph :nfts="data" without-title />
     </div>
