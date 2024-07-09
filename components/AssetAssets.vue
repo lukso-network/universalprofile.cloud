@@ -15,7 +15,7 @@ const assets = computed(() => props.asset?.resolvedMetadata?.assets)
       :file-types="['document', 'video', 'audio', 'contract', 'other']"
     >
       <template #default="{ filteredAssets }">
-        <div v-if="filteredAssets?.length" class="mb-8">
+        <div v-if="filteredAssets?.length">
           <div class="heading-inter-14-bold pb-3">
             {{ $formatMessage('token_details_assets') }}
           </div>

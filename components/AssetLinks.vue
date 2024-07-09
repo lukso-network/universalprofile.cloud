@@ -21,7 +21,7 @@ const isLoaded = computed(() => props.asset && !props.asset?.isMetadataLoading)
   <template v-if="isLoaded">
     <AppLinks :links="asset?.resolvedMetadata?.links">
       <template #default="{ socialMediaLinks, otherLinks, hasLinks }">
-        <div v-if="hasLinks" class="mb-8">
+        <div v-if="hasLinks">
           <div v-if="!withoutTitle" class="heading-inter-14-bold pb-2">
             {{ formatMessage('asset_links_title') }}
           </div>
