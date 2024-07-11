@@ -25,7 +25,7 @@ fragment token on Token {
     url
     title
   }
-  images(order_by: { width: desc }) {
+  images(order_by: { index: asc }) {
     url
     width
     height
