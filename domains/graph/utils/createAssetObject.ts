@@ -60,13 +60,14 @@ export const createAssetObject = (
         address: creator?.profile?.id,
         name: creator?.profile?.name,
         profileImage: prepareImages(creator?.profile?.profileImages),
-        issuedAssets: receivedAsset?.owner?.lsp12IssuedAssets?.map(
+        issuedAssets: creator?.profile?.lsp12IssuedAssets?.map(
           (asset: any) => asset?.asset?.id
         ),
       }
     }),
     tokenId: rawMetadata?.tokenId,
     tokenIdsData,
+    formattedTokenId: rawMetadata?.formattedTokenId,
   } as Asset
 
   return asset

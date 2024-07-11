@@ -1,0 +1,57 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LinkButton > should fallback to url when no title 1`] = `
+"<div id="test-wrapper">
+  <lukso-button size="medium" href="https://example.com" variant="secondary" is-link="" is-full-width="">
+    <div class="flex w-full items-center text-left">
+      <lukso-icon name="link" size="medium" class="mr-2"></lukso-icon><span class="paragraph-inter-14-medium">https://example.com</span>
+    </div>
+  </lukso-button>
+</div>"
+`;
+
+exports[`LinkButton > should render custom link 1`] = `
+"<div id="test-wrapper">
+  <lukso-button size="medium" href="https://example.com" variant="secondary" is-link="" is-full-width="">
+    <div class="flex w-full items-center text-left">
+      <lukso-icon name="link" size="medium" class="mr-2"></lukso-icon><span class="paragraph-inter-14-medium">Custom</span>
+    </div>
+  </lukso-button>
+</div>"
+`;
+
+exports[`LinkButton > should render empty state 1`] = `
+"<div id="test-wrapper">
+  <!--v-if-->
+</div>"
+`;
+
+exports[`LinkButton > should render social link 1`] = `
+"<div id="test-wrapper">
+  <lukso-button size="medium" href="https://twitter.com" variant="secondary" is-link="" is-full-width="" is-icon="">
+    <div class="flex w-full items-center text-left">
+      <lukso-icon name="logo-x-mono" size="medium"></lukso-icon>
+    </div>
+  </lukso-button>
+</div>"
+`;
+
+exports[`LinkButton > small size > should render custom link 1`] = `
+"<div id="test-wrapper">
+  <lukso-button size="small" href="https://example.com" variant="secondary" is-link="" is-full-width="">
+    <div class="flex w-full items-center text-left">
+      <lukso-icon name="link" size="small" class="mr-2"></lukso-icon><span class="">Custom</span>
+    </div>
+  </lukso-button>
+</div>"
+`;
+
+exports[`LinkButton > small size > should render social link 1`] = `
+"<div id="test-wrapper">
+  <lukso-button size="small" href="https://twitter.com" variant="secondary" is-link="" is-full-width="" is-icon="">
+    <div class="flex w-full items-center text-left">
+      <lukso-icon name="logo-x-mono" size="small"></lukso-icon>
+    </div>
+  </lukso-button>
+</div>"
+`;

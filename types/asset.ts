@@ -57,6 +57,7 @@ export type Asset = {
   }
   tokenIdCreatorCount?: number
   lsp7Creators?: Address[]
+  formattedTokenId?: string
   isNativeToken?: boolean
   isOwned?: boolean
   isIssued?: boolean
@@ -76,3 +77,7 @@ export type SendQueryParams = {
 }
 
 export type ImageVerifiedStatus = 'verified' | 'invalid' | 'unverified'
+
+export type LinkMetadataSocialMedia = LinkMetadata & {
+  socialMediaName?: string
+}
