@@ -67,6 +67,7 @@ export const createAssetObject = (
     }),
     tokenId: rawMetadata?.tokenId,
     tokenIdsData,
+    formattedTokenId: rawMetadata?.formattedTokenId,
   } as Asset
 
   return asset

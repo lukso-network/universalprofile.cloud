@@ -4,6 +4,7 @@ fragment token on Token {
   lsp4TokenType
   lsp8TokenIdFormat
   tokenId
+  formattedTokenId
 
   baseAsset {
     ...asset
