@@ -17,9 +17,10 @@ fragment basicAsset on Asset {
   }
 
   images(order_by: { index: asc, width: desc }) {
-    url
+    url: src
     width
     height
     index
+    verified
   }
 }

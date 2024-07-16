@@ -53,11 +53,8 @@ export function useProfileAssetsGraph() {
         const profilesData = data?.[0]
         const isLoading = results.some(result => result.isLoading)
 
-        const {
-          receivedAssets: lsp5ReceivedAssets,
-          holds,
-          lsp12IssuedAssets,
-        } = profilesData || {}
+        const { lsp5ReceivedAssets, holds, lsp12IssuedAssets } =
+          profilesData || {}
 
         const receivedAssets =
           lsp5ReceivedAssets?.flatMap(receivedAsset => {

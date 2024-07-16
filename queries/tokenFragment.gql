@@ -26,15 +26,17 @@ fragment token on Token {
     title
   }
   images(order_by: { index: asc, width: desc }) {
-    url
+    url: src
     width
     height
     index
+    verified
   }
   icons(order_by: { width: desc }) {
-    url
+    url: src
     width
     height
+    verified
   }
   assets {
     fileType

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isAddress, keccak256 } from 'web3-utils'
+import { isAddress } from 'web3-utils'
 
 import type { ProfileSearchQuery } from '@/.nuxt/gql/default'
 import type { SearchProfileResult } from '@lukso/web-components'
@@ -38,15 +38,10 @@ const searchResults = async () => {
   results.value = []
 
   for (const hit of profiles) {
-    const metadata = validateLsp3Metadata({
-      name: hit.name,
-      profileImage: hit.profileImages,
-    })
-    const profile = await browserProcessMetadata(metadata, keccak256)
     results.value.push({
-      name: profile?.name,
+      name: hit.name || '',
       address: hit?.id as Address,
-      image: profile.profileImage?.[0]?.url,
+      image: hit.profileImages?.[0]?.url || '',
     })
   }
   isSearching.value = false

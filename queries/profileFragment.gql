@@ -12,30 +12,16 @@ fragment profile on Profile {
   }
   tags
   backgroundImages(order_by: { width: desc }) {
-    url
+    url: src
     height
     width
+    verified
   }
   profileImages(order_by: { width: desc }) {
+    url: src
     width
-    url
     height
-  }
-  receivedAssets: lsp5ReceivedAssets {
-    id
-  }
-  lsp12IssuedAssets {
-    id
+    verified
   }
   ...avatars
-  holds {
-    asset {
-      id
-    }
-    token {
-      baseAsset {
-        id
-      }
-    }
-  }
 }

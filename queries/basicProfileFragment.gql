@@ -2,14 +2,16 @@ fragment basicProfile on Profile {
   name
   id
   backgroundImages(order_by: { width: desc }, limit: 1) {
-    url
+    url: src
     height
     width
+    verified
   }
   profileImages(order_by: { width: desc }, limit: 1) {
+    url: src
     width
-    url
     height
+    verified
   }
   blockNumber
 }

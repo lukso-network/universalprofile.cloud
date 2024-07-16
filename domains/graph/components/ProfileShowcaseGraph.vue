@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { keccak256 } from 'web3-utils'
-
 import type { ProfileShowcaseQuery } from '@/.nuxt/gql/default'
 
 const { isTestnet } = storeToRefs(useAppStore())
@@ -41,10 +39,9 @@ const shuffleProfiles = async () => {
       profileImage: profileAtIndex.profileImages,
       backgroundImage: profileAtIndex.backgroundImages,
     })
-    const profile = await browserProcessMetadata(metadata, keccak256)
     randomProfiles.push({
       address: profileAtIndex.id,
-      ...profile,
+      ...metadata,
     })
   }
 
