@@ -21,7 +21,7 @@ fragment profile on Profile {
     url
     height
   }
-  receivedAssets {
+  receivedAssets: lsp5ReceivedAssets {
     id
   }
   lsp12IssuedAssets {

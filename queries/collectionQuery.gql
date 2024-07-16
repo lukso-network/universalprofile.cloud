@@ -1,13 +1,42 @@
-query collection($address: String!, $limit: Int, $offset: Int) {
+query collection(
+  $address: String!
+  $limit: Int
+  $offset: Int
+  $search: String
+) {
   collection: Token(
-    where: { baseAsset_id: { _ilike: $address } }
+    where: {
+      _and: [
+        { baseAsset_id: { _ilike: $address } }
+        {
+          _or: [
+            { formattedTokenId: { _ilike: $search } }
+            { tokenId: { _ilike: $search } }
+          ]
+        }
+      ]
+    }
     limit: $limit
     order_by: { tokenId: asc }
     offset: $offset
   ) {
     ...token
   }
-  meta: Token_aggregate(where: { baseAsset_id: { _ilike: $address } }) {
+
+  # use aggregate to count total number of tokens
+  meta: Token_aggregate(
+    where: {
+      _and: [
+        { baseAsset_id: { _ilike: $address } }
+        {
+          _or: [
+            { formattedTokenId: { _ilike: $search } }
+            { tokenId: { _ilike: $search } }
+          ]
+        }
+      ]
+    }
+  ) {
     aggregate {
       count
     }

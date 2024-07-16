@@ -1,6 +1,6 @@
 query profileAssets($address: String!) {
   profiles: Profile(where: { id: { _ilike: $address } }) {
-    receivedAssets {
+    receivedAssets: lsp5ReceivedAssets {
       asset {
         ...asset
       }
