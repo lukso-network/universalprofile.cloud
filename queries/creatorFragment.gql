@@ -2,9 +2,10 @@ fragment creator on Profile {
   id
   name
   profileImages(order_by: { width: desc }) {
-    url
+    url: src
     width
     height
+    verified
   }
   lsp12IssuedAssets {
     asset {

@@ -16,15 +16,13 @@ export const createAssetObject = (
     rawMetadata = _rawMetadata
   }
 
-  const metadata = prepareMetadata({
-    LSP4Metadata: {
-      images: unflatArray(rawMetadata?.images as Image[][]),
-      icon: rawMetadata?.icons as Image[],
-      description: rawMetadata?.description as string,
-      assets: rawMetadata?.assets as AssetMetadata[],
-      attributes: rawMetadata?.attributes as AttributeMetadata[],
-      links: rawMetadata?.links as LinkMetadata[],
-    },
+  const metadata = validateLsp4Metadata({
+    images: unflatArray(rawMetadata?.images as Image[][]),
+    icon: rawMetadata?.icons as Image[],
+    description: rawMetadata?.description as string,
+    assets: rawMetadata?.assets as AssetMetadata[],
+    attributes: rawMetadata?.attributes as AttributeMetadata[],
+    links: rawMetadata?.links as LinkMetadata[],
   })
 
   // TODO due to duplicate creator bug we need to add additional filter, remove this after indexer is fixed
