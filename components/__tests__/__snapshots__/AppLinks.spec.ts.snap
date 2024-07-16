@@ -1,0 +1,38 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AppLinks > should render empty links 1`] = `"<div id="test-wrapper">[]</div>"`;
+
+exports[`AppLinks > should render hasLinks 1`] = `"<div id="test-wrapper">true</div>"`;
+
+exports[`AppLinks > should render linksParsed 1`] = `
+"<div id="test-wrapper">[
+  {
+  "title": "Twitter",
+  "url": "https://twitter.com",
+  "socialMediaName": "x"
+  },
+  {
+  "title": "Custom link",
+  "url": "https://example.com"
+  }
+  ]</div>"
+`;
+
+exports[`AppLinks > should render otherLinks 1`] = `
+"<div id="test-wrapper">[
+  {
+  "title": "Custom link",
+  "url": "https://example.com"
+  }
+  ]</div>"
+`;
+
+exports[`AppLinks > should render socialMediaLinks 1`] = `
+"<div id="test-wrapper">[
+  {
+  "title": "Twitter",
+  "url": "https://twitter.com",
+  "socialMediaName": "x"
+  }
+  ]</div>"
+`;
