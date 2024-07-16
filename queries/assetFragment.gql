@@ -27,16 +27,18 @@ fragment asset on Asset {
     url
     title
   }
-  images(order_by: { index: asc }) {
-    url
+  images(order_by: { width: desc }) {
+    url: src
     width
     height
     index
+    verified
   }
   icons(order_by: { width: desc }) {
-    url
+    url: src
     width
     height
+    verified
   }
   ...fileAssets
   attributes {
