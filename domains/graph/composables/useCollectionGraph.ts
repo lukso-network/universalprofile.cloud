@@ -4,6 +4,7 @@ type CollectionFilters = {
   address?: MaybeRef<Address | undefined>
   limit: number
   offset?: number
+  search?: string
 }
 
 type QueryResult = CollectionQuery
@@ -16,6 +17,7 @@ export async function useCollectionGraph(filters: CollectionFilters) {
       address,
       limit: filters.limit,
       offset: filters.offset,
+      search: filters.search,
     })
 
   if (graphLog.enabled) {

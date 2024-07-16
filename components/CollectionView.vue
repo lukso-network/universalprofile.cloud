@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useInfiniteScroll } from '@vueuse/core'
+
 type Props = {
   asset?: Asset | null
 }
@@ -8,23 +10,91 @@ const { isRpc } = useDataProvider()
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 880)
+const { formatMessage } = useIntl()
+const search = ref('')
+const isLoading = ref(false)
+const limit = ref(60)
+const offset = ref(0)
+const total = ref<number | null>(null)
+const data = ref<Asset[]>([])
+const el = ref<Document | null>(null)
+const hasData = computed(() => data.value.length > 0)
+const attributes = ref<CollectionAttribute[]>([])
 
-const loadMore = async (): Promise<LoadMoreParams> => {
+const loadMore = async (appendData?: boolean) => {
+  // we cannot fetch collection using RPC
   if (isRpc) {
-    // we cannot fetch collection using RPC
-    return { data: [], meta: { total: 0 } }
+    return
   }
 
-  const { collection: data, meta } = await useCollectionGraph({
-    address: asset.value?.address,
-    limit: limit.value,
-    offset: offset.value,
-  })
+  if (isLoading.value) {
+    return
+  }
 
-  return { data, meta }
+  // in new query mode we reset the offset and total
+  if (!appendData) {
+    offset.value = 0
+    total.value = null
+    data.value = []
+  }
+
+  // if we reached the end of the collection
+  if (total.value !== null && offset.value >= total.value) {
+    return
+  }
+
+  isLoading.value = true
+  await sleep(250)
+
+  try {
+    const { collection: _data, meta } = await useCollectionGraph({
+      address: asset.value?.address,
+      limit: limit.value,
+      offset: offset.value,
+      search: `%${search.value}%`,
+    })
+
+    offset.value = offset.value + limit.value
+    total.value = meta.total
+
+    if (appendData) {
+      data.value = data.value.concat(_data)
+    } else {
+      data.value = _data
+    }
+  } catch (error) {
+    console.error(error)
+    return
+  } finally {
+    isLoading.value = false
+  }
 }
 
-const { offset, limit, isLoading, hasData, data } = useLoadMoreData(loadMore)
+const handleSearch = async (customEvent: CustomEvent) => {
+  const searchTerm = customEvent.detail?.value
+  search.value = searchTerm
+  await loadMore()
+}
+
+const handleSelectAttribute = async (customEvent: CustomEvent) => {
+  const attribute = customEvent.detail?.value
+
+  console.log(attribute)
+  // search.value = attribute
+  // await loadMore()
+}
+
+useInfiniteScroll(el, () => loadMore(true), { distance: 500 })
+
+onMounted(async () => {
+  el.value = document
+
+  const { attributes: _attributes } = await useCollectionAttributesGraph({
+    address: asset.value?.address,
+  })
+
+  attributes.value = _attributes
+})
 </script>
 
 <template>
@@ -70,13 +140,35 @@ const { offset, limit, isLoading, hasData, data } = useLoadMoreData(loadMore)
         </div>
       </div>
     </lukso-card>
-    <div class="pb-4"></div>
+    <div
+      class="grid grid-cols-[max-content,max-content,auto,max-content] gap-2 pb-4"
+    >
+      <lukso-select
+        size="small"
+        :placeholder="formatMessage('collection_filter_attribute_placeholder')"
+        hide-loading
+        :options="JSON.stringify(attributes)"
+        @on-select="handleSelectAttribute"
+      ></lukso-select>
+      <lukso-search
+        size="small"
+        hide-loading
+        :placeholder="formatMessage('collection_filter_search_placeholder')"
+        @on-search="handleSearch"
+      ></lukso-search>
+      <div></div>
+      <lukso-select size="small" placeholder="Recently added"></lukso-select>
+    </div>
     <div v-if="hasData">
       <NftListGraph :nfts="data" without-title />
     </div>
-    <AppLoader
+    <div v-else-if="!isLoading">
+      {{ formatMessage('collection_no_results') }}
+    </div>
+    <NftListGraph
       v-if="isLoading"
-      class="absolute bottom-0 left-[calc(50%-20px)]"
+      :nfts="[{ isLoading: true }, { isLoading: true }, { isLoading: true }]"
+      without-title
     />
   </div>
 </template>
