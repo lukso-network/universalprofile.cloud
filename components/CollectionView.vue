@@ -162,12 +162,7 @@ onMounted(async () => {
         </div>
         <div class="flex flex-col gap-4">
           <AssetDescription :asset="token" without-title />
-          <AssetLinks
-            :asset="token"
-            without-title
-            button-size="small"
-            class="mt-4"
-          />
+          <AssetLinks :asset="token" without-title button-size="small" />
         </div>
       </div>
     </lukso-card>
