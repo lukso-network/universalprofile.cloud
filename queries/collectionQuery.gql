@@ -1,42 +1,20 @@
 query collection(
-  $address: String!
+  $where: Token_bool_exp
   $limit: Int
   $offset: Int
-  $search: String
+  $orderBy: order_by
 ) {
   collection: Token(
-    where: {
-      _and: [
-        { baseAsset_id: { _ilike: $address } }
-        {
-          _or: [
-            { formattedTokenId: { _ilike: $search } }
-            { tokenId: { _ilike: $search } }
-          ]
-        }
-      ]
-    }
+    where: $where
     limit: $limit
-    order_by: { tokenId: asc }
+    order_by: { blockNumber: $orderBy }
     offset: $offset
   ) {
     ...token
   }
 
   # use aggregate to count total number of tokens
-  meta: Token_aggregate(
-    where: {
-      _and: [
-        { baseAsset_id: { _ilike: $address } }
-        {
-          _or: [
-            { formattedTokenId: { _ilike: $search } }
-            { tokenId: { _ilike: $search } }
-          ]
-        }
-      ]
-    }
-  ) {
+  meta: Token_aggregate(where: $where) {
     aggregate {
       count
     }

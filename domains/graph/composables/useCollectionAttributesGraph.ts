@@ -1,7 +1,9 @@
+import { useQuery } from '@tanstack/vue-query'
+
 import type { CollectionAttributesQuery } from '@/.nuxt/gql/default'
 
 type Filters = {
-  address?: MaybeRef<Address | undefined>
+  address?: Address
 }
 
 type QueryResult = CollectionAttributesQuery
@@ -11,43 +13,30 @@ export type CollectionAttribute = {
   values: string[]
 }
 
-export async function useCollectionAttributesGraph(filters: Filters) {
-  const address = unref(filters.address)
+export function useCollectionAttributesGraph(filters: Filters) {
+  const { selectedChainId: chainId } = useAppStore()
 
-  const { attributes: attributesData }: QueryResult =
-    await GqlCollectionAttributes({
-      address,
-    })
+  return useQuery({
+    queryKey: ['collection-attributes', filters.address, chainId],
+    queryFn: async () => {
+      const { attributes: attributesData }: QueryResult =
+        await GqlCollectionAttributes({
+          address: filters.address,
+        })
 
-  if (graphLog.enabled) {
-    graphLog('collection-attributes-raw', attributesData)
-  }
-
-  const temp: { [key: string]: string[] } = {}
-
-  for (const { key, value } of attributesData) {
-    if (key !== null && key !== undefined) {
-      if (!temp[key]) {
-        temp[key] = [value as string]
-      } else {
-        temp[key].push(value as string)
+      if (graphLog.enabled) {
+        graphLog('collection-attributes-raw', attributesData)
       }
-    }
-  }
 
-  const attributes: CollectionAttribute[] = Object.keys(temp)
-    .map(group => ({
-      id: group.toLowerCase().replace(/\s/g, '-'),
-      group,
-      values: temp[group],
-    }))
-    .sort((a, b) => a.group.localeCompare(b.group))
+      const attributes: CollectionAttribute[] = groupAttributes(attributesData)
 
-  if (graphLog.enabled) {
-    graphLog('collection-attributes', attributes)
-  }
+      if (graphLog.enabled) {
+        graphLog('collection-attributes', attributes)
+      }
 
-  return {
-    attributes,
-  }
+      return {
+        attributes,
+      }
+    },
+  })
 }

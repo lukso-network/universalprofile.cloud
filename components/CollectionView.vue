@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useInfiniteScroll } from '@vueuse/core'
 
+import type { SelectStringOption } from '@lukso/web-components'
+
 type Props = {
   asset?: Asset | null
 }
@@ -11,6 +13,7 @@ const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 880)
 const { formatMessage } = useIntl()
+const address = useRouter().currentRoute.value.params?.collectionAddress
 const search = ref('')
 const isLoading = ref(false)
 const limit = ref(60)
@@ -19,7 +22,19 @@ const total = ref<number | null>(null)
 const data = ref<Asset[]>([])
 const el = ref<Document | null>(null)
 const hasData = computed(() => data.value.length > 0)
-const attributes = ref<CollectionAttribute[]>([])
+const { data: attributesData, isLoading: isLoadingAttributes } =
+  useCollectionAttributesGraph({
+    address,
+  })
+const selectedAttributes = ref<SelectStringOption[]>([])
+const orderBy = ref<SelectStringOption>({
+  id: 'asc',
+  value: 'Recently added',
+})
+const orders: SelectStringOption[] = [
+  { id: 'asc', value: 'Recently added' },
+  { id: 'desc', value: 'Lastly added' },
+]
 
 const loadMore = async (appendData?: boolean) => {
   // we cannot fetch collection using RPC
@@ -48,10 +63,12 @@ const loadMore = async (appendData?: boolean) => {
 
   try {
     const { collection: _data, meta } = await useCollectionGraph({
-      address: asset.value?.address,
+      address,
       limit: limit.value,
       offset: offset.value,
       search: `%${search.value}%`,
+      orderBy: orderBy.value.id || 'asc',
+      attributes: unref(selectedAttributes.value),
     })
 
     offset.value = offset.value + limit.value
@@ -76,29 +93,43 @@ const handleSearch = async (customEvent: CustomEvent) => {
   await loadMore()
 }
 
-const handleSelectAttribute = async (customEvent: CustomEvent) => {
-  const attribute = customEvent.detail?.value
+const handleSelectAttribute = (customEvent: CustomEvent) => {
+  const attribute = customEvent.detail?.value as SelectStringOption
 
-  console.log(attribute)
-  // search.value = attribute
-  // await loadMore()
+  if (selectedAttributes.value.some(value => value.id === attribute.id)) {
+    selectedAttributes.value = selectedAttributes.value.filter(
+      value => value.id !== attribute.id
+    )
+  } else {
+    selectedAttributes.value = [...selectedAttributes.value, attribute]
+  }
+
+  loadMore()
+}
+
+const handleRemoveAttribute = (attribute: SelectStringOption) => {
+  selectedAttributes.value = selectedAttributes.value.filter(
+    value => value.id !== attribute.id
+  )
+  loadMore()
+}
+
+const handleSelectOrder = (customEvent: CustomEvent) => {
+  const order = customEvent.detail?.value
+  orderBy.value = order
+  loadMore()
 }
 
 useInfiniteScroll(el, () => loadMore(true), { distance: 500 })
 
 onMounted(async () => {
   el.value = document
-
-  const { attributes: _attributes } = await useCollectionAttributesGraph({
-    address: asset.value?.address,
-  })
-
-  attributes.value = _attributes
 })
 </script>
 
 <template>
   <div class="relative mx-auto grid max-w-content pb-28">
+    <!-- Asset info -->
     <lukso-card
       variant="dapp"
       :background-url="assetImage?.url"
@@ -140,31 +171,86 @@ onMounted(async () => {
         </div>
       </div>
     </lukso-card>
-    <div
-      class="grid grid-cols-[max-content,max-content,auto,max-content] gap-2 pb-4"
-    >
+
+    <!-- Filters -->
+    <div class="grid grid-cols-[auto,100px,max-content] gap-2 pb-4">
+      <div class="flex flex-wrap gap-2">
+        <!-- Attributes loading state -->
+        <div v-if="isLoadingAttributes" class="flex gap-2">
+          <AppPlaceholderLine class="h-[28px] w-[100px] rounded-8" />
+          <AppPlaceholderLine class="h-[28px] w-[100px] rounded-8" />
+          <AppPlaceholderLine class="h-[28px] w-[100px] rounded-8" />
+        </div>
+
+        <!-- Attributes dropdowns -->
+        <lukso-select
+          v-for="attribute in attributesData?.attributes"
+          :key="attribute.id"
+          size="small"
+          :placeholder="attribute.group"
+          show-selection-counter
+          :options="
+            JSON.stringify(
+              attribute.values.map(value => ({
+                id: slug(value),
+                value,
+                group: attribute.group,
+              }))
+            )
+          "
+          :value="
+            JSON.stringify(
+              selectedAttributes.filter(
+                value => value.group === attribute.group
+              )
+            )
+          "
+          @on-select="handleSelectAttribute"
+        ></lukso-select>
+
+        <!-- TokenId Search -->
+        <lukso-search
+          size="small"
+          hide-loading
+          :placeholder="formatMessage('collection_filter_search_placeholder')"
+          @on-search="handleSearch"
+        ></lukso-search>
+      </div>
+      <div></div>
+
+      <!-- Order by -->
       <lukso-select
         size="small"
-        :placeholder="formatMessage('collection_filter_attribute_placeholder')"
-        hide-loading
-        :options="JSON.stringify(attributes)"
-        @on-select="handleSelectAttribute"
+        :value="JSON.stringify(orderBy)"
+        :options="JSON.stringify(orders)"
+        @on-select="handleSelectOrder"
       ></lukso-select>
-      <lukso-search
-        size="small"
-        hide-loading
-        :placeholder="formatMessage('collection_filter_search_placeholder')"
-        @on-search="handleSearch"
-      ></lukso-search>
-      <div></div>
-      <lukso-select size="small" placeholder="Recently added"></lukso-select>
     </div>
+
+    <!-- Selected attributes -->
+    <div class="flex gap-2 pb-4">
+      <lukso-tag
+        v-for="attribute in selectedAttributes"
+        :key="attribute.id"
+        is-rounded
+        class="cursor-pointer"
+        @click="() => handleRemoveAttribute(attribute)"
+        >{{ attribute.value }}
+        <lukso-icon name="cross-outline" size="small" class="ml-1"></lukso-icon>
+      </lukso-tag>
+    </div>
+
+    <!-- List -->
     <div v-if="hasData">
       <NftListGraph :nfts="data" without-title />
     </div>
+
+    <!-- Empty state -->
     <div v-else-if="!isLoading">
       {{ formatMessage('collection_no_results') }}
     </div>
+
+    <!-- Loading state -->
     <NftListGraph
       v-if="isLoading"
       :nfts="[{ isLoading: true }, { isLoading: true }, { isLoading: true }]"

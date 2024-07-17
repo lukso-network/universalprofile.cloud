@@ -3,7 +3,8 @@ query collectionAttributes($address: String!) {
     where: { token: { baseAsset_id: { _ilike: $address } } }
     distinct_on: value
   ) {
-    key
+    group: key
     value
+    attributeType
   }
 }
