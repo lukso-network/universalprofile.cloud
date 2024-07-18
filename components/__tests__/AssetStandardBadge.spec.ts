@@ -1,6 +1,6 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime'
 import { fireEvent, screen } from '@testing-library/vue'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 import AssetStandardBadge from '@/components/AssetStandardBadge.vue'
 
