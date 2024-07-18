@@ -51,10 +51,10 @@ useProtectedRoute()
           <lukso-icon name="database"></lukso-icon>
           <div class="paragraph-inter-16-semi-bold">
             <h3 class="pb-1">
-              {{ formatMessage('settings_app_data_provider_title') }}
+              {{ formatMessage('settings_data_provider_title') }}
             </h3>
             <p class="paragraph-inter-14-regular text-neutral-40">
-              {{ formatMessage('settings_app_data_provider_description') }}
+              {{ formatMessage('settings_data_provider_description') }}
             </p>
           </div>
           <lukso-icon
