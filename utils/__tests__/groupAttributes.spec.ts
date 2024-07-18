@@ -30,7 +30,7 @@ describe('groupAttributes', () => {
     const result = groupAttributes(attributesData)
     expect(result).toEqual([
       { id: 'contact', group: 'contact', values: ['email'] },
-      { id: 'social', group: 'social', values: ['twitter', 'facebook'] },
+      { id: 'social', group: 'social', values: ['facebook', 'twitter'] },
     ])
   })
 
