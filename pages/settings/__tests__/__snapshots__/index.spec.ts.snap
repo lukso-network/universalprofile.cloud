@@ -1,0 +1,34 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Settings index page > should render the settings index page 1`] = `
+"<div id="test-wrapper">
+  <div class="relative">
+    <div class="relative px-4 py-6 sm:py-20 opacity-0">
+      <div class="mx-auto w-full sm:w-[440px]">
+        <h1 class="heading-inter-21-semi-bold pb-4">Settings</h1><!-- Add Missing Assets -->
+        <section class="group w-full cursor-pointer select-none rounded-t-12 border border-neutral-90 bg-neutral-100 p-4 transition">
+          <div class="grid grid-cols-[max-content,auto,max-content] gap-2">
+            <lukso-icon name="search"></lukso-icon>
+            <div class="paragraph-inter-16-semi-bold">
+              <h3 class="pb-1">Add missing assets</h3>
+              <p class="paragraph-inter-14-regular text-neutral-40">Easily add assets that you have been sent or are missing from your profile.</p>
+            </div>
+            <lukso-icon name="arrow-right-lg" class="transition group-hover:translate-x-1"></lukso-icon>
+          </div>
+        </section><!-- Application data provider (graph/rpc) -->
+        <section class="group w-full cursor-pointer select-none rounded-b-12 border border-t-0 border-neutral-90 bg-neutral-100 p-4 transition">
+          <div class="grid grid-cols-[max-content,auto,max-content] gap-2">
+            <lukso-icon name="database"></lukso-icon>
+            <div class="paragraph-inter-16-semi-bold">
+              <h3 class="pb-1">Application endpoint</h3>
+              <p class="paragraph-inter-14-regular text-neutral-40">Change how the application loads data</p>
+            </div>
+            <lukso-icon name="arrow-right-lg" class="transition group-hover:translate-x-1"></lukso-icon>
+          </div>
+        </section>
+      </div>
+    </div>
+    <lukso-icon name="progress-indicator-alt" size="x-large" class="absolute left-[calc(50vw-20px)] top-[calc(50vh-20px)] sm:top-[300px]"></lukso-icon>
+  </div>
+</div>"
+`;

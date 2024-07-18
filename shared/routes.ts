@@ -54,3 +54,7 @@ export const settingsMissingAssetsSuccessRoute = (assetAddress?: Address) => {
   assert(assetAddress, 'Missing asset address in route')
   return `/settings/missing-assets/${assetAddress}/success`
 }
+
+export const settingsDataProviderRoute = () => {
+  return '/settings/data-provider'
+}
