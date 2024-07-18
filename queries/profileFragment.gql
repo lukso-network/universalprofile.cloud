@@ -23,21 +23,5 @@ fragment profile on Profile {
     height
     verified
   }
-  lsp5ReceivedAssets {
-    id
-  }
-  lsp12IssuedAssets {
-    id
-  }
   ...avatars
-  holds {
-    asset {
-      id
-    }
-    token {
-      baseAsset {
-        id
-      }
-    }
-  }
 }

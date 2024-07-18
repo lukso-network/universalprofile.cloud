@@ -156,6 +156,7 @@ const handleBlur = async (customEvent: CustomEvent) => {
     class="mt-4 w-full"
     custom-class="paragraph-ptmono-14-regular"
     @on-search="handleReceiverSearch"
+    @on-input-click="handleReceiverSearch"
     @on-select="handleSelect"
     @on-blur="handleBlur"
   ></lukso-search>

@@ -79,17 +79,6 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
         checksummed,
         isResolved: !!fullName,
       }
-      const receivedAssets: string[] = Array.from(
-        new Set(
-          (
-            profileData?.holds?.map(
-              ({ asset, token }) => asset?.id || token?.baseAsset?.id || ''
-            ) || []
-          ).filter(address => !!address)
-        )
-      )
-      const issuedAssets: Address[] | undefined =
-        profileData?.lsp12IssuedAssets?.map(asset => asset.id as Address)
 
       const profile = {
         isLoading,
@@ -97,8 +86,6 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
         name,
         standard,
         profileImage,
-        receivedAssets,
-        issuedAssets,
         backgroundImage,
         balance,
         links,

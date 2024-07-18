@@ -30,9 +30,9 @@ exports[`NftListCardCreatorsGraph > large size > render loading state 1`] = `
 "<div id="test-wrapper">
   <div class="grid grid-cols-[max-content,auto] gap-1">
     <div class="animate-pulse rounded-full bg-neutral-90 size-10"></div>
-    <div class="grid w-full flex-col items-center gap-1 pl-2">
-      <div class="animate-pulse rounded-4 bg-neutral-90 h-3 w-[60px]"></div>
-      <div class="animate-pulse rounded-4 bg-neutral-90 h-3 w-[120px]"></div>
+    <div class="grid h-[24px] w-full flex-col items-center gap-1 pl-2">
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-2 w-[60px]"></div>
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-2 w-[120px]"></div>
     </div>
   </div>
 </div>"
@@ -51,9 +51,9 @@ exports[`NftListCardCreatorsGraph > render loading state 1`] = `
 "<div id="test-wrapper">
   <div class="grid grid-cols-[max-content,auto] gap-1">
     <div class="animate-pulse rounded-full bg-neutral-90 size-6"></div>
-    <div class="grid w-full flex-col items-center gap-1 pl-1">
-      <div class="animate-pulse rounded-4 bg-neutral-90 h-3 w-[40px]"></div>
-      <div class="animate-pulse rounded-4 bg-neutral-90 h-3 w-[80px]"></div>
+    <div class="grid h-[24px] w-full flex-col items-center gap-1 pl-1">
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-2 w-[40px]"></div>
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-2 w-[80px]"></div>
     </div>
   </div>
 </div>"

@@ -81,6 +81,7 @@ watchEffect(() => {
     is-full-width
     class="w-full"
     @on-search="handleSearch"
+    @on-input-click="handleSearch"
     @on-select="handleSelect"
   ></lukso-search>
 </template>

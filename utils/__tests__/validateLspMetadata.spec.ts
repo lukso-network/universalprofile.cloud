@@ -159,6 +159,26 @@ describe('validateLinks', () => {
     const result = validateLinks(links)
     expect(result).toEqual(links)
   })
+
+  test('should remove invalid links', () => {
+    const links = [
+      {
+        title: 'Example Link',
+        url: 'example.com',
+      },
+      {
+        title: 'Another Example Link',
+        url: 'https://example.com/another',
+      },
+    ]
+    const result = validateLinks(links)
+    expect(result).toEqual([
+      {
+        title: 'Another Example Link',
+        url: 'https://example.com/another',
+      },
+    ])
+  })
 })
 
 describe('validateAssets', () => {

@@ -8,7 +8,7 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div class="pt-8">
+  <div>
     <h3 v-if="!withoutTitle" class="heading-inter-17-semi-bold pb-4">
       {{ $formatMessage('collectibles_title') }}
     </h3>

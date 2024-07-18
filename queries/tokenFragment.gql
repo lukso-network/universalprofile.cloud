@@ -5,6 +5,7 @@ fragment token on Token {
   lsp8TokenIdFormat
   tokenId
   formattedTokenId
+  blockNumber
 
   baseAsset {
     ...asset
@@ -25,7 +26,7 @@ fragment token on Token {
     url
     title
   }
-  images(order_by: { width: desc }) {
+  images(order_by: { index: asc, width: desc }) {
     url: src
     width
     height
