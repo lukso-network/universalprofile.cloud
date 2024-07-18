@@ -1,9 +1,9 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createTestingPinia } from '@pinia/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import Index from '../index.vue'
 import { useAppStore } from '@/stores/app'
+import Index from '../index.vue'
 
 describe('Settings data-provider page', () => {
   beforeEach(() => {
