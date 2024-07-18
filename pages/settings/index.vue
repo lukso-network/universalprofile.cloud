@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const connectedProfile = useProfile().connectedProfile()
 const { formatMessage } = useIntl()
+const { isConnected } = storeToRefs(useAppStore())
 
 const handleOpenAddMissingAssets = () => {
   navigateTo(settingsMissingAssetsRoute())
@@ -9,8 +10,6 @@ const handleOpenAddMissingAssets = () => {
 const handleOpenApplicationDataProvider = () => {
   navigateTo(settingsDataProviderRoute())
 }
-
-useProtectedRoute()
 </script>
 
 <template>
@@ -22,7 +21,8 @@ useProtectedRoute()
 
       <!-- Add Missing Assets -->
       <section
-        class="group w-full cursor-pointer select-none rounded-t-12 border border-neutral-90 bg-neutral-100 p-4 transition"
+        v-if="isConnected"
+        class="group w-full cursor-pointer select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b"
         @click="handleOpenAddMissingAssets"
       >
         <div class="grid grid-cols-[max-content,auto,max-content] gap-2">
@@ -44,7 +44,7 @@ useProtectedRoute()
 
       <!-- Application data provider (graph/rpc) -->
       <section
-        class="group w-full cursor-pointer select-none rounded-b-12 border border-t-0 border-neutral-90 bg-neutral-100 p-4 transition"
+        class="group w-full cursor-pointer select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b"
         @click="handleOpenApplicationDataProvider"
       >
         <div class="grid grid-cols-[max-content,auto,max-content] gap-2">

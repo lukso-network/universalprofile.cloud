@@ -40,7 +40,7 @@ const handleEnableRpc = () => {
 
       <!-- Enable GraphQL data provider -->
       <section
-        class="group w-full select-none rounded-t-12 border border-neutral-90 bg-neutral-100 p-4 transition"
+        class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b"
         @click="handleEnableGraph"
         :class="{
           'cursor-pointer': isRpc,
@@ -80,7 +80,7 @@ const handleEnableRpc = () => {
 
       <!-- Enable RPC data provider -->
       <section
-        class="group w-full select-none rounded-b-12 border border-t-0 border-neutral-90 bg-neutral-100 p-4 transition"
+        class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b"
         @click="handleEnableRpc"
         :class="{
           'cursor-pointer': isGraph,
