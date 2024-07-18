@@ -223,7 +223,7 @@ onMounted(async () => {
     </div>
 
     <!-- Selected attributes -->
-    <div v-if="selectedAttributes.length" class="flex gap-2 pb-4">
+    <div v-if="selectedAttributes.length" class="flex flex-wrap gap-2 pb-4">
       <lukso-tag
         v-for="attribute in selectedAttributes"
         :key="attribute.id"
