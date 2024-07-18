@@ -21,7 +21,7 @@ exports[`Settings index page > should render the settings index page 1`] = `
             <lukso-icon name="database"></lukso-icon>
             <div class="paragraph-inter-16-semi-bold">
               <h3 class="pb-1">Application endpoint</h3>
-              <p class="paragraph-inter-14-regular text-neutral-40">Change how the application loads data</p>
+              <p class="paragraph-inter-14-regular text-neutral-40">Change how the application loads data.</p>
             </div>
             <lukso-icon name="arrow-right-lg" class="transition group-hover:translate-x-1"></lukso-icon>
           </div>

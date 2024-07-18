@@ -1,7 +1,7 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime'
 import { describe, it, expect, beforeEach } from 'vitest'
 
-import SettingsIndex from '../index.vue'
+import Index from '../index.vue'
 
 describe('Settings index page', () => {
   beforeEach(() => {
@@ -9,7 +9,7 @@ describe('Settings index page', () => {
   })
 
   it('should render the settings index page', async () => {
-    const component = await renderSuspended(SettingsIndex)
+    const component = await renderSuspended(Index)
 
     expect(component.html()).toMatchSnapshot()
   })
