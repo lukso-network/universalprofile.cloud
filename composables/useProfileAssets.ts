@@ -1,8 +1,8 @@
 export function useProfileAssets() {
   return (profileAddress?: MaybeRef<Address | null>) => {
-    const { isRpc } = useDataProvider()
+    const { isRpc } = storeToRefs(useAppStore())
 
-    if (isRpc) {
+    if (isRpc.value) {
       return useProfileAssetsRpc()(profileAddress)
     }
 

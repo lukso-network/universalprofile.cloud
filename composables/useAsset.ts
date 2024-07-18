@@ -3,9 +3,9 @@ export function useAsset() {
     address?: MaybeRef<Address | undefined>,
     tokenId?: MaybeRef<string | undefined>
   ) => {
-    const { isRpc } = useDataProvider()
+    const { isRpc } = storeToRefs(useAppStore())
 
-    if (isRpc) {
+    if (isRpc.value) {
       return useAssetRpc()(address, tokenId)
     }
 

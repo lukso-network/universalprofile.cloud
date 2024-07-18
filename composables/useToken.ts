@@ -1,8 +1,8 @@
 export function useToken() {
   return (asset?: MaybeRef<Asset | null | undefined>) => {
-    const { isRpc } = useDataProvider()
+    const { isRpc } = storeToRefs(useAppStore())
 
-    if (isRpc) {
+    if (isRpc.value) {
       return useTokenRpc()(asset)
     }
 

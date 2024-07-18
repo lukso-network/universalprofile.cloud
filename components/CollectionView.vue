@@ -4,13 +4,13 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { isRpc } = useDataProvider()
+const { isRpc } = storeToRefs(useAppStore())
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 880)
 
 const loadMore = async (): Promise<LoadMoreParams> => {
-  if (isRpc) {
+  if (isRpc.value) {
     // we cannot fetch collection using RPC
     return { data: [], meta: { total: 0 } }
   }
