@@ -180,7 +180,16 @@ export const validateLinks = (links: unknown): LinkMetadata[] => {
   return (
     (Array.isArray(links) &&
       links?.filter(link => {
-        return link?.title && link?.url
+        const isValidURL = (url: string): boolean => {
+          try {
+            new URL(url)
+            return true
+          } catch (error) {
+            return false
+          }
+        }
+
+        return link?.title && link?.url && isValidURL(link?.url)
       })) ||
     []
   )
