@@ -1,0 +1,10 @@
+query collectionAttributes($address: String!) {
+  attributes: TokenAttribute(
+    where: { token: { baseAsset_id: { _ilike: $address } } }
+    distinct_on: value
+  ) {
+    group: key
+    value
+    attributeType
+  }
+}

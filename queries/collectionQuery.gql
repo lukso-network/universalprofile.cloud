@@ -1,13 +1,20 @@
-query collection($address: String!, $limit: Int, $offset: Int) {
+query collection(
+  $where: Token_bool_exp
+  $limit: Int
+  $offset: Int
+  $orderBy: order_by
+) {
   collection: Token(
-    where: { baseAsset_id: { _ilike: $address } }
+    where: $where
     limit: $limit
-    order_by: { tokenId: asc }
+    order_by: { blockNumber: $orderBy }
     offset: $offset
   ) {
     ...token
   }
-  meta: Token_aggregate(where: { baseAsset_id: { _ilike: $address } }) {
+
+  # use aggregate to count total number of tokens
+  meta: Token_aggregate(where: $where) {
     aggregate {
       count
     }

@@ -172,7 +172,11 @@ const isLoadingAssets = computed(() =>
         </div>
         <div v-else>
           <TokenListGraph v-if="hasEmptyTokens" :tokens="tokens" />
-          <NftListGraph v-if="hasEmptyCollectibles" :nfts="collectibles" />
+          <NftListGraph
+            v-if="hasEmptyCollectibles"
+            :nfts="collectibles"
+            class="pt-8"
+          />
           <AppLoader
             v-if="isLoadingAssets"
             class="relative left-[calc(50%-20px)] mt-20"

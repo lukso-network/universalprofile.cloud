@@ -49,6 +49,7 @@
   "web3_connect_no_extension": "You don't have the Universal Profile browser extension installed.",
   "dapp_showcase_01_title": "universal.page",
   "not_up_title": "Not a Universal Profile",
+  "collection_filter_attribute_placeholder": "Attribute",
   "dapp_showcase_08_url": "https://lsp8.app/",
   "no_asset_balance": "You don't own this asset.",
   "asset_all_creators_partial": "Not all creators are verified",

@@ -111,9 +111,8 @@ const handleBuyLyx = () => {
                 description: $formatMessage('lyx_details_description'),
               },
             }"
-            class="mb-8"
           />
-          <AssetLinks :asset="{ resolvedMetadata: { links } }" class="mb-8" />
+          <AssetLinks :asset="{ resolvedMetadata: { links } }" />
         </div>
       </div>
     </div>
