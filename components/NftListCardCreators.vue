@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { isRpc, isGraph } = useDataProvider()
+const { isRpc, isGraph } = storeToRefs(useAppStore())
 
 type Props = {
   asset?: Asset

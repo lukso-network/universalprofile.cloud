@@ -1,7 +1,7 @@
 export const getProfile = (profileAddress: MaybeRef<Address | undefined>) => {
-  const { isRpc } = useDataProvider()
+  const { isRpc } = storeToRefs(useAppStore())
 
-  if (isRpc) {
+  if (isRpc.value) {
     return useProfileRpc().getProfile(profileAddress)
   }
 

@@ -1,5 +1,5 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 import AssetDescription from '@/components/AssetDescription.vue'
 

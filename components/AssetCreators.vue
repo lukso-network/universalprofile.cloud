@@ -5,7 +5,7 @@ type Props = {
 
 defineProps<Props>()
 
-const { isRpc, isGraph } = useDataProvider()
+const { isRpc, isGraph } = storeToRefs(useAppStore())
 </script>
 
 <template>

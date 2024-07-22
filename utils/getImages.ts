@@ -95,10 +95,10 @@ export const getOptimizedImage = (
 ): Ref<ImageItem | null> => {
   const dpr = window.devicePixelRatio || 1
   const currentImage = getImageBySize(image, width) || {}
-  const { isGraph } = useDataProvider()
+  const { isGraph } = storeToRefs(useAppStore())
 
   // in graph mode we don't need to verify the images
-  if (isGraph) {
+  if (isGraph.value) {
     return computed<ImageItem | null>(() => {
       const { url, verified } = currentImage?.value || {}
 

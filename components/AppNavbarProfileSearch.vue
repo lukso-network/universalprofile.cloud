@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { isGraph, isRpc } = useDataProvider()
+const { isGraph, isRpc } = storeToRefs(useAppStore())
 </script>
 
 <template>

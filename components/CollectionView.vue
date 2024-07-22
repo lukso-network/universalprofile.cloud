@@ -8,7 +8,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { isRpc } = useDataProvider()
+const { isRpc } = storeToRefs(useAppStore())
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 880)
@@ -38,7 +38,7 @@ const orders: SelectStringOption[] = [
 
 const loadMore = async (appendData?: boolean) => {
   // we cannot fetch collection using RPC
-  if (isRpc) {
+  if (isRpc.value) {
     return
   }
 
