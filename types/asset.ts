@@ -58,6 +58,7 @@ export type Asset = {
   tokenIdCreatorCount?: number
   lsp7Creators?: Address[]
   formattedTokenId?: string
+  blockNumber?: number
   isNativeToken?: boolean
   isOwned?: boolean
   isIssued?: boolean

@@ -8,6 +8,7 @@ fragment asset on Asset {
   interfaces
   standard
   totalSupply
+  blockNumber
 
   # creators
   owner {
