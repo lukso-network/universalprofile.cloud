@@ -1,13 +1,17 @@
 query profileAssets($address: String!) {
   profiles: Profile(where: { id: { _ilike: $address } }) {
     # TODO temporary use alias before index has the data
-    lsp5ReceivedAssets: receivedAssets {
+    lsp5ReceivedAssets {
       asset {
         ...asset
       }
     }
 
-    lsp12IssuedAssets {
+    # distinct by asset id to use holds
+
+    # TODO this is a fix for duplicates
+    lsp12IssuedAssets(where: { id: { _nlike: "%-0x%" } }) {
+      id
       asset {
         ...asset
       }
