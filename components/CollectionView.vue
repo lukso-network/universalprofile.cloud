@@ -21,20 +21,16 @@ const offset = ref(0)
 const total = ref<number | null>(null)
 const data = ref<Asset[]>([])
 const el = ref<Document | null>(null)
-const hasData = computed(() => data.value.length > 0)
 const { data: attributesData, isLoading: isLoadingAttributes } =
   useCollectionAttributesGraph({
     address,
   })
 const selectedAttributes = ref<SelectStringOption[]>([])
-const orderBy = ref<SelectStringOption>({
-  id: 'asc',
-  value: 'Recently added',
-})
-const orders: SelectStringOption[] = [
-  { id: 'asc', value: 'Recently added' },
-  { id: 'desc', value: 'Lastly added' },
-]
+const orderBy = ref<SelectStringOption>()
+const orders = ref<SelectStringOption[]>()
+
+const hasData = computed(() => data.value.length > 0)
+const hasFiltersSelected = computed(() => selectedAttributes.value.length > 0)
 
 const loadMore = async (appendData?: boolean) => {
   // we cannot fetch collection using RPC
@@ -67,7 +63,7 @@ const loadMore = async (appendData?: boolean) => {
       limit: limit.value,
       offset: offset.value,
       search: `%${search.value}%`,
-      orderBy: orderBy.value.id || 'asc',
+      orderBy: orderBy.value?.id || 'asc',
       attributes: unref(selectedAttributes.value),
     })
 
@@ -124,6 +120,15 @@ useInfiniteScroll(el, () => loadMore(true), { distance: 500 })
 
 onMounted(async () => {
   el.value = document
+
+  orderBy.value = {
+    id: 'asc',
+    value: formatMessage('filters_order_by_recently_added'),
+  }
+  orders.value = [
+    { id: 'asc', value: formatMessage('filters_order_by_recently_added') },
+    { id: 'desc', value: formatMessage('filters_order_by_lastly_added') },
+  ]
 })
 </script>
 
@@ -211,6 +216,8 @@ onMounted(async () => {
           @on-search="handleSearch"
         ></lukso-search>
       </div>
+
+      <!-- Separator -->
       <div></div>
 
       <!-- Order by -->
@@ -218,12 +225,13 @@ onMounted(async () => {
         size="small"
         :value="JSON.stringify(orderBy)"
         :options="JSON.stringify(orders)"
+        is-right
         @on-select="handleSelectOrder"
       ></lukso-select>
     </div>
 
     <!-- Selected attributes -->
-    <div v-if="selectedAttributes.length" class="flex flex-wrap gap-2 pb-4">
+    <div v-if="hasFiltersSelected" class="flex flex-wrap gap-2 pb-4">
       <lukso-tag
         v-for="attribute in selectedAttributes"
         :key="attribute.id"
