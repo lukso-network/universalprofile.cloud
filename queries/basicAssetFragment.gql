@@ -22,5 +22,6 @@ fragment basicAsset on Asset {
     height
     index
     verified
+    error
   }
 }

@@ -6,6 +6,7 @@ fragment creator on Profile {
     width
     height
     verified
+    error
   }
   lsp12IssuedAssets {
     asset {
