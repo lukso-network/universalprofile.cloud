@@ -1,24 +1,36 @@
 query profileAssets($address: String!) {
-  profiles: Profile(where: { id: { _ilike: $address } }) {
-    # TODO temporary use alias before index has the data
-    lsp5ReceivedAssets {
-      asset {
-        ...asset
-      }
+  receivedAssets: ReceivedAsset(where: { profile_id: { _ilike: $address } }) {
+    asset {
+      ...asset # TODO optimize to use only necessary fields
     }
+  }
 
-    # distinct by asset id to use holds
+  # TODO remove issuedAssets out when filters are done
+  # TODO this is a fix for duplicates with extra where clause
+  issuedAssets: IssuedAsset(
+    where: {
+      _and: [{ profile_id: { _ilike: $address } }, { id: { _nlike: "%-0x%" } }]
+    }
+  ) {
+    id
+    asset {
+      ...asset
+    }
+  }
 
-    # TODO this is a fix for duplicates
-    lsp12IssuedAssets(where: { id: { _nlike: "%-0x%" } }) {
+  # Side load holds to get balances
+  holds: Hold(where: { profile_id: { _ilike: $address } }) {
+    asset {
       id
-      asset {
-        ...asset
+      standard
+    }
+    token {
+      tokenId
+      baseAsset {
+        id
+        standard
       }
     }
-
-    holds {
-      ...hold
-    }
+    balance
   }
 }

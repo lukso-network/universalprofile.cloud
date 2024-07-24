@@ -10,8 +10,6 @@ type FiltersProfileAssets = {
 type AdditionalQueryOptions = { profileAddress?: Address | null }
 
 type QueryResult = ProfileAssetsQuery
-type QueryResultProfile = ProfileAssetsQuery['profiles']
-type QueryResultHolds = ProfileAssetsQuery['profiles'][0]['holds']
 
 export function useProfileAssetsGraph() {
   return ({ profileAddress: _profileAddress }: FiltersProfileAssets) => {
@@ -27,15 +25,25 @@ export function useProfileAssetsGraph() {
                 // 0
                 queryKey: ['profile-assets-graph', profileAddress, chainId],
                 queryFn: async () => {
-                  const { profiles }: QueryResult = await GqlProfileAssets({
-                    address: profileAddress,
-                  })
+                  const { receivedAssets, issuedAssets, holds }: QueryResult =
+                    await GqlProfileAssets({
+                      address: profileAddress,
+                    })
 
                   if (graphLog.enabled) {
-                    graphLog('profile-assets-raw', profiles)
+                    graphLog(
+                      'profile-assets-raw',
+                      receivedAssets,
+                      issuedAssets,
+                      holds
+                    )
                   }
 
-                  return profiles as QueryResultProfile
+                  return {
+                    receivedAssets,
+                    issuedAssets,
+                    holds,
+                  }
                 },
                 refetchInterval: 120_000,
                 staleTime: 250,
@@ -49,19 +57,22 @@ export function useProfileAssetsGraph() {
     return useQueries({
       queries,
       combine: results => {
-        const data = results[0]?.data as QueryResultProfile | undefined
-        const profilesData = data?.[0]
+        const data = results[0]?.data as QueryResult | undefined
+        const holdsData = data?.holds as QueryResult['holds'] | undefined
+        const receivedAssetsData = data?.receivedAssets as
+          | QueryResult['receivedAssets']
+          | undefined
+        const issuedAssetsData = data?.issuedAssets as
+          | QueryResult['issuedAssets']
+          | undefined
         const isLoading = results.some(result => result.isLoading)
 
-        const { lsp5ReceivedAssets, holds, lsp12IssuedAssets } =
-          profilesData || {}
-
         const receivedAssets =
-          lsp5ReceivedAssets?.flatMap(receivedAsset => {
+          receivedAssetsData?.flatMap(receivedAsset => {
             const tokenIdsData: Asset[] = []
 
             if (receivedAsset.asset?.standard === STANDARDS.LSP8) {
-              holds?.filter(hold => {
+              holdsData?.filter(hold => {
                 if (hold.token?.baseAsset?.id === receivedAsset.asset?.id) {
                   tokenIdsData.push({
                     ...createAssetObject(
@@ -88,7 +99,7 @@ export function useProfileAssetsGraph() {
                 receivedAsset.asset,
                 null,
                 tokenIdsData,
-                getBalanceForHold(holds, receivedAsset?.asset?.id) || '0'
+                getBalanceForHold(holdsData, receivedAsset?.asset?.id) || '0'
               ),
               isOwned: true,
               isIssued: false,
@@ -98,13 +109,13 @@ export function useProfileAssetsGraph() {
           }) || []
 
         const issuedAssets =
-          lsp12IssuedAssets?.flatMap(issuedAsset => {
+          issuedAssetsData?.flatMap(issuedAsset => {
             return {
               ...createAssetObject(
                 issuedAsset.asset,
                 null,
                 [],
-                getBalanceForHold(holds, issuedAsset?.asset?.id) || '0'
+                getBalanceForHold(holdsData, issuedAsset?.asset?.id) || '0'
               ),
               isOwned: false,
               isIssued: true,
@@ -121,7 +132,7 @@ export function useProfileAssetsGraph() {
   }
 }
 
-const getBalanceForHold = (holds?: QueryResultHolds, _address?: string) => {
+const getBalanceForHold = (holds?: QueryResult['holds'], _address?: string) => {
   const address = _address?.toLowerCase()
   return holds?.find(
     hold =>
