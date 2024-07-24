@@ -1,5 +1,6 @@
 query profileAssets($address: String!) {
-  receivedAssets: ReceivedAsset(where: { profile_id: { _ilike: $address } }) {
+  # TODO swap to ReceivedAsset in new indexer
+  receivedAssets: ReceivedAssets(where: { profile_id: { _ilike: $address } }) {
     asset {
       ...asset # TODO optimize to use only necessary fields
     }
@@ -29,6 +30,15 @@ query profileAssets($address: String!) {
       baseAsset {
         id
         standard
+      }
+      # we need to include images for case where user has only one token from collection since then we display token as asset
+      images(order_by: { index: asc, width: desc }, limit: 1) {
+        url: src
+        width
+        height
+        index
+        verified
+        error
       }
     }
     balance
