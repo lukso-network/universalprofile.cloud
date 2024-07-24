@@ -15,7 +15,7 @@ query profileAssets($address: String!) {
   ) {
     id
     asset {
-      ...asset
+      ...basicAsset
     }
   }
 
