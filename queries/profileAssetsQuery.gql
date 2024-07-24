@@ -2,7 +2,7 @@ query profileAssets($address: String!) {
   # TODO swap to ReceivedAsset in new indexer
   receivedAssets: ReceivedAssets(where: { profile_id: { _ilike: $address } }) {
     asset {
-      ...asset # TODO optimize to use only necessary fields
+      ...basicAsset
     }
   }
 
