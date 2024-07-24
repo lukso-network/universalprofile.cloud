@@ -14,28 +14,11 @@ type QueryResult = CollectionQuery
 
 export async function useCollectionGraph(filters: CollectionFilters) {
   try {
-    const attributesGrouped: CollectionAttribute[] = groupAttributes(
-      filters?.attributes
-    )
-    const attributes =
-      attributesGrouped?.map(({ group, values }) => ({
-        attributes: {
-          _or: values.map(value => ({
-            key: { _eq: group },
-            value: { _eq: value },
-          })),
-        },
-      })) || []
     const where = {
       _and: [
-        { baseAsset_id: { _ilike: filters.address } },
-        {
-          _or: [
-            { formattedTokenId: { _ilike: filters.search } },
-            { tokenId: { _ilike: filters.search } },
-          ],
-        },
-        ...attributes,
+        whereAssetAddress(filters),
+        whereSearch(filters),
+        ...whereAttributes(filters),
       ],
     }
 
@@ -77,4 +60,34 @@ export async function useCollectionGraph(filters: CollectionFilters) {
       },
     }
   }
+}
+
+const whereAssetAddress = (filters: CollectionFilters) => {
+  return { baseAsset_id: { _ilike: filters.address } }
+}
+
+const whereSearch = (filters: CollectionFilters) => {
+  return {
+    _or: [
+      { formattedTokenId: { _ilike: filters.search } },
+      { tokenId: { _ilike: filters.search } },
+    ],
+  }
+}
+
+const whereAttributes = (filters: CollectionFilters) => {
+  const attributesGrouped: CollectionAttribute[] = groupAttributes(
+    filters?.attributes
+  )
+  const attributes =
+    attributesGrouped?.map(({ group, values }) => ({
+      attributes: {
+        _or: values.map(value => ({
+          key: { _eq: group },
+          value: { _eq: value },
+        })),
+      },
+    })) || []
+
+  return attributes
 }
