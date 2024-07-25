@@ -16,12 +16,14 @@ fragment profile on Profile {
     height
     width
     verified
+    error
   }
   profileImages(order_by: { width: desc }) {
     url: src
     width
     height
     verified
+    error
   }
   ...avatars
 }

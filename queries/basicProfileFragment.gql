@@ -6,12 +6,14 @@ fragment basicProfile on Profile {
     height
     width
     verified
+    error
   }
   profileImages(order_by: { width: desc }, limit: 1) {
     url: src
     width
     height
     verified
+    error
   }
   blockNumber
 }

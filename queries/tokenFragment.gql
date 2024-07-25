@@ -32,12 +32,14 @@ fragment token on Token {
     height
     index
     verified
+    error
   }
   icons(order_by: { width: desc }) {
     url: src
     width
     height
     verified
+    error
   }
   assets {
     fileType

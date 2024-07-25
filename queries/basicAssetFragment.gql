@@ -5,6 +5,7 @@ fragment basicAsset on Asset {
   lsp4TokenType
   standard
   blockNumber
+  decimals
 
   owner {
     ...creator
@@ -22,5 +23,14 @@ fragment basicAsset on Asset {
     height
     index
     verified
+    error
+  }
+
+  icons(order_by: { width: desc }) {
+    url: src
+    width
+    height
+    verified
+    error
   }
 }

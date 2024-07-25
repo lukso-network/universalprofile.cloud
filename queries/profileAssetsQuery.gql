@@ -1,20 +1,46 @@
 query profileAssets($address: String!) {
-  profiles: Profile(where: { id: { _ilike: $address } }) {
-    # TODO temporary use alias before index has the data
-    lsp5ReceivedAssets: receivedAssets {
-      asset {
-        ...asset
+  # TODO swap to ReceivedAsset in new indexer
+  receivedAssets: ReceivedAssets(where: { profile_id: { _ilike: $address } }) {
+    asset {
+      ...basicAsset
+    }
+  }
+
+  # TODO remove issuedAssets out when filters are done
+  # TODO this is a fix for duplicates with extra where clause
+  issuedAssets: IssuedAsset(
+    where: {
+      _and: [{ profile_id: { _ilike: $address } }, { id: { _nlike: "%-0x%" } }]
+    }
+  ) {
+    id
+    asset {
+      ...basicAsset
+    }
+  }
+
+  # Side load holds to get balances
+  holds: Hold(where: { profile_id: { _ilike: $address } }) {
+    asset {
+      id
+      standard
+    }
+    token {
+      tokenId
+      baseAsset {
+        id
+        standard
+      }
+      # we need to include images for case where user has only one token from collection since then we display token as asset
+      images(order_by: { index: asc, width: desc }, limit: 1) {
+        url: src
+        width
+        height
+        index
+        verified
+        error
       }
     }
-
-    lsp12IssuedAssets {
-      asset {
-        ...asset
-      }
-    }
-
-    holds {
-      ...hold
-    }
+    balance
   }
 }
