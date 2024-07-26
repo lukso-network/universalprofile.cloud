@@ -1,71 +1,37 @@
-import { useQueries } from '@tanstack/vue-query'
+import { useQuery } from '@tanstack/vue-query'
 
 import type { ProfileAssetsQuery } from '@/.nuxt/gql/default'
-import type { QFQueryOptions } from '@/utils/queryFunctions'
 
 type FiltersProfileAssets = {
   profileAddress?: MaybeRef<Address | null>
 }
-
-type AdditionalQueryOptions = { profileAddress?: Address | null }
 
 type QueryResult = ProfileAssetsQuery
 
 export function useProfileAssetsGraph() {
   return ({ profileAddress: _profileAddress }: FiltersProfileAssets) => {
     const { selectedChainId: chainId } = useAppStore()
+    const profileAddress = unref(_profileAddress)
 
-    const queries = computed(() => {
-      const profileAddress = unref(_profileAddress)
+    return useQuery({
+      queryKey: ['profile-assets-graph', profileAddress, chainId],
+      queryFn: async () => {
+        const {
+          receivedAssets: receivedAssetsData,
+          issuedAssets: issuedAssetsData,
+          holds: holdsData,
+        }: QueryResult = await GqlProfileAssets({
+          address: profileAddress,
+        })
 
-      const queries: QFQueryOptions[] & AdditionalQueryOptions = (
-        profileAddress
-          ? [
-              {
-                // 0
-                queryKey: ['profile-assets-graph', profileAddress, chainId],
-                queryFn: async () => {
-                  const { receivedAssets, issuedAssets, holds }: QueryResult =
-                    await GqlProfileAssets({
-                      address: profileAddress,
-                    })
-
-                  if (graphLog.enabled) {
-                    graphLog(
-                      'profile-assets-raw',
-                      receivedAssets,
-                      issuedAssets,
-                      holds
-                    )
-                  }
-
-                  return {
-                    receivedAssets,
-                    issuedAssets,
-                    holds,
-                  }
-                },
-                refetchInterval: 120_000,
-                staleTime: 250,
-              },
-            ]
-          : []
-      ) as QFQueryOptions[] & AdditionalQueryOptions
-      queries.profileAddress = profileAddress
-      return queries
-    })
-    return useQueries({
-      queries,
-      combine: results => {
-        const data = results[0]?.data as QueryResult | undefined
-        const holdsData = data?.holds as QueryResult['holds'] | undefined
-        const receivedAssetsData = data?.receivedAssets as
-          | QueryResult['receivedAssets']
-          | undefined
-        const issuedAssetsData = data?.issuedAssets as
-          | QueryResult['issuedAssets']
-          | undefined
-        const isLoading = results.some(result => result.isLoading)
+        if (graphLog.enabled) {
+          graphLog(
+            'profile-assets-raw',
+            receivedAssetsData,
+            issuedAssetsData,
+            holdsData
+          )
+        }
 
         const receivedAssets =
           receivedAssetsData?.flatMap(receivedAsset => {
@@ -83,8 +49,8 @@ export function useProfileAssetsGraph() {
                     ),
                     isOwned: true,
                     isIssued: false,
-                    isLoading,
-                    isMetadataLoading: isLoading,
+                    // isLoading,
+                    // isMetadataLoading: isLoading,
                   })
                 }
               })
@@ -103,8 +69,8 @@ export function useProfileAssetsGraph() {
               ),
               isOwned: true,
               isIssued: false,
-              isLoading,
-              isMetadataLoading: isLoading,
+              // isLoading,
+              // isMetadataLoading: isLoading,
             }
           }) || []
 
@@ -127,7 +93,15 @@ export function useProfileAssetsGraph() {
         }
 
         return [...receivedAssets, ...issuedAssets]
+
+        // return {
+        //   receivedAssets,
+        //   issuedAssets,
+        //   holds,
+        // }
       },
+      refetchInterval: 120_000,
+      staleTime: 250,
     })
   }
 }

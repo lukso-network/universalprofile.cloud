@@ -12,7 +12,12 @@ import {
   isLyx,
   isSupportedAsset,
   isToken,
+  hasCreator,
 } from '../assetChecks'
+import type {
+  SelectProfileOption,
+  SelectStringOption,
+} from '@lukso/web-components'
 
 describe('isLyx', () => {
   test('should return true if the asset is a LYX', async () => {
@@ -321,5 +326,99 @@ describe('isSupportedAsset', () => {
     expect(isSupportedAsset({ standard: 'asdf' })).toBe(false)
     expect(isSupportedAsset(undefined)).toBe(false)
     expect(isSupportedAsset(null)).toBe(false)
+  })
+})
+
+describe('hasCreator', () => {
+  test('should return true if the asset has a creator in the provided creators list', async () => {
+    expect(
+      hasCreator(
+        {
+          tokenCreatorsData: [{ address: '0x1' }],
+        } as Asset,
+        [{ id: '0x1' }] as SelectProfileOption[]
+      )
+    ).toBe(true)
+  })
+
+  test('should return false if the asset does not have a creator in the provided creators list', async () => {
+    expect(
+      hasCreator(
+        {
+          tokenCreatorsData: [{ address: '0x2' }],
+        } as Asset,
+        [{ id: '0x1' }] as SelectProfileOption[]
+      )
+    ).toBe(false)
+  })
+
+  test('should return false if no creators are provided', async () => {
+    expect(
+      hasCreator(
+        {
+          tokenCreatorsData: [{ address: '0x1' }],
+        } as Asset,
+        undefined
+      )
+    ).toBe(false)
+  })
+
+  test('should return false if no asset is provided', async () => {
+    expect(
+      hasCreator(undefined, [{ id: '0x1' }] as SelectProfileOption[])
+    ).toBe(false)
+  })
+
+  test('should fallback to owner if the asset does not have a creator in the provided creators list', async () => {
+    expect(
+      hasCreator(
+        {
+          tokenCreatorsData: [{ address: '0x2' }],
+          ownerData: { address: '0x1' },
+        } as Asset,
+        [{ id: '0x1' }] as SelectProfileOption[]
+      )
+    ).toBe(true)
+  })
+})
+
+describe('isInCollection', () => {
+  test('should return true if the asset is in the provided collections list', async () => {
+    expect(
+      isInCollection(
+        {
+          address: '0x1',
+        } as Asset,
+        [{ id: '0x1' }, { id: '0x2' }] as SelectStringOption[]
+      )
+    ).toBe(true)
+  })
+
+  test('should return false if the asset is not in the provided collections list', async () => {
+    expect(
+      isInCollection(
+        {
+          address: '0x2',
+        } as Asset,
+        [{ id: '0x1' }] as SelectStringOption[]
+      )
+    ).toBe(false)
+  })
+
+  test('should return false if no collections are provided', async () => {
+    expect(
+      isInCollection(
+        {
+          address: '0x1',
+        } as Asset,
+        undefined
+      )
+    ).toBe(false)
+  })
+
+  test('should return false if no asset is provided', async () => {
+    expect(
+      isInCollection(undefined, [{ id: '0x1' }] as SelectStringOption[])
+    ).toBe(false)
   })
 })
