@@ -1,9 +1,14 @@
 import { describe, expect, test } from 'vitest'
 
 import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
+import type {
+  SelectProfileOption,
+  SelectStringOption,
+} from '@lukso/web-components'
 import {
   getBalance,
   hasBalance,
+  hasCreator,
   hasTokenId,
   isCollectible,
   isCollection,
@@ -12,12 +17,7 @@ import {
   isLyx,
   isSupportedAsset,
   isToken,
-  hasCreator,
 } from '../assetChecks'
-import type {
-  SelectProfileOption,
-  SelectStringOption,
-} from '@lukso/web-components'
 
 describe('isLyx', () => {
   test('should return true if the asset is a LYX', async () => {

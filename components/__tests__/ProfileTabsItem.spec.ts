@@ -1,5 +1,5 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime'
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import ProfileTabsItem from '../ProfileTabsItem.vue'
 
