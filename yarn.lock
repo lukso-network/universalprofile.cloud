@@ -4760,17 +4760,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@npm:1.74.0":
-  version: 1.74.0
-  resolution: "@lukso/web-components@npm:1.74.0"
+"@lukso/web-components@npm:1.75.0":
+  version: 1.75.0
+  resolution: "@lukso/web-components@npm:1.75.0"
   dependencies:
     clsx: "npm:^2.0.0"
     ethereum-blockies-base64: "npm:^1.0.2"
     tailwind-merge: "npm:^2.0.0"
     tailwind-variants: "npm:^0.2.1"
     tippy.js: "npm:^6.3.7"
-    uuid: "npm:^10.0.0"
-  checksum: ecca183afa334a6eee8dca3b3b302f93a61296406f00aebbc8828e24d0c391445ad108208fd47ae9ec0d680b232ba50dff3bd9ff0f9f010a3ad40bc79f2e920c
+  checksum: 0453a16e2243d960af65cf143065da0850c4771008e11ef8a167eed1d490bae6412903e0c5026b146cbbfa1380a2e8599ea8ffddabcdb8ce5b7606be4e48bd6b
   languageName: node
   linkType: hard
 
@@ -22925,7 +22924,7 @@ __metadata:
     "@formatjs/intl": "npm:^2.9.9"
     "@google/model-viewer": "npm:^3.4.0"
     "@lukso/lsp-smart-contracts": "npm:0.15.0-rc.5"
-    "@lukso/web-components": "npm:1.74.0"
+    "@lukso/web-components": "npm:1.75.0"
     "@nuxt/test-utils": "npm:^3.13.1"
     "@nuxtjs/algolia": "npm:^1.10.2"
     "@nuxtjs/device": "npm:^3.1.1"
@@ -23369,15 +23368,6 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: 5d6949693d58cb2e636a84f3ee1c6e7b2f9c16cb1d42d0ecb386d8c025c69e327205aa1c69e2868cc06a01e5e20681fbba55a4e0ed0cce913d60334024eae798
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "uuid@npm:10.0.0"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 35aa60614811a201ff90f8ca5e9ecb7076a75c3821e17f0f5ff72d44e36c2d35fcbc2ceee9c4ac7317f4cc41895da30e74f3885e30313bee48fda6338f250538
   languageName: node
   linkType: hard
 
