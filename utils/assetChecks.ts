@@ -98,3 +98,64 @@ export const getBalance = (asset?: Asset | Profile | null) =>
  */
 export const isSupportedAsset = (asset?: Asset | null) =>
   isLsp7(asset) || isLsp8(asset) || isLyx(asset)
+
+/**
+ * Check if passed asset has creator
+ *
+ * @param asset
+ * @param creators
+ * @returns
+ */
+export const hasCreator = (asset?: Asset, creatorAddresses?: string[]) => {
+  let hasCreator = false
+
+  if (!creatorAddresses || !asset) {
+    return hasCreator
+  }
+
+  // check in creators
+  for (const tokenCreator of asset.tokenCreatorsData || []) {
+    if (
+      creatorAddresses.some(
+        address =>
+          address?.toLowerCase() === tokenCreator.address?.toLowerCase()
+      )
+    ) {
+      hasCreator = true
+    }
+  }
+
+  // check in owner
+  if (asset.ownerData) {
+    if (
+      creatorAddresses.some(
+        address =>
+          address?.toLowerCase() === asset.ownerData?.address?.toLowerCase()
+      )
+    ) {
+      hasCreator = true
+    }
+  }
+
+  return hasCreator
+}
+
+/**
+ * Check if passed asset is in collection
+ *
+ * @param asset
+ * @param collections
+ * @returns
+ */
+export const isInCollection = (
+  asset?: Asset,
+  collectionAddresses?: string[]
+) => {
+  if (!asset || !collectionAddresses) {
+    return false
+  }
+
+  return collectionAddresses?.some(address => {
+    return address === asset?.address?.toLowerCase()
+  })
+}

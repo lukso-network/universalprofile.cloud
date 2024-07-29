@@ -17,6 +17,11 @@ const handleCardClick = (swiper: Swiper) => {
   const _address = swiper?.clickedSlide?.dataset?.address as Address | undefined
   // to fix safari bug where `clickedSlide` is undefined
   const address = isSafari ? _address || activeAddress.value : _address
+  const asset = props.assets.find(asset => asset.address === address)
+
+  if (isLsp8(asset)) {
+    return navigateTo(collectionRoute(address))
+  }
 
   navigateTo(assetRoute(address))
 }

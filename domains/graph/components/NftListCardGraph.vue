@@ -17,8 +17,19 @@ const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const viewedProfileAddress = getCurrentProfileAddress()
 const assetImage = useAssetImage(asset, false, 260)
 const { showModal } = useModal()
+const { isCreated } = useFilters()
+
+const isStackedCard = computed(
+  () => isCollection(props.asset) || (isCreated.value && isLsp8(props.asset))
+)
 
 const handleShowAsset = () => {
+  // created LSP8 assets should navigate to collection
+  if (isCreated.value && isLsp8(props.asset)) {
+    return navigateTo(collectionRoute(props.asset.address))
+  }
+
+  // show modal for owned collections
   if (isCollection(props.asset)) {
     return showModal({
       template: 'TokenCollection',
@@ -107,7 +118,14 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
             <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
           </div>
           <div v-if="isLoadedAsset" class="paragraph-ptmono-10-bold">
-            <span v-if="isCollection(asset)">
+            <span v-if="isCreated">
+              {{
+                $formatMessage('collection_total_supply', {
+                  count: asset?.totalSupply || '0',
+                })
+              }}
+            </span>
+            <span v-else-if="isCollection(asset)">
               {{
                 $formatMessage('token_collection_of', {
                   count: asset?.tokenIdsData?.length.toString() || '0',
@@ -169,14 +187,14 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
       <lukso-card
         border-radius="small"
         shadow="small"
-        v-if="isCollection(asset)"
+        v-if="isStackedCard"
         class="relative bottom-[-44px] mx-3 w-[calc(100%-24px)]"
         ><div slot="content" class="h-6 w-full rounded-12 bg-neutral-97"></div
       ></lukso-card>
       <lukso-card
         border-radius="small"
         shadow="small"
-        v-if="isCollection(asset)"
+        v-if="isStackedCard"
         class="relative bottom-[-10px]"
         ><div slot="content" class="h-6 w-full rounded-12 bg-neutral-97"></div
       ></lukso-card>

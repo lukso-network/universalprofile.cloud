@@ -4,6 +4,11 @@ export const useFilters = () => {
   // filters and their defaults
   const filters = reactive<Filters>({
     assetType: 'owned',
+    assetGroup: 'collectibles',
+    orderBy: 'name-asc',
+    search: undefined,
+    collections: undefined,
+    creators: undefined,
   })
 
   //--- getters
@@ -11,8 +16,12 @@ export const useFilters = () => {
 
   const isCreated = computed(() => filters.assetType === 'created')
 
+  const isTokens = computed(() => filters.assetGroup === 'tokens')
+
+  const isCollectibles = computed(() => filters.assetGroup === 'collectibles')
+
   //--- setters
-  const setFilters = (filters: Filters) => {
+  const setFilters = (filters: Partial<Filters>) => {
     navigateTo({
       path: route.path,
       query: {
@@ -25,10 +34,43 @@ export const useFilters = () => {
   watch(
     () => route.query,
     queryParams => {
-      const { assetType: assetTypeFilter } = queryParams
+      const {
+        assetType: assetTypeFilter,
+        assetGroup: assetGroupFilter,
+        search: searchFilter,
+        orderBy: orderByFilter,
+        collections: collectionsFilter,
+        creators: creatorsFilter,
+      } = queryParams as Partial<Filters>
 
       if (assetTypeFilter) {
         filters.assetType = assetTypeFilter
+      }
+
+      if (assetGroupFilter) {
+        filters.assetGroup = assetGroupFilter
+      }
+
+      if (orderByFilter) {
+        filters.orderBy = orderByFilter
+      }
+
+      if (searchFilter) {
+        filters.search = searchFilter
+      } else {
+        filters.search = undefined
+      }
+
+      if (collectionsFilter) {
+        filters.collections = [collectionsFilter].flat()
+      } else {
+        filters.collections = undefined
+      }
+
+      if (creatorsFilter) {
+        filters.creators = [creatorsFilter].flat()
+      } else {
+        filters.creators = undefined
       }
     },
     { deep: true, immediate: true }
@@ -39,5 +81,7 @@ export const useFilters = () => {
     setFilters,
     isOwned,
     isCreated,
+    isTokens,
+    isCollectibles,
   }
 }

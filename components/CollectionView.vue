@@ -8,7 +8,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { isRpc } = storeToRefs(useAppStore())
+const { isRpc, isGraph } = storeToRefs(useAppStore())
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 880)
@@ -173,7 +173,10 @@ onMounted(async () => {
     </lukso-card>
 
     <!-- Filters -->
-    <div class="grid grid-cols-[auto,100px,max-content] gap-2 pb-4">
+    <div
+      v-if="isGraph"
+      class="grid grid-cols-[auto,100px,max-content] gap-2 pb-4"
+    >
       <div class="flex flex-wrap gap-2">
         <!-- Attributes loading state -->
         <div v-if="isLoadingAttributes" class="flex gap-2">
@@ -182,7 +185,7 @@ onMounted(async () => {
           <AppPlaceholderLine class="h-[28px] w-[100px] rounded-8" />
         </div>
 
-        <!-- Attributes dropdowns -->
+        <!-- Attributes filter -->
         <lukso-select
           v-for="attribute in attributesData?.attributes"
           :key="attribute.id"
@@ -208,7 +211,7 @@ onMounted(async () => {
           @on-select="handleSelectAttribute"
         ></lukso-select>
 
-        <!-- TokenId Search -->
+        <!-- Search filter -->
         <lukso-search
           size="small"
           hide-loading
@@ -230,8 +233,9 @@ onMounted(async () => {
       ></lukso-select>
     </div>
 
-    <!-- Selected attributes -->
+    <!-- Selected filters -->
     <div v-if="hasFiltersSelected" class="flex flex-wrap gap-2 pb-4">
+      <!-- Selected attributes -->
       <lukso-tag
         v-for="attribute in selectedAttributes"
         :key="attribute.id"
