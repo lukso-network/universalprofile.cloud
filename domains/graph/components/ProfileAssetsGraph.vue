@@ -253,8 +253,8 @@ onMounted(async () => {
     value: formatMessage(`filters_type_${filters.assetType}`),
   }
   typeFilterOptions.value = [
-    { id: 'created', value: formatMessage('filters_type_created') },
     { id: 'owned', value: formatMessage('filters_type_owned') },
+    { id: 'created', value: formatMessage('filters_type_created') },
   ]
 })
 </script>
