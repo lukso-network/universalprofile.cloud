@@ -14,6 +14,16 @@ export type CollectionAttribute = {
 }
 
 export function useCollectionAttributesGraph(filters: Filters) {
+  const { isRpc } = storeToRefs(useAppStore())
+
+  if (isRpc.value) {
+    return {
+      data: null,
+      isLoading: ref(false),
+      error: null,
+    }
+  }
+
   const { selectedChainId: chainId } = useAppStore()
 
   return useQuery({

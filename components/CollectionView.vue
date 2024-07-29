@@ -8,7 +8,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { isRpc } = storeToRefs(useAppStore())
+const { isRpc, isGraph } = storeToRefs(useAppStore())
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 880)
@@ -173,7 +173,10 @@ onMounted(async () => {
     </lukso-card>
 
     <!-- Filters -->
-    <div class="grid grid-cols-[auto,100px,max-content] gap-2 pb-4">
+    <div
+      v-if="isGraph"
+      class="grid grid-cols-[auto,100px,max-content] gap-2 pb-4"
+    >
       <div class="flex flex-wrap gap-2">
         <!-- Attributes loading state -->
         <div v-if="isLoadingAttributes" class="flex gap-2">
