@@ -17,8 +17,7 @@ const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
 
 const { formatMessage } = useIntl()
-const { filters, isOwned, isTokens, isCollectibles } = useFilters()
-const searchFilter = ref('')
+const { filters, isOwned, isTokens, isCollectibles, setFilters } = useFilters()
 const orderByValue = ref<SelectStringOption>()
 const orderByOptions = ref<SelectStringOption[]>()
 const typeFilterValue = ref<SelectStringOption>()
@@ -37,10 +36,7 @@ const hasFiltersSelected = computed(
     creatorFilterValue.value.length > 0
 )
 const matchLyxToken = computed(() => {
-  return (
-    searchFilter.value === '' ||
-    'lukso'.includes(searchFilter.value.toLowerCase())
-  )
+  return !filters.search || 'lukso'.includes(filters.search.toLowerCase())
 })
 
 const orderedAssets = computed(() => {
@@ -68,10 +64,10 @@ const filteredAssets = computed(() => {
   let assetsFiltered = orderedAssets.value
 
   // filter by search
-  if (searchFilter.value) {
+  if (filters.search) {
     assetsFiltered = assetsFiltered.filter(asset => {
-      const searchValue = searchFilter.value.toLowerCase()
-      return asset.tokenName?.toLowerCase().includes(searchValue)
+      const searchValue = filters.search?.toLowerCase()
+      return asset.tokenName?.toLowerCase().includes(searchValue || '')
     })
   }
 
@@ -174,7 +170,7 @@ const collectionFilterOptions = computed(() => {
 
 const handleChangeSearch = async (customEvent: CustomEvent) => {
   const searchTerm = customEvent.detail?.value
-  searchFilter.value = searchTerm
+  setFilters({ search: searchTerm })
 }
 
 const handleChangeType = async (customEvent: CustomEvent) => {
@@ -301,12 +297,13 @@ onMounted(async () => {
 
         <!-- Search Filter -->
         <lukso-search
-          size="small"
+          :value="filters.search"
           :placeholder="formatMessage('asset_filter_search_placeholder')"
           hide-loading
           has-reset
+          size="small"
           @on-search="handleChangeSearch"
-          @on-reset="() => (searchFilter = '')"
+          @on-reset="() => setFilters({ search: undefined })"
         ></lukso-search>
       </div>
 

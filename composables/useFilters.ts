@@ -5,6 +5,7 @@ export const useFilters = () => {
   const filters = reactive<Filters>({
     assetType: 'owned',
     assetGroup: 'collectibles',
+    search: undefined,
   })
 
   //--- getters
@@ -30,8 +31,11 @@ export const useFilters = () => {
   watch(
     () => route.query,
     queryParams => {
-      const { assetType: assetTypeFilter, assetGroup: assetGroupFilter } =
-        queryParams
+      const {
+        assetType: assetTypeFilter,
+        assetGroup: assetGroupFilter,
+        search: searchFilter,
+      } = queryParams
 
       if (assetTypeFilter) {
         filters.assetType = assetTypeFilter
@@ -40,6 +44,9 @@ export const useFilters = () => {
       if (assetGroupFilter) {
         filters.assetGroup = assetGroupFilter
       }
+
+      // no if wrap for filters that can be undefined
+      filters.search = searchFilter
     },
     { deep: true, immediate: true }
   )
