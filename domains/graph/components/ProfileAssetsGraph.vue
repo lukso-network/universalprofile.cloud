@@ -18,7 +18,6 @@ const emits = defineEmits<Emits>()
 
 const { formatMessage } = useIntl()
 const { filters, isOwned, isTokens, isCollectibles, setFilters } = useFilters()
-const orderByValue = ref<SelectStringOption>()
 const orderByOptions = ref<SelectStringOption[]>()
 const typeFilterValue = ref<SelectStringOption>()
 const typeFilterOptions = ref<SelectStringOption[]>([])
@@ -40,21 +39,17 @@ const matchLyxToken = computed(() => {
 })
 
 const orderedAssets = computed(() => {
-  if (orderByValue.value?.id) {
-    const [orderBy, order] = orderByValue.value.id.split('-')
+  const [orderBy, order] = filters.orderBy.split('-')
 
-    if (orderBy === 'name') {
-      return props.assets
-        .slice()
-        .sort((a, b) => stringSort(a.tokenName, b.tokenName, order))
-    }
-
-    // since assets are ordered by default by added date, we need to reverse the array
-    if (orderBy === 'added' && order === 'asc') {
-      return [...props.assets].reverse()
-    }
-
+  if (orderBy === 'name') {
     return props.assets
+      .slice()
+      .sort((a, b) => stringSort(a.tokenName, b.tokenName, order))
+  }
+
+  // since assets are ordered by default by added date, we need to reverse the array
+  if (orderBy === 'added' && order === 'asc') {
+    return [...props.assets].reverse()
   }
 
   return props.assets
@@ -168,6 +163,10 @@ const collectionFilterOptions = computed(() => {
   return options
 })
 
+const orderByValue = computed(() => {
+  return orderByOptions.value?.find(option => option.id === filters.orderBy)
+})
+
 const handleChangeSearch = async (customEvent: CustomEvent) => {
   const searchTerm = customEvent.detail?.value
   setFilters({ search: searchTerm })
@@ -223,14 +222,10 @@ const handleRemoveCreator = async (creator: SelectProfileOption) => {
 
 const handleSelectOrder = async (customEvent: CustomEvent) => {
   const order = customEvent.detail?.value
-  orderByValue.value = order
+  setFilters({ orderBy: order.id })
 }
 
 onMounted(async () => {
-  orderByValue.value = {
-    id: 'name-asc',
-    value: formatMessage('filters_order_by_name_asc'),
-  }
   orderByOptions.value = [
     { id: 'name-asc', value: formatMessage('filters_order_by_name_asc') },
     { id: 'name-desc', value: formatMessage('filters_order_by_name_desc') },

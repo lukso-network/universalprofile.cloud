@@ -5,5 +5,6 @@ export type FiltersAssetGroup = 'collectibles' | 'tokens'
 export type Filters = {
   assetType: FiltersAssetType
   assetGroup: FiltersAssetGroup
+  orderBy: string
   search?: string
 }

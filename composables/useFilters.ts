@@ -5,6 +5,7 @@ export const useFilters = () => {
   const filters = reactive<Filters>({
     assetType: 'owned',
     assetGroup: 'collectibles',
+    orderBy: 'name-asc',
     search: undefined,
   })
 
@@ -35,6 +36,7 @@ export const useFilters = () => {
         assetType: assetTypeFilter,
         assetGroup: assetGroupFilter,
         search: searchFilter,
+        orderBy: orderByFilter,
       } = queryParams
 
       if (assetTypeFilter) {
@@ -43,6 +45,10 @@ export const useFilters = () => {
 
       if (assetGroupFilter) {
         filters.assetGroup = assetGroupFilter
+      }
+
+      if (orderByFilter) {
+        filters.orderBy = orderByFilter
       }
 
       // no if wrap for filters that can be undefined
