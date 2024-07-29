@@ -30,7 +30,9 @@ const hasFiltersSelected = computed(
     (filters.collections &&
       filters.collections?.length > 0 &&
       isSelectedCollectionInAvailableCollections.value) ||
-    (filters.creators && filters.creators?.length > 0)
+    (filters.creators &&
+      filters.creators?.length > 0 &&
+      isSelectedCreatorInAvailableCreators.value)
 )
 const matchLyxToken = computed(() => {
   return !filters.search || 'lukso'.includes(filters.search.toLowerCase())
@@ -59,6 +61,12 @@ const isSelectedCollectionInAvailableCollections = computed(() => {
   )
 })
 
+const isSelectedCreatorInAvailableCreators = computed(() => {
+  return creatorFilterOptions.value.some(option =>
+    filters.creators?.includes(option.id)
+  )
+})
+
 const filteredAssets = computed(() => {
   let assetsFiltered = orderedAssets.value
 
@@ -72,7 +80,10 @@ const filteredAssets = computed(() => {
 
   // combined filters by creator
   assetsFiltered = assetsFiltered.filter(asset => {
-    const hasCreatorFilter = filters.creators && filters.creators?.length > 0
+    const hasCreatorFilter =
+      filters.creators &&
+      filters.creators?.length > 0 &&
+      isSelectedCreatorInAvailableCreators.value
     const hasCollectionFilter =
       filters?.collections &&
       filters.collections?.length > 0 &&
@@ -347,26 +358,31 @@ const creatorFilterValues = (creators?: string[]) => {
     </div>
 
     <!-- Selected filters -->
-    <div v-if="hasFiltersSelected" class="flex flex-wrap gap-2 pb-4">
+    <div v-if="hasFiltersSelected" class="flex flex-wrap gap-y-2 pb-4">
       <!-- Selected creators -->
-      <lukso-tag
-        v-for="creatorAddress in filters.creators"
-        :key="creatorAddress"
-        is-rounded
-        class="cursor-pointer"
-        @click="() => handleRemoveCreator(creatorAddress)"
-      >
-        <span v-if="creatorFilterValues([creatorAddress])?.[0]?.name"
-          >@{{ creatorFilterValues([creatorAddress])?.[0]?.name }}</span
+      <div v-for="creatorAddress in filters.creators" :key="creatorAddress">
+        <lukso-tag
+          v-if="creatorFilterValues([creatorAddress])?.[0]?.name"
+          is-rounded
+          class="mr-2 cursor-pointer"
+          @click="() => handleRemoveCreator(creatorAddress)"
         >
-        <span v-else>{{
-          sliceAddress(creatorFilterValues([creatorAddress])?.[0]?.address)
-        }}</span>
-        <lukso-icon name="cross-outline" size="small" class="ml-1"></lukso-icon>
-      </lukso-tag>
+          <span v-if="creatorFilterValues([creatorAddress])?.[0]?.name"
+            >@{{ creatorFilterValues([creatorAddress])?.[0]?.name }}</span
+          >
+          <span v-else>{{
+            sliceAddress(creatorFilterValues([creatorAddress])?.[0]?.address)
+          }}</span>
+          <lukso-icon
+            name="cross-outline"
+            size="small"
+            class="ml-1"
+          ></lukso-icon>
+        </lukso-tag>
+      </div>
 
       <!-- Selected collections -->
-      <div v-if="isCollectibles" class="flex">
+      <div v-if="isCollectibles" class="flex flex-wrap">
         <div
           v-for="collectionAddress in filters.collections"
           :key="collectionAddress"
