@@ -7,4 +7,5 @@ export type Filters = {
   assetGroup: FiltersAssetGroup
   orderBy: string
   search?: string
+  collections?: string[]
 }

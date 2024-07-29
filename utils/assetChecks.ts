@@ -1,9 +1,6 @@
 import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
-import type {
-  SelectProfileOption,
-  SelectStringOption,
-} from '@lukso/web-components'
+import type { SelectProfileOption } from '@lukso/web-components'
 
 /**
  * Check if passed asset is LYX token
@@ -152,15 +149,12 @@ export const hasCreator = (asset?: Asset, creators?: SelectProfileOption[]) => {
  * @param collections
  * @returns
  */
-export const isInCollection = (
-  asset?: Asset,
-  collections?: SelectStringOption[]
-) => {
-  if (!asset || !collections) {
+export const isInCollection = (asset?: Asset, collectionAddress?: string[]) => {
+  if (!asset || !collectionAddress) {
     return false
   }
 
-  return collections?.some(collection => {
-    return collection.id === asset?.address?.toLowerCase()
+  return collectionAddress?.some(address => {
+    return address === asset?.address?.toLowerCase()
   })
 }

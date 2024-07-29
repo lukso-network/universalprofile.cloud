@@ -17,11 +17,11 @@ const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
 
 const { formatMessage } = useIntl()
-const { filters, isOwned, isTokens, isCollectibles, setFilters } = useFilters()
+const { filters, isOwned, isCreated, isTokens, isCollectibles, setFilters } =
+  useFilters()
 const orderByOptions = ref<SelectStringOption[]>()
 const typeFilterValue = ref<SelectStringOption>()
 const typeFilterOptions = ref<SelectStringOption[]>([])
-const collectionFilterValue = ref<SelectStringOption[]>([])
 const creatorFilterValue = ref<SelectProfileOption[]>([])
 
 const hasAssets = computed(() =>
@@ -31,7 +31,9 @@ const hasAssets = computed(() =>
 )
 const hasFiltersSelected = computed(
   () =>
-    collectionFilterValue.value.length > 0 ||
+    (filters.collections &&
+      filters.collections.length > 0 &&
+      isSelectedCollectionInAvailableCollections.value) ||
     creatorFilterValue.value.length > 0
 )
 const matchLyxToken = computed(() => {
@@ -55,6 +57,12 @@ const orderedAssets = computed(() => {
   return props.assets
 })
 
+const isSelectedCollectionInAvailableCollections = computed(() => {
+  return collectionFilterOptions.value.some(option =>
+    filters.collections?.includes(option.id)
+  )
+})
+
 const filteredAssets = computed(() => {
   let assetsFiltered = orderedAssets.value
 
@@ -69,20 +77,24 @@ const filteredAssets = computed(() => {
   // combined filters by creator
   assetsFiltered = assetsFiltered.filter(asset => {
     const hasCreatorFilter = creatorFilterValue.value.length > 0
-    const hasCollectionFilter = collectionFilterValue.value.length > 0
+    const hasCollectionFilter =
+      filters?.collections &&
+      filters.collections?.length > 0 &&
+      isCollectibles.value &&
+      isSelectedCollectionInAvailableCollections.value
 
     if (hasCreatorFilter && !hasCollectionFilter) {
       return hasCreator(asset, creatorFilterValue.value)
     }
 
     if (hasCollectionFilter && !hasCreatorFilter) {
-      return isInCollection(asset, collectionFilterValue.value)
+      return isInCollection(asset, filters.collections)
     }
 
     if (hasCreatorFilter && hasCollectionFilter) {
       return (
         hasCreator(asset, creatorFilterValue.value) ||
-        isInCollection(asset, collectionFilterValue.value)
+        isInCollection(asset, filters.collections)
       )
     }
 
@@ -141,7 +153,17 @@ const collectionFilterOptions = computed(() => {
   const options = orderedAssets.value
     // match only assets that has collections
     .filter(asset => {
-      if (asset?.tokenIdsData && asset.tokenIdsData?.length > 0) {
+      // we mark owned assets as collection when there are 1+ tokenIds
+      if (
+        isOwned.value &&
+        asset?.tokenIdsData &&
+        asset.tokenIdsData?.length > 0
+      ) {
+        return asset
+      }
+
+      // we mark created assets as collection when they are LSP8
+      if (isCreated.value && isLsp8(asset)) {
         return asset
       }
     })
@@ -184,22 +206,21 @@ const handleChangeType = async (customEvent: CustomEvent) => {
 const handleChangeCollection = async (customEvent: CustomEvent) => {
   const value = customEvent.detail?.value
 
-  if (collectionFilterValue.value.includes(value)) {
-    collectionFilterValue.value = collectionFilterValue.value.filter(
-      collection => collection.id !== value.id
-    )
+  if (filters.collections?.includes(value)) {
+    setFilters({
+      collections: filters.collections?.filter(
+        collection => collection !== value
+      ),
+    })
   } else {
-    collectionFilterValue.value = [
-      ...(collectionFilterValue.value || []),
-      value,
-    ]
+    setFilters({ collections: [...(filters.collections || []), value.id] })
   }
 }
 
-const handleRemoveCollection = async (collection: SelectStringOption) => {
-  collectionFilterValue.value = collectionFilterValue.value.filter(
-    item => item.id !== collection.id
-  )
+const handleRemoveCollection = async (collection: string) => {
+  setFilters({
+    collections: filters.collections?.filter(item => item !== collection),
+  })
 }
 
 const handleChangeCreator = async (customEvent: CustomEvent) => {
@@ -248,6 +269,12 @@ onMounted(async () => {
     { id: 'created', value: formatMessage('filters_type_created') },
   ]
 })
+
+const collectionFilterValues = (collection?: string[]) => {
+  return collectionFilterOptions.value.filter(option =>
+    collection?.includes(option.id)
+  )
+}
 </script>
 
 <template>
@@ -272,7 +299,7 @@ onMounted(async () => {
         <lukso-select
           v-if="isCollectibles"
           size="small"
-          :value="JSON.stringify(collectionFilterValue)"
+          :value="JSON.stringify(collectionFilterValues(filters.collections))"
           :options="JSON.stringify(collectionFilterOptions)"
           :placeholder="formatMessage('asset_filter_collection_placeholder')"
           :is-readonly="
@@ -331,15 +358,22 @@ onMounted(async () => {
       </lukso-tag>
 
       <!-- Selected collections -->
-      <lukso-tag
-        v-for="collection in collectionFilterValue"
-        :key="collection.id"
-        is-rounded
-        class="cursor-pointer"
-        @click="() => handleRemoveCollection(collection)"
-        >{{ collection.value }}
-        <lukso-icon name="cross-outline" size="small" class="ml-1"></lukso-icon>
-      </lukso-tag>
+      <div v-if="isCollectibles" class="flex">
+        <div v-for="collection in filters.collections" :key="collection">
+          <lukso-tag
+            v-if="collectionFilterValues([collection])?.[0]?.value"
+            is-rounded
+            class="mr-2 cursor-pointer"
+            @click="() => handleRemoveCollection(collection)"
+            >{{ collectionFilterValues([collection])?.[0]?.value }}
+            <lukso-icon
+              name="cross-outline"
+              size="small"
+              class="ml-1"
+            ></lukso-icon>
+          </lukso-tag>
+        </div>
+      </div>
     </div>
 
     <div>

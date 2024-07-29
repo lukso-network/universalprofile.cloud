@@ -7,6 +7,7 @@ export const useFilters = () => {
     assetGroup: 'collectibles',
     orderBy: 'name-asc',
     search: undefined,
+    collections: undefined,
   })
 
   //--- getters
@@ -37,6 +38,7 @@ export const useFilters = () => {
         assetGroup: assetGroupFilter,
         search: searchFilter,
         orderBy: orderByFilter,
+        collections: collectionsFilter,
       } = queryParams
 
       if (assetTypeFilter) {
@@ -53,6 +55,7 @@ export const useFilters = () => {
 
       // no if wrap for filters that can be undefined
       filters.search = searchFilter
+      filters.collections = collectionsFilter
     },
     { deep: true, immediate: true }
   )

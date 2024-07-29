@@ -389,7 +389,7 @@ describe('isInCollection', () => {
         {
           address: '0x1',
         } as Asset,
-        [{ id: '0x1' }, { id: '0x2' }] as SelectStringOption[]
+        ['0x1', '0x2']
       )
     ).toBe(true)
   })
@@ -400,7 +400,7 @@ describe('isInCollection', () => {
         {
           address: '0x2',
         } as Asset,
-        [{ id: '0x1' }] as SelectStringOption[]
+        ['0x1']
       )
     ).toBe(false)
   })
@@ -417,8 +417,6 @@ describe('isInCollection', () => {
   })
 
   test('should return false if no asset is provided', async () => {
-    expect(
-      isInCollection(undefined, [{ id: '0x1' }] as SelectStringOption[])
-    ).toBe(false)
+    expect(isInCollection(undefined, ['0x1'])).toBe(false)
   })
 })
