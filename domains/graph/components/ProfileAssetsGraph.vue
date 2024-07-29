@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { sliceAddress } from '@lukso/web-components/tools'
 
-import type {
-  SelectProfileOption,
-  SelectStringOption,
-} from '@lukso/web-components'
+import type { SelectStringOption } from '@lukso/web-components'
 
 type Props = {
   assets: Asset[]
@@ -22,7 +19,6 @@ const { filters, isOwned, isCreated, isTokens, isCollectibles, setFilters } =
 const orderByOptions = ref<SelectStringOption[]>()
 const typeFilterValue = ref<SelectStringOption>()
 const typeFilterOptions = ref<SelectStringOption[]>([])
-const creatorFilterValue = ref<SelectProfileOption[]>([])
 
 const hasAssets = computed(() =>
   isTokens.value && isOwned.value && matchLyxToken.value
@@ -32,9 +28,9 @@ const hasAssets = computed(() =>
 const hasFiltersSelected = computed(
   () =>
     (filters.collections &&
-      filters.collections.length > 0 &&
+      filters.collections?.length > 0 &&
       isSelectedCollectionInAvailableCollections.value) ||
-    creatorFilterValue.value.length > 0
+    (filters.creators && filters.creators?.length > 0)
 )
 const matchLyxToken = computed(() => {
   return !filters.search || 'lukso'.includes(filters.search.toLowerCase())
@@ -76,7 +72,7 @@ const filteredAssets = computed(() => {
 
   // combined filters by creator
   assetsFiltered = assetsFiltered.filter(asset => {
-    const hasCreatorFilter = creatorFilterValue.value.length > 0
+    const hasCreatorFilter = filters.creators && filters.creators?.length > 0
     const hasCollectionFilter =
       filters?.collections &&
       filters.collections?.length > 0 &&
@@ -84,7 +80,7 @@ const filteredAssets = computed(() => {
       isSelectedCollectionInAvailableCollections.value
 
     if (hasCreatorFilter && !hasCollectionFilter) {
-      return hasCreator(asset, creatorFilterValue.value)
+      return hasCreator(asset, filters.creators)
     }
 
     if (hasCollectionFilter && !hasCreatorFilter) {
@@ -93,7 +89,7 @@ const filteredAssets = computed(() => {
 
     if (hasCreatorFilter && hasCollectionFilter) {
       return (
-        hasCreator(asset, creatorFilterValue.value) ||
+        hasCreator(asset, filters.creators) ||
         isInCollection(asset, filters.collections)
       )
     }
@@ -217,28 +213,30 @@ const handleChangeCollection = async (customEvent: CustomEvent) => {
   }
 }
 
-const handleRemoveCollection = async (collection: string) => {
+const handleRemoveCollection = async (collectionAddress: string) => {
   setFilters({
-    collections: filters.collections?.filter(item => item !== collection),
+    collections: filters.collections?.filter(
+      item => item !== collectionAddress
+    ),
   })
 }
 
 const handleChangeCreator = async (customEvent: CustomEvent) => {
   const value = customEvent.detail?.value
 
-  if (creatorFilterValue.value.includes(value)) {
-    creatorFilterValue.value = creatorFilterValue.value.filter(
-      creator => creator.id !== value.id
-    )
+  if (filters.creators?.includes(value)) {
+    setFilters({
+      creators: filters.creators?.filter(creator => creator !== value),
+    })
   } else {
-    creatorFilterValue.value = [...(creatorFilterValue.value || []), value]
+    setFilters({ creators: [...(filters.creators || []), value.id] })
   }
 }
 
-const handleRemoveCreator = async (creator: SelectProfileOption) => {
-  creatorFilterValue.value = creatorFilterValue.value.filter(
-    item => item.id !== creator.id
-  )
+const handleRemoveCreator = async (creatorAddress: string) => {
+  setFilters({
+    creators: filters.creators?.filter(item => item !== creatorAddress),
+  })
 }
 
 const handleSelectOrder = async (customEvent: CustomEvent) => {
@@ -275,6 +273,12 @@ const collectionFilterValues = (collection?: string[]) => {
     collection?.includes(option.id)
   )
 }
+
+const creatorFilterValues = (creators?: string[]) => {
+  return creatorFilterOptions.value.filter(option =>
+    creators?.includes(option.id)
+  )
+}
 </script>
 
 <template>
@@ -285,7 +289,7 @@ const collectionFilterValues = (collection?: string[]) => {
         <!-- Creator filter -->
         <lukso-select
           size="small"
-          :value="JSON.stringify(creatorFilterValue)"
+          :value="JSON.stringify(creatorFilterValues(filters.creators))"
           :options="JSON.stringify(creatorFilterOptions)"
           :placeholder="formatMessage('asset_filter_creator_placeholder')"
           :is-readonly="
@@ -346,26 +350,33 @@ const collectionFilterValues = (collection?: string[]) => {
     <div v-if="hasFiltersSelected" class="flex flex-wrap gap-2 pb-4">
       <!-- Selected creators -->
       <lukso-tag
-        v-for="creator in creatorFilterValue"
-        :key="creator.id"
+        v-for="creatorAddress in filters.creators"
+        :key="creatorAddress"
         is-rounded
         class="cursor-pointer"
-        @click="() => handleRemoveCreator(creator)"
+        @click="() => handleRemoveCreator(creatorAddress)"
       >
-        <span v-if="creator.name">@{{ creator.name }}</span>
-        <span v-else>{{ sliceAddress(creator.address) }}</span>
+        <span v-if="creatorFilterValues([creatorAddress])?.[0]?.name"
+          >@{{ creatorFilterValues([creatorAddress])?.[0]?.name }}</span
+        >
+        <span v-else>{{
+          sliceAddress(creatorFilterValues([creatorAddress])?.[0]?.address)
+        }}</span>
         <lukso-icon name="cross-outline" size="small" class="ml-1"></lukso-icon>
       </lukso-tag>
 
       <!-- Selected collections -->
       <div v-if="isCollectibles" class="flex">
-        <div v-for="collection in filters.collections" :key="collection">
+        <div
+          v-for="collectionAddress in filters.collections"
+          :key="collectionAddress"
+        >
           <lukso-tag
-            v-if="collectionFilterValues([collection])?.[0]?.value"
+            v-if="collectionFilterValues([collectionAddress])?.[0]?.value"
             is-rounded
             class="mr-2 cursor-pointer"
-            @click="() => handleRemoveCollection(collection)"
-            >{{ collectionFilterValues([collection])?.[0]?.value }}
+            @click="() => handleRemoveCollection(collectionAddress)"
+            >{{ collectionFilterValues([collectionAddress])?.[0]?.value }}
             <lukso-icon
               name="cross-outline"
               size="small"

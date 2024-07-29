@@ -8,6 +8,7 @@ export const useFilters = () => {
     orderBy: 'name-asc',
     search: undefined,
     collections: undefined,
+    creators: undefined,
   })
 
   //--- getters
@@ -39,7 +40,8 @@ export const useFilters = () => {
         search: searchFilter,
         orderBy: orderByFilter,
         collections: collectionsFilter,
-      } = queryParams
+        creators: creatorsFilter,
+      } = queryParams as Partial<Filters>
 
       if (assetTypeFilter) {
         filters.assetType = assetTypeFilter
@@ -53,9 +55,23 @@ export const useFilters = () => {
         filters.orderBy = orderByFilter
       }
 
-      // no if wrap for filters that can be undefined
-      filters.search = searchFilter
-      filters.collections = collectionsFilter
+      if (searchFilter) {
+        filters.search = searchFilter
+      } else {
+        filters.search = undefined
+      }
+
+      if (collectionsFilter) {
+        filters.collections = [collectionsFilter].flat()
+      } else {
+        filters.collections = undefined
+      }
+
+      if (creatorsFilter) {
+        filters.creators = [creatorsFilter].flat()
+      } else {
+        filters.creators = undefined
+      }
     },
     { deep: true, immediate: true }
   )

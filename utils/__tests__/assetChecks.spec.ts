@@ -336,7 +336,7 @@ describe('hasCreator', () => {
         {
           tokenCreatorsData: [{ address: '0x1' }],
         } as Asset,
-        [{ id: '0x1' }] as SelectProfileOption[]
+        ['0x1']
       )
     ).toBe(true)
   })
@@ -347,7 +347,7 @@ describe('hasCreator', () => {
         {
           tokenCreatorsData: [{ address: '0x2' }],
         } as Asset,
-        [{ id: '0x1' }] as SelectProfileOption[]
+        ['0x1']
       )
     ).toBe(false)
   })
@@ -364,9 +364,7 @@ describe('hasCreator', () => {
   })
 
   test('should return false if no asset is provided', async () => {
-    expect(
-      hasCreator(undefined, [{ id: '0x1' }] as SelectProfileOption[])
-    ).toBe(false)
+    expect(hasCreator(undefined, ['0x1'])).toBe(false)
   })
 
   test('should fallback to owner if the asset does not have a creator in the provided creators list', async () => {
@@ -376,7 +374,7 @@ describe('hasCreator', () => {
           tokenCreatorsData: [{ address: '0x2' }],
           ownerData: { address: '0x1' },
         } as Asset,
-        [{ id: '0x1' }] as SelectProfileOption[]
+        ['0x1']
       )
     ).toBe(true)
   })

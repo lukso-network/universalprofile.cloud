@@ -8,4 +8,5 @@ export type Filters = {
   orderBy: string
   search?: string
   collections?: string[]
+  creators?: string[]
 }

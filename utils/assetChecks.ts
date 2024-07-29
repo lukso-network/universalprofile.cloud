@@ -1,7 +1,5 @@
 import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
 
-import type { SelectProfileOption } from '@lukso/web-components'
-
 /**
  * Check if passed asset is LYX token
  * @param asset
@@ -108,19 +106,19 @@ export const isSupportedAsset = (asset?: Asset | null) =>
  * @param creators
  * @returns
  */
-export const hasCreator = (asset?: Asset, creators?: SelectProfileOption[]) => {
+export const hasCreator = (asset?: Asset, creatorAddresses?: string[]) => {
   let hasCreator = false
 
-  if (!creators || !asset) {
+  if (!creatorAddresses || !asset) {
     return hasCreator
   }
 
   // check in creators
   for (const tokenCreator of asset.tokenCreatorsData || []) {
     if (
-      creators.some(
-        creator =>
-          creator.id?.toLowerCase() === tokenCreator.address?.toLowerCase()
+      creatorAddresses.some(
+        address =>
+          address?.toLowerCase() === tokenCreator.address?.toLowerCase()
       )
     ) {
       hasCreator = true
@@ -130,9 +128,9 @@ export const hasCreator = (asset?: Asset, creators?: SelectProfileOption[]) => {
   // check in owner
   if (asset.ownerData) {
     if (
-      creators.some(
-        creator =>
-          creator.id?.toLowerCase() === asset.ownerData?.address?.toLowerCase()
+      creatorAddresses.some(
+        address =>
+          address?.toLowerCase() === asset.ownerData?.address?.toLowerCase()
       )
     ) {
       hasCreator = true
@@ -149,12 +147,15 @@ export const hasCreator = (asset?: Asset, creators?: SelectProfileOption[]) => {
  * @param collections
  * @returns
  */
-export const isInCollection = (asset?: Asset, collectionAddress?: string[]) => {
-  if (!asset || !collectionAddress) {
+export const isInCollection = (
+  asset?: Asset,
+  collectionAddresses?: string[]
+) => {
+  if (!asset || !collectionAddresses) {
     return false
   }
 
-  return collectionAddress?.some(address => {
+  return collectionAddresses?.some(address => {
     return address === asset?.address?.toLowerCase()
   })
 }
