@@ -6,6 +6,7 @@ fragment basicAsset on Asset {
   standard
   blockNumber
   decimals
+  totalSupply
 
   owner {
     ...creator
