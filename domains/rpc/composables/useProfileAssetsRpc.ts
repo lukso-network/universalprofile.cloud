@@ -83,9 +83,15 @@ export function useProfileAssetsRpc() {
                 address,
                 keyName: 'LSP8ReferenceContract',
               }),
+              queryCallContract({
+                // 9
+                chainId,
+                address,
+                method: 'totalSupply()',
+              }),
               ...interfacesToCheck.map(({ interfaceId }) => {
                 return queryCallContract({
-                  // 9+
+                  // 10+
                   chainId,
                   address,
                   method: 'supportsInterface(bytes4)',
@@ -124,6 +130,7 @@ export function useProfileAssetsRpc() {
           const decimals = (results[assetIndex + 7].data as number) || 0
           const rootReferenceContract = results[assetIndex + 8]
             .data as ReferenceContract
+          const totalSupply = results[assetIndex + 9].data as string
           const { supportsInterfaces, standard } = interfacesToCheck.reduce(
             (
               { supportsInterfaces, standard },
@@ -196,6 +203,7 @@ export function useProfileAssetsRpc() {
                 tokenName,
                 tokenSymbol,
                 tokenType,
+                totalSupply,
                 supportsInterfaces,
               } as Asset
               if (!isLoading && assetLog.enabled) {
@@ -230,6 +238,7 @@ export function useProfileAssetsRpc() {
             supportsInterfaces,
             decimals,
             tokenIdsData,
+            totalSupply,
           } as Asset
 
           if (!isLoading && assetLog.enabled) {

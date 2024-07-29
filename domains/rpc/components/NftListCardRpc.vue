@@ -17,25 +17,25 @@ const token = useToken()(asset)
 const viewedProfileAddress = getCurrentProfileAddress()
 const assetImage = useAssetImage(token, false, 260)
 const { showModal } = useModal()
+const { isCreated } = useFilters()
 
 const handleShowAsset = () => {
-  try {
-    assertAddress(props.asset?.address)
-
-    if (isCollection(props.asset)) {
-      return showModal({
-        template: 'TokenCollection',
-        data: {
-          asset: props.asset,
-        },
-        size: 'medium',
-      })
-    }
-
-    navigateTo(assetRoute(props.asset.address, props.asset.tokenId))
-  } catch (error) {
-    console.error(error)
+  // created LSP8 assets should navigate to collection
+  if (isCreated.value && isLsp8(props.asset)) {
+    return navigateTo(collectionRoute(props.asset.address))
   }
+
+  if (isCollection(props.asset)) {
+    return showModal({
+      template: 'TokenCollection',
+      data: {
+        asset: props.asset,
+      },
+      size: 'medium',
+    })
+  }
+
+  navigateTo(assetRoute(props.asset.address, props.asset.tokenId))
 }
 
 const handleSendAsset = (event: Event) => {
@@ -113,7 +113,14 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
             <AppPlaceholderLine v-else class="h-[12px] w-1/4" />
           </div>
           <div v-if="isLoadedAsset" class="paragraph-ptmono-10-bold">
-            <span v-if="isCollection(token)">
+            <span v-if="isCreated">
+              {{
+                $formatMessage('collection_total_supply', {
+                  count: asset?.totalSupply || '0',
+                })
+              }}
+            </span>
+            <span v-else-if="isCollection(token)">
               {{
                 $formatMessage('token_collection_of', {
                   count: asset?.tokenIdsData?.length.toString() || '0',
