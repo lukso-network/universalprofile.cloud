@@ -120,7 +120,7 @@ const tabs = computed(() => {
           :active-tab="filters.assetGroup"
           :tabs="tabs"
           @activate-tab="handleTabChange"
-          class="mt-10"
+          class="mt-20"
         />
         <ProfileAssetsGraph
           :assets="filteredAssets"
