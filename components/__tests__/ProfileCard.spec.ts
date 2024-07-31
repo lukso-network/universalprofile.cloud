@@ -51,15 +51,20 @@ describe('ProfileCard', () => {
     expect(component.html()).toMatchSnapshot()
   })
 
-  it('should render follower button', async () => {
+  it('should render follow button', async () => {
     vi.mock('/composables/useProfile', () => ({
       useProfile: () => ({
-        viewedProfile: vi.fn().mockReturnValue({
-          address: '0x1234567890abcdef1234567890abcdef12345678',
-        }),
-        connectedProfile: vi.fn().mockReturnValue({
-          address: '0xcafebabe',
-        }),
+        viewedProfile: vi.fn().mockReturnValue(
+          toRef({
+            address: '0x1234567890abcdef1234567890abcdef12345678',
+            isFollowing: false,
+          })
+        ),
+        connectedProfile: vi.fn().mockReturnValue(
+          toRef({
+            address: '0xcafebabe',
+          })
+        ),
       }),
     }))
 
