@@ -1,5 +1,6 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createTestingPinia } from '@pinia/testing'
 
 import ProfileCard from '../ProfileCard.vue'
 
@@ -46,6 +47,33 @@ describe('ProfileCard', () => {
     }))
 
     const component = await renderSuspended(ProfileCard)
+
+    expect(component.html()).toMatchSnapshot()
+  })
+
+  it('should render follower button', async () => {
+    vi.mock('/composables/useProfile', () => ({
+      useProfile: () => ({
+        viewedProfile: vi.fn().mockReturnValue({
+          address: '0x1234567890abcdef1234567890abcdef12345678',
+        }),
+        connectedProfile: vi.fn().mockReturnValue({
+          address: '0xcafebabe',
+        }),
+      }),
+    }))
+
+    const component = await renderSuspended(ProfileCard, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              app: { connectedProfileAddress: '0xcafebabe' },
+            },
+          }),
+        ],
+      },
+    })
 
     expect(component.html()).toMatchSnapshot()
   })
