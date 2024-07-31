@@ -3467,17 +3467,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@portal:/Users/dominik/www/lukso/tools-web-components/package::locator=universalprofile.cloud%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@lukso/web-components@portal:/Users/dominik/www/lukso/tools-web-components/package::locator=universalprofile.cloud%40workspace%3A."
+"@lukso/web-components@npm:1.76.0":
+  version: 1.76.0
+  resolution: "@lukso/web-components@npm:1.76.0"
   dependencies:
     clsx: "npm:^2.0.0"
     ethereum-blockies-base64: "npm:^1.0.2"
     tailwind-merge: "npm:^2.0.0"
     tailwind-variants: "npm:^0.2.1"
     tippy.js: "npm:^6.3.7"
+  checksum: f45207f4fe86137222626555c174e5bbf90c81ebac9c4761bee9e11f1bfe7997a8a0b8ad031bec39bd963b939cc0aa7835ba2d86a43834a210c353e347151b72
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "@mapbox/node-pre-gyp@npm:^1.0.5":
   version: 1.0.11
