@@ -4,11 +4,11 @@ import { keccak256 } from 'web3-utils'
 import LSP26FollowingSystemContract from '@/shared/abis/LSP26FollowingSystem.json'
 import { browserProcessMetadata } from '@/utils/processMetadata'
 
+import type { LSP26FollowingSystem } from '@/contracts/LSP26FollowingSystem'
 import type { ProfileLink } from '@/types/profile'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { AbiItem } from 'web3-utils'
-import type { LSP26FollowingSystem } from '@/contracts/LSP26FollowingSystem'
 
 export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
   const { currentNetwork, connectedProfileAddress } = storeToRefs(useAppStore())

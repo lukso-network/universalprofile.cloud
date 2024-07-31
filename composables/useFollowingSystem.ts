@@ -1,7 +1,7 @@
 import LSP26FollowingSystemContract from '@/shared/abis/LSP26FollowingSystem.json'
 
-import type { AbiItem } from 'web3-utils'
 import type { LSP26FollowingSystem } from '@/contracts/LSP26FollowingSystem'
+import type { AbiItem } from 'web3-utils'
 
 export const useFollowingSystem = () => {
   const connectedProfile = useProfile().connectedProfile()

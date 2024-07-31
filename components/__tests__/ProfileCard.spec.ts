@@ -1,6 +1,6 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createTestingPinia } from '@pinia/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import ProfileCard from '../ProfileCard.vue'
 
