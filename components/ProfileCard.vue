@@ -2,8 +2,9 @@
 const profile = useProfile().viewedProfile()
 const { isMobile } = useDevice()
 const { showModal } = useModal()
+const { isConnected } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
-
+const connectedProfile = useProfile().connectedProfile()
 const profileBackground = useProfileBackground(profile, 880)
 const profileAvatar = useProfileAvatar(profile, 96)
 
@@ -59,8 +60,12 @@ const hasTags = computed(
           </lukso-profile>
         </div>
 
-        <!-- Follow Button -->
-        <div class="flex min-h-7 justify-end"></div>
+        <div class="flex min-h-7 justify-end">
+          <!-- Follow Button -->
+          <FollowButton
+            v-if="isConnected && profile?.address !== connectedProfile?.address"
+          />
+        </div>
 
         <div class="mt-8 flex gap-4">
           <!-- Profile Name -->

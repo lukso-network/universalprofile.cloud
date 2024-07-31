@@ -30,8 +30,11 @@ exports[`ProfileCard > should render empty profile 1`] = `
         <!-- Profile picture -->
         <div class="absolute top-[-60px]">
           <lukso-profile profile-url="https://example.com/profile.jpg" profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
-        </div><!-- Follow Button -->
-        <div class="flex min-h-7 justify-end"></div>
+        </div>
+        <div class="flex min-h-7 justify-end">
+          <!-- Follow Button -->
+          <!--v-if-->
+        </div>
         <div class="mt-8 flex gap-4">
           <!-- Profile Name -->
           <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
@@ -95,8 +98,11 @@ exports[`ProfileCard > should render profile 1`] = `
         <!-- Profile picture -->
         <div class="absolute top-[-60px]">
           <lukso-profile profile-url="https://example.com/profile.jpg" profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
-        </div><!-- Follow Button -->
-        <div class="flex min-h-7 justify-end"></div>
+        </div>
+        <div class="flex min-h-7 justify-end">
+          <!-- Follow Button -->
+          <!--v-if-->
+        </div>
         <div class="mt-8 flex gap-4">
           <!-- Profile Name -->
           <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">

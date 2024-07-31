@@ -41,6 +41,7 @@ describe('ProfileCard', () => {
             ],
           })
         ),
+        connectedProfile: vi.fn(),
       }),
     }))
 
