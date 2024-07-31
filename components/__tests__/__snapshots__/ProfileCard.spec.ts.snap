@@ -1,0 +1,131 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ProfileCard > should render empty profile 1`] = `
+"<div id="test-wrapper">
+  <div class="relative">
+    <lukso-card variant="dapp" background-url="https://example.com/background.jpg" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+      <div slot="header" class="relative flex size-full flex-col items-center">
+        <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
+          <div>
+            <lukso-button size="small" variant="secondary" custom-class="px-0 overflow-hidden  h-[30px]" class="h-[30px] min-w-[30px]">
+              <lukso-icon size="small" name="transaction-send" class="mx-1.5"></lukso-icon>
+              <div class="paragraph-inter-12-medium transition-width duration-500 ease-out" style="width: auto;">
+                <div class="inline-flex items-center text-nowrap">Copy <div class="m-1 mr-1.5 text-neutral-50">0x1234567890abcdef1234567890abcdef12345678</div>
+                </div>
+                <div class="inline-flex">
+                  <div class="mr-1.5">Copied!</div>
+                </div>
+              </div>
+            </lukso-button>
+          </div>
+          <lukso-tooltip variant="white" text="universal.page" placement="left">
+            <lukso-button size="small" variant="secondary" custom-class="px-0 overflow-hidden size-full" class="group size-[30px]"><img src="/images/universalpage-logo.png" alt="" class="h-4 grayscale transition group-hover:grayscale-0"></lukso-button>
+          </lukso-tooltip>
+          <lukso-tooltip variant="white" text="universalswaps.io" placement="left">
+            <lukso-button size="small" variant="secondary" custom-class="px-0 overflow-hidden size-full" class="group size-[30px]"><img src="/images/universalswaps-logo.png" alt="" class="max-h-4 max-w-[20px] grayscale transition group-hover:grayscale-0"></lukso-button>
+          </lukso-tooltip>
+        </div>
+      </div>
+      <div slot="content" class="relative flex flex-col p-4 pb-6 sm:p-8">
+        <!-- Profile picture -->
+        <div class="absolute top-[-60px]">
+          <lukso-profile profile-url="https://example.com/profile.jpg" profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
+        </div><!-- Follow Button -->
+        <div class="flex min-h-7 justify-end"></div>
+        <div class="mt-8 flex gap-4">
+          <!-- Profile Name -->
+          <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
+            <lukso-username name="john" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350"></lukso-username>
+          </lukso-tooltip><!-- Followers -->
+        </div><!-- Description -->
+        <div class="paragraph-inter-14-regular mt-4 whitespace-pre-line break-word">Lorem ipsum dolor sit amet</div><!-- Tags -->
+        <ul class="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+          <li class="inline-flex">
+            <lukso-tag is-rounded="">tag1</lukso-tag>
+          </li>
+          <li class="inline-flex">
+            <lukso-tag is-rounded="">tag2</lukso-tag>
+          </li>
+        </ul><!-- Links -->
+        <div class="flex flex-col gap-0 sm:flex-row sm:gap-4">
+          <ul class="mt-4 flex flex-wrap gap-2 sm:gap-x-4"></ul>
+          <ul class="mt-2 flex flex-col flex-wrap gap-x-4 gap-y-2 sm:mt-4 sm:flex-row">
+            <li class="inline-flex">
+              <lukso-button size="small" href="https://example.com/link" variant="secondary" is-link="" is-full-width="">
+                <div class="flex w-full items-center text-left">
+                  <lukso-icon name="link" size="small" class="mr-2"></lukso-icon><span class="">Link</span>
+                </div>
+              </lukso-button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </lukso-card>
+  </div>
+</div>"
+`;
+
+exports[`ProfileCard > should render profile 1`] = `
+"<div id="test-wrapper">
+  <div class="relative">
+    <lukso-card variant="dapp" background-url="https://example.com/background.jpg" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+      <div slot="header" class="relative flex size-full flex-col items-center">
+        <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
+          <div>
+            <lukso-button size="small" variant="secondary" custom-class="px-0 overflow-hidden  h-[30px]" class="h-[30px] min-w-[30px]">
+              <lukso-icon size="small" name="transaction-send" class="mx-1.5"></lukso-icon>
+              <div class="paragraph-inter-12-medium transition-width duration-500 ease-out" style="width: auto;">
+                <div class="inline-flex items-center text-nowrap">Copy <div class="m-1 mr-1.5 text-neutral-50">0x1234567890abcdef1234567890abcdef12345678</div>
+                </div>
+                <div class="inline-flex">
+                  <div class="mr-1.5">Copied!</div>
+                </div>
+              </div>
+            </lukso-button>
+          </div>
+          <lukso-tooltip variant="white" text="universal.page" placement="left">
+            <lukso-button size="small" variant="secondary" custom-class="px-0 overflow-hidden size-full" class="group size-[30px]"><img src="/images/universalpage-logo.png" alt="" class="h-4 grayscale transition group-hover:grayscale-0"></lukso-button>
+          </lukso-tooltip>
+          <lukso-tooltip variant="white" text="universalswaps.io" placement="left">
+            <lukso-button size="small" variant="secondary" custom-class="px-0 overflow-hidden size-full" class="group size-[30px]"><img src="/images/universalswaps-logo.png" alt="" class="max-h-4 max-w-[20px] grayscale transition group-hover:grayscale-0"></lukso-button>
+          </lukso-tooltip>
+        </div>
+      </div>
+      <div slot="content" class="relative flex flex-col p-4 pb-6 sm:p-8">
+        <!-- Profile picture -->
+        <div class="absolute top-[-60px]">
+          <lukso-profile profile-url="https://example.com/profile.jpg" profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
+        </div><!-- Follow Button -->
+        <div class="flex min-h-7 justify-end"></div>
+        <div class="mt-8 flex gap-4">
+          <!-- Profile Name -->
+          <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
+            <lukso-username name="john" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350"></lukso-username>
+          </lukso-tooltip><!-- Followers -->
+        </div><!-- Description -->
+        <div class="paragraph-inter-14-regular mt-4 whitespace-pre-line break-word">Lorem ipsum dolor sit amet</div><!-- Tags -->
+        <ul class="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+          <li class="inline-flex">
+            <lukso-tag is-rounded="">tag1</lukso-tag>
+          </li>
+          <li class="inline-flex">
+            <lukso-tag is-rounded="">tag2</lukso-tag>
+          </li>
+        </ul><!-- Links -->
+        <div class="flex flex-col gap-0 sm:flex-row sm:gap-4">
+          <ul class="mt-4 flex flex-wrap gap-2 sm:gap-x-4"></ul>
+          <ul class="mt-2 flex flex-col flex-wrap gap-x-4 gap-y-2 sm:mt-4 sm:flex-row">
+            <li class="inline-flex">
+              <lukso-button size="small" href="https://example.com/link" variant="secondary" is-link="" is-full-width="">
+                <div class="flex w-full items-center text-left">
+                  <lukso-icon name="link" size="small" class="mr-2"></lukso-icon><span class="">Link</span>
+                </div>
+              </lukso-button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </lukso-card>
+  </div>
+</div>"
+`;
