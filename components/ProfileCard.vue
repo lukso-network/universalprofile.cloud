@@ -67,7 +67,9 @@ const hasTags = computed(
           />
         </div>
 
-        <div class="mt-8 flex gap-4">
+        <div
+          class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center"
+        >
           <!-- Profile Name -->
           <lukso-tooltip
             variant="light"
@@ -138,7 +140,7 @@ const hasTags = computed(
           <template #default="{ socialMediaLinks, otherLinks }">
             <div class="flex flex-col gap-0 sm:flex-row sm:gap-4">
               <ul
-                v-if="socialMediaLinks"
+                v-if="socialMediaLinks.length > 0"
                 class="mt-4 flex flex-wrap gap-2 sm:gap-x-4"
               >
                 <li
@@ -153,7 +155,7 @@ const hasTags = computed(
                 </li>
               </ul>
               <ul
-                v-if="otherLinks"
+                v-if="otherLinks.length > 0"
                 class="mt-2 flex flex-col flex-wrap gap-x-4 gap-y-2 sm:mt-4 sm:flex-row"
               >
                 <li
