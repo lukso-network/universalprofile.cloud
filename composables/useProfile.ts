@@ -18,6 +18,12 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
     const profileAddress = isRef(_profile)
       ? _profile.value || null
       : _profile || null
+    const { contract } = useWeb3(PROVIDERS.INJECTED)
+    const { followingSystemContractAddress } = currentNetwork.value
+    const followingSystemContract = contract<LSP26FollowingSystem>(
+      LSP26FollowingSystemContract.abi as AbiItem[],
+      followingSystemContractAddress
+    )
 
     const queries: QFQueryOptions[] & { profileAddress: Address | null } = (
       profileAddress
@@ -71,16 +77,9 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
                     'isFollowing',
                     profileAddress,
                     connectedProfileAddress.value,
+                    chainId,
                   ],
                   queryFn: async () => {
-                    const { contract } = useWeb3(PROVIDERS.INJECTED)
-                    const { followingSystemContractAddress } =
-                      currentNetwork.value
-                    const followingSystemContract =
-                      contract<LSP26FollowingSystem>(
-                        LSP26FollowingSystemContract.abi as AbiItem[],
-                        followingSystemContractAddress
-                      )
                     assertAddress(connectedProfileAddress.value)
                     const isFollowing = await followingSystemContract.methods
                       .isFollowing(
@@ -88,14 +87,37 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
                         profileAddress
                       )
                       .call()
-
                     return isFollowing
                   },
                   refetchInterval: 120_000,
                   staleTime: 250,
                 }
               : queryNull(),
-            // 6+
+            {
+              // 6
+              queryKey: ['followingCount', profileAddress, chainId],
+              queryFn: async () => {
+                const followingCount = await followingSystemContract.methods
+                  .followingCount(profileAddress)
+                  .call()
+                return followingCount || 0
+              },
+              refetchInterval: 120_000,
+              staleTime: 250,
+            },
+            {
+              // 7
+              queryKey: ['followerCount', profileAddress, chainId],
+              queryFn: async () => {
+                const followersCount = await followingSystemContract.methods
+                  .followerCount(profileAddress)
+                  .call()
+                return followersCount || 0
+              },
+              refetchInterval: 120_000,
+              staleTime: 250,
+            },
+            // 8+
             ...interfacesToCheck.map(({ interfaceId }) =>
               queryCallContract({
                 chainId,
@@ -124,13 +146,15 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
       const issuedAssets = results[3].data as Address[]
       const profileLink = (results[4].data as ProfileLink) || {}
       const isFollowing = results[5].data as boolean
+      const followingCount = results[6].data as number
+      const followerCount = results[7].data as number
       const { supportsInterfaces, standard } = interfacesToCheck.reduce(
         (
           { supportsInterfaces, standard },
           { interfaceId, standard: _standard },
           index
         ) => {
-          const supports = results[index + 6].data as boolean
+          const supports = results[index + 8].data as boolean
           supportsInterfaces[interfaceId] = supports
           if (supports) {
             standard = _standard
@@ -161,6 +185,8 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
         tags,
         profileLink,
         isFollowing,
+        followingCount,
+        followerCount,
       } as Profile
       if (!profile.isLoading && profileLog.enabled) {
         profileLog('profile', profile)

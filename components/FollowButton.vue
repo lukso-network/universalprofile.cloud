@@ -7,50 +7,36 @@ const connectedProfile = useProfile().connectedProfile()
 const { follow, unfollow } = useFollowingSystem()
 const isPending = ref(false)
 const queryClient = useQueryClient()
+const { selectedChainId: chainId } = useAppStore()
+
+const isFollowingQueryKey = computed(() => [
+  'isFollowing',
+  viewedProfile.value?.address,
+  connectedProfile.value?.address,
+  chainId,
+])
 
 const handleFollow = async () => {
   isPending.value = true
   // optimistically update the cache
-  queryClient.setQueryData(
-    [
-      'isFollowing',
-      viewedProfile.value?.address,
-      connectedProfile.value?.address,
-    ],
-    true
-  )
+  queryClient.setQueryData(isFollowingQueryKey.value, true)
   await follow(viewedProfile.value?.address)
   isPending.value = false
   // invalidate the cache to refetch the data
   queryClient.invalidateQueries({
-    queryKey: [
-      'isFollowing',
-      viewedProfile.value?.address,
-      connectedProfile.value?.address,
-    ],
+    queryKey: isFollowingQueryKey.value,
   })
 }
 
 const handleUnfollow = async () => {
   isPending.value = true
   // optimistically update the cache
-  queryClient.setQueryData(
-    [
-      'isFollowing',
-      viewedProfile.value?.address,
-      connectedProfile.value?.address,
-    ],
-    false
-  )
+  queryClient.setQueryData(isFollowingQueryKey.value, false)
   await unfollow(viewedProfile.value?.address)
   isPending.value = false
   // invalidate the cache to refetch the data
   queryClient.invalidateQueries({
-    queryKey: [
-      'isFollowing',
-      viewedProfile.value?.address,
-      connectedProfile.value?.address,
-    ],
+    queryKey: isFollowingQueryKey.value,
   })
 }
 </script>

@@ -20,6 +20,8 @@ export type Profile = {
   isLoading?: boolean
   profileLink?: ProfileLink
   isFollowing?: boolean
+  followingCount?: number
+  followerCount?: number
 }
 
 export type IndexedProfile = {
