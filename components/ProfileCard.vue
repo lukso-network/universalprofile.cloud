@@ -3,7 +3,7 @@ const profile = useProfile().viewedProfile()
 const { isMobile } = useDevice()
 const { showModal } = useModal()
 const { isConnected } = storeToRefs(useAppStore())
-const { formatMessage } = useIntl()
+const { formatMessage, formatNumber } = useIntl()
 const connectedProfile = useProfile().connectedProfile()
 const profileBackground = useProfileBackground(profile, 880)
 const profileAvatar = useProfileAvatar(profile, 96)
@@ -67,7 +67,9 @@ const hasTags = computed(
           />
         </div>
 
-        <div class="mt-8 flex gap-4">
+        <div
+          class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center"
+        >
           <!-- Profile Name -->
           <lukso-tooltip
             variant="light"
@@ -95,7 +97,23 @@ const hasTags = computed(
             ></lukso-username>
           </lukso-tooltip>
 
-          <!-- Followers -->
+          <!-- Follower counters -->
+          <div
+            class="paragraph-inter-12-medium flex items-center rounded-4 border border-neutral-90"
+          >
+            <div class="px-1.5">
+              <span class="paragraph-inter-12-bold">{{
+                formatNumber(profile?.followingCount || 0)
+              }}</span>
+              {{ formatMessage('profile_card_following') }}
+            </div>
+            <div class="border-l border-l-neutral-90 px-1.5">
+              <span class="paragraph-inter-12-bold">{{
+                formatNumber(profile?.followerCount || 0)
+              }}</span>
+              {{ formatMessage('profile_card_followers') }}
+            </div>
+          </div>
         </div>
 
         <!-- Description -->
@@ -122,7 +140,7 @@ const hasTags = computed(
           <template #default="{ socialMediaLinks, otherLinks }">
             <div class="flex flex-col gap-0 sm:flex-row sm:gap-4">
               <ul
-                v-if="socialMediaLinks"
+                v-if="socialMediaLinks.length > 0"
                 class="mt-4 flex flex-wrap gap-2 sm:gap-x-4"
               >
                 <li
@@ -137,7 +155,7 @@ const hasTags = computed(
                 </li>
               </ul>
               <ul
-                v-if="otherLinks"
+                v-if="otherLinks.length > 0"
                 class="mt-2 flex flex-col flex-wrap gap-x-4 gap-y-2 sm:mt-4 sm:flex-row"
               >
                 <li
