@@ -19,6 +19,7 @@ export type Profile = {
   backgroundImage?: Image[]
   isLoading?: boolean
   profileLink?: ProfileLink
+  isFollowing?: boolean
 }
 
 export type IndexedProfile = {

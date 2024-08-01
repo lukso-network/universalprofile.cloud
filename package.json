@@ -30,7 +30,7 @@
     "test:debug": "npx playwright test --debug",
     "pages:build": "cross-env NODE_ENV=production NITRO_PRESET=cloudflare_pages nuxt build --standalone",
     "nuxt:prepare": "nuxt prepare",
-    "typechain": "typechain --target web3-v1 --out-dir contracts/ './shared/abis/LSP2FetcherWithMulticall3.json' && typechain --target web3-v1 --out-dir contracts/ './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
+    "typechain": "typechain --target web3-v1 --out-dir contracts/ './shared/abis/*.json' && typechain --target web3-v1 --out-dir contracts/ './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.7.0",
@@ -38,7 +38,7 @@
     "@formatjs/intl": "^2.9.9",
     "@google/model-viewer": "^3.4.0",
     "@lukso/lsp-smart-contracts": "0.15.0-rc.5",
-    "@lukso/web-components": "1.76.0",
+    "@lukso/web-components": "1.77.0",
     "@nuxt/test-utils": "^3.13.1",
     "@nuxtjs/algolia": "^1.10.1",
     "@nuxtjs/device": "^3.1.1",
