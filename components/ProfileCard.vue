@@ -7,6 +7,10 @@ const { formatMessage, formatNumber } = useIntl()
 const connectedProfile = useProfile().connectedProfile()
 const profileBackground = useProfileBackground(profile, 880)
 const profileAvatar = useProfileAvatar(profile, 96)
+const profileAddress = computed(() => profile.value?.address)
+const profileFollowers = useFollowingSystem().getFollowersData(
+  profileAddress.value
+)
 
 const handlePreviewProfileImage = () => {
   const image = profile.value?.profileImage
@@ -64,6 +68,8 @@ const hasTags = computed(
           <!-- Follow Button -->
           <FollowButton
             v-if="isConnected && profile?.address !== connectedProfile?.address"
+            :is-following="profileFollowers?.isFollowing"
+            :follower-count="profileFollowers?.followerCount"
           />
         </div>
 
@@ -98,18 +104,23 @@ const hasTags = computed(
           </lukso-tooltip>
 
           <!-- Follower counters -->
+          <AppPlaceholderLine
+            v-if="profileFollowers.isLoading"
+            class="h-[20px] w-[160px]"
+          />
           <div
+            v-else
             class="paragraph-inter-12-medium flex items-center rounded-4 border border-neutral-90"
           >
             <div class="px-1.5">
               <span class="paragraph-inter-12-bold">{{
-                formatNumber(profile?.followingCount || 0)
+                formatNumber(profileFollowers?.followingCount || 0)
               }}</span>
               {{ formatMessage('profile_card_following') }}
             </div>
             <div class="border-l border-l-neutral-90 px-1.5">
               <span class="paragraph-inter-12-bold">{{
-                formatNumber(profile?.followerCount || 0)
+                formatNumber(profileFollowers?.followerCount || 0)
               }}</span>
               {{ formatMessage('profile_card_followers') }}
             </div>

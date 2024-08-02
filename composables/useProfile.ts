@@ -1,29 +1,20 @@
 import { useQueries } from '@tanstack/vue-query'
 import { keccak256 } from 'web3-utils'
 
-import LSP26FollowingSystemContract from '@/shared/abis/LSP26FollowingSystem.json'
 import { browserProcessMetadata } from '@/utils/processMetadata'
 
-import type { LSP26FollowingSystem } from '@/contracts/LSP26FollowingSystem'
 import type { ProfileLink } from '@/types/profile'
 import type { QFQueryOptions } from '@/utils/queryFunctions'
 import type { LSP3ProfileMetadataJSON } from '@lukso/lsp-smart-contracts'
-import type { AbiItem } from 'web3-utils'
 
 export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
-  const { currentNetwork, connectedProfileAddress } = storeToRefs(useAppStore())
+  const { currentNetwork } = storeToRefs(useAppStore())
 
   const queries = computed(() => {
     const { value: { chainId } = { chainId: '' } } = currentNetwork
     const profileAddress = isRef(_profile)
       ? _profile.value || null
       : _profile || null
-    const { contract } = useWeb3(PROVIDERS.INJECTED)
-    const { followingSystemContractAddress } = currentNetwork.value
-    const followingSystemContract = contract<LSP26FollowingSystem>(
-      LSP26FollowingSystemContract.abi as AbiItem[],
-      followingSystemContractAddress
-    )
 
     const queries: QFQueryOptions[] & { profileAddress: Address | null } = (
       profileAddress
@@ -70,54 +61,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               refetchInterval: 120_000,
               staleTime: 250,
             },
-            connectedProfileAddress.value
-              ? {
-                  // 5
-                  queryKey: [
-                    'isFollowing',
-                    profileAddress,
-                    connectedProfileAddress.value,
-                    chainId,
-                  ],
-                  queryFn: async () => {
-                    assertAddress(connectedProfileAddress.value)
-                    const isFollowing = await followingSystemContract.methods
-                      .isFollowing(
-                        connectedProfileAddress.value,
-                        profileAddress
-                      )
-                      .call()
-                    return isFollowing
-                  },
-                  refetchInterval: 120_000,
-                  staleTime: 250,
-                }
-              : queryNull(),
-            {
-              // 6
-              queryKey: ['followingCount', profileAddress, chainId],
-              queryFn: async () => {
-                const followingCount = await followingSystemContract.methods
-                  .followingCount(profileAddress)
-                  .call()
-                return followingCount || 0
-              },
-              refetchInterval: 120_000,
-              staleTime: 250,
-            },
-            {
-              // 7
-              queryKey: ['followerCount', profileAddress, chainId],
-              queryFn: async () => {
-                const followersCount = await followingSystemContract.methods
-                  .followerCount(profileAddress)
-                  .call()
-                return followersCount || 0
-              },
-              refetchInterval: 120_000,
-              staleTime: 250,
-            },
-            // 8+
+            // 5+
             ...interfacesToCheck.map(({ interfaceId }) =>
               queryCallContract({
                 chainId,
@@ -140,21 +84,22 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
         return null
       }
       const isLoading = results.some(result => result.isLoading)
+      // we assume profile is loaded when following queries are completed
+      const isLoaded = [results[1], results[2], results[3]]
+        .flat()
+        .every(result => !result.isLoading)
       const balance = results[0].data as string
       const profileData = results[1].data as LSP3ProfileMetadataJSON
       const receivedAssets = results[2].data as Address[]
       const issuedAssets = results[3].data as Address[]
       const profileLink = (results[4].data as ProfileLink) || {}
-      const isFollowing = results[5].data as boolean
-      const followingCount = results[6].data as number
-      const followerCount = results[7].data as number
       const { supportsInterfaces, standard } = interfacesToCheck.reduce(
         (
           { supportsInterfaces, standard },
           { interfaceId, standard: _standard },
           index
         ) => {
-          const supports = results[index + 8].data as boolean
+          const supports = results[index + 5].data as boolean
           supportsInterfaces[interfaceId] = supports
           if (supports) {
             standard = _standard
@@ -171,6 +116,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
 
       const profile = {
         isLoading,
+        isLoaded,
         address: profileAddress,
         name,
         standard: standard as Standard,
@@ -184,9 +130,6 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
         description,
         tags,
         profileLink,
-        isFollowing,
-        followingCount,
-        followerCount,
       } as Profile
       if (!profile.isLoading && profileLog.enabled) {
         profileLog('profile', profile)
