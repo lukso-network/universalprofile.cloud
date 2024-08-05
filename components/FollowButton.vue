@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query'
 
+type Props = {
+  isFollowing?: boolean
+  followerCount?: number | string
+}
+
+const props = defineProps<Props>()
 const { formatMessage } = useIntl()
 const viewedProfile = useProfile().viewedProfile()
 const connectedProfile = useProfile().connectedProfile()
@@ -16,34 +22,64 @@ const isFollowingQueryKey = computed(() => [
   chainId,
 ])
 
+const followerCountKey = computed(() => [
+  'followerCount',
+  viewedProfile.value?.address,
+  chainId,
+])
+
 const handleFollow = async () => {
+  // prevent multiple clicks when tx is pending
+  if (isPending.value) {
+    return
+  }
+
   isPending.value = true
   // optimistically update the cache
   queryClient.setQueryData(isFollowingQueryKey.value, true)
+  queryClient.setQueryData(
+    followerCountKey.value,
+    getPositiveNumber(props.followerCount) + 1
+  )
   await follow(viewedProfile.value?.address)
   isPending.value = false
   // invalidate the cache to refetch the data
   queryClient.invalidateQueries({
     queryKey: isFollowingQueryKey.value,
   })
+  queryClient.invalidateQueries({
+    queryKey: followerCountKey.value,
+  })
 }
 
 const handleUnfollow = async () => {
+  // prevent multiple clicks when tx is pending
+  if (isPending.value) {
+    return
+  }
+
   isPending.value = true
   // optimistically update the cache
   queryClient.setQueryData(isFollowingQueryKey.value, false)
+  queryClient.setQueryData(
+    followerCountKey.value,
+    getPositiveNumber(props.followerCount) - 1
+  )
   await unfollow(viewedProfile.value?.address)
   isPending.value = false
   // invalidate the cache to refetch the data
   queryClient.invalidateQueries({
     queryKey: isFollowingQueryKey.value,
   })
+  queryClient.invalidateQueries({
+    queryKey: followerCountKey.value,
+  })
 }
 </script>
 
 <template>
   <div class="group flex">
-    <template v-if="viewedProfile?.isFollowing">
+    <template v-if="isFollowing">
       <!-- Unfollow -->
       <lukso-button
         size="small"

@@ -1,15 +1,22 @@
 <script setup lang="ts">
-const profile = useProfile().viewedProfile()
+const viewedProfile = useProfile().viewedProfile()
 const { isMobile } = useDevice()
 const { showModal } = useModal()
 const { isConnected } = storeToRefs(useAppStore())
 const { formatMessage, formatNumber } = useIntl()
 const connectedProfile = useProfile().connectedProfile()
-const profileBackground = useProfileBackground(profile, 880)
-const profileAvatar = useProfileAvatar(profile, 96)
+const profileBackground = useProfileBackground(viewedProfile, 880)
+const profileAvatar = useProfileAvatar(viewedProfile, 96)
+const viewedProfileAddress = computed(() => viewedProfile.value?.address)
+const viewedProfileFollowers = useFollowingSystem().getFollowersData(
+  viewedProfileAddress.value
+)
+const connectedProfileFollowers = useFollowingSystem().getFollowersData(
+  connectedProfile.value?.address
+)
 
 const handlePreviewProfileImage = () => {
-  const image = profile.value?.profileImage
+  const image = viewedProfile.value?.profileImage
 
   if (!image) {
     return
@@ -25,11 +32,12 @@ const handlePreviewProfileImage = () => {
 }
 
 const hasDescription = computed(
-  () => profile?.value?.description && profile.value.description !== ''
+  () =>
+    viewedProfile?.value?.description && viewedProfile.value.description !== ''
 )
 
 const hasTags = computed(
-  () => profile?.value?.tags && profile.value.tags?.length > 0
+  () => viewedProfile?.value?.tags && viewedProfile.value.tags?.length > 0
 )
 </script>
 
@@ -44,14 +52,14 @@ const hasTags = computed(
       class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full"
     >
       <div slot="header" class="relative flex size-full flex-col items-center">
-        <ProfileCardShare :profile="profile" />
+        <ProfileCardShare :profile="viewedProfile" />
       </div>
       <div slot="content" class="relative flex flex-col p-4 pb-6 sm:p-8">
         <!-- Profile picture -->
         <div class="absolute top-[-60px]">
           <lukso-profile
             :profile-url="profileAvatar?.url"
-            :profile-address="profile?.address"
+            :profile-address="viewedProfile?.address"
             size="2x-large"
             has-identicon
             class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"
@@ -63,7 +71,12 @@ const hasTags = computed(
         <div class="flex min-h-7 justify-end">
           <!-- Follow Button -->
           <FollowButton
-            v-if="isConnected && profile?.address !== connectedProfile?.address"
+            v-if="
+              isConnected &&
+              viewedProfile?.address !== connectedProfile?.address
+            "
+            :is-following="viewedProfileFollowers?.isFollowing"
+            :follower-count="viewedProfileFollowers?.followerCount"
           />
         </div>
 
@@ -76,12 +89,12 @@ const hasTags = computed(
             offset="-10"
             is-clipboard-copy
             :copy-text="formatMessage('profile_card_copy_address')"
-            :copy-value="profile?.address"
+            :copy-value="viewedProfile?.address"
           >
             <lukso-username
-              v-if="profile?.name"
-              :name="profile?.name.toLowerCase()"
-              :address="profile?.address"
+              v-if="viewedProfile?.name"
+              :name="viewedProfile?.name.toLowerCase()"
+              :address="viewedProfile?.address"
               address-color="neutral-80"
               size="x-large"
               max-width="350"
@@ -89,7 +102,7 @@ const hasTags = computed(
             <lukso-username
               v-else
               :name="formatMessage('profile_default_name')"
-              :address="profile?.address"
+              :address="viewedProfile?.address"
               address-color="neutral-80"
               size="x-large"
               max-width="350"
@@ -98,36 +111,51 @@ const hasTags = computed(
           </lukso-tooltip>
 
           <!-- Follower counters -->
+          <AppPlaceholderLine
+            v-if="viewedProfileFollowers.isLoading"
+            class="h-[20px] w-[160px]"
+          />
           <div
+            v-else
             class="paragraph-inter-12-medium flex items-center rounded-4 border border-neutral-90"
           >
             <div class="px-1.5">
               <span class="paragraph-inter-12-bold">{{
-                formatNumber(profile?.followingCount || 0)
+                formatNumber(viewedProfileFollowers?.followingCount || 0)
               }}</span>
               {{ formatMessage('profile_card_following') }}
             </div>
             <div class="border-l border-l-neutral-90 px-1.5">
               <span class="paragraph-inter-12-bold">{{
-                formatNumber(profile?.followerCount || 0)
+                formatNumber(viewedProfileFollowers?.followerCount || 0)
               }}</span>
               {{ formatMessage('profile_card_followers') }}
             </div>
           </div>
         </div>
 
+        <!-- Followed by -->
+        <FollowedBy
+          v-if="
+            isConnected && viewedProfile?.address !== connectedProfile?.address
+          "
+          :follower-addresses="viewedProfileFollowers?.followerAddresses"
+          :following-addresses="connectedProfileFollowers?.followingAddresses"
+          class="mt-4"
+        />
+
         <!-- Description -->
         <div
           v-if="hasDescription"
           class="paragraph-inter-14-regular mt-4 whitespace-pre-line break-word"
         >
-          {{ profile?.description }}
+          {{ viewedProfile?.description }}
         </div>
 
         <!-- Tags -->
         <ul v-if="hasTags" class="mt-4 flex flex-wrap gap-x-4 gap-y-2">
           <li
-            v-for="(tag, index) in profile?.tags"
+            v-for="(tag, index) in viewedProfile?.tags"
             :key="index"
             class="inline-flex"
           >
@@ -136,7 +164,10 @@ const hasTags = computed(
         </ul>
 
         <!-- Links -->
-        <AppLinks v-if="profile?.links?.length" :links="profile?.links">
+        <AppLinks
+          v-if="viewedProfile?.links?.length"
+          :links="viewedProfile?.links"
+        >
           <template #default="{ socialMediaLinks, otherLinks }">
             <div class="flex flex-col gap-0 sm:flex-row sm:gap-4">
               <ul
