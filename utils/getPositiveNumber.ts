@@ -1,5 +1,5 @@
 /**
- *
+ * Get positive number from string or number
  *
  * @param value
  * @returns
