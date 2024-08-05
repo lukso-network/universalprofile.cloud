@@ -9,9 +9,7 @@ const { currentNetwork } = storeToRefs(useAppStore())
 const { search } = useAlgoliaSearch<IndexedProfile>(
   currentNetwork.value.indexName
 )
-const { receiver, receiverError } = storeToRefs(useSendStore())
-const { isEoA } = useWeb3(PROVIDERS.RPC)
-const { formatMessage } = useIntl()
+const { receiver } = storeToRefs(useSendStore())
 const isSearchingReceiver = ref<boolean>(false)
 const searchTerm = ref<string | Address | undefined>(receiver.value?.address)
 const hasNoResults = ref<boolean>(false)
@@ -49,25 +47,13 @@ const handleReceiverSearch = async (event: CustomEvent) => {
   }
 
   isSearchingReceiver.value = true
+  await searchResults()
 
-  // in user paste address, which might be EoA, we load profile right away
-  if (isAddress(searchTerm.value)) {
-    assertAddress(searchTerm.value)
-
-    if (await isEoA(searchTerm.value)) {
-      receiver.value = {
-        address: searchTerm.value,
-        standard: 'EOA',
-      }
-      hasNoResults.value = false
-      isSearchingReceiver.value = false
-      return
-    }
-  } else {
-    receiver.value = undefined
+  if (hasNoResults.value) {
+    // addresses which might be EoA, or not in index, we load right away
+    await selectProfile(searchTerm.value as Address)
   }
 
-  await searchResults()
   isSearchingReceiver.value = false
 }
 
@@ -75,6 +61,17 @@ const selectProfile = async (address?: Address) => {
   const searchResults = await searchProfile(address)
 
   if (!searchResults || searchResults.hits.length === 0) {
+    if (searchTerm.value && isAddress(searchTerm.value)) {
+      // profile might be not indexed
+      receiver.value = {
+        address: searchTerm.value as Address,
+        standard: 'EOA',
+      }
+      hasNoResults.value = false
+      isSearchingReceiver.value = false
+
+      return
+    }
     return
   }
 
@@ -95,7 +92,6 @@ const selectProfile = async (address?: Address) => {
       },
     ],
   }
-  receiverError.value = ''
   results.value = undefined
 }
 
@@ -125,10 +121,7 @@ const handleBlur = async (customEvent: CustomEvent) => {
 
   // we add slight delay to allow `on-select` to be triggered first
   setTimeout(async () => {
-    if (address && !isAddress(address)) {
-      receiverError.value = formatMessage('errors_invalid_address')
-    } else {
-      receiverError.value = ''
+    if (isAddress(address)) {
       await selectProfile(address)
     }
   }, BLUR_DELAY)
@@ -140,7 +133,6 @@ const handleBlur = async (customEvent: CustomEvent) => {
     name="receiver"
     :value="searchTerm"
     :placeholder="$formatMessage('send_input_placeholder')"
-    :error="receiverError"
     :results="JSON.stringify(results)"
     :is-searching="isSearchingReceiver ? 'true' : undefined"
     :show-no-results="hasNoResults ? 'true' : undefined"
@@ -149,6 +141,7 @@ const handleBlur = async (customEvent: CustomEvent) => {
     class="mt-4 w-full"
     custom-class="paragraph-ptmono-14-regular"
     @on-search="handleReceiverSearch"
+    @on-input-click="handleReceiverSearch"
     @on-select="handleSelect"
     @on-blur="handleBlur"
   ></lukso-search>
