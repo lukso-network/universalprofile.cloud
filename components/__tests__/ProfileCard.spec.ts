@@ -1,10 +1,8 @@
-import { useFollowingSystem } from './../../composables/useFollowingSystem'
 import { renderSuspended } from '@nuxt/test-utils/runtime'
 import { createTestingPinia } from '@pinia/testing'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import ProfileCard from '../ProfileCard.vue'
-import { a, g } from 'vitest/dist/suite-IbNSsUWN.js'
 
 const viewedProfileMock = vi.fn()
 const connectedProfileMock = vi.fn()

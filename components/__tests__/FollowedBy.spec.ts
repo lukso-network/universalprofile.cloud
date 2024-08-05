@@ -2,7 +2,6 @@ import { renderSuspended } from '@nuxt/test-utils/runtime'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import FollowedBy from '../FollowedBy.vue'
-import { p } from 'pinia-orm/dist/shared/pinia-orm.ed84a779'
 
 const profilesMock = vi.fn()
 
