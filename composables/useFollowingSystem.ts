@@ -196,11 +196,11 @@ export const useFollowingSystem = () => {
       return useQueries({
         queries,
         combine: results => {
-          const followingCount = results[0].data as number
-          const followingAddresses = results[1].data as Address[]
-          const followerCount = results[2].data as number
-          const followerAddresses = results[3].data as Address[]
-          const isFollowing = results[4].data as boolean
+          const followingCount = results[0]?.data as number
+          const followingAddresses = results[1]?.data as Address[]
+          const followerCount = results[2]?.data as number
+          const followerAddresses = results[3]?.data as Address[]
+          const isFollowing = results[4]?.data as boolean
           const isLoading = results.some(result => result.isLoading)
 
           const profileFollowers = {

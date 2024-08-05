@@ -58,8 +58,11 @@ const othersCount = computed(() => {
     </div>
     <div class="paragraph-inter-12-medium pl-2">
       <FollowedByNames :profile-addresses="addressesForFollowerNames">
-        <template #default="{ names }">
-          {{ formatMessage('followed_by_text', { names, othersCount }) }}
+        <template #default="{ names, isLoading }">
+          <AppPlaceholderLine v-if="isLoading" class="h-[15px] w-[200px]" />
+          <span v-else>
+            {{ formatMessage('followed_by_text', { names, othersCount }) }}
+          </span>
         </template>
       </FollowedByNames>
     </div>

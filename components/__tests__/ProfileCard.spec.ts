@@ -1,23 +1,55 @@
+import { useFollowingSystem } from './../../composables/useFollowingSystem'
 import { renderSuspended } from '@nuxt/test-utils/runtime'
 import { createTestingPinia } from '@pinia/testing'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import ProfileCard from '../ProfileCard.vue'
+import { a, g } from 'vitest/dist/suite-IbNSsUWN.js'
 
 const viewedProfileMock = vi.fn()
 const connectedProfileMock = vi.fn()
+const followersDataMock = vi.fn()
+const getProfileMock = vi.fn()
+const profilesMock = vi.fn()
 
 vi.mock('/composables/useProfile', () => ({
   useProfile: () => ({
     viewedProfile: viewedProfileMock,
     connectedProfile: connectedProfileMock,
+    getProfile: getProfileMock,
   }),
+}))
+
+vi.mock('/composables/useFollowingSystem', () => ({
+  useFollowingSystem: () => ({
+    getFollowersData: followersDataMock,
+  }),
+}))
+
+vi.mock('/composables/useProfiles', () => ({
+  useProfiles: () => profilesMock,
 }))
 
 describe('ProfileCard', () => {
   beforeEach(() => {
     useIntl().setupIntl(defaultConfig)
-    vi.clearAllMocks()
+    viewedProfileMock.mockReturnValue(toRef({ address: '' }))
+    connectedProfileMock.mockReturnValue(toRef({ address: '' }))
+    followersDataMock.mockReturnValue(
+      toRef({
+        isFollowing: false,
+        followingCount: 0,
+        followingAddresses: [],
+        followerCount: 0,
+        followerAddresses: [],
+        isLoading: false,
+      })
+    )
+    getProfileMock.mockReturnValue(toRef({ address: '' }))
+    profilesMock.mockReturnValue({
+      profiles: [],
+      isLoading: false,
+    })
   })
 
   it('should render empty profile', async () => {
@@ -49,10 +81,10 @@ describe('ProfileCard', () => {
             title: 'Link',
           },
         ],
-        isFollowing: false,
-        followerCount: 10000,
-        followingCount: 20000,
       } as Profile)
+    )
+    followersDataMock.mockReturnValue(
+      toRef({ isFollowing: false, followerCount: 10000, followingCount: 20000 })
     )
 
     const component = await renderSuspended(ProfileCard)
@@ -83,15 +115,15 @@ describe('ProfileCard', () => {
             title: 'Link',
           },
         ],
-        isFollowing: false,
-        followerCount: 10000,
-        followingCount: 20000,
       })
     )
     connectedProfileMock.mockReturnValue(
       toRef({
         address: '0xcafebabe',
       })
+    )
+    followersDataMock.mockReturnValue(
+      toRef({ isFollowing: false, followerCount: 10000, followingCount: 20000 })
     )
 
     const component = await renderSuspended(ProfileCard, {
@@ -113,14 +145,62 @@ describe('ProfileCard', () => {
     viewedProfileMock.mockReturnValue(
       toRef({
         address: '0x1234567890abcdef1234567890abcdef12345678',
-        isFollowing: true,
-        followerCount: 10000,
-        followingCount: 20000,
       })
     )
     connectedProfileMock.mockReturnValue(
       toRef({
         address: '0xcafebabe',
+      })
+    )
+    followersDataMock.mockReturnValue(
+      toRef({ isFollowing: true, followerCount: 10000, followingCount: 20000 })
+    )
+
+    const component = await renderSuspended(ProfileCard, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              app: { connectedProfileAddress: '0xcafebabe' },
+            },
+          }),
+        ],
+      },
+    })
+
+    expect(component.html()).toMatchSnapshot()
+  })
+
+  it('should render followed by info', async () => {
+    viewedProfileMock.mockReturnValue(
+      toRef({
+        address: '0x1234567890abcdef1234567890abcdef12345678',
+      })
+    )
+    connectedProfileMock.mockReturnValue(
+      toRef({
+        address: '0xcafebabe',
+      })
+    )
+    followersDataMock.mockReturnValue(
+      toRef({
+        isFollowing: true,
+        followerCount: 10000,
+        followingCount: 20000,
+        followerAddresses: ['0x1'],
+        followingAddresses: ['0x1'],
+      } as ProfileFollowers)
+    )
+    getProfileMock.mockReturnValue(toRef({ address: '0x1' }))
+    profilesMock.mockReturnValue(
+      toRef({
+        profiles: [
+          {
+            address: '0x1',
+            name: 'john',
+          },
+        ],
+        isLoading: false,
       })
     )
 

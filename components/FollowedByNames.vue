@@ -1,3 +1,4 @@
+Re
 <script setup lang="ts">
 import { sliceAddress } from '@lukso/web-components/tools'
 
@@ -6,7 +7,7 @@ type Props = {
 }
 
 type Slots = {
-  default(props: { names: string }): any
+  default(props: { names: string; isLoading: boolean }): any
 }
 
 const props = defineProps<Props>()
@@ -28,8 +29,10 @@ const names = computed(() => {
       .join(', ') || ''
   )
 })
+
+const isLoading = computed(() => profilesData.value?.isLoading || false)
 </script>
 
 <template>
-  <slot :names="names" />
+  <slot :names="names" :is-loading="isLoading" />
 </template>
