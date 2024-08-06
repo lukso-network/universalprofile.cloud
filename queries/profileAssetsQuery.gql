@@ -1,6 +1,5 @@
 query profileAssets($address: String!) {
-  # TODO swap to ReceivedAsset in new indexer
-  receivedAssets: ReceivedAssets(where: { profile_id: { _ilike: $address } }) {
+  receivedAssets: ReceivedAsset(where: { profile_id: { _ilike: $address } }) {
     asset {
       ...basicAsset
     }
