@@ -3,7 +3,7 @@ const viewedProfile = useProfile().viewedProfile()
 const { isMobile } = useDevice()
 const { showModal } = useModal()
 const { isConnected } = storeToRefs(useAppStore())
-const { formatMessage, formatNumber } = useIntl()
+const { formatMessage } = useIntl()
 const connectedProfile = useProfile().connectedProfile()
 const profileBackground = useProfileBackground(viewedProfile, 880)
 const profileAvatar = useProfileAvatar(viewedProfile, 96)
@@ -111,27 +111,7 @@ const hasTags = computed(
           </lukso-tooltip>
 
           <!-- Follower counters -->
-          <AppPlaceholderLine
-            v-if="viewedProfileFollowers.isLoading"
-            class="h-[20px] w-[160px]"
-          />
-          <div
-            v-else
-            class="paragraph-inter-12-medium flex items-center rounded-4 border border-neutral-90"
-          >
-            <div class="px-1.5">
-              <span class="paragraph-inter-12-bold">{{
-                formatNumber(viewedProfileFollowers?.followingCount || 0)
-              }}</span>
-              {{ formatMessage('profile_card_following') }}
-            </div>
-            <div class="border-l border-l-neutral-90 px-1.5">
-              <span class="paragraph-inter-12-bold">{{
-                formatNumber(viewedProfileFollowers?.followerCount || 0)
-              }}</span>
-              {{ formatMessage('profile_card_followers') }}
-            </div>
-          </div>
+          <FollowCounters :profile-followers="viewedProfileFollowers" />
         </div>
 
         <!-- Followed by -->
