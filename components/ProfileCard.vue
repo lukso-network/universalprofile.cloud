@@ -87,7 +87,7 @@ const hasTags = computed(
           <!-- Profile Name -->
           <lukso-tooltip
             variant="light"
-            offset="-10"
+            offset="5"
             is-clipboard-copy
             :copy-text="formatMessage('profile_card_copy_address')"
             :copy-value="viewedProfile?.address"
