@@ -4,6 +4,7 @@ import { useQueryClient } from '@tanstack/vue-query'
 type Props = {
   isFollowing?: boolean
   followerCount?: number | string
+  followerAddresses?: Address[]
 }
 
 const props = defineProps<Props>()
@@ -28,21 +29,40 @@ const followerCountKey = computed(() => [
   chainId,
 ])
 
-const handleFollow = async () => {
-  // prevent multiple clicks when tx is pending
-  if (isPending.value) {
-    return
-  }
+const followerAddressesKey = computed(() => [
+  'followerAddresses',
+  viewedProfile.value?.address,
+  chainId,
+])
 
-  isPending.value = true
+const updateAddFollowerQueries = () => {
   // optimistically update the cache
   queryClient.setQueryData(isFollowingQueryKey.value, true)
   queryClient.setQueryData(
     followerCountKey.value,
     getPositiveNumber(props.followerCount) + 1
   )
-  await follow(viewedProfile.value?.address)
-  isPending.value = false
+  queryClient.setQueryData(followerAddressesKey.value, [
+    ...(props.followerAddresses || []),
+    connectedProfile.value?.address,
+  ])
+}
+
+const updateRemoveFollowerQueries = () => {
+  // optimistically update the cache
+  queryClient.setQueryData(isFollowingQueryKey.value, false)
+  queryClient.setQueryData(
+    followerCountKey.value,
+    getPositiveNumber(props.followerCount) - 1
+  )
+  queryClient.setQueryData(followerAddressesKey.value, [
+    ...(props.followerAddresses || []).filter(
+      address => address !== connectedProfile.value?.address
+    ),
+  ])
+}
+
+const invalidateQueries = () => {
   // invalidate the cache to refetch the data
   queryClient.invalidateQueries({
     queryKey: isFollowingQueryKey.value,
@@ -50,6 +70,22 @@ const handleFollow = async () => {
   queryClient.invalidateQueries({
     queryKey: followerCountKey.value,
   })
+  queryClient.invalidateQueries({
+    queryKey: followerAddressesKey.value,
+  })
+}
+
+const handleFollow = async () => {
+  // prevent multiple clicks when tx is pending
+  if (isPending.value) {
+    return
+  }
+
+  isPending.value = true
+  updateAddFollowerQueries()
+  await follow(viewedProfile.value?.address)
+  isPending.value = false
+  invalidateQueries()
 }
 
 const handleUnfollow = async () => {
@@ -59,21 +95,10 @@ const handleUnfollow = async () => {
   }
 
   isPending.value = true
-  // optimistically update the cache
-  queryClient.setQueryData(isFollowingQueryKey.value, false)
-  queryClient.setQueryData(
-    followerCountKey.value,
-    getPositiveNumber(props.followerCount) - 1
-  )
+  updateRemoveFollowerQueries()
   await unfollow(viewedProfile.value?.address)
   isPending.value = false
-  // invalidate the cache to refetch the data
-  queryClient.invalidateQueries({
-    queryKey: isFollowingQueryKey.value,
-  })
-  queryClient.invalidateQueries({
-    queryKey: followerCountKey.value,
-  })
+  invalidateQueries()
 }
 </script>
 
