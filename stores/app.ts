@@ -61,9 +61,13 @@ export const useAppStore = defineStore(
 
     const isTestnet = computed(() => selectedChainId.value === TESTNET_CHAIN_ID)
 
-    const isRpc = computed(() => fetchDataProvider.value === 'rpc')
+    const isRpc = computed(
+      () => fetchDataProvider.value === 'rpc' || isTestnet.value // TODO use RPC for Testnet until we have it indexed
+    )
 
-    const isGraph = computed(() => fetchDataProvider.value === 'graph')
+    const isGraph = computed(
+      () => fetchDataProvider.value === 'graph' && !isTestnet.value // TODO use RPC for Testnet until we have it indexed
+    )
 
     // --- actions
 
