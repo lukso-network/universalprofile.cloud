@@ -39,6 +39,13 @@ const hasDescription = computed(
 const hasTags = computed(
   () => viewedProfile?.value?.tags && viewedProfile.value.tags?.length > 0
 )
+
+const hasFollowButton = computed(
+  () =>
+    isConnected &&
+    viewedProfile?.value?.address.toLowerCase() !==
+      connectedProfile?.value?.address.toLowerCase()
+)
 </script>
 
 <template>
@@ -71,10 +78,7 @@ const hasTags = computed(
         <div class="flex min-h-7 justify-end">
           <!-- Follow Button -->
           <FollowButton
-            v-if="
-              isConnected &&
-              viewedProfile?.address !== connectedProfile?.address
-            "
+            v-if="hasFollowButton"
             :is-following="viewedProfileFollowers?.isFollowing"
             :follower-count="viewedProfileFollowers?.followerCount"
             :follower-addresses="viewedProfileFollowers?.followerAddresses"
@@ -117,9 +121,7 @@ const hasTags = computed(
 
         <!-- Followed by -->
         <FollowedBy
-          v-if="
-            isConnected && viewedProfile?.address !== connectedProfile?.address
-          "
+          v-if="hasFollowButton"
           :follower-addresses="viewedProfileFollowers?.followerAddresses"
           :following-addresses="connectedProfileFollowers?.followingAddresses"
           class="mt-4"
