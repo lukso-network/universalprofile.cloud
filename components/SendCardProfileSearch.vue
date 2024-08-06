@@ -50,8 +50,13 @@ const handleReceiverSearch = async (event: CustomEvent) => {
   await searchResults()
 
   if (hasNoResults.value) {
-    // addresses which might be EoA, or not in index, we load right away
-    await selectProfile(searchTerm.value as Address)
+    // addresses which might be EoA, or not in index, we show in the results
+    results.value = [
+      {
+        address: searchTerm.value as Address,
+      },
+    ]
+    hasNoResults.value = false
   }
 
   isSearchingReceiver.value = false
