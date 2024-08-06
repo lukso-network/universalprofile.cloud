@@ -360,9 +360,12 @@ const creatorFilterValues = (creators?: string[]) => {
     <!-- Selected filters -->
     <div v-if="hasFiltersSelected" class="flex flex-wrap gap-y-2 pb-4">
       <!-- Selected creators -->
-      <div v-for="creatorAddress in filters.creators" :key="creatorAddress">
+      <template
+        v-for="creatorAddress in filters.creators"
+        :key="creatorAddress"
+      >
         <lukso-tag
-          v-if="creatorFilterValues([creatorAddress])?.[0]?.name"
+          v-if="creatorFilterValues([creatorAddress])?.[0]?.address"
           is-rounded
           class="mr-2 cursor-pointer"
           @click="() => handleRemoveCreator(creatorAddress)"
@@ -379,10 +382,10 @@ const creatorFilterValues = (creators?: string[]) => {
             class="ml-1"
           ></lukso-icon>
         </lukso-tag>
-      </div>
+      </template>
 
       <!-- Selected collections -->
-      <div v-if="isCollectibles" class="flex flex-wrap">
+      <template v-if="isCollectibles">
         <div
           v-for="collectionAddress in filters.collections"
           :key="collectionAddress"
@@ -400,7 +403,7 @@ const creatorFilterValues = (creators?: string[]) => {
             ></lukso-icon>
           </lukso-tag>
         </div>
-      </div>
+      </template>
     </div>
 
     <div>
