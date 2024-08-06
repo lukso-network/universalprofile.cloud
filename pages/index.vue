@@ -9,7 +9,7 @@ const { isTestnet } = storeToRefs(useAppStore())
 <template>
   <AppPageLoader>
     <div
-      class="mx-auto flex max-w-[1200px] flex-col items-center px-6 transition-opacity duration-300 lg:px-4"
+      class="mx-auto flex max-w-[1200px] flex-col items-center transition-opacity duration-300 lg:px-4"
     >
       <AppTestnetWarning v-if="isTestnet" class="-mb-6" />
       <h1 class="flex flex-col justify-center pt-16 text-center">
