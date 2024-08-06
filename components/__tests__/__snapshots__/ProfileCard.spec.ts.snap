@@ -40,9 +40,9 @@ exports[`ProfileCard > should render empty profile 1`] = `
           <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="">
             <lukso-username name="anonymous-profile" address="" address-color="neutral-80" size="x-large" max-width="350" hide-prefix=""></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
-          <div class="paragraph-inter-12-medium flex items-center rounded-4 border border-neutral-90">
-            <div class="px-1.5"><span class="paragraph-inter-12-bold">0</span> Following</div>
-            <div class="border-l border-l-neutral-90 px-1.5"><span class="paragraph-inter-12-bold">0</span> Followers</div>
+          <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
+            <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">0</span> Following</div>
+            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">0</span> Followers</div>
           </div>
         </div><!-- Followed by -->
         <!--v-if-->
@@ -106,9 +106,9 @@ exports[`ProfileCard > should render followed by info 1`] = `
           <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
             <lukso-username name="anonymous-profile" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350" hide-prefix=""></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
-          <div class="paragraph-inter-12-medium flex items-center rounded-4 border border-neutral-90">
-            <div class="px-1.5"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
-            <div class="border-l border-l-neutral-90 px-1.5"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
+          <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
+            <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
+            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
           </div>
         </div><!-- Followed by -->
         <div class="flex items-center mt-4">
@@ -173,9 +173,9 @@ exports[`ProfileCard > should render profile when connected 1`] = `
           <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
             <lukso-username name="john" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350"></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
-          <div class="paragraph-inter-12-medium flex items-center rounded-4 border border-neutral-90">
-            <div class="px-1.5"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
-            <div class="border-l border-l-neutral-90 px-1.5"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
+          <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
+            <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
+            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
           </div>
         </div><!-- Followed by -->
         <!--v-if-->
@@ -247,9 +247,9 @@ exports[`ProfileCard > should render profile when not connected 1`] = `
           <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
             <lukso-username name="john" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350"></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
-          <div class="paragraph-inter-12-medium flex items-center rounded-4 border border-neutral-90">
-            <div class="px-1.5"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
-            <div class="border-l border-l-neutral-90 px-1.5"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
+          <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
+            <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
+            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
           </div>
         </div><!-- Followed by -->
         <!--v-if-->
@@ -329,9 +329,9 @@ exports[`ProfileCard > should render unfollow button 1`] = `
           <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
             <lukso-username name="anonymous-profile" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350" hide-prefix=""></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
-          <div class="paragraph-inter-12-medium flex items-center rounded-4 border border-neutral-90">
-            <div class="px-1.5"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
-            <div class="border-l border-l-neutral-90 px-1.5"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
+          <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
+            <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
+            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
           </div>
         </div><!-- Followed by -->
         <!--v-if-->
