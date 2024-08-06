@@ -77,6 +77,7 @@ const hasTags = computed(
             "
             :is-following="viewedProfileFollowers?.isFollowing"
             :follower-count="viewedProfileFollowers?.followerCount"
+            :follower-addresses="viewedProfileFollowers?.followerAddresses"
           />
         </div>
 
