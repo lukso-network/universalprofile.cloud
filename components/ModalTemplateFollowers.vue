@@ -75,7 +75,11 @@ const handlePageChange = (event: CustomEvent) => {
               :profile-address="profile?.address"
               has-identicon
             ></lukso-profile>
-            <lukso-username :name="profile.name" :address="profile.address">
+            <lukso-username
+              :name="profile.name"
+              :address="profile.address"
+              address-color="neutral-80"
+            >
             </lukso-username>
           </div>
         </template>
