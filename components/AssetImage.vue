@@ -9,7 +9,7 @@ type Props = {
 
 type Emits = (event: 'on-load') => void
 
-const IMAGE_LOAD_TIMEOUT = 1000 * 15 // 15 seconds
+const IMAGE_LOAD_TIMEOUT = 1000 * 60 // 60 seconds
 
 const props = withDefaults(defineProps<Props>(), {
   image: undefined,
