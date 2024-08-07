@@ -68,7 +68,7 @@ onMounted(async () => {
   }
 
   // some images will never load, ie. when metadata is missing. In this case, we need to show the error image after a timeout
-  await new Promise(resolve => {
+  await new Promise(() => {
     setTimeout(() => {
       if (!props.image?.url) {
         contentWidth.value = useElementSize(contentRef.value).width.value
