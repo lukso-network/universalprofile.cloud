@@ -37,7 +37,7 @@ const handleAddAsset = async () => {
       UniversalProfileJson.abi as AbiItem[],
       profileAddress
     )
-    await profileContract.methods
+    await profileContract?.methods
       .setDataBatch(keys, values)
       .send({ from: profileAddress })
     navigateTo(settingsMissingAssetsSuccessRoute(assetAddress))

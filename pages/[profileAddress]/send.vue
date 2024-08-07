@@ -59,7 +59,7 @@ const handleSend = async () => {
 
   try {
     setStatus('pending')
-    let transactionsReceipt: TransactionReceipt
+    let transactionsReceipt: TransactionReceipt | undefined
 
     // native token transfer
     if (isLyx(sendAsset.value)) {
@@ -81,7 +81,7 @@ const handleSend = async () => {
 
           assertAddress(connectedProfile.value?.address)
           assertAddress(receiver.value?.address)
-          transactionsReceipt = await tokenContract.methods
+          transactionsReceipt = await tokenContract?.methods
             .transfer(
               connectedProfile.value.address,
               receiver.value?.address,
@@ -93,7 +93,7 @@ const handleSend = async () => {
               '0x'
             )
             .send({ from: connectedProfile.value.address })
-          transactionHash.value = transactionsReceipt.transactionHash
+          transactionHash.value = transactionsReceipt?.transactionHash
           break
         }
         case STANDARDS.LSP8: {
@@ -105,7 +105,7 @@ const handleSend = async () => {
           assertAddress(connectedProfile.value?.address)
           assertAddress(receiver.value?.address)
           assertString(sendAsset.value.tokenId)
-          transactionsReceipt = await nftContract.methods
+          transactionsReceipt = await nftContract?.methods
             .transfer(
               connectedProfile.value.address,
               receiver.value?.address,
@@ -114,7 +114,7 @@ const handleSend = async () => {
               '0x'
             )
             .send({ from: connectedProfile.value.address })
-          transactionHash.value = transactionsReceipt.transactionHash
+          transactionHash.value = transactionsReceipt?.transactionHash
           assertNotUndefined(sendAsset.value.address, 'asset')
           break
         }

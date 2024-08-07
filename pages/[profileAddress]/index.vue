@@ -110,16 +110,15 @@ const isLoadingAssets = computed(() =>
 </script>
 
 <template>
-  <AppPageLoader :is-loading="viewedProfile?.isLoading">
+  <AppPageLoader :is-loading="!viewedProfile?.isLoaded">
     <div
       v-if="viewedProfile?.standard === 'LSP3Profile'"
       class="mx-auto max-w-content"
     >
       <ProfileCard />
-      <ProfileDetails />
       <div
         v-if="nftsCreated.length > 0"
-        class="heading-inter-17-semi-bold my-10 flex items-center justify-center"
+        class="heading-inter-17-semi-bold my-10 flex items-center justify-center sm:mt-20"
       >
         {{ $formatMessage('asset_creations') }}
         <span

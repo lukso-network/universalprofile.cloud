@@ -24,4 +24,5 @@ export interface NetworkInfo {
   indexName: string
   explorerUrl: string
   customLSP2ContractAddress: string
+  followingSystemContractAddress: string
 }

@@ -1,5 +1,3 @@
-import Web3 from 'web3'
-
 import type { TransactionConfig } from 'web3-core'
 import type { ContractOptions } from 'web3-eth-contract'
 import type { AbiItem } from 'web3-utils'
@@ -11,7 +9,7 @@ export default function useWeb3(providerName: string) {
     const web3 = web3Store.getWeb3(providerName)
 
     if (!web3) {
-      return new Web3()
+      throw new Error('Web3 instance not found')
     }
 
     return web3
@@ -25,7 +23,12 @@ export default function useWeb3(providerName: string) {
       options?: ContractOptions
     ) => {
       const web3 = getWeb3()
-      return new web3.eth.Contract(jsonInterface, address, options) as T
+
+      try {
+        return new web3.eth.Contract(jsonInterface, address, options) as T
+      } catch (error) {
+        console.error(error)
+      }
     },
     requestAccounts: async (): Promise<Address[]> => {
       const addresses = await getWeb3().eth.requestAccounts()

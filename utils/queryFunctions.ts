@@ -640,7 +640,7 @@ async function doQueries() {
         )
         const resolved: any[] | undefined = resultsLog.enabled ? [] : undefined
         const start = Date.now()
-        await lsp2CustomContract.methods
+        await lsp2CustomContract?.methods
           .aggregate4(
             currentMulticalls.map(({ target, call }) => [target, true, call]),
             MAX_AGGREGATE_DATA_LIMIT

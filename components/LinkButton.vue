@@ -22,7 +22,7 @@ withDefaults(defineProps<Props>(), {
     is-full-width
     is-icon
   >
-    <div class="flex w-full items-center text-left">
+    <div class="flex w-full items-center px-1 text-left">
       <lukso-icon
         :name="`logo-${link?.socialMediaName}-mono`"
         :size="size"
