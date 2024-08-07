@@ -17,7 +17,9 @@ const { formatMessage } = useIntl()
 </script>
 
 <template>
-  <ul class="mb-4 flex gap-6 border-b border-b-neutral-90 pb-4">
+  <ul
+    class="mb-4 flex justify-center gap-6 border-b border-b-neutral-90 pb-4 sm:justify-start"
+  >
     <ProfileTabsItem
       v-for="tab in tabs"
       :key="tab.id"
