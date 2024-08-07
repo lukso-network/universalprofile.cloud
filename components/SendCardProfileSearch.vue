@@ -49,7 +49,7 @@ const handleReceiverSearch = async (event: CustomEvent) => {
   isSearchingReceiver.value = true
   await searchResults()
 
-  if (hasNoResults.value) {
+  if (hasNoResults.value && isAddress(searchTerm.value)) {
     // addresses which might be EoA, or not in index, we show in the results
     results.value = [
       {
