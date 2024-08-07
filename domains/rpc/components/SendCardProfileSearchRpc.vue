@@ -10,7 +10,6 @@ const { search } = useAlgoliaSearch<IndexedProfile>(
   currentNetwork.value.indexName
 )
 const { receiver } = storeToRefs(useSendStore())
-const { isEoA } = useWeb3(PROVIDERS.RPC)
 const isSearchingReceiver = ref<boolean>(false)
 const searchTerm = ref<string | Address | undefined>(receiver.value?.address)
 const hasNoResults = ref<boolean>(false)
@@ -49,25 +48,18 @@ const handleReceiverSearch = async (event: CustomEvent) => {
   }
 
   isSearchingReceiver.value = true
+  await searchResults()
 
-  // in user paste address, which might be EoA, we load profile right away
-  if (isAddress(searchTerm.value)) {
-    assertAddress(searchTerm.value)
-
-    if (await isEoA(searchTerm.value)) {
-      receiver.value = {
-        address: searchTerm.value,
-        standard: 'EOA',
-      }
-      hasNoResults.value = false
-      isSearchingReceiver.value = false
-      return
-    }
-  } else {
-    receiver.value = undefined
+  if (hasNoResults.value && isAddress(searchTerm.value)) {
+    // addresses which might be EoA, or not in index, we show in the results
+    results.value = [
+      {
+        address: searchTerm.value as Address,
+      },
+    ]
+    hasNoResults.value = false
   }
 
-  await searchResults()
   isSearchingReceiver.value = false
 }
 
@@ -75,6 +67,17 @@ const selectProfile = async (address?: Address) => {
   const searchResults = await searchProfile(address)
 
   if (!searchResults || searchResults.length === 0) {
+    if (searchTerm.value && isAddress(searchTerm.value)) {
+      // profile might be not indexed
+      receiver.value = {
+        address: searchTerm.value as Address,
+        standard: 'EOA',
+      }
+      hasNoResults.value = false
+      isSearchingReceiver.value = false
+      return
+    }
+
     return
   }
 
@@ -134,9 +137,7 @@ const handleBlur = async (customEvent: CustomEvent) => {
 
   // we add slight delay to allow `on-select` to be triggered first
   setTimeout(async () => {
-    if (address && !isAddress(address)) {
-      hasNoResults.value = false
-    } else {
+    if (isAddress(address)) {
       await selectProfile(address)
     }
   }, BLUR_DELAY)
