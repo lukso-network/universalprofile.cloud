@@ -41,7 +41,12 @@ const nftsOwned = computed(() =>
 )
 
 const nftsCreated = computed(() =>
-  allTokensSorted.value?.filter(asset => asset.isIssued && isCollectible(asset))
+  allTokensSorted.value?.filter(
+    asset =>
+      asset.isIssued &&
+      isCollectible(asset) &&
+      isCreator(asset, viewedProfileAddress)
+  )
 )
 
 // tokens

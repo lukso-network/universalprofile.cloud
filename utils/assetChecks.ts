@@ -159,3 +159,23 @@ export const isInCollection = (
     return address === asset?.address?.toLowerCase()
   })
 }
+
+/**
+ * Check if passed address is creator of asset
+ *
+ * @param asset
+ * @param creatorAddress
+ * @returns
+ */
+export const isCreator = (asset?: Asset, creatorAddress?: string) => {
+  if (!asset || !creatorAddress) {
+    return false
+  }
+
+  return (
+    asset.tokenCreators
+      ?.map(address => address.toLowerCase())
+      .includes(creatorAddress.toLowerCase()) ||
+    asset.owner?.toLowerCase() === creatorAddress.toLowerCase()
+  )
+}
