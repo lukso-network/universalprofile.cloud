@@ -9,6 +9,8 @@ type Props = {
 
 type Emits = (event: 'on-load') => void
 
+const IMAGE_LOAD_TIMEOUT = 1000 * 60 // 60 seconds
+
 const props = withDefaults(defineProps<Props>(), {
   image: undefined,
   alt: '',
@@ -65,7 +67,19 @@ onMounted(async () => {
     hasImageError.value = false
   }
 
-  await nextTick() // wait for the content to be rendered for the width to be calculated
+  // some images will never load, ie. when metadata is missing. In this case, we need to show the error image after a timeout
+  await new Promise(() => {
+    setTimeout(() => {
+      if (!props.image?.url) {
+        contentWidth.value = useElementSize(contentRef.value).width.value
+        isImageLoading.value = false
+        hasImageError.value = true
+      }
+    }, IMAGE_LOAD_TIMEOUT)
+  })
+
+  // wait for the content to be rendered for the width to be calculated
+  await nextTick()
   contentWidth.value = useElementSize(contentRef.value).width.value
 })
 </script>
@@ -78,28 +92,31 @@ onMounted(async () => {
     }"
     ref="contentRef"
   >
+    <!-- Image Error -->
     <div
       v-if="hasImageError"
-      class="absolute inset-0 z-[1] flex flex-col items-center justify-center gap-2"
+      class="absolute inset-0 z-[1] flex animate-fade-in flex-col items-center justify-center gap-2 bg-pink-97"
     >
       <img
-        src="/images/image-error-icon-grey.svg"
+        src="/images/image-error.png"
         alt=""
         :class="{
-          'w-8': !isLarge,
-          'w-10': isLarge,
+          'w-[30px]': !isLarge,
+          'w-[140px]': isLarge,
         }"
       />
       <div
         v-if="isLarge"
-        class="paragraph-inter-10-bold-uppercase uppercase text-neutral-75"
+        class="paragraph-inter-10-bold-uppercase uppercase text-lukso-70"
       >
         {{ $formatMessage('image_error_missing_message') }}
       </div>
     </div>
+
+    <!-- Verification Error -->
     <div
       v-else-if="isVerificationInvalid"
-      class="absolute inset-0 z-[1] flex flex-col items-center justify-center gap-2"
+      class="absolute inset-0 z-[1] flex animate-fade-in flex-col items-center justify-center gap-2"
       :class="{
         'p-10': isLarge,
       }"
@@ -133,6 +150,8 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+
+    <!-- Image -->
     <img
       class="max-h-[inherit] min-h-[inherit] w-full bg-neutral-90 object-cover opacity-0 animation-fill-forwards"
       :class="{
