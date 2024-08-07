@@ -12,12 +12,12 @@ import {
   hasTokenId,
   isCollectible,
   isCollection,
+  isCreator,
   isLsp7,
   isLsp8,
   isLyx,
   isSupportedAsset,
   isToken,
-  isCreator,
 } from '../assetChecks'
 
 describe('isLyx', () => {
