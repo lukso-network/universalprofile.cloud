@@ -44,6 +44,7 @@ const handleOpenApplicationDataProvider = () => {
 
       <!-- Application data provider (graph/rpc) -->
       <section
+        v-if="false"
         class="group w-full cursor-pointer select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b"
         @click="handleOpenApplicationDataProvider"
       >
