@@ -44,7 +44,12 @@ const creationsShowcase = computed(() =>
   assets.value
     ?.slice()
     ?.sort((a, b) => stringSort(a.tokenName, b.tokenName, 'asc'))
-    ?.filter(asset => asset.isIssued && isCollectible(asset))
+    ?.filter(
+      asset =>
+        asset.isIssued &&
+        isCollectible(asset) &&
+        isCreator(asset, viewedProfileAddress)
+    )
 )
 
 // tokens
@@ -69,7 +74,12 @@ const ownedCollectiblesCount = computed(
 
 const createdCollectiblesCount = computed(
   () =>
-    assets.value.filter(asset => asset.isIssued && isCollectible(asset)).length
+    assets.value.filter(
+      asset =>
+        asset.isIssued &&
+        isCollectible(asset) &&
+        isCreator(asset, viewedProfileAddress)
+    ).length
 )
 
 const handleTabChange = (tab: ProfileViewTabName) => {

@@ -12,6 +12,7 @@ import {
   hasTokenId,
   isCollectible,
   isCollection,
+  isCreator,
   isLsp7,
   isLsp8,
   isLyx,
@@ -416,5 +417,59 @@ describe('isInCollection', () => {
 
   test('should return false if no asset is provided', async () => {
     expect(isInCollection(undefined, ['0x1'])).toBe(false)
+  })
+})
+
+describe('isCreator', () => {
+  test('should return false if the asset is undefined', async () => {
+    expect(isCreator(undefined, '0xCreatorAddress')).toBe(false)
+  })
+
+  test('should return false if the asset is null', async () => {
+    // @ts-expect-error
+    expect(isCreator(null, '0xCreatorAddress')).toBe(false)
+  })
+
+  test('should return false if the creator address is undefined', async () => {
+    expect(isCreator({} as Asset, undefined)).toBe(false)
+  })
+
+  test('should return false if the creator address is null', async () => {
+    // @ts-expect-error
+    expect(isCreator({} as Asset, null)).toBe(false)
+  })
+
+  test('should return true if the creator address is in tokenCreators', async () => {
+    expect(
+      isCreator(
+        {
+          tokenCreators: ['0xCreatorAddress'],
+        } as Asset,
+        '0xCreatorAddress'
+      )
+    ).toBe(true)
+  })
+
+  test('should return true if the creator address matches the owner address', async () => {
+    expect(
+      isCreator(
+        {
+          owner: '0xCreatorAddress',
+        } as Asset,
+        '0xCreatorAddress'
+      )
+    ).toBe(true)
+  })
+
+  test('should return false if the creator address does not match any creator or owner', async () => {
+    expect(
+      isCreator(
+        {
+          tokenCreators: ['0xDifferentAddress'],
+          owner: '0xDifferentOwnerAddress',
+        } as Asset,
+        '0xCreatorAddress'
+      )
+    ).toBe(false)
   })
 })

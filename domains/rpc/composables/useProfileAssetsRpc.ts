@@ -89,9 +89,21 @@ export function useProfileAssetsRpc() {
                 address,
                 method: 'totalSupply()',
               }),
+              queryCallContract({
+                // 10
+                chainId,
+                address,
+                method: 'owner()',
+              }),
+              queryGetData({
+                // 11
+                chainId,
+                address,
+                keyName: 'LSP4Creators[]',
+              }),
               ...interfacesToCheck.map(({ interfaceId }) => {
                 return queryCallContract({
-                  // 10+
+                  // 12+
                   chainId,
                   address,
                   method: 'supportsInterface(bytes4)',
@@ -131,6 +143,8 @@ export function useProfileAssetsRpc() {
           const rootReferenceContract = results[assetIndex + 8]
             .data as ReferenceContract
           const totalSupply = results[assetIndex + 9].data as string
+          const owner = results[assetIndex + 10].data as string
+          const tokenCreators = results[assetIndex + 11].data as string[]
           const { supportsInterfaces, standard } = interfacesToCheck.reduce(
             (
               { supportsInterfaces, standard },
@@ -205,6 +219,8 @@ export function useProfileAssetsRpc() {
                 tokenType,
                 totalSupply,
                 supportsInterfaces,
+                owner,
+                tokenCreators,
               } as Asset
               if (!isLoading && assetLog.enabled) {
                 assetLog('profile-asset', asset)
@@ -239,6 +255,8 @@ export function useProfileAssetsRpc() {
             decimals,
             tokenIdsData,
             totalSupply,
+            owner,
+            tokenCreators,
           } as Asset
 
           if (!isLoading && assetLog.enabled) {
