@@ -26,6 +26,6 @@ export const STANDARDS_ABBREVIATIONS = {
   EOA: 'EOA',
   LSP7DigitalAsset: 'LSP7',
   LSP8IdentifiableDigitalAsset: 'LSP8',
-  LSP0ERC725Account: 'LSP3',
+  LSP0ERC725Account: 'LSP0',
   UnknownContract: 'UNKNOWN',
 }

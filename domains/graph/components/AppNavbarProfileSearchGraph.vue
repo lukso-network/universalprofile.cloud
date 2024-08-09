@@ -39,9 +39,9 @@ const searchResults = async () => {
 
   for (const hit of profiles) {
     results.value.push({
-      name: hit.name || '',
-      address: hit?.id as Address,
-      image: hit.profileImages?.[0]?.url || '',
+      name: hit?.name || '',
+      address: hit.id as Address,
+      image: hit?.profileImages?.[0]?.url || '',
     })
   }
   isSearching.value = false
@@ -80,7 +80,9 @@ watchEffect(() => {
       const luksoSearch = document
         .getElementById('mobile-search')
         ?.querySelector('lukso-search') as unknown as HTMLElement
-      const inputElement = luksoSearch?.shadowRoot?.querySelector('input')
+      const inputElement = luksoSearch?.shadowRoot
+        ?.querySelector('lukso-input')
+        ?.shadowRoot?.querySelector('input')
       inputElement?.focus()
     }, INPUT_FOCUS_DELAY)
   }

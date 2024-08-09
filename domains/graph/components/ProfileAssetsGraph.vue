@@ -20,11 +20,12 @@ const orderByOptions = ref<SelectStringOption[]>()
 const typeFilterValue = ref<SelectStringOption>()
 const typeFilterOptions = ref<SelectStringOption[]>([])
 
-const hasAssets = computed(() =>
-  isTokens.value && isOwned.value && matchLyxToken.value
-    ? true
-    : filteredAssets.value?.length > 0
+const hasAssets = computed(
+  () =>
+    (isTokens.value && isOwned.value && matchLyxToken.value) ||
+    filteredAssets.value?.length > 0
 )
+
 const hasFiltersSelected = computed(
   () =>
     (filters.collections &&

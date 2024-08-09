@@ -94,8 +94,6 @@ export function useAssetRpc() {
       queries.tokenId = tokenId
       queries.address = address
       return queries
-      // Trick to keep the right receivedAssetCount and allAddresses attached
-      // to the current queries list.
     })
     return useQueries({
       queries,

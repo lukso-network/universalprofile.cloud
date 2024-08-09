@@ -63,7 +63,9 @@ watchEffect(() => {
       const luksoSearch = document
         .getElementById('mobile-search')
         ?.querySelector('lukso-search') as unknown as HTMLElement
-      const inputElement = luksoSearch?.shadowRoot?.querySelector('input')
+      const inputElement = luksoSearch?.shadowRoot
+        ?.querySelector('lukso-input')
+        ?.shadowRoot?.querySelector('input')
       inputElement?.focus()
     }, INPUT_FOCUS_DELAY)
   }

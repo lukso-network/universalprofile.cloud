@@ -1,5 +1,4 @@
 import {
-  LSP4_TOKEN_TYPES,
   LSP8_TOKEN_ID_FORMAT,
   type LinkMetadata,
 } from '@lukso/lsp-smart-contracts'
@@ -49,7 +48,7 @@ export const createAssetObject = (
     totalSupply: receivedAsset?.totalSupply,
     tokenName: receivedAsset?.lsp4TokenName,
     tokenSymbol: receivedAsset?.lsp4TokenSymbol,
-    tokenType: receivedAsset?.lsp4TokenType || LSP4_TOKEN_TYPES.TOKEN,
+    tokenType: receivedAsset?.lsp4TokenType,
     tokenIdFormat:
       receivedAsset?.lsp8TokenIdFormat || LSP8_TOKEN_ID_FORMAT.NUMBER,
     tokenCreators: creators.map((creator: any) => creator?.profile?.id),

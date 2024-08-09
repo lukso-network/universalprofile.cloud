@@ -45,11 +45,19 @@ describe('isCollectible', () => {
     expect(
       isCollectible({
         tokenType: LSP4_TOKEN_TYPES.NFT,
+        standard: STANDARDS.LSP8,
       } as Asset)
     ).toBe(true)
     expect(
       isCollectible({
         tokenType: LSP4_TOKEN_TYPES.COLLECTION,
+        standard: STANDARDS.LSP8,
+      } as Asset)
+    ).toBe(true)
+    expect(
+      isCollectible({
+        tokenType: LSP4_TOKEN_TYPES.COLLECTION,
+        standard: STANDARDS.LSP7,
       } as Asset)
     ).toBe(true)
   })
@@ -58,6 +66,19 @@ describe('isCollectible', () => {
     expect(
       isCollectible({
         tokenType: LSP4_TOKEN_TYPES.TOKEN,
+        standard: STANDARDS.LSP7,
+      } as Asset)
+    ).toBe(false)
+    expect(
+      isCollectible({
+        tokenType: LSP4_TOKEN_TYPES.TOKEN,
+        standard: STANDARDS.LSP8,
+      } as Asset)
+    ).toBe(false)
+    expect(
+      isCollectible({
+        tokenType: LSP4_TOKEN_TYPES.NFT,
+        standard: STANDARDS.LSP7,
       } as Asset)
     ).toBe(false)
     expect(isCollectible({} as Asset)).toBe(false)
@@ -69,6 +90,12 @@ describe('isToken', () => {
     expect(
       isToken({
         tokenType: LSP4_TOKEN_TYPES.TOKEN,
+        standard: STANDARDS.LSP7,
+      } as Asset)
+    ).toBe(true)
+    expect(
+      isToken({
+        standard: STANDARDS.LSP7,
       } as Asset)
     ).toBe(true)
     expect(
@@ -87,6 +114,11 @@ describe('isToken', () => {
     expect(
       isToken({
         tokenType: LSP4_TOKEN_TYPES.COLLECTION,
+      } as Asset)
+    ).toBe(false)
+    expect(
+      isToken({
+        standard: STANDARDS.LSP8,
       } as Asset)
     ).toBe(false)
     expect(isToken({} as Asset)).toBe(false)

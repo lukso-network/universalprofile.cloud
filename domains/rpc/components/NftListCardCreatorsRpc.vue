@@ -58,7 +58,7 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
   <div v-if="isLoaded">
     <!--no creators at all including owner, might be that its EOA or not indexed -->
     <div
-      v-if="(creators || []).length === 0"
+      v-if="creators.length === 0"
       class="grid grid-cols-[max-content,auto] gap-1"
     ></div>
     <div v-else class="grid animate-fade-in grid-cols-[max-content,auto]">

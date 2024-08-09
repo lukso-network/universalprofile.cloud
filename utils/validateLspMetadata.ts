@@ -83,17 +83,6 @@ export const validateImage = (images: unknown): ImageMetadata[] => {
   return (
     (Array.isArray(images) &&
       images?.filter(image => {
-        const imageCheck =
-          'url' in image ||
-          ('url' in image &&
-            'verification' in image &&
-            'verification.data' in image &&
-            'verification.method' in image)
-
-        if (!imageCheck) {
-          console.warn('Invalid LSP4 image metadata', image)
-        }
-
         return image.url
       })) ||
     []

@@ -13,9 +13,22 @@ export const isLyx = (asset?: Asset | null) => !!asset?.isNativeToken
  * @param asset
  * @returns
  */
-export const isCollectible = (asset?: Asset | null) =>
-  asset?.tokenType === LSP4_TOKEN_TYPES.NFT ||
-  asset?.tokenType === LSP4_TOKEN_TYPES.COLLECTION
+export const isCollectible = (asset?: Asset | null) => {
+  switch (asset?.standard) {
+    case STANDARDS.LSP7: {
+      return asset?.tokenType === LSP4_TOKEN_TYPES.COLLECTION
+    }
+    case STANDARDS.LSP8: {
+      return (
+        asset?.tokenType === LSP4_TOKEN_TYPES.COLLECTION ||
+        asset?.tokenType === LSP4_TOKEN_TYPES.NFT
+      )
+    }
+    default: {
+      return false
+    }
+  }
+}
 
 /**
  * Check if passed asset is token
@@ -23,8 +36,24 @@ export const isCollectible = (asset?: Asset | null) =>
  * @param asset
  * @returns
  */
-export const isToken = (asset?: Asset | null) =>
-  asset?.tokenType === LSP4_TOKEN_TYPES.TOKEN || isLyx(asset)
+export const isToken = (asset?: Asset | null) => {
+  // in case of native token
+  if (isLyx(asset)) {
+    return true
+  }
+
+  switch (asset?.standard) {
+    case STANDARDS.LSP7: {
+      return !asset?.tokenType || asset?.tokenType === LSP4_TOKEN_TYPES.TOKEN
+    }
+    case STANDARDS.LSP8: {
+      return false
+    }
+    default: {
+      return false
+    }
+  }
+}
 
 /**
  * Check if passed asset is LSP7 token
@@ -156,7 +185,7 @@ export const isInCollection = (
   }
 
   return collectionAddresses?.some(address => {
-    return address === asset?.address?.toLowerCase()
+    return address?.toLowerCase() === asset?.address?.toLowerCase()
   })
 }
 

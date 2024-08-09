@@ -49,8 +49,6 @@ export function useProfileAssetsGraph() {
                     ),
                     isOwned: true,
                     isIssued: false,
-                    // isLoading,
-                    // isMetadataLoading: isLoading,
                   })
                 }
               })
@@ -69,8 +67,6 @@ export function useProfileAssetsGraph() {
               ),
               isOwned: true,
               isIssued: false,
-              // isLoading,
-              // isMetadataLoading: isLoading,
             }
           }) || []
 
@@ -93,12 +89,6 @@ export function useProfileAssetsGraph() {
         }
 
         return [...receivedAssets, ...issuedAssets]
-
-        // return {
-        //   receivedAssets,
-        //   issuedAssets,
-        //   holds,
-        // }
       },
       refetchInterval: 120_000,
       staleTime: 250,
