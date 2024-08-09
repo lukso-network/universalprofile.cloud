@@ -62,7 +62,7 @@ const isSelectedCollectionInAvailableCollections = computed(() => {
 
 const isSelectedCreatorInAvailableCreators = computed(() => {
   return creatorFilterOptions.value.some(option =>
-    filters.creators?.includes(option.id)
+    filters.creators?.includes(option.id as string)
   )
 })
 

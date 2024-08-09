@@ -1,4 +1,8 @@
 import type { FiltersAssetType } from '@/types/filters'
+import type {
+  SelectProfileOption,
+  SelectStringOption,
+} from '@lukso/web-components'
 
 export const useFilters = (assets?: ComputedRef<Asset[]>) => {
   const route = useRoute()
@@ -71,21 +75,21 @@ export const useFilters = (assets?: ComputedRef<Asset[]>) => {
       .sort((a, b) => stringSort(a.name, b.name))
 
     // map to structure of lukso-select component
-    const options = sortedCreators.map(creator => ({
-      id: creator.address?.toLowerCase() || '',
-      address: (creator.address?.toLowerCase() as Address) || '',
-      name: creator.name || '',
-      image: creator?.profileImage?.[0]?.url || '',
-    }))
+    const options: Partial<SelectProfileOption>[] = sortedCreators.map(
+      creator => ({
+        id: creator.address?.toLowerCase() || '',
+        address: (creator.address?.toLowerCase() as Address) || '',
+        name: creator.name || '',
+        image: creator?.profileImage?.[0]?.url || '',
+      })
+    )
 
     // add empty option
     if (options.length === 0) {
       options.push({
         id: 'empty',
-        address: '0x0',
-        image: '',
-        name: formatMessage('filters_no_options'),
-      })
+        value: formatMessage('filters_no_options'),
+      } as SelectStringOption)
     }
 
     return options
@@ -93,7 +97,7 @@ export const useFilters = (assets?: ComputedRef<Asset[]>) => {
 
   const creatorFilterValues = (creators?: string[]) => {
     return creatorFilterOptions.value.filter(option =>
-      creators?.includes(option.id)
+      creators?.includes(option.id as string)
     )
   }
 
