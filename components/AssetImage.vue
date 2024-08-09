@@ -9,8 +9,6 @@ type Props = {
 
 type Emits = (event: 'on-load') => void
 
-const IMAGE_LOAD_TIMEOUT = 1000 * 60 // 60 seconds
-
 const props = withDefaults(defineProps<Props>(), {
   image: undefined,
   alt: '',
@@ -66,17 +64,6 @@ onMounted(async () => {
     imageSrc.value = unref(props.image?.url)
     hasImageError.value = false
   }
-
-  // some images will never load, ie. when metadata is missing. In this case, we need to show the error image after a timeout
-  await new Promise(() => {
-    setTimeout(() => {
-      if (!props.image?.url) {
-        contentWidth.value = useElementSize(contentRef.value).width.value
-        isImageLoading.value = false
-        hasImageError.value = true
-      }
-    }, IMAGE_LOAD_TIMEOUT)
-  })
 
   // wait for the content to be rendered for the width to be calculated
   await nextTick()
