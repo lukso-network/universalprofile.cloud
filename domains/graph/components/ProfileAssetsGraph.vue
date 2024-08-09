@@ -8,23 +8,38 @@ type Props = {
   isLoading?: boolean
 }
 
-type Emits = (event: 'on-change-asset-type', id: FiltersAssetType) => void
-
 const props = defineProps<Props>()
-const emits = defineEmits<Emits>()
 
 const { formatMessage } = useIntl()
-const { filters, isOwned, isCreated, isTokens, isCollectibles, setFilters } =
-  useFilters()
+const assets = computed(() => props.assets)
+const {
+  filters,
+  isOwned,
+  isTokens,
+  isCollectibles,
+  setFilters,
+  orderedAssets,
+  creatorFilterValues,
+  creatorFilterOptions,
+  collectionFilterOptions,
+  collectionFilterValues,
+  typeFilterValue,
+  typeFilterOptions,
+} = useFilters(assets)
+const { isMobile } = useDevice()
+const { showModal } = useModal()
 const orderByOptions = ref<SelectStringOption[]>()
-const typeFilterValue = ref<SelectStringOption>()
-const typeFilterOptions = ref<SelectStringOption[]>([])
 
 const hasAssets = computed(() =>
   isTokens.value && isOwned.value && matchLyxToken.value
     ? true
     : filteredAssets.value?.length > 0
 )
+
+const selectedFiltersCount = computed(() => {
+  return (filters.collections?.length || 0) + (filters.creators?.length || 0)
+})
+
 const hasFiltersSelected = computed(
   () =>
     (filters.collections &&
@@ -34,25 +49,9 @@ const hasFiltersSelected = computed(
       filters.creators?.length > 0 &&
       isSelectedCreatorInAvailableCreators.value)
 )
+
 const matchLyxToken = computed(() => {
   return !filters.search || 'lukso'.includes(filters.search.toLowerCase())
-})
-
-const orderedAssets = computed(() => {
-  const [orderBy, order] = filters.orderBy.split('-')
-
-  if (orderBy === 'name') {
-    return props.assets
-      .slice()
-      .sort((a, b) => stringSort(a.tokenName, b.tokenName, order))
-  }
-
-  // since assets are ordered by default by added date, we need to reverse the array
-  if (orderBy === 'added' && order === 'asc') {
-    return [...props.assets].reverse()
-  }
-
-  return props.assets
 })
 
 const isSelectedCollectionInAvailableCollections = computed(() => {
@@ -111,89 +110,15 @@ const filteredAssets = computed(() => {
   return assetsFiltered
 })
 
-const creatorFilterOptions = computed(() => {
-  let creators = [] as Creator[]
-
-  // get all creators from assets
-  for (const asset of orderedAssets.value) {
-    if (asset?.tokenCreatorsData && asset?.tokenCreatorsData?.length > 0) {
-      for (const creator of asset.tokenCreatorsData) {
-        if (
-          creator.address &&
-          !creators.some(c => c.address === creator.address)
-        ) {
-          creators.push(creator)
-        }
-      }
-    } else if (asset.ownerData) {
-      if (!creators.some(c => c.address === asset.ownerData?.address)) {
-        creators.push(asset.ownerData)
-      }
-    }
-  }
-
-  // sort creators by name
-  creators = creators.sort((a, b) => stringSort(a.name, b.name))
-
-  // map to structure of lukso-select component
-  const options = creators.map(creator => ({
-    id: creator.address?.toLowerCase() || '',
-    address: (creator.address?.toLowerCase() as Address) || '',
-    name: creator.name || '',
-    image: creator?.profileImage?.[0]?.url || '',
-  }))
-
-  // add empty option
-  if (options.length === 0) {
-    options.push({
-      id: 'empty',
-      address: '0x0',
-      image: '',
-      name: formatMessage('filters_no_options'),
-    })
-  }
-
-  return options
-})
-
-const collectionFilterOptions = computed(() => {
-  const options = orderedAssets.value
-    // match only assets that has collections
-    .filter(asset => {
-      // we mark owned assets as collection when there are 1+ tokenIds
-      if (
-        isOwned.value &&
-        asset?.tokenIdsData &&
-        asset.tokenIdsData?.length > 0
-      ) {
-        return asset
-      }
-
-      // we mark created assets as collection when they are LSP8
-      if (isCreated.value && isLsp8(asset)) {
-        return asset
-      }
-    })
-    // map to structure of lukso-select component
-    .map(asset => {
-      return {
-        id: asset.address?.toLowerCase() || '',
-        value: asset.tokenName || '',
-      }
-    })
-    // order by name
-    .sort((a, b) => stringSort(a.value, b.value))
-
-  // add empty option
-  if (options.length === 0) {
-    options.push({ id: 'empty', value: formatMessage('filters_no_options') })
-  }
-
-  return options
-})
-
 const orderByValue = computed(() => {
   return orderByOptions.value?.find(option => option.id === filters.orderBy)
+})
+
+const selectedFilters = computed(() => {
+  return new Array(selectedFiltersCount.value).map((el, index) => ({
+    id: index,
+    value: index,
+  }))
 })
 
 const handleChangeSearch = async (customEvent: CustomEvent) => {
@@ -202,12 +127,8 @@ const handleChangeSearch = async (customEvent: CustomEvent) => {
 }
 
 const handleChangeType = async (customEvent: CustomEvent) => {
-  const type = customEvent.detail?.value?.id as FiltersAssetType
-  typeFilterValue.value = {
-    id: type,
-    value: formatMessage(`filters_type_${type}`),
-  }
-  emits('on-change-asset-type', type)
+  const assetType = customEvent.detail?.value?.id as FiltersAssetType
+  setFilters({ assetType })
 }
 
 const handleChangeCollection = async (customEvent: CustomEvent) => {
@@ -255,6 +176,19 @@ const handleSelectOrder = async (customEvent: CustomEvent) => {
   setFilters({ orderBy: order.id })
 }
 
+const handleMobileFiltersModal = () => {
+  showModal({
+    template: 'MobileFilters',
+    data: { assets: props.assets },
+  })
+}
+
+const handleMobileSearchModal = () => {
+  showModal({
+    template: 'MobileSearch',
+  })
+}
+
 onMounted(async () => {
   orderByOptions.value = [
     { id: 'name-asc', value: formatMessage('filters_order_by_name_asc') },
@@ -268,142 +202,161 @@ onMounted(async () => {
       value: formatMessage('filters_order_by_lastly_added'),
     },
   ]
-
-  typeFilterValue.value = {
-    id: filters.assetType,
-    value: formatMessage(`filters_type_${filters.assetType}`),
-  }
-  typeFilterOptions.value = [
-    { id: 'owned', value: formatMessage('filters_type_owned') },
-    { id: 'created', value: formatMessage('filters_type_created') },
-  ]
 })
-
-const collectionFilterValues = (collection?: string[]) => {
-  return collectionFilterOptions.value.filter(option =>
-    collection?.includes(option.id)
-  )
-}
-
-const creatorFilterValues = (creators?: string[]) => {
-  return creatorFilterOptions.value.filter(option =>
-    creators?.includes(option.id)
-  )
-}
 </script>
 
 <template>
   <div>
-    <!-- Filters -->
-    <div class="grid grid-cols-[auto,100px,max-content] gap-2 pb-4">
-      <div class="flex flex-wrap gap-2">
-        <!-- Creator filter -->
+    <!-- Mobile Filters -->
+    <div v-if="isMobile">
+      <div
+        class="grid grid-cols-[max-content,max-content,auto,max-content] gap-2 pb-4"
+      >
+        <!-- Filters modal trigger -->
         <lukso-select
-          size="small"
-          :value="JSON.stringify(creatorFilterValues(filters.creators))"
-          :options="JSON.stringify(creatorFilterOptions)"
-          :placeholder="formatMessage('asset_filter_creator_placeholder')"
-          :is-readonly="
-            creatorFilterOptions?.[0]?.id === 'empty' ? true : undefined
-          "
+          size="medium"
+          :value="JSON.stringify(selectedFilters)"
+          :placeholder="formatMessage('asset_filter_mobile_filters')"
           show-selection-counter
-          @on-select="handleChangeCreator"
+          @click="handleMobileFiltersModal"
         ></lukso-select>
 
-        <!-- Collection Filter -->
+        <!-- Search trigger -->
+        <lukso-button
+          is-icon
+          variant="secondary"
+          @click="handleMobileSearchModal"
+        >
+          <lukso-icon name="search" size="medium" class="mx-1"></lukso-icon>
+        </lukso-button>
+
+        <!-- Separator -->
+        <div></div>
+
+        <!-- Order by -->
         <lukso-select
-          v-if="isCollectibles"
-          size="small"
-          :value="JSON.stringify(collectionFilterValues(filters.collections))"
-          :options="JSON.stringify(collectionFilterOptions)"
-          :placeholder="formatMessage('asset_filter_collection_placeholder')"
-          :is-readonly="
-            collectionFilterOptions?.[0]?.id === 'empty' ? true : undefined
-          "
-          show-selection-counter
-          @on-select="handleChangeCollection"
+          size="medium"
+          :value="JSON.stringify(orderByValue)"
+          :options="JSON.stringify(orderByOptions)"
+          is-right
+          @on-select="handleSelectOrder"
         ></lukso-select>
-
-        <!-- Type Filter -->
-        <lukso-select
-          size="small"
-          :value="JSON.stringify(typeFilterValue)"
-          :options="JSON.stringify(typeFilterOptions)"
-          @on-select="handleChangeType"
-        ></lukso-select>
-
-        <!-- Search Filter -->
-        <lukso-search
-          :value="filters.search"
-          :placeholder="formatMessage('asset_filter_search_placeholder')"
-          hide-loading
-          has-reset
-          size="small"
-          @on-search="handleChangeSearch"
-          @on-reset="() => setFilters({ search: undefined })"
-        ></lukso-search>
       </div>
-
-      <!-- Separator -->
-      <div></div>
-
-      <!-- Order by -->
-      <lukso-select
-        size="small"
-        :value="JSON.stringify(orderByValue)"
-        :options="JSON.stringify(orderByOptions)"
-        is-right
-        @on-select="handleSelectOrder"
-      ></lukso-select>
     </div>
 
-    <!-- Selected filters -->
-    <div v-if="hasFiltersSelected" class="flex flex-wrap gap-y-2 pb-4">
-      <!-- Selected creators -->
-      <template
-        v-for="creatorAddress in filters.creators"
-        :key="creatorAddress"
-      >
-        <lukso-tag
-          v-if="creatorFilterValues([creatorAddress])?.[0]?.address"
-          is-rounded
-          class="mr-2 cursor-pointer"
-          @click="() => handleRemoveCreator(creatorAddress)"
-        >
-          <span v-if="creatorFilterValues([creatorAddress])?.[0]?.name"
-            >@{{ creatorFilterValues([creatorAddress])?.[0]?.name }}</span
-          >
-          <span v-else>{{
-            sliceAddress(creatorFilterValues([creatorAddress])?.[0]?.address)
-          }}</span>
-          <lukso-icon
-            name="cross-outline"
+    <!-- Desktop Filters -->
+    <div v-else>
+      <!-- Filters -->
+      <div class="grid grid-cols-[auto,100px,max-content] gap-2 pb-4">
+        <div class="flex flex-wrap gap-2">
+          <!-- Creator filter -->
+          <lukso-select
             size="small"
-            class="ml-1"
-          ></lukso-icon>
-        </lukso-tag>
-      </template>
+            :value="JSON.stringify(creatorFilterValues(filters.creators))"
+            :options="JSON.stringify(creatorFilterOptions)"
+            :placeholder="formatMessage('asset_filter_creator_placeholder')"
+            :is-readonly="
+              creatorFilterOptions?.[0]?.id === 'empty' ? true : undefined
+            "
+            show-selection-counter
+            @on-select="handleChangeCreator"
+          ></lukso-select>
 
-      <!-- Selected collections -->
-      <template v-if="isCollectibles">
-        <div
-          v-for="collectionAddress in filters.collections"
-          :key="collectionAddress"
+          <!-- Collection Filter -->
+          <lukso-select
+            v-if="isCollectibles"
+            size="small"
+            :value="JSON.stringify(collectionFilterValues(filters.collections))"
+            :options="JSON.stringify(collectionFilterOptions)"
+            :placeholder="formatMessage('asset_filter_collection_placeholder')"
+            :is-readonly="
+              collectionFilterOptions?.[0]?.id === 'empty' ? true : undefined
+            "
+            show-selection-counter
+            @on-select="handleChangeCollection"
+          ></lukso-select>
+
+          <!-- Type Filter -->
+          <lukso-select
+            size="small"
+            :value="JSON.stringify(typeFilterValue(filters.assetType))"
+            :options="JSON.stringify(typeFilterOptions)"
+            @on-select="handleChangeType"
+          ></lukso-select>
+
+          <!-- Search Filter -->
+          <lukso-search
+            :value="filters.search"
+            :placeholder="formatMessage('asset_filter_search_placeholder')"
+            hide-loading
+            has-reset
+            size="small"
+            @on-search="handleChangeSearch"
+            @on-reset="() => setFilters({ search: undefined })"
+          ></lukso-search>
+        </div>
+
+        <!-- Separator -->
+        <div></div>
+
+        <!-- Order by -->
+        <lukso-select
+          size="small"
+          :value="JSON.stringify(orderByValue)"
+          :options="JSON.stringify(orderByOptions)"
+          is-right
+          @on-select="handleSelectOrder"
+        ></lukso-select>
+      </div>
+
+      <!-- Selected filters -->
+      <div v-if="hasFiltersSelected" class="flex flex-wrap gap-y-2 pb-4">
+        <!-- Selected creators -->
+        <template
+          v-for="creatorAddress in filters.creators"
+          :key="creatorAddress"
         >
           <lukso-tag
-            v-if="collectionFilterValues([collectionAddress])?.[0]?.value"
+            v-if="creatorFilterValues([creatorAddress])?.[0]?.address"
             is-rounded
             class="mr-2 cursor-pointer"
-            @click="() => handleRemoveCollection(collectionAddress)"
-            >{{ collectionFilterValues([collectionAddress])?.[0]?.value }}
+            @click="() => handleRemoveCreator(creatorAddress)"
+          >
+            <span v-if="creatorFilterValues([creatorAddress])?.[0]?.name"
+              >@{{ creatorFilterValues([creatorAddress])?.[0]?.name }}</span
+            >
+            <span v-else>{{
+              sliceAddress(creatorFilterValues([creatorAddress])?.[0]?.address)
+            }}</span>
             <lukso-icon
               name="cross-outline"
               size="small"
               class="ml-1"
             ></lukso-icon>
           </lukso-tag>
-        </div>
-      </template>
+        </template>
+
+        <!-- Selected collections -->
+        <template v-if="isCollectibles">
+          <div
+            v-for="collectionAddress in filters.collections"
+            :key="collectionAddress"
+          >
+            <lukso-tag
+              v-if="collectionFilterValues([collectionAddress])?.[0]?.value"
+              is-rounded
+              class="mr-2 cursor-pointer"
+              @click="() => handleRemoveCollection(collectionAddress)"
+              >{{ collectionFilterValues([collectionAddress])?.[0]?.value }}
+              <lukso-icon
+                name="cross-outline"
+                size="small"
+                class="ml-1"
+              ></lukso-icon>
+            </lukso-tag>
+          </div>
+        </template>
+      </div>
     </div>
 
     <div>
