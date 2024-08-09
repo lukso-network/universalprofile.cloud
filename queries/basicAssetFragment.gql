@@ -1,0 +1,37 @@
+fragment basicAsset on Asset {
+  id # address
+  lsp4TokenName
+  lsp4TokenSymbol
+  lsp4TokenType
+  standard
+  blockNumber
+  decimals
+  totalSupply
+
+  owner {
+    ...creator
+  }
+  lsp4Creators {
+    interfaceId
+    profile {
+      ...creator
+    }
+  }
+
+  images(order_by: { index: asc, width: desc }) {
+    url: src
+    width
+    height
+    index
+    verified
+    error
+  }
+
+  icons(order_by: { width: desc }) {
+    url: src
+    width
+    height
+    verified
+    error
+  }
+}

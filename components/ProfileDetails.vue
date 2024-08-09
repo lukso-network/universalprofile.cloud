@@ -40,7 +40,7 @@ const hasTags = computed(
     <AppLinks :links="viewedProfile?.links">
       <template #default="{ socialMediaLinks, otherLinks }">
         <ul
-          v-if="socialMediaLinks"
+          v-if="socialMediaLinks.length > 0"
           class="mt-4 flex flex-col flex-wrap justify-center gap-x-4 gap-y-2 sm:flex-row"
         >
           <li
@@ -52,7 +52,7 @@ const hasTags = computed(
           </li>
         </ul>
         <ul
-          v-if="otherLinks"
+          v-if="otherLinks.length > 0"
           class="mt-4 flex flex-col flex-wrap justify-center gap-x-4 gap-y-2 sm:flex-row"
         >
           <li

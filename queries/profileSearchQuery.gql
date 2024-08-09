@@ -1,0 +1,13 @@
+query profileSearch($search: String) {
+  profiles: Profile(
+    where: {
+      _and: [
+        { _or: [{ id: { _ilike: $search } }, { name: { _ilike: $search } }] }
+        { standard: { _eq: "LSP0ERC725Account" } }
+      ]
+    }
+    limit: 100
+  ) {
+    ...basicProfile
+  }
+}

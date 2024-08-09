@@ -1,15 +1,15 @@
 const SOCIAL_MEDIA = {
-  facebook: [/facebook\.com$/, /messenger\.com$/, /fb\.com$/, /fb\.me$/],
-  x: [/x\.com$/, /twitter\.com$/, /t\.co$/],
-  instagram: [/instagram\.com$/],
-  medium: [/medium\.com$/],
-  discord: [/discord\.com$/, /discordapp\.com$/, /discord\.gg$/],
-  snapchat: [/snapchat\.com$/],
-  whatsapp: [/whatsapp\.com$/, /wa\.me$/],
-  telegram: [/telegram\.com$/, /t\.me$/],
-  linkedin: [/linkedin\.com$/],
-  github: [/github\.com$/],
-  'universal-page': [/universal\.page$/],
+  facebook: ['facebook.com', 'messenger.com', 'fb.com', 'fb.me'],
+  x: ['x.com', 'twitter.com', 't.co'],
+  instagram: ['instagram.com'],
+  medium: ['medium.com'],
+  discord: ['discord.com', 'discordapp.com', 'discord.gg'],
+  snapchat: ['snapchat.com'],
+  whatsapp: ['whatsapp.com', 'wa.me'],
+  telegram: ['telegram.com', 't.me'],
+  linkedin: ['linkedin.com'],
+  github: ['github.com'],
+  'universal-page': ['universal.page'],
 }
 
 /**
@@ -25,11 +25,9 @@ export const detectSocialMedia = (url?: string) => {
 
   const hostname = new URL(url).hostname
 
-  for (const [key, regExps] of Object.entries(SOCIAL_MEDIA)) {
-    if (regExps.some(regex => regex.test(hostname))) {
+  for (const [key, domains] of Object.entries(SOCIAL_MEDIA)) {
+    if (domains.includes(hostname.replace('www.', ''))) {
       return key
     }
   }
-
-  return
 }

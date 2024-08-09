@@ -13,9 +13,22 @@ export const isLyx = (asset?: Asset | null) => !!asset?.isNativeToken
  * @param asset
  * @returns
  */
-export const isCollectible = (asset?: Asset | null) =>
-  asset?.tokenType === LSP4_TOKEN_TYPES.NFT ||
-  asset?.tokenType === LSP4_TOKEN_TYPES.COLLECTION
+export const isCollectible = (asset?: Asset | null) => {
+  switch (asset?.standard) {
+    case STANDARDS.LSP7: {
+      return asset?.tokenType === LSP4_TOKEN_TYPES.COLLECTION
+    }
+    case STANDARDS.LSP8: {
+      return (
+        asset?.tokenType === LSP4_TOKEN_TYPES.COLLECTION ||
+        asset?.tokenType === LSP4_TOKEN_TYPES.NFT
+      )
+    }
+    default: {
+      return false
+    }
+  }
+}
 
 /**
  * Check if passed asset is token
@@ -23,8 +36,24 @@ export const isCollectible = (asset?: Asset | null) =>
  * @param asset
  * @returns
  */
-export const isToken = (asset?: Asset | null) =>
-  asset?.tokenType === LSP4_TOKEN_TYPES.TOKEN || isLyx(asset)
+export const isToken = (asset?: Asset | null) => {
+  // in case of native token
+  if (isLyx(asset)) {
+    return true
+  }
+
+  switch (asset?.standard) {
+    case STANDARDS.LSP7: {
+      return !asset?.tokenType || asset?.tokenType === LSP4_TOKEN_TYPES.TOKEN
+    }
+    case STANDARDS.LSP8: {
+      return false
+    }
+    default: {
+      return false
+    }
+  }
+}
 
 /**
  * Check if passed asset is LSP7 token
@@ -70,3 +99,112 @@ export const isAsset = (asset?: Asset | null) =>
  */
 export const isCollection = (asset?: Asset | null) =>
   isLsp8(asset) && !!asset?.tokenIdsData?.length
+
+/**
+ * Check if passed asset has balance
+ *
+ * @param asset
+ * @returns
+ */
+export const hasBalance = (asset?: Asset | Profile | null) =>
+  !!asset?.balance && asset?.balance !== '0'
+
+/**
+ * Get asset balance
+ *
+ * @param asset
+ * @returns
+ */
+export const getBalance = (asset?: Asset | Profile | null) =>
+  asset?.balance || '0'
+
+/**
+ * Check if passed asset is supported
+ * Currently supported assets are: LSP7, LSP8 and LYX (native)
+ *
+ * @param asset
+ * @returns
+ */
+export const isSupportedAsset = (asset?: Asset | null) =>
+  isLsp7(asset) || isLsp8(asset) || isLyx(asset)
+
+/**
+ * Check if passed asset has creator
+ *
+ * @param asset
+ * @param creators
+ * @returns
+ */
+export const hasCreator = (asset?: Asset, creatorAddresses?: string[]) => {
+  let hasCreator = false
+
+  if (!creatorAddresses || !asset) {
+    return hasCreator
+  }
+
+  // check in creators
+  for (const tokenCreator of asset.tokenCreatorsData || []) {
+    if (
+      creatorAddresses.some(
+        address =>
+          address?.toLowerCase() === tokenCreator.address?.toLowerCase()
+      )
+    ) {
+      hasCreator = true
+    }
+  }
+
+  // check in owner
+  if (asset.ownerData) {
+    if (
+      creatorAddresses.some(
+        address =>
+          address?.toLowerCase() === asset.ownerData?.address?.toLowerCase()
+      )
+    ) {
+      hasCreator = true
+    }
+  }
+
+  return hasCreator
+}
+
+/**
+ * Check if passed asset is in collection
+ *
+ * @param asset
+ * @param collections
+ * @returns
+ */
+export const isInCollection = (
+  asset?: Asset,
+  collectionAddresses?: string[]
+) => {
+  if (!asset || !collectionAddresses) {
+    return false
+  }
+
+  return collectionAddresses?.some(address => {
+    return address?.toLowerCase() === asset?.address?.toLowerCase()
+  })
+}
+
+/**
+ * Check if passed address is creator of asset
+ *
+ * @param asset
+ * @param creatorAddress
+ * @returns
+ */
+export const isCreator = (asset?: Asset, creatorAddress?: string) => {
+  if (!asset || !creatorAddress) {
+    return false
+  }
+
+  return (
+    asset.tokenCreators
+      ?.map(address => address.toLowerCase())
+      .includes(creatorAddress.toLowerCase()) ||
+    asset.owner?.toLowerCase() === creatorAddress.toLowerCase()
+  )
+}

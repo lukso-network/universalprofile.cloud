@@ -1,6 +1,9 @@
 import type { Modal } from '@/types/modal'
 import type { NetworkId, NetworkInfo } from '@/types/network'
 
+const FETCH_DATA_PROVIDERS = ['rpc', 'graph']
+type FetchDataProvider = (typeof FETCH_DATA_PROVIDERS)[number]
+
 /**
  * App store
  * Keeps the information about app
@@ -14,6 +17,7 @@ export const useAppStore = defineStore(
     const selectedChainId = ref<string>(DEFAULT_NETWORK_CHAIN_ID)
     const modal = ref<Modal>()
     const connectedProfileAddress = ref<Address>()
+    const fetchDataProvider = ref<FetchDataProvider>('rpc') // TODO switch to graph when it's ready
 
     // statuses
     const isConnecting = ref(false)
@@ -57,6 +61,14 @@ export const useAppStore = defineStore(
 
     const isTestnet = computed(() => selectedChainId.value === TESTNET_CHAIN_ID)
 
+    const isRpc = computed(
+      () => fetchDataProvider.value === 'rpc' || isTestnet.value // TODO use RPC for Testnet until we have it indexed
+    )
+
+    const isGraph = computed(
+      () => fetchDataProvider.value === 'graph' && !isTestnet.value // TODO use RPC for Testnet until we have it indexed
+    )
+
     // --- actions
 
     const setModal = (newModal: Modal) => {
@@ -77,11 +89,18 @@ export const useAppStore = defineStore(
       isLoadedApp,
       isTestnet,
       isSearchOpen,
+      isRpc,
+      isGraph,
+      fetchDataProvider,
     }
   },
   {
     persist: {
-      paths: ['connectedProfileAddress', 'selectedChainId'],
+      paths: [
+        'connectedProfileAddress',
+        'selectedChainId',
+        'fetchDataProvider',
+      ],
       key: STORAGE_KEY.APP_STORE,
     },
   }

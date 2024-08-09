@@ -1,0 +1,29 @@
+fragment profile on Profile {
+  fullName
+  description
+  name
+  id
+  standard
+  interfaces
+  blockNumber
+  links {
+    title
+    url
+  }
+  tags
+  backgroundImages(order_by: { width: desc }) {
+    url: src
+    height
+    width
+    verified
+    error
+  }
+  profileImages(order_by: { width: desc }) {
+    url: src
+    width
+    height
+    verified
+    error
+  }
+  ...avatars
+}

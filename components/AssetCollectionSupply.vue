@@ -9,28 +9,14 @@ const totalSupply = computed(() => props.asset?.totalSupply)
 </script>
 
 <template>
-  <div v-if="isLoaded">
-    <div
-      class="paragraph-ptmono-14-regular"
-      v-if="totalSupply"
-      :class="{
-        'mb-4': hasTokenId(asset),
-        'mb-8': !hasTokenId(asset),
-      }"
-    >
+  <template v-if="isLoaded">
+    <div class="paragraph-ptmono-14-regular" v-if="totalSupply">
       {{
         $formatMessage('token_details_collection_of', {
           count: totalSupply,
         })
       }}
     </div>
-  </div>
-  <AppPlaceholderLine
-    v-else
-    class="h-[20px] w-1/3"
-    :class="{
-      'mb-4': hasTokenId(asset),
-      'mb-8': !hasTokenId(asset),
-    }"
-  />
+  </template>
+  <AppPlaceholderLine v-else class="h-[20px] w-1/3" />
 </template>

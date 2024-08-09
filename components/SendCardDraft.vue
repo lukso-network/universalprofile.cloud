@@ -3,7 +3,6 @@ const connectedProfile = useProfile().connectedProfile()
 const {
   asset: sendAsset,
   receiver,
-  receiverError,
   amount,
   onSend,
 } = storeToRefs(useSendStore())
@@ -18,6 +17,8 @@ const lyxToken = useLyxToken()
 const asset = computed(() =>
   isLyx(sendAsset.value) ? lyxToken.value : _asset.value
 )
+
+const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
 
 const assetImage = useAssetImage(asset, isToken(asset.value), 100)
 
@@ -55,7 +56,7 @@ const checkBalance = () => {
     return
   }
 
-  if (isLsp7(asset.value) && asset.value?.balance !== '0') {
+  if (isLsp7(asset.value) && hasBalance(asset.value)) {
     return
   }
 
@@ -110,6 +111,11 @@ watch(
               :profile-address="asset?.address"
               :has-identicon="isLyx(asset) ? undefined : true"
               :is-square="isCollectible(asset) ? true : undefined"
+              :placeholder="
+                isCollectible(asset)
+                  ? undefined
+                  : '/assets/images/token-default.svg'
+              "
             ></lukso-profile>
           </div>
         </div>
@@ -141,14 +147,16 @@ watch(
             class="paragraph-inter-14-semi-bold flex h-full cursor-pointer items-center justify-between rounded-[0_12px_0_0] border border-neutral-90 px-4 py-3 transition break-word hover:border-neutral-35"
             @click="handleSelectAssets"
           >
-            {{ asset?.tokenName }}
+            <span v-if="isLoadedAsset">{{ asset?.tokenName }}</span>
+            <AppPlaceholderLine v-else class="my-[2px] h-[18px] w-1/2" />
             <lukso-icon name="arrow-down-lg"></lukso-icon>
           </div>
           <div
             v-if="!isLsp8(asset)"
             class="rounded-[0_0_12px_0] border border-t-0 border-neutral-90"
           >
-            <SendCardAmount />
+            <span v-if="isLoadedAsset"><SendCardAmount /></span>
+            <AppPlaceholderLine v-else class="mx-4 my-[15px] h-[18px] w-1/2" />
           </div>
         </div>
       </div>
@@ -166,7 +174,6 @@ watch(
     <div slot="bottom" class="flex flex-col items-center p-6">
       <AppAvatar
         :is-eoa="receiver?.standard === 'EOA'"
-        :is-error="!!receiverError"
         :name="receiver?.name"
         :address="receiver?.address"
         :profile-url="receiver?.profileImage?.[0].src"
@@ -174,20 +181,20 @@ watch(
       <SendCardProfileSearch />
       <lukso-button
         class="mt-4 w-full"
-        :disabled="
-          !receiver?.address || receiverError || !Number(amount)
-            ? true
-            : undefined
-        "
+        :disabled="!receiver?.address || !Number(amount) ? true : undefined"
         @click="handleSend"
         is-full-width
-        >{{
-          $formatMessage('send_button', {
-            amount: !!Number(amount) ? $formatNumber(amount || '') : '',
-            symbol: truncate(asset?.tokenSymbol, 10) || '',
-          })
-        }}</lukso-button
       >
+        <span v-if="isLoadedAsset">
+          {{
+            $formatMessage('send_button', {
+              amount: !!Number(amount) ? $formatNumber(amount || '') : '',
+              symbol: truncate(asset?.tokenSymbol, 10) || '',
+            })
+          }}
+        </span>
+        <AppPlaceholderLine v-else class="h-[18px] w-1/2" />
+      </lukso-button>
     </div>
   </lukso-card>
 </template>
