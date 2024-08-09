@@ -2,7 +2,7 @@
 
 exports[`ProfileTabs > renders active state 1`] = `
 "<div id="test-wrapper">
-  <ul class="mb-4 flex gap-6 border-b border-b-neutral-90 pb-4">
+  <ul class="mb-4 flex justify-center gap-6 border-b border-b-neutral-90 pb-4 sm:justify-start">
     <li class="heading-inter-17-semi-bold flex items-center cursor-pointer opacity-50 transition hover:opacity-100">Tokens
       <!--v-if-->
     </li>
@@ -13,7 +13,7 @@ exports[`ProfileTabs > renders active state 1`] = `
 
 exports[`ProfileTabs > renders default state 1`] = `
 "<div id="test-wrapper">
-  <ul class="mb-4 flex gap-6 border-b border-b-neutral-90 pb-4">
+  <ul class="mb-4 flex justify-center gap-6 border-b border-b-neutral-90 pb-4 sm:justify-start">
     <li class="heading-inter-17-semi-bold flex items-center cursor-pointer opacity-50 transition hover:opacity-100">Tokens
       <!--v-if-->
     </li>

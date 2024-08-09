@@ -8,17 +8,6 @@ exports[`Settings data-provider page > can change setting 1`] = `
         <h1 class="heading-inter-17-semi-bold group mb-8 flex cursor-pointer items-center gap-1 border-b border-b-neutral-90 pb-6">
           <lukso-icon name="arrow-left-lg" class="transition group-hover:-translate-x-1"></lukso-icon> Application endpoint
         </h1><!-- Enable GraphQL data provider -->
-        <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b">
-          <div class="grid grid-cols-[max-content,auto] gap-2">
-            <div>
-              <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100"></lukso-icon>
-            </div>
-            <div class="paragraph-inter-16-semi-bold">
-              <h3 class="pb-1">Centralised</h3>
-              <p class="paragraph-inter-14-regular text-neutral-40">Load data via the LUKSO indexing service. This results in faster loading times and smoother UX, however offensive or inappropriate content can be removed.</p>
-            </div>
-          </div>
-        </section><!-- Enable RPC data provider -->
         <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b cursor-pointer">
           <div class="grid grid-cols-[max-content,auto] gap-2">
             <div>
@@ -26,6 +15,17 @@ exports[`Settings data-provider page > can change setting 1`] = `
                 <lukso-icon name="empty-outline" color="neutral-90" class="inline-flex group-hover:hidden"></lukso-icon>
                 <lukso-icon name="empty-outline" color="neutral-80" class="hidden group-hover:inline-flex"></lukso-icon>
               </div>
+            </div>
+            <div class="paragraph-inter-16-semi-bold">
+              <h3 class="pb-1">Centralised</h3>
+              <p class="paragraph-inter-14-regular text-neutral-40">Load data via the LUKSO indexing service. This results in faster loading times and smoother UX, however offensive or inappropriate content can be removed.</p>
+            </div>
+          </div>
+        </section><!-- Enable RPC data provider -->
+        <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b">
+          <div class="grid grid-cols-[max-content,auto] gap-2">
+            <div>
+              <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100"></lukso-icon>
             </div>
             <div class="paragraph-inter-16-semi-bold">
               <h3 class="pb-1">Decentralised</h3>
@@ -88,17 +88,6 @@ exports[`Settings data-provider page > should render with centralized setting 1`
         <h1 class="heading-inter-17-semi-bold group mb-8 flex cursor-pointer items-center gap-1 border-b border-b-neutral-90 pb-6">
           <lukso-icon name="arrow-left-lg" class="transition group-hover:-translate-x-1"></lukso-icon> Application endpoint
         </h1><!-- Enable GraphQL data provider -->
-        <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b">
-          <div class="grid grid-cols-[max-content,auto] gap-2">
-            <div>
-              <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100"></lukso-icon>
-            </div>
-            <div class="paragraph-inter-16-semi-bold">
-              <h3 class="pb-1">Centralised</h3>
-              <p class="paragraph-inter-14-regular text-neutral-40">Load data via the LUKSO indexing service. This results in faster loading times and smoother UX, however offensive or inappropriate content can be removed.</p>
-            </div>
-          </div>
-        </section><!-- Enable RPC data provider -->
         <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b cursor-pointer">
           <div class="grid grid-cols-[max-content,auto] gap-2">
             <div>
@@ -106,6 +95,17 @@ exports[`Settings data-provider page > should render with centralized setting 1`
                 <lukso-icon name="empty-outline" color="neutral-90" class="inline-flex group-hover:hidden"></lukso-icon>
                 <lukso-icon name="empty-outline" color="neutral-80" class="hidden group-hover:inline-flex"></lukso-icon>
               </div>
+            </div>
+            <div class="paragraph-inter-16-semi-bold">
+              <h3 class="pb-1">Centralised</h3>
+              <p class="paragraph-inter-14-regular text-neutral-40">Load data via the LUKSO indexing service. This results in faster loading times and smoother UX, however offensive or inappropriate content can be removed.</p>
+            </div>
+          </div>
+        </section><!-- Enable RPC data provider -->
+        <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b">
+          <div class="grid grid-cols-[max-content,auto] gap-2">
+            <div>
+              <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100"></lukso-icon>
             </div>
             <div class="paragraph-inter-16-semi-bold">
               <h3 class="pb-1">Decentralised</h3>

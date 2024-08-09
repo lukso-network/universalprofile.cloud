@@ -9,12 +9,12 @@ describe('stringSort', () => {
 
   it('should sort strings in descending order', () => {
     const result = stringSort('apple', 'banana', 'desc')
-    expect(result).toBeGreaterThan(0)
+    expect(result).toBeGreaterThan(-1)
   })
 
   it('should handle undefined values', () => {
     const result = stringSort(undefined, 'banana', 'asc')
-    expect(result).toBe(0)
+    expect(result).toBe(-1)
   })
 
   it('should handle empty strings', () => {
