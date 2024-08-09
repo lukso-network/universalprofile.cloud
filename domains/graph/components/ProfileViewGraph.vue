@@ -135,9 +135,6 @@ const tabs = computed(() => {
         <ProfileAssetsGraph
           :assets="filteredAssets"
           :is-loading="isLoadingAssets"
-          @on-change-asset-type="
-            (type: FiltersAssetType) => setFilters({ assetType: type })
-          "
         />
       </div>
     </div>

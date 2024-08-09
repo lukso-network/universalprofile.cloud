@@ -8,7 +8,8 @@ type Props = {
 
 const props = defineProps<Props>()
 const { formatMessage } = useIntl()
-const profileAvatar = useProfileAvatar(props.creator, 24)
+const creator = computed(() => props.creator)
+const profileAvatar = useProfileAvatar(creator, 24)
 </script>
 
 <template>

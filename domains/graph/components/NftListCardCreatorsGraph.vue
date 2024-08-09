@@ -54,6 +54,8 @@ const tooManyCreators = computed(
 )
 
 const isLoaded = computed(() => asset.value && !asset.value.isLoading)
+
+const firstCreator = computed(() => creators.value[0])
 </script>
 
 <template>
@@ -76,8 +78,8 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
           class="relative"
         />
         <NftListCardCreatorsProfileGraph
-          v-if="creators[0]"
-          :creator="creators[0]"
+          v-if="firstCreator"
+          :creator="firstCreator"
           :count="tooManyCreators ? creators.length - CREATOR_SHOW_LIMIT : 0"
           :is-small="isSmall"
           class="relative"
