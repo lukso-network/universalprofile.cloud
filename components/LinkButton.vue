@@ -17,12 +17,13 @@ withDefaults(defineProps<Props>(), {
     v-if="link?.socialMediaName"
     :size="size"
     :href="link?.url"
-    variant="secondary"
+    variant="text"
     is-link
     is-full-width
     is-icon
+    custom-class="px-0"
   >
-    <div class="flex w-full items-center px-1 text-left">
+    <div class="flex w-full items-center text-left">
       <lukso-icon
         :name="`logo-${link?.socialMediaName}-mono`"
         :size="size"

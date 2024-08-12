@@ -11,7 +11,7 @@ type Props = {
 
 defineProps<Props>()
 const perPage = isMobile ? 8 : 24
-
+const connectedProfile = useProfile().connectedProfile()
 const numberOfPages = computed(() => Math.ceil((count.value || 0) / perPage))
 
 const currentPage = ref(1)
@@ -23,12 +23,22 @@ const addressesForPage = computed(() => {
   )
 })
 
+const viewedProfileAddress = getCurrentProfileAddress()
+
+const viewProfileIsConnectedProfile = computed(() => {
+  return connectedProfile?.value?.address === viewedProfileAddress
+})
+
 const addresses = computed(() => modal?.data?.addresses as Address[])
 
 const count = computed(() => modal?.data?.count as number)
 
 const hasFollowers = computed(() => {
   return (addresses.value?.length || 0) > 0
+})
+
+const isFollowingModal = computed(() => {
+  return modal?.data?.type === 'following'
 })
 
 const handleViewProfile = (profileAddress: Address) => {
@@ -98,7 +108,26 @@ const handlePageChange = (event: CustomEvent) => {
 
     <!-- Empty state -->
     <template v-if="!hasFollowers">
-      <span>{{ formatMessage('followed_by_empty') }}</span>
+      <LoaderProfile :profile-address="viewedProfileAddress">
+        <template #default="{ profile }">
+          <span v-if="viewProfileIsConnectedProfile && !isFollowingModal">{{
+            formatMessage('own_connected_profile_followers_empty')
+          }}</span>
+          <span v-if="viewProfileIsConnectedProfile && isFollowingModal">{{
+            formatMessage('own_connected_profile_following_empty')
+          }}</span>
+          <span v-if="!viewProfileIsConnectedProfile && !isFollowingModal">{{
+            formatMessage('followed_by_empty', {
+              username: profile.name,
+            })
+          }}</span>
+          <span v-if="!viewProfileIsConnectedProfile && isFollowingModal">{{
+            formatMessage('follows_empty', {
+              username: profile.name,
+            })
+          }}</span>
+        </template>
+      </LoaderProfile>
     </template>
   </div>
 </template>
