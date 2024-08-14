@@ -32,14 +32,14 @@ const isLoading = computed(() => {
           <lukso-username
             v-if="profile?.name"
             :name="profile?.name.toLowerCase()"
-            :address="profile?.address"
+            :address="address"
             size="large"
             max-width="220"
           ></lukso-username>
           <lukso-username
             v-else
             name="anonymous-profile"
-            :address="profile?.address"
+            :address="address"
             size="large"
             max-width="220"
             hide-prefix
