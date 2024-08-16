@@ -104,7 +104,7 @@
   "modal_connect_wallet_select_provider_title": "Let’s log you in",
   "settings_page_title": "Settings",
   "profile_search_placeholder": "Search profiles",
-  "follows_empty": "<span class=\"paragraph-inter-12-semi-bold\">@{username}</span> follows no one",
+  "follows_empty": "@{username} follows no one",
   "token_details_send": "Send {token}",
   "missing_assets_placeholder": "Enter token contract address",
   "dapp_showcase_05_image": "/images/de-folio-dapp.jpg",
