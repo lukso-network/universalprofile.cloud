@@ -1,10 +1,10 @@
 <script setup lang="ts">
-const { connect, disconnect, isUniversalProfileExtension } =
-  useBrowserExtension()
+const { disconnect } = useBrowserExtension()
 const viewedProfile = useProfile().viewedProfile()
 const connectedProfile = useProfile().connectedProfile()
 const { isConnecting, isConnected, isTestnet, isSearchOpen } =
   storeToRefs(useAppStore())
+const { showModal } = useModal()
 
 const handleNavigateProfile = async () => {
   try {
@@ -23,8 +23,11 @@ const handleNavigateSend = () => {
   navigateTo(sendRoute(connectedProfile.value?.address))
 }
 
-const handleConnect = async () => {
-  connect()
+const handleConnect = () => {
+  showModal({
+    template: 'ConnectWallet',
+    size: 'auto',
+  })
 }
 
 const handleDisconnect = async () => {
@@ -42,19 +45,6 @@ const handleMobileSearch = () => {
 const handleNavigateSettings = () => {
   navigateTo(settingsRoute())
 }
-
-const extensionStoreData = () => {
-  const url = browserInfo().storeLink
-  const icon = `logo-${browserInfo().id}`
-
-  return {
-    icon,
-    url,
-  }
-}
-
-const extensionStore = extensionStoreData()
-const browserSupportExtension = extensionStore.url !== ''
 </script>
 
 <template>
@@ -87,7 +77,7 @@ const browserSupportExtension = extensionStore.url !== ''
       </lukso-button>
       <AppNavbarProfileDropdown v-if="isConnected" />
       <lukso-button
-        v-else-if="isUniversalProfileExtension()"
+        v-else
         variant="secondary"
         custom-class="text-12 nav-apax-12-medium-uppercase"
         @click="handleConnect"
@@ -96,17 +86,6 @@ const browserSupportExtension = extensionStore.url !== ''
       >
         <span class="text-purple-41">
           {{ $formatMessage('header_connect') }}
-        </span>
-      </lukso-button>
-      <lukso-button
-        v-else-if="browserSupportExtension"
-        variant="secondary"
-        is-link
-        custom-class="text-12 nav-apax-12-medium-uppercase"
-        :href="extensionStore.url"
-      >
-        <span class="text-purple-41">
-          {{ $formatMessage('header_install_extension') }}
         </span>
       </lukso-button>
     </div>
@@ -169,7 +148,7 @@ const browserSupportExtension = extensionStore.url !== ''
           </span>
         </lukso-button>
         <lukso-button
-          v-else-if="isUniversalProfileExtension()"
+          v-else
           variant="text"
           custom-class="text-12 nav-apax-12-medium-uppercase"
           class="group"
@@ -177,18 +156,6 @@ const browserSupportExtension = extensionStore.url !== ''
         >
           <span class="text-purple-63 transition group-hover:text-purple-41">
             {{ $formatMessage('header_connect') }}
-          </span>
-        </lukso-button>
-        <lukso-button
-          v-else-if="browserSupportExtension"
-          variant="text"
-          is-link
-          custom-class="text-12 nav-apax-12-medium-uppercase"
-          class="group"
-          :href="extensionStore.url"
-        >
-          <span class="text-purple-63 transition group-hover:text-purple-41">
-            {{ $formatMessage('header_install_extension') }}
           </span>
         </lukso-button>
       </div>

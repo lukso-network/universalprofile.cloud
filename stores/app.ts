@@ -1,5 +1,6 @@
 import type { Modal } from '@/types/modal'
 import type { NetworkId, NetworkInfo } from '@/types/network'
+import type EthereumProvider from '@walletconnect/ethereum-provider'
 
 const FETCH_DATA_PROVIDERS = ['rpc', 'graph']
 type FetchDataProvider = (typeof FETCH_DATA_PROVIDERS)[number]
@@ -18,6 +19,7 @@ export const useAppStore = defineStore(
     const modal = ref<Modal>()
     const connectedProfileAddress = ref<Address>()
     const fetchDataProvider = ref<FetchDataProvider>('rpc') // TODO switch to graph when it's ready
+    const walletConnectProvider = ref<EthereumProvider>()
 
     // statuses
     const isConnecting = ref(false)
@@ -92,6 +94,7 @@ export const useAppStore = defineStore(
       isRpc,
       isGraph,
       fetchDataProvider,
+      walletConnectProvider,
     }
   },
   {

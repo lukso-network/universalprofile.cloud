@@ -8,17 +8,11 @@ const openStoreLink = () => {
   window.open(storeLink, '_blank')
 }
 
-const setConnectionExpiry = () => {
-  const currentDate = Date.now()
-  const expiryDate = currentDate + CONNECTION_EXPIRY_TIME_MS
-
-  setItem(STORAGE_KEY.CONNECTION_EXPIRY, expiryDate.toString())
-}
-
 const connect = async () => {
   const { showModal } = useModal()
   const { formatMessage } = useIntl()
   const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
+  const { setConnectionExpiry } = useConnectionExpiry()
 
   await checkExtensionNetwork()
 
@@ -45,11 +39,6 @@ const connect = async () => {
   } catch (error: unknown) {
     console.error(error)
     disconnect()
-
-    showModal({
-      title: formatMessage('web3_connect_error_title'),
-      message: getErrorMessage(error),
-    })
   } finally {
     isConnecting.value = false
   }

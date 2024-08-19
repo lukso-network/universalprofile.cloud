@@ -1,10 +1,13 @@
 <script setup lang="ts">
 const { isTestnet, isConnected } = storeToRefs(useAppStore())
-const { connect, disconnect, isUniversalProfileExtension } =
-  useBrowserExtension()
+const { disconnect, isUniversalProfileExtension } = useBrowserExtension()
+const { showModal } = useModal()
 
 const handleConnect = async () => {
-  connect()
+  showModal({
+    template: 'ConnectWallet',
+    size: 'auto',
+  })
 }
 
 const handleDisconnect = async () => {
