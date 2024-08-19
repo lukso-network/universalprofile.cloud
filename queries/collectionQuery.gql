@@ -1,0 +1,22 @@
+query collection(
+  $where: Token_bool_exp
+  $limit: Int
+  $offset: Int
+  $orderBy: order_by
+) {
+  collection: Token(
+    where: $where
+    limit: $limit
+    order_by: { blockNumber: $orderBy }
+    offset: $offset
+  ) {
+    ...token
+  }
+
+  # use aggregate to count total number of tokens
+  meta: Token_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}

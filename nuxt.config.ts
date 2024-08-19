@@ -30,11 +30,12 @@ export default defineNuxtConfig({
     '@pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/device',
     '@nuxtjs/plausible',
-    '@nuxtjs/algolia',
     '@pinia-orm/nuxt',
     '@nuxt/test-utils/module',
     '@vite-pwa/nuxt',
     '@nuxt/test-utils/module',
+    '@nuxtjs/algolia',
+    'nuxt-graphql-client',
     'nuxt-swiper',
   ],
   ...({
@@ -193,4 +194,25 @@ export default defineNuxtConfig({
           type: 'module',
         },
   },
+  nitro: {
+    esbuild: {
+      options: {
+        target: 'esnext',
+      },
+    },
+  },
+  'graphql-client': {
+    watch: true,
+    autoImport: true,
+    functionPrefix: 'Gql',
+    documentPaths: ['./'],
+    preferGETQueries: false,
+    codegen: true,
+    clients: {
+      default: {
+        host: 'https://envio.mainnet.lukso.dev/v1/graphql',
+      },
+    },
+  },
+  extends: ['./domains/rpc', './domains/graph'],
 })

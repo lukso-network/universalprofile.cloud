@@ -1,0 +1,16 @@
+fragment creator on Profile {
+  id
+  name
+  profileImages(order_by: { width: desc }) {
+    url: src
+    width
+    height
+    verified
+    error
+  }
+  lsp12IssuedAssets {
+    asset {
+      id
+    }
+  }
+}

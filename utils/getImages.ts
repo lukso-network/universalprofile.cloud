@@ -93,7 +93,43 @@ export const getOptimizedImage = (
   image: MaybeRef<Image[] | null>,
   width: number
 ): Ref<ImageItem | null> => {
+  const dpr = window.devicePixelRatio || 1
   const currentImage = getImageBySize(image, width) || {}
+  const { isGraph } = storeToRefs(useAppStore())
+
+  // in graph mode we don't need to verify the images
+  if (isGraph.value) {
+    return computed<ImageItem | null>(() => {
+      const { url, verified } = currentImage?.value || {}
+
+      // TODO this is a temporary solution to show the verified status before indexer return string status
+      const verificationStatus = () => {
+        switch (verified) {
+          case true:
+            return 'verified'
+          case false:
+            return 'invalid'
+          default:
+            return 'unverified'
+        }
+      }
+
+      const queryParams = {
+        width: width * dpr,
+        ...(dpr !== 1 ? { dpr } : {}),
+      }
+      const queryParamsString = url?.startsWith(`${LUKSO_PROXY_API}/image/`)
+        ? `&${Object.entries(queryParams)
+            .map(([key, value]) => `${key}=${value}`)
+            .join('&')}`
+        : ''
+      return {
+        url: url ? `${url}${queryParamsString}` : null,
+        verified: verificationStatus(), // since indexer return boolean we need to convert
+      } as ImageItem
+    })
+  }
+
   const promise = ref<ImageVerifiedStatus | null>(null)
   const verifiedRef = computed(() => {
     const { verification, url } = isRef(currentImage)
@@ -149,7 +185,6 @@ export const getOptimizedImage = (
       : promise.value || null
   })
   return computed<ImageItem | null>(() => {
-    const dpr = window.devicePixelRatio || 1
     const { verification, url } = isRef(currentImage)
       ? currentImage?.value || {}
       : currentImage || {}

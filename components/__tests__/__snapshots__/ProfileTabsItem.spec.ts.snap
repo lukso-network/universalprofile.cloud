@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ProfileTabsItem > renders active state 1`] = `
+"<div id="test-wrapper">
+  <li class="heading-inter-17-semi-bold flex items-center cursor-default">Test Label
+    <!--v-if-->
+  </li>
+</div>"
+`;
+
+exports[`ProfileTabsItem > renders count 1`] = `
+"<div id="test-wrapper">
+  <li class="heading-inter-17-semi-bold flex items-center cursor-pointer opacity-50 transition hover:opacity-100">Test Label <span class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 px-1 py-[1px] bg-transparent text-neutral-20">2</span></li>
+</div>"
+`;
+
+exports[`ProfileTabsItem > renders default state 1`] = `
+"<div id="test-wrapper">
+  <li class="heading-inter-17-semi-bold flex items-center cursor-pointer opacity-50 transition hover:opacity-100">Test Label
+    <!--v-if-->
+  </li>
+</div>"
+`;

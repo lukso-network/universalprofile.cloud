@@ -47,7 +47,12 @@ defineProps<Props>()
       has-identicon
       class="mb-2"
     ></lukso-profile>
-    <lukso-username v-if="name" :name="name" size="small"></lukso-username>
+    <lukso-username
+      v-if="name"
+      :name="name"
+      :address="address"
+      size="small"
+    ></lukso-username>
     <lukso-username
       v-else-if="address"
       :address="address"
