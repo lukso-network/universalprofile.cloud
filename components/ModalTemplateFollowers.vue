@@ -79,18 +79,24 @@ const handlePageChange = (event: CustomEvent) => {
             @click="handleViewProfile(profileAddress)"
             class="flex cursor-pointer items-center gap-4"
           >
-            <lukso-profile
-              size="small"
-              :profile-url="profileAvatar?.url"
-              :profile-address="profile?.address"
-              has-identicon
-            ></lukso-profile>
-            <lukso-username
-              :name="profile.name"
-              :address="profile.address"
-              address-color="neutral-80"
-            >
-            </lukso-username>
+            <template v-if="profile.isLoading">
+              <AppPlaceholderCircle class="size-10" />
+              <AppPlaceholderLine class="h-[22px] w-3/5" />
+            </template>
+            <template v-else>
+              <lukso-profile
+                size="small"
+                :profile-url="profileAvatar?.url"
+                :profile-address="profile?.address"
+                has-identicon
+              ></lukso-profile>
+              <lukso-username
+                :name="profile.name"
+                :address="profile.address"
+                address-color="neutral-80"
+              >
+              </lukso-username>
+            </template>
           </div>
         </template>
       </LoaderProfile>
