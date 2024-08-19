@@ -84,10 +84,6 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
         return null
       }
       const isLoading = results.some(result => result.isLoading)
-      // we assume profile is loaded when following queries are completed
-      const isLoaded = [results[1], results[2], results[3]]
-        .flat()
-        .every(result => !result.isLoading)
       const balance = results[0].data as string
       const profileData = results[1].data as LSP3ProfileMetadataJSON
       const receivedAssets = results[2].data as Address[]
@@ -116,7 +112,6 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
 
       const profile = {
         isLoading,
-        isLoaded,
         address: profileAddress,
         name,
         standard: standard as Standard,
