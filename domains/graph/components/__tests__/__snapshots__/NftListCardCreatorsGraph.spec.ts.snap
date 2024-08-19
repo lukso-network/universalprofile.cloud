@@ -1,0 +1,212 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`NftListCardCreatorsGraph > large size > render creators 1`] = `
+"<div id="test-wrapper">
+  <div>
+    <!--no creators at all including owner, might be that its EOA or not indexed -->
+    <div class="grid animate-fade-in grid-cols-[max-content,auto]">
+      <div class="flex space-x-[-26px]">
+        <div class="flex h-10 relative">
+          <lukso-profile size="small" profile-url="https://example.com/profile1-image.jpg" profile-address="0x123" has-identicon=""></lukso-profile>
+          <div class="flex flex-col justify-center gap-1 pl-2">
+            <div class="paragraph-inter-10-semi-bold text-neutral-60">Created by</div>
+            <lukso-username name="John Doe" address="0x123" size="x-small" class="flex" name-color="neutral-20"></lukso-username>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-end">
+        <!--v-if-->
+        <!--v-if-->
+        <lukso-tooltip variant="success" text="Verified creators" class="ml-2">
+          <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100" size="small"></lukso-icon>
+        </lukso-tooltip>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`NftListCardCreatorsGraph > large size > render loading state 1`] = `
+"<div id="test-wrapper">
+  <div class="grid grid-cols-[max-content,auto] gap-1">
+    <div class="animate-pulse rounded-full bg-neutral-90 size-10"></div>
+    <div class="grid h-[24px] w-full flex-col items-center gap-1 pl-2">
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-2 w-[60px]"></div>
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-2 w-[120px]"></div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`NftListCardCreatorsGraph > render empty creators 1`] = `
+"<div id="test-wrapper">
+  <div>
+    <!--no creators at all including owner, might be that its EOA or not indexed -->
+    <div class="grid grid-cols-[max-content,auto] gap-1"></div>
+  </div>
+</div>"
+`;
+
+exports[`NftListCardCreatorsGraph > render loading state 1`] = `
+"<div id="test-wrapper">
+  <div class="grid grid-cols-[max-content,auto] gap-1">
+    <div class="animate-pulse rounded-full bg-neutral-90 size-6"></div>
+    <div class="grid h-[24px] w-full flex-col items-center gap-1 pl-1">
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-2 w-[40px]"></div>
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-2 w-[80px]"></div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`NftListCardCreatorsGraph > render more creators then limit 1`] = `
+"<div id="test-wrapper">
+  <div>
+    <!--no creators at all including owner, might be that its EOA or not indexed -->
+    <div class="grid animate-fade-in grid-cols-[max-content,auto]">
+      <div class="flex space-x-[-14px]">
+        <div class="flex h-6 relative">
+          <lukso-profile size="x-small" profile-url="https://example.com/profile1-image.jpg" profile-address="0x123" has-identicon=""></lukso-profile>
+          <!--v-if-->
+        </div>
+        <div class="flex h-6 relative">
+          <lukso-profile size="x-small" profile-url="https://example.com/profile2-image.jpg" profile-address="0x456" has-identicon=""></lukso-profile>
+          <!--v-if-->
+        </div>
+        <div class="flex h-6 relative">
+          <lukso-profile size="x-small" profile-url="https://example.com/profile3-image.jpg" profile-address="0x789" has-identicon=""></lukso-profile>
+          <!--v-if-->
+        </div>
+        <div class="flex h-6 relative">
+          <lukso-profile size="x-small" profile-url="https://example.com/profile4-image.jpg" profile-address="0xabc" has-identicon=""></lukso-profile>
+          <!--v-if-->
+        </div>
+        <div class="flex h-6 relative">
+          <div class="flex items-center justify-center rounded-full bg-neutral-100 outline outline-2 outline-neutral-90 paragraph-inter-10-semi-bold size-6"> +1</div>
+          <div class="flex flex-col justify-center pl-1">
+            <div class="paragraph-inter-10-semi-bold text-neutral-60">Created by</div>
+            <lukso-username name="John Doe" address="0x123" size="x-small" class="flex" name-color="neutral-20"></lukso-username>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-end">
+        <lukso-tooltip variant="danger" text="Un-verified creators" class="ml-2">
+          <lukso-icon name="cross-filled" color="red-55" secondary-color="neutral-100" size="small"></lukso-icon>
+        </lukso-tooltip>
+        <!--v-if-->
+        <!--v-if-->
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`NftListCardCreatorsGraph > verification > render all verified 1`] = `
+"<div id="test-wrapper">
+  <div>
+    <!--no creators at all including owner, might be that its EOA or not indexed -->
+    <div class="grid animate-fade-in grid-cols-[max-content,auto]">
+      <div class="flex space-x-[-14px]">
+        <div class="flex h-6 relative">
+          <lukso-profile size="x-small" profile-url="https://example.com/profile2-image.jpg" profile-address="0x456" has-identicon=""></lukso-profile>
+          <!--v-if-->
+        </div>
+        <div class="flex h-6 relative">
+          <lukso-profile size="x-small" profile-url="https://example.com/profile1-image.jpg" profile-address="0x123" has-identicon=""></lukso-profile>
+          <div class="flex flex-col justify-center pl-1">
+            <div class="paragraph-inter-10-semi-bold text-neutral-60">Created by</div>
+            <lukso-username name="John Doe" address="0x123" size="x-small" class="flex" name-color="neutral-20"></lukso-username>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-end">
+        <!--v-if-->
+        <!--v-if-->
+        <lukso-tooltip variant="success" text="Verified creators" class="ml-2">
+          <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100" size="small"></lukso-icon>
+        </lukso-tooltip>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`NftListCardCreatorsGraph > verification > render none verified 1`] = `
+"<div id="test-wrapper">
+  <div>
+    <!--no creators at all including owner, might be that its EOA or not indexed -->
+    <div class="grid animate-fade-in grid-cols-[max-content,auto]">
+      <div class="flex space-x-[-14px]">
+        <div class="flex h-6 relative">
+          <lukso-profile size="x-small" profile-url="https://example.com/profile2-image.jpg" profile-address="0x456" has-identicon=""></lukso-profile>
+          <!--v-if-->
+        </div>
+        <div class="flex h-6 relative">
+          <lukso-profile size="x-small" profile-url="https://example.com/profile1-image.jpg" profile-address="0x123" has-identicon=""></lukso-profile>
+          <div class="flex flex-col justify-center pl-1">
+            <div class="paragraph-inter-10-semi-bold text-neutral-60">Created by</div>
+            <lukso-username name="John Doe" address="0x123" size="x-small" class="flex" name-color="neutral-20"></lukso-username>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-end">
+        <lukso-tooltip variant="danger" text="Un-verified creators" class="ml-2">
+          <lukso-icon name="cross-filled" color="red-55" secondary-color="neutral-100" size="small"></lukso-icon>
+        </lukso-tooltip>
+        <!--v-if-->
+        <!--v-if-->
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`NftListCardCreatorsGraph > verification > render some verified 1`] = `
+"<div id="test-wrapper">
+  <div>
+    <!--no creators at all including owner, might be that its EOA or not indexed -->
+    <div class="grid animate-fade-in grid-cols-[max-content,auto]">
+      <div class="flex space-x-[-14px]">
+        <div class="flex h-6 relative">
+          <lukso-profile size="x-small" profile-url="https://example.com/profile2-image.jpg" profile-address="0x456" has-identicon=""></lukso-profile>
+          <!--v-if-->
+        </div>
+        <div class="flex h-6 relative">
+          <lukso-profile size="x-small" profile-url="https://example.com/profile1-image.jpg" profile-address="0x123" has-identicon=""></lukso-profile>
+          <div class="flex flex-col justify-center pl-1">
+            <div class="paragraph-inter-10-semi-bold text-neutral-60">Created by</div>
+            <lukso-username name="John Doe" address="0x123" size="x-small" class="flex" name-color="neutral-20"></lukso-username>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-end">
+        <!--v-if-->
+        <lukso-tooltip variant="danger" text="Not all creators are verified" class="ml-2">
+          <lukso-icon name="cross-filled" color="red-55" secondary-color="neutral-100" size="small"></lukso-icon>
+        </lukso-tooltip>
+        <!--v-if-->
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`NftListCardCreatorsGraph > verification > render without verification 1`] = `
+"<div id="test-wrapper">
+  <div>
+    <!--no creators at all including owner, might be that its EOA or not indexed -->
+    <div class="grid animate-fade-in grid-cols-[max-content,auto]">
+      <div class="flex space-x-[-14px]">
+        <div class="flex h-6 relative">
+          <lukso-profile size="x-small" profile-url="https://example.com/profile1-image.jpg" profile-address="0x123" has-identicon=""></lukso-profile>
+          <div class="flex flex-col justify-center pl-1">
+            <div class="paragraph-inter-10-semi-bold text-neutral-60">Created by</div>
+            <lukso-username name="John Doe" address="0x123" size="x-small" class="flex" name-color="neutral-20"></lukso-username>
+          </div>
+        </div>
+      </div>
+      <!--v-if-->
+    </div>
+  </div>
+</div>"
+`;

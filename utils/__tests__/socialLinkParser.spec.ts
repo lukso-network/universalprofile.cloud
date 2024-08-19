@@ -7,6 +7,7 @@ describe('socialLinkParser', () => {
     expect(detectSocialMedia('https://www.messenger.com/')).toBe('facebook')
     expect(detectSocialMedia('https://www.fb.com/')).toBe('facebook')
     expect(detectSocialMedia('https://www.fb.me/')).toBe('facebook')
+    expect(detectSocialMedia('https://fb.me/')).toBe('facebook')
   })
 
   it('should return x', () => {
@@ -61,5 +62,6 @@ describe('socialLinkParser', () => {
     expect(detectSocialMedia('https://www.example.com/')).toBeUndefined()
     expect(detectSocialMedia('')).toBeUndefined()
     expect(detectSocialMedia()).toBeUndefined()
+    expect(detectSocialMedia('https://burntpix.com/')).toBeUndefined()
   })
 })

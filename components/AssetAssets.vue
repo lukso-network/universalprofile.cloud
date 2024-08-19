@@ -9,13 +9,13 @@ const assets = computed(() => props.asset?.resolvedMetadata?.assets)
 </script>
 
 <template>
-  <div v-if="isLoaded">
+  <template v-if="isLoaded">
     <AssetAssetsWrapper
       :assets="assets"
       :file-types="['document', 'video', 'audio', 'contract', 'other']"
     >
       <template #default="{ filteredAssets }">
-        <div v-if="filteredAssets?.length" class="mb-8">
+        <div v-if="filteredAssets?.length">
           <div class="heading-inter-14-bold pb-3">
             {{ $formatMessage('token_details_assets') }}
           </div>
@@ -29,7 +29,7 @@ const assets = computed(() => props.asset?.resolvedMetadata?.assets)
         </div>
       </template>
     </AssetAssetsWrapper>
-  </div>
+  </template>
   <AppPlaceholderSection v-else slot-class="flex gap-4">
     <AppPlaceholderLine class="size-14" />
   </AppPlaceholderSection>
