@@ -42,9 +42,9 @@ const hasTags = computed(
 
 const hasFollowButton = computed(
   () =>
-    isConnected &&
-    viewedProfile?.value?.address.toLowerCase() !==
-      connectedProfile?.value?.address.toLowerCase()
+    isConnected.value &&
+    viewedProfile?.value?.address?.toLowerCase() !==
+      connectedProfile?.value?.address?.toLowerCase()
 )
 </script>
 
