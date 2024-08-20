@@ -120,28 +120,47 @@ const handlePageChange = (event: CustomEvent) => {
     <template v-if="!hasFollowers">
       <LoaderProfile :profile-address="viewedProfileAddress">
         <template #default="{ profile }">
+          <!-- Own followers text -->
           <span v-if="viewProfileIsConnectedProfile && !isFollowingModal">{{
             formatMessage('own_connected_profile_followers_empty')
           }}</span>
+
+          <!-- Own following text -->
           <span v-if="viewProfileIsConnectedProfile && isFollowingModal">{{
             formatMessage('own_connected_profile_following_empty')
           }}</span>
+
+          <!-- Other followers text -->
           <lukso-sanitize
             v-if="!viewProfileIsConnectedProfile && !isFollowingModal"
             :html-content="
               formatMessage('followed_by_empty', {
-                username: `<strong>@${profile.name}#${profile.address.slice(2, 6)}</strong>`,
+                username: `<lukso-username
+                name='${profile.name || formatMessage('profile_default_name')}'
+                address='${profile.address}'
+                max-width='350'
+                ${profile?.name ? '' : 'hide-prefix'}
+              ></lukso-username>`,
               })
             "
-          ></lukso-sanitize>
+          >
+          </lukso-sanitize>
+
+          <!-- Other following text -->
           <lukso-sanitize
             v-if="!viewProfileIsConnectedProfile && isFollowingModal"
             :html-content="
               formatMessage('follows_empty', {
-                username: `<strong>@${profile.name}#${profile.address.slice(2, 6)}</strong>`,
+                username: `<lukso-username
+                name='${profile.name || formatMessage('profile_default_name')}'
+                address='${profile.address}'
+                max-width='350'
+                ${profile?.name ? '' : 'hide-prefix'}
+              ></lukso-username>`,
               })
             "
-          ></lukso-sanitize>
+          >
+          </lukso-sanitize>
         </template>
       </LoaderProfile>
     </template>

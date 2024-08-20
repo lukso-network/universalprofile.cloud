@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { sliceAddress } from '@lukso/web-components/tools'
-
 type Props = {
   followerAddresses?: Address[]
   followingAddresses?: Address[]
@@ -34,13 +32,20 @@ const othersCount = computed(() => {
 const profileNames = (profiles?: Profile[]) =>
   profiles
     ?.map((profile: Profile) => {
-      let name = sliceAddress(profile?.address, 4)
+      let profileName = formatMessage('profile_default_name')
 
       if (profile?.name) {
-        name = `@${profile?.name}#${profile.address?.slice(2, 6)}`
+        profileName = `${profile?.name}`
       }
 
-      return `<strong>${name}</strong>`
+      return `<lukso-username
+        name='${profileName}'
+        address='${profile.address}'
+        size='small'
+        address-color='neutral-20'
+        name-color='neutral-20'
+        ${profile?.name ? '' : 'hide-prefix'}
+      ></lukso-username>`
     })
     .join(', ') || ''
 </script>

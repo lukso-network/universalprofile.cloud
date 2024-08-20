@@ -116,7 +116,14 @@ exports[`ProfileCard > should render followed by info 1`] = `
             <lukso-profile size="x-small" profile-address="0x1"></lukso-profile>
           </div>
           <div class="paragraph-inter-12-medium pl-2">
-            <lukso-sanitize html-content="Followed by <strong>@john#1</strong> you follow"></lukso-sanitize>
+            <lukso-sanitize html-content="Followed by <lukso-username
+        name='john'
+        address='0x1'
+        size='small'
+        address-color='neutral-20'
+        name-color='neutral-20'
+        
+      ></lukso-username> you follow"></lukso-sanitize>
           </div>
         </div><!-- Description -->
         <!--v-if-->
