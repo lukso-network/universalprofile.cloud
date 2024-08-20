@@ -3,8 +3,7 @@ name: Lint, Test, Build
 on:
   pull_request:
     branches:
-      - 'main'
-      - 'develop'
+      - '**'
   push:
     branches:
       - 'main'
@@ -39,20 +38,8 @@ jobs:
       - name: 🎨 Lint
         run: yarn prepare && yarn lint
 
-      - name: 🛠 Install Playwright Browsers
-        if: false
-        run: npx playwright install --with-deps chromium
-
-      - name: 🎯 Run Playwright tests
-        if: false
-        run: npx playwright test
-
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
+      - name: 🎯 Run Unit tests
+        run: yarn test:unit:ci
 
   deploy:
     runs-on: ubuntu-latest

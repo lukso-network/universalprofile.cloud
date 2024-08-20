@@ -37,7 +37,7 @@ exports[`ProfileCard > should render empty profile 1`] = `
         </div>
         <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <!-- Profile Name -->
-          <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="">
+          <lukso-tooltip variant="light" offset="5" is-clipboard-copy="" copy-text="UP address copied!" copy-value="">
             <lukso-username name="anonymous-profile" address="" address-color="neutral-80" size="x-large" max-width="350" hide-prefix=""></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
           <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
@@ -93,17 +93,17 @@ exports[`ProfileCard > should render followed by info 1`] = `
           <!-- Follow Button -->
           <div class="group flex">
             <!-- Unfollow -->
-            <lukso-button size="small" variant="secondary" class="hidden group-hover:block">
+            <lukso-button size="small" variant="secondary" class="hidden group-hover:block" loading-text="Unfollow">
               <lukso-icon name="profile-remove" size="small" class="mr-2"></lukso-icon> Unfollow
             </lukso-button><!-- Following -->
-            <lukso-button size="small" variant="secondary" class="block group-hover:hidden">
+            <lukso-button size="small" variant="secondary" class="block group-hover:hidden" loading-text="Following">
               <lukso-icon name="profile" size="small" class="mr-2"></lukso-icon> Following
             </lukso-button>
           </div>
         </div>
         <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <!-- Profile Name -->
-          <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
+          <lukso-tooltip variant="light" offset="5" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
             <lukso-username name="anonymous-profile" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350" hide-prefix=""></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
           <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
@@ -115,7 +115,16 @@ exports[`ProfileCard > should render followed by info 1`] = `
           <div class="flex space-x-[-14px]">
             <lukso-profile size="x-small" profile-address="0x1"></lukso-profile>
           </div>
-          <div class="paragraph-inter-12-medium pl-2"><span>Followed by @john you follow</span></div>
+          <div class="paragraph-inter-12-medium pl-2">
+            <lukso-sanitize html-content="Followed by <lukso-username
+        name='john'
+        address='0x1'
+        size='small'
+        address-color='neutral-20'
+        name-color='neutral-20'
+        
+      ></lukso-username> you follow"></lukso-sanitize>
+          </div>
         </div><!-- Description -->
         <!--v-if-->
         <!-- Tags -->
@@ -163,14 +172,14 @@ exports[`ProfileCard > should render profile when connected 1`] = `
           <!-- Follow Button -->
           <div class="group flex">
             <!-- Follow -->
-            <lukso-button size="small">
+            <lukso-button size="small" loading-text="Follow">
               <lukso-icon name="profile-add" size="small" color="neutral-100" class="mr-2"></lukso-icon> Follow
             </lukso-button>
           </div>
         </div>
         <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <!-- Profile Name -->
-          <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
+          <lukso-tooltip variant="light" offset="5" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
             <lukso-username name="john" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350"></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
           <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
@@ -244,7 +253,7 @@ exports[`ProfileCard > should render profile when not connected 1`] = `
         </div>
         <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <!-- Profile Name -->
-          <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
+          <lukso-tooltip variant="light" offset="5" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
             <lukso-username name="john" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350"></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
           <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
@@ -316,17 +325,17 @@ exports[`ProfileCard > should render unfollow button 1`] = `
           <!-- Follow Button -->
           <div class="group flex">
             <!-- Unfollow -->
-            <lukso-button size="small" variant="secondary" class="hidden group-hover:block">
+            <lukso-button size="small" variant="secondary" class="hidden group-hover:block" loading-text="Unfollow">
               <lukso-icon name="profile-remove" size="small" class="mr-2"></lukso-icon> Unfollow
             </lukso-button><!-- Following -->
-            <lukso-button size="small" variant="secondary" class="block group-hover:hidden">
+            <lukso-button size="small" variant="secondary" class="block group-hover:hidden" loading-text="Following">
               <lukso-icon name="profile" size="small" class="mr-2"></lukso-icon> Following
             </lukso-button>
           </div>
         </div>
         <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <!-- Profile Name -->
-          <lukso-tooltip variant="light" offset="-10" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
+          <lukso-tooltip variant="light" offset="5" is-clipboard-copy="" copy-text="UP address copied!" copy-value="0x1234567890abcdef1234567890abcdef12345678">
             <lukso-username name="anonymous-profile" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350" hide-prefix=""></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
           <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
