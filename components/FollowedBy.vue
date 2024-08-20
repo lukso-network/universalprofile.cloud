@@ -34,11 +34,13 @@ const othersCount = computed(() => {
 const profileNames = (profiles?: Profile[]) =>
   profiles
     ?.map((profile: Profile) => {
+      let name = sliceAddress(profile?.address, 4)
+
       if (profile?.name) {
-        return `@${profile?.name}`
+        name = `@${profile?.name}#${profile.address?.slice(2, 6)}`
       }
 
-      return sliceAddress(profile?.address, 4)
+      return `<strong>${name}</strong>`
     })
     .join(', ') || ''
 </script>
@@ -73,14 +75,16 @@ const profileNames = (profiles?: Profile[]) =>
       <LoaderProfiles :profile-addresses="addressesForFollowerNames">
         <template #default="{ profiles, isLoading }">
           <AppPlaceholderLine v-if="isLoading" class="h-[15px] w-[200px]" />
-          <span v-else>
-            {{
+          <lukso-sanitize
+            v-else
+            :html-content="
               formatMessage('followed_by_text', {
                 names: profileNames(profiles),
                 othersCount,
               })
-            }}
-          </span>
+            "
+          >
+          </lukso-sanitize>
         </template>
       </LoaderProfiles>
     </div>

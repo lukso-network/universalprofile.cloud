@@ -122,16 +122,22 @@ const handlePageChange = (event: CustomEvent) => {
           <span v-if="viewProfileIsConnectedProfile && isFollowingModal">{{
             formatMessage('own_connected_profile_following_empty')
           }}</span>
-          <span v-if="!viewProfileIsConnectedProfile && !isFollowingModal">{{
+          <lukso-sanitize
+            v-if="!viewProfileIsConnectedProfile && !isFollowingModal"
+            :html-content="
             formatMessage('followed_by_empty', {
-              username: profile.name,
+                username: `<strong>@${profile.name}#${profile.address.slice(2, 6)}</strong>`,
             })
-          }}</span>
-          <span v-if="!viewProfileIsConnectedProfile && isFollowingModal">{{
+            "
+          ></lukso-sanitize>
+          <lukso-sanitize
+            v-if="!viewProfileIsConnectedProfile && isFollowingModal"
+            :html-content="
             formatMessage('follows_empty', {
-              username: profile.name,
+                username: `<strong>@${profile.name}#${profile.address.slice(2, 6)}</strong>`,
             })
-          }}</span>
+            "
+          ></lukso-sanitize>
         </template>
       </LoaderProfile>
     </template>
