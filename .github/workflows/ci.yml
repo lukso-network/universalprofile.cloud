@@ -39,6 +39,10 @@ jobs:
       - name: 🎨 Lint
         run: yarn prepare && yarn lint
 
+      - name: 🎯 Run Unit tests
+        if: false
+        run: yarn test:unit:ci
+
       - name: 🛠 Install Playwright Browsers
         if: false
         run: npx playwright install --with-deps chromium

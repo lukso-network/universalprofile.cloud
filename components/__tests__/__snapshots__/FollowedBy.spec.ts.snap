@@ -12,7 +12,9 @@ exports[`FollowedBy > should render for 1 follower 1`] = `
     <div class="flex space-x-[-14px]">
       <lukso-profile size="x-small" profile-address="0x1"></lukso-profile>
     </div>
-    <div class="paragraph-inter-12-medium pl-2"><span>Followed by @john you follow</span></div>
+    <div class="paragraph-inter-12-medium pl-2">
+      <lukso-sanitize html-content="Followed by <strong>@john#1</strong> you follow"></lukso-sanitize>
+    </div>
   </div>
 </div>"
 `;
@@ -24,7 +26,9 @@ exports[`FollowedBy > should render for 2 followers 1`] = `
       <lukso-profile size="x-small" profile-address="0x2"></lukso-profile>
       <lukso-profile size="x-small" profile-address="0x1"></lukso-profile>
     </div>
-    <div class="paragraph-inter-12-medium pl-2"><span>Followed by @john, @jane you follow</span></div>
+    <div class="paragraph-inter-12-medium pl-2">
+      <lukso-sanitize html-content="Followed by <strong>@john#1</strong>, <strong>@jane#2</strong> you follow"></lukso-sanitize>
+    </div>
   </div>
 </div>"
 `;
@@ -37,7 +41,9 @@ exports[`FollowedBy > should render for 3 followers 1`] = `
       <lukso-profile size="x-small" profile-address="0x3"></lukso-profile>
       <lukso-profile size="x-small" profile-address="0x1"></lukso-profile>
     </div>
-    <div class="paragraph-inter-12-medium pl-2"><span>Followed by @john, 0x2 and 1 other you follow</span></div>
+    <div class="paragraph-inter-12-medium pl-2">
+      <lukso-sanitize html-content="Followed by <strong>@john#1</strong>, <strong>0x2</strong> and 1 other you follow"></lukso-sanitize>
+    </div>
   </div>
 </div>"
 `;
@@ -50,7 +56,9 @@ exports[`FollowedBy > should render for 4 followers 1`] = `
       <lukso-profile size="x-small" profile-address="0x3"></lukso-profile>
       <lukso-profile size="x-small" profile-address="0x1"></lukso-profile>
     </div>
-    <div class="paragraph-inter-12-medium pl-2"><span>Followed by @john, @jane and 2 others you follow</span></div>
+    <div class="paragraph-inter-12-medium pl-2">
+      <lukso-sanitize html-content="Followed by <strong>@john#1</strong>, <strong>@jane#2</strong> and 2 others you follow"></lukso-sanitize>
+    </div>
   </div>
 </div>"
 `;
@@ -63,7 +71,9 @@ exports[`FollowedBy > should render for 5 followers 1`] = `
       <lukso-profile size="x-small" profile-address="0x3"></lukso-profile>
       <lukso-profile size="x-small" profile-address="0x1"></lukso-profile>
     </div>
-    <div class="paragraph-inter-12-medium pl-2"><span>Followed by @john, @jane and 3 others you follow</span></div>
+    <div class="paragraph-inter-12-medium pl-2">
+      <lukso-sanitize html-content="Followed by <strong>@john#1</strong>, <strong>@jane#2</strong> and 3 others you follow"></lukso-sanitize>
+    </div>
   </div>
 </div>"
 `;

@@ -28,7 +28,7 @@ exports[`LinkButton > should render empty state 1`] = `
 
 exports[`LinkButton > should render social link 1`] = `
 "<div id="test-wrapper">
-  <lukso-button size="medium" href="https://twitter.com" variant="secondary" is-link="" is-full-width="" is-icon="">
+  <lukso-button size="medium" href="https://twitter.com" variant="text" is-link="" is-full-width="" is-icon="" custom-class="px-0">
     <div class="flex w-full items-center px-1 text-left">
       <lukso-icon name="logo-x-mono" size="medium"></lukso-icon>
     </div>
@@ -48,7 +48,7 @@ exports[`LinkButton > small size > should render custom link 1`] = `
 
 exports[`LinkButton > small size > should render social link 1`] = `
 "<div id="test-wrapper">
-  <lukso-button size="small" href="https://twitter.com" variant="secondary" is-link="" is-full-width="" is-icon="">
+  <lukso-button size="small" href="https://twitter.com" variant="text" is-link="" is-full-width="" is-icon="" custom-class="px-0">
     <div class="flex w-full items-center px-1 text-left">
       <lukso-icon name="logo-x-mono" size="small"></lukso-icon>
     </div>
