@@ -7,7 +7,7 @@ type Props = {
   followerAddresses?: Address[]
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 const { formatMessage } = useIntl()
 const viewedProfile = useProfile().viewedProfile()
 const connectedProfile = useProfile().connectedProfile()
@@ -35,33 +35,6 @@ const followerAddressesKey = computed(() => [
   chainId,
 ])
 
-const updateAddFollowerQueries = () => {
-  // optimistically update the cache
-  queryClient.setQueryData(isFollowingQueryKey.value, true)
-  queryClient.setQueryData(
-    followerCountKey.value,
-    getPositiveNumber(props.followerCount) + 1
-  )
-  queryClient.setQueryData(followerAddressesKey.value, [
-    ...(props.followerAddresses || []),
-    connectedProfile.value?.address,
-  ])
-}
-
-const updateRemoveFollowerQueries = () => {
-  // optimistically update the cache
-  queryClient.setQueryData(isFollowingQueryKey.value, false)
-  queryClient.setQueryData(
-    followerCountKey.value,
-    getPositiveNumber(props.followerCount) - 1
-  )
-  queryClient.setQueryData(followerAddressesKey.value, [
-    ...(props.followerAddresses || []).filter(
-      address => address !== connectedProfile.value?.address
-    ),
-  ])
-}
-
 const invalidateQueries = () => {
   // invalidate the cache to refetch the data
   queryClient.invalidateQueries({
@@ -82,7 +55,6 @@ const handleFollow = async () => {
   }
 
   isPending.value = true
-  updateAddFollowerQueries()
   await follow(viewedProfile.value?.address)
   isPending.value = false
   invalidateQueries()
@@ -95,7 +67,6 @@ const handleUnfollow = async () => {
   }
 
   isPending.value = true
-  updateRemoveFollowerQueries()
   await unfollow(viewedProfile.value?.address)
   isPending.value = false
   invalidateQueries()
@@ -113,6 +84,8 @@ const handleUnfollow = async () => {
         :class="{
           'group-hover:block': !isPending,
         }"
+        :is-loading="isPending ? true : undefined"
+        :loading-text="formatMessage('profile_card_unfollow_button')"
         @click="handleUnfollow"
       >
         <lukso-icon
@@ -131,6 +104,8 @@ const handleUnfollow = async () => {
         :class="{
           'group-hover:hidden': !isPending,
         }"
+        :is-loading="isPending ? true : undefined"
+        :loading-text="formatMessage('profile_card_following_button')"
       >
         <lukso-icon name="profile" size="small" class="mr-2"></lukso-icon>
         {{ formatMessage('profile_card_following_button') }}
@@ -138,7 +113,12 @@ const handleUnfollow = async () => {
     </template>
     <template v-else>
       <!-- Follow -->
-      <lukso-button size="small" @click="handleFollow">
+      <lukso-button
+        size="small"
+        :is-loading="isPending ? true : undefined"
+        :loading-text="formatMessage('profile_card_follow_button')"
+        @click="handleFollow"
+      >
         <lukso-icon
           name="profile-add"
           size="small"
