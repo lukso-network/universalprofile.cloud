@@ -94,9 +94,10 @@ const handlePageChange = (event: CustomEvent) => {
                   has-identicon
                 ></lukso-profile>
                 <lukso-username
-                  :name="profile.name"
+                  :name="profile.name || formatMessage('profile_default_name')"
                   :address="profile.address"
                   address-color="neutral-80"
+                  :hide-prefix="!profile.name ? true : undefined"
                 >
                 </lukso-username>
               </template>
