@@ -12,6 +12,7 @@ type Props = {
 defineProps<Props>()
 const perPage = isMobile ? 8 : 24
 const connectedProfile = useProfile().connectedProfile()
+const viewedProfile = useProfile().viewedProfile()
 const numberOfPages = computed(() => Math.ceil((count.value || 0) / perPage))
 
 const currentPage = ref(1)
@@ -23,10 +24,8 @@ const addressesForPage = computed(() => {
   )
 })
 
-const viewedProfileAddress = getCurrentProfileAddress()
-
 const viewProfileIsConnectedProfile = computed(() => {
-  return connectedProfile?.value?.address === viewedProfileAddress
+  return connectedProfile?.value?.address === viewedProfile.value?.address
 })
 
 const addresses = computed(() => modal?.data?.addresses as Address[])
@@ -119,51 +118,47 @@ const handlePageChange = (event: CustomEvent) => {
 
     <!-- Empty state -->
     <template v-if="!hasFollowers">
-      <LoaderProfile :profile-address="viewedProfileAddress">
-        <template #default="{ profile }">
-          <!-- Own followers text -->
-          <span v-if="viewProfileIsConnectedProfile && !isFollowingModal">{{
-            formatMessage('own_connected_profile_followers_empty')
-          }}</span>
+      <!-- Own followers text -->
+      <span v-if="viewProfileIsConnectedProfile && !isFollowingModal">{{
+        formatMessage('own_connected_profile_followers_empty')
+      }}</span>
 
-          <!-- Own following text -->
-          <span v-if="viewProfileIsConnectedProfile && isFollowingModal">{{
-            formatMessage('own_connected_profile_following_empty')
-          }}</span>
+      <!-- Own following text -->
+      <span v-if="viewProfileIsConnectedProfile && isFollowingModal">{{
+        formatMessage('own_connected_profile_following_empty')
+      }}</span>
 
-          <!-- Other followers text -->
-          <lukso-sanitize
-            v-if="!viewProfileIsConnectedProfile && !isFollowingModal"
-            :html-content="
-              formatMessage('followed_by_empty', {
-                username: `<lukso-username
-                name='${profile.name || formatMessage('profile_default_name')}'
-                address='${profile.address}'
+      <!-- Other followers text -->
+      <lukso-sanitize
+        v-if="!viewProfileIsConnectedProfile && !isFollowingModal"
+        :html-content="
+          formatMessage('followed_by_empty', {
+            username: `<lukso-username
+                name='${viewedProfile?.name || formatMessage('profile_default_name')}'
+                address='${viewedProfile?.address}'
                 max-width='350'
-                ${profile?.name ? '' : 'hide-prefix'}
+                ${viewedProfile?.name ? '' : 'hide-prefix'}
               ></lukso-username>`,
-              })
-            "
-          >
-          </lukso-sanitize>
+          })
+        "
+      >
+      </lukso-sanitize>
 
-          <!-- Other following text -->
-          <lukso-sanitize
-            v-if="!viewProfileIsConnectedProfile && isFollowingModal"
-            :html-content="
-              formatMessage('follows_empty', {
-                username: `<lukso-username
-                name='${profile.name || formatMessage('profile_default_name')}'
-                address='${profile.address}'
+      <!-- Other following text -->
+      <lukso-sanitize
+        v-if="!viewProfileIsConnectedProfile && isFollowingModal"
+        :html-content="
+          formatMessage('follows_empty', {
+            username: `<lukso-username
+                name='${viewedProfile?.name || formatMessage('profile_default_name')}'
+                address='${viewedProfile?.address}'
                 max-width='350'
-                ${profile?.name ? '' : 'hide-prefix'}
+                ${viewedProfile?.name ? '' : 'hide-prefix'}
               ></lukso-username>`,
-              })
-            "
-          >
-          </lukso-sanitize>
-        </template>
-      </LoaderProfile>
+          })
+        "
+      >
+      </lukso-sanitize>
     </template>
   </div>
 </template>
