@@ -51,7 +51,9 @@ const handlePageChange = (event: CustomEvent) => {
 </script>
 
 <template>
-  <div class="relative p-6 sm:p-8">
+  <div
+    class="relative grid grid-rows-[max-content,auto,max-content] p-6 sm:min-h-[654px] sm:p-8"
+  >
     <div class="heading-inter-21-semi-bold mb-6 flex items-center gap-2">
       {{ formatMessage(`modal_${modal?.data?.type}_title`) }}
       <div
@@ -66,50 +68,52 @@ const handlePageChange = (event: CustomEvent) => {
       class="absolute right-6 top-6 sm:right-8 sm:top-8"
     />
 
-    <!-- List of profiles -->
+    <div v-if="hasFollowers" class="flex flex-col justify-between">
+      <!-- List of profiles -->
 
-    <div class="grid gap-6 sm:grid-cols-3">
-      <LoaderProfile
-        v-for="profileAddress in addressesForPage"
-        :key="profileAddress"
-        :profile-address="profileAddress"
-      >
-        <template #default="{ profile, profileAvatar }">
-          <div
-            @click="handleViewProfile(profileAddress)"
-            class="flex cursor-pointer items-center gap-4"
-          >
-            <template v-if="profile.isLoading">
-              <AppPlaceholderCircle class="size-10" />
-              <AppPlaceholderLine class="h-[22px] w-3/5" />
-            </template>
-            <template v-else>
-              <lukso-profile
-                size="small"
-                :profile-url="profileAvatar?.url"
-                :profile-address="profile?.address"
-                has-identicon
-              ></lukso-profile>
-              <lukso-username
-                :name="profile.name"
-                :address="profile.address"
-                address-color="neutral-80"
-              >
-              </lukso-username>
-            </template>
-          </div>
-        </template>
-      </LoaderProfile>
-    </div>
+      <div class="grid gap-6 sm:grid-cols-3">
+        <LoaderProfile
+          v-for="profileAddress in addressesForPage"
+          :key="profileAddress"
+          :profile-address="profileAddress"
+        >
+          <template #default="{ profile, profileAvatar }">
+            <div
+              @click="handleViewProfile(profileAddress)"
+              class="flex cursor-pointer items-center gap-4"
+            >
+              <template v-if="profile.isLoading">
+                <AppPlaceholderCircle class="size-10" />
+                <AppPlaceholderLine class="h-[22px] w-3/5" />
+              </template>
+              <template v-else>
+                <lukso-profile
+                  size="small"
+                  :profile-url="profileAvatar?.url"
+                  :profile-address="profile?.address"
+                  has-identicon
+                ></lukso-profile>
+                <lukso-username
+                  :name="profile.name"
+                  :address="profile.address"
+                  address-color="neutral-80"
+                >
+                </lukso-username>
+              </template>
+            </div>
+          </template>
+        </LoaderProfile>
+      </div>
 
-    <!-- Pagination -->
-    <div v-if="numberOfPages > 1" class="mt-6 flex justify-center">
-      <lukso-pagination
-        variant="secondary"
-        :current-page="currentPage"
-        :total-pages="numberOfPages"
-        @on-page-change="handlePageChange"
-      ></lukso-pagination>
+      <!-- Pagination -->
+      <div v-if="numberOfPages > 1" class="mt-6 flex justify-center">
+        <lukso-pagination
+          variant="secondary"
+          :current-page="currentPage"
+          :total-pages="numberOfPages"
+          @on-page-change="handlePageChange"
+        ></lukso-pagination>
+      </div>
     </div>
 
     <!-- Empty state -->
@@ -125,17 +129,17 @@ const handlePageChange = (event: CustomEvent) => {
           <lukso-sanitize
             v-if="!viewProfileIsConnectedProfile && !isFollowingModal"
             :html-content="
-            formatMessage('followed_by_empty', {
+              formatMessage('followed_by_empty', {
                 username: `<strong>@${profile.name}#${profile.address.slice(2, 6)}</strong>`,
-            })
+              })
             "
           ></lukso-sanitize>
           <lukso-sanitize
             v-if="!viewProfileIsConnectedProfile && isFollowingModal"
             :html-content="
-            formatMessage('follows_empty', {
+              formatMessage('follows_empty', {
                 username: `<strong>@${profile.name}#${profile.address.slice(2, 6)}</strong>`,
-            })
+              })
             "
           ></lukso-sanitize>
         </template>
