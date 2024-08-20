@@ -32,14 +32,8 @@ const othersCount = computed(() => {
 const profileNames = (profiles?: Profile[]) =>
   profiles
     ?.map((profile: Profile) => {
-      let profileName = formatMessage('profile_default_name')
-
-      if (profile?.name) {
-        profileName = `${profile?.name}`
-      }
-
       return `<lukso-username
-        name='${profileName}'
+        name='${profile?.name || formatMessage('profile_default_name')}'
         address='${profile.address}'
         size='small'
         address-color='neutral-20'
