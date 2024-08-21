@@ -9,7 +9,7 @@ type Props = {
   activeTab?: ProfileViewTabName
 }
 
-type Emits = (event: 'activate-tab', value: ProfileViewTabName) => void
+type Emits = (event: 'activate-tab', value: ProfileViewTab) => void
 
 defineProps<Props>()
 const emits = defineEmits<Emits>()
@@ -26,7 +26,7 @@ const { formatMessage } = useIntl()
       :label="formatMessage(`profile_tab_${tab.id}`)"
       :count="tab.count"
       :is-active="tab.id === activeTab"
-      @click="emits('activate-tab', tab.id)"
+      @click="emits('activate-tab', tab)"
     />
   </ul>
 </template>

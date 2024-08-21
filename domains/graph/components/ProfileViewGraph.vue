@@ -1,44 +1,20 @@
 <script setup lang="ts">
-export type ProfileViewTabName = 'collectibles' | 'tokens'
-export type ProfileViewTab = { id: ProfileViewTabName; count: number }
+export type ProfileViewTabName = 'collectibles' | 'tokens' | 'grid'
+export type ProfileViewTab = {
+  id: ProfileViewTabName
+  count?: number
+  route?: string
+}
 
 const { isOwned, setFilters, filters } = useFilters()
 const viewedProfileAddress = getCurrentProfileAddress()
+const route = useRoute()
 
 const viewedProfile = useProfile().getProfile(viewedProfileAddress)
 const assetsData = useProfileAssetsGraph()({
   profileAddress: viewedProfileAddress,
 })
 const assets = computed(() => assetsData.data.value || [])
-const isLoadingAssets = computed(() => assetsData.isLoading.value)
-
-const filteredAssets = computed(() => {
-  return (
-    assets.value
-      // filter by owned/created
-      .filter(asset => {
-        switch (filters.assetType) {
-          case 'owned':
-            return asset.isOwned && hasBalance(asset) // for owned we need to check if user has balance
-          case 'created':
-            return asset.isIssued
-          default:
-            return false
-        }
-      })
-      // filter token/collectible
-      .filter(asset => {
-        switch (filters.assetGroup) {
-          case 'collectibles':
-            return isCollectible(asset)
-          case 'tokens':
-            return isToken(asset)
-          default:
-            return false
-        }
-      })
-  )
-})
 
 const creationsShowcase = computed(() =>
   assets.value
@@ -82,12 +58,20 @@ const createdCollectiblesCount = computed(
     ).length
 )
 
-const handleTabChange = (tab: ProfileViewTabName) => {
-  setFilters({ assetGroup: tab })
+const handleTabChange = (tab: ProfileViewTab) => {
+  if (tab.route) {
+    navigateTo(tab.route)
+  } else {
+    setFilters({ assetGroup: tab.id }, profileAssetsRoute(viewedProfileAddress))
+  }
 }
 
-const tabs = computed(() => {
+const tabs = computed<ProfileViewTab[]>(() => {
   return [
+    {
+      id: 'grid',
+      route: profileRoute(viewedProfileAddress),
+    },
     {
       id: 'collectibles',
       count: isOwned.value
@@ -99,6 +83,14 @@ const tabs = computed(() => {
       count: isOwned.value ? ownedTokensCount.value : createdTokensCount.value,
     },
   ]
+})
+
+const activeTab = computed(() => {
+  if (route.name === 'profileAddress-index') {
+    return 'grid'
+  }
+
+  return filters.assetGroup
 })
 </script>
 
@@ -126,15 +118,12 @@ const tabs = computed(() => {
       />
       <div>
         <ProfileTabs
-          :active-tab="filters.assetGroup"
+          :active-tab="activeTab"
           :tabs="tabs"
           @activate-tab="handleTabChange"
           class="mt-20"
         />
-        <ProfileAssetsGraph
-          :assets="filteredAssets"
-          :is-loading="isLoadingAssets"
-        />
+        <NuxtPage :assets="assetsData" />
       </div>
     </div>
     <div
