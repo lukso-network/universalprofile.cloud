@@ -51,7 +51,10 @@ const handlePageChange = (event: CustomEvent) => {
 
 <template>
   <div
-    class="relative grid grid-rows-[max-content,auto,max-content] p-6 sm:min-h-[654px] sm:p-8"
+    :class="{
+      'sm:min-h-[654px]': numberOfPages > 1,
+    }"
+    class="relative grid grid-rows-[max-content,auto,max-content] p-6 sm:p-8"
   >
     <div class="heading-inter-21-semi-bold mb-6 flex items-center gap-2">
       {{ formatMessage(`modal_${modal?.data?.type}_title`) }}
