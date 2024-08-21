@@ -154,9 +154,9 @@ export const useFilters = (assets?: ComputedRef<Asset[]>) => {
   ])
 
   //--- setters
-  const setFilters = (filters: Partial<Filters>) => {
+  const setFilters = (filters: Partial<Filters>, path?: string) => {
     navigateTo({
-      path: route.path,
+      path: path || route.path,
       query: {
         ...route.query,
         ...filters,

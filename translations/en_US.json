@@ -45,6 +45,7 @@
   "missing_asset_label_added": "Added",
   "error_no_accounts": "Account not found.",
   "asset_all_creators_unverified": "Un-verified creators",
+  "profile_tab_grid": "Grid",
   "followed_by_empty": "No one is following {username}",
   "dapp_showcase_01_image": "/images/universal-page-dapp.jpg",
   "hero_title_02": "Universal Profiles",
