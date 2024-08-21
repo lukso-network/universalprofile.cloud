@@ -202,6 +202,9 @@ export const useFollowingSystem = () => {
           const followerAddresses = results[3]?.data as Address[]
           const isFollowing = results[4]?.data as boolean
           const isLoading = results.some(result => result.isLoading)
+          const isLoadingCounters = [0, 2].some(
+            index => results[index]?.isLoading
+          )
 
           const profileFollowers = {
             isFollowing,
@@ -210,6 +213,7 @@ export const useFollowingSystem = () => {
             followerCount,
             followerAddresses,
             isLoading,
+            isLoadingCounters,
           } as ProfileFollowers
 
           if (!profileFollowers.isLoading && followersLog.enabled) {
