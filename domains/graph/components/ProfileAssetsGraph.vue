@@ -132,16 +132,18 @@ const handleChangeType = async (customEvent: CustomEvent) => {
 }
 
 const handleChangeCollection = async (customEvent: CustomEvent) => {
-  const value = customEvent.detail?.value
+  const collectionAddress = customEvent.detail?.value?.id as string
 
-  if (filters.collections?.includes(value)) {
+  if (filters.collections?.includes(collectionAddress)) {
     setFilters({
       collections: filters.collections?.filter(
-        collection => collection !== value
+        collection => collection !== collectionAddress
       ),
     })
   } else {
-    setFilters({ collections: [...(filters.collections || []), value.id] })
+    setFilters({
+      collections: [...(filters.collections || []), collectionAddress],
+    })
   }
 }
 
@@ -154,14 +156,14 @@ const handleRemoveCollection = async (collectionAddress: string) => {
 }
 
 const handleChangeCreator = async (customEvent: CustomEvent) => {
-  const value = customEvent.detail?.value
+  const creatorAddress = customEvent.detail?.value?.id as string
 
-  if (filters.creators?.includes(value)) {
+  if (filters.creators?.includes(creatorAddress)) {
     setFilters({
-      creators: filters.creators?.filter(creator => creator !== value),
+      creators: filters.creators?.filter(creator => creator !== creatorAddress),
     })
   } else {
-    setFilters({ creators: [...(filters.creators || []), value.id] })
+    setFilters({ creators: [...(filters.creators || []), creatorAddress] })
   }
 }
 
