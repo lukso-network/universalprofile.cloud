@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { sliceAddress } from '@lukso/web-components/tools'
-
 type Props = {
   followerAddresses?: Address[]
   followingAddresses?: Address[]
@@ -34,11 +32,14 @@ const othersCount = computed(() => {
 const profileNames = (profiles?: Profile[]) =>
   profiles
     ?.map((profile: Profile) => {
-      if (profile?.name) {
-        return `@${profile?.name}`
-      }
-
-      return sliceAddress(profile?.address, 4)
+      return `<lukso-username
+        name='${profile?.name || formatMessage('profile_default_name')}'
+        address='${profile.address}'
+        size='small'
+        address-color='neutral-20'
+        name-color='neutral-20'
+        ${profile?.name ? '' : 'hide-prefix'}
+      ></lukso-username>`
     })
     .join(', ') || ''
 </script>
@@ -73,14 +74,16 @@ const profileNames = (profiles?: Profile[]) =>
       <LoaderProfiles :profile-addresses="addressesForFollowerNames">
         <template #default="{ profiles, isLoading }">
           <AppPlaceholderLine v-if="isLoading" class="h-[15px] w-[200px]" />
-          <span v-else>
-            {{
+          <lukso-sanitize
+            v-else
+            :html-content="
               formatMessage('followed_by_text', {
                 names: profileNames(profiles),
                 othersCount,
               })
-            }}
-          </span>
+            "
+          >
+          </lukso-sanitize>
         </template>
       </LoaderProfiles>
     </div>
