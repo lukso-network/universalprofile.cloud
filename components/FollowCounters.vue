@@ -35,7 +35,7 @@ const handleShowFollowers = () => {
 
 <template>
   <AppPlaceholderLine
-    v-if="profileFollowers?.isLoading"
+    v-if="profileFollowers?.isLoadingCounters"
     class="h-[20px] w-[160px]"
   />
   <div
