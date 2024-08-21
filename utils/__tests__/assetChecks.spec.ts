@@ -56,7 +56,7 @@ describe('isCollectible', () => {
     ).toBe(true)
     expect(
       isCollectible({
-        tokenType: LSP4_TOKEN_TYPES.COLLECTION,
+        tokenType: LSP4_TOKEN_TYPES.NFT,
         standard: STANDARDS.LSP7,
       } as Asset)
     ).toBe(true)
@@ -77,7 +77,7 @@ describe('isCollectible', () => {
     ).toBe(false)
     expect(
       isCollectible({
-        tokenType: LSP4_TOKEN_TYPES.NFT,
+        tokenType: LSP4_TOKEN_TYPES.COLLECTION,
         standard: STANDARDS.LSP7,
       } as Asset)
     ).toBe(false)
