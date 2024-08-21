@@ -6,7 +6,6 @@ import type { LSP26FollowingSystem } from '@/contracts/LSP26FollowingSystem'
 import type { AbiItem } from 'web3-utils'
 
 export const useFollowingSystem = () => {
-  const connectedProfile = useProfile().connectedProfile()
   const { currentNetwork } = storeToRefs(useAppStore())
   const { followingSystemContractAddress } = currentNetwork.value
 
@@ -24,24 +23,20 @@ export const useFollowingSystem = () => {
   )
 
   return {
-    follow: async (address?: Address) => {
+    follow: (address?: Address) => {
       try {
         assertAddress(address)
 
-        await followingSystemContractInjected?.methods
-          .follow(address)
-          .send({ from: connectedProfile.value?.address })
+        return followingSystemContractInjected?.methods.follow(address)
       } catch (error) {
         console.warn(error)
       }
     },
-    unfollow: async (address?: Address) => {
+    unfollow: (address?: Address) => {
       try {
         assertAddress(address)
 
-        await followingSystemContractInjected?.methods
-          .unfollow(address)
-          .send({ from: connectedProfile.value?.address })
+        return followingSystemContractInjected?.methods.unfollow(address)
       } catch (error) {
         console.warn(error)
       }

@@ -7,7 +7,7 @@ type Props = {
   followerAddresses?: Address[]
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 const { formatMessage } = useIntl()
 const viewedProfile = useProfile().viewedProfile()
 const connectedProfile = useProfile().connectedProfile()
@@ -35,6 +35,33 @@ const followerAddressesKey = computed(() => [
   chainId,
 ])
 
+const updateAddFollowerQueries = () => {
+  // optimistically update the cache
+  queryClient.setQueryData(isFollowingQueryKey.value, true)
+  queryClient.setQueryData(
+    followerCountKey.value,
+    getPositiveNumber(props.followerCount) + 1
+  )
+  queryClient.setQueryData(followerAddressesKey.value, [
+    ...(props.followerAddresses || []),
+    connectedProfile.value?.address,
+  ])
+}
+
+const updateRemoveFollowerQueries = () => {
+  // optimistically update the cache
+  queryClient.setQueryData(isFollowingQueryKey.value, false)
+  queryClient.setQueryData(
+    followerCountKey.value,
+    getPositiveNumber(props.followerCount) - 1
+  )
+  queryClient.setQueryData(followerAddressesKey.value, [
+    ...(props.followerAddresses || []).filter(
+      address => address !== connectedProfile.value?.address
+    ),
+  ])
+}
+
 const invalidateQueries = () => {
   // invalidate the cache to refetch the data
   queryClient.invalidateQueries({
@@ -48,28 +75,54 @@ const invalidateQueries = () => {
   })
 }
 
-const handleFollow = async () => {
+const handleFollow = () => {
   // prevent multiple clicks when tx is pending
   if (isPending.value) {
     return
   }
 
   isPending.value = true
-  await follow(viewedProfile.value?.address)
-  isPending.value = false
-  invalidateQueries()
+  follow(viewedProfile.value?.address)
+    ?.send({
+      from: connectedProfile.value?.address,
+    })
+    ?.on('transactionHash', (_hash: string) => {
+      updateAddFollowerQueries()
+    })
+    ?.on('receipt', (_receipt: any) => {
+      isPending.value = false
+      invalidateQueries()
+    })
+    ?.on('error', (error: Error) => {
+      isPending.value = false
+      invalidateQueries()
+      console.error(error)
+    })
 }
 
-const handleUnfollow = async () => {
+const handleUnfollow = () => {
   // prevent multiple clicks when tx is pending
   if (isPending.value) {
     return
   }
 
   isPending.value = true
-  await unfollow(viewedProfile.value?.address)
-  isPending.value = false
-  invalidateQueries()
+  unfollow(viewedProfile.value?.address)
+    ?.send({
+      from: connectedProfile.value?.address,
+    })
+    ?.on('transactionHash', (_hash: string) => {
+      updateRemoveFollowerQueries()
+    })
+    ?.on('receipt', (_receipt: any) => {
+      isPending.value = false
+      invalidateQueries()
+    })
+    ?.on('error', (error: Error) => {
+      isPending.value = false
+      invalidateQueries()
+      console.error(error)
+    })
 }
 </script>
 
