@@ -53,7 +53,7 @@ const hasFiltersSelected = computed(
 const matchLyxToken = computed(() => {
   return (
     (!filters.search || 'lukso'.includes(filters.search.toLowerCase())) &&
-    filters.creators?.length === 0
+    (filters.creators === undefined || filters.creators?.length === 0)
   )
 })
 
