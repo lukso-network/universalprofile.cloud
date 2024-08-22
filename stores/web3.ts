@@ -1,6 +1,6 @@
 import Web3 from 'web3'
 
-import type { provider as Provider } from 'web3-core'
+import type EthereumProvider from '@walletconnect/ethereum-provider'
 import type { HttpProviderOptions } from 'web3-core-helpers'
 
 export const useWeb3Store = defineStore('web3', () => {
@@ -14,7 +14,7 @@ export const useWeb3Store = defineStore('web3', () => {
   // actions
   const addWeb3 = (
     providerName: string,
-    provider: Provider,
+    provider: EthereumProvider,
     options?: HttpProviderOptions
   ) => {
     if (!provider) {
@@ -30,6 +30,11 @@ export const useWeb3Store = defineStore('web3', () => {
       web3 = new Web3(provider)
     } else {
       web3 = new Web3()
+    }
+
+    if (web3Instances.value[providerName]) {
+      web3Instances.value[providerName] = markRaw(web3)
+      return
     }
 
     web3Instances.value = {

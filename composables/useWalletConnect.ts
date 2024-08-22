@@ -25,6 +25,7 @@ const connect = async () => {
   const { walletConnectProvider: provider } = storeToRefs(useAppStore())
   const { connectedProfileAddress } = storeToRefs(useAppStore())
   const { setConnectionExpiry } = useConnectionExpiry()
+  const { addWeb3 } = useWeb3Store()
 
   await provider.value?.connect()
 
@@ -35,6 +36,10 @@ const connect = async () => {
   connectedProfileAddress.value = address
   setConnectionExpiry()
   navigateTo(profileRoute(address))
+
+  if (provider.value) {
+    addWeb3(PROVIDERS.INJECTED, provider.value)
+  }
 }
 
 export const useWalletConnect = () => {
