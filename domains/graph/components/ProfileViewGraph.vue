@@ -83,7 +83,7 @@ const createdCollectiblesCount = computed(
 )
 
 const handleTabChange = (tab: ProfileViewTabName) => {
-  setFilters({ assetGroup: tab })
+  setFilters({ assetGroup: tab }, undefined, true)
 }
 
 const tabs = computed(() => {
