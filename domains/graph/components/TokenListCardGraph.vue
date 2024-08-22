@@ -7,9 +7,8 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { isConnected } = storeToRefs(useAppStore())
+const { viewedProfileIsConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
-const viewedProfileAddress = getCurrentProfileAddress()
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
@@ -30,6 +29,16 @@ const handleSendAsset = (event: Event) => {
   })
 }
 
+const handleBuySellAsset = (event: Event) => {
+  event.stopPropagation()
+  window.open(universalSwapsAssetUrl(props.asset.address), '_blank')
+}
+
+const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
+const isLoadedMetadata = computed(
+  () => asset.value && !asset.value.isMetadataLoading
+)
+
 onMounted(() => {
   setTimeout(() => {
     useIntersectionObserver(
@@ -40,11 +49,6 @@ onMounted(() => {
     )
   }, 1)
 })
-
-const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
-const isLoadedMetadata = computed(
-  () => asset.value && !asset.value.isMetadataLoading
-)
 </script>
 
 <template>
@@ -127,21 +131,29 @@ const isLoadedMetadata = computed(
             >
               {{ $formatCurrency(getBalance(asset), asset.tokenSymbol) }}
             </div>
-            <div class="flex w-full items-end justify-end">
-              <div v-if="isLoadedAsset">
+            <div class="flex w-full items-end justify-end gap-2">
+              <template v-if="isLoadedAsset">
                 <lukso-button
-                  v-if="
-                    isConnected &&
-                    viewedProfileAddress === connectedProfile?.address
-                  "
+                  v-if="viewedProfileIsConnected"
+                  size="small"
+                  variant="secondary"
+                  @click="handleBuySellAsset"
+                  class="mt-4"
+                  >{{ $formatMessage('button_buy_sell') }}</lukso-button
+                >
+                <lukso-button
+                  v-if="viewedProfileIsConnected"
                   size="small"
                   variant="secondary"
                   @click="handleSendAsset"
                   class="mt-4"
                   >{{ $formatMessage('button_send') }}</lukso-button
                 >
-              </div>
-              <AppPlaceholderLine v-else class="h-[28px] w-[60px]" />
+              </template>
+              <template v-else>
+                <AppPlaceholderLine class="h-[28px] w-[60px]" />
+                <AppPlaceholderLine class="h-[28px] w-[60px]" />
+              </template>
             </div>
           </div>
         </div>
