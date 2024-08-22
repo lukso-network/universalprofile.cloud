@@ -154,11 +154,10 @@ onMounted(() => {
           <NftListCardCreatorsGraph :asset="asset" class="mt-4" />
           <div
             class="flex w-full items-end justify-end gap-2"
-            v-if="!isCollection(asset)"
+            v-if="!isCollection(asset) && viewedProfileIsConnected"
           >
             <template v-if="isLoadedAsset">
               <lukso-button
-                v-if="viewedProfileIsConnected"
                 size="small"
                 variant="secondary"
                 @click="handleBuySellAsset"

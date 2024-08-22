@@ -131,10 +131,12 @@ onMounted(() => {
             >
               {{ $formatCurrency(getBalance(asset), asset.tokenSymbol) }}
             </div>
-            <div class="flex w-full items-end justify-end gap-2">
+            <div
+              v-if="viewedProfileIsConnected"
+              class="flex w-full items-end justify-end gap-2"
+            >
               <template v-if="isLoadedAsset">
                 <lukso-button
-                  v-if="viewedProfileIsConnected"
                   size="small"
                   variant="secondary"
                   @click="handleBuySellAsset"
@@ -142,7 +144,6 @@ onMounted(() => {
                   >{{ $formatMessage('button_buy_sell') }}</lukso-button
                 >
                 <lukso-button
-                  v-if="viewedProfileIsConnected"
                   size="small"
                   variant="secondary"
                   @click="handleSendAsset"
