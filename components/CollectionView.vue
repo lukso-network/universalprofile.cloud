@@ -264,7 +264,7 @@ onMounted(async () => {
     <!-- RPC warning -->
     <div
       v-if="isRpc"
-      class="paragraph-inter-12-regular flex items-center gap-3 rounded-8 bg-yellow-85 p-4"
+      class="paragraph-inter-12-regular flex items-center gap-3 rounded-8 bg-sky-85 p-4"
     >
       <lukso-icon name="warning-round"></lukso-icon>
       <div>
