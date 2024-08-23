@@ -1,12 +1,12 @@
 import type { LayoutItem } from 'grid-layout-plus';
 
-export interface GridProperties {
+export type GridProperties = {
   isDraggable: boolean;
   isResizable: boolean;
   isResponsive: boolean;
 }
 
-export interface Widget extends LayoutItem {
+export type Widget = LayoutItem  & {
   type: WidgetType;
   properties?: Record<string, any>;
 }
