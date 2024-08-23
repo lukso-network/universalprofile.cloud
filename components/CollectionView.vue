@@ -274,7 +274,6 @@ onMounted(async () => {
           @click="handleDataProviderSettings"
           >{{ formatMessage('collection_not_avail_link') }}</span
         >
-        {{ formatMessage('collection_not_avail_end') }}
       </div>
     </div>
 
