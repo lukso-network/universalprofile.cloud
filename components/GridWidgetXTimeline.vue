@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useScriptTag } from '@vueuse/core'
 
-defineProps<{
+type Props = {
   src: string
-}>()
+}
+
+defineProps<Props>()
 
 useScriptTag('https://platform.twitter.com/widgets.js')
 </script>

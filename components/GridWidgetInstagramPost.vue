@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { useScriptTag } from '@vueuse/core'
-import { onMounted, onUpdated } from 'vue'
 
-defineProps<{
+type Props = {
   src: string
-}>()
+}
+
+defineProps<Props>()
 
 useScriptTag(
   'https://www.instagram.com/embed.js',

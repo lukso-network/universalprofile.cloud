@@ -1,26 +1,10 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
-import { useRoute } from 'vue-router'
 import {
   GridLayout,
   type Breakpoint,
   type Breakpoints,
   type Layout,
 } from 'grid-layout-plus'
-
-import WidgetTitleLink from '@/components/WidgetTitleLink.vue'
-import WidgetImage from '@/components/WidgetImage.vue'
-import WidgetXTimeline from '@/components/WidgetXTimeline.vue'
-import WidgetXPost from '@/components/WidgetXPost.vue'
-import WidgetInstagramPost from '@/components/WidgetInstagramPost.vue'
-import WidgetText from '../components/WidgetText.vue'
-import { type GridProperties, WidgetType, type Widget } from '../types/grid'
-import { getGridConfig, upsertGridConfig } from '../utils/gridConfig'
-import {
-  isValidLayout,
-  getNewUserLayout,
-  SHOWCASE_LAYOUT,
-} from '../utils/gridLayout'
 
 const COL_NUM_LARGE = 4
 const COL_NUM_SMALL = 2
@@ -43,9 +27,7 @@ const layout = ref<Widget[]>([])
 const showSettingsModal = ref(false)
 const layoutStringified = ref('')
 
-// Load the layout based on the route id
-const route = useRoute()
-const address = route.path.split('/')[1]
+const address = getCurrentProfileAddress()
 
 async function initializeTheGrid(address: string | undefined): Promise<void> {
   if (!address) {
@@ -161,20 +143,22 @@ onMounted(async () => {
         @breakpoint-changed="breakpointChanged"
       >
         <template #item="{ item }">
-          <div :class="'grid-item flex h-full flex-col  p-[10px]'">
-            <WidgetTitleLink
+          <div
+            class="flex h-full flex-col rounded-[10px] border border-[#e4e2e2a3] bg-[rgba(var(--tw-prose-rgb),0.5)] p-[10px] shadow-[0_0_10px_#0003] backdrop-blur-[4px]"
+          >
+            <GridWidgetTitleLink
               v-if="item.type === WidgetType.TITLE_LINK"
               :title="item.properties.title"
               :src="item.properties.src"
               :bg-color="item.properties.bgColor"
             />
-            <WidgetText
+            <GridWidgetText
               v-if="item.type === WidgetType.TEXT"
               :title="item.properties.title"
               :text="item.properties.text"
               :bg-color="item.properties.bgColor"
             />
-            <WidgetImage
+            <GridWidgetImage
               v-if="item.type === WidgetType.IMAGE"
               :src="item.properties.src"
             />
@@ -188,15 +172,15 @@ onMounted(async () => {
               height="100%"
               frameborder="0"
             ></iframe>
-            <WidgetXPost
+            <GridWidgetXPost
               v-if="item.type === WidgetType.X_POST"
               :src="item.properties.src"
             />
-            <WidgetXTimeline
+            <GridWidgetXTimeline
               v-if="item.type === WidgetType.X_TIMELINE"
               :src="item.properties.src"
             />
-            <WidgetInstagramPost
+            <GridWidgetInstagramPost
               v-if="item.type === WidgetType.INSTAGRAM_POST"
               :src="item.properties.src"
             />
@@ -260,10 +244,6 @@ onMounted(async () => {
               </div>
             </div>
           </div>
-          <p>
-            Ensure JSON is valid. Read the code to understand the structure. Go
-            wild. YOLO SWAGGINS. 😂👌
-          </p>
           <textarea
             v-model="layoutStringified"
             class="h-96 w-full border-2 border-solid border-black"
@@ -280,26 +260,8 @@ onMounted(async () => {
               Reset
             </lukso-button>
           </span>
-          <p>
-            Help make The Grid great @
-            <a
-              class="text-blue-500 underline"
-              :href="'https://github.com/nastita/vue-cool-grid-stuff'"
-              >vue-cool-grid-stuff</a
-            >
-          </p>
         </div>
       </lukso-modal>
     </div>
   </main>
 </template>
-
-<style scoped>
-.grid-item {
-  background: rgba(red, green, blue, alpha);
-  border-radius: 10px;
-  border: 1px solid #e4e2e2a3;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 0 10px #0003;
-}
-</style>

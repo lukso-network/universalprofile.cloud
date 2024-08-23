@@ -1,9 +1,11 @@
 <script setup lang="ts">
-defineProps<{
+type Props = {
   title: string
   text: string
   bgColor?: string
-}>()
+}
+
+defineProps<Props>()
 </script>
 
 <template>
@@ -14,6 +16,6 @@ defineProps<{
     "
   >
     <h1 class="heading-apax-24-medium">{{ title }}</h1>
-    <p class="text-apax-16-regular mt-2 text-center">{{ text }}</p>
+    <p class="mt-2 text-center text-16">{{ text }}</p>
   </div>
 </template>

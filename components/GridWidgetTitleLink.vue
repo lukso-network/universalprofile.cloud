@@ -1,10 +1,12 @@
 <script setup lang="ts">
-defineProps<{
+type Props = {
   title: string
   src?: string
   textColor?: string
   bgColor?: string
-}>()
+}
+
+defineProps<Props>()
 </script>
 
 <template>

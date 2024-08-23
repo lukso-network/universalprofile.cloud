@@ -1,7 +1,5 @@
-<script setup lang="ts">
-import TheGrid from '@/components/TheGrid.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <TheGrid />
+  <GridView />
 </template>
