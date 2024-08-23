@@ -8,12 +8,12 @@ import type { Widget } from '../types/grid'
 Parse.initialize("Y2qPj69JQtmOzHpr49mwNxna9ss2QPsuZV5YH9JH", "gQZwrQ25HQ2y1NZFi2JJy0QdLs7hHzMsEpgL9D5J")
 Parse.serverURL = "https://parseapi.back4app.com/"
 
-export interface GetGridConfigResponse {
+export type GetGridConfigResponse = {
   objectId: string
   config: Widget[]
 }
 
-export interface UpsertGridConfigResponse {
+export type UpsertGridConfigResponse = {
   objectId: string
   createdAt?: string
   updatedAt?: string
