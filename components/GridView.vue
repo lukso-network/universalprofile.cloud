@@ -123,15 +123,6 @@ onMounted(async () => {
 
 <template>
   <main class="min-h-screen bg-cover bg-fixed">
-    <div class="fixed bottom-0 right-0 m-2">
-      <lukso-button
-        size="small"
-        type="button"
-        variant="secondary"
-        @click="onSettingsClick()"
-        >⚙️
-      </lukso-button>
-    </div>
     <div class="mx-auto max-w-content">
       <GridLayout
         v-model:layout="layout"
@@ -188,7 +179,16 @@ onMounted(async () => {
         </template>
       </GridLayout>
     </div>
-    <!-- TODO: Refactor this modal to be used like the other modals in the app -->
+    <!-- This configuration tools are just temporal until we have the proper ones -->
+    <div class="fixed bottom-0 right-0 m-2">
+      <lukso-button
+        size="small"
+        type="button"
+        variant="secondary"
+        @click="onSettingsClick()"
+        >⚙️
+      </lukso-button>
+    </div>
     <div>
       <lukso-modal
         :is-open="showSettingsModal.valueOf() ? true : undefined"
