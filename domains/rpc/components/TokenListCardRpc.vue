@@ -134,21 +134,19 @@ onMounted(() => {
             </div>
             <div
               v-if="viewedProfileIsConnected"
-              class="flex w-full items-end justify-end gap-2"
+              class="mt-4 flex w-full items-end justify-end gap-2"
             >
               <template v-if="isLoadedAsset">
                 <lukso-button
                   size="small"
                   variant="secondary"
                   @click="handleBuySellAsset"
-                  class="mt-4"
                   >{{ $formatMessage('button_buy_sell') }}</lukso-button
                 >
                 <lukso-button
                   size="small"
                   variant="secondary"
                   @click="handleSendAsset"
-                  class="mt-4"
                   >{{ $formatMessage('button_send') }}</lukso-button
                 >
               </template>

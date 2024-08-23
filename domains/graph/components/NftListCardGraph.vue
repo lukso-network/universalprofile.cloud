@@ -153,7 +153,7 @@ onMounted(() => {
           <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
           <NftListCardCreatorsGraph :asset="asset" class="mt-4" />
           <div
-            class="flex w-full items-end justify-end gap-2"
+            class="mt-4 flex w-full items-end justify-end gap-2"
             v-if="!isCollection(asset) && viewedProfileIsConnected"
           >
             <template v-if="isLoadedAsset">
@@ -161,7 +161,6 @@ onMounted(() => {
                 size="small"
                 variant="secondary"
                 @click="handleBuySellAsset"
-                class="mt-4"
                 >{{ $formatMessage('button_buy_sell') }}</lukso-button
               >
               <lukso-button
