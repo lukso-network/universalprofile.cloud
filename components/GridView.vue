@@ -6,6 +6,8 @@ import {
   type Layout,
 } from 'grid-layout-plus'
 
+import { type Widget, WidgetType } from '@/types/grid'
+
 const COL_NUM_LARGE = 4
 const COL_NUM_SMALL = 2
 const ROW_HEIGHT = 20
