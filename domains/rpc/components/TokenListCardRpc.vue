@@ -7,14 +7,17 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { viewedProfileIsConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const token = useToken()(asset)
-
 const assetImage = useAssetImage(token, true, 260)
+const viewedProfileAddress = getCurrentProfileAddress()
+
+const viewedProfileIsConnected = computed(() =>
+  useProfile().viewedProfileIsConnected(viewedProfileAddress)
+)
 
 const handleShowAsset = () => {
   navigateTo(assetRoute(props.asset.address))
@@ -132,10 +135,7 @@ onMounted(() => {
             >
               {{ $formatCurrency(getBalance(token), token.tokenSymbol) }}
             </div>
-            <div
-              v-if="viewedProfileIsConnected"
-              class="mt-4 flex w-full items-end justify-end gap-2"
-            >
+            <div class="mt-4 flex w-full items-end justify-end gap-2">
               <template v-if="isLoadedAsset">
                 <lukso-button
                   size="small"
@@ -144,6 +144,7 @@ onMounted(() => {
                   >{{ $formatMessage('button_buy_sell') }}</lukso-button
                 >
                 <lukso-button
+                  v-if="viewedProfileIsConnected"
                   size="small"
                   variant="secondary"
                   @click="handleSendAsset"

@@ -69,17 +69,6 @@ export const useAppStore = defineStore(
       () => fetchDataProvider.value === 'graph' && !isTestnet.value // TODO use RPC for Testnet until we have it indexed
     )
 
-    const viewedProfileIsConnected = computed(() => {
-      const viewedProfileAddress = getCurrentProfileAddress()
-
-      return (
-        isConnected.value &&
-        // we need to compare lowercase addresses in case of checksummed addresses
-        connectedProfileAddress.value?.toLowerCase() ===
-          viewedProfileAddress?.toLowerCase()
-      )
-    })
-
     // --- actions
 
     const setModal = (newModal: Modal) => {
@@ -103,7 +92,6 @@ export const useAppStore = defineStore(
       isRpc,
       isGraph,
       fetchDataProvider,
-      viewedProfileIsConnected,
     }
   },
   {

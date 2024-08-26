@@ -8,7 +8,6 @@ type Props = {
 
 const props = defineProps<Props>()
 
-const { viewedProfileIsConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
@@ -17,6 +16,11 @@ const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 260)
 const { showModal } = useModal()
 const { isCreated } = useFilters()
+const viewedProfileAddress = getCurrentProfileAddress()
+
+const viewedProfileIsConnected = computed(() =>
+  useProfile().viewedProfileIsConnected(viewedProfileAddress)
+)
 
 const handleShowAsset = () => {
   // created LSP8 assets should navigate to collection
@@ -147,16 +151,21 @@ onMounted(() => {
           <NftListCardCreatorsRpc :asset="token" class="mt-4" />
           <div
             class="mt-4 flex w-full items-end justify-end gap-2"
-            v-if="!isCollection(asset) && viewedProfileIsConnected"
+            v-if="!isCollection(asset)"
           >
             <template v-if="isLoadedAsset">
               <lukso-button
                 size="small"
                 variant="secondary"
                 @click="handleBuySellAsset"
-                >{{ $formatMessage('button_buy_sell') }}</lukso-button
               >
+                <span v-if="viewedProfileIsConnected">{{
+                  $formatMessage('button_sell')
+                }}</span>
+                <span v-else>{{ $formatMessage('button_buy') }}</span>
+              </lukso-button>
               <lukso-button
+                v-if="viewedProfileIsConnected"
                 size="small"
                 variant="secondary"
                 @click="handleSendAsset"

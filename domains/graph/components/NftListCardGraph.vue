@@ -8,8 +8,6 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-
-const { viewedProfileIsConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
@@ -17,6 +15,11 @@ const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const assetImage = useAssetImage(asset, false, 260)
 const { showModal } = useModal()
 const { isCreated } = useFilters()
+const viewedProfileAddress = getCurrentProfileAddress()
+
+const viewedProfileIsConnected = computed(() =>
+  useProfile().viewedProfileIsConnected(viewedProfileAddress)
+)
 
 const isStackedCard = computed(
   () => isCollection(props.asset) || (isCreated.value && isLsp8(props.asset))
@@ -65,6 +68,11 @@ const handleSendAsset = (event: Event) => {
 
 const handleBuySellAsset = (event: Event) => {
   event.stopPropagation()
+
+  if (isCollection(props.asset)) {
+    return navigateTo(collectionRoute(props.asset.address))
+  }
+
   window.open(
     universalPageAssetUrl(props.asset.address, props.asset.tokenId),
     '_blank'
@@ -152,18 +160,20 @@ onMounted(() => {
           </div>
           <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
           <NftListCardCreatorsGraph :asset="asset" class="mt-4" />
-          <div
-            class="mt-4 flex w-full items-end justify-end gap-2"
-            v-if="!isCollection(asset) && viewedProfileIsConnected"
-          >
+          <div class="mt-4 flex w-full items-end justify-end gap-2">
             <template v-if="isLoadedAsset">
               <lukso-button
                 size="small"
                 variant="secondary"
                 @click="handleBuySellAsset"
-                >{{ $formatMessage('button_buy_sell') }}</lukso-button
               >
+                <span v-if="viewedProfileIsConnected">{{
+                  $formatMessage('button_sell')
+                }}</span>
+                <span v-else>{{ $formatMessage('button_buy') }}</span>
+              </lukso-button>
               <lukso-button
+                v-if="!isCollection(asset) && viewedProfileIsConnected"
                 size="small"
                 variant="secondary"
                 @click="handleSendAsset"
