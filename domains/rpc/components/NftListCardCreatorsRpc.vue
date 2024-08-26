@@ -128,7 +128,7 @@ const isLoaded = computed(() => asset.value && !asset.value.isLoading)
   <div v-else class="grid grid-cols-[max-content,auto] gap-1">
     <AppPlaceholderCircle :class="{ 'size-6': isSmall, 'size-10': !isSmall }" />
     <div
-      class="grid w-full flex-col items-center gap-1"
+      class="grid h-[24px] w-full flex-col items-center gap-1"
       :class="{
         'pl-1': isSmall,
         'pl-2': !isSmall,
