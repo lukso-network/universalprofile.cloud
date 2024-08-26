@@ -162,7 +162,7 @@ onMounted(async () => {
             </div>
           </div>
           <div class="flex justify-start">
-            <AssetAddress :asset="asset" without-title />
+            <AssetAddress :asset="asset" without-title show-contract-link />
           </div>
         </div>
         <div class="flex flex-col gap-4">

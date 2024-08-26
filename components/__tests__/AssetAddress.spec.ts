@@ -70,4 +70,17 @@ describe('AssetAddress', () => {
 
     expect(component.html()).toMatchSnapshot()
   })
+
+  it('should render with contract link', async () => {
+    const component = await renderSuspended(AssetAddress, {
+      props: {
+        showContractLink: true,
+        asset: {
+          address: '0xd1d18961ffeba233ba023e25e602f842d4a3d668',
+        },
+      },
+    })
+
+    expect(component.html()).toMatchSnapshot()
+  })
 })
