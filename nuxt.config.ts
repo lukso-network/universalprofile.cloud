@@ -210,7 +210,7 @@ export default defineNuxtConfig({
     codegen: true,
     clients: {
       default: {
-        host: 'https://envio.lukso-mainnet.universal.tech/v1/graphql',
+        host: 'https://envio.mainnet.lukso.network/v1/graphql',
       },
     },
   },
