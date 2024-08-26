@@ -116,6 +116,10 @@ const handleSelectOrder = (customEvent: CustomEvent) => {
   loadMore()
 }
 
+const handleDataProviderSettings = () => {
+  navigateTo(settingsDataProviderRoute())
+}
+
 useInfiniteScroll(el, () => loadMore(true), { distance: 500 })
 
 onMounted(async () => {
@@ -253,8 +257,24 @@ onMounted(async () => {
     </div>
 
     <!-- Empty state -->
-    <div v-else-if="!isLoading">
+    <div v-else-if="!isLoading && isGraph">
       {{ formatMessage('collection_no_results') }}
+    </div>
+
+    <!-- RPC info -->
+    <div
+      v-if="isRpc"
+      class="paragraph-inter-12-regular flex items-center gap-3 rounded-8 bg-sky-85 p-4"
+    >
+      <lukso-icon name="information"></lukso-icon>
+      <div>
+        {{ formatMessage('collection_not_avail_front') }}
+        <span
+          class="paragraph-inter-12-semi-bold cursor-pointer underline"
+          @click="handleDataProviderSettings"
+          >{{ formatMessage('collection_not_avail_link') }}</span
+        >
+      </div>
     </div>
 
     <!-- Loading state -->
