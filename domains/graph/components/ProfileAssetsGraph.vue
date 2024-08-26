@@ -252,7 +252,9 @@ onMounted(async () => {
     <!-- Desktop Filters -->
     <div v-else>
       <!-- Filters -->
-      <div class="grid grid-cols-[auto,100px,max-content] gap-2 pb-4">
+      <div
+        class="grid grid-cols-[auto,20px,max-content] gap-2 pb-4 sm:grid-cols-[auto,100px,max-content]"
+      >
         <div class="flex flex-wrap gap-2">
           <!-- Creator filter -->
           <lukso-select
