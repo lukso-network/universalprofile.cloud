@@ -31,7 +31,9 @@ const handleOpenApplicationDataProvider = () => {
             <h3 class="pb-1">
               {{ formatMessage('settings_add_missing_assets_title') }}
             </h3>
-            <p class="paragraph-inter-14-regular text-neutral-40">
+            <p
+              class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40"
+            >
               {{ formatMessage('settings_add_missing_assets_description') }}
             </p>
           </div>
@@ -53,7 +55,9 @@ const handleOpenApplicationDataProvider = () => {
             <h3 class="pb-1">
               {{ formatMessage('settings_data_provider_title') }}
             </h3>
-            <p class="paragraph-inter-14-regular text-neutral-40">
+            <p
+              class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40"
+            >
               {{ formatMessage('settings_data_provider_description') }}
             </p>
           </div>

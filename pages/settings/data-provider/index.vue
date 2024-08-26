@@ -71,7 +71,9 @@ const handleEnableRpc = () => {
             <h3 class="pb-1">
               {{ formatMessage('data_provider_graph_title') }}
             </h3>
-            <p class="paragraph-inter-14-regular text-neutral-40">
+            <p
+              class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40"
+            >
               {{ formatMessage('data_provider_graph_description') }}
             </p>
           </div>
@@ -111,7 +113,9 @@ const handleEnableRpc = () => {
             <h3 class="pb-1">
               {{ formatMessage('data_provider_rpc_title') }}
             </h3>
-            <p class="paragraph-inter-14-regular text-neutral-40">
+            <p
+              class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40"
+            >
               {{ formatMessage('data_provider_rpc_description') }}
             </p>
           </div>
