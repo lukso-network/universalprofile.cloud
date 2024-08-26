@@ -9,6 +9,7 @@ type Props = {
 
 const props = defineProps<Props>()
 const { isRpc, isGraph } = storeToRefs(useAppStore())
+const { isMobile } = useDevice()
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 880)
@@ -167,7 +168,11 @@ onMounted(async () => {
         </div>
         <div class="flex flex-col gap-4">
           <AssetDescription :asset="token" without-title />
-          <AssetLinks :asset="token" without-title button-size="small" />
+          <AssetLinks
+            :asset="token"
+            without-title
+            :button-size="isMobile ? 'medium' : 'small'"
+          />
         </div>
       </div>
     </lukso-card>
@@ -175,7 +180,7 @@ onMounted(async () => {
     <!-- Filters -->
     <div
       v-if="isGraph"
-      class="grid grid-cols-[auto,100px,max-content] gap-2 pb-4"
+      class="grid grid-cols-[auto,20px,max-content] gap-2 pb-4 sm:grid-cols-[auto,100px,max-content]"
     >
       <div class="flex flex-wrap gap-2">
         <!-- Attributes loading state -->
