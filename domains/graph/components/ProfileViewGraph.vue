@@ -100,6 +100,27 @@ const tabs = computed(() => {
     },
   ]
 })
+
+const selectTabBasedOnAssetCounts = () => {
+  // when user has no collectibles, we show tokens first
+  // when user has collectibles, we show created ones first
+  const assetGroup =
+    ownedCollectiblesCount.value > 0 || createdCollectiblesCount.value
+      ? 'collectibles'
+      : 'tokens'
+  const assetType =
+    assetGroup === 'collectibles' && createdCollectiblesCount.value > 0
+      ? 'created'
+      : 'owned'
+  setFilters({
+    assetType,
+    assetGroup,
+  })
+}
+
+onMounted(() => {
+  selectTabBasedOnAssetCounts()
+})
 </script>
 
 <template>
