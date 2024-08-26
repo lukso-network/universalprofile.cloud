@@ -45,7 +45,8 @@ export const useNetworkConfig = (): NetworkInfo[] => {
       indexName: 'prod_mainnet_universal_profiles',
       explorerUrl: 'https://explorer.execution.mainnet.lukso.network',
       customLSP2ContractAddress: '0x51c602b249a5bc0ff437fbed4607448d8bc66dad',
-      followingSystemContractAddress: '', // TBA
+      followingSystemContractAddress:
+        '0xf01103E5a9909Fc0DBe8166dA7085e0285daDDcA',
     },
   ]
 }
