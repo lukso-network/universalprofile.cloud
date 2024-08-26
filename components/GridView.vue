@@ -6,7 +6,9 @@ import {
   type Layout,
 } from 'grid-layout-plus'
 
-import { type Widget, WidgetType } from '@/types/grid'
+import { toGridLayoutItems } from '@/utils/gridLayout'
+
+import type { GridLayoutItem, GridWidgetType } from '@/types/grid'
 
 const COL_NUM_LARGE = 4
 const COL_NUM_SMALL = 2
@@ -25,7 +27,7 @@ const gridOptions = reactive<GridProperties>({
   isResizable: false,
   isResponsive: true,
 })
-const layout = ref<Widget[]>([])
+const layout = ref<GridLayoutItem[]>([])
 const showSettingsModal = ref(false)
 const layoutStringified = ref('')
 
@@ -33,15 +35,17 @@ const address = getCurrentProfileAddress()
 
 async function initializeTheGrid(address: string | undefined): Promise<void> {
   if (!address) {
-    layout.value = SHOWCASE_LAYOUT
+    layout.value = toGridLayoutItems(SHOWCASE_LAYOUT)
 
     return
   }
 
   // check if there's an existing layout for the user
   const gridConfigObject = await getGridConfig(address)
+
   if (!gridConfigObject) {
-    layout.value = getNewUserLayout(address)
+    const newUserLayout = getNewUserLayout(address)
+    layout.value = toGridLayoutItems(newUserLayout)
 
     return
   }
@@ -49,12 +53,14 @@ async function initializeTheGrid(address: string | undefined): Promise<void> {
   // check if the config is valid
   if (!isValidLayout(gridConfigObject.config)) {
     alert('Saved layout is invalid. Resetting to default layout.')
-    layout.value = getNewUserLayout(address)
+    const newUserLayout = getNewUserLayout(address)
+    layout.value = toGridLayoutItems(newUserLayout)
 
     return
   }
 
-  layout.value = gridConfigObject.config
+  const newLayout = gridConfigObject.config
+  layout.value = toGridLayoutItems(newLayout)
 }
 
 // UGLY HACK => Need to deep dive into the grid-layout-plus source code
@@ -107,7 +113,8 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
 
 function resetLayout(): void {
   showSettingsModal.value = false
-  layout.value = SHOWCASE_LAYOUT
+  const newUserLayout = getNewUserLayout(address)
+  layout.value = toGridLayoutItems(newUserLayout)
 }
 
 function breakpointChanged(
@@ -140,23 +147,23 @@ onMounted(async () => {
             class="flex h-full flex-col rounded-[10px] border border-[#e4e2e2a3] bg-[rgba(var(--tw-prose-rgb),0.5)] p-[10px] shadow-[0_0_10px_#0003] backdrop-blur-[4px]"
           >
             <GridWidgetTitleLink
-              v-if="item.type === WidgetType.TITLE_LINK"
+              v-if="item.type === GridWidgetType.TITLE_LINK"
               :title="item.properties.title"
               :src="item.properties.src"
               :bg-color="item.properties.bgColor"
             />
             <GridWidgetText
-              v-if="item.type === WidgetType.TEXT"
+              v-if="item.type === GridWidgetType.TEXT"
               :title="item.properties.title"
               :text="item.properties.text"
               :bg-color="item.properties.bgColor"
             />
             <GridWidgetImage
-              v-if="item.type === WidgetType.IMAGE"
+              v-if="item.type === GridWidgetType.IMAGE"
               :src="item.properties.src"
             />
             <iframe
-              v-if="item.type === WidgetType.IFRAME"
+              v-if="item.type === GridWidgetType.IFRAME"
               :src="item.properties.src"
               :title="item.properties.title"
               :allow="item.properties.allow"
@@ -166,15 +173,15 @@ onMounted(async () => {
               frameborder="0"
             ></iframe>
             <GridWidgetXPost
-              v-if="item.type === WidgetType.X_POST"
+              v-if="item.type === GridWidgetType.X_POST"
               :src="item.properties.src"
             />
             <GridWidgetXTimeline
-              v-if="item.type === WidgetType.X_TIMELINE"
+              v-if="item.type === GridWidgetType.X_TIMELINE"
               :src="item.properties.src"
             />
             <GridWidgetInstagramPost
-              v-if="item.type === WidgetType.INSTAGRAM_POST"
+              v-if="item.type === GridWidgetType.INSTAGRAM_POST"
               :src="item.properties.src"
             />
           </div>
