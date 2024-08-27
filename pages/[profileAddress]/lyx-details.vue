@@ -72,14 +72,19 @@ const handleBuyLyx = () => {
 
         <div class="mt-12 flex flex-col gap-2">
           <lukso-button
-            v-if="
-              isConnected &&
-              connectedProfile &&
-              viewedProfile?.address === connectedProfile?.address &&
-              hasBalance(asset)
-            "
             is-full-width
             variant="secondary"
+            @click="handleBuyLyx"
+            >{{
+              isTestnet
+                ? $formatMessage('token_details_get_lyx')
+                : $formatMessage('token_details_buy_lyx')
+            }}</lukso-button
+          >
+          <lukso-button
+            v-if="isConnected && hasBalance(asset)"
+            is-full-width
+            variant="primary"
             @click="handleSendLyx"
             >{{
               $formatMessage('token_details_send', {
@@ -87,11 +92,6 @@ const handleBuyLyx = () => {
               })
             }}</lukso-button
           >
-          <lukso-button is-full-width variant="primary" @click="handleBuyLyx">{{
-            isTestnet
-              ? $formatMessage('token_details_get_lyx')
-              : $formatMessage('token_details_buy_lyx')
-          }}</lukso-button>
         </div>
       </div>
       <div>

@@ -41,6 +41,11 @@ const handlePreviewImage = () => {
     size: 'auto',
   })
 }
+
+const handleBuySellAsset = (event: Event) => {
+  event.stopPropagation()
+  window.open(universalSwapsAssetUrl(asset.value?.address), '_blank')
+}
 </script>
 
 <template>
@@ -79,6 +84,13 @@ const handlePreviewImage = () => {
           :message="$formatMessage('token_details_own')"
         />
         <div class="mt-12 flex flex-col gap-2">
+          <lukso-button
+            variant="secondary"
+            is-full-width
+            @click="handleBuySellAsset"
+          >
+            {{ $formatMessage('button_buy_sell') }}
+          </lukso-button>
           <lukso-button
             v-if="hasBalance(asset) && isConnected"
             is-full-width

@@ -107,6 +107,24 @@ export const universalPageProfileUrl = (address?: Address) => {
 }
 
 /**
+ * URL to token page on universal.page
+ *
+ * @param address
+ * @param tokenId
+ * @returns
+ */
+export const universalPageAssetUrl = (address?: Address, tokenId?: string) => {
+  assert(address, 'Address is required')
+  assert(isAddress(address), 'Address is not a valid address')
+
+  if (tokenId) {
+    return `https://universal.page/collections/lukso/${address}/${tokenId}`
+  }
+
+  return `https://universal.page/assets/lukso/${address}`
+}
+
+/**
  * URL to profile page on universalswaps.io
  *
  * @returns
@@ -115,4 +133,16 @@ export const universalSwapsProfileUrl = (address?: Address) => {
   assert(address, 'Address is required')
   assert(isAddress(address), 'Address is not a valid address')
   return `https://universalswaps.io/social/${address}`
+}
+
+/**
+ * URL to token page on universalswaps.io
+ *
+ * @param address
+ * @returns
+ */
+export const universalSwapsAssetUrl = (address?: Address) => {
+  assert(address, 'Address is required')
+  assert(isAddress(address), 'Address is not a valid address')
+  return `https://universalswaps.io/tokens/lukso/${address}`
 }
