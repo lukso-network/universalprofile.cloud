@@ -6,8 +6,19 @@ exports[`Settings data-provider page > can change setting 1`] = `
     <div class="relative px-4 py-6 sm:py-20 opacity-0">
       <div class="mx-auto w-full sm:w-[440px]">
         <h1 class="heading-inter-17-semi-bold group mb-8 flex cursor-pointer items-center gap-1 border-b border-b-neutral-90 pb-6">
-          <lukso-icon name="arrow-left-lg" class="transition group-hover:-translate-x-1"></lukso-icon> Application endpoint
+          <lukso-icon name="arrow-left-lg" class="transition group-hover:-translate-x-1"></lukso-icon> Data loading mode
         </h1><!-- Enable GraphQL data provider -->
+        <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b">
+          <div class="grid grid-cols-[max-content,auto] gap-2">
+            <div>
+              <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100"></lukso-icon>
+            </div>
+            <div class="paragraph-inter-16-semi-bold">
+              <h3 class="pb-1">Read from indexing service</h3>
+              <p class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40">Load data via the our Envio indexing service. This results in faster loading times and smoother UX, however inappropriate content might be removed.</p>
+            </div>
+          </div>
+        </section><!-- Enable RPC data provider -->
         <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b cursor-pointer">
           <div class="grid grid-cols-[max-content,auto] gap-2">
             <div>
@@ -17,19 +28,10 @@ exports[`Settings data-provider page > can change setting 1`] = `
               </div>
             </div>
             <div class="paragraph-inter-16-semi-bold">
-              <h3 class="pb-1">Centralised</h3>
-              <p class="paragraph-inter-14-regular text-neutral-40">Load data via the LUKSO indexing service. This results in faster loading times and smoother UX, however offensive or inappropriate content can be removed.</p>
-            </div>
-          </div>
-        </section><!-- Enable RPC data provider -->
-        <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b">
-          <div class="grid grid-cols-[max-content,auto] gap-2">
-            <div>
-              <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100"></lukso-icon>
-            </div>
-            <div class="paragraph-inter-16-semi-bold">
-              <h3 class="pb-1">Decentralised</h3>
-              <p class="paragraph-inter-14-regular text-neutral-40">Load data directly from the blockchain. This can result in delays during the loading of assets, and is censorship resistant. Some app features might be limited.</p>
+              <h3 class="pb-1">Read from smart contracts</h3>
+              <p class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40">Loads data directly from the blockchain using an RPC provider. If a custom RPC provider (This feature will be added later) is used the read data can not be manipulated by us.
+
+                Will result in slower loading times during the loading of assets and some app features might be limited.</p>
             </div>
           </div>
         </section>
@@ -46,7 +48,7 @@ exports[`Settings data-provider page > can change setting 2`] = `
     <div class="relative px-4 py-6 sm:py-20 opacity-0">
       <div class="mx-auto w-full sm:w-[440px]">
         <h1 class="heading-inter-17-semi-bold group mb-8 flex cursor-pointer items-center gap-1 border-b border-b-neutral-90 pb-6">
-          <lukso-icon name="arrow-left-lg" class="transition group-hover:-translate-x-1"></lukso-icon> Application endpoint
+          <lukso-icon name="arrow-left-lg" class="transition group-hover:-translate-x-1"></lukso-icon> Data loading mode
         </h1><!-- Enable GraphQL data provider -->
         <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b cursor-pointer">
           <div class="grid grid-cols-[max-content,auto] gap-2">
@@ -57,8 +59,8 @@ exports[`Settings data-provider page > can change setting 2`] = `
               </div>
             </div>
             <div class="paragraph-inter-16-semi-bold">
-              <h3 class="pb-1">Centralised</h3>
-              <p class="paragraph-inter-14-regular text-neutral-40">Load data via the LUKSO indexing service. This results in faster loading times and smoother UX, however offensive or inappropriate content can be removed.</p>
+              <h3 class="pb-1">Read from indexing service</h3>
+              <p class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40">Load data via the our Envio indexing service. This results in faster loading times and smoother UX, however inappropriate content might be removed.</p>
             </div>
           </div>
         </section><!-- Enable RPC data provider -->
@@ -68,8 +70,10 @@ exports[`Settings data-provider page > can change setting 2`] = `
               <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100"></lukso-icon>
             </div>
             <div class="paragraph-inter-16-semi-bold">
-              <h3 class="pb-1">Decentralised</h3>
-              <p class="paragraph-inter-14-regular text-neutral-40">Load data directly from the blockchain. This can result in delays during the loading of assets, and is censorship resistant. Some app features might be limited.</p>
+              <h3 class="pb-1">Read from smart contracts</h3>
+              <p class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40">Loads data directly from the blockchain using an RPC provider. If a custom RPC provider (This feature will be added later) is used the read data can not be manipulated by us.
+
+                Will result in slower loading times during the loading of assets and some app features might be limited.</p>
             </div>
           </div>
         </section>
@@ -86,8 +90,19 @@ exports[`Settings data-provider page > should render with centralized setting 1`
     <div class="relative px-4 py-6 sm:py-20 opacity-0">
       <div class="mx-auto w-full sm:w-[440px]">
         <h1 class="heading-inter-17-semi-bold group mb-8 flex cursor-pointer items-center gap-1 border-b border-b-neutral-90 pb-6">
-          <lukso-icon name="arrow-left-lg" class="transition group-hover:-translate-x-1"></lukso-icon> Application endpoint
+          <lukso-icon name="arrow-left-lg" class="transition group-hover:-translate-x-1"></lukso-icon> Data loading mode
         </h1><!-- Enable GraphQL data provider -->
+        <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b">
+          <div class="grid grid-cols-[max-content,auto] gap-2">
+            <div>
+              <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100"></lukso-icon>
+            </div>
+            <div class="paragraph-inter-16-semi-bold">
+              <h3 class="pb-1">Read from indexing service</h3>
+              <p class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40">Load data via the our Envio indexing service. This results in faster loading times and smoother UX, however inappropriate content might be removed.</p>
+            </div>
+          </div>
+        </section><!-- Enable RPC data provider -->
         <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b cursor-pointer">
           <div class="grid grid-cols-[max-content,auto] gap-2">
             <div>
@@ -97,19 +112,10 @@ exports[`Settings data-provider page > should render with centralized setting 1`
               </div>
             </div>
             <div class="paragraph-inter-16-semi-bold">
-              <h3 class="pb-1">Centralised</h3>
-              <p class="paragraph-inter-14-regular text-neutral-40">Load data via the LUKSO indexing service. This results in faster loading times and smoother UX, however offensive or inappropriate content can be removed.</p>
-            </div>
-          </div>
-        </section><!-- Enable RPC data provider -->
-        <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b">
-          <div class="grid grid-cols-[max-content,auto] gap-2">
-            <div>
-              <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100"></lukso-icon>
-            </div>
-            <div class="paragraph-inter-16-semi-bold">
-              <h3 class="pb-1">Decentralised</h3>
-              <p class="paragraph-inter-14-regular text-neutral-40">Load data directly from the blockchain. This can result in delays during the loading of assets, and is censorship resistant. Some app features might be limited.</p>
+              <h3 class="pb-1">Read from smart contracts</h3>
+              <p class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40">Loads data directly from the blockchain using an RPC provider. If a custom RPC provider (This feature will be added later) is used the read data can not be manipulated by us.
+
+                Will result in slower loading times during the loading of assets and some app features might be limited.</p>
             </div>
           </div>
         </section>
@@ -126,7 +132,7 @@ exports[`Settings data-provider page > should render with decentralized setting 
     <div class="relative px-4 py-6 sm:py-20 opacity-0">
       <div class="mx-auto w-full sm:w-[440px]">
         <h1 class="heading-inter-17-semi-bold group mb-8 flex cursor-pointer items-center gap-1 border-b border-b-neutral-90 pb-6">
-          <lukso-icon name="arrow-left-lg" class="transition group-hover:-translate-x-1"></lukso-icon> Application endpoint
+          <lukso-icon name="arrow-left-lg" class="transition group-hover:-translate-x-1"></lukso-icon> Data loading mode
         </h1><!-- Enable GraphQL data provider -->
         <section class="group w-full select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b cursor-pointer">
           <div class="grid grid-cols-[max-content,auto] gap-2">
@@ -137,8 +143,8 @@ exports[`Settings data-provider page > should render with decentralized setting 
               </div>
             </div>
             <div class="paragraph-inter-16-semi-bold">
-              <h3 class="pb-1">Centralised</h3>
-              <p class="paragraph-inter-14-regular text-neutral-40">Load data via the LUKSO indexing service. This results in faster loading times and smoother UX, however offensive or inappropriate content can be removed.</p>
+              <h3 class="pb-1">Read from indexing service</h3>
+              <p class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40">Load data via the our Envio indexing service. This results in faster loading times and smoother UX, however inappropriate content might be removed.</p>
             </div>
           </div>
         </section><!-- Enable RPC data provider -->
@@ -148,8 +154,10 @@ exports[`Settings data-provider page > should render with decentralized setting 
               <lukso-icon name="complete-filled" color="green-54" secondary-color="neutral-100"></lukso-icon>
             </div>
             <div class="paragraph-inter-16-semi-bold">
-              <h3 class="pb-1">Decentralised</h3>
-              <p class="paragraph-inter-14-regular text-neutral-40">Load data directly from the blockchain. This can result in delays during the loading of assets, and is censorship resistant. Some app features might be limited.</p>
+              <h3 class="pb-1">Read from smart contracts</h3>
+              <p class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40">Loads data directly from the blockchain using an RPC provider. If a custom RPC provider (This feature will be added later) is used the read data can not be manipulated by us.
+
+                Will result in slower loading times during the loading of assets and some app features might be limited.</p>
             </div>
           </div>
         </section>
