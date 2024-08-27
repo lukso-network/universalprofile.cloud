@@ -198,7 +198,7 @@ exports[`ProfileCard > should render profile when connected 1`] = `
             <lukso-tag is-rounded="">tag2</lukso-tag>
           </li>
         </ul><!-- Links -->
-        <div class="flex flex-col gap-4">
+        <div class="gap-4 mt-4 flex flex-col">
           <!--v-if-->
           <ul class="flex flex-col flex-wrap gap-x-4 gap-y-2 sm:flex-row">
             <li class="inline-flex">
@@ -272,7 +272,7 @@ exports[`ProfileCard > should render profile when not connected 1`] = `
             <lukso-tag is-rounded="">tag2</lukso-tag>
           </li>
         </ul><!-- Links -->
-        <div class="flex flex-col gap-4">
+        <div class="gap-4 mt-4 flex flex-col">
           <!--v-if-->
           <ul class="flex flex-col flex-wrap gap-x-4 gap-y-2 sm:flex-row">
             <li class="inline-flex">
