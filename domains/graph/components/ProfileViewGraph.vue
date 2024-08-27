@@ -118,7 +118,24 @@ const selectTabBasedOnAssetCounts = () => {
   })
 }
 
-onMounted(() => {
+watch(
+  () => ownedCollectiblesCount.value,
+  async () => {
+    await nextTick()
+    selectTabBasedOnAssetCounts()
+  }
+)
+
+watch(
+  () => createdCollectiblesCount.value,
+  async () => {
+    await nextTick()
+    selectTabBasedOnAssetCounts()
+  }
+)
+
+onMounted(async () => {
+  await nextTick()
   selectTabBasedOnAssetCounts()
 })
 </script>
