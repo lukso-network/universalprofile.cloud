@@ -10,11 +10,16 @@ export const useFollowingSystem = () => {
   const { followingSystemContractAddress } = currentNetwork.value
 
   const { contract: contractInjected } = useWeb3(PROVIDERS.INJECTED)
-  const followingSystemContractInjected =
-    contractInjected<LSP26FollowingSystem>(
+  let followingSystemContractInjected: LSP26FollowingSystem | undefined
+
+  try {
+    followingSystemContractInjected = contractInjected<LSP26FollowingSystem>(
       LSP26FollowingSystemContract.abi as AbiItem[],
       followingSystemContractAddress
     )
+  } catch (error) {
+    console.warn(error)
+  }
 
   const { contract: contractRpc, getWeb3 } = useWeb3(PROVIDERS.RPC)
   const followingSystemContractRpc = contractRpc<LSP26FollowingSystem>(
