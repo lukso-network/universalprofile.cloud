@@ -177,7 +177,7 @@
   "missing_assets_description": "Find the token contract address of the asset you want to add and enter it below.",
   "dapp_showcase_02_url": "https://universalswaps.io/",
   "token_collection_of": "Owns {count}",
-  "data_provider_rpc_description": "Loads data directly from the blockchain using an RPC provider. If a custom RPC provider (This feature will be added later) is used the read data can not be manipulated by us. Will result in slower loading times during the loading of assets and some app features might be limited.",
+  "data_provider_rpc_description": "Loads data directly from the blockchain using an RPC provider. If a custom RPC provider (This feature will be added later) is used the read data can not be manipulated by us. \n\nWill result in slower loading times during the loading of assets and some app features might be limited.",
   "button_create_profile": "CREATE A PROFILE",
   "buy_lyx_card_ramp_description": "Ramp is a global financial technology company building solutions that connect the crypto economy with today’s financial infrastructure.",
   "send_success_button": "Send another token",
