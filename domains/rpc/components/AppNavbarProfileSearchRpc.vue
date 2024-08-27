@@ -11,6 +11,7 @@ const isSearching = ref<boolean>(false)
 const searchTerm = ref<string | Address | undefined>()
 const hasNoResults = ref<boolean>(false)
 const results = ref<SearchProfileResult[]>()
+
 const searchResults = async () => {
   isSearching.value = true
   const searchResults = await search({
@@ -35,6 +36,7 @@ const searchResults = async () => {
   })
   isSearching.value = false
 }
+
 const handleSearch = async (event: CustomEvent) => {
   searchTerm.value = event.detail.value
   results.value = undefined
@@ -46,6 +48,7 @@ const handleSearch = async (event: CustomEvent) => {
   }
   await searchResults()
 }
+
 const handleSelect = (event: CustomEvent) => {
   const selection = event.detail.value
   const { address } = selection
@@ -57,6 +60,15 @@ const handleSelect = (event: CustomEvent) => {
     searchTerm.value = undefined
   }
 }
+
+const handleKeyUpSearch = (customEvent: CustomEvent) => {
+  const key = customEvent.detail?.event?.detail?.event?.key
+
+  if (key === 'Escape') {
+    searchTerm.value = undefined
+  }
+}
+
 watchEffect(() => {
   if (isSearchOpen.value) {
     setTimeout(() => {
@@ -85,5 +97,6 @@ watchEffect(() => {
     @on-search="handleSearch"
     @on-input-click="handleSearch"
     @on-select="handleSelect"
+    @on-key-up="handleKeyUpSearch"
   ></lukso-search>
 </template>
