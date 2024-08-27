@@ -42,6 +42,15 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
               refetchInterval: 120_000,
               staleTime: 250,
             },
+            {
+              // 2
+              queryKey: ['profileResolve', chainId, profileAddress],
+              queryFn: async () => {
+                return await resolveProfile(profileAddress)
+              },
+              refetchInterval: 120_000,
+              staleTime: 250,
+            },
           ]
         : []
     ) as QFQueryOptions[] & AdditionalQueryOptions
@@ -69,17 +78,8 @@ export const getProfile = (_profileAddress: MaybeRef<Address | undefined>) => {
         links,
         description,
         tags,
-        fullName,
       } = profileData || {}
-      const checksummed = toChecksumAddress(profileAddress) as Address
-      const profileLink: ProfileLink | undefined = {
-        address: profileAddress,
-        resolved: profileAddress,
-        link: fullName || `${BASE_PROFILE_LINK_URL}/${checksummed}`,
-        checksummed,
-        isResolved: !!fullName,
-      }
-
+      const profileLink = (results[2].data as ProfileLink) || {}
       const profile = {
         isLoading,
         address: profileAddress,
