@@ -23,11 +23,15 @@ export const detectSocialMedia = (url?: string) => {
     return
   }
 
-  const hostname = new URL(url).hostname
+  try {
+    const hostname = new URL(url).hostname
 
-  for (const [key, domains] of Object.entries(SOCIAL_MEDIA)) {
-    if (domains.includes(hostname.replace('www.', ''))) {
-      return key
+    for (const [key, domains] of Object.entries(SOCIAL_MEDIA)) {
+      if (domains.includes(hostname.replace('www.', ''))) {
+        return key
+      }
     }
+  } catch {
+    return
   }
 }

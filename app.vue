@@ -208,7 +208,10 @@ useHead({
   <NuxtPwaManifest />
   <div>
     <NuxtLayout>
-      <NuxtPage />
+      <NuxtPage v-if="isLoadedApp" />
+      <div v-else>
+        <AppLoader class="absolute left-[calc(50vw-20px)] top-[300px]" />
+      </div>
     </NuxtLayout>
     <AppModal />
     <!-- <VueQueryDevtools /> -->

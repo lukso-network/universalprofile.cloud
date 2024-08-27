@@ -25,21 +25,28 @@ const isLoaded = computed(() => props.asset && !props.asset?.isMetadataLoading)
           <div v-if="!withoutTitle" class="heading-inter-14-bold pb-2">
             {{ formatMessage('asset_links_title') }}
           </div>
-          <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
-            <div
-              v-for="(link, index) in socialMediaLinks"
-              :key="index"
-              class="inline-flex"
+          <div class="flex flex-col gap-3">
+            <ul v-if="socialMediaLinks.length > 0" class="flex flex-wrap gap-2">
+              <li
+                v-for="(link, index) in socialMediaLinks"
+                :key="index"
+                class="inline-flex"
+              >
+                <LinkButton :link="link" :size="buttonSize" />
+              </li>
+            </ul>
+            <ul
+              v-if="otherLinks.length > 0"
+              class="flex flex-col flex-wrap gap-x-4 gap-y-2 sm:flex-row"
             >
-              <LinkButton :link="link" :size="buttonSize" />
-            </div>
-            <div
-              v-for="(link, index) in otherLinks"
-              :key="index"
-              class="inline-flex"
-            >
-              <LinkButton :link="link" :size="buttonSize" />
-            </div>
+              <li
+                v-for="(link, index) in otherLinks"
+                :key="index"
+                class="inline-flex"
+              >
+                <LinkButton :link="link" :size="buttonSize" />
+              </li>
+            </ul>
           </div>
         </div>
       </template>

@@ -63,5 +63,6 @@ describe('socialLinkParser', () => {
     expect(detectSocialMedia('')).toBeUndefined()
     expect(detectSocialMedia()).toBeUndefined()
     expect(detectSocialMedia('https://burntpix.com/')).toBeUndefined()
+    expect(detectSocialMedia('test@gmail.com')).toBeUndefined()
   })
 })

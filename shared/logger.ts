@@ -15,5 +15,8 @@ export const profileLog = debug('dapp:profile')
 // Logger for sending assets
 export const sendLog = debug('dapp:send')
 
+// Logger for followers data
+export const followersLog = debug('dapp:followers')
+
 // Logger for sending assets
 export const graphLog = debug('dapp:graph')

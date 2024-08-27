@@ -118,7 +118,24 @@ const selectTabBasedOnAssetCounts = () => {
   })
 }
 
-onMounted(() => {
+watch(
+  () => ownedCollectiblesCount.value,
+  async () => {
+    await nextTick()
+    selectTabBasedOnAssetCounts()
+  }
+)
+
+watch(
+  () => createdCollectiblesCount.value,
+  async () => {
+    await nextTick()
+    selectTabBasedOnAssetCounts()
+  }
+)
+
+onMounted(async () => {
+  await nextTick()
   selectTabBasedOnAssetCounts()
 })
 </script>
@@ -130,10 +147,9 @@ onMounted(() => {
       class="mx-auto max-w-content"
     >
       <ProfileCard />
-      <ProfileDetails />
       <div
         v-if="createdCollectiblesCount > 0"
-        class="heading-inter-17-semi-bold my-10 flex items-center justify-center"
+        class="heading-inter-17-semi-bold my-10 flex items-center justify-center sm:mt-20"
       >
         {{ $formatMessage('asset_creations') }}
         <span

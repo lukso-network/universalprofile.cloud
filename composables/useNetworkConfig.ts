@@ -22,6 +22,8 @@ export const useNetworkConfig = (): NetworkInfo[] => {
       indexName: 'prod_testnet_universal_profiles',
       explorerUrl: 'https://explorer.execution.testnet.lukso.network',
       customLSP2ContractAddress: '0x1690c1A6f5dc385d20139222567476F0A185f77a',
+      followingSystemContractAddress:
+        '0xcc439C9f4A3ebA8fb69945e650BbAB717741Fe99',
     },
     {
       id: 'mainnet',
@@ -43,6 +45,8 @@ export const useNetworkConfig = (): NetworkInfo[] => {
       indexName: 'prod_mainnet_universal_profiles',
       explorerUrl: 'https://explorer.execution.mainnet.lukso.network',
       customLSP2ContractAddress: '0x51c602b249a5bc0ff437fbed4607448d8bc66dad',
+      followingSystemContractAddress:
+        '0xf01103E5a9909Fc0DBe8166dA7085e0285daDDcA',
     },
   ]
 }
