@@ -25,7 +25,7 @@ const handleDisconnect = async () => {
         is-link
         :href="BASE_L14_UP_CLOUD_URL"
         target="_self"
-        custom-class="text-12 nav-apax-12-medium-uppercase"
+        custom-class="text-12 nav-apax-12-medium-uppercase px-2"
         class="group"
       >
         <span class="text-purple-51 transition group-hover:text-purple-41">
@@ -37,6 +37,18 @@ const handleDisconnect = async () => {
           class="ml-2"
           color="purple-51"
         ></lukso-icon>
+      </lukso-button>
+      <lukso-button
+        variant="text"
+        is-link
+        href="https://support.lukso.network/"
+        target="_blank"
+        custom-class="text-12 nav-apax-12-medium-uppercase pl-2 pr-4"
+        class="group"
+      >
+        <span class="text-purple-51 transition group-hover:text-purple-41">
+          {{ $formatMessage('footer_need_help_text') }}
+        </span>
       </lukso-button>
       <lukso-button
         variant="secondary"
