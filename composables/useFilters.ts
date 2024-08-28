@@ -167,6 +167,7 @@ export const useFilters = (assets?: ComputedRef<Asset[]>) => {
         ...(resetFilters ? FILTER_DEFAULTS : route.query),
         ...filters,
       },
+      replace: true,
     })
   }
 
