@@ -66,6 +66,7 @@ const handleKeyUpSearch = (customEvent: CustomEvent) => {
 
   if (key === 'Escape') {
     searchTerm.value = undefined
+    hasNoResults.value = false
   }
 }
 
