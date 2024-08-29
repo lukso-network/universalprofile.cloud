@@ -40,10 +40,6 @@ const isFollowingModal = computed(() => {
   return modal?.data?.type === 'following'
 })
 
-const handleViewProfile = (profileAddress: Address) => {
-  navigateTo(profileRoute(profileAddress))
-}
-
 const handlePageChange = (event: CustomEvent) => {
   currentPage.value = event.detail.value
 }
@@ -80,9 +76,9 @@ const handlePageChange = (event: CustomEvent) => {
           :profile-address="profileAddress"
         >
           <template #default="{ profile, profileAvatar }">
-            <div
-              @click="handleViewProfile(profileAddress)"
+            <NuxtLink
               class="flex cursor-pointer items-center gap-4"
+              :to="profileRoute(profileAddress)"
             >
               <template v-if="profile.isLoading">
                 <AppPlaceholderCircle class="size-10" />
@@ -103,7 +99,7 @@ const handlePageChange = (event: CustomEvent) => {
                 >
                 </lukso-username>
               </template>
-            </div>
+            </NuxtLink>
           </template>
         </LoaderProfile>
       </div>
