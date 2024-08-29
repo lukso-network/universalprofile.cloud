@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { formatMessage, formatNumber } = useIntl()
 const { showModal } = useModal()
+const { isMobile } = useDevice()
 
 type Props = {
   profileFollowers?: ProfileFollowers
@@ -16,7 +17,7 @@ const handleShowFollowing = () => {
       count: props.profileFollowers?.followingCount,
       type: 'following',
     },
-    size: 'medium',
+    size: isMobile ? 'full' : 'auto',
   })
 }
 
@@ -28,7 +29,7 @@ const handleShowFollowers = () => {
       count: props.profileFollowers?.followerCount,
       type: 'follower',
     },
-    size: 'medium',
+    size: isMobile ? 'full' : 'auto',
   })
 }
 </script>
