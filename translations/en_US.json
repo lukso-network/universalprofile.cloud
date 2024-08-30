@@ -227,7 +227,7 @@
   "create_profile_box_text": "Create your <strong>Universal Profile</strong> and get ready for a new kind of <strong>DApp</strong> experience! ",
   "web3_interface_error_message": "You tried to connect with a legacy profile that is no longer supported.",
   "errors_invalid_address": "This is an invalid address",
-  "header_connect": "Connect",
+  "header_connect": "Login",
   "dapp_showcase_06_title": "universalgrave.com",
   "collection_filter_search_placeholder": "Search by token ID",
   "nft_details_own": "You own this collectible",
