@@ -249,7 +249,12 @@ exports[`ProfileCard > should render profile when not connected 1`] = `
         </div>
         <div class="flex min-h-7 justify-end">
           <!-- Follow Button -->
-          <!--v-if-->
+          <div class="group flex">
+            <!-- Follow -->
+            <lukso-button size="small" loading-text="Follow">
+              <lukso-icon name="profile-add" size="small" color="neutral-100" class="mr-2"></lukso-icon> Follow
+            </lukso-button>
+          </div>
         </div>
         <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <!-- Profile Name -->
