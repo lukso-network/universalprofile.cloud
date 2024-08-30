@@ -43,10 +43,6 @@ const addressesForPage = computed(() => {
   )
 })
 
-const handleViewProfile = (profileAddress: Address) => {
-  navigateTo(profileRoute(profileAddress))
-}
-
 const handlePageChange = (event: CustomEvent) => {
   currentPage.value = event.detail.value
 }
@@ -95,9 +91,9 @@ const handleResetSearch = () => {
           :profile-address="profileAddress"
         >
           <template #default="{ profile, profileAvatar }">
-            <div
-              @click="handleViewProfile(profileAddress)"
+            <NuxtLink
               class="grid cursor-pointer grid-cols-[max-content,max-content,auto] items-center gap-4"
+              :to="profileRoute(profileAddress)"
             >
               <template v-if="profile.isLoading">
                 <AppPlaceholderCircle class="size-10" />
@@ -121,7 +117,7 @@ const handleResetSearch = () => {
               <div class="flex justify-end">
                 <FollowButton :address="profileAddress" />
               </div>
-            </div>
+            </NuxtLink>
           </template>
         </LoaderProfile>
 
