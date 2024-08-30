@@ -19,6 +19,7 @@ const connect = async () => {
   const { showModal } = useModal()
   const { formatMessage } = useIntl()
   const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
+  const route = useRoute()
 
   await checkExtensionNetwork()
 
@@ -41,7 +42,11 @@ const connect = async () => {
     assertAddress(address, 'connection')
     connectedProfileAddress.value = address
     setConnectionExpiry()
-    navigateTo(profileRoute(address))
+
+    // when we connect on the landing page we redirect to profile
+    if (route.name === 'index') {
+      navigateTo(profileRoute(address))
+    }
   } catch (error: unknown) {
     console.error(error)
     disconnect()

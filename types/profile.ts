@@ -29,6 +29,7 @@ export type ProfileFollowers = {
   followerCount?: number
   followerAddresses?: Address[]
   isLoading?: boolean
+  isLoadingCounters?: boolean
 }
 
 export type ProfileLink = {

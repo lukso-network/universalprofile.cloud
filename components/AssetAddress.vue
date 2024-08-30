@@ -5,6 +5,7 @@ import makeBlockie from 'ethereum-blockies-base64'
 type Props = {
   asset?: Asset
   withoutTitle?: boolean
+  showContractLink?: boolean
 }
 
 const props = defineProps<Props>()
@@ -30,6 +31,10 @@ const truncateAddress = computed(() => {
   }
   return sliceAddress(props.asset.address, addressLength)
 })
+
+const handleShowContract = () => {
+  navigateTo(assetRoute(props.asset?.address))
+}
 </script>
 
 <template>
@@ -65,6 +70,13 @@ const truncateAddress = computed(() => {
                 class="cursor-pointer transition-opacity hover:opacity-70"
               ></lukso-icon>
             </lukso-tooltip>
+            <lukso-icon
+              v-if="showContractLink"
+              name="eye-show"
+              size="small"
+              class="cursor-pointer transition-opacity hover:opacity-70"
+              @click="handleShowContract"
+            ></lukso-icon>
             <a
               :href="explorerContractUrl(address)"
               target="_blank"

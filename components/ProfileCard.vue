@@ -152,10 +152,15 @@ const hasFollowButton = computed(
           :links="viewedProfile?.links"
         >
           <template #default="{ socialMediaLinks, otherLinks }">
-            <div class="flex flex-col gap-0 sm:flex-row sm:gap-4">
+            <div
+              :class="{
+                'gap-4': socialMediaLinks.length > 0 || otherLinks.length > 0,
+              }"
+              class="mt-4 flex flex-col"
+            >
               <ul
                 v-if="socialMediaLinks.length > 0"
-                class="mt-4 flex flex-wrap gap-2 sm:gap-x-4"
+                class="flex flex-wrap gap-2"
               >
                 <li
                   v-for="(link, index) in socialMediaLinks"
@@ -170,7 +175,7 @@ const hasFollowButton = computed(
               </ul>
               <ul
                 v-if="otherLinks.length > 0"
-                class="mt-2 flex flex-col flex-wrap gap-x-4 gap-y-2 sm:mt-4 sm:flex-row"
+                class="flex flex-col flex-wrap gap-x-4 gap-y-2 sm:flex-row"
               >
                 <li
                   v-for="(link, index) in otherLinks"

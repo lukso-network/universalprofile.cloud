@@ -31,7 +31,9 @@ const handleOpenApplicationDataProvider = () => {
             <h3 class="pb-1">
               {{ formatMessage('settings_add_missing_assets_title') }}
             </h3>
-            <p class="paragraph-inter-14-regular text-neutral-40">
+            <p
+              class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40"
+            >
               {{ formatMessage('settings_add_missing_assets_description') }}
             </p>
           </div>
@@ -44,7 +46,6 @@ const handleOpenApplicationDataProvider = () => {
 
       <!-- Application data provider (graph/rpc) -->
       <section
-        v-if="false"
         class="group w-full cursor-pointer select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b"
         @click="handleOpenApplicationDataProvider"
       >
@@ -54,7 +55,9 @@ const handleOpenApplicationDataProvider = () => {
             <h3 class="pb-1">
               {{ formatMessage('settings_data_provider_title') }}
             </h3>
-            <p class="paragraph-inter-14-regular text-neutral-40">
+            <p
+              class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40"
+            >
               {{ formatMessage('settings_data_provider_description') }}
             </p>
           </div>

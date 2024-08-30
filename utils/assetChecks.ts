@@ -16,7 +16,7 @@ export const isLyx = (asset?: Asset | null) => !!asset?.isNativeToken
 export const isCollectible = (asset?: Asset | null) => {
   switch (asset?.standard) {
     case STANDARDS.LSP7: {
-      return asset?.tokenType === LSP4_TOKEN_TYPES.COLLECTION
+      return asset?.tokenType === LSP4_TOKEN_TYPES.NFT
     }
     case STANDARDS.LSP8: {
       return (

@@ -17,7 +17,8 @@ export const useAppStore = defineStore(
     const selectedChainId = ref<string>(DEFAULT_NETWORK_CHAIN_ID)
     const modal = ref<Modal>()
     const connectedProfileAddress = ref<Address>()
-    const fetchDataProvider = ref<FetchDataProvider>('rpc') // TODO switch to graph when it's ready
+    const fetchDataProvider = ref<FetchDataProvider>('graph')
+    const fetchDataProviderReset = ref(false)
 
     // statuses
     const isConnecting = ref(false)
@@ -92,6 +93,7 @@ export const useAppStore = defineStore(
       isRpc,
       isGraph,
       fetchDataProvider,
+      fetchDataProviderReset,
     }
   },
   {
@@ -100,6 +102,7 @@ export const useAppStore = defineStore(
         'connectedProfileAddress',
         'selectedChainId',
         'fetchDataProvider',
+        'fetchDataProviderReset',
       ],
       key: STORAGE_KEY.APP_STORE,
     },

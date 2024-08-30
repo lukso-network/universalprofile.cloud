@@ -85,7 +85,7 @@ const createdCollectiblesCount = computed(
 )
 
 const handleTabChange = (tab: ProfileViewTab) => {
-  setFilters({ assetGroup: tab.id })
+  setFilters({ assetGroup: tab.id }, undefined, true)
 }
 
 const tabs = computed<ProfileViewTab[]>(() => {
@@ -108,6 +108,38 @@ const tabs = computed<ProfileViewTab[]>(() => {
 
 const activeTab = computed(() => {
   return filters.assetGroup
+})
+
+const selectTabBasedOnAssetCounts = () => {
+  // when user has no collectibles, we show tokens first
+  const assetGroup =
+    ownedCollectiblesCount.value > 0 || createdCollectiblesCount.value
+      ? 'collectibles'
+      : 'tokens'
+  setFilters({
+    assetGroup,
+  })
+}
+
+watch(
+  () => ownedCollectiblesCount.value,
+  async () => {
+    await nextTick()
+    selectTabBasedOnAssetCounts()
+  }
+)
+
+watch(
+  () => createdCollectiblesCount.value,
+  async () => {
+    await nextTick()
+    selectTabBasedOnAssetCounts()
+  }
+)
+
+onMounted(async () => {
+  await nextTick()
+  selectTabBasedOnAssetCounts()
 })
 </script>
 

@@ -6,16 +6,20 @@ import type { LSP26FollowingSystem } from '@/contracts/LSP26FollowingSystem'
 import type { AbiItem } from 'web3-utils'
 
 export const useFollowingSystem = () => {
-  const connectedProfile = useProfile().connectedProfile()
   const { currentNetwork } = storeToRefs(useAppStore())
   const { followingSystemContractAddress } = currentNetwork.value
 
   const { contract: contractInjected } = useWeb3(PROVIDERS.INJECTED)
-  const followingSystemContractInjected =
-    contractInjected<LSP26FollowingSystem>(
+  let followingSystemContractInjected: LSP26FollowingSystem | undefined
+
+  try {
+    followingSystemContractInjected = contractInjected<LSP26FollowingSystem>(
       LSP26FollowingSystemContract.abi as AbiItem[],
       followingSystemContractAddress
     )
+  } catch (error) {
+    console.warn(error)
+  }
 
   const { contract: contractRpc, getWeb3 } = useWeb3(PROVIDERS.RPC)
   const followingSystemContractRpc = contractRpc<LSP26FollowingSystem>(
@@ -24,24 +28,20 @@ export const useFollowingSystem = () => {
   )
 
   return {
-    follow: async (address?: Address) => {
+    follow: (address?: Address) => {
       try {
         assertAddress(address)
 
-        await followingSystemContractInjected?.methods
-          .follow(address)
-          .send({ from: connectedProfile.value?.address })
+        return followingSystemContractInjected?.methods.follow(address)
       } catch (error) {
         console.warn(error)
       }
     },
-    unfollow: async (address?: Address) => {
+    unfollow: (address?: Address) => {
       try {
         assertAddress(address)
 
-        await followingSystemContractInjected?.methods
-          .unfollow(address)
-          .send({ from: connectedProfile.value?.address })
+        return followingSystemContractInjected?.methods.unfollow(address)
       } catch (error) {
         console.warn(error)
       }
@@ -202,6 +202,9 @@ export const useFollowingSystem = () => {
           const followerAddresses = results[3]?.data as Address[]
           const isFollowing = results[4]?.data as boolean
           const isLoading = results.some(result => result.isLoading)
+          const isLoadingCounters = [0, 2].some(
+            index => results[index]?.isLoading
+          )
 
           const profileFollowers = {
             isFollowing,
@@ -210,6 +213,7 @@ export const useFollowingSystem = () => {
             followerCount,
             followerAddresses,
             isLoading,
+            isLoadingCounters,
           } as ProfileFollowers
 
           if (!profileFollowers.isLoading && followersLog.enabled) {

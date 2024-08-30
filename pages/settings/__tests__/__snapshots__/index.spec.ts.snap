@@ -8,7 +8,16 @@ exports[`Settings index page > should render the settings index page 1`] = `
         <h1 class="heading-inter-21-semi-bold pb-4">Settings</h1><!-- Add Missing Assets -->
         <!--v-if-->
         <!-- Application data provider (graph/rpc) -->
-        <!--v-if-->
+        <section class="group w-full cursor-pointer select-none border border-b-0 border-neutral-90 bg-neutral-100 p-4 transition first-of-type:rounded-t-12 last-of-type:rounded-b-12 last-of-type:border-b">
+          <div class="grid grid-cols-[max-content,auto,max-content] gap-2">
+            <lukso-icon name="database"></lukso-icon>
+            <div class="paragraph-inter-16-semi-bold">
+              <h3 class="pb-1">Data loading mode</h3>
+              <p class="paragraph-inter-14-regular whitespace-pre-line text-neutral-40">Change how the application loads data.</p>
+            </div>
+            <lukso-icon name="arrow-right-lg" class="transition group-hover:translate-x-1"></lukso-icon>
+          </div>
+        </section>
       </div>
     </div>
     <!--v-if-->
