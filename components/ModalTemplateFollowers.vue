@@ -9,7 +9,7 @@ type Props = {
   closeModal: () => void
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 const perPage = isMobile ? 8 : 24
 const connectedProfile = useProfile().connectedProfile()
 const viewedProfile = useProfile().viewedProfile()
