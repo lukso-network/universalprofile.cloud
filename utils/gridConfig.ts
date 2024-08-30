@@ -5,8 +5,11 @@ import Parse from 'parse'
 
 import type { Widget } from '../types/grid'
 
-Parse.initialize("Y2qPj69JQtmOzHpr49mwNxna9ss2QPsuZV5YH9JH", "gQZwrQ25HQ2y1NZFi2JJy0QdLs7hHzMsEpgL9D5J")
-Parse.serverURL = "https://parseapi.back4app.com/"
+Parse.initialize(
+  'Y2qPj69JQtmOzHpr49mwNxna9ss2QPsuZV5YH9JH',
+  'gQZwrQ25HQ2y1NZFi2JJy0QdLs7hHzMsEpgL9D5J'
+)
+Parse.serverURL = 'https://parseapi.back4app.com/'
 
 export type GetGridConfigResponse = {
   objectId: string
@@ -19,7 +22,9 @@ export type UpsertGridConfigResponse = {
   updatedAt?: string
 }
 
-export async function getGridConfig(username: string): Promise<GetGridConfigResponse | undefined> {
+export async function getGridConfig(
+  username: string
+): Promise<GetGridConfigResponse | undefined> {
   const query: Parse.Query = new Parse.Query('grid_config')
   query.equalTo('username', username)
 
@@ -32,9 +37,8 @@ export async function getGridConfig(username: string): Promise<GetGridConfigResp
 
     return {
       objectId: object.id,
-      config: object?.get('config')
+      config: object?.get('config'),
     }
-
   } catch (error: any) {
     console.error('Error while fetching grid_config', error)
   }
@@ -63,7 +67,7 @@ export async function upsertGridConfig(
       return {
         objectId: response.id,
         createdAt: response.get('createdAt'),
-        updatedAt: response.get('updatedAt')
+        updatedAt: response.get('updatedAt'),
       }
     } catch (error: any) {
       console.error('Error while updating grid_config', error)

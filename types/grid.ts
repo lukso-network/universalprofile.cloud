@@ -1,14 +1,14 @@
-import type { LayoutItem } from 'grid-layout-plus';
+import type { LayoutItem } from 'grid-layout-plus'
 
 export type GridProperties = {
-  isDraggable: boolean;
-  isResizable: boolean;
-  isResponsive: boolean;
+  isDraggable: boolean
+  isResizable: boolean
+  isResponsive: boolean
 }
 
-export type Widget = LayoutItem  & {
-  type: WidgetType;
-  properties?: Record<string, any>;
+export type Widget = LayoutItem & {
+  type: WidgetType
+  properties?: Record<string, any>
 }
 
 // TODO: calculate w and h based on size

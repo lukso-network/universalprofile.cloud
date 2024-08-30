@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {
-  GridLayout,
   type Breakpoint,
   type Breakpoints,
+  GridLayout,
   type Layout,
 } from 'grid-layout-plus'
 

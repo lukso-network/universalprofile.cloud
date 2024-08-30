@@ -45,14 +45,13 @@ function processInstagramEmbeds() {
         border: 0;
         border-radius: 3px;
         box-shadow:
-          0 0 1px 0 rgba(0, 0, 0, 0.5),
-          0 1px 10px 0 rgba(0, 0, 0, 0.15);
+          0 0 1px 0 rgb(0 0 0 / 50%),
+          0 1px 10px 0 rgb(0 0 0 / 15%);
         margin: 1px;
         max-width: 540px;
         min-width: 326px;
         padding: 0;
         width: 99.375%;
-        width: -webkit-calc(100% - 2px);
         width: calc(100% - 2px);
       "
     >
@@ -60,9 +59,9 @@ function processInstagramEmbeds() {
         <a
           :href="src"
           style="
-            background: #ffffff;
+            background: #fff;
             line-height: 0;
-            padding: 0 0;
+            padding: 0;
             text-align: center;
             text-decoration: none;
             width: 100%;
@@ -163,7 +162,7 @@ function processInstagramEmbeds() {
                   border-radius: 50%;
                   height: 12.5px;
                   width: 12.5px;
-                  transform: translateX(0px) translateY(7px);
+                  transform: translateX(0) translateY(7px);
                 "
               ></div>
               <div
@@ -211,7 +210,7 @@ function processInstagramEmbeds() {
             <div style="margin-left: auto">
               <div
                 style="
-                  width: 0px;
+                  width: 0;
                   border-top: 8px solid #f4f4f4;
                   border-right: 8px solid transparent;
                   transform: translateY(16px);

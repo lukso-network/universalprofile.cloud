@@ -61,7 +61,14 @@ module.exports = {
     'tailwindcss/no-custom-classname': [
       'error',
       {
-        whitelist: ['paragraph-.*', 'heading-.*', 'nav-.*', 'shadow-.*'],
+        whitelist: [
+          'paragraph-.*',
+          'heading-.*',
+          'nav-.*',
+          'shadow-.*',
+          'instagram-.*',
+          'twitter-.*',
+        ],
       },
     ],
   },
