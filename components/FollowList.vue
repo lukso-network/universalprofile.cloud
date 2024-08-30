@@ -115,7 +115,14 @@ const handleResetSearch = () => {
                 </lukso-username>
               </template>
               <div class="flex justify-end">
-                <FollowButton :address="profileAddress" />
+                <AppPlaceholderLine
+                  v-show="profile.isLoading"
+                  class="h-[28px] w-[86px]"
+                />
+                <FollowButton
+                  v-show="!profile.isLoading"
+                  :address="profileAddress"
+                />
               </div>
             </NuxtLink>
           </template>
