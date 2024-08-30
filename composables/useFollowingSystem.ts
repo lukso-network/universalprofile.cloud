@@ -142,7 +142,7 @@ export const useFollowingSystem = () => {
                   return (await followingCount(profileAddress)) || 0
                 },
                 refetchInterval: 120_000,
-                staleTime: 250,
+                staleTime: 1_000,
               },
               {
                 // 1
@@ -152,7 +152,7 @@ export const useFollowingSystem = () => {
                   return (await followingAddresses(profileAddress)) || []
                 },
                 refetchInterval: 120_000,
-                staleTime: 250,
+                staleTime: 1_000,
               },
               {
                 // 2
@@ -161,7 +161,7 @@ export const useFollowingSystem = () => {
                   return (await followerCount(profileAddress)) || 0
                 },
                 refetchInterval: 120_000,
-                staleTime: 250,
+                staleTime: 1_000,
               },
               {
                 // 3
@@ -171,7 +171,7 @@ export const useFollowingSystem = () => {
                   return (await followerAddresses(profileAddress)) || []
                 },
                 refetchInterval: 120_000,
-                staleTime: 250,
+                staleTime: 1_000,
               },
               connectedAddress
                 ? {
@@ -199,7 +199,7 @@ export const useFollowingSystem = () => {
                       return isFollowing
                     },
                     refetchInterval: 120_000,
-                    staleTime: 250,
+                    staleTime: 1_000,
                   }
                 : queryNull(),
             ]
