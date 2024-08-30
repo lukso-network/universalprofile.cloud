@@ -160,6 +160,17 @@ const checkBuyLyx = () => {
   }
 }
 
+const resetDataProvider = () => {
+  const { fetchDataProviderReset, fetchDataProvider } =
+    storeToRefs(useAppStore())
+
+  // reset will happen only once and it will change data provider to graph
+  if (fetchDataProviderReset.value === false) {
+    fetchDataProvider.value = 'graph'
+    fetchDataProviderReset.value = true
+  }
+}
+
 router.beforeEach(() => {
   // hide modals when there is router transition
   setModal({ isOpen: false })
@@ -171,6 +182,7 @@ onMounted(async () => {
   await setupWeb3Instances()
   checkConnectionExpiry()
   await setupConnectedProfile()
+  resetDataProvider()
   isLoadedApp.value = true
   await setupCurrencies()
   window.scrollTo(0, 0)
