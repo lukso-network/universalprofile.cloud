@@ -89,7 +89,7 @@ const invalidateQueries = () => {
 }
 
 const handleClick = async (event: Event) => {
-  event.stopPropagation()
+  event.preventDefault()
 
   // when we are not connected, we need to connect first
   if (!isConnected.value) {
