@@ -14,6 +14,10 @@ const perPage = isMobile ? 8 : 24
 const connectedProfile = useProfile().connectedProfile()
 const viewedProfile = useProfile().viewedProfile()
 const numberOfPages = computed(() => Math.ceil((count.value || 0) / perPage))
+const viewedProfileAddress = computed(() => viewedProfile.value?.address)
+const viewedProfileFollowers = useFollowingSystem().getFollowersData(
+  viewedProfileAddress.value
+)
 
 const currentPage = ref(1)
 
@@ -28,9 +32,17 @@ const viewProfileIsConnectedProfile = computed(() => {
   return connectedProfile?.value?.address === viewedProfile.value?.address
 })
 
-const addresses = computed(() => modal?.data?.addresses as Address[])
+const addresses = computed(() =>
+  isFollowingModal.value
+    ? viewedProfileFollowers.value?.followingAddresses
+    : viewedProfileFollowers.value?.followerAddresses
+)
 
-const count = computed(() => modal?.data?.count as number)
+const count = computed(() =>
+  isFollowingModal.value
+    ? viewedProfileFollowers.value?.followingCount
+    : viewedProfileFollowers.value?.followerCount
+)
 
 const hasFollowers = computed(() => {
   return (addresses.value?.length || 0) > 0
