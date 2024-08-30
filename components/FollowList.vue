@@ -119,7 +119,7 @@ const handleResetSearch = () => {
                 </lukso-username>
               </template>
               <div class="flex justify-end">
-                <!-- TBA Follow button -->
+                <FollowButton :address="profileAddress" />
               </div>
             </div>
           </template>

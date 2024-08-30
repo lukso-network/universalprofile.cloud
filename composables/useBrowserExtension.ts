@@ -18,7 +18,8 @@ const setConnectionExpiry = () => {
 const connect = async () => {
   const { showModal } = useModal()
   const { formatMessage } = useIntl()
-  const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
+  const { connectedProfileAddress, isConnecting, modal } =
+    storeToRefs(useAppStore())
   const route = useRoute()
 
   await checkExtensionNetwork()
@@ -51,10 +52,12 @@ const connect = async () => {
     console.error(error)
     disconnect()
 
-    showModal({
-      title: formatMessage('web3_connect_error_title'),
-      message: getErrorMessage(error),
-    })
+    if (!modal.value?.isOpen) {
+      showModal({
+        title: formatMessage('web3_connect_error_title'),
+        message: getErrorMessage(error),
+      })
+    }
   } finally {
     isConnecting.value = false
   }

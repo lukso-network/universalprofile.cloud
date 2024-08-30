@@ -28,6 +28,19 @@ export const useFollowingSystem = () => {
   )
 
   return {
+    isFollowing: (follower?: Address, address?: Address) => {
+      try {
+        assertAddress(follower)
+        assertAddress(address)
+
+        return followingSystemContractInjected?.methods.isFollowing(
+          follower,
+          address
+        )
+      } catch (error) {
+        console.warn(error)
+      }
+    },
     follow: (address?: Address) => {
       try {
         assertAddress(address)
@@ -114,7 +127,7 @@ export const useFollowingSystem = () => {
     getFollowersData: (_profileAddress: MaybeRef<Address | undefined>) => {
       const { followerCount } = useFollowingSystem()
       const queries = computed(() => {
-        const profileAddress = unref(_profileAddress)
+        const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
         const { connectedProfileAddress } = storeToRefs(useAppStore())
         const connectedAddress = unref(connectedProfileAddress)
         const { selectedChainId: chainId } = useAppStore()
@@ -166,7 +179,7 @@ export const useFollowingSystem = () => {
                     queryKey: [
                       'isFollowing',
                       profileAddress,
-                      connectedAddress,
+                      connectedAddress.toLowerCase(),
                       chainId,
                     ],
                     queryFn: async () => {

@@ -77,12 +77,7 @@ const hasFollowButton = computed(
 
         <div class="flex min-h-7 justify-end">
           <!-- Follow Button -->
-          <FollowButton
-            v-if="hasFollowButton"
-            :is-following="viewedProfileFollowers?.isFollowing"
-            :follower-count="viewedProfileFollowers?.followerCount"
-            :follower-addresses="viewedProfileFollowers?.followerAddresses"
-          />
+          <FollowButton :address="viewedProfile?.address" />
         </div>
 
         <div
