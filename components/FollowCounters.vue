@@ -7,17 +7,16 @@ type Props = {
   profileFollowers?: ProfileFollowers
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const handleShowFollowing = () => {
   showModal({
     template: 'Followers',
     data: {
-      addresses: props.profileFollowers?.followingAddresses,
-      count: props.profileFollowers?.followingCount,
       type: 'following',
     },
     size: isMobile ? 'full' : 'auto',
+    isUrlModal: true,
   })
 }
 
@@ -25,11 +24,10 @@ const handleShowFollowers = () => {
   showModal({
     template: 'Followers',
     data: {
-      addresses: props.profileFollowers?.followerAddresses,
-      count: props.profileFollowers?.followerCount,
       type: 'follower',
     },
     size: isMobile ? 'full' : 'auto',
+    isUrlModal: true,
   })
 }
 </script>

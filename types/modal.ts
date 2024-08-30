@@ -1,6 +1,6 @@
 import type { ModalSizes } from '@lukso/web-components'
 
-export interface Modal {
+export type Modal = {
   title?: string
   message?: string
   isOpen?: boolean
@@ -11,4 +11,11 @@ export interface Modal {
     [key: string]: any
   }
   size?: ModalSizes
+  isUrlModal?: boolean
+}
+
+export type ModalQueryParams = {
+  modalTemplate?: string
+  modalSize?: ModalSizes
+  modalData?: any
 }

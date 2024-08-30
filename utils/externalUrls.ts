@@ -144,5 +144,5 @@ export const universalSwapsProfileUrl = (address?: Address) => {
 export const universalSwapsAssetUrl = (address?: Address) => {
   assert(address, 'Address is required')
   assert(isAddress(address), 'Address is not a valid address')
-  return `https://universalswaps.io/tokens/lukso/${address}`
+  return `https://universalswaps.io/tokens/lukso/${address.toLowerCase()}`
 }
