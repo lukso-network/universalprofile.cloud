@@ -122,7 +122,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-cover bg-fixed">
+  <div class="w-full">
     <div class="mx-auto max-w-content">
       <GridLayout
         v-model:layout="layout"
@@ -263,5 +263,5 @@ onMounted(async () => {
         </div>
       </lukso-modal>
     </div>
-  </main>
+  </div>
 </template>

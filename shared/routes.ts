@@ -22,11 +22,6 @@ export const profileRoute = (profileAddress?: Address) => {
   return `/${profileAddress}`
 }
 
-export const profileAssetsRoute = (profileAddress?: Address) => {
-  assert(profileAddress, 'Missing profile address in route')
-  return `/${profileAddress}/assets`
-}
-
 export const sendRoute = (profileAddress?: Address) => {
   assert(profileAddress, 'Missing profile address in route')
   return `/${profileAddress}/send`
