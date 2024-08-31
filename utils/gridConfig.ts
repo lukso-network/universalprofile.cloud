@@ -3,7 +3,7 @@
 
 import Parse from 'parse'
 
-import type { GridWidget } from '../types/grid'
+import type { GridWidget, LSP27TheGrid } from '../types/grid'
 
 const CLASS_NAME = 'grid_config_new'
 
@@ -46,7 +46,7 @@ export async function getGridConfig(username: string): Promise<GetGridConfigResp
 
 export async function upsertGridConfig(
   username: string,
-  config: GridWidget[]
+  config: LSP27TheGrid
 ): Promise<UpsertGridConfigResponse | undefined> {
   const query: Parse.Query = new Parse.Query(CLASS_NAME)
   query.equalTo('username', username)

@@ -8,11 +8,11 @@ import {
 
 import { toGridLayoutItems } from '@/utils/gridLayout'
 
-import type { GridLayoutItem, GridWidgetType } from '@/types/grid'
+import type { GridLayoutItem } from '@/types/grid'
 
-const COL_NUM_LARGE = 4
-const COL_NUM_SMALL = 2
-const ROW_HEIGHT = 20
+const COL_NUM_LARGE = 2
+const COL_NUM_SMALL = 1
+const ROW_HEIGHT = 280
 
 const cols: Breakpoints = {
   xxs: COL_NUM_SMALL,
@@ -35,8 +35,7 @@ const address = getCurrentProfileAddress()
 
 async function initializeTheGrid(address: string | undefined): Promise<void> {
   if (!address) {
-    layout.value = toGridLayoutItems(SHOWCASE_LAYOUT)
-
+    layout.value = []
     return
   }
 
@@ -45,7 +44,7 @@ async function initializeTheGrid(address: string | undefined): Promise<void> {
 
   if (!gridConfigObject) {
     const newUserLayout = getNewUserLayout(address)
-    layout.value = toGridLayoutItems(newUserLayout)
+    layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
 
     return
   }
@@ -54,13 +53,13 @@ async function initializeTheGrid(address: string | undefined): Promise<void> {
   if (!isValidLayout(gridConfigObject.config)) {
     alert('Saved layout is invalid. Resetting to default layout.')
     const newUserLayout = getNewUserLayout(address)
-    layout.value = toGridLayoutItems(newUserLayout)
+    layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
 
     return
   }
 
   const newLayout = gridConfigObject.config
-  layout.value = toGridLayoutItems(newLayout)
+  layout.value = toGridLayoutItems(newLayout, COL_NUM_LARGE)
 }
 
 // UGLY HACK => Need to deep dive into the grid-layout-plus source code
@@ -100,8 +99,8 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
 
   // close modal
   showSettingsModal.value = false
-
-  const response = await upsertGridConfig(address, layout.value)
+  const lsp27Config = toLSP27TheGrid(layout.value)
+  const response = await upsertGridConfig(address, lsp27Config)
   if (!response) {
     alert('Failed to save layout 😢')
 
