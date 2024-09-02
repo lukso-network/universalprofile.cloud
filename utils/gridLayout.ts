@@ -1,7 +1,7 @@
 import {
-  GridWidgetType,
   type GridLayoutItem,
   type GridWidget,
+  GridWidgetType,
   type LSP27TheGrid,
 } from '../types/grid'
 
@@ -81,7 +81,7 @@ export function toGridLayoutItems(
       remainingColumns -= widget.width
 
       // h will depend on the height of the tallest widget
-      if (h == 0 || h < widget.height) {
+      if (h === 0 || h < widget.height) {
         h = widget.height
       }
 
@@ -118,7 +118,7 @@ export function toLSP27TheGrid(layout: GridLayoutItem[]): LSP27TheGrid {
     return a.y - b.y
   })
 
-  return orderedLayout.map((item) => {
+  return orderedLayout.map(item => {
     return {
       type: item.type,
       width: item.w,

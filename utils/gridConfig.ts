@@ -24,7 +24,9 @@ export type UpsertGridConfigResponse = {
   updatedAt?: string
 }
 
-export async function getGridConfig(username: string): Promise<GetGridConfigResponse | undefined> {
+export async function getGridConfig(
+  username: string
+): Promise<GetGridConfigResponse | undefined> {
   const query: Parse.Query = new Parse.Query(CLASS_NAME)
   query.equalTo('username', username)
 
