@@ -56,7 +56,7 @@ export function isValidLayout(layout: GridWidget[]): boolean {
 
 export function toGridLayoutItems(
   grid: LSP27TheGrid,
-  gridColumns = 4
+  gridColumns: number
 ): GridLayoutItem[] {
   const layout: GridLayoutItem[] = []
 

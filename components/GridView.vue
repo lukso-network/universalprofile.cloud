@@ -12,7 +12,7 @@ import type { GridLayoutItem } from '@/types/grid'
 
 const COL_NUM_LARGE = 2
 const COL_NUM_SMALL = 1
-const ROW_HEIGHT = 280
+const ROW_HEIGHT_PX = 280
 
 const cols: Breakpoints = {
   xxs: COL_NUM_SMALL,
@@ -113,7 +113,7 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
 function resetLayout(): void {
   showSettingsModal.value = false
   const newUserLayout = getNewUserLayout(address)
-  layout.value = toGridLayoutItems(newUserLayout)
+  layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
 }
 
 function breakpointChanged(
@@ -135,7 +135,7 @@ onMounted(async () => {
       <GridLayout
         v-model:layout="layout"
         :cols="cols"
-        :row-height="ROW_HEIGHT"
+        :row-height="ROW_HEIGHT_PX"
         :is-draggable="gridOptions.isDraggable"
         :is-resizable="gridOptions.isDraggable"
         :responsive="gridOptions.isResponsive"
