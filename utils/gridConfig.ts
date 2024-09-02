@@ -42,7 +42,7 @@ export async function getGridConfig(
       config: object?.get('config'),
     }
   } catch (error: any) {
-    console.error('Error while fetching grid_config', error)
+    console.error(`Error while fetching ${CLASS_NAME}`, error)
   }
 }
 
@@ -57,7 +57,7 @@ export async function upsertGridConfig(
     let object = await query.first()
 
     if (!object) {
-      object = new Parse.Object('grid_config')
+      object = new Parse.Object(CLASS_NAME)
     }
 
     object.set('config', config)
@@ -72,9 +72,9 @@ export async function upsertGridConfig(
         updatedAt: response.get('updatedAt'),
       }
     } catch (error: any) {
-      console.error('Error while updating grid_config', error)
+      console.error(`Error while updating ${CLASS_NAME}`, error)
     }
   } catch (error: any) {
-    console.error('Error while retrieving object grid_config', error)
+    console.error(`Error while retrieving object ${CLASS_NAME}`, error)
   }
 }
