@@ -1,90 +1,49 @@
-import { type Widget, WidgetSize, WidgetType } from '../types/grid'
+import {
+  type GridLayoutItem,
+  type GridWidget,
+  GridWidgetType,
+  type LSP27TheGrid,
+} from '../types/grid'
 
-export const SHOWCASE_LAYOUT: Widget[] = [
-  {
-    i: '0',
-    x: 0,
-    y: 0,
-    w: WidgetSize.SMALL,
-    h: 6,
-    type: WidgetType.TITLE_LINK,
-    properties: {
-      title: 'The Grid 🍱',
-      bgColor: 'bg-purple-58',
-    },
-  },
-  {
-    i: '1',
-    x: 1,
-    y: 0,
-    w: WidgetSize.MEDIUM,
-    h: 10,
-    type: WidgetType.TEXT,
-    properties: {
-      title: 'Welcome to The Grid',
-      text: 'You can visit a layout or create your own by visiting /:username. Try /feindura or /irontom.',
-      bgColor: 'bg-sea-salt-67',
-    },
-  },
-  {
-    i: '2',
-    x: 0,
-    y: 10,
-    w: WidgetSize.FULL,
-    h: 5,
-    type: WidgetType.TITLE_LINK,
-    properties: {
-      title: 'LUKSO.NETWORK',
-      src: 'https://lukso.network/',
-      bgColor: 'bg-lukso-70',
-    },
-  },
-]
-
-export function getNewUserLayout(address: string): Widget[] {
+export function getNewUserLayout(address: string): GridWidget[] {
   return [
     {
-      i: '1',
-      x: 0,
-      y: 0,
-      w: 2,
-      h: 6,
-      type: WidgetType.TITLE_LINK,
+      type: GridWidgetType.TITLE_LINK,
+      width: 1,
+      height: 1,
       properties: { title: address, bgColor: 'bg-purple-58' },
     },
     {
-      i: '2',
-      x: 2,
-      y: 1,
-      w: 2,
-      h: 6,
-      type: WidgetType.TEXT,
-      properties: { title: 'Text', text: 'Text', bgColor: 'bg-sea-salt-67' },
+      type: GridWidgetType.TEXT,
+      width: 1,
+      height: 1,
+      properties: {
+        title: 'Hey',
+        text: 'Customize your grid layout!',
+        bgColor: 'bg-sea-salt-67',
+      },
     },
     {
-      i: '3',
-      x: 0,
-      y: 2,
-      w: 1,
-      h: 7,
-      type: WidgetType.IMAGE,
+      type: GridWidgetType.IMAGE,
+      width: 1,
+      height: 1,
       properties: { src: 'https://via.placeholder.com/150' },
     },
   ]
 }
 
-export function isValidLayout(layout: Widget[]): boolean {
+export function isValidLayout(layout: GridWidget[]): boolean {
   // We can make the validations even better with Zod or some other library
+
+  console.log(JSON.stringify(layout))
+
   if (
-    !Array.isArray(layout) ||
     // check if object entries adhere to Widget interface
     !layout.every(item => {
       return (
-        typeof item.x === 'number' &&
-        typeof item.y === 'number' &&
-        typeof item.w === 'number' &&
-        typeof item.h === 'number' &&
         typeof item.type === 'string' &&
+        typeof item.width === 'number' &&
+        typeof item.height === 'number' &&
         typeof item.properties === 'object'
       )
     })
@@ -93,4 +52,78 @@ export function isValidLayout(layout: Widget[]): boolean {
   }
 
   return true
+}
+
+export function toGridLayoutItems(
+  grid: LSP27TheGrid,
+  gridColumns: number
+): GridLayoutItem[] {
+  const layout: GridLayoutItem[] = []
+
+  // Fill rows and cols with widgets,
+  // Depending on size some rows will contain multiple widgets or some empty space
+  let y = 0
+  let h = 0
+  let remainingColumns = gridColumns
+  for (const [i, widget] of grid.entries()) {
+    if (widget.width <= remainingColumns) {
+      // If widget fits, add it to the current row
+      layout.push({
+        ...widget,
+        i,
+        x: gridColumns - remainingColumns,
+        y: y,
+        w: widget.width,
+        h: widget.height,
+      })
+
+      // Decrease the remaining columns
+      remainingColumns -= widget.width
+
+      // h will depend on the height of the tallest widget
+      if (h === 0 || h < widget.height) {
+        h = widget.height
+      }
+
+      continue
+    }
+
+    // If it doesn't fit, go to the next row
+    y += h + 1
+    // The row height will be the height of the current widget
+    h = widget.height
+
+    // Add the widget to the next row
+    layout.push({
+      ...widget,
+      i,
+      x: 0,
+      y: y,
+      w: widget.width,
+      h: widget.height,
+    })
+
+    remainingColumns = gridColumns - widget.width
+  }
+
+  return layout
+}
+
+export function toLSP27TheGrid(layout: GridLayoutItem[]): LSP27TheGrid {
+  //Sort by y and then x to get the correct order
+  const orderedLayout = layout.sort((a, b) => {
+    if (a.y === b.y) {
+      return a.x - b.x
+    }
+    return a.y - b.y
+  })
+
+  return orderedLayout.map(item => {
+    return {
+      type: item.type,
+      width: item.w,
+      height: item.h,
+      properties: item.properties,
+    }
+  })
 }

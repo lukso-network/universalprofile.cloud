@@ -3,7 +3,9 @@
 
 import Parse from 'parse'
 
-import type { Widget } from '../types/grid'
+import type { GridWidget, LSP27TheGrid } from '../types/grid'
+
+const CLASS_NAME = 'grid_config_new'
 
 Parse.initialize(
   'Y2qPj69JQtmOzHpr49mwNxna9ss2QPsuZV5YH9JH',
@@ -13,7 +15,7 @@ Parse.serverURL = 'https://parseapi.back4app.com/'
 
 export type GetGridConfigResponse = {
   objectId: string
-  config: Widget[]
+  config: GridWidget[]
 }
 
 export type UpsertGridConfigResponse = {
@@ -25,7 +27,7 @@ export type UpsertGridConfigResponse = {
 export async function getGridConfig(
   username: string
 ): Promise<GetGridConfigResponse | undefined> {
-  const query: Parse.Query = new Parse.Query('grid_config')
+  const query: Parse.Query = new Parse.Query(CLASS_NAME)
   query.equalTo('username', username)
 
   try {
@@ -46,9 +48,9 @@ export async function getGridConfig(
 
 export async function upsertGridConfig(
   username: string,
-  config: Widget[]
+  config: LSP27TheGrid
 ): Promise<UpsertGridConfigResponse | undefined> {
-  const query: Parse.Query = new Parse.Query('grid_config')
+  const query: Parse.Query = new Parse.Query(CLASS_NAME)
   query.equalTo('username', username)
 
   try {
