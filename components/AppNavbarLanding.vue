@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { isTestnet, isConnected } = storeToRefs(useAppStore())
-const { disconnect, isUniversalProfileExtension } = useBrowserExtension()
+const { disconnect } = useBrowserExtension()
 const { showModal } = useModal()
 
 const handleConnect = async () => {
@@ -72,7 +72,7 @@ const handleDisconnect = async () => {
       </lukso-button>
       <AppNavbarProfileDropdown v-if="isConnected" />
       <lukso-button
-        v-else-if="isUniversalProfileExtension()"
+        v-else
         variant="landing"
         custom-class="text-12 nav-apax-12-medium-uppercase"
         class="group"
@@ -108,6 +108,20 @@ const handleDisconnect = async () => {
             class="ml-2 hidden group-hover:inline-block"
             color="purple-41"
           ></lukso-icon>
+        </lukso-button>
+        <lukso-button
+          variant="text"
+          is-link
+          href="https://support.lukso.network/"
+          target="_blank"
+          custom-class="no-underline"
+          class="group"
+        >
+          <span
+            class="nav-apax-12-medium-uppercase text-purple-63 group-hover:text-purple-41"
+          >
+            {{ $formatMessage('footer_need_help_text') }}
+          </span>
         </lukso-button>
         <lukso-button
           variant="text"
@@ -151,7 +165,7 @@ const handleDisconnect = async () => {
           </span>
         </lukso-button>
         <lukso-button
-          v-else-if="isUniversalProfileExtension()"
+          v-else
           variant="text"
           custom-class="text-12 nav-apax-12-medium-uppercase"
           class="group"
