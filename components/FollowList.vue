@@ -52,14 +52,6 @@ const handleChangeSearch = (event: CustomEvent) => {
   currentPage.value = 1
 }
 
-const handleKeyUpSearch = (customEvent: CustomEvent) => {
-  const key = customEvent.detail?.event?.detail?.event?.key
-
-  if (key === 'Escape') {
-    search.value = undefined
-  }
-}
-
 const handleResetSearch = () => {
   search.value = undefined
 }
@@ -69,15 +61,13 @@ const handleResetSearch = () => {
   <div class="grid grid-rows-[max-content,auto]">
     <!-- Search -->
     <lukso-search
-      :value="search"
+      .value="search"
       placeholder="Search for a profile"
       is-full-width
       hide-loading
       has-reset
       class="mb-6"
-      :disabled="isLoading ? true : undefined"
       @on-search="handleChangeSearch"
-      @on-key-up="handleKeyUpSearch"
       @on-reset="handleResetSearch"
     ></lukso-search>
 

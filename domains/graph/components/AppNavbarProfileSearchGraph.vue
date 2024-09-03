@@ -74,15 +74,6 @@ const handleSelect = (event: CustomEvent) => {
   }
 }
 
-const handleKeyUpSearch = (customEvent: CustomEvent) => {
-  const key = customEvent.detail?.event?.detail?.event?.key
-
-  if (key === 'Escape') {
-    searchTerm.value = undefined
-    hasNoResults.value = false
-  }
-}
-
 watchEffect(() => {
   if (isSearchOpen.value) {
     setTimeout(() => {
@@ -101,7 +92,7 @@ watchEffect(() => {
 <template>
   <lukso-search
     name="profile-search"
-    :value="searchTerm"
+    .value="searchTerm"
     :placeholder="formatMessage('profile_search_placeholder')"
     :results="JSON.stringify(results)"
     :is-searching="isSearching ? 'true' : undefined"
@@ -112,6 +103,5 @@ watchEffect(() => {
     @on-search="handleSearch"
     @on-input-click="handleSearch"
     @on-select="handleSelect"
-    @on-key-up="handleKeyUpSearch"
   ></lukso-search>
 </template>
