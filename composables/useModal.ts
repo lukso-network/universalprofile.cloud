@@ -6,11 +6,16 @@ import type { Modal } from '@/types/modal'
  * @param data
  */
 const showModal = (modal: Modal | string) => {
+  const appStore = useAppStore()
+
+  if (appStore.modal?.isOpen) {
+    return
+  }
+
   if (typeof modal === 'object' && modal.isUrlModal) {
     return setModalQueryParams(modal)
   }
 
-  const appStore = useAppStore()
   const modalDefaults: Modal = {
     isOpen: true,
     icon: '/images/up-error.png',
