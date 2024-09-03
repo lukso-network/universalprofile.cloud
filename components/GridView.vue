@@ -2,6 +2,7 @@
 import {
   type Breakpoint,
   type Breakpoints,
+  GridItem,
   GridLayout,
   type Layout,
 } from 'grid-layout-plus'
@@ -128,6 +129,10 @@ function breakpointChanged(
   triggerLayoutRefresh()
 }
 
+function clearSelection(): void {
+  window.getSelection()?.removeAllRanges()
+}
+
 onMounted(async () => {
   await initializeTheGrid(address)
   triggerLayoutRefresh()
@@ -146,7 +151,19 @@ onMounted(async () => {
         :responsive="gridOptions.isResponsive"
         @breakpoint-changed="breakpointChanged"
       >
-        <template #item="{ item }">
+        <GridItem
+          v-for="item in layout"
+          :key="item.i"
+          :x="item.x"
+          :y="item.y"
+          :w="item.w"
+          :h="item.h"
+          :i="item.i"
+          @move="clearSelection"
+          @moved="clearSelection"
+          @resize="clearSelection"
+          @resized="clearSelection"
+        >
           <div
             class="flex h-full flex-col rounded-[10px] border border-[#e4e2e2a3] bg-[rgba(var(--tw-prose-rgb),0.5)] p-[10px] shadow-[0_0_10px_#0003] backdrop-blur-[4px]"
           >
@@ -189,7 +206,7 @@ onMounted(async () => {
               :src="item.properties.src"
             />
           </div>
-        </template>
+        </GridItem>
       </GridLayout>
     </div>
     <!-- This configuration tools are just temporal until we have the proper ones -->
