@@ -73,9 +73,6 @@ const ownedAssets = computed(() => {
       asset => asset.isOwned && isSupportedAsset(asset) && hasBalance(asset)
     )
 
-  console.log('allAssets', allAssets.value)
-  console.log('allAssetsFiltered', allAssetsFiltered)
-
   const allTokens =
     allAssetsFiltered
       ?.filter(asset => isToken(asset))
