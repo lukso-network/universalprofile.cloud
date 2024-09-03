@@ -15,21 +15,21 @@ const connect = async () => {
   const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
   const route = useRoute()
 
-  await checkExtensionNetwork()
-
-  // when no extension installed we show modal
-  if (!INJECTED_PROVIDER) {
-    openStoreLink()
-
-    return showModal({
-      title: formatMessage('web3_connect_error_title'),
-      message: formatMessage('web3_connect_no_extension'),
-    })
-  }
-
-  isConnecting.value = true
-
   try {
+    // check if we are on the right network
+    await checkExtensionNetwork(true)
+
+    // when no extension installed we show modal
+    if (!INJECTED_PROVIDER) {
+      openStoreLink()
+
+      return showModal({
+        title: formatMessage('web3_connect_error_title'),
+        message: formatMessage('web3_connect_no_extension'),
+      })
+    }
+
+    isConnecting.value = true
     const { requestAccounts } = useWeb3(PROVIDERS.INJECTED)
     const [address] = await requestAccounts()
 

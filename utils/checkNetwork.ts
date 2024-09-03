@@ -4,26 +4,41 @@ import { INJECTED_PROVIDER } from '@/shared/provider'
  * Check if application network match with extension.
  * If not break execution with error and show modal to switch network.
  *
+ * @param triggerNetworkSwitch
  * @returns
  */
-export const checkExtensionNetwork = async (): Promise<undefined | never> => {
+export const checkExtensionNetwork = async (
+  triggerNetworkSwitch?: boolean
+): Promise<undefined | never> => {
   const { currentNetwork } = useAppStore()
   const { showModal } = useModal()
-  const chainId = (await INJECTED_PROVIDER?.request({
-    method: 'eth_chainId',
-  })) as string
 
-  // when we can't get network information from ext it's very likely it's not installed yet, then we just exit
-  if (!chainId) {
-    return
-  }
+  try {
+    const chainId = (await INJECTED_PROVIDER?.request({
+      method: 'eth_chainId',
+    })) as string
 
-  // if network mismatch then show modal and break further execution by throwing an error
-  if (currentNetwork.chainId !== chainId) {
-    showModal({
-      template: 'SwitchExtensionNetwork',
-    })
+    // when we can't get network information from ext it's very likely it's not installed yet, then we just exit
+    if (!chainId) {
+      return
+    }
 
-    throw new Error('Wrong network')
+    // if network mismatch then show modal and break further execution by throwing an error
+    if (currentNetwork.chainId !== chainId) {
+      showModal({
+        template: 'SwitchExtensionNetwork',
+      })
+
+      throw new Error('Wrong network')
+    }
+  } catch (error: unknown) {
+    console.warn(error)
+
+    if (triggerNetworkSwitch) {
+      await INJECTED_PROVIDER?.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: currentNetwork.chainId }],
+      })
+    }
   }
 }

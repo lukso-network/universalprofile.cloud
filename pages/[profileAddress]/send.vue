@@ -55,9 +55,9 @@ watchEffect(() => {
 })
 
 const handleSend = async () => {
-  await checkExtensionNetwork()
-
   try {
+    await checkExtensionNetwork(true)
+
     setStatus('pending')
     let transactionsReceipt: TransactionReceipt | undefined
 
