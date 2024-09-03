@@ -11,11 +11,14 @@ const qrCodeElement = ref<HTMLDivElement | null>(null)
 const { isMobile } = useDevice()
 const { initProvider, connect } = useWalletConnect()
 const isLoading = ref(true)
+const qrCodeDeepLink = ref('')
 const { walletConnectProvider: provider } = storeToRefs(useAppStore())
+const { formatMessage } = useIntl()
 
 const size = computed(() => (isMobile ? 300 : 340))
 
 const generateQrCode = (data: string) => {
+  qrCodeDeepLink.value = data
   const qrCode = new QRCodeStyling({
     width: size.value,
     height: size.value,
@@ -59,12 +62,20 @@ onMounted(async () => {
 
 <template>
   <div>
-    <div
-      ref="qrCodeElement"
-      :style="{
-        'min-height': `${size}px`,
-      }"
-    ></div>
+    <lukso-tooltip
+      variant="light"
+      offset="0"
+      is-clipboard-copy
+      :copy-text="formatMessage('asset_address_copied_tooltip')"
+      :copy-value="qrCodeDeepLink"
+    >
+      <div
+        ref="qrCodeElement"
+        :style="{
+          'min-height': `${size}px`,
+        }"
+      ></div>
+    </lukso-tooltip>
     <AppLoader v-if="isLoading" />
   </div>
 </template>

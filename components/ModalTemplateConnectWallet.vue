@@ -86,7 +86,9 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
           )
         }}
       </lukso-button>
+      <WalletConnectButton v-if="isMobile" />
       <lukso-button
+        v-else
         variant="secondary"
         is-full-width
         @click="handleToggleMobile"
