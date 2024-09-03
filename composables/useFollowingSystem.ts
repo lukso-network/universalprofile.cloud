@@ -28,6 +28,19 @@ export const useFollowingSystem = () => {
   )
 
   return {
+    isFollowing: (follower?: Address, address?: Address) => {
+      try {
+        assertAddress(follower)
+        assertAddress(address)
+
+        return followingSystemContractInjected?.methods.isFollowing(
+          follower,
+          address
+        )
+      } catch (error) {
+        console.warn(error)
+      }
+    },
     follow: (address?: Address) => {
       try {
         assertAddress(address)
@@ -114,7 +127,7 @@ export const useFollowingSystem = () => {
     getFollowersData: (_profileAddress: MaybeRef<Address | undefined>) => {
       const { followerCount } = useFollowingSystem()
       const queries = computed(() => {
-        const profileAddress = unref(_profileAddress)
+        const profileAddress = unref(_profileAddress)?.toLowerCase() as Address
         const { connectedProfileAddress } = storeToRefs(useAppStore())
         const connectedAddress = unref(connectedProfileAddress)
         const { selectedChainId: chainId } = useAppStore()
@@ -129,7 +142,7 @@ export const useFollowingSystem = () => {
                   return (await followingCount(profileAddress)) || 0
                 },
                 refetchInterval: 120_000,
-                staleTime: 250,
+                staleTime: 1_000,
               },
               {
                 // 1
@@ -139,7 +152,7 @@ export const useFollowingSystem = () => {
                   return (await followingAddresses(profileAddress)) || []
                 },
                 refetchInterval: 120_000,
-                staleTime: 250,
+                staleTime: 1_000,
               },
               {
                 // 2
@@ -148,7 +161,7 @@ export const useFollowingSystem = () => {
                   return (await followerCount(profileAddress)) || 0
                 },
                 refetchInterval: 120_000,
-                staleTime: 250,
+                staleTime: 1_000,
               },
               {
                 // 3
@@ -158,7 +171,7 @@ export const useFollowingSystem = () => {
                   return (await followerAddresses(profileAddress)) || []
                 },
                 refetchInterval: 120_000,
-                staleTime: 250,
+                staleTime: 1_000,
               },
               connectedAddress
                 ? {
@@ -166,7 +179,7 @@ export const useFollowingSystem = () => {
                     queryKey: [
                       'isFollowing',
                       profileAddress,
-                      connectedAddress,
+                      connectedAddress.toLowerCase(),
                       chainId,
                     ],
                     queryFn: async () => {
@@ -186,7 +199,7 @@ export const useFollowingSystem = () => {
                       return isFollowing
                     },
                     refetchInterval: 120_000,
-                    staleTime: 250,
+                    staleTime: 1_000,
                   }
                 : queryNull(),
             ]
