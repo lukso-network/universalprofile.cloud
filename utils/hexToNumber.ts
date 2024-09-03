@@ -15,7 +15,7 @@ export const hexToNumber = (value?: string) => {
   try {
     return web3hexToNumber(value)
   } catch (error) {
-    console.error(`Couldn't decode hex to number with value ${value}`, error)
+    console.warn(`Couldn't decode hex to number with value ${value}`, error)
     return ''
   }
 }
