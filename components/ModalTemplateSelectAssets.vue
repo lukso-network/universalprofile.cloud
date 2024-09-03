@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const connectedProfile = useProfile().connectedProfile()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
+const { isRpc } = storeToRefs(useAppStore())
 
 type Props = {
   closeModal: () => void
@@ -48,16 +49,23 @@ const handleSelectAsset = (asset: Asset) => {
 }
 
 const ownedAssets = computed(() => {
-  const allAssetsFiltered = allAssets.value
-    // unwrap token Ids into main array
-    ?.flatMap(token => {
-      if (isLsp8(token)) {
-        return token?.tokenIdsData?.map(tokenIdsData => ({
-          ...tokenIdsData,
-        }))
+  let allAssetsFiltered = allAssets.value || []
+
+  if (isRpc.value) {
+    // in RPC mode unwrap token Ids into main array
+    allAssetsFiltered = allAssetsFiltered?.flatMap(token => {
+      if (isLsp8(token) && token?.tokenIdsData) {
+        return (
+          token?.tokenIdsData?.map(tokenIdsData => ({
+            ...tokenIdsData,
+          })) || []
+        )
       }
       return [token]
     })
+  }
+
+  allAssetsFiltered = allAssetsFiltered
     // remove potential undefined from array
     ?.filter(item => item !== undefined)
     // pick only the ones with balance/owned/in right standard
@@ -65,27 +73,22 @@ const ownedAssets = computed(() => {
       asset => asset.isOwned && isSupportedAsset(asset) && hasBalance(asset)
     )
 
+  console.log('allAssets', allAssets.value)
+  console.log('allAssetsFiltered', allAssetsFiltered)
+
   const allTokens =
     allAssetsFiltered
       ?.filter(asset => isToken(asset))
       // sort by name
-      ?.sort((a: Asset, b: Asset) => {
-        const tokenNameA = a.tokenName || ''
-        const tokenNameB = b.tokenName || ''
-
-        return tokenNameA.localeCompare(tokenNameB)
-      }) || []
+      ?.slice()
+      ?.sort((a, b) => stringSort(a.tokenName, b.tokenName)) || []
 
   const allCollectibles =
     allAssetsFiltered
       ?.filter(asset => isCollectible(asset))
       // sort by name
-      ?.sort((a: Asset, b: Asset) => {
-        const tokenNameA = a.tokenName || ''
-        const tokenNameB = b.tokenName || ''
-
-        return tokenNameA.localeCompare(tokenNameB)
-      }) || []
+      ?.slice()
+      ?.sort((a, b) => stringSort(a.tokenName, b.tokenName)) || []
 
   return [...allTokens, ...allCollectibles]
 })
