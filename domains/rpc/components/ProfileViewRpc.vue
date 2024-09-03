@@ -113,10 +113,9 @@ const isLoadingAssets = computed(() =>
       class="mx-auto max-w-content"
     >
       <ProfileCard />
-      <ProfileDetails />
       <div
         v-if="nftsCreated.length > 0"
-        class="heading-inter-17-semi-bold my-10 flex items-center justify-center"
+        class="heading-inter-17-semi-bold my-10 flex items-center justify-center sm:mt-20"
       >
         {{ $formatMessage('asset_creations') }}
         <span

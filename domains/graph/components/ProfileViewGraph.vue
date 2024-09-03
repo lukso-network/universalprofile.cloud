@@ -83,7 +83,7 @@ const createdCollectiblesCount = computed(
 )
 
 const handleTabChange = (tab: ProfileViewTabName) => {
-  setFilters({ assetGroup: tab })
+  setFilters({ assetGroup: tab }, undefined, true)
 }
 
 const tabs = computed(() => {
@@ -100,6 +100,38 @@ const tabs = computed(() => {
     },
   ]
 })
+
+const selectTabBasedOnAssetCounts = () => {
+  // when user has no collectibles, we show tokens first
+  const assetGroup =
+    ownedCollectiblesCount.value > 0 || createdCollectiblesCount.value
+      ? 'collectibles'
+      : 'tokens'
+  setFilters({
+    assetGroup,
+  })
+}
+
+watch(
+  () => ownedCollectiblesCount.value,
+  async () => {
+    await nextTick()
+    selectTabBasedOnAssetCounts()
+  }
+)
+
+watch(
+  () => createdCollectiblesCount.value,
+  async () => {
+    await nextTick()
+    selectTabBasedOnAssetCounts()
+  }
+)
+
+onMounted(async () => {
+  await nextTick()
+  selectTabBasedOnAssetCounts()
+})
 </script>
 
 <template>
@@ -109,10 +141,9 @@ const tabs = computed(() => {
       class="mx-auto max-w-content"
     >
       <ProfileCard />
-      <ProfileDetails />
       <div
         v-if="createdCollectiblesCount > 0"
-        class="heading-inter-17-semi-bold my-10 flex items-center justify-center"
+        class="heading-inter-17-semi-bold my-10 flex items-center justify-center sm:mt-20"
       >
         {{ $formatMessage('asset_creations') }}
         <span

@@ -9,10 +9,11 @@ const openStoreLink = () => {
 }
 
 const connect = async () => {
-  const { showModal } = useModal()
+  const { showModal, closeModal } = useModal()
   const { formatMessage } = useIntl()
-  const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
   const { setConnectionExpiry } = useConnectionExpiry()
+  const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
+  const route = useRoute()
 
   await checkExtensionNetwork()
 
@@ -35,7 +36,12 @@ const connect = async () => {
     assertAddress(address, 'connection')
     connectedProfileAddress.value = address
     setConnectionExpiry()
-    navigateTo(profileRoute(address))
+    closeModal()
+
+    // when we connect on the landing page we redirect to profile
+    if (route.name === 'index') {
+      navigateTo(profileRoute(address))
+    }
   } catch (error: unknown) {
     console.error(error)
     disconnect()

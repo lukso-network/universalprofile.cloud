@@ -44,7 +44,7 @@ describe('Settings data-provider page', () => {
     })
 
     expect(component.html()).toMatchSnapshot()
-    await component.getByText('Decentralised').click()
+    await component.getByText('Read from smart contracts').click()
     expect(component.html()).toMatchSnapshot()
   })
 })

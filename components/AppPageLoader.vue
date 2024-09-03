@@ -8,9 +8,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { isLoading } = toRefs(props)
-const { isLoadedApp } = storeToRefs(useAppStore())
-
-const isLoaded = computed(() => isLoadedApp.value && !isLoading.value)
+const isLoaded = computed(() => !isLoading.value)
 </script>
 
 <template>
@@ -27,7 +25,7 @@ const isLoaded = computed(() => isLoadedApp.value && !isLoading.value)
     </div>
     <AppLoader
       v-if="!isLoaded"
-      class="absolute left-[calc(50vw-20px)] top-[calc(50vh-20px)] sm:top-[300px]"
+      class="absolute left-[calc(50vw-20px)] top-[300px]"
     />
   </div>
 </template>

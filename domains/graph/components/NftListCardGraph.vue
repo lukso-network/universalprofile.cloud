@@ -8,16 +8,18 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-
-const { isConnected } = storeToRefs(useAppStore())
 const connectedProfile = useProfile().connectedProfile()
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
-const viewedProfileAddress = getCurrentProfileAddress()
 const assetImage = useAssetImage(asset, false, 260)
 const { showModal } = useModal()
 const { isCreated } = useFilters()
+const viewedProfileAddress = getCurrentProfileAddress()
+
+const viewedProfileIsConnected = computed(() =>
+  useProfile().viewedProfileIsConnected(viewedProfileAddress)
+)
 
 const isStackedCard = computed(
   () => isCollection(props.asset) || (isCreated.value && isLsp8(props.asset))
@@ -64,9 +66,24 @@ const handleSendAsset = (event: Event) => {
   })
 }
 
+const handleBuySellAsset = (event: Event) => {
+  event.stopPropagation()
+
+  if (isCollection(props.asset)) {
+    return navigateTo(collectionRoute(props.asset.address))
+  }
+
+  window.open(
+    universalPageAssetUrl(props.asset.address, props.asset.tokenId),
+    '_blank'
+  )
+}
+
 const assetTokenId = computed(() => {
   return prefixedTokenId(props.asset?.tokenId, props.asset?.tokenIdFormat, 24)
 })
+
+const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
 
 onMounted(() => {
   setTimeout(() => {
@@ -81,8 +98,6 @@ onMounted(() => {
     )
   }, 1)
 })
-
-const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
 </script>
 
 <template>
@@ -145,23 +160,30 @@ const isLoadedAsset = computed(() => asset.value && !asset.value.isLoading)
           </div>
           <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
           <NftListCardCreatorsGraph :asset="asset" class="mt-4" />
-          <div
-            class="mt-4 flex items-end"
-            v-if="
-              isConnected && viewedProfileAddress === connectedProfile?.address
-            "
-          >
-            <div v-if="!isCollection(asset)" class="flex w-full justify-end">
-              <div v-if="isLoadedAsset">
-                <lukso-button
-                  size="small"
-                  variant="secondary"
-                  @click="handleSendAsset"
-                  >{{ $formatMessage('button_send') }}</lukso-button
-                >
-              </div>
-              <AppPlaceholderLine v-else class="h-[28px] w-[60px]" />
-            </div>
+          <div class="mt-4 flex w-full items-end justify-end gap-2">
+            <template v-if="isLoadedAsset">
+              <lukso-button
+                size="small"
+                variant="secondary"
+                @click="handleBuySellAsset"
+              >
+                <span v-if="viewedProfileIsConnected">{{
+                  $formatMessage('button_sell')
+                }}</span>
+                <span v-else>{{ $formatMessage('button_buy') }}</span>
+              </lukso-button>
+              <lukso-button
+                v-if="!isCollection(asset) && viewedProfileIsConnected"
+                size="small"
+                variant="secondary"
+                @click="handleSendAsset"
+                >{{ $formatMessage('button_send') }}</lukso-button
+              >
+            </template>
+            <template v-else>
+              <AppPlaceholderLine class="h-[28px] w-[60px]" />
+              <AppPlaceholderLine class="h-[28px] w-[60px]" />
+            </template>
           </div>
         </div>
         <div

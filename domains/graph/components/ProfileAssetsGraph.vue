@@ -51,7 +51,10 @@ const hasFiltersSelected = computed(
 )
 
 const matchLyxToken = computed(() => {
-  return !filters.search || 'lukso'.includes(filters.search.toLowerCase())
+  return (
+    (!filters.search || 'lukso'.includes(filters.search.toLowerCase())) &&
+    (filters.creators === undefined || filters.creators?.length === 0)
+  )
 })
 
 const isSelectedCollectionInAvailableCollections = computed(() => {
@@ -121,17 +124,25 @@ const selectedFilters = computed(() => {
   }))
 })
 
-const handleChangeSearch = async (customEvent: CustomEvent) => {
+const handleChangeSearch = (customEvent: CustomEvent) => {
   const searchTerm = customEvent.detail?.value
   setFilters({ search: searchTerm })
 }
 
-const handleChangeType = async (customEvent: CustomEvent) => {
+const handleKeyUpSearch = (customEvent: CustomEvent) => {
+  const key = customEvent.detail?.event?.detail?.event?.key
+
+  if (key === 'Escape') {
+    setFilters({ search: undefined })
+  }
+}
+
+const handleChangeType = (customEvent: CustomEvent) => {
   const assetType = customEvent.detail?.value?.id as FiltersAssetType
   setFilters({ assetType })
 }
 
-const handleChangeCollection = async (customEvent: CustomEvent) => {
+const handleChangeCollection = (customEvent: CustomEvent) => {
   const collectionAddress = customEvent.detail?.value?.id as string
 
   if (filters.collections?.includes(collectionAddress)) {
@@ -147,7 +158,7 @@ const handleChangeCollection = async (customEvent: CustomEvent) => {
   }
 }
 
-const handleRemoveCollection = async (collectionAddress: string) => {
+const handleRemoveCollection = (collectionAddress: string) => {
   setFilters({
     collections: filters.collections?.filter(
       item => item !== collectionAddress
@@ -155,7 +166,7 @@ const handleRemoveCollection = async (collectionAddress: string) => {
   })
 }
 
-const handleChangeCreator = async (customEvent: CustomEvent) => {
+const handleChangeCreator = (customEvent: CustomEvent) => {
   const creatorAddress = customEvent.detail?.value?.id as string
 
   if (filters.creators?.includes(creatorAddress)) {
@@ -167,13 +178,13 @@ const handleChangeCreator = async (customEvent: CustomEvent) => {
   }
 }
 
-const handleRemoveCreator = async (creatorAddress: string) => {
+const handleRemoveCreator = (creatorAddress: string) => {
   setFilters({
     creators: filters.creators?.filter(item => item !== creatorAddress),
   })
 }
 
-const handleSelectOrder = async (customEvent: CustomEvent) => {
+const handleSelectOrder = (customEvent: CustomEvent) => {
   const order = customEvent.detail?.value
   setFilters({ orderBy: order.id })
 }
@@ -249,7 +260,9 @@ onMounted(async () => {
     <!-- Desktop Filters -->
     <div v-else>
       <!-- Filters -->
-      <div class="grid grid-cols-[auto,100px,max-content] gap-2 pb-4">
+      <div
+        class="grid grid-cols-[auto,20px,max-content] gap-2 pb-4 sm:grid-cols-[auto,100px,max-content]"
+      >
         <div class="flex flex-wrap gap-2">
           <!-- Creator filter -->
           <lukso-select
@@ -294,6 +307,7 @@ onMounted(async () => {
             has-reset
             size="small"
             @on-search="handleChangeSearch"
+            @on-key-up="handleKeyUpSearch"
             @on-reset="() => setFilters({ search: undefined })"
           ></lukso-search>
         </div>

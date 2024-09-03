@@ -60,7 +60,7 @@ export const getProfile = (_profile: MaybeRef<Address | undefined>) => {
               refetchInterval: 120_000,
               staleTime: 250,
             },
-            // 5-10
+            // 5+
             ...interfacesToCheck.map(({ interfaceId }) =>
               queryCallContract({
                 chainId,

@@ -55,6 +55,14 @@ const handlePreviewImage = () => {
 const handleViewCollection = () => {
   navigateTo(collectionRoute(props.asset?.address))
 }
+
+const handleBuySellAsset = (event: Event) => {
+  event.stopPropagation()
+  window.open(
+    universalPageAssetUrl(asset.value?.address, asset.value?.tokenId),
+    '_blank'
+  )
+}
 </script>
 
 <template>
@@ -81,6 +89,16 @@ const handleViewCollection = () => {
           @click="handleViewCollection"
           >{{ $formatMessage('token_details_show_collection') }}</lukso-button
         >
+        <lukso-button
+          variant="secondary"
+          is-full-width
+          @click="handleBuySellAsset"
+        >
+          <span v-if="hasBalance(asset)">{{
+            $formatMessage('button_sell')
+          }}</span>
+          <span v-else>{{ $formatMessage('button_buy') }}</span>
+        </lukso-button>
         <lukso-button
           v-if="hasBalance(asset) && isConnected"
           is-full-width

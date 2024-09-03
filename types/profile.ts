@@ -18,7 +18,18 @@ export type Profile = {
   profileImage?: Image[]
   backgroundImage?: Image[]
   isLoading?: boolean
+  isLoaded?: boolean
   profileLink?: ProfileLink
+}
+
+export type ProfileFollowers = {
+  isFollowing?: boolean
+  followingCount?: number
+  followingAddresses?: Address[]
+  followerCount?: number
+  followerAddresses?: Address[]
+  isLoading?: boolean
+  isLoadingCounters?: boolean
 }
 
 export type ProfileLink = {

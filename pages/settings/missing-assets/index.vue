@@ -44,7 +44,7 @@ const handleInput = async (customEvent: CustomEvent) => {
       assetAddress.value
     )
     assertString(connectedProfile.value?.address)
-    const balance = await assetContract.methods
+    const balance = await assetContract?.methods
       .balanceOf(connectedProfile.value?.address)
       .call()
 

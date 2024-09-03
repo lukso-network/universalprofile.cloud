@@ -4,19 +4,21 @@ import type {
   SelectStringOption,
 } from '@lukso/web-components'
 
+const FILTER_DEFAULTS: Filters = {
+  assetType: 'owned',
+  assetGroup: 'collectibles',
+  orderBy: 'name-asc',
+  search: undefined,
+  collections: undefined,
+  creators: undefined,
+}
+
 export const useFilters = (assets?: ComputedRef<Asset[]>) => {
   const route = useRoute()
   const { formatMessage } = useIntl()
 
   // filters and their defaults
-  const filters = reactive<Filters>({
-    assetType: 'owned',
-    assetGroup: 'collectibles',
-    orderBy: 'name-asc',
-    search: undefined,
-    collections: undefined,
-    creators: undefined,
-  })
+  const filters = reactive<Filters>({ ...FILTER_DEFAULTS })
 
   //--- getters
   const isOwned = computed(() => filters.assetType === 'owned')
@@ -154,13 +156,18 @@ export const useFilters = (assets?: ComputedRef<Asset[]>) => {
   ])
 
   //--- setters
-  const setFilters = (filters: Partial<Filters>) => {
+  const setFilters = (
+    filters: Partial<Filters>,
+    path?: string,
+    resetFilters?: boolean
+  ) => {
     navigateTo({
-      path: route.path,
+      path: path || route.path,
       query: {
-        ...route.query,
+        ...(resetFilters ? FILTER_DEFAULTS : route.query),
         ...filters,
       },
+      replace: true,
     })
   }
 

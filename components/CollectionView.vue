@@ -9,6 +9,7 @@ type Props = {
 
 const props = defineProps<Props>()
 const { isRpc, isGraph } = storeToRefs(useAppStore())
+const { isMobile } = useDevice()
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 880)
@@ -116,6 +117,10 @@ const handleSelectOrder = (customEvent: CustomEvent) => {
   loadMore()
 }
 
+const handleDataProviderSettings = () => {
+  navigateTo(settingsDataProviderRoute())
+}
+
 useInfiniteScroll(el, () => loadMore(true), { distance: 500 })
 
 onMounted(async () => {
@@ -162,12 +167,16 @@ onMounted(async () => {
             </div>
           </div>
           <div class="flex justify-start">
-            <AssetAddress :asset="asset" without-title />
+            <AssetAddress :asset="asset" without-title show-contract-link />
           </div>
         </div>
         <div class="flex flex-col gap-4">
           <AssetDescription :asset="token" without-title />
-          <AssetLinks :asset="token" without-title button-size="small" />
+          <AssetLinks
+            :asset="token"
+            without-title
+            :button-size="isMobile ? 'medium' : 'small'"
+          />
         </div>
       </div>
     </lukso-card>
@@ -175,7 +184,7 @@ onMounted(async () => {
     <!-- Filters -->
     <div
       v-if="isGraph"
-      class="grid grid-cols-[auto,100px,max-content] gap-2 pb-4"
+      class="grid grid-cols-[auto,20px,max-content] gap-2 pb-4 sm:grid-cols-[auto,100px,max-content]"
     >
       <div class="flex flex-wrap gap-2">
         <!-- Attributes loading state -->
@@ -253,8 +262,24 @@ onMounted(async () => {
     </div>
 
     <!-- Empty state -->
-    <div v-else-if="!isLoading">
+    <div v-else-if="!isLoading && isGraph">
       {{ formatMessage('collection_no_results') }}
+    </div>
+
+    <!-- RPC info -->
+    <div
+      v-if="isRpc"
+      class="paragraph-inter-12-regular flex items-center gap-3 rounded-8 bg-sky-85 p-4"
+    >
+      <lukso-icon name="information"></lukso-icon>
+      <div>
+        {{ formatMessage('collection_not_avail_front') }}
+        <span
+          class="paragraph-inter-12-semi-bold cursor-pointer underline"
+          @click="handleDataProviderSettings"
+          >{{ formatMessage('collection_not_avail_link') }}</span
+        >
+      </div>
     </div>
 
     <!-- Loading state -->
