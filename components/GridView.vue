@@ -72,7 +72,8 @@ function triggerLayoutRefresh(): void {
 
 function onSettingsClick() {
   showSettingsModal.value = true
-  layoutStringified.value = JSON.stringify(layout.value, null, 2)
+  const lsp27Config = toLSP27TheGrid(layout.value)
+  layoutStringified.value = JSON.stringify(lsp27Config, null, 2)
 }
 
 function onModalClose() {
@@ -89,16 +90,20 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
     return
   }
 
-  if (!isValidLayout(parsedLayout)) {
+  // Convert the layout to grid layout items
+  const gridLayoutItems = toGridLayoutItems(parsedLayout, COL_NUM_LARGE)
+
+  if (!isValidLayout(gridLayoutItems)) {
     alert('Invalid schema 😡')
 
     return
   }
 
-  layout.value = parsedLayout
+  layout.value = gridLayoutItems
 
   // close modal
   showSettingsModal.value = false
+
   const lsp27Config = toLSP27TheGrid(layout.value)
   const response = await upsertGridConfig(address, lsp27Config)
   if (!response) {
@@ -200,7 +205,7 @@ onMounted(async () => {
     <div>
       <lukso-modal
         :is-open="showSettingsModal.valueOf() ? true : undefined"
-        size="full"
+        size="medium"
         @on-backdrop-click="onModalClose"
       >
         <div class="m-4 flex flex-col space-y-2 text-sm">
