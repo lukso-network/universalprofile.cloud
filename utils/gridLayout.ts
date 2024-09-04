@@ -90,8 +90,6 @@ export function toGridLayoutItems(
     }
   }
 
-  console.log(JSON.stringify(layout, null, 2))
-
   return layout
 }
 
