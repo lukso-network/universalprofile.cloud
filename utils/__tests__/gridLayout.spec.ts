@@ -1,134 +1,47 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { toGridLayoutItems, toLSP27TheGrid } from '../gridLayout'
 
-const TEST_LSP27_THE_GRID: LSP27TheGrid = [
-  {
-    type: GridWidgetType.TITLE_LINK,
-    width: 1,
-    height: 2,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-  {
-    type: GridWidgetType.TEXT,
-    width: 1,
-    height: 1,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-  {
-    type: GridWidgetType.IFRAME,
-    width: 1,
-    height: 2,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-  {
-    type: GridWidgetType.IMAGE,
-    width: 1,
-    height: 1,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-]
+interface GridTests {
+  grid: LSP27TheGrid
+  expectedLayouts: Record<number, Partial<GridLayoutItem>[]>
+}
 
-const TEST_GRID_VARIANT_1: LSP27TheGrid = [
+const GRID_TESTS: GridTests[] = [
   {
-    type: GridWidgetType.IMAGE,
-    width: 2,
-    height: 2,
-    properties: { prop1: 'value1', prop2: 'value2' },
+    grid: [],
+    expectedLayouts: {
+      2: [],
+    },
   },
   {
-    type: GridWidgetType.TEXT,
-    width: 1,
-    height: 1,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-  {
-    type: GridWidgetType.IMAGE,
-    width: 1,
-    height: 1,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-]
-
-const TEST_GRID_VARIANT_2: LSP27TheGrid = [
-  {
-    type: GridWidgetType.IMAGE,
-    width: 1,
-    height: 1,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-  {
-    type: GridWidgetType.IFRAME,
-    width: 2,
-    height: 2,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-  {
-    type: GridWidgetType.TEXT,
-    width: 1,
-    height: 1,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-  {
-    type: GridWidgetType.IMAGE,
-    width: 2,
-    height: 1,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-]
-
-const TEST_GRID_VARIANT_3: LSP27TheGrid = [
-  {
-    type: GridWidgetType.TITLE_LINK,
-    width: 1,
-    height: 2,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-  {
-    type: GridWidgetType.TEXT,
-    width: 2,
-    height: 1,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-]
-
-const TEST_GRID_VARIANT_4: LSP27TheGrid = [
-  {
-    type: GridWidgetType.IFRAME,
-    width: 1,
-    height: 1,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-  {
-    type: GridWidgetType.IMAGE,
-    width: 1,
-    height: 2,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-  {
-    type: GridWidgetType.TEXT,
-    width: 1,
-    height: 1,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-  {
-    type: GridWidgetType.IMAGE,
-    width: 1,
-    height: 1,
-    properties: { prop1: 'value1', prop2: 'value2' },
-  },
-]
-
-describe('toGridLayoutItems', () => {
-  beforeEach(() => {
-    // jest.resetModules();
-  })
-
-  it.each([
-    {
-      case: 1,
-      gridColumns: 2,
-      grid: TEST_LSP27_THE_GRID,
-      expectedLayout: [
+    grid: [
+      {
+        type: GridWidgetType.TITLE_LINK,
+        width: 1,
+        height: 2,
+        properties: { prop1: 'value1', prop2: 'value2' },
+      },
+      {
+        type: GridWidgetType.TEXT,
+        width: 1,
+        height: 1,
+        properties: { prop1: 'value1', prop2: 'value2' },
+      },
+      {
+        type: GridWidgetType.IFRAME,
+        width: 1,
+        height: 2,
+        properties: { prop1: 'value1', prop2: 'value2' },
+      },
+      {
+        type: GridWidgetType.IMAGE,
+        width: 1,
+        height: 1,
+        properties: { prop1: 'value1', prop2: 'value2' },
+      },
+    ],
+    expectedLayouts: {
+      2: [
         {
           i: 0,
           x: 0,
@@ -166,12 +79,69 @@ describe('toGridLayoutItems', () => {
           properties: { prop1: 'value1', prop2: 'value2' },
         },
       ],
+      3: [
+        {
+          i: 0,
+          x: 0,
+          y: 0,
+          w: 1,
+          h: 2,
+          type: GridWidgetType.TITLE_LINK,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+        {
+          i: 1,
+          x: 1,
+          y: 0,
+          w: 1,
+          h: 1,
+          type: GridWidgetType.TEXT,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+        {
+          i: 2,
+          x: 2,
+          y: 0,
+          w: 1,
+          h: 2,
+          type: GridWidgetType.IFRAME,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+        {
+          i: 3,
+          x: 1,
+          y: 1,
+          w: 1,
+          h: 1,
+          type: GridWidgetType.IMAGE,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+      ],
     },
-    {
-      case: 2,
-      gridColumns: 2,
-      grid: TEST_GRID_VARIANT_1,
-      expectedLayout: [
+  },
+  {
+    grid: [
+      {
+        type: GridWidgetType.IMAGE,
+        width: 2,
+        height: 2,
+        properties: { prop1: 'value1', prop2: 'value2' },
+      },
+      {
+        type: GridWidgetType.TEXT,
+        width: 1,
+        height: 1,
+        properties: { prop1: 'value1', prop2: 'value2' },
+      },
+      {
+        type: GridWidgetType.IMAGE,
+        width: 1,
+        height: 1,
+        properties: { prop1: 'value1', prop2: 'value2' },
+      },
+    ],
+    expectedLayouts: {
+      2: [
         {
           i: 0,
           x: 0,
@@ -201,11 +171,36 @@ describe('toGridLayoutItems', () => {
         },
       ],
     },
-    {
-      case: 3,
-      gridColumns: 2,
-      grid: TEST_GRID_VARIANT_2,
-      expectedLayout: [
+  },
+  {
+    grid: [
+      {
+        type: GridWidgetType.IMAGE,
+        width: 1,
+        height: 1,
+        properties: { prop1: 'value1', prop2: 'value2' },
+      },
+      {
+        type: GridWidgetType.IFRAME,
+        width: 2,
+        height: 2,
+        properties: { prop1: 'value1', prop2: 'value2' },
+      },
+      {
+        type: GridWidgetType.TEXT,
+        width: 1,
+        height: 1,
+        properties: { prop1: 'value1', prop2: 'value2' },
+      },
+      {
+        type: GridWidgetType.IMAGE,
+        width: 2,
+        height: 1,
+        properties: { prop1: 'value1', prop2: 'value2' },
+      },
+    ],
+    expectedLayouts: {
+      2: [
         {
           i: 0,
           x: 0,
@@ -244,143 +239,82 @@ describe('toGridLayoutItems', () => {
         },
       ],
     },
-    {
-      case: 4,
-      gridColumns: 3,
-      grid: TEST_GRID_VARIANT_3,
-      expectedLayout: [
-        {
-          i: 0,
-          x: 0,
-          y: 0,
-          w: 1,
-          h: 2,
-          type: GridWidgetType.TITLE_LINK,
-          properties: { prop1: 'value1', prop2: 'value2' },
-        },
-        {
-          i: 1,
-          x: 1,
-          y: 0,
-          w: 2,
-          h: 1,
-          type: GridWidgetType.TEXT,
-          properties: { prop1: 'value1', prop2: 'value2' },
-        },
-      ],
-    },
-    {
-      case: 5,
-      gridColumns: 2,
-      grid: TEST_GRID_VARIANT_4,
-      expectedLayout: [
-        {
-          i: 0,
-          x: 0,
-          y: 0,
-          w: 1,
-          h: 1,
-          type: GridWidgetType.IFRAME,
-          properties: { prop1: 'value1', prop2: 'value2' },
-        },
-        {
-          i: 1,
-          x: 1,
-          y: 0,
-          w: 1,
-          h: 2,
-          type: GridWidgetType.IMAGE,
-          properties: { prop1: 'value1', prop2: 'value2' },
-        },
-        {
-          i: 2,
-          x: 0,
-          y: 1,
-          w: 1,
-          h: 1,
-          type: GridWidgetType.TEXT,
-          properties: { prop1: 'value1', prop2: 'value2' },
-        },
-        {
-          i: 3,
-          x: 0,
-          y: 2,
-          w: 1,
-          h: 1,
-          type: GridWidgetType.IMAGE,
-          properties: { prop1: 'value1', prop2: 'value2' },
-        },
-      ],
-    },
-  ])(
-    'should position case=$case widgets correctly in gridColumns=$gridColumns',
-    ({ gridColumns, grid, expectedLayout }) => {
-      const gridItems = toGridLayoutItems(grid, gridColumns)
-      expect(gridItems).toMatchObject(expectedLayout)
-    }
-  )
+  },
+]
 
-  it.each([
-    { gridColumns: 2, grid: TEST_LSP27_THE_GRID },
-    { gridColumns: 2, grid: TEST_GRID_VARIANT_1 },
-    { gridColumns: 2, grid: TEST_GRID_VARIANT_2 },
-    { gridColumns: 3, grid: TEST_GRID_VARIANT_3 },
-    { gridColumns: 2, grid: TEST_GRID_VARIANT_4 },
-  ])(
-    'Invariance: LSP27TheGrid to GridLayoutItem and back with gridColumns=$gridColumns should produce the same original object',
-    ({ gridColumns, grid }) => {
-      const gridItems = toGridLayoutItems(grid, gridColumns)
-      const gridItemsBack = toLSP27TheGrid(gridItems)
-      expect(gridItemsBack).toEqual(grid)
-    }
-  )
-
-  it.each([
-    { gridColumns: 2, grid: TEST_LSP27_THE_GRID },
-    { gridColumns: 2, grid: TEST_GRID_VARIANT_1 },
-    { gridColumns: 2, grid: TEST_GRID_VARIANT_2 },
-    { gridColumns: 3, grid: TEST_GRID_VARIANT_3 },
-    { gridColumns: 2, grid: TEST_GRID_VARIANT_4 },
-  ])(
-    'Invariance: GridLayoutItem to LSP27TheGrid and back with gridColumns=$gridColumns should produce the same original layout',
-    ({ gridColumns, grid }) => {
-      const gridItems = toGridLayoutItems(grid, gridColumns)
-      const gridFromLayout = toLSP27TheGrid(gridItems)
-      const gridLayoutItemsBack = toGridLayoutItems(gridFromLayout, gridColumns)
-      expect(gridLayoutItemsBack).toEqual(gridItems)
-    }
-  )
-
-  it('should handle an empty grid gracefully', () => {
-    const emptyGrid: LSP27TheGrid = []
-    const gridItems = toGridLayoutItems(emptyGrid, 2)
-    expect(gridItems).toEqual([])
-    const gridItemsBack = toLSP27TheGrid(gridItems)
-    expect(gridItemsBack).toEqual(emptyGrid)
+describe('Grid Layout Handling', () => {
+  describe('toGridLayoutItems', () => {
+    describe('should position elements correctly', () => {
+      it.each([
+        {
+          case: 0,
+          gridColumns: 2,
+          grid: GRID_TESTS[0].grid,
+          expectedLayout: GRID_TESTS[0].expectedLayouts[2],
+        },
+        {
+          case: 1,
+          gridColumns: 2,
+          grid: GRID_TESTS[1].grid,
+          expectedLayout: GRID_TESTS[1].expectedLayouts[2],
+        },
+        {
+          case: 1,
+          gridColumns: 3,
+          grid: GRID_TESTS[1].grid,
+          expectedLayout: GRID_TESTS[1].expectedLayouts[3],
+        },
+        {
+          case: 2,
+          gridColumns: 2,
+          grid: GRID_TESTS[2].grid,
+          expectedLayout: GRID_TESTS[2].expectedLayouts[2],
+        },
+        {
+          case: 3,
+          gridColumns: 2,
+          grid: GRID_TESTS[3].grid,
+          expectedLayout: GRID_TESTS[3].expectedLayouts[2],
+        },
+      ])(
+        'case=$case gridColumns=$gridColumns',
+        ({ gridColumns, grid, expectedLayout }) => {
+          const gridItems = toGridLayoutItems(grid, gridColumns)
+          expect(gridItems).toMatchObject(expectedLayout)
+        }
+      )
+    })
   })
 
-  it('should handle a grid with a single widget', () => {
-    const singleWidgetGrid: LSP27TheGrid = [
-      {
-        type: GridWidgetType.TITLE_LINK,
-        width: 1,
-        height: 1,
-        properties: { prop1: 'value1', prop2: 'value2' },
-      },
-    ]
-    const gridItems = toGridLayoutItems(singleWidgetGrid, 2)
-    expect(gridItems).toMatchObject([
-      {
-        i: 0,
-        x: 0,
-        y: 0,
-        w: 1,
-        h: 1,
-        type: GridWidgetType.TITLE_LINK,
-        properties: { prop1: 'value1', prop2: 'value2' },
-      },
-    ])
-    const gridItemsBack = toLSP27TheGrid(gridItems)
-    expect(gridItemsBack).toEqual(singleWidgetGrid)
+  describe('Transformation invariance', () => {
+    describe('LSP27TheGrid to GridLayoutItem and back should produce the original object', () => {
+      it.each([
+        { case: 0, gridColumns: 2, grid: GRID_TESTS[0].grid },
+        { case: 1, gridColumns: 2, grid: GRID_TESTS[1].grid },
+        { case: 2, gridColumns: 2, grid: GRID_TESTS[2].grid },
+        { case: 3, gridColumns: 2, grid: GRID_TESTS[3].grid },
+      ])('case=$case gridColumns=$gridColumns ', ({ gridColumns, grid }) => {
+        const gridItems = toGridLayoutItems(grid, gridColumns)
+        const gridItemsBack = toLSP27TheGrid(gridItems)
+        expect(gridItemsBack).toEqual(grid)
+      })
+    })
+
+    describe('GridLayoutItem to LSP27TheGrid and back should produce the same original layout', () => {
+      it.each([
+        { case: 0, gridColumns: 2, grid: GRID_TESTS[0].grid },
+        { case: 1, gridColumns: 2, grid: GRID_TESTS[1].grid },
+        { case: 2, gridColumns: 2, grid: GRID_TESTS[2].grid },
+        { case: 3, gridColumns: 2, grid: GRID_TESTS[3].grid },
+      ])('case=$case gridColumns=$gridColumns', ({ gridColumns, grid }) => {
+        const gridItems = toGridLayoutItems(grid, gridColumns)
+        const gridFromLayout = toLSP27TheGrid(gridItems)
+        const gridLayoutItemsBack = toGridLayoutItems(
+          gridFromLayout,
+          gridColumns
+        )
+        expect(gridLayoutItemsBack).toEqual(gridItems)
+      })
+    })
   })
 })
