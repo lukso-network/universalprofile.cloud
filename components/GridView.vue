@@ -52,7 +52,7 @@ async function initializeTheGrid(address: string | undefined): Promise<void> {
 
   // check if the config is valid
   if (!isValidLayout(gridConfigObject.config)) {
-    alert('Saved layout is invalid. Resetting to default layout.')
+    console.warn('Saved layout is invalid. Resetting to default layout.')
     const newUserLayout = getNewUserLayout(address)
     layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
 
@@ -86,7 +86,7 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
   try {
     parsedLayout = JSON.parse(newLayout)
   } catch (error) {
-    alert('Invalid JSON 👿')
+    console.warn('Invalid JSON 👿')
 
     return
   }
@@ -95,7 +95,7 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
   const gridLayoutItems = toGridLayoutItems(parsedLayout, COL_NUM_LARGE)
 
   if (!isValidLayout(gridLayoutItems)) {
-    alert('Invalid schema 😡')
+    console.warn('Invalid schema 😡')
 
     return
   }
@@ -108,12 +108,12 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
   const lsp27Config = toLSP27TheGrid(layout.value)
   const response = await upsertGridConfig(address, lsp27Config)
   if (!response) {
-    alert('Failed to save layout 😢')
+    console.warn('Failed to save layout 😢')
 
     return
   }
 
-  alert('Layout saved 🎉')
+  console.log('Layout saved 🎉')
 }
 
 function resetLayout(): void {
