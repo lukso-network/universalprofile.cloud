@@ -5,17 +5,19 @@ type Props = {
   closeModal: () => void
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const handleChangeNetwork = async () => {
   const { selectedChainId } = storeToRefs(useAppStore())
+  const { getNetworkByChainId } = useAppStore()
   const { disconnect } = useBaseProvider()
 
   selectedChainId.value = modal?.data?.chainId
+  await navigateTo({
+    path: homeRoute(),
+    query: { network: getNetworkByChainId(modal?.data?.chainId).id },
+  })
   disconnect()
-  await navigateTo(homeRoute())
-  window.location.href = window.location.href.split('?')[0]
-  props.closeModal()
 }
 </script>
 
