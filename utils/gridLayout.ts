@@ -55,22 +55,22 @@ export function toGridLayoutItems(
   grid: LSP27TheGrid,
   gridColumns: number
 ): GridLayoutItem[] {
-  const layout: GridLayoutItem[] = [];
-  const columnHeights = Array(gridColumns).fill(0); // Track the height of each column
+  const layout: GridLayoutItem[] = []
+  const columnHeights = Array(gridColumns).fill(0) // Track the height of each column
 
   for (const [i, widget] of grid.entries()) {
     // Find the first position where the widget can fit
-    let bestY = Number.MAX_SAFE_INTEGER;
-    let bestX = 0;
+    let bestY = Number.MAX_SAFE_INTEGER
+    let bestX = 0
 
     for (let x = 0; x <= gridColumns - widget.width; x++) {
       // Find the max height in the range of columns where this widget would be placed
-      const maxY = Math.max(...columnHeights.slice(x, x + widget.width));
+      const maxY = Math.max(...columnHeights.slice(x, x + widget.width))
 
       // If this position is better (lower), choose it
       if (maxY < bestY) {
-        bestY = maxY;
-        bestX = x;
+        bestY = maxY
+        bestX = x
       }
     }
 
@@ -82,17 +82,17 @@ export function toGridLayoutItems(
       y: bestY,
       w: widget.width,
       h: widget.height,
-    });
+    })
 
     // Update the column heights based on where the widget was placed
     for (let x = bestX; x < bestX + widget.width; x++) {
-      columnHeights[x] = bestY + widget.height;
+      columnHeights[x] = bestY + widget.height
     }
   }
 
   console.log(JSON.stringify(layout, null, 2))
 
-  return layout;
+  return layout
 }
 
 export function toLSP27TheGrid(layout: GridLayoutItem[]): LSP27TheGrid {
@@ -101,7 +101,7 @@ export function toLSP27TheGrid(layout: GridLayoutItem[]): LSP27TheGrid {
     if (a.y === b.y) {
       return a.x - b.x
     }
-    
+
     return a.y - b.y
   })
 
