@@ -27,7 +27,7 @@ const getProfiles = async () => {
 const shuffleProfiles = async () => {
   const profileIndexes = getDistinctRandomIntegers(
     0,
-    profilePool.value.length - 1,
+    profilePool.value?.length - 1,
     isTestnet.value ? PROFILE_SHOWCASE_LIMIT * 2 : PROFILE_SHOWCASE_LIMIT
   )
   const randomProfiles = []
