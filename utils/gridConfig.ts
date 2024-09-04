@@ -28,7 +28,7 @@ export async function getGridConfig(
   username: string
 ): Promise<GetGridConfigResponse | undefined> {
   const query: Parse.Query = new Parse.Query(CLASS_NAME)
-  query.equalTo('username', username)
+  query.equalTo('username', username.toLowerCase())
 
   try {
     const object = await query.first()
@@ -51,7 +51,7 @@ export async function upsertGridConfig(
   config: LSP27TheGrid
 ): Promise<UpsertGridConfigResponse | undefined> {
   const query: Parse.Query = new Parse.Query(CLASS_NAME)
-  query.equalTo('username', username)
+  query.equalTo('username', username.toLowerCase())
 
   try {
     let object = await query.first()
@@ -61,7 +61,7 @@ export async function upsertGridConfig(
     }
 
     object.set('config', config)
-    object.set('username', username)
+    object.set('username', username.toLowerCase())
 
     try {
       const response = await object.save()
