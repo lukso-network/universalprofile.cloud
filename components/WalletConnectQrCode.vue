@@ -9,21 +9,21 @@ const emit = defineEmits<Emits>()
 
 const qrCodeElement = ref<HTMLDivElement | null>(null)
 const { isMobile } = useDevice()
-const { initProvider, connect } = useWalletConnect()
+const { initProvider, connect, deepLinkParser } = useWalletConnect()
 const isLoading = ref(true)
-const qrCodeDeepLink = ref('')
+const deepLink = ref('')
 const { walletConnectProvider: provider } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 
 const size = computed(() => (isMobile ? 300 : 340))
 
 const generateQrCode = (data: string) => {
-  qrCodeDeepLink.value = data
+  deepLink.value = deepLinkParser(data)
   const qrCode = new QRCodeStyling({
     width: size.value,
     height: size.value,
     type: 'svg',
-    data,
+    data: deepLink.value,
     image: '/images/app-icon.png',
     dotsOptions: {
       color: '#243542',
@@ -64,10 +64,10 @@ onMounted(async () => {
   <div>
     <lukso-tooltip
       variant="light"
-      offset="0"
+      offset="-20"
       is-clipboard-copy
       :copy-text="formatMessage('asset_address_copied_tooltip')"
-      :copy-value="qrCodeDeepLink"
+      :copy-value="deepLink"
     >
       <div
         ref="qrCodeElement"
