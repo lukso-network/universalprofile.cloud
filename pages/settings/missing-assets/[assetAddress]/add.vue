@@ -7,6 +7,7 @@ import type { AbiItem } from 'web3-utils'
 const connectedProfile = useProfile().connectedProfile()
 const assetAddress = useRouter().currentRoute.value.params?.assetAddress
 const isPending = ref(false)
+const { providerWeb3Instance } = useBaseProvider()
 
 const asset = useAsset()(assetAddress)
 
@@ -32,7 +33,7 @@ const handleAddAsset = async () => {
       profileAddress,
       connectedProfile.value?.receivedAssets
     )
-    const { contract } = useWeb3(PROVIDERS.INJECTED)
+    const { contract } = providerWeb3Instance.value
     const profileContract = contract<UniversalProfile>(
       UniversalProfileJson.abi as AbiItem[],
       profileAddress

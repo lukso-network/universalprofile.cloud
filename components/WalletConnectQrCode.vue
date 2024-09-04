@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import QRCodeStyling from 'qr-code-styling'
 
-import { useWalletConnect } from '@/composables/useWalletConnect'
-
 type Emits = (event: 'disconnect') => void
 
 const emit = defineEmits<Emits>()
 
 const qrCodeElement = ref<HTMLDivElement | null>(null)
 const { isMobile } = useDevice()
-const { initProvider, connect, deepLinkParser } = useWalletConnect()
+const {
+  initProvider,
+  connect: connectWalletConnect,
+  deepLinkParser,
+} = useWalletConnectProvider()
 const isLoading = ref(true)
 const deepLink = ref('')
 const { walletConnectProvider: provider } = storeToRefs(useAppStore())
@@ -52,7 +54,7 @@ onMounted(async () => {
   isLoading.value = false
 
   try {
-    await connect()
+    await connectWalletConnect()
   } catch (error) {
     console.error(error)
     emit('disconnect')

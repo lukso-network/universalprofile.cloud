@@ -14,10 +14,11 @@ const connect = async () => {
   const { setConnectionExpiry } = useConnectionExpiry()
   const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
   const route = useRoute()
+  const { disconnect } = useBaseProvider()
 
   try {
     // check if we are on the right network
-    await checkExtensionNetwork(true)
+    await checkNetwork(true)
 
     // when no extension installed we show modal
     if (!INJECTED_PROVIDER) {
@@ -50,16 +51,9 @@ const connect = async () => {
   }
 }
 
-const disconnect = () => {
-  const { removeItem } = useLocalStorage()
-  const { connectedProfileAddress } = storeToRefs(useAppStore())
-
-  connectedProfileAddress.value = undefined
-  removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
-}
-
 const handleAccountsChanged = async (accounts: string[]) => {
   const { connectedProfileAddress, isConnected } = storeToRefs(useAppStore())
+  const { disconnect } = useBaseProvider()
 
   // handle account change only for connected users
   if (!isConnected.value) {
@@ -118,10 +112,9 @@ const isUniversalProfileExtension = () => {
   return !!INJECTED_PROVIDER
 }
 
-export const useBrowserExtension = () => {
+export const useBrowserExtensionProvider = () => {
   return {
     connect,
-    disconnect,
     addProviderEvents,
     removeProviderEvents,
     isUniversalProfileExtension,

@@ -8,8 +8,9 @@ import type { AbiItem } from 'web3-utils'
 export const useFollowingSystem = () => {
   const { currentNetwork } = storeToRefs(useAppStore())
   const { followingSystemContractAddress } = currentNetwork.value
+  const { providerWeb3Instance } = useBaseProvider()
 
-  const { contract: contractInjected } = useWeb3(PROVIDERS.INJECTED)
+  const { contract: contractInjected } = providerWeb3Instance.value
   let followingSystemContractInjected: LSP26FollowingSystem | undefined
 
   try {
@@ -131,6 +132,7 @@ export const useFollowingSystem = () => {
         const { connectedProfileAddress } = storeToRefs(useAppStore())
         const connectedAddress = unref(connectedProfileAddress)
         const { selectedChainId: chainId } = useAppStore()
+        const { providerWeb3Instance } = useBaseProvider()
 
         const queries = profileAddress
           ? [
@@ -184,7 +186,7 @@ export const useFollowingSystem = () => {
                     ],
                     queryFn: async () => {
                       assertAddress(connectedAddress)
-                      const { contract } = useWeb3(PROVIDERS.INJECTED)
+                      const { contract } = providerWeb3Instance.value
                       const { followingSystemContractAddress } =
                         currentNetwork.value
                       const followingSystemContract =

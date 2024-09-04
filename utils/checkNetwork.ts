@@ -1,20 +1,19 @@
-import { INJECTED_PROVIDER } from '@/shared/provider'
-
 /**
- * Check if application network match with extension.
+ * Check if app network match with provider.
  * If not break execution with error and show modal to switch network.
  *
  * @param triggerNetworkSwitch
  * @returns
  */
-export const checkExtensionNetwork = async (
+export const checkNetwork = async (
   triggerNetworkSwitch?: boolean
 ): Promise<undefined | never> => {
   const { currentNetwork } = useAppStore()
   const { showModal } = useModal()
+  const { currentProvider } = useBaseProvider()
 
   try {
-    const chainId = (await INJECTED_PROVIDER?.request({
+    const chainId = (await currentProvider.value?.request({
       method: 'eth_chainId',
     })) as string
 
@@ -35,7 +34,7 @@ export const checkExtensionNetwork = async (
     console.warn(error)
 
     if (triggerNetworkSwitch) {
-      await INJECTED_PROVIDER?.request({
+      await currentProvider.value?.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: currentNetwork.chainId }],
       })

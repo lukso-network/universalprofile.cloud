@@ -5,7 +5,8 @@ type Props = {
 
 defineProps<Props>()
 const { formatMessage } = useIntl()
-const { isUniversalProfileExtension, connect } = useBrowserExtension()
+const { isUniversalProfileExtension, connect: connectBrowserExtension } =
+  useBrowserExtensionProvider()
 const { isMobile } = useDevice()
 const isConnecting = ref(false)
 const isWalletConnect = ref(false)
@@ -22,7 +23,7 @@ const handleConnectBrowser = async () => {
   }
 
   isConnecting.value = true
-  await connect()
+  await connectBrowserExtension()
   isConnecting.value = false
 }
 

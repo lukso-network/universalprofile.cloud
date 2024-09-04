@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { disconnect } = useBrowserExtension()
+const { disconnect } = useBaseProvider()
 const viewedProfile = useProfile().viewedProfile()
 const connectedProfile = useProfile().connectedProfile()
 const { isConnecting, isConnected, isTestnet, isSearchOpen } =

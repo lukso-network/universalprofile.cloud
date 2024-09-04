@@ -1,9 +1,11 @@
-import { EthereumProvider } from '@walletconnect/ethereum-provider'
+import { EthereumProvider as WalletConnectProvider } from '@walletconnect/ethereum-provider'
+
+import type EthereumProvider from '@walletconnect/ethereum-provider'
 
 const initProvider = async () => {
   const { walletConnectProvider: provider } = storeToRefs(useAppStore())
 
-  provider.value = await EthereumProvider.init({
+  provider.value = await WalletConnectProvider.init({
     projectId: '68cee9cbecf1293488f207237e89f337',
     metadata: {
       name: 'Universal Profiles',
@@ -21,25 +23,39 @@ const initProvider = async () => {
   })
 }
 
-const connect = async () => {
-  const { walletConnectProvider: provider } = storeToRefs(useAppStore())
-  const { connectedProfileAddress } = storeToRefs(useAppStore())
+const connect = async (requestAccounts = true) => {
+  const {
+    walletConnectProvider: provider,
+    connectedProfileAddress,
+    isWalletConnect,
+  } = storeToRefs(useAppStore())
   const { setConnectionExpiry } = useConnectionExpiry()
   const { addWeb3 } = useWeb3Store()
 
   await provider.value?.connect()
 
-  const result = (await provider.value?.request({
-    method: 'eth_requestAccounts',
-  })) as Address[]
-  const [address] = result
-  connectedProfileAddress.value = address
+  if (requestAccounts) {
+    const result = (await provider.value?.request({
+      method: 'eth_requestAccounts',
+    })) as Address[]
+    const [address] = result
+    connectedProfileAddress.value = address
+  }
+
   setConnectionExpiry()
-  navigateTo(profileRoute(address))
+  navigateTo(profileRoute(connectedProfileAddress.value))
+  isWalletConnect.value = true
 
   if (provider.value) {
-    addWeb3(PROVIDERS.INJECTED, provider.value)
+    addWeb3(PROVIDERS.WALLET_CONNECT, provider.value as EthereumProvider)
   }
+}
+
+/**
+ * Reconnect WalletConnect but don't trigger request accounts
+ */
+const reconnect = async () => {
+  connect(false)
 }
 
 /**
@@ -55,10 +71,11 @@ const deepLinkParser = (data: string) => {
   return data.replace('wc:', 'network.lukso.universalprofiles.ios:')
 }
 
-export const useWalletConnect = () => {
+export const useWalletConnectProvider = () => {
   return {
     initProvider,
     connect,
+    reconnect,
     deepLinkParser,
   }
 }

@@ -9,7 +9,7 @@ const props = defineProps<Props>()
 
 const handleChangeNetwork = async () => {
   const { selectedChainId } = storeToRefs(useAppStore())
-  const { disconnect } = useBrowserExtension()
+  const { disconnect } = useBaseProvider()
 
   selectedChainId.value = modal?.data?.chainId
   disconnect()

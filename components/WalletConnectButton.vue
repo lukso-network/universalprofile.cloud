@@ -1,7 +1,11 @@
 <script setup lang="ts">
 const { formatMessage } = useIntl()
 const deepLink = ref('')
-const { initProvider, connect, deepLinkParser } = useWalletConnect()
+const {
+  initProvider,
+  connect: connectWalletConnect,
+  deepLinkParser,
+} = useWalletConnectProvider()
 const { walletConnectProvider: provider } = storeToRefs(useAppStore())
 
 onMounted(async () => {
@@ -11,7 +15,7 @@ onMounted(async () => {
   })
 
   try {
-    await connect()
+    await connectWalletConnect()
   } catch (error) {
     console.warn(error)
   }

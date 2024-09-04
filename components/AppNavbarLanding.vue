@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { isTestnet, isConnected } = storeToRefs(useAppStore())
-const { disconnect } = useBrowserExtension()
+const { disconnect } = useBaseProvider()
 const { showModal } = useModal()
 
 const handleConnect = async () => {
