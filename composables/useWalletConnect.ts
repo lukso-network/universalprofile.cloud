@@ -42,9 +42,23 @@ const connect = async () => {
   }
 }
 
+/**
+ * Parse deep link to be used by mobile app
+ *
+ * By default WalletConnect uses wc: prefix for deep linking, but this also works with
+ * other wallets. We replace with own prefix to ensure it works with our app.
+ *
+ * @param data
+ * @returns
+ */
+const deepLinkParser = (data: string) => {
+  return data.replace('wc:', 'network.lukso.universalprofiles.ios:')
+}
+
 export const useWalletConnect = () => {
   return {
     initProvider,
     connect,
+    deepLinkParser,
   }
 }
