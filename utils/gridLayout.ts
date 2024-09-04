@@ -33,10 +33,7 @@ export function getNewUserLayout(address: string): GridWidget[] {
 }
 
 export function isValidLayout(layout: GridWidget[]): boolean {
-  // We can make the validations even better with Zod or some other library
-
-  console.log(JSON.stringify(layout))
-
+  // TODO: We can make the validations even better with Zod or some other library
   if (
     // check if object entries adhere to Widget interface
     !layout.every(item => {
@@ -58,55 +55,44 @@ export function toGridLayoutItems(
   grid: LSP27TheGrid,
   gridColumns: number
 ): GridLayoutItem[] {
-  const layout: GridLayoutItem[] = []
+  const layout: GridLayoutItem[] = [];
+  const columnHeights = Array(gridColumns).fill(0); // Track the height of each column
 
-  // Fill rows and cols with widgets,
-  // Depending on size some rows will contain multiple widgets or some empty space
-  let y = 0
-  let h = 0
-  let remainingColumns = gridColumns
   for (const [i, widget] of grid.entries()) {
-    if (widget.width <= remainingColumns) {
-      // If widget fits, add it to the current row
-      layout.push({
-        ...widget,
-        i,
-        x: gridColumns - remainingColumns,
-        y: y,
-        w: widget.width,
-        h: widget.height,
-      })
+    // Find the first position where the widget can fit
+    let bestY = Number.MAX_SAFE_INTEGER;
+    let bestX = 0;
 
-      // Decrease the remaining columns
-      remainingColumns -= widget.width
+    for (let x = 0; x <= gridColumns - widget.width; x++) {
+      // Find the max height in the range of columns where this widget would be placed
+      const maxY = Math.max(...columnHeights.slice(x, x + widget.width));
 
-      // h will depend on the height of the tallest widget
-      if (h === 0 || h < widget.height) {
-        h = widget.height
+      // If this position is better (lower), choose it
+      if (maxY < bestY) {
+        bestY = maxY;
+        bestX = x;
       }
-
-      continue
     }
 
-    // If it doesn't fit, go to the next row
-    y += h + 1
-    // The row height will be the height of the current widget
-    h = widget.height
-
-    // Add the widget to the next row
+    // Place the widget in the best position found
     layout.push({
       ...widget,
       i,
-      x: 0,
-      y: y,
+      x: bestX,
+      y: bestY,
       w: widget.width,
       h: widget.height,
-    })
+    });
 
-    remainingColumns = gridColumns - widget.width
+    // Update the column heights based on where the widget was placed
+    for (let x = bestX; x < bestX + widget.width; x++) {
+      columnHeights[x] = bestY + widget.height;
+    }
   }
 
-  return layout
+  console.log(JSON.stringify(layout, null, 2))
+
+  return layout;
 }
 
 export function toLSP27TheGrid(layout: GridLayoutItem[]): LSP27TheGrid {
@@ -115,6 +101,7 @@ export function toLSP27TheGrid(layout: GridLayoutItem[]): LSP27TheGrid {
     if (a.y === b.y) {
       return a.x - b.x
     }
+    
     return a.y - b.y
   })
 
