@@ -22,12 +22,16 @@ const confirmModal = () => {
   setFilters({ search: searchTerm.value })
   props.closeModal()
 }
+
+onMounted(() => {
+  searchTerm.value = filters.search
+})
 </script>
 
 <template>
   <div class="flex flex-col rounded-12 bg-neutral-98 px-6 py-8 text-center">
     <lukso-search
-      :value="filters.search"
+      .value="searchTerm"
       is-full-width
       hide-loading
       has-reset

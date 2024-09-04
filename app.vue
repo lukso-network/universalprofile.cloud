@@ -225,7 +225,7 @@ useHead({
         <AppLoader class="absolute left-[calc(50vw-20px)] top-[300px]" />
       </div>
     </NuxtLayout>
-    <AppModal />
+    <AppModal v-if="isLoadedApp" />
     <!-- <VueQueryDevtools /> -->
   </div>
 </template>
