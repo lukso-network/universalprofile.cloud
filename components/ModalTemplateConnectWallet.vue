@@ -62,44 +62,51 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
       <div class="paragraph-inter-16-regular mb-6">
         {{ formatMessage('modal_connect_wallet_select_provider_text') }}
       </div>
-      <lukso-button
-        variant="secondary"
-        is-full-width
-        class="mb-2"
-        :disabled="!browserSupportExtension || isMobile ? true : undefined"
-        :is-loading="isConnecting ? true : undefined"
-        :loading-text="
-          formatMessage(
-            'modal_connect_wallet_select_provider_connect_extension_button'
-          )
-        "
-        @click="handleConnectBrowser"
+      <div
+        :class="{
+          'flex-col-reverse': isMobile,
+          'flex-col': !isMobile,
+        }"
+        class="flex gap-2"
       >
-        <lukso-icon
-          :name="extensionStore.icon"
-          class="mr-2"
-          secondary-color="neutral-100"
-        ></lukso-icon>
-        {{
-          formatMessage(
-            'modal_connect_wallet_select_provider_connect_extension_button'
-          )
-        }}
-      </lukso-button>
-      <WalletConnectButton v-if="isMobile" />
-      <lukso-button
-        v-else
-        variant="secondary"
-        is-full-width
-        @click="handleToggleMobile"
-      >
-        <lukso-icon name="phone-portrait-outline" class="mr-2"></lukso-icon>
-        {{
-          formatMessage(
-            'modal_connect_wallet_select_provider_connect_mobile_button'
-          )
-        }}
-      </lukso-button>
+        <lukso-button
+          variant="secondary"
+          is-full-width
+          :disabled="!browserSupportExtension || isMobile ? true : undefined"
+          :is-loading="isConnecting ? true : undefined"
+          :loading-text="
+            formatMessage(
+              'modal_connect_wallet_select_provider_connect_extension_button'
+            )
+          "
+          @click="handleConnectBrowser"
+        >
+          <lukso-icon
+            :name="extensionStore.icon"
+            class="mr-2"
+            secondary-color="neutral-100"
+          ></lukso-icon>
+          {{
+            formatMessage(
+              'modal_connect_wallet_select_provider_connect_extension_button'
+            )
+          }}
+        </lukso-button>
+        <WalletConnectButton v-if="isMobile" />
+        <lukso-button
+          v-else
+          variant="secondary"
+          is-full-width
+          @click="handleToggleMobile"
+        >
+          <lukso-icon name="phone-portrait-outline" class="mr-2"></lukso-icon>
+          {{
+            formatMessage(
+              'modal_connect_wallet_select_provider_connect_mobile_button'
+            )
+          }}
+        </lukso-button>
+      </div>
       <div class="paragraph-inter-12-regular mt-4 text-neutral-40">
         {{ formatMessage('modal_connect_wallet_select_provider_install_info') }}
       </div>
