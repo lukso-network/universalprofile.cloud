@@ -10,7 +10,7 @@ export const toChecksumAddress = (value: string) => {
   try {
     return toChecksumAddressWeb3(value)
   } catch (error) {
-    console.error(error)
+    console.warn(error)
     return ''
   }
 }

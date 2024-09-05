@@ -43,7 +43,7 @@ describe('hexToUtf8 function', () => {
 
   test('logs error when decoding fails', () => {
     const value = 'invalidHex'
-    const consoleErrorSpy = vi.spyOn(console, 'error')
+    const consoleErrorSpy = vi.spyOn(console, 'warn')
 
     hexToUtf8(value)
 
