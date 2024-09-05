@@ -2,6 +2,7 @@
 import {
   type Breakpoint,
   type Breakpoints,
+  GridItem,
   GridLayout,
   type Layout,
 } from 'grid-layout-plus'
@@ -51,7 +52,7 @@ async function initializeTheGrid(address: string | undefined): Promise<void> {
 
   // check if the config is valid
   if (!isValidLayout(gridConfigObject.config)) {
-    alert('Saved layout is invalid. Resetting to default layout.')
+    console.warn('Saved layout is invalid. Resetting to default layout.')
     const newUserLayout = getNewUserLayout(address)
     layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
 
@@ -72,7 +73,8 @@ function triggerLayoutRefresh(): void {
 
 function onSettingsClick() {
   showSettingsModal.value = true
-  layoutStringified.value = JSON.stringify(layout.value, null, 2)
+  const lsp27Config = toLSP27TheGrid(layout.value)
+  layoutStringified.value = JSON.stringify(lsp27Config, null, 2)
 }
 
 function onModalClose() {
@@ -84,30 +86,34 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
   try {
     parsedLayout = JSON.parse(newLayout)
   } catch (error) {
-    alert('Invalid JSON 👿')
+    console.warn('Invalid JSON 👿')
 
     return
   }
 
-  if (!isValidLayout(parsedLayout)) {
-    alert('Invalid schema 😡')
+  // Convert the layout to grid layout items
+  const gridLayoutItems = toGridLayoutItems(parsedLayout, COL_NUM_LARGE)
+
+  if (!isValidLayout(gridLayoutItems)) {
+    console.warn('Invalid schema 😡')
 
     return
   }
 
-  layout.value = parsedLayout
+  layout.value = gridLayoutItems
 
   // close modal
   showSettingsModal.value = false
+
   const lsp27Config = toLSP27TheGrid(layout.value)
   const response = await upsertGridConfig(address, lsp27Config)
   if (!response) {
-    alert('Failed to save layout 😢')
+    console.warn('Failed to save layout 😢')
 
     return
   }
 
-  alert('Layout saved 🎉')
+  console.log('Layout saved 🎉')
 }
 
 function resetLayout(): void {
@@ -121,6 +127,10 @@ function breakpointChanged(
   _newLayout: Layout
 ): void {
   triggerLayoutRefresh()
+}
+
+function clearSelection(): void {
+  window.getSelection()?.removeAllRanges()
 }
 
 onMounted(async () => {
@@ -141,7 +151,19 @@ onMounted(async () => {
         :responsive="gridOptions.isResponsive"
         @breakpoint-changed="breakpointChanged"
       >
-        <template #item="{ item }">
+        <GridItem
+          v-for="item in layout"
+          :key="item.i"
+          :x="item.x"
+          :y="item.y"
+          :w="item.w"
+          :h="item.h"
+          :i="item.i"
+          @move="clearSelection"
+          @moved="clearSelection"
+          @resize="clearSelection"
+          @resized="clearSelection"
+        >
           <div
             class="flex h-full flex-col rounded-[10px] border border-[#e4e2e2a3] bg-[rgba(var(--tw-prose-rgb),0.5)] p-[10px] shadow-[0_0_10px_#0003] backdrop-blur-[4px]"
           >
@@ -184,7 +206,7 @@ onMounted(async () => {
               :src="item.properties.src"
             />
           </div>
-        </template>
+        </GridItem>
       </GridLayout>
     </div>
     <!-- This configuration tools are just temporal until we have the proper ones -->
@@ -200,7 +222,7 @@ onMounted(async () => {
     <div>
       <lukso-modal
         :is-open="showSettingsModal.valueOf() ? true : undefined"
-        size="full"
+        size="medium"
         @on-backdrop-click="onModalClose"
       >
         <div class="m-4 flex flex-col space-y-2 text-sm">
