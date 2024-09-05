@@ -45,7 +45,7 @@ const handleOpenVerificationDocs = (event: Event) => {
 }
 
 const isVerificationInvalid = computed(
-  () => unref(props.image)?.verified === 'invalid' && hasVerification.value
+  () => unref(props.image)?.verified === 'INVALID' && hasVerification.value
 )
 
 const isLarge = computed(() => contentWidth.value > LARGE_IMAGE_BREAKPOINT)
