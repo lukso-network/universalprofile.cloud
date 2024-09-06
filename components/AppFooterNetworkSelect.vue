@@ -38,6 +38,7 @@ const handleNetworkChange = async (event: CustomEvent) => {
       name: selectedNetwork.value,
       chainId: selectedNetwork.id,
     },
+    isUrlModal: true,
   })
 }
 </script>
