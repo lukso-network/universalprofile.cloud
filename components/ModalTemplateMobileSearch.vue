@@ -7,7 +7,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const searchTerm = ref<string | undefined>(undefined)
+const searchTerm = ref<string>('')
 
 const handleChangeSearch = async (customEvent: CustomEvent) => {
   const value = customEvent.detail?.value
@@ -15,7 +15,7 @@ const handleChangeSearch = async (customEvent: CustomEvent) => {
 }
 
 const handleResetSearch = () => {
-  searchTerm.value = undefined
+  searchTerm.value = ''
 }
 
 const confirmModal = () => {
@@ -24,7 +24,7 @@ const confirmModal = () => {
 }
 
 onMounted(() => {
-  searchTerm.value = filters.search
+  searchTerm.value = filters.search || ''
 })
 </script>
 

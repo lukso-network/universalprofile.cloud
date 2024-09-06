@@ -7,10 +7,20 @@ const isLoading = ref(false)
 const profilePool = ref()
 const profilesOnDisplay = ref()
 
+const profilesOlderThen = () => {
+  const now = new Date().getTime()
+  const timeDiff = 1_000 * 60 * 120 // 2 hours
+  const timestamp = Math.round((now - timeDiff) / 1000)
+
+  return timestamp
+}
+
 const getProfiles = async () => {
   try {
     isLoading.value = true
-    const { profiles }: ProfileShowcaseQuery = await GqlProfileShowcase()
+    const { profiles }: ProfileShowcaseQuery = await GqlProfileShowcase({
+      createdTimestamp: profilesOlderThen(),
+    })
 
     if (graphLog.enabled) {
       graphLog('profileShowcase', profiles)
