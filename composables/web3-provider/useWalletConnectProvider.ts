@@ -28,26 +28,47 @@ const connect = async (requestAccounts = true) => {
     walletConnectProvider: provider,
     connectedProfileAddress,
     isWalletConnect,
+    isConnecting,
   } = storeToRefs(useAppStore())
   const { setConnectionExpiry } = useConnectionExpiry()
   const { addWeb3 } = useWeb3Store()
+  const { disconnect } = useBaseProvider()
+  const { showModal } = useModal()
+  const { formatMessage } = useIntl()
 
-  await provider.value?.connect()
+  try {
+    isConnecting.value = true
+    await provider.value?.connect()
 
-  if (requestAccounts) {
-    const result = (await provider.value?.request({
-      method: 'eth_requestAccounts',
-    })) as Address[]
-    const [address] = result
-    connectedProfileAddress.value = address
-  }
+    if (requestAccounts) {
+      const result = (await provider.value?.request({
+        method: 'eth_requestAccounts',
+      })) as Address[]
 
-  setConnectionExpiry()
-  navigateTo(profileRoute(connectedProfileAddress.value))
-  isWalletConnect.value = true
+      if (!result) {
+        throw new NoAccountsError()
+      }
 
-  if (provider.value) {
-    addWeb3(PROVIDERS.WALLET_CONNECT, provider.value as EthereumProvider)
+      const [address] = result
+      connectedProfileAddress.value = address
+    }
+
+    setConnectionExpiry()
+    navigateTo(profileRoute(connectedProfileAddress.value))
+    isWalletConnect.value = true
+
+    if (provider.value) {
+      addWeb3(PROVIDERS.WALLET_CONNECT, provider.value as EthereumProvider)
+    }
+  } catch (error) {
+    console.error(error)
+    disconnect()
+    showModal({
+      title: formatMessage('web3_connect_error_title'),
+      message: getErrorMessage(error),
+    })
+  } finally {
+    isConnecting.value = false
   }
 }
 
