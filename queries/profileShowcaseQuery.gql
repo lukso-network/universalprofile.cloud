@@ -7,7 +7,7 @@ query profileShowcase($createdTimestamp: Int!) {
         { backgroundImages: { url: { _is_null: false } } }
         { name: { _is_null: false } }
         { name: { _neq: "" } }
-        { followed_aggregate: { count: { predicate: { _gt: 5 } } } }
+        { followed_aggregate: { count: { predicate: { _gte: 5 } } } }
         { createdTimestamp: { _lte: $createdTimestamp } }
       ]
     }
