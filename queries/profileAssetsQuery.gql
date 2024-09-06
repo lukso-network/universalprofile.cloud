@@ -1,5 +1,8 @@
 query profileAssets($address: String!) {
-  receivedAssets: ReceivedAsset(where: { profile_id: { _ilike: $address } }) {
+  receivedAssets: ReceivedAsset(
+    where: { profile_id: { _ilike: $address } }
+    distinct_on: asset_id
+  ) {
     asset {
       ...basicAsset
     }
@@ -11,6 +14,7 @@ query profileAssets($address: String!) {
     where: {
       _and: [{ profile_id: { _ilike: $address } }, { id: { _nlike: "%-0x%" } }]
     }
+    distinct_on: asset_id
   ) {
     id
     asset {
