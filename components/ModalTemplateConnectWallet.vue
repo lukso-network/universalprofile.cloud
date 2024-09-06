@@ -93,8 +93,9 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
             )
           }}
         </lukso-button>
-        <WalletConnectButton v-if="false" />
+        <WalletConnectButton v-if="isMobile" />
         <lukso-button
+          v-else
           variant="secondary"
           is-full-width
           disabled
@@ -106,7 +107,6 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
               'modal_connect_wallet_select_provider_connect_mobile_button'
             )
           }}
-          (soon)
         </lukso-button>
       </div>
       <div class="paragraph-inter-12-regular mt-4 text-neutral-40">
