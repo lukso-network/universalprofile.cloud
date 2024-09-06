@@ -8,7 +8,7 @@ const { search } = useAlgoliaSearch<IndexedProfile>(
   currentNetwork.value.indexName
 )
 const isSearching = ref<boolean>(false)
-const searchTerm = ref<string | Address | undefined>()
+const searchTerm = ref<string | Address>('')
 const hasNoResults = ref<boolean>(false)
 const results = ref<SearchProfileResult[]>()
 
@@ -55,9 +55,10 @@ const handleSelect = (event: CustomEvent) => {
   searchTerm.value = address
   results.value = undefined
   isSearchOpen.value = false
+
   if (isAddress(address)) {
     navigateTo(profileRoute(address))
-    searchTerm.value = undefined
+    searchTerm.value = ''
   }
 }
 

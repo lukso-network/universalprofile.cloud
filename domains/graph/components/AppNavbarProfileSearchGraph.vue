@@ -9,7 +9,7 @@ const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element ren
 const { isSearchOpen } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const isSearching = ref<boolean>(false)
-const searchTerm = ref<string | Address | undefined>()
+const searchTerm = ref<string | Address>('')
 const hasNoResults = ref<boolean>(false)
 const results = ref<SearchProfileResult[]>()
 
@@ -70,7 +70,7 @@ const handleSelect = (event: CustomEvent) => {
 
   if (isAddress(address)) {
     navigateTo(profileRoute(address))
-    searchTerm.value = undefined
+    searchTerm.value = ''
   }
 }
 
