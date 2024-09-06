@@ -129,14 +129,6 @@ const handleChangeSearch = (customEvent: CustomEvent) => {
   setFilters({ search: searchTerm })
 }
 
-const handleKeyUpSearch = (customEvent: CustomEvent) => {
-  const key = customEvent.detail?.event?.detail?.event?.key
-
-  if (key === 'Escape') {
-    setFilters({ search: undefined })
-  }
-}
-
 const handleChangeType = (customEvent: CustomEvent) => {
   const assetType = customEvent.detail?.value?.id as FiltersAssetType
   setFilters({ assetType })
@@ -301,13 +293,12 @@ onMounted(async () => {
 
           <!-- Search Filter -->
           <lukso-search
-            :value="filters.search"
+            .value="filters.search"
             :placeholder="formatMessage('asset_filter_search_placeholder')"
             hide-loading
             has-reset
             size="small"
             @on-search="handleChangeSearch"
-            @on-key-up="handleKeyUpSearch"
             @on-reset="() => setFilters({ search: undefined })"
           ></lukso-search>
         </div>

@@ -11,7 +11,7 @@ export const decodeParameter = (param: string, value: string) => {
   try {
     return ABICoder.decodeParameter(param, value)
   } catch (error) {
-    console.error(`Couldn't decode ${param} with value ${value}`, error)
+    console.warn(`Couldn't decode ${param} with value ${value}`, error)
     return ''
   }
 }

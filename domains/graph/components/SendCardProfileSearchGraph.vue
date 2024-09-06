@@ -152,7 +152,7 @@ const handleBlur = async (customEvent: CustomEvent) => {
 <template>
   <lukso-search
     name="receiver"
-    :value="searchTerm"
+    .value="searchTerm"
     :placeholder="$formatMessage('send_input_placeholder')"
     :results="JSON.stringify(results)"
     :is-searching="isSearchingReceiver ? 'true' : undefined"

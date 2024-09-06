@@ -66,15 +66,19 @@ const linkLabel = computed(() => {
   return props.profile?.address
 })
 
-onMounted(async () => {
-  // we need slight delay to make sure that the elements are rendered before we can get their width
-  await sleep(100)
-  expandedWidth.value = expandedRef.value?.clientWidth || 0
-  copyWidth.value = copyRef.value?.clientWidth || 0
+watch(
+  () => props.profile?.profileLink?.isResolved,
+  async () => {
+    // we need slight delay to make sure that the elements are rendered before we can get their width
+    await sleep(100)
+    expandedWidth.value = expandedRef.value?.clientWidth || 0
+    copyWidth.value = copyRef.value?.clientWidth || 0
 
-  copyRef.value?.classList.add('hidden') // after we measure copy text we hide it
-  buttonWidth.value = '0px' // also collapse button
-})
+    copyRef.value?.classList.add('hidden') // after we measure copy text we hide it
+    buttonWidth.value = '0px' // also collapse button
+  },
+  { immediate: true }
+)
 </script>
 
 <template>

@@ -15,7 +15,7 @@ export const hexToUtf8 = (value?: string) => {
   try {
     return web3hexToUtf8(value)
   } catch (error) {
-    console.error(`Couldn't decode hex to utf8 with value ${value}`, error)
+    console.warn(`Couldn't decode hex to utf8 with value ${value}`, error)
     return ''
   }
 }

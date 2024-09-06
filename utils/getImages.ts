@@ -101,19 +101,6 @@ export const getOptimizedImage = (
   if (isGraph.value) {
     return computed<ImageItem | null>(() => {
       const { url, verified } = currentImage?.value || {}
-
-      // TODO this is a temporary solution to show the verified status before indexer return string status
-      const verificationStatus = () => {
-        switch (verified) {
-          case true:
-            return 'verified'
-          case false:
-            return 'invalid'
-          default:
-            return 'unverified'
-        }
-      }
-
       const queryParams = {
         width: width * dpr,
         ...(dpr !== 1 ? { dpr } : {}),
@@ -125,7 +112,7 @@ export const getOptimizedImage = (
         : ''
       return {
         url: url ? `${url}${queryParamsString}` : null,
-        verified: verificationStatus(), // since indexer return boolean we need to convert
+        verified,
       } as ImageItem
     })
   }
@@ -149,9 +136,9 @@ export const getOptimizedImage = (
           promise.value =
             isVerified != null
               ? isVerified === 'true'
-                ? 'verified'
-                : 'invalid'
-              : 'unverified'
+                ? 'VERIFIED'
+                : 'INVALID'
+              : 'UNVERIFIED'
         } else if (
           verification?.method != null &&
           verification?.method !== '0x00000000' &&
@@ -166,22 +153,22 @@ export const getOptimizedImage = (
             )
             .catch(() => null)
           const hash = data != null ? keccak256(data) : null
-          promise.value = hash === verification.data ? 'verified' : 'invalid'
+          promise.value = hash === verification.data ? 'VERIFIED' : 'INVALID'
         } else if (
           verification?.method != null &&
           verification?.method !== '0x00000000' &&
           verification?.data != null
         ) {
-          promise.value = 'invalid'
+          promise.value = 'INVALID'
         } else {
-          promise.value = 'unverified'
+          promise.value = 'UNVERIFIED'
         }
       })()
     }
     return verified != null
       ? verified
-        ? 'verified'
-        : 'invalid'
+        ? 'VERIFIED'
+        : 'INVALID'
       : promise.value || null
   })
   return computed<ImageItem | null>(() => {
