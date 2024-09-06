@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useInfiniteScroll } from '@vueuse/core'
 
-import type { SelectStringOption } from '@lukso/web-components'
 import type { FiltersAttribute } from '@/types/filters'
+import type { SelectStringOption } from '@lukso/web-components'
 
 type Props = {
   asset?: Asset | null
