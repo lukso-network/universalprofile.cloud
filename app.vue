@@ -156,13 +156,10 @@ const checkBuyLyx = () => {
     genericLog('Buy lyx order', buyLyx)
 
     const { showModal } = useModal()
-    const { formatMessage } = useIntl()
 
     showModal({
-      icon: '/images/lukso.svg',
-      title: formatMessage('transak_success_title'),
-      message: formatMessage('transak_success_message'),
-      confirmButtonText: formatMessage('transak_success_button'),
+      template: 'BuyLyxSuccess',
+      isUrlModal: true,
     })
   }
 }
