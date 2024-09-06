@@ -67,10 +67,14 @@ const whereAssetAddress = (filters: CollectionFilters) => {
 }
 
 const whereSearch = (filters: CollectionFilters) => {
+  if (!filters?.search) {
+    return {}
+  }
+
   return {
     _or: [
-      { formattedTokenId: { _ilike: filters.search } },
-      { tokenId: { _ilike: filters.search } },
+      { formattedTokenId: { _ilike: `%${filters?.search}%` } },
+      { tokenId: { _ilike: `%${filters?.search}%` } },
     ],
   }
 }

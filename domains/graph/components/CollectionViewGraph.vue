@@ -2,6 +2,7 @@
 import { useInfiniteScroll } from '@vueuse/core'
 
 import type { SelectStringOption } from '@lukso/web-components'
+import type { FiltersAttribute } from '@/types/filters'
 
 type Props = {
   asset?: Asset | null
@@ -11,7 +12,11 @@ defineProps<Props>()
 const { isMobile } = useDevice()
 const { formatMessage } = useIntl()
 const address = useRouter().currentRoute.value.params?.collectionAddress
-const search = ref('')
+const { showModal } = useModal()
+const { filters, setFilters, attributeFilterOptions, attributeFilterValues } =
+  useFilters(toRef([]), {
+    orderBy: 'added-asc',
+  } as Filters)
 const isLoading = ref(false)
 const limit = ref(60)
 const offset = ref(0)
@@ -22,12 +27,16 @@ const { data: attributesData, isLoading: isLoadingAttributes } =
   useCollectionAttributesGraph({
     address,
   })
-const selectedAttributes = ref<SelectStringOption[]>([])
-const orderBy = ref<SelectStringOption>()
-const orders = ref<SelectStringOption[]>()
+const orderByOptions = ref<SelectStringOption[]>()
+
+const orderByValue = computed(() => {
+  return orderByOptions.value?.find(option => option.id === filters.orderBy)
+})
 
 const hasData = computed(() => data.value.length > 0)
-const hasFiltersSelected = computed(() => selectedAttributes.value.length > 0)
+const hasFiltersSelected = computed(
+  () => filters?.attributes && filters.attributes?.length > 0
+)
 
 const loadMore = async (appendData?: boolean) => {
   if (isLoading.value) {
@@ -50,13 +59,16 @@ const loadMore = async (appendData?: boolean) => {
   await sleep(250)
 
   try {
+    const [, order] = filters.orderBy.split('-')
     const { collection: _data, meta } = await useCollectionGraph({
       address,
       limit: limit.value,
       offset: offset.value,
-      search: `%${search.value}%`,
-      orderBy: orderBy.value?.id || 'asc',
-      attributes: unref(selectedAttributes.value),
+      search: filters.search,
+      orderBy: order,
+      attributes: filters.attributes
+        ? JSON.parse(filters.attributes)
+        : undefined,
     })
 
     offset.value = offset.value + limit.value
@@ -75,37 +87,76 @@ const loadMore = async (appendData?: boolean) => {
   }
 }
 
-const handleSearch = async (customEvent: CustomEvent) => {
+const handleSearch = (customEvent: CustomEvent) => {
   const searchTerm = customEvent.detail?.value
-  search.value = searchTerm
-  await loadMore()
+  setFilters({ search: searchTerm })
 }
 
 const handleSelectAttribute = (customEvent: CustomEvent) => {
-  const attribute = customEvent.detail?.value as SelectStringOption
-
-  if (selectedAttributes.value.some(value => value.id === attribute.id)) {
-    selectedAttributes.value = selectedAttributes.value.filter(
-      value => value.id !== attribute.id
-    )
-  } else {
-    selectedAttributes.value = [...selectedAttributes.value, attribute]
+  const option = customEvent.detail?.value as SelectStringOption
+  const attribute = {
+    group: option.group as string,
+    value: option.value,
   }
 
-  loadMore()
+  const attributes = JSON.parse(
+    filters.attributes || '[]'
+  ) as FiltersAttribute[]
+  let attributesUpdated = []
+
+  if (
+    attributes?.some(
+      value =>
+        value.group === attribute.group && value.value === attribute.value
+    )
+  ) {
+    attributesUpdated = attributes?.filter(
+      value =>
+        value.group !== attribute.group || value.value !== attribute.value
+    )
+  } else {
+    attributesUpdated = [...attributes, attribute]
+  }
+
+  setFilters({
+    attributes:
+      attributesUpdated.length > 0
+        ? JSON.stringify(attributesUpdated)
+        : undefined,
+  })
 }
 
 const handleRemoveAttribute = (attribute: SelectStringOption) => {
-  selectedAttributes.value = selectedAttributes.value.filter(
-    value => value.id !== attribute.id
+  const selectedAttributes = filters.attributes
+    ? (JSON.parse(filters.attributes) as FiltersAttribute[])
+    : []
+  const attributesUpdated = selectedAttributes?.filter(
+    value => value.group !== attribute.group || value.value !== attribute.value
   )
-  loadMore()
+
+  setFilters({
+    attributes:
+      attributesUpdated.length > 0
+        ? JSON.stringify(attributesUpdated)
+        : undefined,
+  })
 }
 
 const handleSelectOrder = (customEvent: CustomEvent) => {
   const order = customEvent.detail?.value
-  orderBy.value = order
-  loadMore()
+  setFilters({ orderBy: order.id })
+}
+
+const handleMobileFiltersModal = () => {
+  showModal({
+    template: 'MobileCollectionFilters',
+  })
+}
+
+const handleMobileSearchModal = () => {
+  showModal({
+    template: 'MobileSearch',
+  })
 }
 
 useInfiniteScroll(el, () => loadMore(true), { distance: 500 })
@@ -113,15 +164,20 @@ useInfiniteScroll(el, () => loadMore(true), { distance: 500 })
 onMounted(async () => {
   el.value = document
 
-  orderBy.value = {
-    id: 'asc',
-    value: formatMessage('filters_order_by_recently_added'),
-  }
-  orders.value = [
-    { id: 'asc', value: formatMessage('filters_order_by_recently_added') },
-    { id: 'desc', value: formatMessage('filters_order_by_lastly_added') },
+  orderByOptions.value = [
+    {
+      id: 'added-asc',
+      value: formatMessage('filters_order_by_recently_added'),
+    },
+    { id: 'added-desc', value: formatMessage('filters_order_by_lastly_added') },
   ]
 })
+
+watch(
+  () => filters,
+  async () => await loadMore(),
+  { deep: true }
+)
 </script>
 
 <template>
@@ -131,7 +187,39 @@ onMounted(async () => {
 
     <!-- Mobile Filters -->
     <div v-if="isMobile">
-      <!-- TBA -->
+      <div
+        class="grid grid-cols-[max-content,max-content,auto,max-content] gap-2 pb-4"
+      >
+        <!-- Filters modal trigger -->
+        <lukso-select
+          size="medium"
+          :value="filters.attributes"
+          :placeholder="formatMessage('asset_filter_mobile_filters')"
+          show-selection-counter
+          @click="handleMobileFiltersModal"
+        ></lukso-select>
+
+        <!-- Search trigger -->
+        <lukso-button
+          is-icon
+          variant="secondary"
+          @click="handleMobileSearchModal"
+        >
+          <lukso-icon name="search" size="medium" class="mx-1"></lukso-icon>
+        </lukso-button>
+
+        <!-- Separator -->
+        <div></div>
+
+        <!-- Order by -->
+        <lukso-select
+          size="medium"
+          :value="JSON.stringify(orderByValue)"
+          :options="JSON.stringify(orderByOptions)"
+          is-right
+          @on-select="handleSelectOrder"
+        ></lukso-select>
+      </div>
     </div>
 
     <!-- Desktop Filters -->
@@ -155,22 +243,8 @@ onMounted(async () => {
             size="small"
             :placeholder="attribute.group"
             show-selection-counter
-            :options="
-              JSON.stringify(
-                attribute.values.map(value => ({
-                  id: slug(value),
-                  value,
-                  group: attribute.group,
-                }))
-              )
-            "
-            :value="
-              JSON.stringify(
-                selectedAttributes.filter(
-                  value => value.group === attribute.group
-                )
-              )
-            "
+            :options="JSON.stringify(attributeFilterOptions(attribute))"
+            :value="JSON.stringify(attributeFilterValues(attribute))"
             @on-select="handleSelectAttribute"
           ></lukso-select>
 
@@ -189,8 +263,8 @@ onMounted(async () => {
         <!-- Order by -->
         <lukso-select
           size="small"
-          :value="JSON.stringify(orderBy)"
-          :options="JSON.stringify(orders)"
+          :value="JSON.stringify(orderByValue)"
+          :options="JSON.stringify(orderByOptions)"
           is-right
           @on-select="handleSelectOrder"
         ></lukso-select>
@@ -200,8 +274,8 @@ onMounted(async () => {
       <div v-if="hasFiltersSelected" class="flex flex-wrap gap-2 pb-4">
         <!-- Selected attributes -->
         <lukso-tag
-          v-for="attribute in selectedAttributes"
-          :key="attribute.id"
+          v-for="attribute in JSON.parse(filters.attributes || '[]')"
+          :key="`${attribute.group}-${attribute.value}`"
           is-rounded
           class="cursor-pointer"
           @click="() => handleRemoveAttribute(attribute)"
