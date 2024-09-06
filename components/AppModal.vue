@@ -63,10 +63,11 @@ watch(
   modalTemplate => {
     if (modalTemplate) {
       const { modalSize, modalData } = route.query || {}
+      loadModalTemplate()
       showModal({
         template: modalTemplate,
         data: modalData ? JSON.parse(modalData) : undefined,
-        size: modalSize,
+        size: modalSize || 'small',
       })
     }
   },

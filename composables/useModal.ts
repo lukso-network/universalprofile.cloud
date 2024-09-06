@@ -16,6 +16,8 @@ const showModal = (modal: Modal | string) => {
     return setModalQueryParams(modal)
   }
 
+  // TODO remove this after all modals are migrated to new modal
+
   const modalDefaults: Modal = {
     isOpen: true,
     icon: '/images/up-error.png',
@@ -61,8 +63,11 @@ const closeModal = () => {
 }
 
 export const useModal = () => {
+  const { modal } = useAppStore()
+
   return {
     showModal,
     closeModal,
+    modal,
   }
 }
