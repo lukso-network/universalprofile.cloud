@@ -3,12 +3,7 @@ import type { FiltersAttribute } from '@/types/filters'
 import type { SelectStringOption } from '@lukso/web-components'
 
 const { formatMessage } = useIntl()
-const {
-  filters,
-  setFilters,
-  attributeFilterOptions,
-  //   // attributeFilterValues,
-} = useFilters()
+const { filters, setFilters, attributeFilterOptions } = useFilters()
 
 type Props = {
   closeModal: () => void
