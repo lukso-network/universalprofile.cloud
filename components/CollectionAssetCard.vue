@@ -19,9 +19,11 @@ const assetImage = useAssetImage(token, false, 880)
   >
     <div slot="content" class="break-words p-6">
       <div
-        class="mb-4 flex flex-col gap-2 border-b border-b-neutral-90 pb-4 sm:gap-3"
+        class="mb-4 flex flex-col gap-4 border-b border-b-neutral-90 pb-4 sm:gap-3"
       >
-        <div class="grid grid-cols-1 sm:grid-cols-[auto,max-content]">
+        <div
+          class="grid grid-cols-1 gap-4 sm:grid-cols-[auto,max-content] sm:gap-0"
+        >
           <div class="flex flex-col gap-2">
             <div class="heading-inter-17-semi-bold flex gap-2">
               <AssetName :asset="asset" />
