@@ -97,7 +97,7 @@ onMounted(() => {
         {{ formatMessage('modal_mobile_filter_cancel') }}
       </lukso-button>
       <lukso-button variant="landing" is-full-width @click="confirmModal">
-        {{ formatMessage('modal_mobile_search_confirm') }}
+        {{ formatMessage('modal_mobile_filter_confirm') }}
       </lukso-button>
     </div>
   </div>
