@@ -58,3 +58,11 @@ export const settingsMissingAssetsSuccessRoute = (assetAddress?: Address) => {
 export const settingsDataProviderRoute = () => {
   return '/settings/data-provider'
 }
+
+export const privacyPolicyRoute = () => {
+  return '/legal/privacy-policy'
+}
+
+export const termsAndConditionsRoute = () => {
+  return '/legal/terms-and-conditions'
+}
