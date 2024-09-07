@@ -29,20 +29,18 @@ const providers: ProviderName[] = ['twitter', 'discord', 'github']
       </div>
       <div class="hidden h-4 w-0.5 bg-purple-63 xl:block"></div>
       <div class="flex gap-10">
-        <a
-          href="https://new-creative-economies.foundation/privacy"
+        <NuxtLink
+          :to="privacyPolicyRoute()"
           class="nav-apax-12-medium-uppercase text-purple-41/70 hover:text-purple-31/70 hover:underline"
-          target="_blank"
         >
           {{ $formatMessage('footer_privacy_policy_text') }}
-        </a>
-        <a
-          href="https://lukso.network/terms"
+        </NuxtLink>
+        <NuxtLink
+          :to="termsAndConditionsRoute()"
           class="nav-apax-12-medium-uppercase text-purple-41/70 hover:text-purple-31/70 hover:underline"
-          target="_blank"
         >
           {{ $formatMessage('footer_terms_text') }}
-        </a>
+        </NuxtLink>
       </div>
     </div>
   </lukso-footer>
