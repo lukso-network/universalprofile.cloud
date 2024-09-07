@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type Props = {
-  asset?: Asset
+  asset?: FileAsset
 }
 
 const props = defineProps<Props>()
@@ -10,9 +10,10 @@ const handleClick = () => {
   showModal({
     template: 'Asset3D',
     data: {
-      asset: props.asset,
+      url: props.asset?.url,
     },
     size: 'auto',
+    isUrlModal: true,
   })
 }
 </script>

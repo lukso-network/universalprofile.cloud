@@ -2,7 +2,7 @@
 const appStore = useAppStore()
 const modalTemplateComponent = shallowRef()
 const route = useRoute()
-const { showModal, closeModal } = useModal()
+const { closeModal } = useModal()
 
 const loadModalTemplate = () => {
   modalTemplateComponent.value = defineAsyncComponent(() => {
@@ -64,7 +64,8 @@ watch(
     if (modalTemplate) {
       const { modalSize, modalData } = route.query || {}
       loadModalTemplate()
-      showModal({
+      appStore.setModal({
+        isOpen: true,
         template: modalTemplate,
         data: modalData ? JSON.parse(modalData) : undefined,
         size: modalSize || 'small',

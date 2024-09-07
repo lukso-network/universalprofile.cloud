@@ -13,12 +13,14 @@ const images = computed(() => props.asset?.resolvedMetadata?.images || null)
 const optimizedImages = useOptimizedImages(images, 56)
 
 const handlePreviewImage = (image: Image[]) => {
+  const optimizedImage = useOptimizedImage([image[0]], 1000)
   showModal({
     template: 'AssetImage',
     data: {
-      asset: [image[0]],
+      image: unref(optimizedImage),
     },
     size: 'auto',
+    isUrlModal: true,
   })
 }
 </script>

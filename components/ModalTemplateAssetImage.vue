@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import '@google/model-viewer'
 
-const { modal } = useAppStore()
+const { modal } = useModal()
 
 type Props = {
   closeModal: () => void
@@ -9,7 +9,6 @@ type Props = {
 
 defineProps<Props>()
 const isLoaded = ref(false)
-const optimizedImage = useOptimizedImage(modal?.data?.asset, 1000)
 </script>
 
 <template>
@@ -24,7 +23,7 @@ const optimizedImage = useOptimizedImage(modal?.data?.asset, 1000)
 
     <AssetImage
       class="relative max-h-[calc(100vh-100px)] rounded-12"
-      :image="optimizedImage"
+      :image="modal?.data?.image"
       :has-verification="false"
       @on-load="isLoaded = true"
     />
