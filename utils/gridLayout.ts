@@ -65,7 +65,7 @@ export function toGridLayoutItems(
         ...widget,
         i,
         x: 0,
-        y: currentY, 
+        y: currentY,
         w: 1,
         h: widget.height,
       })
