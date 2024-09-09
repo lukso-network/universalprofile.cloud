@@ -58,6 +58,11 @@ describe('socialLinkParser', () => {
     )
   })
 
+  it('should return youtube', () => {
+    expect(detectSocialMedia('https://www.youtube.com/')).toBe('youtube')
+    expect(detectSocialMedia('https://www.youtu.be/')).toBe('youtube')
+  })
+
   it('should return for an invalid url', () => {
     expect(detectSocialMedia('https://www.example.com/')).toBeUndefined()
     expect(detectSocialMedia('')).toBeUndefined()

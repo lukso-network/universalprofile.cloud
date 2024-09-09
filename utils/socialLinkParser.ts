@@ -10,6 +10,7 @@ const SOCIAL_MEDIA = {
   linkedin: ['linkedin.com'],
   github: ['github.com'],
   'universal-page': ['universal.page'],
+  youtube: ['youtube.com', 'youtu.be'],
 }
 
 /**
