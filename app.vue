@@ -22,6 +22,7 @@ const { disconnect } = useBaseProvider()
 const { cacheValue } = useCache()
 const { currencyList } = storeToRefs(useCurrencyStore())
 const { initProvider, reconnect } = useWalletConnectProvider()
+const { formatMessage } = useIntl()
 
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
@@ -162,7 +163,12 @@ const checkBuyLyx = () => {
     const { showModal } = useModal()
 
     showModal({
-      template: 'BuyLyxSuccess',
+      data: {
+        icon: '/images/lukso.svg',
+        title: formatMessage('transak_success_title'),
+        message: formatMessage('transak_success_message'),
+        confirmButtonText: formatMessage('transak_success_button'),
+      },
     })
   }
 }

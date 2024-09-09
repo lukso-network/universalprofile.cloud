@@ -12,6 +12,7 @@ const address = computed(() => sendAsset.value?.address)
 const tokenId = computed(() => sendAsset.value?.tokenId)
 const _asset = useToken()(useAsset()(address, tokenId))
 const lyxToken = useLyxToken()
+const { formatMessage } = useIntl()
 
 const asset = computed(() =>
   isLyx(sendAsset.value) ? lyxToken.value : _asset.value
@@ -60,7 +61,9 @@ const checkBalance = () => {
   }
 
   showModal({
-    template: 'NoAssetBalance',
+    data: {
+      message: formatMessage('no_asset_balance'),
+    },
   })
 }
 
