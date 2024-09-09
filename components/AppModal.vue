@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { ModalSizes } from '@lukso/web-components'
 
-const appStore = useAppStore()
-const { isModalOpen } = storeToRefs(useAppStore())
+const { setModal } = useAppStore()
+const { isModalOpen, modal } = storeToRefs(useAppStore())
 const modalTemplateComponent = shallowRef()
 const route = useRoute()
 const { closeModal } = useModal()
@@ -29,14 +29,14 @@ watch(
       }: { modalSize: ModalSizes; modalData?: string } = route.query || {}
 
       loadModalTemplate(modalTemplate)
-      appStore.setModal({
+      setModal({
         template: modalTemplate,
         data: modalData ? JSON.parse(modalData) : undefined,
         size: modalSize,
       })
     } else {
       loadModalTemplate(MODAL_DEFAULT_TEMPLATE)
-      appStore.setModal({
+      setModal({
         template: undefined,
         data: undefined,
         size: undefined,
@@ -50,8 +50,8 @@ watch(
 <template>
   <lukso-modal
     :is-open="isModalOpen ? true : undefined"
-    :size="appStore.modal?.size"
-    :data-template="appStore.modal?.template"
+    :size="modal?.size"
+    :data-template="modal?.template"
     @on-backdrop-click="closeModal"
   >
     <component
