@@ -1,38 +1,45 @@
 <script setup lang="ts">
-import {
-  type Breakpoint,
-  type Breakpoints,
-  GridItem,
-  GridLayout,
-  type Layout,
-} from 'grid-layout-plus'
+import { GridItem, GridLayout } from 'grid-layout-plus'
 
 import { toGridLayoutItems } from '@/utils/gridLayout'
-
-import type { GridLayoutItem } from '@/types/grid'
 
 const COL_NUM_LARGE = 2
 const COL_NUM_SMALL = 1
 const ROW_HEIGHT_PX = 280
 
-const cols: Breakpoints = {
-  xxs: COL_NUM_SMALL,
-  xs: COL_NUM_LARGE,
-  sm: COL_NUM_LARGE,
-  md: COL_NUM_LARGE,
-  lg: COL_NUM_LARGE,
+const breakpoints: Record<number, number> = {
+  0: COL_NUM_SMALL,
+  768: COL_NUM_LARGE,
 }
+
+const gridColumns = ref(getGridColumns(window.innerWidth))
+
+const DEBOUNCE_TIMEOUT = 250
+let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 
 const gridOptions = reactive<GridProperties>({
   isDraggable: false,
   isResizable: false,
-  isResponsive: true,
+  isResponsive: false,
 })
+
+// TODO: gridConfig should be saved and fetched from local storage on changes
+// Only sent to the server when the user saves the layout
+const gridConfig = ref<LSP27TheGrid | undefined>()
 const layout = ref<GridLayoutItem[]>([])
 const showSettingsModal = ref(false)
 const layoutStringified = ref('')
 
 const address = getCurrentProfileAddress()
+
+function getGridColumns(width: number): number {
+  const breakpointsKeys = Object.keys(breakpoints)
+    .map(Number)
+    .sort((a, b) => b - a)
+  const validBreakpoint = breakpointsKeys.find(bp => width >= bp)
+
+  return validBreakpoint ? breakpoints[validBreakpoint] : COL_NUM_SMALL
+}
 
 async function initializeTheGrid(address: string | undefined): Promise<void> {
   if (!address) {
@@ -40,35 +47,20 @@ async function initializeTheGrid(address: string | undefined): Promise<void> {
     return
   }
 
-  // check if there's an existing layout for the user
-  const gridConfigObject = await getGridConfig(address)
-
-  if (!gridConfigObject) {
-    const newUserLayout = getNewUserLayout(address)
-    layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
-
-    return
+  if (!gridConfig.value) {
+    const gridConfigObject = await getGridConfig(address)
+    if (
+      !gridConfigObject ||
+      !gridConfigObject.config ||
+      !isValidLayout(gridConfigObject.config)
+    ) {
+      gridConfig.value = getNewUserLayout(address)
+    } else {
+      gridConfig.value = gridConfigObject.config
+    }
   }
 
-  // check if the config is valid
-  if (!isValidLayout(gridConfigObject.config)) {
-    console.warn('Saved layout is invalid. Resetting to default layout.')
-    const newUserLayout = getNewUserLayout(address)
-    layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
-
-    return
-  }
-
-  const newLayout = gridConfigObject.config
-  layout.value = toGridLayoutItems(newLayout, COL_NUM_LARGE)
-}
-
-// UGLY HACK => Need to deep dive into the grid-layout-plus source code
-// to figure out why the layouts overlap.
-// Or just calculate 2 col layouts manually based on the 4 col layout.
-function triggerLayoutRefresh(): void {
-  gridOptions.isDraggable = !gridOptions.isDraggable
-  gridOptions.isDraggable = !gridOptions.isDraggable
+  layout.value = toGridLayoutItems(gridConfig.value, gridColumns.value)
 }
 
 function onSettingsClick() {
@@ -116,26 +108,39 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
   console.log('Layout saved 🎉')
 }
 
+function resizeHandler(): void {
+  if (resizeTimeout) clearTimeout(resizeTimeout)
+  resizeTimeout = setTimeout(() => {
+    const prevCols = gridColumns.value
+    const newCols = getGridColumns(window.innerWidth)
+
+    if (prevCols !== newCols) {
+      gridColumns.value = newCols
+      layout.value = toGridLayoutItems(layout.value, newCols)
+    }
+  }, DEBOUNCE_TIMEOUT)
+}
+
 function resetLayout(): void {
   showSettingsModal.value = false
   const newUserLayout = getNewUserLayout(address)
   layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
 }
 
-function breakpointChanged(
-  _newBreakpoint: Breakpoint,
-  _newLayout: Layout
-): void {
-  triggerLayoutRefresh()
-}
-
 function clearSelection(): void {
   window.getSelection()?.removeAllRanges()
 }
 
+onMounted(() => {
+  window.addEventListener('resize', resizeHandler)
+})
+
 onMounted(async () => {
   await initializeTheGrid(address)
-  triggerLayoutRefresh()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', resizeHandler)
 })
 </script>
 
@@ -144,12 +149,11 @@ onMounted(async () => {
     <div class="mx-auto max-w-content">
       <GridLayout
         v-model:layout="layout"
-        :cols="cols"
+        :col-num="gridColumns"
         :row-height="ROW_HEIGHT_PX"
         :is-draggable="gridOptions.isDraggable"
         :is-resizable="gridOptions.isDraggable"
         :responsive="gridOptions.isResponsive"
-        @breakpoint-changed="breakpointChanged"
       >
         <GridItem
           v-for="item in layout"

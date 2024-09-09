@@ -56,37 +56,50 @@ export function toGridLayoutItems(
   gridColumns: number
 ): GridLayoutItem[] {
   const layout: GridLayoutItem[] = []
-  const columnHeights = Array(gridColumns).fill(0) // Track the height of each column
 
-  for (const [i, widget] of grid.entries()) {
-    // Find the first position where the widget can fit
-    let bestY = Number.MAX_SAFE_INTEGER
-    let bestX = 0
-
-    for (let x = 0; x <= gridColumns - widget.width; x++) {
-      // Find the max height in the range of columns where this widget would be placed
-      const maxY = Math.max(...columnHeights.slice(x, x + widget.width))
-
-      // If this position is better (lower), choose it
-      if (maxY < bestY) {
-        bestY = maxY
-        bestX = x
-      }
+  if (gridColumns === 1) {
+    // Simple stacking for single column layout
+    let currentY = 0
+    for (const [i, widget] of grid.entries()) {
+      layout.push({
+        ...widget,
+        i,
+        x: 0,
+        y: currentY,
+        w: 1,
+        h: widget.height,
+      })
+      currentY += widget.height
     }
+  } else {
+    // General case for multiple columns
+    const columnHeights = Array(gridColumns).fill(0)
 
-    // Place the widget in the best position found
-    layout.push({
-      ...widget,
-      i,
-      x: bestX,
-      y: bestY,
-      w: widget.width,
-      h: widget.height,
-    })
+    for (const [i, widget] of grid.entries()) {
+      let bestY = Number.MAX_SAFE_INTEGER
+      let bestX = 0
 
-    // Update the column heights based on where the widget was placed
-    for (let x = bestX; x < bestX + widget.width; x++) {
-      columnHeights[x] = bestY + widget.height
+      for (let x = 0; x <= gridColumns - widget.width; x++) {
+        const maxY = Math.max(...columnHeights.slice(x, x + widget.width))
+
+        if (maxY < bestY) {
+          bestY = maxY
+          bestX = x
+        }
+      }
+
+      layout.push({
+        ...widget,
+        i,
+        x: bestX,
+        y: bestY,
+        w: widget.width,
+        h: widget.height,
+      })
+
+      for (let x = bestX; x < bestX + widget.width; x++) {
+        columnHeights[x] = bestY + widget.height
+      }
     }
   }
 
