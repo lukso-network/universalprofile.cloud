@@ -8,7 +8,6 @@ const {
 } = storeToRefs(useSendStore())
 const { isLoadedApp } = storeToRefs(useAppStore())
 const { showModal } = useModal()
-const { formatMessage } = useIntl()
 const address = computed(() => sendAsset.value?.address)
 const tokenId = computed(() => sendAsset.value?.tokenId)
 const _asset = useToken()(useAsset()(address, tokenId))
@@ -61,7 +60,7 @@ const checkBalance = () => {
   }
 
   showModal({
-    message: formatMessage('no_asset_balance'),
+    template: 'NoAssetBalance',
   })
 }
 

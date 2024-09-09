@@ -32,7 +32,7 @@ const handleShowAsset = () => {
     return showModal({
       template: 'TokenCollection',
       data: {
-        asset: props.asset,
+        address: props.asset.address,
       },
       size: 'medium',
     })

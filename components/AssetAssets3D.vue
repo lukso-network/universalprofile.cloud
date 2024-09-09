@@ -13,7 +13,6 @@ const handleClick = () => {
       url: props.asset?.url,
     },
     size: 'auto',
-    isUrlModal: true,
   })
 }
 </script>

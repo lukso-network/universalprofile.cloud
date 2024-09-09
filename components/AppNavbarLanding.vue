@@ -7,7 +7,6 @@ const handleConnect = async () => {
   showModal({
     template: 'ConnectWallet',
     size: 'auto',
-    isUrlModal: true,
   })
 }
 

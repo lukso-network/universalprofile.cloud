@@ -20,7 +20,6 @@ const handlePreviewImage = (image: Image[]) => {
       image: unref(optimizedImage),
     },
     size: 'auto',
-    isUrlModal: true,
   })
 }
 </script>

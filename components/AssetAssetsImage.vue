@@ -18,7 +18,6 @@ const handleClick = () => {
       image: unref(optimizedImage),
     },
     size: 'auto',
-    isUrlModal: true,
   })
 }
 </script>

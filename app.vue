@@ -8,13 +8,17 @@ if (typeof window !== 'undefined') {
 }
 
 const { addWeb3, getWeb3 } = useWeb3Store()
-const { getNetworkById, setModal } = useAppStore()
-const { isLoadedApp, selectedChainId, isSearchOpen, modal, isWalletConnect } =
-  storeToRefs(useAppStore())
+const { getNetworkById } = useAppStore()
+const {
+  isLoadedApp,
+  selectedChainId,
+  isSearchOpen,
+  isModalOpen,
+  isWalletConnect,
+} = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents } =
   useBrowserExtensionProvider()
 const { disconnect } = useBaseProvider()
-const router = useRouter()
 const { cacheValue } = useCache()
 const { currencyList } = storeToRefs(useCurrencyStore())
 const { initProvider, reconnect } = useWalletConnectProvider()
@@ -159,7 +163,6 @@ const checkBuyLyx = () => {
 
     showModal({
       template: 'BuyLyxSuccess',
-      isUrlModal: true,
     })
   }
 }
@@ -174,11 +177,6 @@ const resetDataProvider = () => {
     fetchDataProviderReset.value = true
   }
 }
-
-router.beforeEach(() => {
-  // hide modals when there is router transition
-  setModal({ isOpen: false })
-})
 
 onMounted(async () => {
   setupTranslations()
@@ -205,7 +203,7 @@ useHead({
       const bodyClass = []
 
       // prevent window scroll when search modal is open
-      if (isSearchOpen.value || modal.value?.isOpen) {
+      if (isSearchOpen.value || isModalOpen.value) {
         bodyClass.push('!overflow-hidden')
       }
 

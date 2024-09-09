@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import '@google/model-viewer'
-
-const { modal } = useModal()
-
-type Props = {
-  closeModal: () => void
-}
-
-defineProps<Props>()
+const { modal, closeModal } = useModal()
 const isLoaded = ref(false)
 </script>
 

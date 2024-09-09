@@ -1,74 +1,45 @@
 <script setup lang="ts">
+import type { ModalSizes } from '@lukso/web-components'
+
 const appStore = useAppStore()
+const { isModalOpen } = storeToRefs(useAppStore())
 const modalTemplateComponent = shallowRef()
 const route = useRoute()
 const { closeModal } = useModal()
 
-const loadModalTemplate = () => {
+/**
+ * Load modal template component
+ *
+ * @param name
+ */
+const loadModalTemplate = (name: string) => {
   modalTemplateComponent.value = defineAsyncComponent(() => {
-    const templateName = appStore.modal?.template
-      ? appStore.modal.template
-      : MODAL_DEFAULT_TEMPLATE
-    return import(`./ModalTemplate${templateName}.vue`)
+    return import(`./ModalTemplate${name}.vue`)
   })
 }
 
-/**
- * Reset modal query params
- */
-const resetModalQueryParams = () => {
-  // remove modal query params from the URL
-  const modalQueryParams: ModalQueryParams = {
-    modalTemplate: undefined,
-    modalSize: undefined,
-    modalData: undefined,
-  }
-
-  // navigate to the same route without modal query params
-  try {
-    navigateTo({
-      path: route.path,
-      query: {
-        ...route.query,
-        ...modalQueryParams,
-      },
-    })
-  } catch (error) {
-    console.warn(error)
-  }
-}
-
-// when modal is opened, load proper template
-watch(
-  () => appStore.modal?.isOpen,
-  () => {
-    if (appStore.modal?.isOpen) {
-      loadModalTemplate()
-    } else {
-      if (route.query?.modalTemplate) {
-        resetModalQueryParams()
-      }
-
-      modalTemplateComponent.value = defineAsyncComponent(() => {
-        const templateName = MODAL_DEFAULT_TEMPLATE
-        return import(`./ModalTemplate${templateName}.vue`)
-      })
-    }
-  }
-)
-
-// watch for modal query params and show modal
+// watch for modal query params and show/hide modal
 watch(
   () => route.query?.modalTemplate,
   modalTemplate => {
     if (modalTemplate) {
-      const { modalSize, modalData } = route.query || {}
-      loadModalTemplate()
+      const {
+        modalSize,
+        modalData,
+      }: { modalSize: ModalSizes; modalData?: string } = route.query || {}
+
+      loadModalTemplate(modalTemplate)
       appStore.setModal({
-        isOpen: true,
         template: modalTemplate,
         data: modalData ? JSON.parse(modalData) : undefined,
-        size: modalSize || 'small',
+        size: modalSize,
+      })
+    } else {
+      loadModalTemplate(MODAL_DEFAULT_TEMPLATE)
+      appStore.setModal({
+        template: undefined,
+        data: undefined,
+        size: undefined,
       })
     }
   },
@@ -78,14 +49,15 @@ watch(
 
 <template>
   <lukso-modal
-    :is-open="appStore.modal?.isOpen ? true : undefined"
+    :is-open="isModalOpen ? true : undefined"
     :size="appStore.modal?.size"
+    :data-template="appStore.modal?.template"
     @on-backdrop-click="closeModal"
   >
     <component
       v-if="modalTemplateComponent"
       :is="modalTemplateComponent"
-      :close-modal="closeModal"
+      class="animate-fade-in"
     ></component>
   </lukso-modal>
 </template>
