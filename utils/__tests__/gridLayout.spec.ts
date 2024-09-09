@@ -10,6 +10,7 @@ const GRID_TESTS: GridTests[] = [
   {
     grid: [],
     expectedLayouts: {
+      1: [],
       2: [],
     },
   },
@@ -41,6 +42,44 @@ const GRID_TESTS: GridTests[] = [
       },
     ],
     expectedLayouts: {
+      1: [
+        {
+          i: 0,
+          x: 0,
+          y: 0,
+          w: 1,
+          h: 2,
+          type: GridWidgetType.TITLE_LINK,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+        {
+          i: 1,
+          x: 0,
+          y: 2,
+          w: 1,
+          h: 1,
+          type: GridWidgetType.TEXT,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+        {
+          i: 2,
+          x: 0,
+          y: 3,
+          w: 1,
+          h: 2,
+          type: GridWidgetType.IFRAME,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+        {
+          i: 3,
+          x: 0,
+          y: 5,
+          w: 1,
+          h: 1,
+          type: GridWidgetType.IMAGE,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+      ],
       2: [
         {
           i: 0,
@@ -141,6 +180,35 @@ const GRID_TESTS: GridTests[] = [
       },
     ],
     expectedLayouts: {
+      1: [
+        {
+          i: 0,
+          x: 0,
+          y: 0,
+          w: 2,
+          h: 2,
+          type: GridWidgetType.IMAGE,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+        {
+          i: 1,
+          x: 0,
+          y: 2,
+          w: 1,
+          h: 1,
+          type: GridWidgetType.TEXT,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+        {
+          i: 2,
+          x: 0,
+          y: 3,
+          w: 1,
+          h: 1,
+          type: GridWidgetType.IMAGE,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+      ],
       2: [
         {
           i: 0,
@@ -248,9 +316,21 @@ describe('Grid Layout Handling', () => {
       it.each([
         {
           case: 0,
+          gridColumns: 1,
+          grid: GRID_TESTS[0].grid,
+          expectedLayout: GRID_TESTS[0].expectedLayouts[1],
+        },
+        {
+          case: 0,
           gridColumns: 2,
           grid: GRID_TESTS[0].grid,
           expectedLayout: GRID_TESTS[0].expectedLayouts[2],
+        },
+        {
+          case: 1,
+          gridColumns: 1,
+          grid: GRID_TESTS[1].grid,
+          expectedLayout: GRID_TESTS[1].expectedLayouts[1],
         },
         {
           case: 1,
