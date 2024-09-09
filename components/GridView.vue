@@ -164,48 +164,7 @@ onMounted(async () => {
           @resize="clearSelection"
           @resized="clearSelection"
         >
-          <div
-            class="flex h-full flex-col rounded-[10px] border border-[#e4e2e2a3] bg-[rgba(var(--tw-prose-rgb),0.5)] p-[10px] shadow-[0_0_10px_#0003] backdrop-blur-[4px]"
-          >
-            <GridWidgetTitleLink
-              v-if="item.type === GridWidgetType.TITLE_LINK"
-              :title="item.properties.title"
-              :src="item.properties.src"
-              :bg-color="item.properties.bgColor"
-            />
-            <GridWidgetText
-              v-if="item.type === GridWidgetType.TEXT"
-              :title="item.properties.title"
-              :text="item.properties.text"
-              :bg-color="item.properties.bgColor"
-            />
-            <GridWidgetImage
-              v-if="item.type === GridWidgetType.IMAGE"
-              :src="item.properties.src"
-            />
-            <iframe
-              v-if="item.type === GridWidgetType.IFRAME"
-              :src="item.properties.src"
-              :title="item.properties.title"
-              :allow="item.properties.allow"
-              class="overflow-hidden rounded-[10px]"
-              width="100%"
-              height="100%"
-              frameborder="0"
-            ></iframe>
-            <GridWidgetXPost
-              v-if="item.type === GridWidgetType.X_POST"
-              :src="item.properties.src"
-            />
-            <GridWidgetXTimeline
-              v-if="item.type === GridWidgetType.X_TIMELINE"
-              :src="item.properties.src"
-            />
-            <GridWidgetInstagramPost
-              v-if="item.type === GridWidgetType.INSTAGRAM_POST"
-              :src="item.properties.src"
-            />
-          </div>
+          <GridWidget :widget="item" />
         </GridItem>
       </GridLayout>
     </div>
