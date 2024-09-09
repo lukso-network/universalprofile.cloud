@@ -131,6 +131,7 @@
     "@tanstack/query-core": "^5.20.5",
     "web3-bzz": "~1.10.3",
     "web3-shh": "~1.10.3",
+    "web3-utils": "~1.10.3",
     "web3": "~1.10.3",
     "swiper": "~11.1.4"
   },
