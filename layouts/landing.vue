@@ -12,6 +12,5 @@
       <slot />
       <AppFooter />
     </div>
-    <AppModal />
   </div>
 </template>

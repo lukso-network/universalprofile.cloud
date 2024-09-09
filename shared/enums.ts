@@ -1,6 +1,7 @@
 export enum PROVIDERS {
   RPC = 'RPC',
   INJECTED = 'INJECTED',
+  WALLET_CONNECT = 'WALLET_CONNECT',
 }
 
 export enum STORAGE_KEY {

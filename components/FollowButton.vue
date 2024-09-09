@@ -13,7 +13,7 @@ const isPending = ref(false)
 const queryClient = useQueryClient()
 const { selectedChainId: chainId } = useAppStore()
 const { isConnected } = storeToRefs(useAppStore())
-const { connect } = useBrowserExtension()
+const { connect } = useBaseProvider()
 
 const address = computed(() => props.address?.toLowerCase() as Address)
 const profileFollowers = useFollowingSystem().getFollowersData(address)
