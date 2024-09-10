@@ -43,7 +43,7 @@ describe('hexToNumber function', () => {
 
   test('logs error when decoding fails', () => {
     const value = 'invalidHex'
-    const consoleErrorSpy = vi.spyOn(console, 'error')
+    const consoleErrorSpy = vi.spyOn(console, 'warn')
 
     hexToNumber(value)
 

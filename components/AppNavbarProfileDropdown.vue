@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const connectedProfile = useProfile().connectedProfile()
-const { disconnect } = useBrowserExtension()
+const { disconnect } = useBaseProvider()
 
 const DROPDOWN_TRIGGER_TAG_NAME = 'LUKSO-PROFILE'
 const isOpen = ref(false)

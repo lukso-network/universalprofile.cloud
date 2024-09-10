@@ -8,7 +8,7 @@ const { search } = useAlgoliaSearch<IndexedProfile>(
   currentNetwork.value.indexName
 )
 const isSearching = ref<boolean>(false)
-const searchTerm = ref<string | Address | undefined>()
+const searchTerm = ref<string | Address>('')
 const hasNoResults = ref<boolean>(false)
 const results = ref<SearchProfileResult[]>()
 
@@ -55,18 +55,10 @@ const handleSelect = (event: CustomEvent) => {
   searchTerm.value = address
   results.value = undefined
   isSearchOpen.value = false
+
   if (isAddress(address)) {
     navigateTo(profileRoute(address))
-    searchTerm.value = undefined
-  }
-}
-
-const handleKeyUpSearch = (customEvent: CustomEvent) => {
-  const key = customEvent.detail?.event?.detail?.event?.key
-
-  if (key === 'Escape') {
-    searchTerm.value = undefined
-    hasNoResults.value = false
+    searchTerm.value = ''
   }
 }
 
@@ -98,6 +90,5 @@ watchEffect(() => {
     @on-search="handleSearch"
     @on-input-click="handleSearch"
     @on-select="handleSelect"
-    @on-key-up="handleKeyUpSearch"
   ></lukso-search>
 </template>

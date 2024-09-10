@@ -2,29 +2,13 @@
 const appStore = useAppStore()
 const modalTemplateComponent = shallowRef()
 const route = useRoute()
-const { showModal } = useModal()
+const { showModal, closeModal } = useModal()
 
 const loadModalTemplate = () => {
   modalTemplateComponent.value = defineAsyncComponent(() => {
     const templateName = appStore.modal?.template
       ? appStore.modal.template
       : MODAL_DEFAULT_TEMPLATE
-    return import(`./ModalTemplate${templateName}.vue`)
-  })
-}
-
-/**
- * Close modal
- */
-const closeModal = () => {
-  if (route.query?.modalTemplate) {
-    resetModalQueryParams()
-  }
-
-  appStore.setModal({ isOpen: false })
-
-  modalTemplateComponent.value = defineAsyncComponent(() => {
-    const templateName = MODAL_DEFAULT_TEMPLATE
     return import(`./ModalTemplate${templateName}.vue`)
   })
 }
@@ -60,6 +44,15 @@ watch(
   () => {
     if (appStore.modal?.isOpen) {
       loadModalTemplate()
+    } else {
+      if (route.query?.modalTemplate) {
+        resetModalQueryParams()
+      }
+
+      modalTemplateComponent.value = defineAsyncComponent(() => {
+        const templateName = MODAL_DEFAULT_TEMPLATE
+        return import(`./ModalTemplate${templateName}.vue`)
+      })
     }
   }
 )
@@ -72,7 +65,7 @@ watch(
       const { modalSize, modalData } = route.query || {}
       showModal({
         template: modalTemplate,
-        data: JSON.parse(modalData),
+        data: modalData ? JSON.parse(modalData) : undefined,
         size: modalSize,
       })
     }

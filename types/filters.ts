@@ -2,6 +2,11 @@ export type FiltersAssetType = 'owned' | 'created'
 
 export type FiltersAssetGroup = 'collectibles' | 'tokens' | 'grid'
 
+export type FiltersAttribute = {
+  group: string
+  value: string
+}
+
 export type Filters = {
   assetType: FiltersAssetType
   assetGroup: FiltersAssetGroup
@@ -9,4 +14,5 @@ export type Filters = {
   search?: string
   collections?: string[]
   creators?: string[]
+  attributes?: string
 }

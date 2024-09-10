@@ -9,13 +9,15 @@ if (typeof window !== 'undefined') {
 
 const { addWeb3, getWeb3 } = useWeb3Store()
 const { getNetworkById, setModal } = useAppStore()
-const { isLoadedApp, selectedChainId, isSearchOpen, modal } =
+const { isLoadedApp, selectedChainId, isSearchOpen, modal, isWalletConnect } =
   storeToRefs(useAppStore())
-const { addProviderEvents, removeProviderEvents, disconnect } =
-  useBrowserExtension()
+const { addProviderEvents, removeProviderEvents } =
+  useBrowserExtensionProvider()
+const { disconnect } = useBaseProvider()
 const router = useRouter()
 const { cacheValue } = useCache()
 const { currencyList } = storeToRefs(useCurrencyStore())
+const { initProvider, reconnect } = useWalletConnectProvider()
 
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
@@ -27,12 +29,17 @@ const setupTranslations = () => {
  * RPC - from RPC endpoint
  */
 const setupWeb3Instances = async () => {
-  const provider = INJECTED_PROVIDER
+  // reconnect wallet connect
+  if (isWalletConnect.value) {
+    await initProvider()
+    await reconnect()
+  }
 
-  if (provider) {
+  // set injected provider
+  if (INJECTED_PROVIDER) {
     // for chain interactions through dapp
-    addWeb3(PROVIDERS.INJECTED, provider)
-    await addProviderEvents(provider)
+    addWeb3(PROVIDERS.INJECTED, INJECTED_PROVIDER)
+    await addProviderEvents(INJECTED_PROVIDER)
   } else {
     console.error('No browser extension provider found')
   }
@@ -95,13 +102,13 @@ const setupNetwork = async () => {
   const network = useRouter().currentRoute.value.query?.network
 
   if (!network) {
-    await checkExtensionNetwork()
+    await checkNetwork()
     return
   }
 
   if (SUPPORTED_NETWORK_IDS.includes(network)) {
     selectedChainId.value = getNetworkById(network).chainId
-    await checkExtensionNetwork()
+    await checkNetwork()
   } else {
     console.warn(
       `Invalid network: ${network}, valid networks are ${SUPPORTED_NETWORK_IDS.join(
@@ -225,7 +232,7 @@ useHead({
         <AppLoader class="absolute left-[calc(50vw-20px)] top-[300px]" />
       </div>
     </NuxtLayout>
-    <AppModal />
+    <AppModal v-if="isLoadedApp" />
     <!-- <VueQueryDevtools /> -->
   </div>
 </template>

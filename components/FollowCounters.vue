@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { formatMessage, formatNumber } = useIntl()
 const { showModal } = useModal()
+const { isMobile } = useDevice()
 
 type Props = {
   profileFollowers?: ProfileFollowers
@@ -11,10 +12,10 @@ defineProps<Props>()
 const handleShowFollowing = () => {
   showModal({
     template: 'Followers',
-    size: 'medium',
     data: {
       type: 'following',
     },
+    size: isMobile ? 'full' : 'auto',
     isUrlModal: true,
   })
 }
@@ -22,10 +23,10 @@ const handleShowFollowing = () => {
 const handleShowFollowers = () => {
   showModal({
     template: 'Followers',
-    size: 'medium',
     data: {
       type: 'follower',
     },
+    size: isMobile ? 'full' : 'auto',
     isUrlModal: true,
   })
 }
