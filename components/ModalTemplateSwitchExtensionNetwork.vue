@@ -12,7 +12,7 @@ const handleChangeNetwork = async () => {
   } catch (error: unknown) {
     console.error(error)
   } finally {
-    closeModal()
+    await closeModal()
   }
 }
 </script>
