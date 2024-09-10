@@ -42,6 +42,7 @@ describe('socialLinkParser', () => {
   it('should return telegram', () => {
     expect(detectSocialMedia('https://www.telegram.com/')).toBe('telegram')
     expect(detectSocialMedia('https://t.me/')).toBe('telegram')
+    expect(detectSocialMedia('https://web.telegram.org/')).toBe('telegram')
   })
 
   it('should return linkedin', () => {
@@ -69,5 +70,6 @@ describe('socialLinkParser', () => {
     expect(detectSocialMedia()).toBeUndefined()
     expect(detectSocialMedia('https://burntpix.com/')).toBeUndefined()
     expect(detectSocialMedia('test@gmail.com')).toBeUndefined()
+    expect(detectSocialMedia('https://fast.co/')).toBeUndefined()
   })
 })
