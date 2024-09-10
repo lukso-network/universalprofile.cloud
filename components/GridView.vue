@@ -19,11 +19,7 @@ const gridColumns = ref(getGridColumns(window.innerWidth))
 const DEBOUNCE_TIMEOUT = 250
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 
-const gridOptions = reactive<GridProperties>({
-  isDraggable: false,
-  isResizable: false,
-  isResponsive: false,
-})
+const editMode = ref(false)
 
 // TODO: gridConfig should be saved and fetched from local storage on changes
 // Only sent to the server when the user saves the layout
@@ -133,6 +129,10 @@ function clearSelection(): void {
   window.getSelection()?.removeAllRanges()
 }
 
+function toggleEditMode(): void {
+  editMode.value = !editMode.value
+}
+
 onMounted(async () => {
   await initializeTheGrid(address)
 })
@@ -150,9 +150,10 @@ useResizeObserver(gridContainer, entries => {
         v-model:layout="layout"
         :col-num="gridColumns"
         :row-height="ROW_HEIGHT_PX"
-        :is-draggable="gridOptions.isDraggable"
-        :is-resizable="gridOptions.isDraggable"
-        :responsive="gridOptions.isResponsive"
+        :is-draggable="editMode"
+        :is-resizable="editMode"
+        :responsive="false"
+        :is-bounded="true"
       >
         <GridItem
           v-for="item in layout"
@@ -166,19 +167,57 @@ useResizeObserver(gridContainer, entries => {
           @moved="clearSelection"
           @resize="clearSelection"
           @resized="clearSelection"
+          drag-allow-from=".cursor-move"
+          drag-ignore-from=".z-10"
         >
+          <!-- This will serve as a handle to drag the widget when enabled -->
+          <div
+            v-if="editMode"
+            class="absolute left-0 top-0 z-20 cursor-move rounded-[10px] bg-white"
+          >
+            <lukso-icon
+              name="hand-right-outline"
+              size="small"
+              class="m-1"
+            ></lukso-icon>
+          </div>
           <GridWidget :widget="item" />
         </GridItem>
       </GridLayout>
     </div>
     <!-- This configuration tools are just temporal until we have the proper ones -->
-    <div class="fixed bottom-0 right-0 m-2">
+    <div class="fixed bottom-0 right-0 m-2 flex flex-col">
+      <lukso-button
+        v-if="editMode"
+        size="small"
+        type="button"
+        variant="secondary"
+        is-icon
+        disabled="true"
+      >
+        <lukso-icon name="plus" size="medium" class="mx-1"></lukso-icon>
+      </lukso-button>
       <lukso-button
         size="small"
         type="button"
         variant="secondary"
+        is-icon
+        @click="toggleEditMode()"
+      >
+        <lukso-icon
+          :name="editMode ? 'tick' : 'edit'"
+          size="medium"
+          class="mx-1"
+        ></lukso-icon>
+      </lukso-button>
+      <lukso-button
+        size="small"
+        type="button"
+        variant="secondary"
+        is-icon
         @click="onSettingsClick()"
-        >⚙️
+      >
+        <lukso-icon name="code-outline" size="medium" class="mx-1"></lukso-icon>
       </lukso-button>
     </div>
     <div>
@@ -188,45 +227,6 @@ useResizeObserver(gridContainer, entries => {
         @on-backdrop-click="onModalClose"
       >
         <div class="m-4 flex flex-col space-y-2 text-sm">
-          <div class="flex space-x-2">
-            <lukso-checkbox
-              type="text"
-              size="x-small"
-              :checked="gridOptions.isDraggable ? true : undefined"
-              @click="
-                () => {
-                  gridOptions.isDraggable = !gridOptions.isDraggable
-                }
-              "
-            >
-              Draggable
-            </lukso-checkbox>
-            <lukso-checkbox
-              type="text"
-              size="x-small"
-              :checked="gridOptions.isResizable ? true : undefined"
-              @click="
-                () => {
-                  gridOptions.isResizable = !gridOptions.isResizable
-                }
-              "
-            >
-              Resizable
-            </lukso-checkbox>
-            <lukso-checkbox
-              type="text"
-              size="x-small"
-              :checked="gridOptions.isResponsive ? true : undefined"
-              @click="
-                () => {
-                  gridOptions.isResponsive = !gridOptions.isResponsive
-                }
-              "
-            >
-              Responsive
-            </lukso-checkbox>
-          </div>
-
           <div>
             Current items info as i: [x, y, w, h]:
             <div class="columns-4">
