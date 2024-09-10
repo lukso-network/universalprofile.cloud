@@ -86,7 +86,7 @@ onMounted(() => {
               v-if="isLoadedAsset"
               class="paragraph-ptmono-10-bold text-neutral-60"
             >
-              #{{ token?.address?.slice(2, 8) }}
+              #{{ toChecksumAddress(token?.address).slice(2, 8) }}
             </div>
             <AppPlaceholderLine v-else class="h-[14px] w-full" />
           </div>
