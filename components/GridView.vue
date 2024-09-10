@@ -81,22 +81,18 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
     return
   }
 
-  // Convert the layout to grid layout items
-  const gridLayoutItems = toGridLayoutItems(parsedLayout, COL_NUM_LARGE)
-
-  if (!isValidLayout(gridLayoutItems)) {
+  if (!isValidLayout(parsedLayout)) {
     console.warn('Invalid schema 😡')
 
     return
   }
 
-  layout.value = gridLayoutItems
+  layout.value = toGridLayoutItems(parsedLayout, COL_NUM_LARGE)
 
   // close modal
   showSettingsModal.value = false
 
-  const lsp27Config = toLSP27TheGrid(layout.value)
-  const response = await upsertGridConfig(address, lsp27Config)
+  const response = await upsertGridConfig(address, parsedLayout)
   if (!response) {
     console.warn('Failed to save layout 😢')
 
@@ -226,33 +222,11 @@ useResizeObserver(gridContainer, entries => {
         size="medium"
         @on-backdrop-click="onModalClose"
       >
-        <div class="m-4 flex flex-col space-y-2 text-sm">
-          <div>
-            Current items info as i: [x, y, w, h]:
-            <div class="columns-4">
-              <div v-for="item in layout" :key="item.i">
-                <strong>{{ item.i }}</strong
-                >: [{{ item.x }}, {{ item.y }}, {{ item.w }}, {{ item.h }}]
-              </div>
-            </div>
-          </div>
-          <textarea
-            v-model="layoutStringified"
-            class="h-96 w-full border-2 border-solid border-black"
-            wrap="off"
-          ></textarea>
-          <span class="space-x-2">
-            <lukso-button
-              @click="validateAndSaveLayout(layoutStringified)"
-              size="small"
-            >
-              Apply
-            </lukso-button>
-            <lukso-button @click="resetLayout()" size="small">
-              Reset
-            </lukso-button>
-          </span>
-        </div>
+        <ModalGridDebug
+          :layout="layout"
+          :on-save="validateAndSaveLayout"
+          :on-reset="resetLayout"
+        />
       </lukso-modal>
     </div>
   </div>
