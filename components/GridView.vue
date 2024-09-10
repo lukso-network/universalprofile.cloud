@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { GridItem, GridLayout } from 'grid-layout-plus'
+import { useResizeObserver } from '@vueuse/core'
 
 import { toGridLayoutItems } from '@/utils/gridLayout'
 
@@ -7,6 +8,7 @@ const COL_NUM_LARGE = 2
 const COL_NUM_SMALL = 1
 const ROW_HEIGHT_PX = 280
 
+const gridContainer = ref<HTMLElement | null>(null)
 const breakpoints: Record<number, number> = {
   0: COL_NUM_SMALL,
   768: COL_NUM_LARGE,
@@ -108,11 +110,11 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
   console.log('Layout saved 🎉')
 }
 
-function resizeHandler(): void {
+function resizeHandler(width: number): void {
   if (resizeTimeout) clearTimeout(resizeTimeout)
   resizeTimeout = setTimeout(() => {
     const prevCols = gridColumns.value
-    const newCols = getGridColumns(window.innerWidth)
+    const newCols = getGridColumns(width)
 
     if (prevCols !== newCols) {
       gridColumns.value = newCols
@@ -131,22 +133,19 @@ function clearSelection(): void {
   window.getSelection()?.removeAllRanges()
 }
 
-onMounted(() => {
-  window.addEventListener('resize', resizeHandler)
-})
-
 onMounted(async () => {
   await initializeTheGrid(address)
 })
 
-onUnmounted(() => {
-  window.removeEventListener('resize', resizeHandler)
+useResizeObserver(gridContainer, entries => {
+  const { contentRect } = entries[0]
+  resizeHandler(contentRect.width)
 })
 </script>
 
 <template>
   <div class="w-full">
-    <div class="mx-auto max-w-content">
+    <div class="mx-auto max-w-content" ref="gridContainer">
       <GridLayout
         v-model:layout="layout"
         :col-num="gridColumns"
