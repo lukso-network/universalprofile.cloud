@@ -26,7 +26,6 @@ const editMode = ref(false)
 const gridConfig = ref<LSP27TheGrid | undefined>()
 const layout = ref<GridLayoutItem[]>([])
 const showSettingsModal = ref(false)
-const layoutStringified = ref('')
 
 const address = getCurrentProfileAddress()
 
@@ -63,8 +62,6 @@ async function initializeTheGrid(address: string | undefined): Promise<void> {
 
 function onSettingsClick() {
   showSettingsModal.value = true
-  const lsp27Config = toLSP27TheGrid(layout.value)
-  layoutStringified.value = JSON.stringify(lsp27Config, null, 2)
 }
 
 function onModalClose() {
