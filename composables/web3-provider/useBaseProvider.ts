@@ -1,12 +1,11 @@
 import { INJECTED_PROVIDER } from '@/shared/provider'
 
 const connect = async () => {
-  const { isWalletConnect } = storeToRefs(useAppStore())
+  const { isWalletConnect, isMobile } = storeToRefs(useAppStore())
   const { connect: connectWalletConnect } = useWalletConnectProvider()
   const { connect: connectBrowserExtension } = useBrowserExtensionProvider()
-  const { isMobile } = useDevice()
 
-  if (isWalletConnect.value || isMobile) {
+  if (isWalletConnect.value || isMobile.value) {
     await connectWalletConnect()
     return
   }

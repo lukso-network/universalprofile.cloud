@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { isOwned, isCreated, setFilters } = useFilters()
 const viewedProfileAddress = getCurrentProfileAddress()
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 
 const viewedProfile = useProfile().getProfile(viewedProfileAddress)
 const allTokens = useProfileAssetsRpc()(viewedProfileAddress)

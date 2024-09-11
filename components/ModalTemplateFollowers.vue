@@ -7,10 +7,15 @@ type Props = {
 }
 
 defineProps<Props>()
-const perPage = 8
+const { isMobile } = storeToRefs(useAppStore())
+const perPage = computed(() => {
+  return isMobile.value ? 6 : 8
+})
 const connectedProfile = useProfile().connectedProfile()
 const viewedProfile = useProfile().viewedProfile()
-const numberOfPages = computed(() => Math.ceil((count.value || 0) / perPage))
+const numberOfPages = computed(() =>
+  Math.ceil((count.value || 0) / perPage.value)
+)
 const viewedProfileAddress = computed(() => viewedProfile.value?.address)
 const viewedProfileFollowers = useFollowingSystem().getFollowersData(
   viewedProfileAddress.value

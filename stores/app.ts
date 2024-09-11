@@ -79,6 +79,21 @@ export const useAppStore = defineStore(
       () => fetchDataProvider.value === 'graph' && !isTestnet.value // TODO use RPC for Testnet until we have it indexed
     )
 
+    const isMobile = computed(() => {
+      const { isMobile } = useDevice()
+      return isMobile
+    })
+
+    const isMobileOrTablet = computed(() => {
+      const { isMobileOrTablet } = useDevice()
+      return isMobileOrTablet
+    })
+
+    const isSafari = computed(() => {
+      const { isSafari } = useDevice()
+      return isSafari
+    })
+
     // --- actions
 
     const setModal = (newModal: Modal) => {
@@ -101,6 +116,9 @@ export const useAppStore = defineStore(
       isSearchOpen,
       isRpc,
       isGraph,
+      isMobile,
+      isMobileOrTablet,
+      isSafari,
       fetchDataProvider,
       fetchDataProviderReset,
       walletConnectProvider,

@@ -2,6 +2,7 @@
 import '@google/model-viewer'
 
 const { modal } = useAppStore()
+const { isMobile } = storeToRefs(useAppStore())
 
 type Props = {
   closeModal: () => void
@@ -33,7 +34,7 @@ const handleViewEntireCollection = () => {
       </div>
       <ModalCloseButton @click="closeModal" />
     </div>
-    <div class="flex items-center justify-between pb-6">
+    <div class="flex justify-between gap-4 pb-6 sm:items-center">
       <div class="flex items-center gap-4">
         <lukso-profile
           size="small"
@@ -62,11 +63,18 @@ const handleViewEntireCollection = () => {
       </div>
       <lukso-button
         variant="secondary"
-        size="small"
+        :size="isMobile ? 'medium' : 'small'"
+        :is-icon="isMobile ? true : undefined"
         @click="handleViewEntireCollection"
       >
-        <lukso-icon size="small" name="eye-show" class="mr-2"></lukso-icon>
-        {{ $formatMessage('view_entire_collection') }}
+        <lukso-icon
+          :size="isMobile ? 'medium' : 'small'"
+          name="eye-show"
+          :class="{ 'mr-2': !isMobile }"
+        ></lukso-icon>
+        <span v-if="!isMobile">
+          {{ $formatMessage('view_entire_collection') }}
+        </span>
       </lukso-button>
     </div>
     <div

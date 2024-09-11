@@ -9,7 +9,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const isLoaded = computed(() => props.asset)
 const address = computed(() => props.asset?.address)
@@ -26,7 +26,7 @@ const truncateAddress = computed(() => {
 
   let addressLength = 66
 
-  if (isMobile) {
+  if (isMobile.value) {
     addressLength = 8
   }
   return sliceAddress(props.asset.address, addressLength)

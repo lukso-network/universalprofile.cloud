@@ -26,7 +26,7 @@ const {
   typeFilterValue,
   typeFilterOptions,
 } = useFilters(assets)
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 const { showModal } = useModal()
 const orderByOptions = ref<SelectStringOption[]>()
 

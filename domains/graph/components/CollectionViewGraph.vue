@@ -9,7 +9,7 @@ type Props = {
 }
 
 defineProps<Props>()
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const address = useRouter().currentRoute.value.params?.collectionAddress
 const { showModal } = useModal()

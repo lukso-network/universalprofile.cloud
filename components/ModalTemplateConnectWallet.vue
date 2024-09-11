@@ -7,7 +7,7 @@ defineProps<Props>()
 const { formatMessage } = useIntl()
 const { isUniversalProfileExtension, connect: connectBrowserExtension } =
   useBrowserExtensionProvider()
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 const isConnecting = ref(false)
 const isWalletConnect = ref(false)
 
