@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { GridItem, GridLayout } from 'grid-layout-plus'
 import { useResizeObserver } from '@vueuse/core'
+import { GridItem, GridLayout } from 'grid-layout-plus'
 
 import { toGridLayoutItems } from '@/utils/gridLayout'
 
