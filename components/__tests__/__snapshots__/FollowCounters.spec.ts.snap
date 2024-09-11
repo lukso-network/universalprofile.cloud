@@ -3,8 +3,8 @@
 exports[`FollowCounters > should render counters 1`] = `
 "<div id="test-wrapper">
   <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
-    <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">2,000</span> Following</div>
-    <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">1,000</span> Followers</div>
+    <div class="rounded-l-4 border border-neutral-90 px-3 py-1 transition hover:border-neutral-20 group-hover:border-r-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">2,000</span> Following</div>
+    <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-3 py-1 transition hover:border-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">1,000</span> Followers</div>
   </div>
 </div>"
 `;
@@ -12,8 +12,8 @@ exports[`FollowCounters > should render counters 1`] = `
 exports[`FollowCounters > should render empty state 1`] = `
 "<div id="test-wrapper">
   <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
-    <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">0</span> Following</div>
-    <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">0</span> Followers</div>
+    <div class="rounded-l-4 border border-neutral-90 px-3 py-1 transition hover:border-neutral-20 group-hover:border-r-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">0</span> Following</div>
+    <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-3 py-1 transition hover:border-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">0</span> Followers</div>
   </div>
 </div>"
 `;
