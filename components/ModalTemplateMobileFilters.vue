@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { formatMessage } = useIntl()
+const { isGraph } = storeToRefs(useAppStore())
 const appStore = useAppStore()
 const assets = computed(() => appStore.modal?.data?.assets)
 const {
@@ -65,6 +66,7 @@ const handleChangeType = (customEvent: CustomEvent) => {
   >
     <!-- Creator filter -->
     <lukso-select
+      v-if="isGraph"
       size="medium"
       :value="JSON.stringify(creatorFilterValues(creators))"
       :options="JSON.stringify(creatorFilterOptions)"
@@ -79,7 +81,7 @@ const handleChangeType = (customEvent: CustomEvent) => {
 
     <!-- Collection Filter -->
     <lukso-select
-      v-if="isCollectibles"
+      v-if="isCollectibles && isGraph"
       size="medium"
       :value="JSON.stringify(collectionFilterValues(collections))"
       :options="JSON.stringify(collectionFilterOptions)"

@@ -1,109 +1,101 @@
 <script setup lang="ts">
-const { isOwned, isCreated, setFilters } = useFilters()
+const { isOwned, setFilters, filters } = useFilters()
 const viewedProfileAddress = getCurrentProfileAddress()
-const { isMobile } = useDevice()
-
 const viewedProfile = useProfile().getProfile(viewedProfileAddress)
-const allTokens = useProfileAssetsRpc()(viewedProfileAddress)
-
-/**
- * Sort assets ascending (A-Z) by their name
- *
- * @returns
- */
-const allTokensSorted = computed(
-  () =>
-    allTokens.value?.slice().sort((a, b) => {
-      const tokenNameA = a.tokenName || ''
-      const tokenNameB = b.tokenName || ''
-
-      return tokenNameA.localeCompare(tokenNameB)
-    }) || []
+const assetsData = useProfileAssetsRpc()(viewedProfileAddress)
+const assets = computed(() => assetsData.value || [])
+const isLoadingAssets = computed(() =>
+  assets.value.some(asset => asset.isLoading)
 )
 
-const tokensOwned = computed(() =>
-  allTokensSorted.value?.filter(
-    asset =>
-      asset.isOwned && isLsp7(asset) && hasBalance(asset) && isToken(asset)
+const filteredAssets = computed(() => {
+  return (
+    assets.value
+      // filter by owned/created
+      .filter(asset => {
+        switch (filters.assetType) {
+          case 'owned':
+            return asset.isOwned && hasBalance(asset) // for owned we need to check if user has balance
+          case 'created':
+            return asset.isIssued
+          default:
+            return false
+        }
+      })
+      // filter token/collectible
+      .filter(asset => {
+        switch (filters.assetGroup) {
+          case 'collectibles':
+            return isCollectible(asset)
+          case 'tokens':
+            return isToken(asset)
+          default:
+            return false
+        }
+      })
   )
-)
+})
 
-const tokensCreated = computed(() =>
-  allTokensSorted.value?.filter(
-    asset => asset.isIssued && isLsp7(asset) && isToken(asset)
-  )
-)
-
-const nftsOwned = computed(() =>
-  allTokensSorted.value?.filter(
-    asset => asset.isOwned && isCollectible(asset) && hasBalance(asset)
-  )
-)
-
-const nftsCreated = computed(() =>
-  allTokensSorted.value?.filter(
-    asset =>
-      asset.isIssued &&
-      isCollectible(asset) &&
-      isCreator(asset, viewedProfileAddress)
-  )
+const creationsShowcase = computed(() =>
+  assets.value
+    ?.slice()
+    ?.sort((a, b) => stringSort(a.tokenName, b.tokenName, 'asc'))
+    ?.filter(
+      asset =>
+        asset.isIssued &&
+        isCollectible(asset) &&
+        isCreator(asset, viewedProfileAddress)
+    )
 )
 
 // tokens
 const ownedTokensCount = computed(
   () =>
-    (tokensOwned.value?.length || 0) +
-    (hasBalance(viewedProfile?.value) ? 1 : 0) // +1 if user has LYX token
+    assets.value.filter(
+      asset => asset.isOwned && isToken(asset) && hasBalance(asset)
+    ).length + (hasBalance(viewedProfile?.value) ? 1 : 0) // +1 if user has LYX token
 )
 
-const createdTokensCount = computed(() => tokensCreated.value?.length || 0)
-
-const tokens = computed(() => {
-  if (isOwned.value) {
-    return tokensOwned.value
-  }
-  return tokensCreated.value
-})
-
-// NFTs
-const ownedNftsCount = computed(() => nftsOwned.value?.length || 0)
-
-const createdNftsCount = computed(() => nftsCreated.value?.length || 0)
-
-const nfts = computed(() => {
-  if (isOwned.value) {
-    return nftsOwned.value || []
-  }
-  return nftsCreated.value || []
-})
-
-// assets (tokens + NFTs)
-const ownedAssetsCount = computed(
-  () => ownedTokensCount.value + ownedNftsCount.value
+const createdTokensCount = computed(
+  () => assets.value.filter(asset => asset.isIssued && isToken(asset)).length
 )
 
-const createdAssetsCount = computed(
-  () => createdTokensCount.value + createdNftsCount.value
-)
-
-// empty states
-const hasEmptyCreators = computed(
-  () => isCreated.value && !createdNftsCount.value && !createdTokensCount.value
-)
-
-const hasEmptyTokens = computed(
-  () => isOwned.value || (isCreated && createdTokensCount.value)
-)
-
-const hasEmptyNfts = computed(
+// collectibles
+const ownedCollectiblesCount = computed(
   () =>
-    (isOwned.value && ownedNftsCount.value) ||
-    (isCreated && createdNftsCount.value)
+    assets.value.filter(
+      asset => asset.isOwned && isCollectible(asset) && hasBalance(asset)
+    ).length
 )
 
-const isLoadingAssets = computed(() =>
-  allTokens.value?.some(asset => asset.isLoading)
+const createdCollectiblesCount = computed(
+  () =>
+    assets.value.filter(
+      asset =>
+        asset.isIssued &&
+        isCollectible(asset) &&
+        isCreator(asset, viewedProfileAddress)
+    ).length
 )
+
+const handleTabChange = (tab: ProfileViewTabName) => {
+  setFilters({ assetGroup: tab }, undefined, true)
+}
+
+const tabs = computed(() => {
+  return [
+    {
+      id: 'collectibles',
+      count: isOwned.value
+        ? ownedCollectiblesCount.value
+        : createdCollectiblesCount.value,
+    },
+    {
+      id: 'tokens',
+      count: isOwned.value ? ownedTokensCount.value : createdTokensCount.value,
+    },
+  ]
+})
 </script>
 
 <template>
@@ -114,82 +106,30 @@ const isLoadingAssets = computed(() =>
     >
       <ProfileCard />
       <div
-        v-if="nftsCreated.length > 0"
+        v-if="createdCollectiblesCount > 0"
         class="heading-inter-17-semi-bold my-10 flex items-center justify-center sm:mt-20"
       >
         {{ $formatMessage('asset_creations') }}
         <span
-          class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 bg-neutral-20 px-[2px] py-[1px] text-neutral-100"
-          >{{ nftsCreated.length }}</span
+          class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 bg-neutral-20 px-1 py-[1px] text-neutral-100"
+          >{{ createdCollectiblesCount }}</span
         >
       </div>
       <CreationsCarousel
-        v-if="nftsCreated.length > 0"
-        :assets="nftsCreated"
+        v-if="createdCollectiblesCount > 0"
+        :assets="creationsShowcase"
         class="mb-10"
       />
       <div>
-        <ul class="grid gap-2 pt-6 sm:flex sm:grid-cols-2 sm:gap-4 sm:pt-10">
-          <li>
-            <lukso-button
-              :size="isMobile ? 'medium' : 'small'"
-              variant="secondary"
-              :is-active="isOwned ? true : undefined"
-              is-full-width
-              :count="ownedAssetsCount"
-              @click="setFilters({ assetType: 'owned' })"
-              >{{ $formatMessage('asset_filter_owned_assets') }}</lukso-button
-            >
-          </li>
-          <li>
-            <lukso-button
-              :size="isMobile ? 'medium' : 'small'"
-              variant="secondary"
-              :is-active="isCreated ? true : undefined"
-              is-full-width
-              :count="createdAssetsCount"
-              @click="setFilters({ assetType: 'created' })"
-              >{{ $formatMessage('asset_filter_created_assets') }}</lukso-button
-            >
-          </li>
-        </ul>
-
-        <div v-if="hasEmptyCreators" class="pt-8">
-          <h3 class="heading-inter-17-semi-bold pb-2">
-            {{ $formatMessage('assets_empty_state_title') }}
-          </h3>
-          <lukso-sanitize
-            :html-content="$formatMessage('assets_empty_state_description')"
-          ></lukso-sanitize>
-        </div>
-        <div v-else>
-          <TokenListRpc v-if="hasEmptyTokens" :tokens="tokens" />
-          <NftListRpc v-if="hasEmptyNfts" :nfts="nfts" />
-          <AppLoader
-            v-if="isLoadingAssets"
-            class="relative left-[calc(50%-20px)] mt-20"
-          />
-        </div>
+        <ProfileTabs
+          :active-tab="filters.assetGroup"
+          :tabs="tabs"
+          @activate-tab="handleTabChange"
+          class="mt-20"
+        />
+        <ProfileAssets :assets="filteredAssets" :is-loading="isLoadingAssets" />
       </div>
     </div>
-    <div
-      v-else
-      class="mx-auto flex h-full max-w-72 flex-col items-center justify-center text-center"
-    >
-      <img src="/images/up-error.png" alt="" class="mb-6 w-36" />
-      <div class="heading-inter-21-semi-bold mb-4">
-        {{ $formatMessage('not_up_title') }}
-      </div>
-      <div class="paragraph-inter-16-regular mb-6">
-        {{ $formatMessage('not_up_description') }}
-      </div>
-      <lukso-button
-        variant="landing"
-        is-link
-        :href="explorerContractUrl(viewedProfile?.address)"
-        class="mb-8"
-        >{{ $formatMessage('not_up_button') }}</lukso-button
-      >
-    </div>
+    <ProfileViewNotUp v-else :address="viewedProfile?.address" />
   </AppPageLoader>
 </template>

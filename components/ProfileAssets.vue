@@ -12,6 +12,22 @@ const props = defineProps<Props>()
 
 const { formatMessage } = useIntl()
 const assets = computed(() => props.assets)
+const { isGraph } = storeToRefs(useAppStore())
+const defaultFilters = (): Filters => {
+  if (isGraph.value) {
+    return {
+      assetType: 'owned',
+      orderBy: 'name-asc',
+      assetGroup: 'collectibles',
+    }
+  }
+
+  return {
+    assetType: 'owned',
+    orderBy: 'added-desc',
+    assetGroup: 'collectibles',
+  }
+}
 const {
   filters,
   isOwned,
@@ -25,7 +41,7 @@ const {
   collectionFilterValues,
   typeFilterValue,
   typeFilterOptions,
-} = useFilters(assets)
+} = useFilters(assets, defaultFilters())
 const { isMobile } = useDevice()
 const { showModal } = useModal()
 const orderByOptions = ref<SelectStringOption[]>()
@@ -114,7 +130,15 @@ const filteredAssets = computed(() => {
 })
 
 const orderByValue = computed(() => {
-  return orderByOptions.value?.find(option => option.id === filters.orderBy)
+  const value = orderByOptions.value?.find(
+    option => option.id === filters.orderBy
+  )
+
+  if (!value) {
+    setFilters({ orderBy: orderByOptions.value?.[0].id })
+  }
+
+  return value
 })
 
 const selectedFilters = computed(() => {
@@ -196,8 +220,15 @@ const handleMobileSearchModal = () => {
 
 onMounted(async () => {
   orderByOptions.value = [
-    { id: 'name-asc', value: formatMessage('filters_order_by_name_asc') },
-    { id: 'name-desc', value: formatMessage('filters_order_by_name_desc') },
+    ...(isGraph.value
+      ? [
+          { id: 'name-asc', value: formatMessage('filters_order_by_name_asc') },
+          {
+            id: 'name-desc',
+            value: formatMessage('filters_order_by_name_desc'),
+          },
+        ]
+      : []),
     {
       id: 'added-asc',
       value: formatMessage('filters_order_by_recently_added'),
@@ -228,12 +259,14 @@ onMounted(async () => {
 
         <!-- Search trigger -->
         <lukso-button
+          v-if="isGraph"
           is-icon
           variant="secondary"
           @click="handleMobileSearchModal"
         >
           <lukso-icon name="search" size="medium" class="mx-1"></lukso-icon>
         </lukso-button>
+        <div v-else></div>
 
         <!-- Separator -->
         <div></div>
@@ -258,6 +291,7 @@ onMounted(async () => {
         <div class="flex flex-wrap gap-2">
           <!-- Creator filter -->
           <lukso-select
+            v-if="isGraph"
             size="small"
             :value="JSON.stringify(creatorFilterValues(filters.creators))"
             :options="JSON.stringify(creatorFilterOptions)"
@@ -271,7 +305,7 @@ onMounted(async () => {
 
           <!-- Collection Filter -->
           <lukso-select
-            v-if="isCollectibles"
+            v-if="isCollectibles && isGraph"
             size="small"
             :value="JSON.stringify(collectionFilterValues(filters.collections))"
             :options="JSON.stringify(collectionFilterOptions)"
@@ -293,6 +327,7 @@ onMounted(async () => {
 
           <!-- Search Filter -->
           <lukso-search
+            v-if="isGraph"
             .value="filters.search"
             :placeholder="formatMessage('asset_filter_search_placeholder')"
             hide-loading
