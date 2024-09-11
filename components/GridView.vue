@@ -14,8 +14,6 @@ const breakpoints: Record<number, number> = {
   768: COL_NUM_LARGE,
 }
 
-const gridColumns = ref(getGridColumns(window.innerWidth))
-
 const DEBOUNCE_TIMEOUT = 250
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 
@@ -29,7 +27,7 @@ const showSettingsModal = ref(false)
 
 const address = getCurrentProfileAddress()
 
-function getGridColumns(width: number): number {
+const getGridColumns = (width: number): number => {
   const breakpointsKeys = Object.keys(breakpoints)
     .map(Number)
     .sort((a, b) => b - a)
@@ -38,7 +36,10 @@ function getGridColumns(width: number): number {
   return validBreakpoint ? breakpoints[validBreakpoint] : COL_NUM_SMALL
 }
 
-async function initializeTheGrid(address: string | undefined): Promise<void> {
+const gridColumns = ref(getGridColumns(window.innerWidth))
+const initializeTheGrid = async (
+  address: string | undefined
+): Promise<void> => {
   if (!address) {
     layout.value = []
     return
@@ -60,15 +61,15 @@ async function initializeTheGrid(address: string | undefined): Promise<void> {
   layout.value = toGridLayoutItems(gridConfig.value, gridColumns.value)
 }
 
-function onSettingsClick() {
+const handleSettingsClick = () => {
   showSettingsModal.value = true
 }
 
-function onModalClose() {
+const handleModalClose = () => {
   showSettingsModal.value = false
 }
 
-async function validateAndSaveLayout(newLayout: string): Promise<void> {
+const validateAndSaveLayout = async (newLayout: string) => {
   let parsedLayout: any
   try {
     parsedLayout = JSON.parse(newLayout)
@@ -99,7 +100,7 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
   console.log('Layout saved 🎉')
 }
 
-function resizeHandler(width: number): void {
+const handleResize = (width: number) => {
   if (resizeTimeout) clearTimeout(resizeTimeout)
   resizeTimeout = setTimeout(() => {
     const prevCols = gridColumns.value
@@ -112,17 +113,17 @@ function resizeHandler(width: number): void {
   }, DEBOUNCE_TIMEOUT)
 }
 
-function resetLayout(): void {
+const handleResetLayout = () => {
   showSettingsModal.value = false
   const newUserLayout = getNewUserLayout(address)
   layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
 }
 
-function clearSelection(): void {
+const handleClearSelection = () => {
   window.getSelection()?.removeAllRanges()
 }
 
-function toggleEditMode(): void {
+const handleToggleEditMode = () => {
   editMode.value = !editMode.value
 }
 
@@ -132,7 +133,7 @@ onMounted(async () => {
 
 useResizeObserver(gridContainer, entries => {
   const { contentRect } = entries[0]
-  resizeHandler(contentRect.width)
+  handleResize(contentRect.width)
 })
 </script>
 
@@ -156,10 +157,10 @@ useResizeObserver(gridContainer, entries => {
           :w="item.w"
           :h="item.h"
           :i="item.i"
-          @move="clearSelection"
-          @moved="clearSelection"
-          @resize="clearSelection"
-          @resized="clearSelection"
+          @move="handleClearSelection"
+          @moved="handleClearSelection"
+          @resize="handleClearSelection"
+          @resized="handleClearSelection"
           drag-allow-from=".cursor-move"
           drag-ignore-from=".z-10"
         >
@@ -195,7 +196,7 @@ useResizeObserver(gridContainer, entries => {
         type="button"
         variant="secondary"
         is-icon
-        @click="toggleEditMode()"
+        @click="handleToggleEditMode"
       >
         <lukso-icon
           :name="editMode ? 'tick' : 'edit'"
@@ -208,7 +209,7 @@ useResizeObserver(gridContainer, entries => {
         type="button"
         variant="secondary"
         is-icon
-        @click="onSettingsClick()"
+        @click="handleSettingsClick()"
       >
         <lukso-icon name="code-outline" size="medium" class="mx-1"></lukso-icon>
       </lukso-button>
@@ -217,12 +218,12 @@ useResizeObserver(gridContainer, entries => {
       <lukso-modal
         :is-open="showSettingsModal.valueOf() ? true : undefined"
         size="medium"
-        @on-backdrop-click="onModalClose"
+        @on-backdrop-click="handleModalClose"
       >
         <ModalGridDebug
           :layout="layout"
           :on-save="validateAndSaveLayout"
-          :on-reset="resetLayout"
+          :on-reset="handleResetLayout"
         />
       </lukso-modal>
     </div>
