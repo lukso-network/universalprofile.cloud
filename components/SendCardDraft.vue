@@ -6,7 +6,7 @@ const {
   amount,
   onSend,
 } = storeToRefs(useSendStore())
-const { isLoadedApp } = storeToRefs(useAppStore())
+const { isLoadedApp, isRpc } = storeToRefs(useAppStore())
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
 const address = computed(() => sendAsset.value?.address)
@@ -39,6 +39,22 @@ const handleBack = () => {
   navigateTo(profileRoute(connectedProfile?.value?.address))
 }
 
+const hasTokenId = () => {
+  if (!asset.value?.tokenId) {
+    return false
+  }
+
+  if (isRpc.value) {
+    return asset.value?.tokenIdsOf?.includes(asset.value.tokenId) || false
+  }
+
+  const foundTokenId =
+    asset.value.tokenIdsData?.filter(t => t.tokenId === asset.value?.tokenId) ||
+    []
+
+  return foundTokenId.length > 0
+}
+
 const checkBalance = () => {
   if (asset.value?.isLoading) {
     return
@@ -48,11 +64,7 @@ const checkBalance = () => {
     return
   }
 
-  if (
-    isLsp8(asset.value) &&
-    asset.value?.tokenId &&
-    asset.value?.tokenIdsOf?.includes(asset.value.tokenId)
-  ) {
+  if (isLsp8(asset.value) && asset.value?.tokenId && hasTokenId()) {
     return
   }
 
