@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { formatMessage, formatNumber } = useIntl()
 const { showModal } = useModal()
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 
 type Props = {
   profileFollowers?: ProfileFollowers
@@ -15,7 +15,7 @@ const handleShowFollowing = () => {
     data: {
       type: 'following',
     },
-    size: isMobile ? 'full' : 'auto',
+    size: isMobile.value ? 'full' : 'auto',
   })
 }
 
@@ -25,7 +25,7 @@ const handleShowFollowers = () => {
     data: {
       type: 'follower',
     },
-    size: isMobile ? 'full' : 'auto',
+    size: isMobile.value ? 'full' : 'auto',
   })
 }
 </script>
@@ -40,7 +40,7 @@ const handleShowFollowers = () => {
     class="paragraph-inter-12-medium group flex cursor-pointer items-center"
   >
     <div
-      class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"
+      class="rounded-l-4 border border-neutral-90 px-3 py-1 transition hover:border-neutral-20 group-hover:border-r-neutral-20 sm:px-1.5 sm:py-0"
       @click="handleShowFollowing"
     >
       <span class="paragraph-inter-12-bold">{{
@@ -49,7 +49,7 @@ const handleShowFollowers = () => {
       {{ formatMessage('profile_card_following') }}
     </div>
     <div
-      class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"
+      class="rounded-r-4 border border-l-0 border-l-neutral-90 px-3 py-1 transition hover:border-neutral-20 sm:px-1.5 sm:py-0"
       @click="handleShowFollowers"
     >
       <span class="paragraph-inter-12-bold">{{

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 
 type Props = {
@@ -12,7 +12,7 @@ const isLoaded = computed(() => props.asset && !props.asset?.isLoading)
 const tokenLength = computed(() => {
   let tokenLength = 64
 
-  if (isMobile) {
+  if (isMobile.value) {
     tokenLength = 36
   }
 

@@ -67,25 +67,29 @@ onMounted(() => {
     </div>
 
     <!-- Attributes filter -->
-    <lukso-select
-      v-for="attribute in attributesData?.attributes"
-      :key="attribute.id"
-      size="medium"
-      :placeholder="attribute.group"
-      show-selection-counter
-      is-full-width
-      :options="JSON.stringify(attributeFilterOptions(attribute))"
-      :value="
-        JSON.stringify(
-          selectedAttributes.filter(
-            value =>
-              value.group === attribute.group &&
-              attribute.values.includes(value.value)
+    <div
+      class="-mx-4 grid max-h-[calc(100vh-300px)] grid-cols-1 gap-2 overflow-y-auto px-4"
+    >
+      <lukso-select
+        v-for="attribute in attributesData?.attributes"
+        :key="attribute.id"
+        size="medium"
+        :placeholder="attribute.group"
+        show-selection-counter
+        is-full-width
+        :options="JSON.stringify(attributeFilterOptions(attribute))"
+        :value="
+          JSON.stringify(
+            selectedAttributes.filter(
+              value =>
+                value.group === attribute.group &&
+                attribute.values.includes(value.value)
+            )
           )
-        )
-      "
-      @on-select="handleSelectAttribute"
-    ></lukso-select>
+        "
+        @on-select="handleSelectAttribute"
+      ></lukso-select>
+    </div>
 
     <!-- Buttons -->
     <div class="mt-4 flex gap-2">

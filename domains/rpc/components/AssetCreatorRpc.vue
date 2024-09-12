@@ -5,7 +5,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const creator = computed(() => props.creator)
 const creatorProfile = useProfile().getProfile(creator)

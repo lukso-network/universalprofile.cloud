@@ -1,8 +1,7 @@
 <script setup lang="ts">
 const viewedProfile = useProfile().viewedProfile()
-const { isMobile } = useDevice()
 const { showModal } = useModal()
-const { isConnected } = storeToRefs(useAppStore())
+const { isConnected, isMobile } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const connectedProfile = useProfile().connectedProfile()
 const profileBackground = useProfileBackground(viewedProfile, 880)

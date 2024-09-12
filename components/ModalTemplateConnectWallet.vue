@@ -3,8 +3,7 @@ const { closeModal } = useModal()
 const { formatMessage } = useIntl()
 const { isUniversalProfileExtension, connect: connectBrowserExtension } =
   useBrowserExtensionProvider()
-const { isMobile } = useDevice()
-const { isConnecting } = storeToRefs(useAppStore())
+const { isConnecting, isMobile } = storeToRefs(useAppStore())
 const isWalletConnect = ref(false)
 
 const handleConnectBrowser = async () => {

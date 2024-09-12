@@ -9,14 +9,14 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { isMobile, isSafari } = useDevice()
+const { isMobile, isSafari } = storeToRefs(useAppStore())
 const activeIndex = ref(0)
 const activeAddress = ref<Address>()
 
 const handleCardClick = (swiper: Swiper) => {
   const _address = swiper?.clickedSlide?.dataset?.address as Address | undefined
   // to fix safari bug where `clickedSlide` is undefined
-  const address = isSafari ? _address || activeAddress.value : _address
+  const address = isSafari.value ? _address || activeAddress.value : _address
   const asset = props.assets.find(asset => asset.address === address)
 
   if (isLsp8(asset)) {
@@ -93,7 +93,7 @@ const styles = computed(() => {
   return styleVariants({
     isSingleSlide: props.assets.length === 1,
     isLoading: isLoading.value,
-    isMobile,
+    isMobile: isMobile.value,
   })
 })
 </script>
