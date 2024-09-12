@@ -112,7 +112,7 @@ const handleResetSearch = () => {
               <div class="flex justify-end">
                 <AppPlaceholderLine
                   v-show="profile.isLoading"
-                  class="h-12 w-[58px] !rounded-12 sm:h-[28px] sm:w-[86px] sm:!rounded-4"
+                  class="h-12 w-[48px] !rounded-12 sm:h-[28px] sm:w-[86px] sm:!rounded-4"
                 />
                 <FollowButton
                   v-show="!profile.isLoading"

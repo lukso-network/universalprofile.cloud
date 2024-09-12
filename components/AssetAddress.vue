@@ -94,7 +94,9 @@ const handleShowContract = () => {
       </div>
     </div>
   </template>
-  <AppPlaceholderSection v-else>
-    <AppPlaceholderLine class="h-[48px] w-full" />
+  <!-- Loading state -->
+  <AppPlaceholderLine v-else-if="withoutTitle" class="h-[50px] w-full" />
+  <AppPlaceholderSection v-else class="w-full">
+    <AppPlaceholderLine class="h-[50px] w-full !rounded-12" />
   </AppPlaceholderSection>
 </template>

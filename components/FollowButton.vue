@@ -179,7 +179,7 @@ const handleUnfollow = () => {
   <div v-if="hasFollowButton" class="group flex">
     <template v-if="isLoading">
       <AppPlaceholderLine
-        class="h-12 w-[58px] !rounded-12 sm:h-[28px] sm:w-[86px] sm:!rounded-4"
+        class="h-12 w-[48px] !rounded-12 sm:h-[28px] sm:w-[86px] sm:!rounded-4"
       />
     </template>
     <template v-else-if="isFollowing">
