@@ -32,6 +32,17 @@ query asset($profileAddress: String, $assetAddress: String, $tokenId: String) {
       ]
     }
   ) {
+    asset {
+      id
+      standard
+    }
+    token {
+      tokenId
+      baseAsset {
+        id
+        standard
+      }
+    }
     balance
   }
 }

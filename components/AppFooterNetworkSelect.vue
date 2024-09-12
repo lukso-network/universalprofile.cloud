@@ -3,8 +3,7 @@ import type { SelectStringOption } from '@lukso/web-components'
 
 const networks = ref<SelectStringOption[]>()
 const selectedNetwork = ref<SelectStringOption>()
-const { currentNetwork } = storeToRefs(useAppStore())
-const { isMobileOrTablet } = useDevice()
+const { currentNetwork, isMobileOrTablet } = storeToRefs(useAppStore())
 const networkConfig = useNetworkConfig()
 
 onMounted(() => {

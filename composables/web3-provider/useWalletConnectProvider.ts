@@ -64,8 +64,10 @@ const connect = async (requestAccounts = true) => {
     console.error(error)
     disconnect()
     showModal({
-      title: formatMessage('web3_connect_error_title'),
-      message: getErrorMessage(error),
+      data: {
+        title: formatMessage('web3_connect_error_title'),
+        message: getErrorMessage(error),
+      },
     })
   } finally {
     isConnecting.value = false

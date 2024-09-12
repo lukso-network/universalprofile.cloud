@@ -4,7 +4,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 const asset = computed(() => props.asset)
 const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 880)

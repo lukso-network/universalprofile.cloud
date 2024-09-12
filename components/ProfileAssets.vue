@@ -42,7 +42,7 @@ const {
   typeFilterValue,
   typeFilterOptions,
 } = useFilters(assets, defaultFilters())
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 const { showModal } = useModal()
 const orderByOptions = ref<SelectStringOption[]>()
 
@@ -213,7 +213,6 @@ const handleSelectOrder = (customEvent: CustomEvent) => {
 const handleMobileFiltersModal = () => {
   showModal({
     template: 'MobileFilters',
-    data: { assets: props.assets },
   })
 }
 

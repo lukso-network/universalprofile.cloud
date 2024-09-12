@@ -9,7 +9,7 @@ type Props = {
 }
 
 defineProps<Props>()
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const address = useRouter().currentRoute.value.params?.collectionAddress
 const { showModal } = useModal()
@@ -193,7 +193,9 @@ watch(
         <!-- Filters modal trigger -->
         <lukso-select
           size="medium"
-          :value="filters.attributes"
+          :value="
+            JSON.stringify(filters?.attributes ? filters?.attributes : [])
+          "
           :placeholder="formatMessage('asset_filter_mobile_filters')"
           show-selection-counter
           @click="handleMobileFiltersModal"

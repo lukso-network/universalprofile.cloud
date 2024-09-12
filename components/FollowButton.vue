@@ -12,7 +12,7 @@ const { follow, unfollow, isFollowing: isFollowingCheck } = useFollowingSystem()
 const isPending = ref(false)
 const queryClient = useQueryClient()
 const { selectedChainId: chainId } = useAppStore()
-const { isConnected } = storeToRefs(useAppStore())
+const { isConnected, isMobile } = storeToRefs(useAppStore())
 const { connect } = useBaseProvider()
 
 const address = computed(() => props.address?.toLowerCase() as Address)
@@ -178,59 +178,80 @@ const handleUnfollow = () => {
 <template>
   <div v-if="hasFollowButton" class="group flex">
     <template v-if="isLoading">
-      <AppPlaceholderLine class="h-[28px] w-[60px]" />
+      <AppPlaceholderLine
+        class="h-12 w-[58px] !rounded-12 sm:h-[28px] sm:w-[86px] sm:!rounded-4"
+      />
     </template>
     <template v-else-if="isFollowing">
       <!-- Unfollow -->
       <lukso-button
-        size="small"
+        :size="isMobile ? 'medium' : 'small'"
         variant="secondary"
         class="hidden"
         :class="{
           'group-hover:block': !isPending,
         }"
         :is-loading="isPending ? true : undefined"
-        :loading-text="formatMessage('profile_card_unfollow_button')"
+        :loading-text="
+          isMobile ? '' : formatMessage('profile_card_unfollow_button')
+        "
+        :is-icon="isMobile ? true : undefined"
         @click="handleClick"
       >
         <lukso-icon
           name="profile-remove"
-          size="small"
-          class="mr-2"
+          :size="isMobile ? 'medium' : 'small'"
+          :class="{ 'mr-2': !isMobile }"
         ></lukso-icon>
-        {{ formatMessage('profile_card_unfollow_button') }}
+        <span v-if="!isMobile">{{
+          formatMessage('profile_card_unfollow_button')
+        }}</span>
       </lukso-button>
 
       <!-- Following -->
       <lukso-button
-        size="small"
+        :size="isMobile ? 'medium' : 'small'"
         variant="secondary"
         class="block"
         :class="{
           'group-hover:hidden': !isPending,
         }"
         :is-loading="isPending ? true : undefined"
-        :loading-text="formatMessage('profile_card_following_button')"
+        :loading-text="
+          isMobile ? '' : formatMessage('profile_card_following_button')
+        "
+        :is-icon="isMobile ? true : undefined"
       >
-        <lukso-icon name="profile" size="small" class="mr-2"></lukso-icon>
-        {{ formatMessage('profile_card_following_button') }}
+        <lukso-icon
+          name="profile"
+          :size="isMobile ? 'medium' : 'small'"
+          :class="{ 'mr-2': !isMobile }"
+        ></lukso-icon>
+        <span v-if="!isMobile">
+          {{ formatMessage('profile_card_following_button') }}
+        </span>
       </lukso-button>
     </template>
     <template v-else>
       <!-- Follow -->
       <lukso-button
-        size="small"
+        :size="isMobile ? 'medium' : 'small'"
         :is-loading="isPending ? true : undefined"
-        :loading-text="formatMessage('profile_card_follow_button')"
+        :loading-text="
+          isMobile ? '' : formatMessage('profile_card_follow_button')
+        "
         @click="handleClick"
+        :is-icon="isMobile ? true : undefined"
       >
         <lukso-icon
           name="profile-add"
-          size="small"
+          :size="isMobile ? 'medium' : 'small'"
           color="neutral-100"
-          class="mr-2"
+          :class="{ 'mr-2': !isMobile }"
         ></lukso-icon>
-        {{ formatMessage('profile_card_follow_button') }}
+        <span v-if="!isMobile">
+          {{ formatMessage('profile_card_follow_button') }}
+        </span>
       </lukso-button>
     </template>
   </div>

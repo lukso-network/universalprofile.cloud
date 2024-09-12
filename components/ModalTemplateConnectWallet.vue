@@ -1,14 +1,9 @@
 <script setup lang="ts">
-type Props = {
-  closeModal: () => void
-}
-
-defineProps<Props>()
+const { closeModal } = useModal()
 const { formatMessage } = useIntl()
 const { isUniversalProfileExtension, connect: connectBrowserExtension } =
   useBrowserExtensionProvider()
-const { isMobile } = useDevice()
-const isConnecting = ref(false)
+const { isConnecting, isMobile } = storeToRefs(useAppStore())
 const isWalletConnect = ref(false)
 
 const handleConnectBrowser = async () => {
@@ -22,9 +17,7 @@ const handleConnectBrowser = async () => {
     return window.open(extensionStore.value.url, '_blank')
   }
 
-  isConnecting.value = true
   await connectBrowserExtension()
-  isConnecting.value = false
 }
 
 const handleToggleMobile = () => {
