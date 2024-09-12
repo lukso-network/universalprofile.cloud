@@ -27,7 +27,6 @@ const handleConnect = () => {
   showModal({
     template: 'ConnectWallet',
     size: 'auto',
-    isUrlModal: true,
   })
 }
 

@@ -79,6 +79,12 @@ export const useAppStore = defineStore(
       () => fetchDataProvider.value === 'graph' && !isTestnet.value // TODO use RPC for Testnet until we have it indexed
     )
 
+    const isModalOpen = computed(() => {
+      const route = useRoute()
+
+      return !!route.query?.modalTemplate
+    })
+
     // --- actions
 
     const setModal = (newModal: Modal) => {
@@ -101,6 +107,7 @@ export const useAppStore = defineStore(
       isSearchOpen,
       isRpc,
       isGraph,
+      isModalOpen,
       fetchDataProvider,
       fetchDataProviderReset,
       walletConnectProvider,

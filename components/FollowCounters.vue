@@ -16,7 +16,6 @@ const handleShowFollowing = () => {
       type: 'following',
     },
     size: isMobile ? 'full' : 'auto',
-    isUrlModal: true,
   })
 }
 
@@ -27,7 +26,6 @@ const handleShowFollowers = () => {
       type: 'follower',
     },
     size: isMobile ? 'full' : 'auto',
-    isUrlModal: true,
   })
 }
 </script>

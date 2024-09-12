@@ -184,7 +184,6 @@ const handleSelectOrder = (customEvent: CustomEvent) => {
 const handleMobileFiltersModal = () => {
   showModal({
     template: 'MobileFilters',
-    data: { assets: props.assets },
   })
 }
 

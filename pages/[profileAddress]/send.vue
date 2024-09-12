@@ -129,7 +129,9 @@ const handleSend = async () => {
     setStatus('draft')
 
     showModal({
-      message: getErrorMessage(error),
+      data: {
+        message: getErrorMessage(error),
+      },
     })
   }
 }

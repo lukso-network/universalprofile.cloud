@@ -8,11 +8,11 @@ const {
 } = storeToRefs(useSendStore())
 const { isLoadedApp } = storeToRefs(useAppStore())
 const { showModal } = useModal()
-const { formatMessage } = useIntl()
 const address = computed(() => sendAsset.value?.address)
 const tokenId = computed(() => sendAsset.value?.tokenId)
 const _asset = useToken()(useAsset()(address, tokenId))
 const lyxToken = useLyxToken()
+const { formatMessage } = useIntl()
 
 const asset = computed(() =>
   isLyx(sendAsset.value) ? lyxToken.value : _asset.value
@@ -61,7 +61,9 @@ const checkBalance = () => {
   }
 
   showModal({
-    message: formatMessage('no_asset_balance'),
+    data: {
+      message: formatMessage('no_asset_balance'),
+    },
   })
 }
 

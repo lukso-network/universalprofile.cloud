@@ -1,12 +1,7 @@
 <script setup lang="ts">
 const { currentNetwork } = useAppStore()
 const { currentProvider } = useBaseProvider()
-
-type Props = {
-  closeModal: () => void
-}
-
-const props = defineProps<Props>()
+const { closeModal } = useModal()
 
 const handleChangeNetwork = async () => {
   try {
@@ -17,7 +12,7 @@ const handleChangeNetwork = async () => {
   } catch (error: unknown) {
     console.error(error)
   } finally {
-    props.closeModal()
+    await closeModal()
   }
 }
 </script>

@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import '@google/model-viewer'
-
-const { modal } = useAppStore()
-
-type Props = {
-  closeModal: () => void
-}
-
-defineProps<Props>()
+const { modal, closeModal } = useModal()
 const isLoaded = ref(false)
 </script>
 
@@ -25,7 +17,7 @@ const isLoaded = ref(false)
       class="relative max-h-[calc(100vh-100px)] rounded-12"
       @on-load="isLoaded = true"
     >
-      <source :src="modal?.data?.asset?.url" />
+      <source :src="modal?.data?.url" />
     </audio>
     <ModalCloseCircleButton @click="closeModal" />
   </div>

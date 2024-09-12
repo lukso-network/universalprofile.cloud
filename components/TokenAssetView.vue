@@ -33,10 +33,12 @@ const handlePreviewImage = () => {
     return
   }
 
+  const optimizedImage = useOptimizedImage(image, 1000)
+
   showModal({
     template: 'AssetImage',
     data: {
-      asset: image,
+      image: unref(optimizedImage),
     },
     size: 'auto',
   })

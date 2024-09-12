@@ -1,12 +1,7 @@
 <script setup lang="ts">
-const { modal } = useAppStore()
+const { modal, closeModal } = useModal()
 const { formatMessage } = useIntl()
 
-type Props = {
-  closeModal: () => void
-}
-
-defineProps<Props>()
 const perPage = 8
 const connectedProfile = useProfile().connectedProfile()
 const viewedProfile = useProfile().viewedProfile()
