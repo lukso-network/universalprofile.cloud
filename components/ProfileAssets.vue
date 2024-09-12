@@ -12,7 +12,7 @@ const props = defineProps<Props>()
 
 const { formatMessage } = useIntl()
 const assets = computed(() => props.assets)
-const { isGraph } = storeToRefs(useAppStore())
+const { isGraph, isRpc } = storeToRefs(useAppStore())
 const defaultFilters = (): Filters => {
   if (isGraph.value) {
     return {
@@ -86,6 +86,11 @@ const isSelectedCreatorInAvailableCreators = computed(() => {
 })
 
 const filteredAssets = computed(() => {
+  // no filters in RPC mode
+  if (isRpc.value) {
+    return orderedAssets.value
+  }
+
   let assetsFiltered = orderedAssets.value
 
   // filter by search
@@ -352,7 +357,10 @@ onMounted(async () => {
       </div>
 
       <!-- Selected filters -->
-      <div v-if="hasFiltersSelected" class="flex flex-wrap gap-y-2 pb-4">
+      <div
+        v-if="hasFiltersSelected && isGraph"
+        class="flex flex-wrap gap-y-2 pb-4"
+      >
         <!-- Selected creators -->
         <template
           v-for="creatorAddress in filters.creators"
