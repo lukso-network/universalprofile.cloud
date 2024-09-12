@@ -2,7 +2,7 @@
 import { useResizeObserver } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
-import { toGridLayoutItems } from '@/utils/gridLayout'
+import { addGridLayoutItem, toGridLayoutItems } from '@/utils/gridLayout'
 
 const COL_NUM_LARGE = 2
 const COL_NUM_SMALL = 1
@@ -23,7 +23,14 @@ const editMode = ref(false)
 // Only sent to the server when the user saves the layout
 const gridConfig = ref<LSP27TheGrid | undefined>()
 const layout = ref<GridLayoutItem[]>([])
-const showSettingsModal = ref(false)
+
+enum ModalType {
+  DEBUG,
+  NEW_WIDGET,
+}
+
+const showModal = ref(false)
+const modalType = ref<ModalType | undefined>()
 
 const address = getCurrentProfileAddress()
 
@@ -61,12 +68,18 @@ const initializeTheGrid = async (
   layout.value = toGridLayoutItems(gridConfig.value, gridColumns.value)
 }
 
-const handleSettingsClick = () => {
-  showSettingsModal.value = true
+const handleNewWidgetClick = () => {
+  modalType.value = ModalType.NEW_WIDGET
+  showModal.value = true
+}
+
+const handleDebugClick = () => {
+  modalType.value = ModalType.DEBUG
+  showModal.value = true
 }
 
 const handleModalClose = () => {
-  showSettingsModal.value = false
+  showModal.value = false
 }
 
 const validateAndSaveLayout = async (newLayout: string) => {
@@ -88,7 +101,7 @@ const validateAndSaveLayout = async (newLayout: string) => {
   layout.value = toGridLayoutItems(parsedLayout, COL_NUM_LARGE)
 
   // close modal
-  showSettingsModal.value = false
+  showModal.value = false
 
   const response = await upsertGridConfig(address, parsedLayout)
   if (!response) {
@@ -98,6 +111,10 @@ const validateAndSaveLayout = async (newLayout: string) => {
   }
 
   console.log('Layout saved 🎉')
+}
+
+const addWidget = (widget: GridWidget) => {
+  layout.value = addGridLayoutItem(layout.value, widget, gridColumns.value)
 }
 
 const handleResize = (width: number) => {
@@ -114,7 +131,7 @@ const handleResize = (width: number) => {
 }
 
 const handleResetLayout = () => {
-  showSettingsModal.value = false
+  showModal.value = false
   const newUserLayout = getNewUserLayout(address)
   layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
 }
@@ -187,9 +204,19 @@ useResizeObserver(gridContainer, entries => {
         type="button"
         variant="secondary"
         is-icon
-        disabled="true"
+        @click="handleNewWidgetClick()"
       >
         <lukso-icon name="plus" size="medium" class="mx-1"></lukso-icon>
+      </lukso-button>
+      <lukso-button
+        v-if="editMode"
+        size="small"
+        type="button"
+        variant="secondary"
+        is-icon
+        @click="handleDebugClick()"
+      >
+        <lukso-icon name="code-outline" size="medium" class="mx-1"></lukso-icon>
       </lukso-button>
       <lukso-button
         size="small"
@@ -204,26 +231,23 @@ useResizeObserver(gridContainer, entries => {
           class="mx-1"
         ></lukso-icon>
       </lukso-button>
-      <lukso-button
-        size="small"
-        type="button"
-        variant="secondary"
-        is-icon
-        @click="handleSettingsClick()"
-      >
-        <lukso-icon name="code-outline" size="medium" class="mx-1"></lukso-icon>
-      </lukso-button>
     </div>
     <div>
       <lukso-modal
-        :is-open="showSettingsModal.valueOf() ? true : undefined"
+        :is-open="showModal.valueOf() ? true : undefined"
         size="medium"
         @on-backdrop-click="handleModalClose"
       >
         <ModalGridDebug
+          v-if="modalType === ModalType.DEBUG"
           :layout="layout"
           :on-save="validateAndSaveLayout"
           :on-reset="handleResetLayout"
+        />
+
+        <ModalGridNewWidget
+          v-else-if="modalType === ModalType.NEW_WIDGET"
+          :on-add="addWidget"
         />
       </lukso-modal>
     </div>
