@@ -3,6 +3,7 @@ const connectedProfile = useProfile().connectedProfile()
 const { isConnected, isTestnet } = storeToRefs(useAppStore())
 const viewedProfile = useProfile().viewedProfile()
 const asset = useLyxToken()
+const { isMobile } = storeToRefs(useAppStore())
 
 const handleSendAsset = (event: Event) => {
   event.stopPropagation()
@@ -93,17 +94,24 @@ const handleBuyLyx = (event: Event) => {
           </div>
         </div>
       </div>
+
+      <!-- Buttons -->
       <div class="flex w-full justify-end gap-2">
-        <lukso-button size="small" variant="secondary" @click="handleBuyLyx">{{
-          isTestnet
-            ? $formatMessage('button_get_lyx')
-            : $formatMessage('button_buy_lyx')
-        }}</lukso-button>
+        <lukso-button
+          :size="isMobile ? 'medium' : 'small'"
+          variant="secondary"
+          @click="handleBuyLyx"
+          >{{
+            isTestnet
+              ? $formatMessage('button_get_lyx')
+              : $formatMessage('button_buy_lyx')
+          }}</lukso-button
+        >
         <lukso-button
           v-if="
             isConnected && viewedProfile?.address === connectedProfile?.address
           "
-          size="small"
+          :size="isMobile ? 'medium' : 'small'"
           variant="secondary"
           @click="handleSendAsset"
           >{{ $formatMessage('button_send') }}</lukso-button
