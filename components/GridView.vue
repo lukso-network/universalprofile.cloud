@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useResizeObserver } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
 import { toGridLayoutItems } from '@/utils/gridLayout'
@@ -7,32 +8,26 @@ const COL_NUM_LARGE = 2
 const COL_NUM_SMALL = 1
 const ROW_HEIGHT_PX = 280
 
+const gridContainer = ref<HTMLElement | null>(null)
 const breakpoints: Record<number, number> = {
   0: COL_NUM_SMALL,
   768: COL_NUM_LARGE,
 }
 
-const gridColumns = ref(getGridColumns(window.innerWidth))
-
 const DEBOUNCE_TIMEOUT = 250
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 
-const gridOptions = reactive<GridProperties>({
-  isDraggable: false,
-  isResizable: false,
-  isResponsive: false,
-})
+const editMode = ref(false)
 
 // TODO: gridConfig should be saved and fetched from local storage on changes
 // Only sent to the server when the user saves the layout
 const gridConfig = ref<LSP27TheGrid | undefined>()
 const layout = ref<GridLayoutItem[]>([])
 const showSettingsModal = ref(false)
-const layoutStringified = ref('')
 
 const address = getCurrentProfileAddress()
 
-function getGridColumns(width: number): number {
+const getGridColumns = (width: number): number => {
   const breakpointsKeys = Object.keys(breakpoints)
     .map(Number)
     .sort((a, b) => b - a)
@@ -41,7 +36,10 @@ function getGridColumns(width: number): number {
   return validBreakpoint ? breakpoints[validBreakpoint] : COL_NUM_SMALL
 }
 
-async function initializeTheGrid(address: string | undefined): Promise<void> {
+const gridColumns = ref(getGridColumns(window.innerWidth))
+const initializeTheGrid = async (
+  address: string | undefined
+): Promise<void> => {
   if (!address) {
     layout.value = []
     return
@@ -63,17 +61,15 @@ async function initializeTheGrid(address: string | undefined): Promise<void> {
   layout.value = toGridLayoutItems(gridConfig.value, gridColumns.value)
 }
 
-function onSettingsClick() {
+const handleSettingsClick = () => {
   showSettingsModal.value = true
-  const lsp27Config = toLSP27TheGrid(layout.value)
-  layoutStringified.value = JSON.stringify(lsp27Config, null, 2)
 }
 
-function onModalClose() {
+const handleModalClose = () => {
   showSettingsModal.value = false
 }
 
-async function validateAndSaveLayout(newLayout: string): Promise<void> {
+const validateAndSaveLayout = async (newLayout: string) => {
   let parsedLayout: any
   try {
     parsedLayout = JSON.parse(newLayout)
@@ -83,22 +79,18 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
     return
   }
 
-  // Convert the layout to grid layout items
-  const gridLayoutItems = toGridLayoutItems(parsedLayout, COL_NUM_LARGE)
-
-  if (!isValidLayout(gridLayoutItems)) {
+  if (!isValidLayout(parsedLayout)) {
     console.warn('Invalid schema 😡')
 
     return
   }
 
-  layout.value = gridLayoutItems
+  layout.value = toGridLayoutItems(parsedLayout, COL_NUM_LARGE)
 
   // close modal
   showSettingsModal.value = false
 
-  const lsp27Config = toLSP27TheGrid(layout.value)
-  const response = await upsertGridConfig(address, lsp27Config)
+  const response = await upsertGridConfig(address, parsedLayout)
   if (!response) {
     console.warn('Failed to save layout 😢')
 
@@ -108,11 +100,11 @@ async function validateAndSaveLayout(newLayout: string): Promise<void> {
   console.log('Layout saved 🎉')
 }
 
-function resizeHandler(): void {
+const handleResize = (width: number) => {
   if (resizeTimeout) clearTimeout(resizeTimeout)
   resizeTimeout = setTimeout(() => {
     const prevCols = gridColumns.value
-    const newCols = getGridColumns(window.innerWidth)
+    const newCols = getGridColumns(width)
 
     if (prevCols !== newCols) {
       gridColumns.value = newCols
@@ -121,39 +113,41 @@ function resizeHandler(): void {
   }, DEBOUNCE_TIMEOUT)
 }
 
-function resetLayout(): void {
+const handleResetLayout = () => {
   showSettingsModal.value = false
   const newUserLayout = getNewUserLayout(address)
   layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
 }
 
-function clearSelection(): void {
+const handleClearSelection = () => {
   window.getSelection()?.removeAllRanges()
 }
 
-onMounted(() => {
-  window.addEventListener('resize', resizeHandler)
-})
+const handleToggleEditMode = () => {
+  editMode.value = !editMode.value
+}
 
 onMounted(async () => {
   await initializeTheGrid(address)
 })
 
-onUnmounted(() => {
-  window.removeEventListener('resize', resizeHandler)
+useResizeObserver(gridContainer, entries => {
+  const { contentRect } = entries[0]
+  handleResize(contentRect.width)
 })
 </script>
 
 <template>
   <div class="w-full">
-    <div class="mx-auto max-w-content">
+    <div class="mx-auto max-w-content" ref="gridContainer">
       <GridLayout
         v-model:layout="layout"
         :col-num="gridColumns"
         :row-height="ROW_HEIGHT_PX"
-        :is-draggable="gridOptions.isDraggable"
-        :is-resizable="gridOptions.isDraggable"
-        :responsive="gridOptions.isResponsive"
+        :is-draggable="editMode"
+        :is-resizable="editMode"
+        :responsive="false"
+        :is-bounded="true"
       >
         <GridItem
           v-for="item in layout"
@@ -163,97 +157,74 @@ onUnmounted(() => {
           :w="item.w"
           :h="item.h"
           :i="item.i"
-          @move="clearSelection"
-          @moved="clearSelection"
-          @resize="clearSelection"
-          @resized="clearSelection"
+          @move="handleClearSelection"
+          @moved="handleClearSelection"
+          @resize="handleClearSelection"
+          @resized="handleClearSelection"
+          drag-allow-from=".cursor-move"
+          drag-ignore-from=".z-10"
         >
+          <!-- This will serve as a handle to drag the widget when enabled -->
+          <div
+            v-if="editMode"
+            class="absolute left-0 top-0 z-20 cursor-move rounded-[10px] bg-white"
+          >
+            <lukso-icon
+              name="hand-right-outline"
+              size="small"
+              class="m-1"
+            ></lukso-icon>
+          </div>
           <GridWidget :widget="item" />
         </GridItem>
       </GridLayout>
     </div>
     <!-- This configuration tools are just temporal until we have the proper ones -->
-    <div class="fixed bottom-0 right-0 m-2">
+    <div class="fixed bottom-0 right-0 m-2 flex flex-col">
+      <lukso-button
+        v-if="editMode"
+        size="small"
+        type="button"
+        variant="secondary"
+        is-icon
+        disabled="true"
+      >
+        <lukso-icon name="plus" size="medium" class="mx-1"></lukso-icon>
+      </lukso-button>
       <lukso-button
         size="small"
         type="button"
         variant="secondary"
-        @click="onSettingsClick()"
-        >⚙️
+        is-icon
+        @click="handleToggleEditMode"
+      >
+        <lukso-icon
+          :name="editMode ? 'tick' : 'edit'"
+          size="medium"
+          class="mx-1"
+        ></lukso-icon>
+      </lukso-button>
+      <lukso-button
+        size="small"
+        type="button"
+        variant="secondary"
+        is-icon
+        @click="handleSettingsClick()"
+      >
+        <lukso-icon name="code-outline" size="medium" class="mx-1"></lukso-icon>
       </lukso-button>
     </div>
     <div>
       <lukso-modal
         :is-open="showSettingsModal.valueOf() ? true : undefined"
         size="medium"
-        @on-backdrop-click="onModalClose"
+        @on-backdrop-click="handleModalClose"
       >
-        <div class="m-4 flex flex-col space-y-2 text-sm">
-          <div class="flex space-x-2">
-            <lukso-checkbox
-              type="text"
-              size="x-small"
-              :checked="gridOptions.isDraggable ? true : undefined"
-              @click="
-                () => {
-                  gridOptions.isDraggable = !gridOptions.isDraggable
-                }
-              "
-            >
-              Draggable
-            </lukso-checkbox>
-            <lukso-checkbox
-              type="text"
-              size="x-small"
-              :checked="gridOptions.isResizable ? true : undefined"
-              @click="
-                () => {
-                  gridOptions.isResizable = !gridOptions.isResizable
-                }
-              "
-            >
-              Resizable
-            </lukso-checkbox>
-            <lukso-checkbox
-              type="text"
-              size="x-small"
-              :checked="gridOptions.isResponsive ? true : undefined"
-              @click="
-                () => {
-                  gridOptions.isResponsive = !gridOptions.isResponsive
-                }
-              "
-            >
-              Responsive
-            </lukso-checkbox>
-          </div>
-
-          <div>
-            Current items info as i: [x, y, w, h]:
-            <div class="columns-4">
-              <div v-for="item in layout" :key="item.i">
-                <strong>{{ item.i }}</strong
-                >: [{{ item.x }}, {{ item.y }}, {{ item.w }}, {{ item.h }}]
-              </div>
-            </div>
-          </div>
-          <textarea
-            v-model="layoutStringified"
-            class="h-96 w-full border-2 border-solid border-black"
-            wrap="off"
-          ></textarea>
-          <span class="space-x-2">
-            <lukso-button
-              @click="validateAndSaveLayout(layoutStringified)"
-              size="small"
-            >
-              Apply
-            </lukso-button>
-            <lukso-button @click="resetLayout()" size="small">
-              Reset
-            </lukso-button>
-          </span>
-        </div>
+        <ModalGridDebug
+          :layout="layout"
+          :on-save="validateAndSaveLayout"
+          :on-reset="handleResetLayout"
+        />
       </lukso-modal>
     </div>
   </div>

@@ -2,12 +2,6 @@ import type { LayoutItem } from 'grid-layout-plus'
 
 export type LSP27TheGrid = Array<GridWidget>
 
-export type GridProperties = {
-  isDraggable: boolean
-  isResizable: boolean
-  isResponsive: boolean
-}
-
 export type GridWidget = {
   type: GridWidgetType
   width: number

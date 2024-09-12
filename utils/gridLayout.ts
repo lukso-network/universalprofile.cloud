@@ -38,7 +38,7 @@ export function isValidLayout(layout: GridWidget[]): boolean {
     // check if object entries adhere to Widget interface
     !layout.every(item => {
       return (
-        typeof item.type === 'string' &&
+        item.type in GridWidgetType &&
         typeof item.width === 'number' &&
         typeof item.height === 'number' &&
         typeof item.properties === 'object'
