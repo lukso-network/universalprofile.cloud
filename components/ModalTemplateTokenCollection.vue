@@ -1,24 +1,23 @@
 <script setup lang="ts">
-import '@google/model-viewer'
-
-const { modal } = useAppStore()
-const { isMobile } = storeToRefs(useAppStore())
-
-type Props = {
-  closeModal: () => void
-}
-
-defineProps<Props>()
+const { modal, closeModal } = useModal()
 const viewedProfile = useProfile().viewedProfile()
 const connectedProfile = useProfile().connectedProfile()
 const profileAvatar = useProfileAvatar(viewedProfile, 24)
-const { isConnected } = storeToRefs(useAppStore())
+const { isConnected, isMobile } = storeToRefs(useAppStore())
 
-const asset = computed(() => modal?.data?.asset)
+const address = computed(() => modal?.data?.address)
+const assets = useProfileAssets()(viewedProfile.value?.address)
+const asset = computed(() => {
+  if ('data' in assets) {
+    return assets.data.value?.find(asset => asset.address === address.value)
+  }
+
+  return assets.value?.find(asset => asset.address === address.value)
+})
 const tokenIdsData = computed(() => asset.value?.tokenIdsData)
 
 const handleViewEntireCollection = () => {
-  navigateTo(collectionRoute(asset.value.address))
+  navigateTo(collectionRoute(asset.value?.address))
 }
 </script>
 

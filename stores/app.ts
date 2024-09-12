@@ -94,6 +94,12 @@ export const useAppStore = defineStore(
       return isSafari
     })
 
+    const isModalOpen = computed(() => {
+      const route = useRoute()
+
+      return !!route.query?.modalTemplate
+    })
+
     // --- actions
 
     const setModal = (newModal: Modal) => {
@@ -119,6 +125,7 @@ export const useAppStore = defineStore(
       isMobile,
       isMobileOrTablet,
       isSafari,
+      isModalOpen,
       fetchDataProvider,
       fetchDataProviderReset,
       walletConnectProvider,

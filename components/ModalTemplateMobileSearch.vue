@@ -1,13 +1,9 @@
 <script setup lang="ts">
 const { formatMessage } = useIntl()
 const { filters, setFilters } = useFilters()
+const { closeModal } = useModal()
 
-type Props = {
-  closeModal: () => void
-}
-
-const props = defineProps<Props>()
-const searchTerm = ref<string>('')
+const searchTerm = ref<string | undefined>('')
 
 const handleChangeSearch = async (customEvent: CustomEvent) => {
   const value = customEvent.detail?.value
@@ -15,12 +11,12 @@ const handleChangeSearch = async (customEvent: CustomEvent) => {
 }
 
 const handleResetSearch = () => {
-  searchTerm.value = ''
+  searchTerm.value = undefined
 }
 
-const confirmModal = () => {
-  setFilters({ search: searchTerm.value })
-  props.closeModal()
+const confirmModal = async () => {
+  await setFilters({ search: searchTerm.value })
+  await closeModal()
 }
 
 onMounted(() => {

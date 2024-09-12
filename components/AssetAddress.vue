@@ -19,7 +19,8 @@ const truncateAddress = computed(() => {
     return ''
   }
 
-  const address = props.asset.address
+  const address = toChecksumAddress(props.asset.address)
+
   if (address.length <= 8) {
     return address
   }
@@ -29,7 +30,7 @@ const truncateAddress = computed(() => {
   if (isMobile.value) {
     addressLength = 8
   }
-  return sliceAddress(props.asset.address, addressLength)
+  return sliceAddress(address, addressLength)
 })
 
 const handleShowContract = () => {

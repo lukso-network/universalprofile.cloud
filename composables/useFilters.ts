@@ -183,12 +183,12 @@ export const useFilters = (
   }
 
   //--- setters
-  const setFilters = (
+  const setFilters = async (
     filters: Partial<Filters>,
     path?: string,
     resetFilters?: boolean
   ) => {
-    navigateTo({
+    await navigateTo({
       path: path || route.path,
       query: {
         ...(resetFilters ? defaultFilters : route.query),

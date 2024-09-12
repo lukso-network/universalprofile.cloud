@@ -69,7 +69,7 @@ export default defineNuxtConfig({
         authToken: process.env.NUXT_PUBLIC_SENTRY_AUTH_TOKEN,
         debug: true,
         org: 'lukso',
-        project: 'wallet-universalprofile-cloud',
+        project: 'universalprofile-cloud',
         sourcemaps: {
           assets: ['./.nuxt/dist/client/**'],
         },

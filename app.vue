@@ -8,16 +8,21 @@ if (typeof window !== 'undefined') {
 }
 
 const { addWeb3, getWeb3 } = useWeb3Store()
-const { getNetworkById, setModal } = useAppStore()
-const { isLoadedApp, selectedChainId, isSearchOpen, modal, isWalletConnect } =
-  storeToRefs(useAppStore())
+const { getNetworkById } = useAppStore()
+const {
+  isLoadedApp,
+  selectedChainId,
+  isSearchOpen,
+  isModalOpen,
+  isWalletConnect,
+} = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents } =
   useBrowserExtensionProvider()
 const { disconnect } = useBaseProvider()
-const router = useRouter()
 const { cacheValue } = useCache()
 const { currencyList } = storeToRefs(useCurrencyStore())
 const { initProvider, reconnect } = useWalletConnectProvider()
+const { formatMessage } = useIntl()
 
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
@@ -156,13 +161,14 @@ const checkBuyLyx = () => {
     genericLog('Buy lyx order', buyLyx)
 
     const { showModal } = useModal()
-    const { formatMessage } = useIntl()
 
     showModal({
-      icon: '/images/lukso.svg',
-      title: formatMessage('transak_success_title'),
-      message: formatMessage('transak_success_message'),
-      confirmButtonText: formatMessage('transak_success_button'),
+      data: {
+        icon: '/images/lukso.svg',
+        title: formatMessage('transak_success_title'),
+        message: formatMessage('transak_success_message'),
+        confirmButtonText: formatMessage('transak_success_button'),
+      },
     })
   }
 }
@@ -177,11 +183,6 @@ const resetDataProvider = () => {
     fetchDataProviderReset.value = true
   }
 }
-
-router.beforeEach(() => {
-  // hide modals when there is router transition
-  setModal({ isOpen: false })
-})
 
 onMounted(async () => {
   setupTranslations()
@@ -208,7 +209,7 @@ useHead({
       const bodyClass = []
 
       // prevent window scroll when search modal is open
-      if (isSearchOpen.value || modal.value?.isOpen) {
+      if (isSearchOpen.value || isModalOpen.value) {
         bodyClass.push('!overflow-hidden')
       }
 

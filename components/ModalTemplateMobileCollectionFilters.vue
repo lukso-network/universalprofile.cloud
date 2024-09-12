@@ -4,12 +4,8 @@ import type { SelectStringOption } from '@lukso/web-components'
 
 const { formatMessage } = useIntl()
 const { filters, setFilters, attributeFilterOptions } = useFilters()
+const { closeModal } = useModal()
 
-type Props = {
-  closeModal: () => void
-}
-
-const props = defineProps<Props>()
 const address = useRouter().currentRoute.value.params?.collectionAddress
 const selectedAttributes = ref<SelectStringOption[]>([])
 const { data: attributesData, isLoading: isLoadingAttributes } =
@@ -17,16 +13,21 @@ const { data: attributesData, isLoading: isLoadingAttributes } =
     address,
   })
 
-const confirmModal = () => {
-  setFilters({
-    attributes: JSON.stringify(
-      selectedAttributes.value.map(attribute => ({
-        group: attribute.group,
-        value: attribute.value,
-      }))
-    ),
+const confirmModal = async () => {
+  const attributes =
+    selectedAttributes.value.length > 0
+      ? JSON.stringify(
+          selectedAttributes.value?.map(attribute => ({
+            group: attribute.group,
+            value: attribute.value,
+          }))
+        )
+      : undefined
+
+  await setFilters({
+    attributes,
   })
-  props.closeModal()
+  await closeModal()
 }
 
 const handleSelectAttribute = (customEvent: CustomEvent) => {

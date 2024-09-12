@@ -78,7 +78,7 @@ const assetTokenId = computed(() => {
               alt=""
               class="size-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
             />
-            {{ asset?.address?.slice(0, 6) }}
+            {{ toChecksumAddress(asset?.address)?.slice(0, 6) }}
           </div>
           <AppPlaceholderLine v-else class="h-[20px] w-1/5" />
         </div>
