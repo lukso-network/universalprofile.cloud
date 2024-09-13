@@ -253,5 +253,6 @@
   "modal_connect_wallet_select_provider_install_info": "If you do not have the browser extension, clicking the above button will redirect you to install it",
   "profile_card_copy_address": "UP address copied!",
   "success_missing_assets_description": "The below asset has been added to your profile.",
-  "asset_filter_collection_placeholder": "Collection"
+  "asset_filter_collection_placeholder": "Collection",
+  "widget_iframe_warning": "Caution: this content is embedded from an external source"
 }

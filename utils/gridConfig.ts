@@ -3,7 +3,9 @@
 
 import Parse from 'parse'
 
-import type { Widget } from '../types/grid'
+import type { GridWidget, LSP27TheGrid } from '../types/grid'
+
+const CLASS_NAME = 'grid_config_new'
 
 Parse.initialize(
   'Y2qPj69JQtmOzHpr49mwNxna9ss2QPsuZV5YH9JH',
@@ -13,7 +15,7 @@ Parse.serverURL = 'https://parseapi.back4app.com/'
 
 export type GetGridConfigResponse = {
   objectId: string
-  config: Widget[]
+  config: GridWidget[]
 }
 
 export type UpsertGridConfigResponse = {
@@ -25,8 +27,8 @@ export type UpsertGridConfigResponse = {
 export async function getGridConfig(
   username: string
 ): Promise<GetGridConfigResponse | undefined> {
-  const query: Parse.Query = new Parse.Query('grid_config')
-  query.equalTo('username', username)
+  const query: Parse.Query = new Parse.Query(CLASS_NAME)
+  query.equalTo('username', username.toLowerCase())
 
   try {
     const object = await query.first()
@@ -40,26 +42,26 @@ export async function getGridConfig(
       config: object?.get('config'),
     }
   } catch (error: any) {
-    console.error('Error while fetching grid_config', error)
+    console.error(`Error while fetching ${CLASS_NAME}`, error)
   }
 }
 
 export async function upsertGridConfig(
   username: string,
-  config: Widget[]
+  config: LSP27TheGrid
 ): Promise<UpsertGridConfigResponse | undefined> {
-  const query: Parse.Query = new Parse.Query('grid_config')
-  query.equalTo('username', username)
+  const query: Parse.Query = new Parse.Query(CLASS_NAME)
+  query.equalTo('username', username.toLowerCase())
 
   try {
     let object = await query.first()
 
     if (!object) {
-      object = new Parse.Object('grid_config')
+      object = new Parse.Object(CLASS_NAME)
     }
 
     object.set('config', config)
-    object.set('username', username)
+    object.set('username', username.toLowerCase())
 
     try {
       const response = await object.save()
@@ -70,9 +72,9 @@ export async function upsertGridConfig(
         updatedAt: response.get('updatedAt'),
       }
     } catch (error: any) {
-      console.error('Error while updating grid_config', error)
+      console.error(`Error while updating ${CLASS_NAME}`, error)
     }
   } catch (error: any) {
-    console.error('Error while retrieving object grid_config', error)
+    console.error(`Error while retrieving object ${CLASS_NAME}`, error)
   }
 }
