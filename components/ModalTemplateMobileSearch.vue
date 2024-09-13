@@ -1,13 +1,9 @@
 <script setup lang="ts">
 const { formatMessage } = useIntl()
 const { filters, setFilters } = useFilters()
+const { closeModal } = useModal()
 
-type Props = {
-  closeModal: () => void
-}
-
-const props = defineProps<Props>()
-const searchTerm = ref<string | undefined>(undefined)
+const searchTerm = ref<string | undefined>('')
 
 const handleChangeSearch = async (customEvent: CustomEvent) => {
   const value = customEvent.detail?.value
@@ -18,16 +14,20 @@ const handleResetSearch = () => {
   searchTerm.value = undefined
 }
 
-const confirmModal = () => {
-  setFilters({ search: searchTerm.value })
-  props.closeModal()
+const confirmModal = async () => {
+  await setFilters({ search: searchTerm.value })
+  await closeModal()
 }
+
+onMounted(() => {
+  searchTerm.value = filters.search || ''
+})
 </script>
 
 <template>
   <div class="flex flex-col rounded-12 bg-neutral-98 px-6 py-8 text-center">
     <lukso-search
-      :value="filters.search"
+      .value="searchTerm"
       is-full-width
       hide-loading
       has-reset

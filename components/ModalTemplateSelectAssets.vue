@@ -1,26 +1,22 @@
 <script setup lang="ts">
+const { closeModal } = useModal()
 const connectedProfile = useProfile().connectedProfile()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
-
-type Props = {
-  closeModal: () => void
-}
-
+const { isRpc } = storeToRefs(useAppStore())
 const profileAddress = computed(() => connectedProfile.value?.address || null)
-const props = defineProps<Props>()
 const allAssets = useProfileHolds()(profileAddress)
 const isLoadingAssets = computed(() =>
   allAssets.value?.some(asset => asset.isLoading)
 )
 
-const handleSelectLyx = () => {
-  navigateTo({
+const handleSelectLyx = async () => {
+  await navigateTo({
     path: sendRoute(connectedProfile.value?.address),
   })
-  props.closeModal()
+  await closeModal()
 }
 
-const handleSelectAsset = (asset: Asset) => {
+const handleSelectAsset = async (asset: Asset) => {
   sendLog('Selected asset', toRaw(asset))
 
   let query: SendQueryParams = { asset: asset?.address }
@@ -39,25 +35,31 @@ const handleSelectAsset = (asset: Asset) => {
     }
   }
 
-  navigateTo({
+  await navigateTo({
     path: sendRoute(connectedProfile.value?.address),
     query,
   })
-
-  props.closeModal()
+  await closeModal()
 }
 
 const ownedAssets = computed(() => {
-  const allAssetsFiltered = allAssets.value
-    // unwrap token Ids into main array
-    ?.flatMap(token => {
-      if (isLsp8(token)) {
-        return token?.tokenIdsData?.map(tokenIdsData => ({
-          ...tokenIdsData,
-        }))
+  let allAssetsFiltered = allAssets.value || []
+
+  if (isRpc.value) {
+    // in RPC mode unwrap token Ids into main array
+    allAssetsFiltered = allAssetsFiltered?.flatMap(token => {
+      if (isLsp8(token) && token?.tokenIdsData) {
+        return (
+          token?.tokenIdsData?.map(tokenIdsData => ({
+            ...tokenIdsData,
+          })) || []
+        )
       }
       return [token]
     })
+  }
+
+  allAssetsFiltered = allAssetsFiltered
     // remove potential undefined from array
     ?.filter(item => item !== undefined)
     // pick only the ones with balance/owned/in right standard
@@ -69,23 +71,15 @@ const ownedAssets = computed(() => {
     allAssetsFiltered
       ?.filter(asset => isToken(asset))
       // sort by name
-      ?.sort((a: Asset, b: Asset) => {
-        const tokenNameA = a.tokenName || ''
-        const tokenNameB = b.tokenName || ''
-
-        return tokenNameA.localeCompare(tokenNameB)
-      }) || []
+      ?.slice()
+      ?.sort((a, b) => stringSort(a.tokenName, b.tokenName)) || []
 
   const allCollectibles =
     allAssetsFiltered
       ?.filter(asset => isCollectible(asset))
       // sort by name
-      ?.sort((a: Asset, b: Asset) => {
-        const tokenNameA = a.tokenName || ''
-        const tokenNameB = b.tokenName || ''
-
-        return tokenNameA.localeCompare(tokenNameB)
-      }) || []
+      ?.slice()
+      ?.sort((a, b) => stringSort(a.tokenName, b.tokenName)) || []
 
   return [...allTokens, ...allCollectibles]
 })

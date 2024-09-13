@@ -32,4 +32,24 @@ describe('toChecksumAddress', () => {
     const checksummedAddress = ''
     expect(toChecksumAddress(address)).toBe(checksummedAddress)
   })
+
+  test('handles undefined', () => {
+    const address = undefined
+    const checksummedAddress = ''
+    expect(toChecksumAddress(address)).toBe(checksummedAddress)
+  })
+
+  test('handles null', () => {
+    const address = null
+    const checksummedAddress = ''
+    // @ts-expect-error
+    expect(toChecksumAddress(address)).toBe(checksummedAddress)
+  })
+
+  test('handles object', () => {
+    const address = {}
+    const checksummedAddress = ''
+    // @ts-expect-error
+    expect(toChecksumAddress(address)).toBe(checksummedAddress)
+  })
 })

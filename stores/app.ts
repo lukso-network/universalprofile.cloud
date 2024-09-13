@@ -1,5 +1,6 @@
 import type { Modal } from '@/types/modal'
 import type { NetworkId, NetworkInfo } from '@/types/network'
+import type EthereumProvider from '@walletconnect/ethereum-provider'
 
 const FETCH_DATA_PROVIDERS = ['rpc', 'graph']
 type FetchDataProvider = (typeof FETCH_DATA_PROVIDERS)[number]
@@ -12,11 +13,19 @@ type FetchDataProvider = (typeof FETCH_DATA_PROVIDERS)[number]
 export const useAppStore = defineStore(
   'app',
   () => {
+    const modal = ref<Modal>()
+
+    // network
     const networkConfig = useNetworkConfig()
     const networks = ref<NetworkInfo[]>(networkConfig)
     const selectedChainId = ref<string>(DEFAULT_NETWORK_CHAIN_ID)
-    const modal = ref<Modal>()
+
+    // connection
     const connectedProfileAddress = ref<Address>()
+    const walletConnectProvider = ref<EthereumProvider | undefined>()
+    const isWalletConnect = ref(false)
+
+    // data provider
     const fetchDataProvider = ref<FetchDataProvider>('graph')
     const fetchDataProviderReset = ref(false)
 
@@ -70,6 +79,27 @@ export const useAppStore = defineStore(
       () => fetchDataProvider.value === 'graph' && !isTestnet.value // TODO use RPC for Testnet until we have it indexed
     )
 
+    const isMobile = computed(() => {
+      const { isMobile } = useDevice()
+      return isMobile
+    })
+
+    const isMobileOrTablet = computed(() => {
+      const { isMobileOrTablet } = useDevice()
+      return isMobileOrTablet
+    })
+
+    const isSafari = computed(() => {
+      const { isSafari } = useDevice()
+      return isSafari
+    })
+
+    const isModalOpen = computed(() => {
+      const route = useRoute()
+
+      return !!route.query?.modalTemplate
+    })
+
     // --- actions
 
     const setModal = (newModal: Modal) => {
@@ -92,8 +122,14 @@ export const useAppStore = defineStore(
       isSearchOpen,
       isRpc,
       isGraph,
+      isMobile,
+      isMobileOrTablet,
+      isSafari,
+      isModalOpen,
       fetchDataProvider,
       fetchDataProviderReset,
+      walletConnectProvider,
+      isWalletConnect,
     }
   },
   {
@@ -103,6 +139,7 @@ export const useAppStore = defineStore(
         'selectedChainId',
         'fetchDataProvider',
         'fetchDataProviderReset',
+        'isWalletConnect',
       ],
       key: STORAGE_KEY.APP_STORE,
     },

@@ -1,24 +1,18 @@
 <script setup lang="ts">
-import { INJECTED_PROVIDER } from '@/shared/provider'
-
 const { currentNetwork } = useAppStore()
-
-type Props = {
-  closeModal: () => void
-}
-
-const props = defineProps<Props>()
+const { currentProvider } = useBaseProvider()
+const { closeModal } = useModal()
 
 const handleChangeNetwork = async () => {
   try {
-    await INJECTED_PROVIDER?.request({
+    await currentProvider.value?.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: currentNetwork.chainId }],
     })
   } catch (error: unknown) {
     console.error(error)
   } finally {
-    props.closeModal()
+    await closeModal()
   }
 }
 </script>

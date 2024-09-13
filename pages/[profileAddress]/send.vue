@@ -21,7 +21,8 @@ const {
 const { isLoadedApp } = storeToRefs(useAppStore())
 const { setStatus, clearSend } = useSendStore()
 const { showModal } = useModal()
-const { sendTransaction, contract, isEoA } = useWeb3(PROVIDERS.INJECTED)
+const { providerWeb3Instance } = useBaseProvider()
+const { sendTransaction, contract, isEoA } = providerWeb3Instance.value
 const amount = computed(() => useRouter().currentRoute.value.query.amount)
 const assetAddress = computed(() => useRouter().currentRoute.value.query.asset)
 const tokenId = computed(() => useRouter().currentRoute.value.query.tokenId)
@@ -55,9 +56,9 @@ watchEffect(() => {
 })
 
 const handleSend = async () => {
-  await checkExtensionNetwork()
-
   try {
+    await checkNetwork(true)
+
     setStatus('pending')
     let transactionsReceipt: TransactionReceipt | undefined
 
@@ -128,7 +129,9 @@ const handleSend = async () => {
     setStatus('draft')
 
     showModal({
-      message: getErrorMessage(error),
+      data: {
+        message: getErrorMessage(error),
+      },
     })
   }
 }

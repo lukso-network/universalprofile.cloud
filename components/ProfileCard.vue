@@ -1,8 +1,7 @@
 <script setup lang="ts">
 const viewedProfile = useProfile().viewedProfile()
-const { isMobile } = useDevice()
 const { showModal } = useModal()
-const { isConnected } = storeToRefs(useAppStore())
+const { isConnected, isMobile } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const connectedProfile = useProfile().connectedProfile()
 const profileBackground = useProfileBackground(viewedProfile, 880)
@@ -22,10 +21,12 @@ const handlePreviewProfileImage = () => {
     return
   }
 
+  const optimizedImage = useOptimizedImage(image, 1000)
+
   showModal({
     template: 'AssetImage',
     data: {
-      asset: image,
+      image: unref(optimizedImage),
     },
     size: 'auto',
   })
@@ -77,12 +78,7 @@ const hasFollowButton = computed(
 
         <div class="flex min-h-7 justify-end">
           <!-- Follow Button -->
-          <FollowButton
-            v-if="hasFollowButton"
-            :is-following="viewedProfileFollowers?.isFollowing"
-            :follower-count="viewedProfileFollowers?.followerCount"
-            :follower-addresses="viewedProfileFollowers?.followerAddresses"
-          />
+          <FollowButton :address="viewedProfile?.address" />
         </div>
 
         <div

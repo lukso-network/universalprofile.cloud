@@ -11,14 +11,18 @@ const FILTER_DEFAULTS: Filters = {
   search: undefined,
   collections: undefined,
   creators: undefined,
+  attributes: undefined,
 }
 
-export const useFilters = (assets?: ComputedRef<Asset[]>) => {
+export const useFilters = (
+  assets?: Ref<Asset[]>,
+  defaultFilters: Filters = FILTER_DEFAULTS
+) => {
   const route = useRoute()
   const { formatMessage } = useIntl()
 
   // filters and their defaults
-  const filters = reactive<Filters>({ ...FILTER_DEFAULTS })
+  const filters = reactive<Filters>({ ...defaultFilters })
 
   //--- getters
   const isOwned = computed(() => filters.assetType === 'owned')
@@ -155,16 +159,39 @@ export const useFilters = (assets?: ComputedRef<Asset[]>) => {
     { id: 'created', value: formatMessage('filters_type_created') },
   ])
 
+  const attributeFilterOptions = (attribute: CollectionAttribute) => {
+    return attribute.values.map(value => ({
+      id: slug(`${attribute.group}-${value}`),
+      value,
+      group: attribute.group,
+    }))
+  }
+
+  const attributeFilterValues = (attribute: CollectionAttribute) => {
+    return (JSON.parse(filters.attributes || '[]') as FiltersAttribute[])
+      ?.filter(value => {
+        return (
+          attribute.group === value.group &&
+          attribute.values.includes(value.value)
+        )
+      })
+      .map(value => ({
+        id: slug(`${attribute.group}-${value.value}`),
+        value: value.value,
+        group: attribute.group,
+      }))
+  }
+
   //--- setters
-  const setFilters = (
+  const setFilters = async (
     filters: Partial<Filters>,
     path?: string,
     resetFilters?: boolean
   ) => {
-    navigateTo({
+    await navigateTo({
       path: path || route.path,
       query: {
-        ...(resetFilters ? FILTER_DEFAULTS : route.query),
+        ...(resetFilters ? defaultFilters : route.query),
         ...filters,
       },
       replace: true,
@@ -181,6 +208,7 @@ export const useFilters = (assets?: ComputedRef<Asset[]>) => {
         orderBy: orderByFilter,
         collections: collectionsFilter,
         creators: creatorsFilter,
+        attributes: attributesFilter,
       } = queryParams as Partial<Filters>
 
       if (assetTypeFilter) {
@@ -212,6 +240,12 @@ export const useFilters = (assets?: ComputedRef<Asset[]>) => {
       } else {
         filters.creators = undefined
       }
+
+      if (attributesFilter) {
+        filters.attributes = attributesFilter
+      } else {
+        filters.attributes = undefined
+      }
     },
     { deep: true, immediate: true }
   )
@@ -230,5 +264,7 @@ export const useFilters = (assets?: ComputedRef<Asset[]>) => {
     collectionFilterValues,
     typeFilterValue,
     typeFilterOptions,
+    attributeFilterOptions,
+    attributeFilterValues,
   }
 }

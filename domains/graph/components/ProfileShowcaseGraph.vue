@@ -7,10 +7,20 @@ const isLoading = ref(false)
 const profilePool = ref()
 const profilesOnDisplay = ref()
 
+const profilesOlderThen = () => {
+  const now = new Date().getTime()
+  const timeDiff = 1_000 * 60 * 120 // 2 hours
+  const timestamp = Math.round((now - timeDiff) / 1000)
+
+  return timestamp
+}
+
 const getProfiles = async () => {
   try {
     isLoading.value = true
-    const { profiles }: ProfileShowcaseQuery = await GqlProfileShowcase()
+    const { profiles }: ProfileShowcaseQuery = await GqlProfileShowcase({
+      createdTimestamp: profilesOlderThen(),
+    })
 
     if (graphLog.enabled) {
       graphLog('profileShowcase', profiles)
@@ -27,7 +37,7 @@ const getProfiles = async () => {
 const shuffleProfiles = async () => {
   const profileIndexes = getDistinctRandomIntegers(
     0,
-    profilePool.value.length - 1,
+    profilePool.value?.length - 1,
     isTestnet.value ? PROFILE_SHOWCASE_LIMIT * 2 : PROFILE_SHOWCASE_LIMIT
   )
   const randomProfiles = []

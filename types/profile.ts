@@ -54,3 +54,6 @@ export type IndexedProfile = {
   hasProfileImage?: boolean
   hasBackgroundImage?: boolean
 }
+
+export type ProfileViewTabName = 'collectibles' | 'tokens' | 'grid'
+export type ProfileViewTab = { id: ProfileViewTabName; count?: number }

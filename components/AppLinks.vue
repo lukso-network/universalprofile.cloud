@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { detectSocialMedia } from '@lukso/web-components/tools'
+
 import type { LinkMetadata } from '@lukso/lsp-smart-contracts'
 
 type Props = {

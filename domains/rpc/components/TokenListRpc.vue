@@ -14,7 +14,7 @@ const { isOwned } = useFilters()
       {{ $formatMessage('tokens_title') }}
     </h3>
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-      <TokenListLyxCard v-if="isOwned" />
+      <TokenListCardLyx v-if="isOwned" />
       <TokenListCardRpc
         v-for="(asset, index) in tokens"
         :key="index"

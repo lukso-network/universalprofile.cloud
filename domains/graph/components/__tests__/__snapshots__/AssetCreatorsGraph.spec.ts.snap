@@ -68,7 +68,7 @@ exports[`AssetCreatorsGraph > should render empty state 1`] = `
 exports[`AssetCreatorsGraph > should render loading state 1`] = `
 "<div id="test-wrapper">
   <div>
-    <div class="mb-3 h-[17px] w-1/2 animate-pulse rounded-4 bg-neutral-90"></div>
+    <div class="mb-2 h-[17px] w-1/2 animate-pulse rounded-4 bg-neutral-90"></div>
     <div class="flex gap-4">
       <div class="animate-pulse rounded-4 bg-neutral-90 h-[48px] w-[170px]"></div>
       <div class="animate-pulse rounded-4 bg-neutral-90 h-[48px] w-[140px]"></div>

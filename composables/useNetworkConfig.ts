@@ -23,7 +23,7 @@ export const useNetworkConfig = (): NetworkInfo[] => {
       explorerUrl: 'https://explorer.execution.testnet.lukso.network',
       customLSP2ContractAddress: '0x1690c1A6f5dc385d20139222567476F0A185f77a',
       followingSystemContractAddress:
-        '0xcc439C9f4A3ebA8fb69945e650BbAB717741Fe99',
+        '0xf01103E5a9909Fc0DBe8166dA7085e0285daDDcA',
     },
     {
       id: 'mainnet',

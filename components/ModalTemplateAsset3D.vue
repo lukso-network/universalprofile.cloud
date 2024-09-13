@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import '@google/model-viewer'
 
-const { modal } = useAppStore()
-
-type Props = {
-  closeModal: () => void
-}
-
-defineProps<Props>()
+const { modal, closeModal } = useModal()
 const isLoaded = ref(false)
 </script>
 
@@ -21,7 +15,7 @@ const isLoaded = ref(false)
       class="absolute left-[calc(50%-12px)] top-[calc(50%-12px)]"
     ></lukso-icon>
     <model-viewer
-      :src="modal?.data?.asset?.url"
+      :src="modal?.data?.url"
       alt="3D model"
       auto-rotate="true"
       modelutoplay="true"

@@ -9,7 +9,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { isMobile } = useDevice()
+const { isMobile } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const isLoaded = computed(() => props.asset)
 const address = computed(() => props.asset?.address)
@@ -19,17 +19,18 @@ const truncateAddress = computed(() => {
     return ''
   }
 
-  const address = props.asset.address
+  const address = toChecksumAddress(props.asset.address)
+
   if (address.length <= 8) {
     return address
   }
 
   let addressLength = 66
 
-  if (isMobile) {
+  if (isMobile.value) {
     addressLength = 8
   }
-  return sliceAddress(props.asset.address, addressLength)
+  return sliceAddress(address, addressLength)
 })
 
 const handleShowContract = () => {
@@ -93,7 +94,9 @@ const handleShowContract = () => {
       </div>
     </div>
   </template>
-  <AppPlaceholderSection v-else>
-    <AppPlaceholderLine class="h-[48px] w-full" />
+  <!-- Loading state -->
+  <AppPlaceholderLine v-else-if="withoutTitle" class="h-[50px] w-full" />
+  <AppPlaceholderSection v-else class="w-full">
+    <AppPlaceholderLine class="h-[50px] w-full !rounded-12" />
   </AppPlaceholderSection>
 </template>

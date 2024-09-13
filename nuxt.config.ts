@@ -69,7 +69,7 @@ export default defineNuxtConfig({
         authToken: process.env.NUXT_PUBLIC_SENTRY_AUTH_TOKEN,
         debug: true,
         org: 'lukso',
-        project: 'wallet-universalprofile-cloud',
+        project: 'universalprofile-cloud',
         sourcemaps: {
           assets: ['./.nuxt/dist/client/**'],
         },
@@ -123,7 +123,7 @@ export default defineNuxtConfig({
     },
   },
   imports: {
-    dirs: ['stores/**', 'shared/**', 'utils/**', 'types/**'],
+    dirs: ['stores/**', 'shared/**', 'utils/**', 'types/**', 'composables/**'],
   },
   ssr: false,
   spaLoadingTemplate: 'public/loading-template.html',
@@ -210,7 +210,7 @@ export default defineNuxtConfig({
     codegen: true,
     clients: {
       default: {
-        host: 'https://envio.mainnet.lukso.network/v1/graphql',
+        host: 'https://envio.lukso-mainnet.universal.tech/v1/graphql',
       },
     },
   },

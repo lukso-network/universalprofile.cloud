@@ -1,16 +1,21 @@
 <script setup lang="ts">
 type Props = {
-  asset?: Asset
+  asset?: Image
 }
 
 const props = defineProps<Props>()
 const { showModal } = useModal()
 
 const handleClick = () => {
+  if (!props.asset) {
+    return
+  }
+
+  const optimizedImage = useOptimizedImage([props.asset], 1000)
   showModal({
     template: 'AssetImage',
     data: {
-      asset: [props.asset],
+      image: unref(optimizedImage),
     },
     size: 'auto',
   })

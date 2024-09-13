@@ -1,13 +1,6 @@
 <script setup lang="ts">
-export type ProfileViewTabName = 'collectibles' | 'tokens' | 'grid'
-export type ProfileViewTab = {
-  id: ProfileViewTabName
-  count?: number
-}
-
 const { isOwned, setFilters, filters } = useFilters()
 const viewedProfileAddress = getCurrentProfileAddress()
-
 const viewedProfile = useProfile().getProfile(viewedProfileAddress)
 const assetsData = useProfileAssetsGraph()({
   profileAddress: viewedProfileAddress,
@@ -178,7 +171,7 @@ onMounted(async () => {
             'invisible absolute z-0 opacity-0': activeTab !== 'grid',
           }"
         />
-        <ProfileAssetsGraph
+        <ProfileAssets
           v-show="activeTab !== 'grid'"
           :assets="filteredAssets"
           :is-loading="isLoadingAssets"
@@ -186,24 +179,6 @@ onMounted(async () => {
         />
       </div>
     </div>
-    <div
-      v-else
-      class="mx-auto flex h-full max-w-72 flex-col items-center justify-center text-center"
-    >
-      <img src="/images/up-error.png" alt="" class="mb-6 w-36" />
-      <div class="heading-inter-21-semi-bold mb-4">
-        {{ $formatMessage('not_up_title') }}
-      </div>
-      <div class="paragraph-inter-16-regular mb-6">
-        {{ $formatMessage('not_up_description') }}
-      </div>
-      <lukso-button
-        variant="landing"
-        is-link
-        :href="explorerContractUrl(viewedProfile?.address)"
-        class="mb-8"
-        >{{ $formatMessage('not_up_button') }}</lukso-button
-      >
-    </div>
+    <ProfileViewNotUp v-else :address="viewedProfile?.address" />
   </AppPageLoader>
 </template>

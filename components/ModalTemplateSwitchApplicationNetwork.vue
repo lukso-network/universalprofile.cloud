@@ -1,21 +1,18 @@
 <script setup lang="ts">
-const { modal } = useAppStore()
-
-type Props = {
-  closeModal: () => void
-}
-
-const props = defineProps<Props>()
+const { closeModal, modal } = useModal()
+const { formatMessage } = useIntl()
 
 const handleChangeNetwork = async () => {
   const { selectedChainId } = storeToRefs(useAppStore())
-  const { disconnect } = useBrowserExtension()
+  const { getNetworkByChainId } = useAppStore()
+  const { disconnect } = useBaseProvider()
 
   selectedChainId.value = modal?.data?.chainId
+  await navigateTo({
+    path: homeRoute(),
+    query: { network: getNetworkByChainId(modal?.data?.chainId).id },
+  })
   disconnect()
-  await navigateTo(homeRoute())
-  window.location.href = window.location.href.split('?')[0]
-  props.closeModal()
 }
 </script>
 
@@ -27,12 +24,12 @@ const handleChangeNetwork = async () => {
       alt=""
     />
     <div class="heading-inter-21-semi-bold pb-4">
-      {{ $formatMessage('modal_switch_application_network_title') }}
+      {{ formatMessage('modal_switch_application_network_title') }}
     </div>
     <div class="paragraph-inter-16-regular">
       <lukso-sanitize
         :html-content="
-          $formatMessage('modal_switch_application_network_description', {
+          formatMessage('modal_switch_application_network_description', {
             name: `<strong>${modal?.data?.name}</strong>`,
           })
         "
@@ -40,7 +37,7 @@ const handleChangeNetwork = async () => {
     </div>
     <div class="grid grid-cols-[max-content,auto]">
       <lukso-button variant="text" @click="closeModal" class="mt-6">
-        {{ $formatMessage('modal_switch_application_network_cancel') }}
+        {{ formatMessage('modal_switch_application_network_cancel') }}
       </lukso-button>
       <lukso-button
         variant="landing"
@@ -48,7 +45,7 @@ const handleChangeNetwork = async () => {
         @click="handleChangeNetwork"
         class="mt-6"
       >
-        {{ $formatMessage('modal_switch_application_network_confirm') }}
+        {{ formatMessage('modal_switch_application_network_confirm') }}
       </lukso-button>
     </div>
   </div>

@@ -8,40 +8,42 @@ const openStoreLink = () => {
   window.open(storeLink, '_blank')
 }
 
-const setConnectionExpiry = () => {
-  const currentDate = Date.now()
-  const expiryDate = currentDate + CONNECTION_EXPIRY_TIME_MS
-
-  setItem(STORAGE_KEY.CONNECTION_EXPIRY, expiryDate.toString())
-}
-
 const connect = async () => {
-  const { showModal } = useModal()
+  const { showModal, closeModal, modal } = useModal()
   const { formatMessage } = useIntl()
+  const { setConnectionExpiry } = useConnectionExpiry()
   const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
   const route = useRoute()
-
-  await checkExtensionNetwork()
-
-  // when no extension installed we show modal
-  if (!INJECTED_PROVIDER) {
-    openStoreLink()
-
-    return showModal({
-      title: formatMessage('web3_connect_error_title'),
-      message: formatMessage('web3_connect_no_extension'),
-    })
-  }
-
-  isConnecting.value = true
+  const { disconnect } = useBaseProvider()
 
   try {
+    // check if we are on the right network
+    await checkNetwork(true)
+
+    // when no extension installed we show modal
+    if (!INJECTED_PROVIDER) {
+      openStoreLink()
+
+      return showModal({
+        data: {
+          title: formatMessage('web3_connect_error_title'),
+          message: formatMessage('web3_connect_no_extension'),
+        },
+      })
+    }
+
+    isConnecting.value = true
     const { requestAccounts } = useWeb3(PROVIDERS.INJECTED)
     const [address] = await requestAccounts()
 
     assertAddress(address, 'connection')
     connectedProfileAddress.value = address
     setConnectionExpiry()
+
+    // close connect modal if it's open
+    if (modal?.template === 'ConnectWallet') {
+      closeModal()
+    }
 
     // when we connect on the landing page we redirect to profile
     if (route.name === 'index') {
@@ -50,26 +52,22 @@ const connect = async () => {
   } catch (error: unknown) {
     console.error(error)
     disconnect()
-
     showModal({
-      title: formatMessage('web3_connect_error_title'),
-      message: getErrorMessage(error),
+      data: {
+        title: formatMessage('web3_connect_error_title'),
+        message: getErrorMessage(error),
+      },
     })
+
+    // TODO: we might want to show toast message when modal is open because then we can't provide error feedback to user
   } finally {
     isConnecting.value = false
   }
 }
 
-const disconnect = () => {
-  const { removeItem } = useLocalStorage()
-  const { connectedProfileAddress } = storeToRefs(useAppStore())
-
-  connectedProfileAddress.value = undefined
-  removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
-}
-
 const handleAccountsChanged = async (accounts: string[]) => {
   const { connectedProfileAddress, isConnected } = storeToRefs(useAppStore())
+  const { disconnect } = useBaseProvider()
 
   // handle account change only for connected users
   if (!isConnected.value) {
@@ -128,10 +126,9 @@ const isUniversalProfileExtension = () => {
   return !!INJECTED_PROVIDER
 }
 
-export const useBrowserExtension = () => {
+export const useBrowserExtensionProvider = () => {
   return {
     connect,
-    disconnect,
     addProviderEvents,
     removeProviderEvents,
     isUniversalProfileExtension,

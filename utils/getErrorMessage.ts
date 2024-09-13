@@ -15,6 +15,10 @@ export const getErrorMessage = (error: unknown) => {
     return formatMessage('error_unknown_standard')
   }
 
+  if (error instanceof NoAccountsError) {
+    return formatMessage('error_no_accounts')
+  }
+
   // errors that have a code or message
   if (error && typeof error === 'object' && 'code' in error) {
     switch (error.code) {

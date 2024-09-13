@@ -12,6 +12,22 @@ const props = defineProps<Props>()
 
 const { formatMessage } = useIntl()
 const assets = computed(() => props.assets)
+const { isGraph, isRpc } = storeToRefs(useAppStore())
+const defaultFilters = (): Filters => {
+  if (isGraph.value) {
+    return {
+      assetType: 'owned',
+      orderBy: 'name-asc',
+      assetGroup: 'collectibles',
+    }
+  }
+
+  return {
+    assetType: 'owned',
+    orderBy: 'added-desc',
+    assetGroup: 'collectibles',
+  }
+}
 const {
   filters,
   isOwned,
@@ -25,8 +41,8 @@ const {
   collectionFilterValues,
   typeFilterValue,
   typeFilterOptions,
-} = useFilters(assets)
-const { isMobile } = useDevice()
+} = useFilters(assets, defaultFilters())
+const { isMobile } = storeToRefs(useAppStore())
 const { showModal } = useModal()
 const orderByOptions = ref<SelectStringOption[]>()
 
@@ -70,6 +86,11 @@ const isSelectedCreatorInAvailableCreators = computed(() => {
 })
 
 const filteredAssets = computed(() => {
+  // no filters in RPC mode
+  if (isRpc.value) {
+    return orderedAssets.value
+  }
+
   let assetsFiltered = orderedAssets.value
 
   // filter by search
@@ -114,7 +135,15 @@ const filteredAssets = computed(() => {
 })
 
 const orderByValue = computed(() => {
-  return orderByOptions.value?.find(option => option.id === filters.orderBy)
+  const value = orderByOptions.value?.find(
+    option => option.id === filters.orderBy
+  )
+
+  if (!value) {
+    setFilters({ orderBy: orderByOptions.value?.[0].id })
+  }
+
+  return value
 })
 
 const selectedFilters = computed(() => {
@@ -127,14 +156,6 @@ const selectedFilters = computed(() => {
 const handleChangeSearch = (customEvent: CustomEvent) => {
   const searchTerm = customEvent.detail?.value
   setFilters({ search: searchTerm })
-}
-
-const handleKeyUpSearch = (customEvent: CustomEvent) => {
-  const key = customEvent.detail?.event?.detail?.event?.key
-
-  if (key === 'Escape') {
-    setFilters({ search: undefined })
-  }
 }
 
 const handleChangeType = (customEvent: CustomEvent) => {
@@ -192,7 +213,6 @@ const handleSelectOrder = (customEvent: CustomEvent) => {
 const handleMobileFiltersModal = () => {
   showModal({
     template: 'MobileFilters',
-    data: { assets: props.assets },
   })
 }
 
@@ -204,8 +224,15 @@ const handleMobileSearchModal = () => {
 
 onMounted(async () => {
   orderByOptions.value = [
-    { id: 'name-asc', value: formatMessage('filters_order_by_name_asc') },
-    { id: 'name-desc', value: formatMessage('filters_order_by_name_desc') },
+    ...(isGraph.value
+      ? [
+          { id: 'name-asc', value: formatMessage('filters_order_by_name_asc') },
+          {
+            id: 'name-desc',
+            value: formatMessage('filters_order_by_name_desc'),
+          },
+        ]
+      : []),
     {
       id: 'added-asc',
       value: formatMessage('filters_order_by_recently_added'),
@@ -236,12 +263,14 @@ onMounted(async () => {
 
         <!-- Search trigger -->
         <lukso-button
+          v-if="isGraph"
           is-icon
           variant="secondary"
           @click="handleMobileSearchModal"
         >
-          <lukso-icon name="search" size="medium" class="mx-1"></lukso-icon>
+          <lukso-icon name="search" size="medium"></lukso-icon>
         </lukso-button>
+        <div v-else></div>
 
         <!-- Separator -->
         <div></div>
@@ -266,6 +295,7 @@ onMounted(async () => {
         <div class="flex flex-wrap gap-2">
           <!-- Creator filter -->
           <lukso-select
+            v-if="isGraph"
             size="small"
             :value="JSON.stringify(creatorFilterValues(filters.creators))"
             :options="JSON.stringify(creatorFilterOptions)"
@@ -279,7 +309,7 @@ onMounted(async () => {
 
           <!-- Collection Filter -->
           <lukso-select
-            v-if="isCollectibles"
+            v-if="isCollectibles && isGraph"
             size="small"
             :value="JSON.stringify(collectionFilterValues(filters.collections))"
             :options="JSON.stringify(collectionFilterOptions)"
@@ -301,13 +331,13 @@ onMounted(async () => {
 
           <!-- Search Filter -->
           <lukso-search
-            :value="filters.search"
+            v-if="isGraph"
+            .value="filters.search"
             :placeholder="formatMessage('asset_filter_search_placeholder')"
             hide-loading
             has-reset
             size="small"
             @on-search="handleChangeSearch"
-            @on-key-up="handleKeyUpSearch"
             @on-reset="() => setFilters({ search: undefined })"
           ></lukso-search>
         </div>
@@ -326,7 +356,10 @@ onMounted(async () => {
       </div>
 
       <!-- Selected filters -->
-      <div v-if="hasFiltersSelected" class="flex flex-wrap gap-y-2 pb-4">
+      <div
+        v-if="hasFiltersSelected && isGraph"
+        class="flex flex-wrap gap-y-2 pb-4"
+      >
         <!-- Selected creators -->
         <template
           v-for="creatorAddress in filters.creators"

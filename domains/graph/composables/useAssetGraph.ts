@@ -54,13 +54,35 @@ export function useAssetGraph() {
         const data = results[0]?.data as QueryResult | undefined
         const assetData = data?.asset?.[0]
         const tokenData = data?.token?.[0]
-        const holdData = data?.hold?.[0]
+        const holdData = data?.hold
         const isLoading = !results.length
           ? true
           : results?.some(result => result.isLoading)
+        const tokenIdsData: Asset[] = []
 
+        if (assetData?.standard === STANDARDS.LSP8) {
+          holdData?.filter(hold => {
+            if (hold.token?.baseAsset?.id === assetData?.id) {
+              tokenIdsData.push({
+                ...createAssetObject(
+                  assetData,
+                  hold?.token,
+                  [],
+                  getBalance(hold)
+                ),
+                isOwned: true,
+                isIssued: false,
+              })
+            }
+          })
+        }
         const asset = {
-          ...createAssetObject(assetData, tokenData, [], getBalance(holdData)),
+          ...createAssetObject(
+            assetData,
+            tokenData,
+            tokenIdsData,
+            getBalance(holdData?.[0])
+          ),
           isLoading,
           isMetadataLoading: isLoading,
         }

@@ -8,7 +8,7 @@ const BLUR_DELAY = 100
 
 const { receiver } = storeToRefs(useSendStore())
 const isSearchingReceiver = ref<boolean>(false)
-const searchTerm = ref<string | Address | undefined>(receiver.value?.address)
+const searchTerm = ref<string | Address>(receiver.value?.address || '')
 const hasNoResults = ref<boolean>(false)
 const results = ref<SearchProfileResult[]>()
 
@@ -152,7 +152,7 @@ const handleBlur = async (customEvent: CustomEvent) => {
 <template>
   <lukso-search
     name="receiver"
-    :value="searchTerm"
+    .value="searchTerm"
     :placeholder="$formatMessage('send_input_placeholder')"
     :results="JSON.stringify(results)"
     :is-searching="isSearchingReceiver ? 'true' : undefined"

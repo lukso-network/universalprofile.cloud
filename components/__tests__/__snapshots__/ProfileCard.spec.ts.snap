@@ -41,8 +41,8 @@ exports[`ProfileCard > should render empty profile 1`] = `
             <lukso-username name="anonymous-profile" address="" address-color="neutral-80" size="x-large" max-width="350" hide-prefix=""></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
           <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
-            <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">0</span> Following</div>
-            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">0</span> Followers</div>
+            <div class="rounded-l-4 border border-neutral-90 px-3 py-1 transition hover:border-neutral-20 group-hover:border-r-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">0</span> Following</div>
+            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-3 py-1 transition hover:border-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">0</span> Followers</div>
           </div>
         </div><!-- Followed by -->
         <!--v-if-->
@@ -94,10 +94,10 @@ exports[`ProfileCard > should render followed by info 1`] = `
           <div class="group flex">
             <!-- Unfollow -->
             <lukso-button size="small" variant="secondary" class="hidden group-hover:block" loading-text="Unfollow">
-              <lukso-icon name="profile-remove" size="small" class="mr-2"></lukso-icon> Unfollow
+              <lukso-icon name="profile-remove" size="small" class="mr-2"></lukso-icon><span>Unfollow</span>
             </lukso-button><!-- Following -->
             <lukso-button size="small" variant="secondary" class="block group-hover:hidden" loading-text="Following">
-              <lukso-icon name="profile" size="small" class="mr-2"></lukso-icon> Following
+              <lukso-icon name="profile" size="small" class="mr-2"></lukso-icon><span>Following</span>
             </lukso-button>
           </div>
         </div>
@@ -107,8 +107,8 @@ exports[`ProfileCard > should render followed by info 1`] = `
             <lukso-username name="anonymous-profile" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350" hide-prefix=""></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
           <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
-            <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
-            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
+            <div class="rounded-l-4 border border-neutral-90 px-3 py-1 transition hover:border-neutral-20 group-hover:border-r-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
+            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-3 py-1 transition hover:border-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
           </div>
         </div><!-- Followed by -->
         <div class="flex items-center mt-4">
@@ -173,7 +173,7 @@ exports[`ProfileCard > should render profile when connected 1`] = `
           <div class="group flex">
             <!-- Follow -->
             <lukso-button size="small" loading-text="Follow">
-              <lukso-icon name="profile-add" size="small" color="neutral-100" class="mr-2"></lukso-icon> Follow
+              <lukso-icon name="profile-add" size="small" color="neutral-100" class="mr-2"></lukso-icon><span>Follow</span>
             </lukso-button>
           </div>
         </div>
@@ -183,8 +183,8 @@ exports[`ProfileCard > should render profile when connected 1`] = `
             <lukso-username name="john" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350"></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
           <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
-            <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
-            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
+            <div class="rounded-l-4 border border-neutral-90 px-3 py-1 transition hover:border-neutral-20 group-hover:border-r-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
+            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-3 py-1 transition hover:border-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
           </div>
         </div><!-- Followed by -->
         <!--v-if-->
@@ -249,7 +249,12 @@ exports[`ProfileCard > should render profile when not connected 1`] = `
         </div>
         <div class="flex min-h-7 justify-end">
           <!-- Follow Button -->
-          <!--v-if-->
+          <div class="group flex">
+            <!-- Follow -->
+            <lukso-button size="small" loading-text="Follow">
+              <lukso-icon name="profile-add" size="small" color="neutral-100" class="mr-2"></lukso-icon><span>Follow</span>
+            </lukso-button>
+          </div>
         </div>
         <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <!-- Profile Name -->
@@ -257,8 +262,8 @@ exports[`ProfileCard > should render profile when not connected 1`] = `
             <lukso-username name="john" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350"></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
           <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
-            <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
-            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
+            <div class="rounded-l-4 border border-neutral-90 px-3 py-1 transition hover:border-neutral-20 group-hover:border-r-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
+            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-3 py-1 transition hover:border-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
           </div>
         </div><!-- Followed by -->
         <!--v-if-->
@@ -326,10 +331,10 @@ exports[`ProfileCard > should render unfollow button 1`] = `
           <div class="group flex">
             <!-- Unfollow -->
             <lukso-button size="small" variant="secondary" class="hidden group-hover:block" loading-text="Unfollow">
-              <lukso-icon name="profile-remove" size="small" class="mr-2"></lukso-icon> Unfollow
+              <lukso-icon name="profile-remove" size="small" class="mr-2"></lukso-icon><span>Unfollow</span>
             </lukso-button><!-- Following -->
             <lukso-button size="small" variant="secondary" class="block group-hover:hidden" loading-text="Following">
-              <lukso-icon name="profile" size="small" class="mr-2"></lukso-icon> Following
+              <lukso-icon name="profile" size="small" class="mr-2"></lukso-icon><span>Following</span>
             </lukso-button>
           </div>
         </div>
@@ -339,8 +344,8 @@ exports[`ProfileCard > should render unfollow button 1`] = `
             <lukso-username name="anonymous-profile" address="0x1234567890abcdef1234567890abcdef12345678" address-color="neutral-80" size="x-large" max-width="350" hide-prefix=""></lukso-username>
           </lukso-tooltip><!-- Follower counters -->
           <div class="paragraph-inter-12-medium group flex cursor-pointer items-center">
-            <div class="rounded-l-4 border border-neutral-90 px-1.5 transition hover:border-neutral-20 group-hover:border-r-neutral-20"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
-            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-1.5 transition hover:border-neutral-20"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
+            <div class="rounded-l-4 border border-neutral-90 px-3 py-1 transition hover:border-neutral-20 group-hover:border-r-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">20,000</span> Following</div>
+            <div class="rounded-r-4 border border-l-0 border-l-neutral-90 px-3 py-1 transition hover:border-neutral-20 sm:px-1.5 sm:py-0"><span class="paragraph-inter-12-bold">10,000</span> Followers</div>
           </div>
         </div><!-- Followed by -->
         <!--v-if-->

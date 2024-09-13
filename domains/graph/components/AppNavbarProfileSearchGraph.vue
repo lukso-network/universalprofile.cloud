@@ -9,7 +9,7 @@ const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element ren
 const { isSearchOpen } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const isSearching = ref<boolean>(false)
-const searchTerm = ref<string | Address | undefined>()
+const searchTerm = ref<string | Address>('')
 const hasNoResults = ref<boolean>(false)
 const results = ref<SearchProfileResult[]>()
 
@@ -70,16 +70,7 @@ const handleSelect = (event: CustomEvent) => {
 
   if (isAddress(address)) {
     navigateTo(profileRoute(address))
-    searchTerm.value = undefined
-  }
-}
-
-const handleKeyUpSearch = (customEvent: CustomEvent) => {
-  const key = customEvent.detail?.event?.detail?.event?.key
-
-  if (key === 'Escape') {
-    searchTerm.value = undefined
-    hasNoResults.value = false
+    searchTerm.value = ''
   }
 }
 
@@ -101,7 +92,7 @@ watchEffect(() => {
 <template>
   <lukso-search
     name="profile-search"
-    :value="searchTerm"
+    .value="searchTerm"
     :placeholder="formatMessage('profile_search_placeholder')"
     :results="JSON.stringify(results)"
     :is-searching="isSearching ? 'true' : undefined"
@@ -112,6 +103,5 @@ watchEffect(() => {
     @on-search="handleSearch"
     @on-input-click="handleSearch"
     @on-select="handleSelect"
-    @on-key-up="handleKeyUpSearch"
   ></lukso-search>
 </template>

@@ -6,11 +6,15 @@ import { toChecksumAddress as toChecksumAddressWeb3 } from 'web3-utils'
  * @param value
  * @returns
  */
-export const toChecksumAddress = (value: string) => {
+export const toChecksumAddress = (value?: string | Address) => {
+  if (!value) {
+    return ''
+  }
+
   try {
     return toChecksumAddressWeb3(value)
   } catch (error) {
-    console.error(error)
+    console.warn(error)
     return ''
   }
 }

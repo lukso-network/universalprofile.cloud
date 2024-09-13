@@ -27,3 +27,9 @@ export class StandardError extends Error {
     super('Unknown asset standard')
   }
 }
+
+export class NoAccountsError extends Error {
+  constructor() {
+    super('No accounts available')
+  }
+}

@@ -8,7 +8,7 @@ export type Image = {
   url?: string
   verification?: ImageMetadata['verification']
   src?: string
-  verified?: boolean
+  verified?: ImageVerifiedStatus
 }
 
 export type Base64EncodedImage = `data:image/jpeg;base64${string}`
