@@ -1,37 +1,61 @@
-import { useQuery } from '@tanstack/vue-query'
+import { useQueries } from '@tanstack/vue-query'
 
 import type { ProfileAssetsQuery } from '@/.nuxt/gql/default'
-
-type FiltersProfileAssets = {
-  profileAddress?: MaybeRef<Address | null>
-}
+import type { QFQueryOptions } from '@/utils/queryFunctions'
 
 type QueryResult = ProfileAssetsQuery
 
 export function useProfileAssetsGraph() {
-  return ({ profileAddress: _profileAddress }: FiltersProfileAssets) => {
+  return (_profileAddress?: MaybeRef<Address | null>) => {
     const { selectedChainId: chainId } = useAppStore()
     const profileAddress = unref(_profileAddress)
 
-    return useQuery({
-      queryKey: ['profile-assets-graph', profileAddress, chainId],
-      queryFn: async () => {
+    const queries = computed(() => {
+      const queries: Array<QFQueryOptions> = [
+        {
+          queryKey: ['profile-assets-graph', profileAddress, chainId],
+          queryFn: async () => {
+            const { receivedAssets, issuedAssets, holds }: QueryResult =
+              await GqlProfileAssets({
+                address: profileAddress,
+              })
+
+            if (graphLog.enabled) {
+              graphLog(
+                'profile-assets-raw',
+                receivedAssets,
+                issuedAssets,
+                holds
+              )
+            }
+
+            return {
+              receivedAssets,
+              issuedAssets,
+              holds,
+            }
+          },
+          refetchInterval: 120_000,
+          staleTime: 250,
+        },
+      ]
+
+      return queries
+    })
+
+    return useQueries({
+      queries,
+      combine: results => {
+        if (!profileAddress) {
+          return null
+        }
+
+        const isLoading = results.some(result => result.isLoading)
         const {
           receivedAssets: receivedAssetsData,
           issuedAssets: issuedAssetsData,
           holds: holdsData,
-        }: QueryResult = await GqlProfileAssets({
-          address: profileAddress,
-        })
-
-        if (graphLog.enabled) {
-          graphLog(
-            'profile-assets-raw',
-            receivedAssetsData,
-            issuedAssetsData,
-            holdsData
-          )
-        }
+        } = results[0]?.data as QueryResult
 
         const receivedAssets =
           receivedAssetsData?.flatMap(receivedAsset => {
@@ -49,6 +73,7 @@ export function useProfileAssetsGraph() {
                     ),
                     isOwned: true,
                     isIssued: false,
+                    isLoading,
                   })
                 }
               })
@@ -67,6 +92,7 @@ export function useProfileAssetsGraph() {
               ),
               isOwned: true,
               isIssued: false,
+              isLoading,
             }
           }) || []
 
@@ -90,8 +116,6 @@ export function useProfileAssetsGraph() {
 
         return [...receivedAssets, ...issuedAssets]
       },
-      refetchInterval: 120_000,
-      staleTime: 250,
     })
   }
 }

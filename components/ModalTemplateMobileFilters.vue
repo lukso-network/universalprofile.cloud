@@ -3,12 +3,10 @@ const { formatMessage } = useIntl()
 const { closeModal } = useModal()
 const { isGraph } = storeToRefs(useAppStore())
 const viewedProfileAddress = getCurrentProfileAddress()
-const assetsData = useProfileAssetsGraph()({
-  profileAddress: viewedProfileAddress,
-})
+const assetsData = useProfileAssetsGraph()(viewedProfileAddress)
 const assets = computed(() => {
   return (
-    assetsData.data.value
+    assetsData.value
       // filter by owned/created
       ?.filter(asset => {
         switch (filters.assetType) {

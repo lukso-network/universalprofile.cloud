@@ -6,6 +6,6 @@ export function useProfileAssets() {
       return useProfileAssetsRpc()(profileAddress)
     }
 
-    return useProfileAssetsGraph()({ profileAddress })
+    return useProfileAssetsGraph()(profileAddress)
   }
 }

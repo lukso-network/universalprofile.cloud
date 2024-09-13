@@ -2,11 +2,12 @@
 const { isOwned, setFilters, filters } = useFilters()
 const viewedProfileAddress = getCurrentProfileAddress()
 const viewedProfile = useProfile().getProfile(viewedProfileAddress)
-const assetsData = useProfileAssetsGraph()({
-  profileAddress: viewedProfileAddress,
-})
-const assets = computed(() => assetsData.data.value || [])
-const isLoadingAssets = computed(() => assetsData.isLoading.value)
+const assetsData = useProfileAssets()(viewedProfileAddress)
+const assets = computed(() => assetsData.value || [])
+const isLoadingAssets = computed(() =>
+  assets.value.some(asset => asset.isLoading)
+)
+
 const filteredAssets = computed(() => {
   return (
     assets.value
@@ -101,38 +102,6 @@ const tabs = computed<ProfileViewTab[]>(() => {
 
 const activeTab = computed(() => {
   return filters.assetGroup
-})
-
-const selectTabBasedOnAssetCounts = () => {
-  // when user has no collectibles, we show tokens first
-  const assetGroup =
-    ownedCollectiblesCount.value > 0 || createdCollectiblesCount.value
-      ? 'collectibles'
-      : 'tokens'
-  setFilters({
-    assetGroup,
-  })
-}
-
-watch(
-  () => ownedCollectiblesCount.value,
-  async () => {
-    await nextTick()
-    selectTabBasedOnAssetCounts()
-  }
-)
-
-watch(
-  () => createdCollectiblesCount.value,
-  async () => {
-    await nextTick()
-    selectTabBasedOnAssetCounts()
-  }
-)
-
-onMounted(async () => {
-  await nextTick()
-  selectTabBasedOnAssetCounts()
 })
 </script>
 
