@@ -17,15 +17,11 @@ const breakpoints: Record<number, number> = {
 const DEBOUNCE_TIMEOUT = 250
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 
-const editMode = ref(false)
-
-// TODO: gridConfig should be saved and fetched from local storage on changes
-// Only sent to the server when the user saves the layout
-const gridConfig = ref<LSP27TheGrid | undefined>()
-const layout = ref<GridLayoutItem[]>([])
-const showSettingsModal = ref(false)
-
+const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid } =
+  storeToRefs(useAppStore())
 const address = getCurrentProfileAddress()
+
+const isEditMode = computed(() => isEditingGrid.value && isConnected.value)
 
 const getGridColumns = (width: number): number => {
   const breakpointsKeys = Object.keys(breakpoints)
@@ -37,67 +33,64 @@ const getGridColumns = (width: number): number => {
 }
 
 const gridColumns = ref(getGridColumns(window.innerWidth))
-const initializeTheGrid = async (
-  address: string | undefined
-): Promise<void> => {
+
+const getGridLayout = async (address: Address) => {
+  let gridConfig: LSP27TheGrid
+  const gridConfigObject = await getGridConfig(address)
+
+  // if user config is invalid we load default one
+  if (
+    !gridConfigObject ||
+    !gridConfigObject.config ||
+    !isValidLayout(gridConfigObject.config)
+  ) {
+    gridConfig = getDefaultLayout(address)
+  } else {
+    gridConfig = gridConfigObject.config
+  }
+
+  return toGridLayoutItems(gridConfig, gridColumns.value)
+}
+
+const initializeTheGrid = async (address?: Address): Promise<void> => {
   if (!address) {
-    layout.value = []
+    gridLayout.value = []
     return
   }
 
-  if (!gridConfig.value) {
-    const gridConfigObject = await getGridConfig(address)
-    if (
-      !gridConfigObject ||
-      !gridConfigObject.config ||
-      !isValidLayout(gridConfigObject.config)
-    ) {
-      gridConfig.value = getNewUserLayout(address)
-    } else {
-      gridConfig.value = gridConfigObject.config
-    }
+  const userGridLayout = await getGridLayout(address)
+  const tempGridLayout = gridLayout.value
+
+  if (hasUnsavedGrid.value) {
+    gridLayout.value = tempGridLayout
+  } else {
+    gridLayout.value = userGridLayout
   }
-
-  layout.value = toGridLayoutItems(gridConfig.value, gridColumns.value)
 }
 
-const handleSettingsClick = () => {
-  showSettingsModal.value = true
+const handleUpdateLayout = (newLayout: GridLayoutItem[]) => {
+  console.log('Layout updated 🎉', newLayout)
+  gridLayout.value = newLayout
 }
 
-const handleModalClose = () => {
-  showSettingsModal.value = false
-}
+const handleSaveLayout = async () => {
+  isEditingGrid.value = false
+  hasUnsavedGrid.value = false
+  const lsp27Grid = toLSP27TheGrid(gridLayout.value)
 
-const validateAndSaveLayout = async (newLayout: string) => {
-  let parsedLayout: any
-  try {
-    parsedLayout = JSON.parse(newLayout)
-  } catch (error) {
-    console.warn('Invalid JSON 👿')
-
-    return
-  }
-
-  if (!isValidLayout(parsedLayout)) {
+  if (!isValidLayout(lsp27Grid)) {
     console.warn('Invalid schema 😡')
-
     return
   }
 
-  layout.value = toGridLayoutItems(parsedLayout, COL_NUM_LARGE)
+  const response = await upsertGridConfig(address, lsp27Grid)
 
-  // close modal
-  showSettingsModal.value = false
-
-  const response = await upsertGridConfig(address, parsedLayout)
   if (!response) {
     console.warn('Failed to save layout 😢')
-
     return
   }
 
-  console.log('Layout saved 🎉')
+  console.log('Layout saved 🎉', response)
 }
 
 const handleResize = (width: number) => {
@@ -108,23 +101,45 @@ const handleResize = (width: number) => {
 
     if (prevCols !== newCols) {
       gridColumns.value = newCols
-      layout.value = toGridLayoutItems(layout.value, newCols)
+      gridLayout.value = toGridLayoutItems(gridLayout.value, newCols)
     }
   }, DEBOUNCE_TIMEOUT)
 }
 
-const handleResetLayout = () => {
-  showSettingsModal.value = false
-  const newUserLayout = getNewUserLayout(address)
-  layout.value = toGridLayoutItems(newUserLayout, COL_NUM_LARGE)
+const handleResetLayout = async () => {
+  isEditingGrid.value = false
+  hasUnsavedGrid.value = false
+  gridLayout.value = await getGridLayout(address)
 }
 
-const handleClearSelection = () => {
+const clearSelection = () => {
   window.getSelection()?.removeAllRanges()
 }
 
+const handleItemMove = (itemNumber: number) => {
+  console.log('Item move 🚚', itemNumber)
+  clearSelection()
+}
+
+const handleItemMoved = (itemNumber: number) => {
+  console.log('Item moved 🚚', itemNumber)
+  clearSelection()
+  hasUnsavedGrid.value = true
+}
+
+const handleItemResize = (itemNumber: number) => {
+  console.log('Item resize 📏', itemNumber)
+  clearSelection()
+}
+
+const handleItemResized = (itemNumber: number) => {
+  console.log('Item resized 📏', itemNumber)
+  clearSelection()
+  hasUnsavedGrid.value = true
+}
+
 const handleToggleEditMode = () => {
-  editMode.value = !editMode.value
+  isEditingGrid.value = !isEditingGrid.value
 }
 
 onMounted(async () => {
@@ -141,32 +156,33 @@ useResizeObserver(gridContainer, entries => {
   <div class="w-full">
     <div class="mx-auto max-w-content" ref="gridContainer">
       <GridLayout
-        v-model:layout="layout"
+        v-model:layout="gridLayout"
         :col-num="gridColumns"
         :row-height="ROW_HEIGHT_PX"
-        :is-draggable="editMode"
-        :is-resizable="editMode"
+        :is-draggable="isEditMode"
+        :is-resizable="isEditMode"
         :responsive="false"
         :is-bounded="true"
+        @layout-updated="handleUpdateLayout"
       >
         <GridItem
-          v-for="item in layout"
+          v-for="item in gridLayout"
           :key="item.i"
           :x="item.x"
           :y="item.y"
           :w="item.w"
           :h="item.h"
           :i="item.i"
-          @move="handleClearSelection"
-          @moved="handleClearSelection"
-          @resize="handleClearSelection"
-          @resized="handleClearSelection"
+          @move="handleItemMove"
+          @moved="handleItemMoved"
+          @resize="handleItemResize"
+          @resized="handleItemResized"
           drag-allow-from=".cursor-move"
           drag-ignore-from=".z-10"
         >
           <!-- This will serve as a handle to drag the widget when enabled -->
           <div
-            v-if="editMode"
+            v-if="isEditMode"
             class="absolute left-0 top-0 z-20 cursor-move rounded-[10px] bg-white"
           >
             <lukso-icon
@@ -179,10 +195,11 @@ useResizeObserver(gridContainer, entries => {
         </GridItem>
       </GridLayout>
     </div>
+
     <!-- This configuration tools are just temporal until we have the proper ones -->
-    <div class="fixed bottom-0 right-0 m-2 flex flex-col">
+    <div v-if="isConnected" class="fixed bottom-0 right-0 m-2 flex flex-col">
       <lukso-button
-        v-if="editMode"
+        v-if="isEditMode"
         size="small"
         type="button"
         variant="secondary"
@@ -192,40 +209,42 @@ useResizeObserver(gridContainer, entries => {
         <lukso-icon name="plus" size="medium" class="mx-1"></lukso-icon>
       </lukso-button>
       <lukso-button
+        v-if="!isEditMode"
         size="small"
         type="button"
         variant="secondary"
         is-icon
         @click="handleToggleEditMode"
       >
-        <lukso-icon
-          :name="editMode ? 'tick' : 'edit'"
-          size="medium"
-          class="mx-1"
-        ></lukso-icon>
+        <lukso-icon name="edit" size="medium" class="mx-1"></lukso-icon>
       </lukso-button>
-      <lukso-button
-        size="small"
-        type="button"
-        variant="secondary"
-        is-icon
-        @click="handleSettingsClick()"
-      >
-        <lukso-icon name="code-outline" size="medium" class="mx-1"></lukso-icon>
-      </lukso-button>
+      <template v-else>
+        <lukso-button
+          size="small"
+          type="button"
+          variant="secondary"
+          is-icon
+          @click="handleSaveLayout"
+        >
+          <lukso-icon name="tick" size="medium" class="mx-1"></lukso-icon>
+        </lukso-button>
+        <lukso-button
+          size="small"
+          type="button"
+          variant="secondary"
+          is-icon
+          @click="handleResetLayout"
+        >
+          <lukso-icon name="close-lg" size="medium" class="mx-1"></lukso-icon>
+        </lukso-button>
+      </template>
     </div>
-    <div>
-      <lukso-modal
-        :is-open="showSettingsModal.valueOf() ? true : undefined"
-        size="medium"
-        @on-backdrop-click="handleModalClose"
-      >
-        <ModalGridDebug
-          :layout="layout"
-          :on-save="validateAndSaveLayout"
-          :on-reset="handleResetLayout"
-        />
-      </lukso-modal>
-    </div>
+
+    <!-- Confirmation dialog for unsaved changes -->
+    <GridConfirmationDialog
+      v-if="isEditMode"
+      @save="handleSaveLayout"
+      @cancel="handleResetLayout"
+    />
   </div>
 </template>

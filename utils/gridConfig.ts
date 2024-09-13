@@ -1,4 +1,4 @@
-// All this is just temporal until we implement LSP22TheGrid
+// All this is just temporal until we implement LSP27TheGrid
 // This is a simple way to store the grid configuration in a BaaS database
 
 import Parse from 'parse'

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 type Props = {
-  title: string
-  text: string
+  title?: string
+  text?: string
   bgColor?: string
 }
 
