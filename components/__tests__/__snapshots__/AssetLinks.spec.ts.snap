@@ -59,10 +59,10 @@ exports[`AssetLinks > should render links for small buttons 1`] = `
 exports[`AssetLinks > should render loading state for medium buttons 1`] = `
 "<div id="test-wrapper">
   <div>
-    <div class="mb-3 h-[17px] w-1/2 animate-pulse rounded-4 bg-neutral-90"></div>
-    <div class="flex gap-4">
-      <div class="animate-pulse rounded-4 bg-neutral-90 h-[48px] w-[170px]"></div>
-      <div class="animate-pulse rounded-4 bg-neutral-90 h-[48px] w-[170px]"></div>
+    <div class="mb-2 h-[17px] w-1/2 animate-pulse rounded-4 bg-neutral-90"></div>
+    <div class="flex gap-4 flex-col sm:flex-row">
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-[48px] w-full !rounded-12 sm:w-[150px]"></div>
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-[48px] w-full !rounded-12 sm:w-[150px]"></div>
     </div>
   </div>
 </div>"
@@ -71,10 +71,10 @@ exports[`AssetLinks > should render loading state for medium buttons 1`] = `
 exports[`AssetLinks > should render loading state for small buttons 1`] = `
 "<div id="test-wrapper">
   <div>
-    <div class="mb-3 h-[17px] w-1/2 animate-pulse rounded-4 bg-neutral-90"></div>
-    <div class="flex gap-4">
-      <div class="animate-pulse rounded-4 bg-neutral-90 h-[24px] w-[90px]"></div>
-      <div class="animate-pulse rounded-4 bg-neutral-90 h-[24px] w-[90px]"></div>
+    <div class="mb-2 h-[17px] w-1/2 animate-pulse rounded-4 bg-neutral-90"></div>
+    <div class="flex gap-4 flex-col sm:flex-row">
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-[24px] w-full sm:w-[90px]"></div>
+      <div class="animate-pulse rounded-4 bg-neutral-90 h-[24px] w-full sm:w-[90px]"></div>
     </div>
   </div>
 </div>"

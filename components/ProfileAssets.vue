@@ -268,7 +268,7 @@ onMounted(async () => {
           variant="secondary"
           @click="handleMobileSearchModal"
         >
-          <lukso-icon name="search" size="medium" class="mx-1"></lukso-icon>
+          <lukso-icon name="search" size="medium"></lukso-icon>
         </lukso-button>
         <div v-else></div>
 

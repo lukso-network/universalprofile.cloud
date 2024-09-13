@@ -16,6 +16,7 @@ const assetImage = useAssetImage(asset, false, 260)
 const { showModal } = useModal()
 const { isCreated } = useFilters()
 const viewedProfileAddress = getCurrentProfileAddress()
+const { isMobile } = storeToRefs(useAppStore())
 
 const viewedProfileIsConnected = computed(() =>
   useProfile().viewedProfileIsConnected(viewedProfileAddress)
@@ -160,10 +161,12 @@ onMounted(() => {
           </div>
           <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
           <NftListCardCreatorsGraph :asset="asset" class="mt-4" />
+
+          <!-- Buttons -->
           <div class="mt-4 flex w-full items-end justify-end gap-2">
             <template v-if="isLoadedAsset">
               <lukso-button
-                size="small"
+                :size="isMobile ? 'medium' : 'small'"
                 variant="secondary"
                 @click="handleBuySellAsset"
               >
@@ -174,18 +177,24 @@ onMounted(() => {
               </lukso-button>
               <lukso-button
                 v-if="!isCollection(asset) && viewedProfileIsConnected"
-                size="small"
+                :size="isMobile ? 'medium' : 'small'"
                 variant="secondary"
                 @click="handleSendAsset"
                 >{{ $formatMessage('button_send') }}</lukso-button
               >
             </template>
             <template v-else>
-              <AppPlaceholderLine class="h-[28px] w-[60px]" />
-              <AppPlaceholderLine class="h-[28px] w-[60px]" />
+              <AppPlaceholderLine
+                class="h-12 w-[80px] !rounded-12 sm:h-[28px] sm:w-[60px] sm:!rounded-4"
+              />
+              <AppPlaceholderLine
+                class="h-12 w-[80px] !rounded-12 sm:h-[28px] sm:w-[60px] sm:!rounded-4"
+              />
             </template>
           </div>
         </div>
+
+        <!-- Bottom -->
         <div
           class="mx-4 flex justify-between border-t border-t-neutral-90 py-3"
         >
