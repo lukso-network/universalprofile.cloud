@@ -79,6 +79,10 @@ const handleUpdateLayout = (newLayout: GridLayoutItem[]) => {
 }
 
 const handleSaveLayout = async () => {
+  if (!canEditGrid.value) {
+    return
+  }
+
   isEditingGrid.value = false
   hasUnsavedGrid.value = false
   const lsp27Grid = toLSP27TheGrid(gridLayout.value)
