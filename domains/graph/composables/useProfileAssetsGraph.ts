@@ -55,7 +55,7 @@ export function useProfileAssetsGraph() {
           receivedAssets: receivedAssetsData,
           issuedAssets: issuedAssetsData,
           holds: holdsData,
-        } = results[0]?.data as QueryResult
+        } = (results[0]?.data as QueryResult) || {}
 
         const receivedAssets =
           receivedAssetsData?.flatMap(receivedAsset => {

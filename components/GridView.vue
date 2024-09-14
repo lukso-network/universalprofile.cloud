@@ -20,8 +20,14 @@ let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid } =
   storeToRefs(useAppStore())
 const address = getCurrentProfileAddress()
+const connectedProfile = useProfile().connectedProfile()
 
-const isEditMode = computed(() => isEditingGrid.value && isConnected.value)
+const isEditMode = computed(
+  () =>
+    isEditingGrid.value &&
+    isConnected.value &&
+    connectedProfile.value?.address?.toLowerCase() === address.toLowerCase()
+)
 
 const getGridColumns = (width: number): number => {
   const breakpointsKeys = Object.keys(breakpoints)
@@ -139,7 +145,11 @@ const handleItemResized = (itemNumber: number) => {
 }
 
 const handleToggleEditMode = () => {
-  isEditingGrid.value = !isEditingGrid.value
+  if (
+    connectedProfile.value?.address?.toLowerCase() === address.toLowerCase()
+  ) {
+    isEditingGrid.value = !isEditingGrid.value
+  }
 }
 
 onMounted(async () => {
