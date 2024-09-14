@@ -22,9 +22,8 @@ const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid } =
 const address = getCurrentProfileAddress()
 const connectedProfile = useProfile().connectedProfile()
 
-const isEditMode = computed(
+const canEditGrid = computed(
   () =>
-    isEditingGrid.value &&
     isConnected.value &&
     connectedProfile.value?.address?.toLowerCase() === address.toLowerCase()
 )
@@ -145,9 +144,7 @@ const handleItemResized = (itemNumber: number) => {
 }
 
 const handleToggleEditMode = () => {
-  if (
-    connectedProfile.value?.address?.toLowerCase() === address.toLowerCase()
-  ) {
+  if (canEditGrid.value) {
     isEditingGrid.value = !isEditingGrid.value
   }
 }
@@ -169,8 +166,8 @@ useResizeObserver(gridContainer, entries => {
         v-model:layout="gridLayout"
         :col-num="gridColumns"
         :row-height="ROW_HEIGHT_PX"
-        :is-draggable="isEditMode"
-        :is-resizable="isEditMode"
+        :is-draggable="isEditingGrid"
+        :is-resizable="isEditingGrid"
         :responsive="false"
         :is-bounded="true"
         @layout-updated="handleUpdateLayout"
@@ -192,7 +189,7 @@ useResizeObserver(gridContainer, entries => {
         >
           <!-- This will serve as a handle to drag the widget when enabled -->
           <div
-            v-if="isEditMode"
+            v-if="isEditingGrid"
             class="absolute left-0 top-0 z-20 cursor-move rounded-[10px] bg-white"
           >
             <lukso-icon
@@ -207,9 +204,9 @@ useResizeObserver(gridContainer, entries => {
     </div>
 
     <!-- This configuration tools are just temporal until we have the proper ones -->
-    <div v-if="isConnected" class="fixed bottom-0 right-0 m-2 flex flex-col">
+    <div v-if="canEditGrid" class="fixed bottom-0 right-0 m-2 flex flex-col">
       <lukso-button
-        v-if="isEditMode"
+        v-if="isEditingGrid"
         size="small"
         type="button"
         variant="secondary"
@@ -219,7 +216,7 @@ useResizeObserver(gridContainer, entries => {
         <lukso-icon name="plus" size="medium" class="mx-1"></lukso-icon>
       </lukso-button>
       <lukso-button
-        v-if="!isEditMode"
+        v-if="!isEditingGrid"
         size="small"
         type="button"
         variant="secondary"
@@ -252,7 +249,7 @@ useResizeObserver(gridContainer, entries => {
 
     <!-- Confirmation dialog for unsaved changes -->
     <GridConfirmationDialog
-      v-if="isEditMode"
+      v-if="isEditingGrid"
       @save="handleSaveLayout"
       @cancel="handleResetLayout"
     />
