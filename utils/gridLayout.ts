@@ -5,7 +5,7 @@ import {
   type LSP27TheGrid,
 } from '../types/grid'
 
-export function getNewUserLayout(address: string): GridWidget[] {
+export const getDefaultLayout = (address: string): GridWidget[] => {
   return [
     {
       type: GridWidgetType.TITLE_LINK,
@@ -32,7 +32,7 @@ export function getNewUserLayout(address: string): GridWidget[] {
   ]
 }
 
-export function isValidLayout(layout: GridWidget[]): boolean {
+export const isValidLayout = (layout: GridWidget[]): boolean => {
   // TODO: We can make the validations even better with Zod or some other library
   if (
     // check if object entries adhere to Widget interface
@@ -51,10 +51,10 @@ export function isValidLayout(layout: GridWidget[]): boolean {
   return true
 }
 
-export function toGridLayoutItems(
+export const toGridLayoutItems = (
   grid: LSP27TheGrid,
   gridColumns: number
-): GridLayoutItem[] {
+): GridLayoutItem[] => {
   const layout: GridLayoutItem[] = []
 
   if (gridColumns === 1) {
@@ -106,7 +106,7 @@ export function toGridLayoutItems(
   return layout
 }
 
-export function toLSP27TheGrid(layout: GridLayoutItem[]): LSP27TheGrid {
+export const toLSP27TheGrid = (layout: GridLayoutItem[]): LSP27TheGrid => {
   //Sort by y and then x to get the correct order
   const orderedLayout = layout.sort((a, b) => {
     if (a.y === b.y) {

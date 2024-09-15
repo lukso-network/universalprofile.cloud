@@ -54,6 +54,7 @@
   "not_up_description": "This does not seem to be a Universal Profile address. View this address on block explorer to find out more information.",
   "modal_switch_application_network_title": "Change application network",
   "add_missing_assets_add_another_button": "Add another missing asset",
+  "grid_unsaved_changes_text": "You have unsaved changes in your Grid.",
   "send_pending_title": "Sending {amount} {symbol}",
   "collection_no_results": "No results",
   "buy_lyx_title": "Use the below services to <strong>buy LYX</strong> for your Universal Profile",
@@ -218,6 +219,7 @@
   "header_disconnect": "Disconnect",
   "tokens_title": "Tokens",
   "footer_faq_text": "FAQs",
+  "grid_unsaved_changes_save": "Save changes",
   "send_card_view_in_explorer": "View transaction on block explorer",
   "asset_created_by": "Created by",
   "collectibles_title": "Collectibles",
@@ -235,6 +237,7 @@
   "errors_invalid_address": "This is an invalid address",
   "header_connect": "Login",
   "dapp_showcase_06_title": "universalgrave.com",
+  "grid_unsaved_changes_reset": "Reset",
   "collection_filter_search_placeholder": "Search by token ID",
   "nft_details_own": "You own this collectible",
   "error_wrong_network": "Your browser extension is using different network. In order to continue please switch to {name}.",
@@ -253,6 +256,5 @@
   "modal_connect_wallet_select_provider_install_info": "If you do not have the browser extension, clicking the above button will redirect you to install it",
   "profile_card_copy_address": "UP address copied!",
   "success_missing_assets_description": "The below asset has been added to your profile.",
-  "asset_filter_collection_placeholder": "Collection",
-  "widget_iframe_warning": "Caution: this content is embedded from an external source"
+  "asset_filter_collection_placeholder": "Collection"
 }

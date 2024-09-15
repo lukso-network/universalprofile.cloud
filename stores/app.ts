@@ -29,6 +29,11 @@ export const useAppStore = defineStore(
     const fetchDataProvider = ref<FetchDataProvider>('graph')
     const fetchDataProviderReset = ref(false)
 
+    // grid
+    const isEditingGrid = ref(false)
+    const hasUnsavedGrid = ref(false)
+    const gridLayout = ref<GridLayoutItem[]>([])
+
     // statuses
     const isConnecting = ref(false)
     const isLoadedApp = ref(false)
@@ -130,6 +135,9 @@ export const useAppStore = defineStore(
       fetchDataProviderReset,
       walletConnectProvider,
       isWalletConnect,
+      isEditingGrid,
+      hasUnsavedGrid,
+      gridLayout,
     }
   },
   {
@@ -140,6 +148,9 @@ export const useAppStore = defineStore(
         'fetchDataProvider',
         'fetchDataProviderReset',
         'isWalletConnect',
+        'isEditingGrid',
+        'hasUnsavedGrid',
+        'gridLayout',
       ],
       key: STORAGE_KEY.APP_STORE,
     },
