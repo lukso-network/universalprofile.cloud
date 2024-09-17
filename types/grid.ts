@@ -7,6 +7,7 @@ export type GridWidget = {
   width: number
   height: number
   properties: Record<string, any>
+  id: string
 }
 
 export type GridWidgetSize = { w: number; h: number }
@@ -27,7 +28,7 @@ export enum GridWidgetType {
 
 // This class is compatible with the grid-layout-plus library
 // And enhances it with the properties used for our grid layout
-export type GridLayoutItem = GridWidget & LayoutItem
+export type GridLayoutItem = LayoutItem & GridWidget
 
 export interface Property {
   key: string

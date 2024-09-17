@@ -1,27 +1,22 @@
 <script setup lang="ts">
+const { closeModal } = useModal()
 const connectedProfile = useProfile().connectedProfile()
 const { asset: selectedAsset } = storeToRefs(useSendStore())
 const { isRpc } = storeToRefs(useAppStore())
-
-type Props = {
-  closeModal: () => void
-}
-
 const profileAddress = computed(() => connectedProfile.value?.address || null)
-const props = defineProps<Props>()
 const allAssets = useProfileHolds()(profileAddress)
 const isLoadingAssets = computed(() =>
   allAssets.value?.some(asset => asset.isLoading)
 )
 
-const handleSelectLyx = () => {
-  navigateTo({
+const handleSelectLyx = async () => {
+  await navigateTo({
     path: sendRoute(connectedProfile.value?.address),
   })
-  props.closeModal()
+  await closeModal()
 }
 
-const handleSelectAsset = (asset: Asset) => {
+const handleSelectAsset = async (asset: Asset) => {
   sendLog('Selected asset', toRaw(asset))
 
   let query: SendQueryParams = { asset: asset?.address }
@@ -40,12 +35,11 @@ const handleSelectAsset = (asset: Asset) => {
     }
   }
 
-  navigateTo({
+  await navigateTo({
     path: sendRoute(connectedProfile.value?.address),
     query,
   })
-
-  props.closeModal()
+  await closeModal()
 }
 
 const ownedAssets = computed(() => {

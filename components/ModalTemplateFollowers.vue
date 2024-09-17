@@ -1,24 +1,21 @@
 <script setup lang="ts">
-const { modal } = useAppStore()
+const { modal, closeModal } = useModal()
 const { formatMessage } = useIntl()
-
-type Props = {
-  closeModal: () => void
-}
-
-defineProps<Props>()
-const perPage = 8
+const { isMobile } = storeToRefs(useAppStore())
+const perPage = computed(() => (isMobile.value ? 6 : 8))
 const connectedProfile = useProfile().connectedProfile()
 const viewedProfile = useProfile().viewedProfile()
-const numberOfPages = computed(() => Math.ceil((count.value || 0) / perPage))
+const numberOfPages = computed(() =>
+  Math.ceil((count.value || 0) / perPage.value)
+)
 const viewedProfileAddress = computed(() => viewedProfile.value?.address)
 const viewedProfileFollowers = useFollowingSystem().getFollowersData(
   viewedProfileAddress.value
 )
 
-const viewProfileIsConnectedProfile = computed(() => {
-  return connectedProfile?.value?.address === viewedProfile.value?.address
-})
+const viewProfileIsConnectedProfile = computed(
+  () => connectedProfile?.value?.address === viewedProfile.value?.address
+)
 
 const addresses = computed(() =>
   isFollowingModal.value
@@ -32,13 +29,9 @@ const count = computed(() =>
     : viewedProfileFollowers.value?.followerCount
 )
 
-const hasFollowers = computed(() => {
-  return (addresses.value?.length || 0) > 0
-})
+const hasFollowers = computed(() => (addresses.value?.length || 0) > 0)
 
-const isFollowingModal = computed(() => {
-  return modal?.data?.type === 'following'
-})
+const isFollowingModal = computed(() => modal?.data?.type === 'following')
 </script>
 
 <template>

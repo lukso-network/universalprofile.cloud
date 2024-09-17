@@ -54,3 +54,5 @@ export type IndexedProfile = {
   hasProfileImage?: boolean
   hasBackgroundImage?: boolean
 }
+
+export type ProfileViewTab = { id: FiltersAssetGroup; count?: number }

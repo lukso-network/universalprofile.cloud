@@ -29,6 +29,11 @@ export const useAppStore = defineStore(
     const fetchDataProvider = ref<FetchDataProvider>('graph')
     const fetchDataProviderReset = ref(false)
 
+    // grid
+    const isEditingGrid = ref(false)
+    const hasUnsavedGrid = ref(false)
+    const gridLayout = ref<GridLayoutItem[]>([])
+
     // statuses
     const isConnecting = ref(false)
     const isLoadedApp = ref(false)
@@ -79,6 +84,27 @@ export const useAppStore = defineStore(
       () => fetchDataProvider.value === 'graph' && !isTestnet.value // TODO use RPC for Testnet until we have it indexed
     )
 
+    const isMobile = computed(() => {
+      const { isMobile } = useDevice()
+      return isMobile
+    })
+
+    const isMobileOrTablet = computed(() => {
+      const { isMobileOrTablet } = useDevice()
+      return isMobileOrTablet
+    })
+
+    const isSafari = computed(() => {
+      const { isSafari } = useDevice()
+      return isSafari
+    })
+
+    const isModalOpen = computed(() => {
+      const route = useRoute()
+
+      return !!route.query?.modalTemplate
+    })
+
     // --- actions
 
     const setModal = (newModal: Modal) => {
@@ -101,10 +127,17 @@ export const useAppStore = defineStore(
       isSearchOpen,
       isRpc,
       isGraph,
+      isMobile,
+      isMobileOrTablet,
+      isSafari,
+      isModalOpen,
       fetchDataProvider,
       fetchDataProviderReset,
       walletConnectProvider,
       isWalletConnect,
+      isEditingGrid,
+      hasUnsavedGrid,
+      gridLayout,
     }
   },
   {
@@ -115,6 +148,9 @@ export const useAppStore = defineStore(
         'fetchDataProvider',
         'fetchDataProviderReset',
         'isWalletConnect',
+        'isEditingGrid',
+        'hasUnsavedGrid',
+        'gridLayout',
       ],
       key: STORAGE_KEY.APP_STORE,
     },

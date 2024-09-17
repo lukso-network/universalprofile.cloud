@@ -6,7 +6,7 @@ import type {
 
 const FILTER_DEFAULTS: Filters = {
   assetType: 'owned',
-  assetGroup: 'collectibles',
+  assetGroup: 'grid',
   orderBy: 'name-asc',
   search: undefined,
   collections: undefined,
@@ -183,12 +183,12 @@ export const useFilters = (
   }
 
   //--- setters
-  const setFilters = (
+  const setFilters = async (
     filters: Partial<Filters>,
     path?: string,
     resetFilters?: boolean
   ) => {
-    navigateTo({
+    await navigateTo({
       path: path || route.path,
       query: {
         ...(resetFilters ? defaultFilters : route.query),

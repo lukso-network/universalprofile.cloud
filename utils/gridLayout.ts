@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid'
+
 import {
   type GridLayoutItem,
   type GridWidget,
@@ -5,13 +7,22 @@ import {
   type LSP27TheGrid,
 } from '../types/grid'
 
-export function getNewUserLayout(address: string): GridWidget[] {
+const COL_NUM_LARGE = 2
+const COL_NUM_SMALL = 1
+
+const breakpoints: Record<number, number> = {
+  0: COL_NUM_SMALL,
+  768: COL_NUM_LARGE,
+}
+
+export const getDefaultLayout = (address: string): GridWidget[] => {
   return [
     {
       type: GridWidgetType.TITLE_LINK,
       width: 1,
       height: 1,
       properties: { title: address, bgColor: 'bg-purple-58' },
+      id: uuidv4(),
     },
     {
       type: GridWidgetType.TEXT,
@@ -22,17 +33,19 @@ export function getNewUserLayout(address: string): GridWidget[] {
         text: 'Customize your grid layout!',
         bgColor: 'bg-sea-salt-67',
       },
+      id: uuidv4(),
     },
     {
       type: GridWidgetType.IMAGE,
       width: 1,
       height: 1,
       properties: { src: 'https://via.placeholder.com/150' },
+      id: uuidv4(),
     },
   ]
 }
 
-export function isValidLayout(layout: GridWidget[]): boolean {
+export const isValidLayout = (layout: GridWidget[]): boolean => {
   // TODO: We can make the validations even better with Zod or some other library
   if (
     // check if object entries adhere to Widget interface
@@ -51,11 +64,20 @@ export function isValidLayout(layout: GridWidget[]): boolean {
   return true
 }
 
-export function toGridLayoutItems(
+export const getGridColumns = (width: number): number => {
+  const breakpointsKeys = Object.keys(breakpoints)
+    .map(Number)
+    .sort((a, b) => b - a)
+  const validBreakpoint = breakpointsKeys.find(bp => width >= bp)
+
+  return validBreakpoint ? breakpoints[validBreakpoint] : COL_NUM_SMALL
+}
+
+export const toGridLayoutItems = (
   grid: LSP27TheGrid,
   gridColumns: number
-): GridLayoutItem[] {
-  const layout: GridLayoutItem[] = []
+): GridLayoutItem[] => {
+  let layout: GridLayoutItem[] = []
   const columnHeights = Array(gridColumns).fill(0)
 
   if (gridColumns === 1) {
@@ -73,6 +95,14 @@ export function toGridLayoutItems(
       updateColumnHeights(columnHeights, x, widget.width, y + widget.height)
     }
   }
+
+  // add id's for items
+  layout = layout.map(item => {
+    return {
+      ...item,
+      id: item.id || uuidv4(),
+    }
+  })
 
   return layout
 }
@@ -100,11 +130,11 @@ export function addGridLayoutItem(
   return layout
 }
 
-function findBestPosition(
+const findBestPosition = (
   widget: GridWidget,
   columnHeights: number[],
   gridColumns: number
-): { x: number; y: number } {
+): { x: number; y: number } => {
   let bestY = Number.MAX_SAFE_INTEGER
   let bestX = 0
 
@@ -119,12 +149,12 @@ function findBestPosition(
   return { x: bestX, y: bestY }
 }
 
-function placeWidgetInLayout(
+const placeWidgetInLayout = (
   widget: GridWidget,
   i: number,
   x: number,
   y: number
-): GridLayoutItem {
+): GridLayoutItem => {
   return {
     ...widget,
     i,
@@ -135,11 +165,11 @@ function placeWidgetInLayout(
   }
 }
 
-function placeWidgetInSingleColumn(
+const placeWidgetInSingleColumn = (
   widget: GridWidget,
   i: number,
   y: number
-): GridLayoutItem {
+): GridLayoutItem => {
   return {
     ...widget,
     i,
@@ -150,21 +180,21 @@ function placeWidgetInSingleColumn(
   }
 }
 
-function updateColumnHeights(
+const updateColumnHeights = (
   columnHeights: number[],
   x: number,
   width: number,
   newHeight: number
-): void {
+): void => {
   for (let i = x; i < x + width; i++) {
     columnHeights[i] = newHeight
   }
 }
 
-function getColumnHeightsFromLayout(
+const getColumnHeightsFromLayout = (
   layout: GridLayoutItem[],
   gridColumns: number
-): number[] {
+): number[] => {
   const columnHeights = Array(gridColumns).fill(0)
 
   for (const item of layout) {
@@ -192,6 +222,7 @@ export function toLSP27TheGrid(layout: GridLayoutItem[]): LSP27TheGrid {
       width: item.w,
       height: item.h,
       properties: item.properties,
+      id: item.id,
     }
   })
 }

@@ -1,21 +1,20 @@
 <script setup lang="ts">
+import { v4 as uuidv4 } from 'uuid'
+
 import type { SelectStringOption } from '@lukso/web-components'
-
-type Props = {
-  onAdd: (widget: GridWidget) => void
-}
-
-const { onAdd } = defineProps<Props>()
 
 const widgetTypes = ref<SelectStringOption[]>()
 const selectedWidgetType = ref<SelectStringOption>()
 const formValues = ref<Record<string, any>>({})
+const { gridLayout } = storeToRefs(useAppStore())
+const gridColumns = ref(getGridColumns(window.innerWidth))
 
 const resetFormValues = (properties: Property[]) => {
   formValues.value = {}
-  properties.forEach(property => {
+
+  for (const property of properties) {
     formValues.value[property.key] = property.optional ? '' : null
-  })
+  }
 }
 
 watch(selectedWidgetType, newOption => {
@@ -46,9 +45,14 @@ const handleSave = () => {
       width: 1,
       height: 1,
       properties: { ...formValues.value },
+      id: uuidv4(),
     }
 
-    onAdd(newWidget)
+    gridLayout.value = addGridLayoutItem(
+      gridLayout.value,
+      newWidget,
+      gridColumns.value
+    )
   }
 }
 

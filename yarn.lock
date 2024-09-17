@@ -4733,16 +4733,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@npm:1.81.3":
-  version: 1.81.3
-  resolution: "@lukso/web-components@npm:1.81.3"
+"@lukso/web-components@npm:1.86.0":
+  version: 1.86.0
+  resolution: "@lukso/web-components@npm:1.86.0"
   dependencies:
     clsx: "npm:^2.0.0"
     ethereum-blockies-base64: "npm:^1.0.2"
     tailwind-merge: "npm:^2.0.0"
     tailwind-variants: "npm:^0.2.1"
     tippy.js: "npm:^6.3.7"
-  checksum: 0bfe9d05d83dba1f7bb9fc8e31c30b0a8b690a274434e434f51d15a11c6d444bac06c802702f56c69849c3dcfa0fed435b43e0ebeb1c6a8ffa66c5c5dc1f9dd9
+    web3-utils: "npm:^4.3.1"
+  checksum: e3d0bd7d57e57891b8dccd2f91f3970a18cbcb435a10a90e7127e6827ef48ab754f86c608cdf68ec470ba6e76f26e63df30531e915af4008c2d31a908b59a800
   languageName: node
   linkType: hard
 
@@ -7585,6 +7586,13 @@ __metadata:
   version: 1.11.15
   resolution: "@types/underscore@npm:1.11.15"
   checksum: 5a9c262566551f61744e066d33578c0fad1139c2d5314ed77a8f867487a6d7dd18616f32df4c605070fbd569b942c6d2c083be9f9ae649f41a562b52812b06be
+  languageName: node
+  linkType: hard
+
+"@types/uuid@npm:^10":
+  version: 10.0.0
+  resolution: "@types/uuid@npm:10.0.0"
+  checksum: e3958f8b0fe551c86c14431f5940c3470127293280830684154b91dc7eb3514aeb79fe3216968833cf79d4d1c67f580f054b5be2cd562bebf4f728913e73e944
   languageName: node
   linkType: hard
 
@@ -24104,7 +24112,7 @@ __metadata:
     "@formatjs/intl": "npm:^2.9.9"
     "@google/model-viewer": "npm:^3.4.0"
     "@lukso/lsp-smart-contracts": "npm:0.15.0-rc.5"
-    "@lukso/web-components": "npm:1.81.3"
+    "@lukso/web-components": "npm:1.86.0"
     "@nuxt/test-utils": "npm:^3.13.1"
     "@nuxtjs/algolia": "npm:^1.10.2"
     "@nuxtjs/device": "npm:^3.1.1"
@@ -24134,6 +24142,7 @@ __metadata:
     "@types/parse": "npm:^3.0.9"
     "@types/randombytes": "npm:2.0.3"
     "@types/three": "npm:^0.162.0"
+    "@types/uuid": "npm:^10"
     "@typescript-eslint/eslint-plugin": "npm:7.1.1"
     "@typescript-eslint/parser": "npm:7.1.1"
     "@vite-pwa/nuxt": "npm:^0.6.0"
@@ -24195,6 +24204,7 @@ __metadata:
     typechain: "npm:^8.3.2"
     typescript: "npm:5.3.3"
     util: "npm:0.12.5"
+    uuid: "npm:^10.0.0"
     vitest: "npm:^1.6.0"
     vue: "npm:^3.4.21"
     vue-router: "npm:^4.3.0"
@@ -24624,7 +24634,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:10.0.0":
+"uuid@npm:10.0.0, uuid@npm:^10.0.0":
   version: 10.0.0
   resolution: "uuid@npm:10.0.0"
   bin:
@@ -25587,23 +25597,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-utils@npm:1.10.3":
-  version: 1.10.3
-  resolution: "web3-utils@npm:1.10.3"
-  dependencies:
-    "@ethereumjs/util": "npm:^8.1.0"
-    bn.js: "npm:^5.2.1"
-    ethereum-bloom-filters: "npm:^1.0.6"
-    ethereum-cryptography: "npm:^2.1.2"
-    ethjs-unit: "npm:0.1.6"
-    number-to-bn: "npm:1.7.0"
-    randombytes: "npm:^2.1.0"
-    utf8: "npm:3.0.0"
-  checksum: 7303919fbea2be4a720eb7688a51edb84f993e481bf08ac482c0e3a8f100300ce9a1b51b2775a8356fd397aa2a64fa016d9621d9ced05bdbfe1013d6b5ea90ef
-  languageName: node
-  linkType: hard
-
-"web3-utils@npm:1.10.4, web3-utils@npm:^1.10.0, web3-utils@npm:~1.10.4":
+"web3-utils@npm:~1.10.3":
   version: 1.10.4
   resolution: "web3-utils@npm:1.10.4"
   dependencies:

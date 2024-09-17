@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import type {
-  ProfileViewTab,
-  ProfileViewTabName,
-} from '@/domains/graph/components/ProfileViewGraph.vue'
-
 type Props = {
   tabs?: ProfileViewTab[]
-  activeTab?: ProfileViewTabName
+  activeTab?: FiltersAssetGroup
 }
 
 type Emits = (event: 'activate-tab', value: ProfileViewTab) => void

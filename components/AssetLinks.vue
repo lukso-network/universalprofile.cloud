@@ -52,17 +52,24 @@ const isLoaded = computed(() => props.asset && !props.asset?.isMetadataLoading)
       </template>
     </AppLinks>
   </template>
-  <AppPlaceholderSection v-else slot-class="flex gap-4">
+  <AppPlaceholderLine
+    v-else-if="withoutTitle"
+    :class="{
+      'h-[48px] w-full !rounded-12 sm:w-[150px]': buttonSize === 'medium',
+      'h-[24px] w-full sm:w-[90px]': buttonSize === 'small',
+    }"
+  />
+  <AppPlaceholderSection v-else slot-class="flex gap-4 flex-col sm:flex-row">
     <AppPlaceholderLine
       :class="{
-        'h-[48px] w-[170px]': buttonSize === 'medium',
-        'h-[24px] w-[90px]': buttonSize === 'small',
+        'h-[48px] w-full !rounded-12 sm:w-[150px]': buttonSize === 'medium',
+        'h-[24px] w-full sm:w-[90px]': buttonSize === 'small',
       }"
     />
     <AppPlaceholderLine
       :class="{
-        'h-[48px] w-[170px]': buttonSize === 'medium',
-        'h-[24px] w-[90px]': buttonSize === 'small',
+        'h-[48px] w-full !rounded-12 sm:w-[150px]': buttonSize === 'medium',
+        'h-[24px] w-full sm:w-[90px]': buttonSize === 'small',
       }"
     />
   </AppPlaceholderSection>
