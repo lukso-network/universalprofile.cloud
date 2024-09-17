@@ -4,15 +4,9 @@ import { GridItem, GridLayout } from 'grid-layout-plus'
 
 import { toGridLayoutItems } from '@/utils/gridLayout'
 
-const COL_NUM_LARGE = 2
-const COL_NUM_SMALL = 1
 const ROW_HEIGHT_PX = 280
 
 const gridContainer = ref<HTMLElement | null>(null)
-const breakpoints: Record<number, number> = {
-  0: COL_NUM_SMALL,
-  768: COL_NUM_LARGE,
-}
 
 const DEBOUNCE_TIMEOUT = 250
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
@@ -21,21 +15,13 @@ const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid } =
   storeToRefs(useAppStore())
 const address = getCurrentProfileAddress()
 const connectedProfile = useProfile().connectedProfile()
+const { showModal } = useModal()
 
 const canEditGrid = computed(
   () =>
     isConnected.value &&
     connectedProfile.value?.address?.toLowerCase() === address.toLowerCase()
 )
-
-const getGridColumns = (width: number): number => {
-  const breakpointsKeys = Object.keys(breakpoints)
-    .map(Number)
-    .sort((a, b) => b - a)
-  const validBreakpoint = breakpointsKeys.find(bp => width >= bp)
-
-  return validBreakpoint ? breakpoints[validBreakpoint] : COL_NUM_SMALL
-}
 
 const gridColumns = ref(getGridColumns(window.innerWidth))
 
@@ -153,6 +139,12 @@ const handleToggleEditMode = () => {
   }
 }
 
+const handleAddWidget = () => {
+  showModal({
+    template: 'AddGridWidget',
+  })
+}
+
 onMounted(async () => {
   await initializeTheGrid(address)
 })
@@ -204,7 +196,7 @@ useResizeObserver(gridContainer, entries => {
         type="button"
         variant="secondary"
         is-icon
-        disabled="true"
+        @click="handleAddWidget"
       >
         <lukso-icon name="plus" size="medium" class="mx-1"></lukso-icon>
       </lukso-button>
