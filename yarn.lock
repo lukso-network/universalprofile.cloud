@@ -7589,6 +7589,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/uuid@npm:^10":
+  version: 10.0.0
+  resolution: "@types/uuid@npm:10.0.0"
+  checksum: e3958f8b0fe551c86c14431f5940c3470127293280830684154b91dc7eb3514aeb79fe3216968833cf79d4d1c67f580f054b5be2cd562bebf4f728913e73e944
+  languageName: node
+  linkType: hard
+
 "@types/web-bluetooth@npm:^0.0.20":
   version: 0.0.20
   resolution: "@types/web-bluetooth@npm:0.0.20"
@@ -24135,6 +24142,7 @@ __metadata:
     "@types/parse": "npm:^3.0.9"
     "@types/randombytes": "npm:2.0.3"
     "@types/three": "npm:^0.162.0"
+    "@types/uuid": "npm:^10"
     "@typescript-eslint/eslint-plugin": "npm:7.1.1"
     "@typescript-eslint/parser": "npm:7.1.1"
     "@vite-pwa/nuxt": "npm:^0.6.0"
@@ -24196,6 +24204,7 @@ __metadata:
     typechain: "npm:^8.3.2"
     typescript: "npm:5.3.3"
     util: "npm:0.12.5"
+    uuid: "npm:^10.0.0"
     vitest: "npm:^1.6.0"
     vue: "npm:^3.4.21"
     vue-router: "npm:^4.3.0"
@@ -24625,7 +24634,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:10.0.0":
+"uuid@npm:10.0.0, uuid@npm:^10.0.0":
   version: 10.0.0
   resolution: "uuid@npm:10.0.0"
   bin:
