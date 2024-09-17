@@ -191,17 +191,6 @@ useResizeObserver(gridContainer, entries => {
           drag-allow-from=".cursor-move"
           drag-ignore-from=".z-10"
         >
-          <!-- This will serve as a handle to drag the widget when enabled -->
-          <div
-            v-if="isEditingGrid"
-            class="absolute left-0 top-0 z-20 cursor-move rounded-[10px] bg-white"
-          >
-            <lukso-icon
-              name="hand-right-outline"
-              size="small"
-              class="m-1"
-            ></lukso-icon>
-          </div>
           <GridWidget :widget="item" />
         </GridItem>
       </GridLayout>
