@@ -214,5 +214,5 @@ export default defineNuxtConfig({
       },
     },
   },
-  extends: ['./domains/rpc', './domains/graph'],
+  extends: ['./domains/rpc', './domains/graph', './domains/grid'],
 })

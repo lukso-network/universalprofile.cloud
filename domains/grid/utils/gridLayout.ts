@@ -5,7 +5,7 @@ import {
   type GridWidget,
   GridWidgetType,
   type LSP27TheGrid,
-} from '../types/grid'
+} from '../../../types/grid'
 
 const COL_NUM_LARGE = 2
 const COL_NUM_SMALL = 1
@@ -107,11 +107,11 @@ export const toGridLayoutItems = (
   return layout
 }
 
-export function addGridLayoutItem(
+export const addGridLayoutItem = (
   layout: GridLayoutItem[],
   newWidget: GridWidget,
   gridColumns: number
-): GridLayoutItem[] {
+): GridLayoutItem[] => {
   const columnHeights = getColumnHeightsFromLayout(layout, gridColumns)
 
   if (gridColumns === 1) {
@@ -206,7 +206,7 @@ const getColumnHeightsFromLayout = (
   return columnHeights
 }
 
-export function toLSP27TheGrid(layout: GridLayoutItem[]): LSP27TheGrid {
+export const toLSP27TheGrid = (layout: GridLayoutItem[]): LSP27TheGrid => {
   //Sort by y and then x to get the correct order
   const orderedLayout = layout.sort((a, b) => {
     if (a.y === b.y) {

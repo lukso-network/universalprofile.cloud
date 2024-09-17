@@ -2,7 +2,7 @@
 import { useResizeObserver } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
-import { toGridLayoutItems } from '@/utils/gridLayout'
+import { toGridLayoutItems } from '@/domains/grid/utils/gridLayout'
 
 const ROW_HEIGHT_PX = 280
 
