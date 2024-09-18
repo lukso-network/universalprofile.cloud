@@ -3,8 +3,6 @@
 
 import Parse from 'parse'
 
-import type { GridWidget, LSP27TheGrid } from '../../../types/grid'
-
 const CLASS_NAME = 'grid_config_new'
 
 Parse.initialize(

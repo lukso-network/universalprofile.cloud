@@ -19,7 +19,7 @@ const resetFormValues = (properties: Property[]) => {
 
 watch(selectedWidgetType, newOption => {
   if (newOption) {
-    const newType = newOption.value as keyof typeof GridWidgetType
+    const newType = newOption.value as GridWidgetType
     const properties = WIDGET_TYPE_PROPERTIES[newType] || []
     resetFormValues(properties)
   }
@@ -29,7 +29,7 @@ const selectedProperties = computed(() => {
   if (selectedWidgetType.value) {
     return (
       WIDGET_TYPE_PROPERTIES[
-        selectedWidgetType.value.value as keyof typeof GridWidgetType
+        selectedWidgetType.value.value as GridWidgetType
       ] || []
     )
   }
@@ -39,9 +39,7 @@ const selectedProperties = computed(() => {
 const handleSave = () => {
   if (selectedWidgetType.value) {
     const newWidget: GridWidget = {
-      type: GridWidgetType[
-        selectedWidgetType.value.value as keyof typeof GridWidgetType
-      ],
+      type: GRID_WIDGET_TYPE[selectedWidgetType.value.value as GridWidgetType],
       width: 1,
       height: 1,
       properties: { ...formValues.value },
@@ -69,7 +67,7 @@ function handleWidgetTypeChange(event: CustomEvent) {
 }
 
 onMounted(() => {
-  widgetTypes.value = Object.values(GridWidgetType).map(type => {
+  widgetTypes.value = Object.values(GRID_WIDGET_TYPE).map(type => {
     return {
       id: type,
       value: type,

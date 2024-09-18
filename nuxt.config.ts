@@ -123,7 +123,14 @@ export default defineNuxtConfig({
     },
   },
   imports: {
-    dirs: ['stores/**', 'shared/**', 'utils/**', 'types/**', 'composables/**'],
+    dirs: [
+      'stores/**',
+      'shared/**',
+      'utils/**',
+      'types/**',
+      'composables/**',
+      'domains/**',
+    ],
   },
   ssr: false,
   spaLoadingTemplate: 'public/loading-template.html',

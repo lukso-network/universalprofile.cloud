@@ -15,13 +15,13 @@ const dropdownId = `dropdown-${uuidv4()}`
 
 // Dynamically import components based on item type
 const WIDGET_COMPONENTS: Record<string, string> = {
-  [GridWidgetType.TITLE_LINK]: 'TitleLink',
-  [GridWidgetType.TEXT]: 'Text',
-  [GridWidgetType.IMAGE]: 'Image',
-  [GridWidgetType.IFRAME]: 'Iframe',
-  [GridWidgetType.X_POST]: 'XPost',
-  [GridWidgetType.X_TIMELINE]: 'XTimeline',
-  [GridWidgetType.INSTAGRAM_POST]: 'InstagramPost',
+  [GRID_WIDGET_TYPE.TITLE_LINK]: 'TitleLink',
+  [GRID_WIDGET_TYPE.TEXT]: 'Text',
+  [GRID_WIDGET_TYPE.IMAGE]: 'Image',
+  [GRID_WIDGET_TYPE.IFRAME]: 'Iframe',
+  [GRID_WIDGET_TYPE.X_POST]: 'XPost',
+  [GRID_WIDGET_TYPE.X_TIMELINE]: 'XTimeline',
+  [GRID_WIDGET_TYPE.INSTAGRAM_POST]: 'InstagramPost',
 }
 
 const loadWidgetComponent = (type: string): Component | undefined => {

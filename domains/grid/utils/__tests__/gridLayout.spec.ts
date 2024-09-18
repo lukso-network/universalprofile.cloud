@@ -17,28 +17,28 @@ const GRID_TESTS: GridTests[] = [
   {
     grid: [
       {
-        type: GridWidgetType.TITLE_LINK,
+        type: GRID_WIDGET_TYPE.TITLE_LINK,
         width: 1,
         height: 2,
         properties: { prop1: 'value1', prop2: 'value2' },
         id: '1',
       },
       {
-        type: GridWidgetType.TEXT,
+        type: GRID_WIDGET_TYPE.TEXT,
         width: 1,
         height: 1,
         properties: { prop1: 'value1', prop2: 'value2' },
         id: '2',
       },
       {
-        type: GridWidgetType.IFRAME,
+        type: GRID_WIDGET_TYPE.IFRAME,
         width: 1,
         height: 2,
         properties: { prop1: 'value1', prop2: 'value2' },
         id: '3',
       },
       {
-        type: GridWidgetType.IMAGE,
+        type: GRID_WIDGET_TYPE.IMAGE,
         width: 1,
         height: 1,
         properties: { prop1: 'value1', prop2: 'value2' },
@@ -53,7 +53,7 @@ const GRID_TESTS: GridTests[] = [
           y: 0,
           w: 1,
           h: 2,
-          type: GridWidgetType.TITLE_LINK,
+          type: GRID_WIDGET_TYPE.TITLE_LINK,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -62,7 +62,7 @@ const GRID_TESTS: GridTests[] = [
           y: 2,
           w: 1,
           h: 1,
-          type: GridWidgetType.TEXT,
+          type: GRID_WIDGET_TYPE.TEXT,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -71,7 +71,7 @@ const GRID_TESTS: GridTests[] = [
           y: 3,
           w: 1,
           h: 2,
-          type: GridWidgetType.IFRAME,
+          type: GRID_WIDGET_TYPE.IFRAME,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -80,7 +80,7 @@ const GRID_TESTS: GridTests[] = [
           y: 5,
           w: 1,
           h: 1,
-          type: GridWidgetType.IMAGE,
+          type: GRID_WIDGET_TYPE.IMAGE,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
       ],
@@ -91,7 +91,7 @@ const GRID_TESTS: GridTests[] = [
           y: 0,
           w: 1,
           h: 2,
-          type: GridWidgetType.TITLE_LINK,
+          type: GRID_WIDGET_TYPE.TITLE_LINK,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -100,7 +100,7 @@ const GRID_TESTS: GridTests[] = [
           y: 0,
           w: 1,
           h: 1,
-          type: GridWidgetType.TEXT,
+          type: GRID_WIDGET_TYPE.TEXT,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -109,7 +109,7 @@ const GRID_TESTS: GridTests[] = [
           y: 1,
           w: 1,
           h: 2,
-          type: GridWidgetType.IFRAME,
+          type: GRID_WIDGET_TYPE.IFRAME,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -118,7 +118,7 @@ const GRID_TESTS: GridTests[] = [
           y: 2,
           w: 1,
           h: 1,
-          type: GridWidgetType.IMAGE,
+          type: GRID_WIDGET_TYPE.IMAGE,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
       ],
@@ -129,7 +129,7 @@ const GRID_TESTS: GridTests[] = [
           y: 0,
           w: 1,
           h: 2,
-          type: GridWidgetType.TITLE_LINK,
+          type: GRID_WIDGET_TYPE.TITLE_LINK,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -138,7 +138,7 @@ const GRID_TESTS: GridTests[] = [
           y: 0,
           w: 1,
           h: 1,
-          type: GridWidgetType.TEXT,
+          type: GRID_WIDGET_TYPE.TEXT,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -147,7 +147,7 @@ const GRID_TESTS: GridTests[] = [
           y: 0,
           w: 1,
           h: 2,
-          type: GridWidgetType.IFRAME,
+          type: GRID_WIDGET_TYPE.IFRAME,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -156,7 +156,7 @@ const GRID_TESTS: GridTests[] = [
           y: 1,
           w: 1,
           h: 1,
-          type: GridWidgetType.IMAGE,
+          type: GRID_WIDGET_TYPE.IMAGE,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
       ],
@@ -165,21 +165,21 @@ const GRID_TESTS: GridTests[] = [
   {
     grid: [
       {
-        type: GridWidgetType.IMAGE,
+        type: GRID_WIDGET_TYPE.IMAGE,
         width: 2,
         height: 2,
         properties: { prop1: 'value1', prop2: 'value2' },
         id: '1',
       },
       {
-        type: GridWidgetType.TEXT,
+        type: GRID_WIDGET_TYPE.TEXT,
         width: 1,
         height: 1,
         properties: { prop1: 'value1', prop2: 'value2' },
         id: '2',
       },
       {
-        type: GridWidgetType.IMAGE,
+        type: GRID_WIDGET_TYPE.IMAGE,
         width: 1,
         height: 1,
         properties: { prop1: 'value1', prop2: 'value2' },
@@ -194,7 +194,7 @@ const GRID_TESTS: GridTests[] = [
           y: 0,
           w: 2,
           h: 2,
-          type: GridWidgetType.IMAGE,
+          type: GRID_WIDGET_TYPE.IMAGE,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -203,7 +203,7 @@ const GRID_TESTS: GridTests[] = [
           y: 2,
           w: 1,
           h: 1,
-          type: GridWidgetType.TEXT,
+          type: GRID_WIDGET_TYPE.TEXT,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -212,7 +212,7 @@ const GRID_TESTS: GridTests[] = [
           y: 3,
           w: 1,
           h: 1,
-          type: GridWidgetType.IMAGE,
+          type: GRID_WIDGET_TYPE.IMAGE,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
       ],
@@ -223,7 +223,7 @@ const GRID_TESTS: GridTests[] = [
           y: 0,
           w: 2,
           h: 2,
-          type: GridWidgetType.IMAGE,
+          type: GRID_WIDGET_TYPE.IMAGE,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -232,7 +232,7 @@ const GRID_TESTS: GridTests[] = [
           y: 2,
           w: 1,
           h: 1,
-          type: GridWidgetType.TEXT,
+          type: GRID_WIDGET_TYPE.TEXT,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -241,7 +241,7 @@ const GRID_TESTS: GridTests[] = [
           y: 2,
           w: 1,
           h: 1,
-          type: GridWidgetType.IMAGE,
+          type: GRID_WIDGET_TYPE.IMAGE,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
       ],
@@ -250,28 +250,28 @@ const GRID_TESTS: GridTests[] = [
   {
     grid: [
       {
-        type: GridWidgetType.IMAGE,
+        type: GRID_WIDGET_TYPE.IMAGE,
         width: 1,
         height: 1,
         properties: { prop1: 'value1', prop2: 'value2' },
         id: '1',
       },
       {
-        type: GridWidgetType.IFRAME,
+        type: GRID_WIDGET_TYPE.IFRAME,
         width: 2,
         height: 2,
         properties: { prop1: 'value1', prop2: 'value2' },
         id: '2',
       },
       {
-        type: GridWidgetType.TEXT,
+        type: GRID_WIDGET_TYPE.TEXT,
         width: 1,
         height: 1,
         properties: { prop1: 'value1', prop2: 'value2' },
         id: '3',
       },
       {
-        type: GridWidgetType.IMAGE,
+        type: GRID_WIDGET_TYPE.IMAGE,
         width: 2,
         height: 1,
         properties: { prop1: 'value1', prop2: 'value2' },
@@ -286,7 +286,7 @@ const GRID_TESTS: GridTests[] = [
           y: 0,
           w: 1,
           h: 1,
-          type: GridWidgetType.IMAGE,
+          type: GRID_WIDGET_TYPE.IMAGE,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -295,7 +295,7 @@ const GRID_TESTS: GridTests[] = [
           y: 1,
           w: 2,
           h: 2,
-          type: GridWidgetType.IFRAME,
+          type: GRID_WIDGET_TYPE.IFRAME,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -304,7 +304,7 @@ const GRID_TESTS: GridTests[] = [
           y: 3,
           w: 1,
           h: 1,
-          type: GridWidgetType.TEXT,
+          type: GRID_WIDGET_TYPE.TEXT,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
@@ -313,7 +313,7 @@ const GRID_TESTS: GridTests[] = [
           y: 4,
           w: 2,
           h: 1,
-          type: GridWidgetType.IMAGE,
+          type: GRID_WIDGET_TYPE.IMAGE,
           properties: { prop1: 'value1', prop2: 'value2' },
         },
       ],

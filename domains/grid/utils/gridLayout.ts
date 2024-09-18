@@ -1,31 +1,16 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import {
-  type GridLayoutItem,
-  type GridWidget,
-  GridWidgetType,
-  type LSP27TheGrid,
-} from '../../../types/grid'
-
-const COL_NUM_LARGE = 2
-const COL_NUM_SMALL = 1
-
-const breakpoints: Record<number, number> = {
-  0: COL_NUM_SMALL,
-  768: COL_NUM_LARGE,
-}
-
 export const getDefaultLayout = (address: string): GridWidget[] => {
   return [
     {
-      type: GridWidgetType.TITLE_LINK,
+      type: GRID_WIDGET_TYPE.TITLE_LINK,
       width: 1,
       height: 1,
       properties: { title: address, bgColor: 'bg-purple-58' },
       id: uuidv4(),
     },
     {
-      type: GridWidgetType.TEXT,
+      type: GRID_WIDGET_TYPE.TEXT,
       width: 1,
       height: 1,
       properties: {
@@ -36,7 +21,7 @@ export const getDefaultLayout = (address: string): GridWidget[] => {
       id: uuidv4(),
     },
     {
-      type: GridWidgetType.IMAGE,
+      type: GRID_WIDGET_TYPE.IMAGE,
       width: 1,
       height: 1,
       properties: { src: 'https://via.placeholder.com/150' },
@@ -51,7 +36,7 @@ export const isValidLayout = (layout: GridWidget[]): boolean => {
     // check if object entries adhere to Widget interface
     !layout.every(item => {
       return (
-        item.type in GridWidgetType &&
+        item.type in GRID_WIDGET_TYPE &&
         typeof item.width === 'number' &&
         typeof item.height === 'number' &&
         typeof item.properties === 'object'
@@ -107,30 +92,7 @@ export const toGridLayoutItems = (
   return layout
 }
 
-export const addGridLayoutItem = (
-  layout: GridLayoutItem[],
-  newWidget: GridWidget,
-  gridColumns: number
-): GridLayoutItem[] => {
-  const columnHeights = getColumnHeightsFromLayout(layout, gridColumns)
-
-  if (gridColumns === 1) {
-    // Place the widget in a single column at the end
-    const currentY = Math.max(...columnHeights)
-    const newIndex = layout.length
-    layout.push(placeWidgetInSingleColumn(newWidget, newIndex, currentY))
-  } else {
-    // Place the widget in the best position in multiple columns
-    const { x, y } = findBestPosition(newWidget, columnHeights, gridColumns)
-    const newIndex = layout.length
-    layout.push(placeWidgetInLayout(newWidget, newIndex, x, y))
-    updateColumnHeights(columnHeights, x, newWidget.width, y + newWidget.height)
-  }
-
-  return layout
-}
-
-const findBestPosition = (
+export const findBestPosition = (
   widget: GridWidget,
   columnHeights: number[],
   gridColumns: number
@@ -149,7 +111,7 @@ const findBestPosition = (
   return { x: bestX, y: bestY }
 }
 
-const placeWidgetInLayout = (
+export const placeWidgetInLayout = (
   widget: GridWidget,
   i: number,
   x: number,
@@ -165,7 +127,7 @@ const placeWidgetInLayout = (
   }
 }
 
-const placeWidgetInSingleColumn = (
+export const placeWidgetInSingleColumn = (
   widget: GridWidget,
   i: number,
   y: number
@@ -180,7 +142,7 @@ const placeWidgetInSingleColumn = (
   }
 }
 
-const updateColumnHeights = (
+export const updateColumnHeights = (
   columnHeights: number[],
   x: number,
   width: number,
@@ -191,7 +153,7 @@ const updateColumnHeights = (
   }
 }
 
-const getColumnHeightsFromLayout = (
+export const getColumnHeightsFromLayout = (
   layout: GridLayoutItem[],
   gridColumns: number
 ): number[] => {
