@@ -6,8 +6,7 @@ import type { SelectStringOption } from '@lukso/web-components'
 const widgetTypes = ref<SelectStringOption[]>()
 const selectedWidgetType = ref<SelectStringOption>()
 const formValues = ref<Record<string, any>>({})
-const { gridLayout, hasUnsavedGrid } = storeToRefs(useAppStore())
-const gridColumns = ref(getGridColumns(window.innerWidth))
+const { hasUnsavedGrid } = storeToRefs(useAppStore())
 const { closeModal } = useModal()
 
 const resetFormValues = (properties: Property[]) => {
@@ -49,11 +48,7 @@ const handleSave = () => {
       id: uuidv4(),
     }
 
-    gridLayout.value = addGridLayoutItem(
-      gridLayout.value,
-      newWidget,
-      gridColumns.value
-    )
+    addGridLayoutItem(newWidget)
   }
 
   hasUnsavedGrid.value = true
