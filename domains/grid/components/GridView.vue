@@ -11,7 +11,7 @@ const gridContainer = ref<HTMLElement | null>(null)
 const DEBOUNCE_TIMEOUT = 250
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 
-const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid } =
+const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid, gridColumns } =
   storeToRefs(useAppStore())
 const address = getCurrentProfileAddress()
 const connectedProfile = useProfile().connectedProfile()
@@ -22,8 +22,6 @@ const canEditGrid = computed(
     isConnected.value &&
     connectedProfile.value?.address?.toLowerCase() === address.toLowerCase()
 )
-
-const gridColumns = ref(getGridColumns(window.innerWidth))
 
 const getGridLayout = async (address: Address) => {
   let gridConfig: LSP27TheGrid
