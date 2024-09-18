@@ -188,3 +188,21 @@ export const toLSP27TheGrid = (layout: GridLayoutItem[]): LSP27TheGrid => {
     }
   })
 }
+
+export const getGridLayout = async (address: Address, gridColumns: number) => {
+  let gridConfig: LSP27TheGrid
+  const gridConfigObject = await getGridConfig(address)
+
+  // if user config is invalid we load default one
+  if (
+    !gridConfigObject ||
+    !gridConfigObject.config ||
+    !isValidLayout(gridConfigObject.config)
+  ) {
+    gridConfig = getDefaultLayout(address)
+  } else {
+    gridConfig = gridConfigObject.config
+  }
+
+  return toGridLayoutItems(gridConfig, gridColumns)
+}

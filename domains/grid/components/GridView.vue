@@ -16,46 +16,13 @@ const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid, gridColumns } =
 const address = getCurrentProfileAddress()
 const connectedProfile = useProfile().connectedProfile()
 const { showModal } = useModal()
+const { initializeGridLayout } = useGrid()
 
 const canEditGrid = computed(
   () =>
     isConnected.value &&
     connectedProfile.value?.address?.toLowerCase() === address.toLowerCase()
 )
-
-const getGridLayout = async (address: Address) => {
-  let gridConfig: LSP27TheGrid
-  const gridConfigObject = await getGridConfig(address)
-
-  // if user config is invalid we load default one
-  if (
-    !gridConfigObject ||
-    !gridConfigObject.config ||
-    !isValidLayout(gridConfigObject.config)
-  ) {
-    gridConfig = getDefaultLayout(address)
-  } else {
-    gridConfig = gridConfigObject.config
-  }
-
-  return toGridLayoutItems(gridConfig, gridColumns.value)
-}
-
-const initializeTheGrid = async (address?: Address): Promise<void> => {
-  if (!address) {
-    gridLayout.value = []
-    return
-  }
-
-  const userGridLayout = await getGridLayout(address)
-  const tempGridLayout = gridLayout.value
-
-  if (hasUnsavedGrid.value) {
-    gridLayout.value = tempGridLayout
-  } else {
-    gridLayout.value = userGridLayout
-  }
-}
 
 const handleUpdateLayout = (newLayout: GridLayoutItem[]) => {
   console.log('Layout updated 🎉', newLayout)
@@ -102,7 +69,7 @@ const handleResize = (width: number) => {
 const handleResetLayout = async () => {
   isEditingGrid.value = false
   hasUnsavedGrid.value = false
-  gridLayout.value = await getGridLayout(address)
+  gridLayout.value = await getGridLayout(address, gridColumns.value)
 }
 
 const clearSelection = () => {
@@ -144,7 +111,7 @@ const handleAddWidget = () => {
 }
 
 onMounted(async () => {
-  await initializeTheGrid(address)
+  await initializeGridLayout(address)
 })
 
 useResizeObserver(gridContainer, entries => {

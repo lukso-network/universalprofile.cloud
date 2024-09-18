@@ -38,8 +38,28 @@ export const addGridLayoutItem = (newWidget: GridWidget) => {
   hasUnsavedGrid.value = true
 }
 
+const initializeGridLayout = async (address?: Address): Promise<void> => {
+  const { gridLayout, hasUnsavedGrid, gridColumns } = storeToRefs(useAppStore())
+
+  if (!address) {
+    gridLayout.value = []
+    return
+  }
+
+  const userGridLayout = await getGridLayout(address, gridColumns.value)
+  const tempGridLayout = gridLayout.value
+
+  if (hasUnsavedGrid.value) {
+    gridLayout.value = tempGridLayout
+  } else {
+    gridLayout.value = userGridLayout
+  }
+}
+
 export const useGrid = () => {
   return {
     removeGridLayoutItem,
+    addGridLayoutItem,
+    initializeGridLayout,
   }
 }
