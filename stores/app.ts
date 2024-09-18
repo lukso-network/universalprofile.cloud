@@ -33,6 +33,7 @@ export const useAppStore = defineStore(
     const isEditingGrid = ref(false)
     const hasUnsavedGrid = ref(false)
     const gridLayout = ref<GridLayoutItem[]>([])
+    const gridColumns = ref<number>(COL_NUM_LARGE)
 
     // statuses
     const isConnecting = ref(false)
@@ -138,6 +139,7 @@ export const useAppStore = defineStore(
       isEditingGrid,
       hasUnsavedGrid,
       gridLayout,
+      gridColumns,
     }
   },
   {

@@ -1,31 +1,16 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import {
-  type GridLayoutItem,
-  type GridWidget,
-  GridWidgetType,
-  type LSP27TheGrid,
-} from '../types/grid'
-
-const COL_NUM_LARGE = 2
-const COL_NUM_SMALL = 1
-
-const breakpoints: Record<number, number> = {
-  0: COL_NUM_SMALL,
-  768: COL_NUM_LARGE,
-}
-
 export const getDefaultLayout = (address: string): GridWidget[] => {
   return [
     {
-      type: GridWidgetType.TITLE_LINK,
+      type: GRID_WIDGET_TYPE.TITLE_LINK,
       width: 1,
       height: 1,
       properties: { title: address, bgColor: 'bg-purple-58' },
       id: uuidv4(),
     },
     {
-      type: GridWidgetType.TEXT,
+      type: GRID_WIDGET_TYPE.TEXT,
       width: 1,
       height: 1,
       properties: {
@@ -36,7 +21,7 @@ export const getDefaultLayout = (address: string): GridWidget[] => {
       id: uuidv4(),
     },
     {
-      type: GridWidgetType.IMAGE,
+      type: GRID_WIDGET_TYPE.IMAGE,
       width: 1,
       height: 1,
       properties: { src: 'https://via.placeholder.com/150' },
@@ -45,13 +30,17 @@ export const getDefaultLayout = (address: string): GridWidget[] => {
   ]
 }
 
-export const isValidLayout = (layout: GridWidget[]): boolean => {
+export const isValidLayout = (layout?: GridWidget[]): boolean => {
+  if (!layout) {
+    return false
+  }
+
   // TODO: We can make the validations even better with Zod or some other library
   if (
     // check if object entries adhere to Widget interface
     !layout.every(item => {
       return (
-        item.type in GridWidgetType &&
+        item.type in GRID_WIDGET_TYPE &&
         typeof item.width === 'number' &&
         typeof item.height === 'number' &&
         typeof item.properties === 'object'
@@ -107,30 +96,7 @@ export const toGridLayoutItems = (
   return layout
 }
 
-export function addGridLayoutItem(
-  layout: GridLayoutItem[],
-  newWidget: GridWidget,
-  gridColumns: number
-): GridLayoutItem[] {
-  const columnHeights = getColumnHeightsFromLayout(layout, gridColumns)
-
-  if (gridColumns === 1) {
-    // Place the widget in a single column at the end
-    const currentY = Math.max(...columnHeights)
-    const newIndex = layout.length
-    layout.push(placeWidgetInSingleColumn(newWidget, newIndex, currentY))
-  } else {
-    // Place the widget in the best position in multiple columns
-    const { x, y } = findBestPosition(newWidget, columnHeights, gridColumns)
-    const newIndex = layout.length
-    layout.push(placeWidgetInLayout(newWidget, newIndex, x, y))
-    updateColumnHeights(columnHeights, x, newWidget.width, y + newWidget.height)
-  }
-
-  return layout
-}
-
-const findBestPosition = (
+export const findBestPosition = (
   widget: GridWidget,
   columnHeights: number[],
   gridColumns: number
@@ -149,7 +115,7 @@ const findBestPosition = (
   return { x: bestX, y: bestY }
 }
 
-const placeWidgetInLayout = (
+export const placeWidgetInLayout = (
   widget: GridWidget,
   i: number,
   x: number,
@@ -165,7 +131,7 @@ const placeWidgetInLayout = (
   }
 }
 
-const placeWidgetInSingleColumn = (
+export const placeWidgetInSingleColumn = (
   widget: GridWidget,
   i: number,
   y: number
@@ -180,7 +146,7 @@ const placeWidgetInSingleColumn = (
   }
 }
 
-const updateColumnHeights = (
+export const updateColumnHeights = (
   columnHeights: number[],
   x: number,
   width: number,
@@ -191,7 +157,7 @@ const updateColumnHeights = (
   }
 }
 
-const getColumnHeightsFromLayout = (
+export const getColumnHeightsFromLayout = (
   layout: GridLayoutItem[],
   gridColumns: number
 ): number[] => {
@@ -206,7 +172,7 @@ const getColumnHeightsFromLayout = (
   return columnHeights
 }
 
-export function toLSP27TheGrid(layout: GridLayoutItem[]): LSP27TheGrid {
+export const toLSP27TheGrid = (layout: GridLayoutItem[]): LSP27TheGrid => {
   //Sort by y and then x to get the correct order
   const orderedLayout = layout.sort((a, b) => {
     if (a.y === b.y) {
@@ -225,4 +191,18 @@ export function toLSP27TheGrid(layout: GridLayoutItem[]): LSP27TheGrid {
       id: item.id,
     }
   })
+}
+
+export const getGridLayout = async (address: Address, gridColumns: number) => {
+  let gridConfig: LSP27TheGrid
+  const gridConfigObject = await getGridConfig(address)
+
+  // if user config is invalid we load default one
+  if (!isValidLayout(gridConfigObject?.config)) {
+    gridConfig = getDefaultLayout(address)
+  } else {
+    gridConfig = gridConfigObject?.config as LSP27TheGrid
+  }
+
+  return toGridLayoutItems(gridConfig, gridColumns)
 }

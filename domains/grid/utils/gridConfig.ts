@@ -3,8 +3,6 @@
 
 import Parse from 'parse'
 
-import type { GridWidget, LSP27TheGrid } from '../types/grid'
-
 const CLASS_NAME = 'grid_config_new'
 
 Parse.initialize(
@@ -24,9 +22,9 @@ export type UpsertGridConfigResponse = {
   updatedAt?: string
 }
 
-export async function getGridConfig(
+export const getGridConfig = async (
   username: string
-): Promise<GetGridConfigResponse | undefined> {
+): Promise<GetGridConfigResponse | undefined> => {
   const query: Parse.Query = new Parse.Query(CLASS_NAME)
   query.equalTo('username', username.toLowerCase())
 
@@ -46,10 +44,10 @@ export async function getGridConfig(
   }
 }
 
-export async function upsertGridConfig(
+export const upsertGridConfig = async (
   username: string,
   config: LSP27TheGrid
-): Promise<UpsertGridConfigResponse | undefined> {
+): Promise<UpsertGridConfigResponse | undefined> => {
   const query: Parse.Query = new Parse.Query(CLASS_NAME)
   query.equalTo('username', username.toLowerCase())
 
