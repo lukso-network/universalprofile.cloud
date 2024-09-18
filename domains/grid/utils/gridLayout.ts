@@ -30,7 +30,11 @@ export const getDefaultLayout = (address: string): GridWidget[] => {
   ]
 }
 
-export const isValidLayout = (layout: GridWidget[]): boolean => {
+export const isValidLayout = (layout?: GridWidget[]): boolean => {
+  if (!layout) {
+    return false
+  }
+
   // TODO: We can make the validations even better with Zod or some other library
   if (
     // check if object entries adhere to Widget interface
@@ -194,14 +198,10 @@ export const getGridLayout = async (address: Address, gridColumns: number) => {
   const gridConfigObject = await getGridConfig(address)
 
   // if user config is invalid we load default one
-  if (
-    !gridConfigObject ||
-    !gridConfigObject.config ||
-    !isValidLayout(gridConfigObject.config)
-  ) {
+  if (!isValidLayout(gridConfigObject?.config)) {
     gridConfig = getDefaultLayout(address)
   } else {
-    gridConfig = gridConfigObject.config
+    gridConfig = gridConfigObject?.config as LSP27TheGrid
   }
 
   return toGridLayoutItems(gridConfig, gridColumns)
