@@ -6,7 +6,7 @@ import type { SelectStringOption } from '@lukso/web-components'
 const widgetTypes = ref<SelectStringOption[]>()
 const selectedWidgetType = ref<SelectStringOption>()
 const formValues = ref<Record<string, any>>({})
-const { gridLayout } = storeToRefs(useAppStore())
+const { gridLayout, hasUnsavedGrid } = storeToRefs(useAppStore())
 const gridColumns = ref(getGridColumns(window.innerWidth))
 const { closeModal } = useModal()
 
@@ -56,6 +56,7 @@ const handleSave = () => {
     )
   }
 
+  hasUnsavedGrid.value = true
   closeModal()
 }
 

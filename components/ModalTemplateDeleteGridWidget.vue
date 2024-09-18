@@ -2,9 +2,11 @@
 const { closeModal, modal } = useModal()
 const { formatMessage } = useIntl()
 const { removeGridLayoutItem } = useGrid()
+const { hasUnsavedGrid } = storeToRefs(useAppStore())
 
 const handleDelete = async () => {
   removeGridLayoutItem(modal?.data?.id)
+  hasUnsavedGrid.value = true
   closeModal()
 }
 </script>
