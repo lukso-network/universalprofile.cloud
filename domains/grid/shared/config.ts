@@ -18,7 +18,10 @@ export enum GRID_WIDGET_TYPE {
 
 // To programmatically generate the form based on the widget type
 // TODO: Once we have the tools to parse widget properties from embed code some of this might change
-export const WIDGET_TYPE_PROPERTIES: Record<GRID_WIDGET_TYPE, Property[]> = {
+export const WIDGET_TYPE_PROPERTIES: Record<
+  GridWidgetType,
+  GridWidgetProperty[]
+> = {
   [GRID_WIDGET_TYPE.TITLE_LINK]: [
     { key: 'title', type: 'string' },
     { key: 'src', type: 'url', optional: true },

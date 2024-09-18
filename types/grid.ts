@@ -22,7 +22,7 @@ export type GridWidgetTypeSizes = Record<GridWidgetType, GridWidgetSizes>
 // And enhances it with the properties used for our grid layout
 export type GridLayoutItem = LayoutItem & GridWidget
 
-export type Property = {
+export type GridWidgetProperty = {
   key: string
   type: 'string' | 'number' | 'boolean' | 'color' | 'url'
   optional?: boolean

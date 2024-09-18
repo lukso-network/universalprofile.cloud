@@ -9,7 +9,7 @@ const formValues = ref<Record<string, any>>({})
 const { hasUnsavedGrid } = storeToRefs(useAppStore())
 const { closeModal } = useModal()
 
-const resetFormValues = (properties: Property[]) => {
+const resetFormValues = (properties: GridWidgetProperty[]) => {
   formValues.value = {}
 
   for (const property of properties) {
