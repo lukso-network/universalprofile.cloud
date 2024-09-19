@@ -9,7 +9,6 @@ export type GridWidget = {
   width: number
   height: number
   properties: Record<string, any>
-  id: string
 }
 
 export type GridWidgetSize = { w: number; h: number }

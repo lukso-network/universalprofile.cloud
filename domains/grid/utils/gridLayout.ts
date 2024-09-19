@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
-
 export const getDefaultLayout = (address: string): GridWidget[] => {
   return [
     {
@@ -7,7 +5,6 @@ export const getDefaultLayout = (address: string): GridWidget[] => {
       width: 1,
       height: 1,
       properties: { title: address, bgColor: 'bg-purple-58' },
-      id: uuidv4(),
     },
     {
       type: GRID_WIDGET_TYPE.TEXT,
@@ -18,14 +15,12 @@ export const getDefaultLayout = (address: string): GridWidget[] => {
         text: 'Customize your grid layout!',
         bgColor: 'bg-sea-salt-67',
       },
-      id: uuidv4(),
     },
     {
       type: GRID_WIDGET_TYPE.IMAGE,
       width: 1,
       height: 1,
       properties: { src: 'https://via.placeholder.com/150' },
-      id: uuidv4(),
     },
   ]
 }
@@ -66,7 +61,7 @@ export const toGridLayoutItems = (
   grid: LSP27TheGrid,
   gridColumns: number
 ): GridLayoutItem[] => {
-  let layout: GridLayoutItem[] = []
+  const layout: GridLayoutItem[] = []
   const columnHeights = Array(gridColumns).fill(0)
 
   if (gridColumns === 1) {
@@ -84,14 +79,6 @@ export const toGridLayoutItems = (
       updateColumnHeights(columnHeights, x, widget.width, y + widget.height)
     }
   }
-
-  // add id's for items
-  layout = layout.map(item => {
-    return {
-      ...item,
-      id: item.id || uuidv4(),
-    }
-  })
 
   return layout
 }
@@ -188,7 +175,6 @@ export const toLSP27TheGrid = (layout: GridLayoutItem[]): LSP27TheGrid => {
       width: item.w,
       height: item.h,
       properties: item.properties,
-      id: item.id,
     }
   })
 }

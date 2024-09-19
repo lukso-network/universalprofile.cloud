@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
 type Props = {
-  widget: GridWidget
+  widget: GridLayoutItem
 }
 
 const props = defineProps<Props>()
@@ -39,7 +39,7 @@ const handleDelete = () => {
   showModal({
     template: 'DeleteGridWidget',
     data: {
-      id: props.widget.id,
+      id: props.widget.i,
     },
   })
 }

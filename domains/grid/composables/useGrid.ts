@@ -1,11 +1,11 @@
-const removeGridLayoutItem = (id: string) => {
+const removeGridLayoutItem = (id: string | number) => {
   const { gridLayout, hasUnsavedGrid } = storeToRefs(useAppStore())
 
-  if (!id || typeof id !== 'string') {
+  if (typeof id !== 'string' && typeof id !== 'number') {
     return
   }
 
-  gridLayout.value = gridLayout.value.filter(item => item.id !== id)
+  gridLayout.value = gridLayout.value.filter(item => item.i !== id)
   hasUnsavedGrid.value = true
 }
 

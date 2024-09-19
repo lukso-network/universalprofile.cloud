@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid'
-
 import type { SelectStringOption } from '@lukso/web-components'
 
 const widgetTypes = ref<SelectStringOption[]>()
@@ -43,7 +41,6 @@ const handleSave = () => {
       width: 1,
       height: 1,
       properties: { ...formValues.value },
-      id: uuidv4(),
     }
 
     addGridLayoutItem(newWidget)
