@@ -62,13 +62,13 @@ function parseXWidgetInput(input: string): Partial<GridWidget> | undefined {
           src: `https://twitter.com/${xUrlMatch[1]}/status/${xUrlMatch[2]}?ref_src=twsrc%5Etfw`,
         },
       }
-    else
-      return {
-        type: GRID_WIDGET_TYPE.X_TIMELINE,
-        properties: {
-          src: `https://twitter.com/${xUrlMatch[1]}?ref_src=twsrc%5Etfw`,
-        },
-      }
+
+    return {
+      type: GRID_WIDGET_TYPE.X_TIMELINE,
+      properties: {
+        src: `https://twitter.com/${xUrlMatch[1]}?ref_src=twsrc%5Etfw`,
+      },
+    }
   }
 
   return
