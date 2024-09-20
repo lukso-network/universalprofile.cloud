@@ -6,6 +6,11 @@ export const breakpoints: Record<number, number> = {
   768: COL_NUM_LARGE,
 }
 
+export enum GRID_WIDGET_SUPPORTED_PLATFORMS {
+  YOUTUBE = 'YOUTUBE',
+  X = 'X',
+}
+
 export enum GRID_WIDGET_TYPE {
   TITLE_LINK = 'TITLE_LINK',
   TEXT = 'TEXT',
