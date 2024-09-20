@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
-
 /**
  * Default grid config
  *
@@ -86,7 +84,7 @@ export const configToLayout = (
       properties: item.properties,
       w: item.width,
       h: item.height,
-      i: uuidv4(),
+      i: generateItemId(),
     } as GridWidgetWithoutCords
   })
 
@@ -104,15 +102,15 @@ export const buildLayout = (
     // Simple stacking for single column layout
     let currentY = 0
 
-    for (const [i, widget] of layout.entries()) {
-      updatedLayout.push(placeWidgetInSingleColumn(widget, i, currentY))
+    for (const widget of layout) {
+      updatedLayout.push(placeWidgetInSingleColumn(widget, currentY))
       currentY += widget.h
     }
   } else {
     // General case for multiple columns
-    for (const [i, widget] of layout.entries()) {
+    for (const widget of layout) {
       const { x, y } = findBestPosition(widget, columnHeights, gridColumns)
-      updatedLayout.push(placeWidgetInLayout(widget, i, x, y))
+      updatedLayout.push(placeWidgetInLayout(widget, x, y))
       updateColumnHeights(columnHeights, x, widget.w, y + widget.h)
     }
   }
@@ -141,13 +139,11 @@ export const findBestPosition = (
 
 export const placeWidgetInLayout = (
   widget: GridWidgetWithoutCords,
-  i: number,
   x: number,
   y: number
 ): GridWidget => {
   return {
     ...widget,
-    i,
     x,
     y,
   }
@@ -155,12 +151,10 @@ export const placeWidgetInLayout = (
 
 export const placeWidgetInSingleColumn = (
   widget: GridWidgetWithoutCords,
-  i: number,
   y: number
 ): GridWidget => {
   return {
     ...widget,
-    i,
     x: 0,
     y,
     w: 1,

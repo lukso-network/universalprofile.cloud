@@ -19,15 +19,11 @@ export const addGridLayoutItem = (newItem: GridWidgetWithoutCords) => {
   if (gridColumns.value === 1) {
     // Place the widget in a single column at the end
     const currentY = Math.max(...columnHeights)
-    const newIndex = gridLayout.value.length
-    gridLayout.value.push(
-      placeWidgetInSingleColumn(newItem, newIndex, currentY)
-    )
+    gridLayout.value.push(placeWidgetInSingleColumn(newItem, currentY))
   } else {
     // Place the widget in the best position in multiple columns
     const { x, y } = findBestPosition(newItem, columnHeights, gridColumns.value)
-    const newIndex = gridLayout.value.length
-    gridLayout.value.push(placeWidgetInLayout(newItem, newIndex, x, y))
+    gridLayout.value.push(placeWidgetInLayout(newItem, x, y))
     updateColumnHeights(columnHeights, x, newItem.w, y + newItem.h)
   }
 
