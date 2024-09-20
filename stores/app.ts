@@ -32,7 +32,7 @@ export const useAppStore = defineStore(
     // grid
     const isEditingGrid = ref(false)
     const hasUnsavedGrid = ref(false)
-    const gridLayout = ref<GridLayoutItem[]>([])
+    const gridLayout = ref<GridWidget[]>([])
     const gridColumns = ref<number>(COL_NUM_LARGE)
 
     // statuses
