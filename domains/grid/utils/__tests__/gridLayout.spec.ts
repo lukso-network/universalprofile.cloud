@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { configToLayout, layoutToConfig } from '../gridLayout'
 
-interface GridTests {
+type GridTests = {
   grid: GridConfigItem[]
   expectedLayouts: Record<number, Partial<GridWidget>[]>
 }
@@ -44,7 +44,7 @@ const GRID_TESTS: GridTests[] = [
     expectedLayouts: {
       1: [
         {
-          i: 0,
+          i: 'test-id',
           x: 0,
           y: 0,
           w: 1,
@@ -53,7 +53,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 1,
+          i: 'test-id',
           x: 0,
           y: 2,
           w: 1,
@@ -62,7 +62,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 2,
+          i: 'test-id',
           x: 0,
           y: 3,
           w: 1,
@@ -71,7 +71,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 3,
+          i: 'test-id',
           x: 0,
           y: 5,
           w: 1,
@@ -82,7 +82,7 @@ const GRID_TESTS: GridTests[] = [
       ],
       2: [
         {
-          i: 0,
+          i: 'test-id',
           x: 0,
           y: 0,
           w: 1,
@@ -91,7 +91,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 1,
+          i: 'test-id',
           x: 1,
           y: 0,
           w: 1,
@@ -100,7 +100,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 2,
+          i: 'test-id',
           x: 1,
           y: 1,
           w: 1,
@@ -109,7 +109,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 3,
+          i: 'test-id',
           x: 0,
           y: 2,
           w: 1,
@@ -120,7 +120,7 @@ const GRID_TESTS: GridTests[] = [
       ],
       3: [
         {
-          i: 0,
+          i: 'test-id',
           x: 0,
           y: 0,
           w: 1,
@@ -129,7 +129,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 1,
+          i: 'test-id',
           x: 1,
           y: 0,
           w: 1,
@@ -138,7 +138,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 2,
+          i: 'test-id',
           x: 2,
           y: 0,
           w: 1,
@@ -147,7 +147,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 3,
+          i: 'test-id',
           x: 1,
           y: 1,
           w: 1,
@@ -182,7 +182,7 @@ const GRID_TESTS: GridTests[] = [
     expectedLayouts: {
       1: [
         {
-          i: 0,
+          i: 'test-id',
           x: 0,
           y: 0,
           w: 2,
@@ -191,7 +191,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 1,
+          i: 'test-id',
           x: 0,
           y: 2,
           w: 1,
@@ -200,7 +200,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 2,
+          i: 'test-id',
           x: 0,
           y: 3,
           w: 1,
@@ -211,7 +211,7 @@ const GRID_TESTS: GridTests[] = [
       ],
       2: [
         {
-          i: 0,
+          i: 'test-id',
           x: 0,
           y: 0,
           w: 2,
@@ -220,7 +220,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 1,
+          i: 'test-id',
           x: 0,
           y: 2,
           w: 1,
@@ -229,7 +229,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 2,
+          i: 'test-id',
           x: 1,
           y: 2,
           w: 1,
@@ -270,7 +270,7 @@ const GRID_TESTS: GridTests[] = [
     expectedLayouts: {
       2: [
         {
-          i: 0,
+          i: 'test-id',
           x: 0,
           y: 0,
           w: 1,
@@ -279,7 +279,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 1,
+          i: 'test-id',
           x: 0,
           y: 1,
           w: 2,
@@ -288,7 +288,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 2,
+          i: 'test-id',
           x: 0,
           y: 3,
           w: 1,
@@ -297,7 +297,7 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
         {
-          i: 3,
+          i: 'test-id',
           x: 0,
           y: 4,
           w: 2,
@@ -309,6 +309,10 @@ const GRID_TESTS: GridTests[] = [
     },
   },
 ]
+
+vi.mock('/domains/grid/utils/generateItemId', () => ({
+  generateItemId: () => 'test-id',
+}))
 
 describe('Grid Layout Handling', () => {
   describe('configToLayout', () => {
