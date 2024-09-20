@@ -9,7 +9,7 @@ const removeGridLayoutItem = (id: string | number) => {
   hasUnsavedGrid.value = true
 }
 
-export const addGridLayoutItem = (newWidget: GridWidget) => {
+export const addGridLayoutItem = (newItem: GridWidgetWithoutCords) => {
   const { gridLayout, hasUnsavedGrid, gridColumns } = storeToRefs(useAppStore())
   const columnHeights = getColumnHeightsFromLayout(
     gridLayout.value,
@@ -21,18 +21,14 @@ export const addGridLayoutItem = (newWidget: GridWidget) => {
     const currentY = Math.max(...columnHeights)
     const newIndex = gridLayout.value.length
     gridLayout.value.push(
-      placeWidgetInSingleColumn(newWidget, newIndex, currentY)
+      placeWidgetInSingleColumn(newItem, newIndex, currentY)
     )
   } else {
     // Place the widget in the best position in multiple columns
-    const { x, y } = findBestPosition(
-      newWidget,
-      columnHeights,
-      gridColumns.value
-    )
+    const { x, y } = findBestPosition(newItem, columnHeights, gridColumns.value)
     const newIndex = gridLayout.value.length
-    gridLayout.value.push(placeWidgetInLayout(newWidget, newIndex, x, y))
-    updateColumnHeights(columnHeights, x, newWidget.width, y + newWidget.height)
+    gridLayout.value.push(placeWidgetInLayout(newItem, newIndex, x, y))
+    updateColumnHeights(columnHeights, x, newItem.w, y + newItem.h)
   }
 
   hasUnsavedGrid.value = true
@@ -50,7 +46,7 @@ const initializeGridLayout = async (address?: Address): Promise<void> => {
   const tempGridLayout = gridLayout.value
 
   if (hasUnsavedGrid.value) {
-    gridLayout.value = tempGridLayout
+    gridLayout.value = tempGridLayout as GridWidget[]
   } else {
     gridLayout.value = userGridLayout
   }

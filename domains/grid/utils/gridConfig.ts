@@ -13,7 +13,7 @@ Parse.serverURL = 'https://parseapi.back4app.com/'
 
 export type GetGridConfigResponse = {
   objectId: string
-  config: GridWidget[]
+  config: GridConfigItem[]
 }
 
 export type UpsertGridConfigResponse = {
@@ -46,7 +46,7 @@ export const getGridConfig = async (
 
 export const upsertGridConfig = async (
   username: string,
-  config: LSP27TheGrid
+  config: GridConfigItem[]
 ): Promise<UpsertGridConfigResponse | undefined> => {
   const query: Parse.Query = new Parse.Query(CLASS_NAME)
   query.equalTo('username', username.toLowerCase())

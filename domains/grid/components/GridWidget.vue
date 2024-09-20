@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
 type Props = {
-  widget: GridLayoutItem
+  widget: GridWidget
 }
 
 const props = defineProps<Props>()
@@ -13,7 +13,7 @@ const { showModal } = useModal()
 
 const dropdownId = `dropdown-${uuidv4()}`
 
-// Dynamically import components based on item type
+// Dynamically import components based on widget type
 const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.TITLE_LINK]: 'TitleLink',
   [GRID_WIDGET_TYPE.TEXT]: 'Text',

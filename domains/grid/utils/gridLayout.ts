@@ -1,4 +1,12 @@
-export const getDefaultLayout = (address: string): GridWidget[] => {
+import { v4 as uuidv4 } from 'uuid'
+
+/**
+ * Default grid config
+ *
+ * @param address
+ * @returns
+ */
+export const defaultConfig = (address: string): GridConfigItem[] => {
   return [
     {
       type: GRID_WIDGET_TYPE.TITLE_LINK,
@@ -25,15 +33,19 @@ export const getDefaultLayout = (address: string): GridWidget[] => {
   ]
 }
 
-export const isValidLayout = (layout?: GridWidget[]): boolean => {
-  if (!layout) {
+/**
+ *  Check if the grid config is valid
+ *
+ * @param grid
+ * @returns
+ */
+export const isConfigValid = (gridConfig?: GridConfigItem[]): boolean => {
+  if (!gridConfig) {
     return false
   }
 
-  // TODO: We can make the validations even better with Zod or some other library
   if (
-    // check if object entries adhere to Widget interface
-    !layout.every(item => {
+    !gridConfig.every(item => {
       return (
         item.type in GRID_WIDGET_TYPE &&
         typeof item.width === 'number' &&
@@ -57,42 +69,67 @@ export const getGridColumns = (width: number): number => {
   return validBreakpoint ? breakpoints[validBreakpoint] : COL_NUM_SMALL
 }
 
-export const toGridLayoutItems = (
-  grid: LSP27TheGrid,
+/**
+ * Convert LSP27 config to grid layout
+ *
+ * @param config
+ * @param columns
+ * @returns
+ */
+export const configToLayout = (
+  config: GridConfigItem[],
+  columns: number
+): GridWidget[] => {
+  const layout = config.map(item => {
+    return {
+      type: item.type,
+      properties: item.properties,
+      w: item.width,
+      h: item.height,
+      i: uuidv4(),
+    } as GridWidgetWithoutCords
+  })
+
+  return buildLayout(layout, columns)
+}
+
+export const buildLayout = (
+  layout: GridWidgetWithoutCords[],
   gridColumns: number
-): GridLayoutItem[] => {
-  const layout: GridLayoutItem[] = []
+): GridWidget[] => {
   const columnHeights = Array(gridColumns).fill(0)
+  const updatedLayout: GridWidget[] = []
 
   if (gridColumns === 1) {
     // Simple stacking for single column layout
     let currentY = 0
-    for (const [i, widget] of grid.entries()) {
-      layout.push(placeWidgetInSingleColumn(widget, i, currentY))
-      currentY += widget.height
+
+    for (const [i, widget] of layout.entries()) {
+      updatedLayout.push(placeWidgetInSingleColumn(widget, i, currentY))
+      currentY += widget.h
     }
   } else {
     // General case for multiple columns
-    for (const [i, widget] of grid.entries()) {
+    for (const [i, widget] of layout.entries()) {
       const { x, y } = findBestPosition(widget, columnHeights, gridColumns)
-      layout.push(placeWidgetInLayout(widget, i, x, y))
-      updateColumnHeights(columnHeights, x, widget.width, y + widget.height)
+      updatedLayout.push(placeWidgetInLayout(widget, i, x, y))
+      updateColumnHeights(columnHeights, x, widget.w, y + widget.h)
     }
   }
 
-  return layout
+  return updatedLayout
 }
 
 export const findBestPosition = (
-  widget: GridWidget,
+  widget: GridWidgetWithoutCords,
   columnHeights: number[],
   gridColumns: number
 ): { x: number; y: number } => {
   let bestY = Number.MAX_SAFE_INTEGER
   let bestX = 0
 
-  for (let x = 0; x <= gridColumns - widget.width; x++) {
-    const maxY = Math.max(...columnHeights.slice(x, x + widget.width))
+  for (let x = 0; x <= gridColumns - widget.w; x++) {
+    const maxY = Math.max(...columnHeights.slice(x, x + widget.w))
     if (maxY < bestY) {
       bestY = maxY
       bestX = x
@@ -103,33 +140,30 @@ export const findBestPosition = (
 }
 
 export const placeWidgetInLayout = (
-  widget: GridWidget,
+  widget: GridWidgetWithoutCords,
   i: number,
   x: number,
   y: number
-): GridLayoutItem => {
+): GridWidget => {
   return {
     ...widget,
     i,
     x,
     y,
-    w: widget.width,
-    h: widget.height,
   }
 }
 
 export const placeWidgetInSingleColumn = (
-  widget: GridWidget,
+  widget: GridWidgetWithoutCords,
   i: number,
   y: number
-): GridLayoutItem => {
+): GridWidget => {
   return {
     ...widget,
     i,
     x: 0,
     y,
     w: 1,
-    h: widget.height,
   }
 }
 
@@ -145,7 +179,7 @@ export const updateColumnHeights = (
 }
 
 export const getColumnHeightsFromLayout = (
-  layout: GridLayoutItem[],
+  layout: GridWidget[],
   gridColumns: number
 ): number[] => {
   const columnHeights = Array(gridColumns).fill(0)
@@ -159,8 +193,14 @@ export const getColumnHeightsFromLayout = (
   return columnHeights
 }
 
-export const toLSP27TheGrid = (layout: GridLayoutItem[]): LSP27TheGrid => {
-  //Sort by y and then x to get the correct order
+/**
+ * Convert grid layout to LSP27 config
+ *
+ * @param layout
+ * @returns
+ */
+export const layoutToConfig = (layout: GridWidget[]): GridConfigItem[] => {
+  // sort by y and then x to get the correct order
   const orderedLayout = layout.sort((a, b) => {
     if (a.y === b.y) {
       return a.x - b.x
@@ -179,16 +219,23 @@ export const toLSP27TheGrid = (layout: GridLayoutItem[]): LSP27TheGrid => {
   })
 }
 
-export const getGridLayout = async (address: Address, gridColumns: number) => {
-  let gridConfig: LSP27TheGrid
+/**
+ * Get grid layout for a given user address and grid column number
+ *
+ * @param address
+ * @param columns
+ * @returns
+ */
+export const getGridLayout = async (address: Address, columns: number) => {
+  let config: GridConfigItem[]
   const gridConfigObject = await getGridConfig(address)
 
   // if user config is invalid we load default one
-  if (!isValidLayout(gridConfigObject?.config)) {
-    gridConfig = getDefaultLayout(address)
+  if (!isConfigValid(gridConfigObject?.config)) {
+    config = defaultConfig(address)
   } else {
-    gridConfig = gridConfigObject?.config as LSP27TheGrid
+    config = gridConfigObject?.config as GridConfigItem[]
   }
 
-  return toGridLayoutItems(gridConfig, gridColumns)
+  return configToLayout(config, columns)
 }

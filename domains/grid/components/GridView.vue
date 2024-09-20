@@ -2,8 +2,6 @@
 import { useResizeObserver } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
-import { toGridLayoutItems } from '@/domains/grid/utils/gridLayout'
-
 const ROW_HEIGHT_PX = 280
 
 const gridContainer = ref<HTMLElement | null>(null)
@@ -24,7 +22,7 @@ const canEditGrid = computed(
     connectedProfile.value?.address?.toLowerCase() === address.toLowerCase()
 )
 
-const handleUpdateLayout = (newLayout: GridLayoutItem[]) => {
+const handleUpdateLayout = (newLayout: GridWidget[]) => {
   console.log('Layout updated 🎉', newLayout)
   gridLayout.value = newLayout
 }
@@ -36,9 +34,9 @@ const handleSaveLayout = async () => {
 
   isEditingGrid.value = false
   hasUnsavedGrid.value = false
-  const lsp27Grid = toLSP27TheGrid(gridLayout.value)
+  const lsp27Grid = layoutToConfig(gridLayout.value)
 
-  if (!isValidLayout(lsp27Grid)) {
+  if (!isConfigValid(lsp27Grid)) {
     console.warn('Invalid schema 😡')
     return
   }
@@ -61,7 +59,7 @@ const handleResize = (width: number) => {
 
     if (prevCols !== newCols) {
       gridColumns.value = newCols
-      gridLayout.value = toGridLayoutItems(gridLayout.value, newCols)
+      gridLayout.value = buildLayout(gridLayout.value, newCols)
     }
   }, DEBOUNCE_TIMEOUT)
 }

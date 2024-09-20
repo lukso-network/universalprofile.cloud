@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { toGridLayoutItems, toLSP27TheGrid } from '../gridLayout'
+import { configToLayout, layoutToConfig } from '../gridLayout'
 
 interface GridTests {
-  grid: LSP27TheGrid
-  expectedLayouts: Record<number, Partial<GridLayoutItem>[]>
+  grid: GridConfigItem[]
+  expectedLayouts: Record<number, Partial<GridWidget>[]>
 }
 
 const GRID_TESTS: GridTests[] = [
@@ -311,7 +311,7 @@ const GRID_TESTS: GridTests[] = [
 ]
 
 describe('Grid Layout Handling', () => {
-  describe('toGridLayoutItems', () => {
+  describe('configToLayout', () => {
     describe('should position elements correctly', () => {
       it.each([
         {
@@ -359,7 +359,7 @@ describe('Grid Layout Handling', () => {
       ])(
         'case=$case gridColumns=$gridColumns',
         ({ gridColumns, grid, expectedLayout }) => {
-          const gridItems = toGridLayoutItems(grid, gridColumns)
+          const gridItems = configToLayout(grid, gridColumns)
           expect(gridItems).toMatchObject(expectedLayout)
         }
       )
@@ -367,32 +367,29 @@ describe('Grid Layout Handling', () => {
   })
 
   describe('Transformation invariance', () => {
-    describe('LSP27TheGrid to GridLayoutItem and back should produce the original object', () => {
+    describe('Grid config to layout and back should produce the original object', () => {
       it.each([
         { case: 0, gridColumns: 2, grid: GRID_TESTS[0].grid },
         { case: 1, gridColumns: 2, grid: GRID_TESTS[1].grid },
         { case: 2, gridColumns: 2, grid: GRID_TESTS[2].grid },
         { case: 3, gridColumns: 2, grid: GRID_TESTS[3].grid },
       ])('case=$case gridColumns=$gridColumns ', ({ gridColumns, grid }) => {
-        const gridItems = toGridLayoutItems(grid, gridColumns)
-        const gridItemsBack = toLSP27TheGrid(gridItems)
+        const gridItems = configToLayout(grid, gridColumns)
+        const gridItemsBack = layoutToConfig(gridItems)
         expect(gridItemsBack).toEqual(grid)
       })
     })
 
-    describe('GridLayoutItem to LSP27TheGrid and back should produce the same original layout', () => {
+    describe('Grid layout to config and back should produce the same original layout', () => {
       it.each([
         { case: 0, gridColumns: 2, grid: GRID_TESTS[0].grid },
         { case: 1, gridColumns: 2, grid: GRID_TESTS[1].grid },
         { case: 2, gridColumns: 2, grid: GRID_TESTS[2].grid },
         { case: 3, gridColumns: 2, grid: GRID_TESTS[3].grid },
       ])('case=$case gridColumns=$gridColumns', ({ gridColumns, grid }) => {
-        const gridItems = toGridLayoutItems(grid, gridColumns)
-        const gridFromLayout = toLSP27TheGrid(gridItems)
-        const gridLayoutItemsBack = toGridLayoutItems(
-          gridFromLayout,
-          gridColumns
-        )
+        const gridItems = configToLayout(grid, gridColumns)
+        const gridFromLayout = layoutToConfig(gridItems)
+        const gridLayoutItemsBack = configToLayout(gridFromLayout, gridColumns)
         expect(gridLayoutItemsBack).toEqual(gridItems)
       })
     })
