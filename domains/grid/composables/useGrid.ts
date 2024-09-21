@@ -42,9 +42,17 @@ const initializeGridLayout = async (address?: Address): Promise<void> => {
 
   if (hasUnsavedGrid.value) {
     layout = buildLayout(gridLayout.value, gridColumns.value, isConnected.value)
+
+    if (gridLog.enabled) {
+      gridLog('Initialize saved layout', gridLayout.value)
+    }
   } else {
     const userLayout = await getUserLayout(address)
     layout = buildLayout(userLayout, gridColumns.value, isConnected.value)
+
+    if (gridLog.enabled) {
+      gridLog('Initialize user layout', userLayout)
+    }
   }
 
   gridLayout.value = layout
@@ -64,18 +72,21 @@ const saveGridLayout = async (layout?: GridWidget[]) => {
   const config = layoutToConfig(layoutWithoutAddWidget)
 
   if (!isConfigValid(config)) {
-    console.warn('Invalid schema 😡')
+    console.warn('Invalid schema')
     return
   }
 
   const response = await saveConfig(connectedProfileAddress.value, config)
 
   if (!response) {
-    console.warn('Failed to save layout 😢')
+    console.warn('Failed to save layout')
     return
   }
 
-  console.log('Layout saved 🎉', response)
+  if (gridLog.enabled) {
+    gridLog('Layout saved', layoutWithoutAddWidget, response)
+  }
+
   hasUnsavedGrid.value = false
 }
 

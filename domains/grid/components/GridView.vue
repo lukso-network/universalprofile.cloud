@@ -25,7 +25,10 @@ const canEditGrid = computed(
 const layout = ref<GridWidget[]>([])
 
 const handleUpdateLayout = (newLayout: GridWidget[]) => {
-  console.log('Layout updated 🎉', newLayout)
+  if (gridLog.enabled) {
+    gridLog('Layout updated', newLayout)
+  }
+
   gridLayout.value = newLayout
 }
 
@@ -78,24 +81,20 @@ const clearSelection = () => {
   window.getSelection()?.removeAllRanges()
 }
 
-const handleItemMove = (itemNumber: number) => {
-  console.log('Item move 🚚', itemNumber)
+const handleItemMove = (_itemNumber: number) => {
   clearSelection()
 }
 
-const handleItemMoved = (itemNumber: number) => {
-  console.log('Item moved 🚚', itemNumber)
+const handleItemMoved = (_itemNumber: number) => {
   clearSelection()
   hasUnsavedGrid.value = true
 }
 
-const handleItemResize = (itemNumber: number) => {
-  console.log('Item resize 📏', itemNumber)
+const handleItemResize = (_itemNumber: number) => {
   clearSelection()
 }
 
-const handleItemResized = (itemNumber: number) => {
-  console.log('Item resized 📏', itemNumber)
+const handleItemResized = (_itemNumber: number) => {
   clearSelection()
   hasUnsavedGrid.value = true
 }
