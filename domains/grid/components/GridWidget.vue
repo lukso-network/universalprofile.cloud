@@ -10,8 +10,11 @@ const widgetComponent = shallowRef<Component | undefined>()
 const { isEditingGrid } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
-
 const dropdownId = `dropdown-${uuidv4()}`
+
+const canEditWidget = computed(
+  () => isEditingGrid.value && props.widget.type !== GRID_WIDGET_TYPE.ADD_WIDGET
+)
 
 // Dynamically import components based on widget type
 const WIDGET_COMPONENTS: Record<string, string> = {
@@ -22,6 +25,7 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.X_POST]: 'XPost',
   [GRID_WIDGET_TYPE.X_TIMELINE]: 'XTimeline',
   [GRID_WIDGET_TYPE.INSTAGRAM_POST]: 'InstagramPost',
+  [GRID_WIDGET_TYPE.ADD_WIDGET]: 'AddWidget',
 }
 
 const loadWidgetComponent = (type: string): Component | undefined => {
@@ -51,12 +55,12 @@ onMounted(() => {
 
 <template>
   <div
-    class="relative flex h-full flex-col rounded-[10px] border border-[#e4e2e2a3] bg-[rgba(var(--tw-prose-rgb),0.5)] p-[10px] shadow-[0_0_10px_#0003] backdrop-blur-[4px]"
+    class="relative flex h-full flex-col rounded-12 border border-neutral-90 bg-neutral-100"
   >
     <!-- Handle for moving widget -->
     <div
-      v-if="isEditingGrid"
-      class="absolute left-0 top-0 z-20 cursor-move rounded-8 bg-white"
+      v-if="canEditWidget"
+      class="absolute left-0 top-0 z-20 cursor-move rounded-8 bg-neutral-100"
     >
       <lukso-icon
         name="hand-right-outline"
@@ -67,8 +71,8 @@ onMounted(() => {
 
     <!-- Widget Options -->
     <div
-      v-if="isEditingGrid"
-      class="absolute right-0 top-0 z-20 cursor-pointer rounded-8 bg-white"
+      v-if="canEditWidget"
+      class="absolute right-0 top-0 z-20 cursor-pointer rounded-8 bg-neutral-100"
     >
       <lukso-icon
         :id="dropdownId"

@@ -31,27 +31,59 @@ export const addGridLayoutItem = (newItem: GridWidgetWithoutCords) => {
 }
 
 const initializeGridLayout = async (address?: Address): Promise<void> => {
-  const { gridLayout, hasUnsavedGrid, gridColumns } = storeToRefs(useAppStore())
+  const { gridLayout, hasUnsavedGrid, gridColumns, isConnected } =
+    storeToRefs(useAppStore())
+  let layout: GridWidget[] = []
 
   if (!address) {
     gridLayout.value = []
     return
   }
 
-  const userGridLayout = await getGridLayout(address, gridColumns.value)
-  const tempGridLayout = gridLayout.value
-
   if (hasUnsavedGrid.value) {
-    gridLayout.value = tempGridLayout as GridWidget[]
+    layout = buildLayout(gridLayout.value, gridColumns.value, isConnected.value)
   } else {
-    gridLayout.value = userGridLayout
+    const userLayout = await getUserLayout(address)
+    layout = buildLayout(userLayout, gridColumns.value, isConnected.value)
   }
+
+  gridLayout.value = layout
+}
+
+const saveGridLayout = async (layout?: GridWidget[]) => {
+  const { hasUnsavedGrid, connectedProfileAddress } = storeToRefs(useAppStore())
+
+  if (!layout || !connectedProfileAddress.value) {
+    return
+  }
+
+  // remove "add widget" item from layout before saving
+  const layoutWithoutAddWidget = layout.filter(
+    item => item.type !== GRID_WIDGET_TYPE.ADD_WIDGET
+  )
+  const config = layoutToConfig(layoutWithoutAddWidget)
+
+  if (!isConfigValid(config)) {
+    console.warn('Invalid schema 😡')
+    return
+  }
+
+  const response = await saveConfig(connectedProfileAddress.value, config)
+
+  if (!response) {
+    console.warn('Failed to save layout 😢')
+    return
+  }
+
+  console.log('Layout saved 🎉', response)
+  hasUnsavedGrid.value = false
 }
 
 export const useGrid = () => {
   return {
-    removeGridLayoutItem,
-    addGridLayoutItem,
     initializeGridLayout,
+    addGridLayoutItem,
+    removeGridLayoutItem,
+    saveGridLayout,
   }
 }

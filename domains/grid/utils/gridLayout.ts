@@ -12,7 +12,7 @@ export const defaultConfig = (address: string): GridConfigItem[] => {
       type: GRID_WIDGET_TYPE.TITLE_LINK,
       width: 1,
       height: 1,
-      properties: { title: address, bgColor: 'bg-purple-58' },
+      properties: { title: address, bgColor: '#7a83ae' },
     },
     {
       type: GRID_WIDGET_TYPE.TEXT,
@@ -21,7 +21,7 @@ export const defaultConfig = (address: string): GridConfigItem[] => {
       properties: {
         title: 'Hey',
         text: 'Customize your grid layout!',
-        bgColor: 'bg-sea-salt-67',
+        bgColor: '#9db9b9',
       },
     },
     {
@@ -77,9 +77,8 @@ export const getGridColumns = (width: number): number => {
  * @returns
  */
 export const configToLayout = (
-  config: GridConfigItem[],
-  columns: number
-): GridWidget[] => {
+  config: GridConfigItem[]
+): GridWidgetWithoutCords[] => {
   const layout = config.map(item => {
     return {
       type: item.type,
@@ -90,27 +89,45 @@ export const configToLayout = (
     } as GridWidgetWithoutCords
   })
 
-  return buildLayout(layout, columns)
+  return layout
 }
 
 export const buildLayout = (
   layout: GridWidgetWithoutCords[],
-  gridColumns: number
+  gridColumns: number,
+  withAddWidgetPlaceholder?: boolean
 ): GridWidget[] => {
   const columnHeights = Array(gridColumns).fill(0)
   const updatedLayout: GridWidget[] = []
 
+  // remove "add widget" placeholder from layout
+  const _layout = layout.filter(
+    item => item.type !== GRID_WIDGET_TYPE.ADD_WIDGET
+  )
+
+  // re-add placeholder
+  if (withAddWidgetPlaceholder) {
+    _layout.push({
+      i: 'placeholder',
+      type: GRID_WIDGET_TYPE.ADD_WIDGET,
+      w: 1,
+      h: 1,
+      properties: {},
+      isResizable: false,
+    })
+  }
+
   if (gridColumns === 1) {
-    // Simple stacking for single column layout
+    // simple stacking for single column layout
     let currentY = 0
 
-    for (const widget of layout) {
+    for (const widget of _layout) {
       updatedLayout.push(placeWidgetInSingleColumn(widget, currentY))
       currentY += widget.h
     }
   } else {
-    // General case for multiple columns
-    for (const widget of layout) {
+    // general case for multiple columns
+    for (const widget of _layout) {
       const { x, y } = findBestPosition(widget, columnHeights, gridColumns)
       updatedLayout.push(placeWidgetInLayout(widget, x, y))
       updateColumnHeights(columnHeights, x, widget.w, y + widget.h)
@@ -222,16 +239,19 @@ export const layoutToConfig = (layout: GridWidget[]): GridConfigItem[] => {
  * @param columns
  * @returns
  */
-export const getGridLayout = async (address: Address, columns: number) => {
+export const getUserLayout = async (
+  address: Address
+): Promise<GridWidgetWithoutCords[]> => {
   let config: GridConfigItem[]
-  const gridConfigObject = await getGridConfig(address)
+  const userConfig = await getGridConfig(address)
 
   // if user config is invalid we load default one
-  if (!isConfigValid(gridConfigObject?.config)) {
-    config = defaultConfig(address)
+  if (isConfigValid(userConfig?.config)) {
+    config = userConfig?.config as GridConfigItem[]
   } else {
-    config = gridConfigObject?.config as GridConfigItem[]
+    console.log('Invalid config', userConfig?.config)
+    config = defaultConfig(address)
   }
 
-  return configToLayout(config, columns)
+  return configToLayout(config)
 }
