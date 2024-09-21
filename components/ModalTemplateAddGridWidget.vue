@@ -54,6 +54,7 @@ const handleSave = () => {
 function handleCancel() {
   selectedWidgetType.value = undefined
   formValues.value = {}
+  closeModal()
 }
 
 function handleInput(event: CustomEvent, key: string) {
@@ -127,8 +128,8 @@ onMounted(() => {
 
     <!-- Action Buttons -->
     <div class="mt-4 flex justify-end space-x-2">
-      <lukso-button @click="handleSave" size="small"> Save </lukso-button>
-      <lukso-button @click="handleCancel" size="small"> Cancel </lukso-button>
+      <lukso-button variant="text" @click="handleCancel"> Cancel </lukso-button>
+      <lukso-button variant="landing" @click="handleSave"> Save </lukso-button>
     </div>
   </div>
 </template>
