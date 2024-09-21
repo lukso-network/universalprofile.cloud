@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { configToLayout, layoutToConfig } from '../gridLayout'
+import { configToLayout, layoutToConfig, buildLayout } from '../gridLayout'
 
 type GridTests = {
   grid: GridConfigItem[]
@@ -363,7 +363,7 @@ describe('Grid Layout Handling', () => {
       ])(
         'case=$case gridColumns=$gridColumns',
         ({ gridColumns, grid, expectedLayout }) => {
-          const gridItems = configToLayout(grid, gridColumns)
+          const gridItems = buildLayout(configToLayout(grid), gridColumns)
           expect(gridItems).toMatchObject(expectedLayout)
         }
       )
@@ -378,7 +378,7 @@ describe('Grid Layout Handling', () => {
         { case: 2, gridColumns: 2, grid: GRID_TESTS[2].grid },
         { case: 3, gridColumns: 2, grid: GRID_TESTS[3].grid },
       ])('case=$case gridColumns=$gridColumns ', ({ gridColumns, grid }) => {
-        const gridItems = configToLayout(grid, gridColumns)
+        const gridItems = buildLayout(configToLayout(grid), gridColumns)
         const gridItemsBack = layoutToConfig(gridItems)
         expect(gridItemsBack).toEqual(grid)
       })
@@ -391,9 +391,12 @@ describe('Grid Layout Handling', () => {
         { case: 2, gridColumns: 2, grid: GRID_TESTS[2].grid },
         { case: 3, gridColumns: 2, grid: GRID_TESTS[3].grid },
       ])('case=$case gridColumns=$gridColumns', ({ gridColumns, grid }) => {
-        const gridItems = configToLayout(grid, gridColumns)
+        const gridItems = buildLayout(configToLayout(grid), gridColumns)
         const gridFromLayout = layoutToConfig(gridItems)
-        const gridLayoutItemsBack = configToLayout(gridFromLayout, gridColumns)
+        const gridLayoutItemsBack = buildLayout(
+          configToLayout(gridFromLayout),
+          gridColumns
+        )
         expect(gridLayoutItemsBack).toEqual(gridItems)
       })
     })

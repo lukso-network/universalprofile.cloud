@@ -65,11 +65,7 @@ const saveGridLayout = async (layout?: GridWidget[]) => {
     return
   }
 
-  // remove "add widget" item from layout before saving
-  const layoutWithoutAddWidget = layout.filter(
-    item => item.type !== GRID_WIDGET_TYPE.ADD_WIDGET
-  )
-  const config = layoutToConfig(layoutWithoutAddWidget)
+  const config = layoutToConfig(layout)
 
   if (!isConfigValid(config)) {
     console.warn('Invalid schema')
@@ -84,7 +80,7 @@ const saveGridLayout = async (layout?: GridWidget[]) => {
   }
 
   if (gridLog.enabled) {
-    gridLog('Layout saved', layoutWithoutAddWidget, response)
+    gridLog('Layout saved', layout, response)
   }
 
   hasUnsavedGrid.value = false

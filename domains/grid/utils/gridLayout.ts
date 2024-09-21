@@ -213,8 +213,13 @@ export const getColumnHeightsFromLayout = (
  * @returns
  */
 export const layoutToConfig = (layout: GridWidget[]): GridConfigItem[] => {
+  // remove "add widget" item from layout before saving
+  const layoutWithoutAddWidget = layout.filter(
+    item => item.type !== GRID_WIDGET_TYPE.ADD_WIDGET
+  )
+
   // sort by y and then x to get the correct order
-  const orderedLayout = layout.sort((a, b) => {
+  const orderedLayout = layoutWithoutAddWidget.sort((a, b) => {
     if (a.y === b.y) {
       return a.x - b.x
     }
