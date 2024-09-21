@@ -11,7 +11,7 @@ useScriptTag('https://platform.twitter.com/widgets.js')
 </script>
 
 <template>
-  <div class="overflow-scroll rounded-[10px]">
+  <div class="m-3 overflow-scroll rounded-12">
     <a class="twitter-timeline" :href="src">Loading</a>
   </div>
 </template>

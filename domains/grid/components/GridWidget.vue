@@ -60,7 +60,7 @@ onMounted(() => {
     <!-- Handle for moving widget -->
     <div
       v-if="canEditWidget"
-      class="absolute left-0 top-0 z-20 cursor-move rounded-8 bg-neutral-100"
+      class="absolute left-0 top-0 z-20 cursor-move rounded-12 bg-neutral-100"
     >
       <lukso-icon
         name="hand-right-outline"
@@ -72,7 +72,7 @@ onMounted(() => {
     <!-- Widget Options -->
     <div
       v-if="canEditWidget"
-      class="absolute right-0 top-0 z-20 cursor-pointer rounded-8 bg-neutral-100"
+      class="absolute right-0 top-0 z-20 cursor-pointer rounded-12 bg-neutral-100"
     >
       <lukso-icon
         :id="dropdownId"
