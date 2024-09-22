@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { configToLayout, layoutToConfig, buildLayout } from '../gridLayout'
+import { buildLayout, configToLayout, layoutToConfig } from '../gridLayout'
 
 type GridTests = {
   grid: GridConfigItem[]
