@@ -44,12 +44,12 @@ export const getGridConfig = async (
   }
 }
 
-export const upsertGridConfig = async (
-  username: string,
+export const saveConfig = async (
+  address: Address,
   config: GridConfigItem[]
 ): Promise<UpsertGridConfigResponse | undefined> => {
   const query: Parse.Query = new Parse.Query(CLASS_NAME)
-  query.equalTo('username', username.toLowerCase())
+  query.equalTo('username', address.toLowerCase())
 
   try {
     let object = await query.first()
@@ -59,7 +59,7 @@ export const upsertGridConfig = async (
     }
 
     object.set('config', config)
-    object.set('username', username.toLowerCase())
+    object.set('username', address.toLowerCase())
 
     try {
       const response = await object.save()

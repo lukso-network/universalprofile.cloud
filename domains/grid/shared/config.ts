@@ -19,6 +19,7 @@ export enum GRID_WIDGET_TYPE {
   INSTAGRAM_POST = 'INSTAGRAM_POST',
   IMAGE = 'IMAGE',
   IFRAME = 'IFRAME',
+  ADD_WIDGET = 'ADD_WIDGET',
 }
 
 // To programmatically generate the form based on the widget type
@@ -47,4 +48,5 @@ export const WIDGET_TYPE_PROPERTIES: Record<
     { key: 'allow', type: 'string' },
   ],
   [GRID_WIDGET_TYPE.IMAGE]: [{ key: 'src', type: 'url' }],
+  [GRID_WIDGET_TYPE.ADD_WIDGET]: [],
 }

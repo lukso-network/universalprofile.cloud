@@ -180,6 +180,7 @@
   "missing_assets_token_address": "Token contract address",
   "dapp_showcase_06_url": "https://universalgrave.com/",
   "modal_connect_wallet_select_provider_connect_extension_button": "Universal Profile browser extension",
+  "grid_widget_add_widget_text": "Add content",
   "missing_assets_description": "Find the token contract address of the asset you want to add and enter it below.",
   "dapp_showcase_02_url": "https://universalswaps.io/",
   "token_collection_of": "Owns {count}",

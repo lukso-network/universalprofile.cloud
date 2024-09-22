@@ -34,7 +34,7 @@ function processInstagramEmbeds() {
 </script>
 
 <template>
-  <div class="overflow-auto rounded-[10px]">
+  <div class="m-3 overflow-auto rounded-12">
     <blockquote
       class="instagram-media"
       data-instgrm-captioned

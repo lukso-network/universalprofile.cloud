@@ -10,7 +10,7 @@ defineProps<Props>()
 
 <template>
   <div
-    class="flex h-full flex-col items-center justify-center overflow-hidden rounded-[10px] p-4 text-neutral-100"
+    class="m-3 flex h-full flex-col items-center justify-center overflow-hidden rounded-12 p-4 text-neutral-100"
     :style="{ backgroundColor: bgColor }"
   >
     <h1 class="heading-apax-24-medium">{{ title }}</h1>

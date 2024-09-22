@@ -30,28 +30,77 @@ export const addGridLayoutItem = (newItem: GridWidgetWithoutCords) => {
   hasUnsavedGrid.value = true
 }
 
-const initializeGridLayout = async (address?: Address): Promise<void> => {
+const initializeGridLayout = async (
+  address?: Address,
+  withAddWidgetPlaceholder?: boolean
+): Promise<void> => {
   const { gridLayout, hasUnsavedGrid, gridColumns } = storeToRefs(useAppStore())
+  let layout: GridWidget[] = []
 
   if (!address) {
     gridLayout.value = []
     return
   }
 
-  const userGridLayout = await getGridLayout(address, gridColumns.value)
-  const tempGridLayout = gridLayout.value
-
   if (hasUnsavedGrid.value) {
-    gridLayout.value = tempGridLayout as GridWidget[]
+    layout = buildLayout(
+      gridLayout.value,
+      gridColumns.value,
+      withAddWidgetPlaceholder
+    )
+
+    if (gridLog.enabled) {
+      gridLog('Initialize saved layout', gridLayout.value)
+    }
   } else {
-    gridLayout.value = userGridLayout
+    const userLayout = await getUserLayout(address)
+    layout = buildLayout(
+      userLayout,
+      gridColumns.value,
+      withAddWidgetPlaceholder
+    )
+
+    if (gridLog.enabled) {
+      gridLog('Initialize user layout', userLayout)
+    }
   }
+
+  gridLayout.value = layout
+}
+
+const saveGridLayout = async (layout?: GridWidget[]) => {
+  const { hasUnsavedGrid, connectedProfileAddress } = storeToRefs(useAppStore())
+
+  if (!layout || !connectedProfileAddress.value) {
+    return
+  }
+
+  const config = layoutToConfig(layout)
+
+  if (!isConfigValid(config)) {
+    console.warn('Invalid schema')
+    return
+  }
+
+  const response = await saveConfig(connectedProfileAddress.value, config)
+
+  if (!response) {
+    console.warn('Failed to save layout')
+    return
+  }
+
+  if (gridLog.enabled) {
+    gridLog('Layout saved', layout, response)
+  }
+
+  hasUnsavedGrid.value = false
 }
 
 export const useGrid = () => {
   return {
-    removeGridLayoutItem,
-    addGridLayoutItem,
     initializeGridLayout,
+    addGridLayoutItem,
+    removeGridLayoutItem,
+    saveGridLayout,
   }
 }

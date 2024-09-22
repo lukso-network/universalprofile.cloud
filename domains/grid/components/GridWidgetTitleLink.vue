@@ -11,7 +11,7 @@ defineProps<Props>()
 
 <template>
   <div
-    class="flex h-full items-center justify-center overflow-hidden rounded-[10px] p-4 text-neutral-100"
+    class="m-3 flex h-full items-center justify-center overflow-hidden rounded-12 p-4 text-neutral-100"
     :style="{ backgroundColor: bgColor, color: textColor }"
   >
     <a :href="src" target="_blank">

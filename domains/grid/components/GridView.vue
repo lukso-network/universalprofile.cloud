@@ -2,7 +2,7 @@
 import { useResizeObserver } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
-const ROW_HEIGHT_PX = 280
+const ROW_HEIGHT_PX = 280 // TODO we should calculate this based on grid column width
 
 const gridContainer = ref<HTMLElement | null>(null)
 
@@ -14,7 +14,7 @@ const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid, gridColumns } =
 const address = getCurrentProfileAddress()
 const connectedProfile = useProfile().connectedProfile()
 const { showModal } = useModal()
-const { initializeGridLayout } = useGrid()
+const { initializeGridLayout, saveGridLayout } = useGrid()
 
 const canEditGrid = computed(
   () =>
@@ -22,8 +22,13 @@ const canEditGrid = computed(
     connectedProfile.value?.address?.toLowerCase() === address.toLowerCase()
 )
 
+const layout = ref<GridWidget[]>([])
+
 const handleUpdateLayout = (newLayout: GridWidget[]) => {
-  console.log('Layout updated 🎉', newLayout)
+  if (gridLog.enabled) {
+    gridLog('Layout updated', newLayout)
+  }
+
   gridLayout.value = newLayout
 }
 
@@ -32,23 +37,16 @@ const handleSaveLayout = async () => {
     return
   }
 
+  // rebuild layout to ensure that all widgets are in the correct position
+  layout.value = buildLayout(
+    gridLayout.value,
+    gridColumns.value,
+    canEditGrid.value
+  )
+
+  await saveGridLayout(layout.value)
+
   isEditingGrid.value = false
-  hasUnsavedGrid.value = false
-  const lsp27Grid = layoutToConfig(gridLayout.value)
-
-  if (!isConfigValid(lsp27Grid)) {
-    console.warn('Invalid schema 😡')
-    return
-  }
-
-  const response = await upsertGridConfig(address, lsp27Grid)
-
-  if (!response) {
-    console.warn('Failed to save layout 😢')
-    return
-  }
-
-  console.log('Layout saved 🎉', response)
 }
 
 const handleResize = (width: number) => {
@@ -59,7 +57,11 @@ const handleResize = (width: number) => {
 
     if (prevCols !== newCols) {
       gridColumns.value = newCols
-      gridLayout.value = buildLayout(gridLayout.value, newCols)
+      gridLayout.value = buildLayout(
+        gridLayout.value,
+        newCols,
+        canEditGrid.value
+      )
     }
   }, DEBOUNCE_TIMEOUT)
 }
@@ -67,31 +69,32 @@ const handleResize = (width: number) => {
 const handleResetLayout = async () => {
   isEditingGrid.value = false
   hasUnsavedGrid.value = false
-  gridLayout.value = await getGridLayout(address, gridColumns.value)
+  const userLayout = await getUserLayout(address)
+  gridLayout.value = buildLayout(
+    userLayout,
+    gridColumns.value,
+    canEditGrid.value
+  )
 }
 
 const clearSelection = () => {
   window.getSelection()?.removeAllRanges()
 }
 
-const handleItemMove = (itemNumber: number) => {
-  console.log('Item move 🚚', itemNumber)
+const handleItemMove = (_itemNumber: number) => {
   clearSelection()
 }
 
-const handleItemMoved = (itemNumber: number) => {
-  console.log('Item moved 🚚', itemNumber)
+const handleItemMoved = (_itemNumber: number) => {
   clearSelection()
   hasUnsavedGrid.value = true
 }
 
-const handleItemResize = (itemNumber: number) => {
-  console.log('Item resize 📏', itemNumber)
+const handleItemResize = (_itemNumber: number) => {
   clearSelection()
 }
 
-const handleItemResized = (itemNumber: number) => {
-  console.log('Item resized 📏', itemNumber)
+const handleItemResized = (_itemNumber: number) => {
   clearSelection()
   hasUnsavedGrid.value = true
 }
@@ -108,8 +111,22 @@ const handleAddWidget = () => {
   })
 }
 
+// rebuild layout when user connects or disconnects
+watch(
+  () => isConnected.value,
+  () => {
+    layout.value = buildLayout(
+      gridLayout.value,
+      gridColumns.value,
+      canEditGrid.value
+    )
+  },
+  { immediate: true }
+)
+
 onMounted(async () => {
-  await initializeGridLayout(address)
+  await initializeGridLayout(address, canEditGrid.value)
+  layout.value = gridLayout.value
 })
 
 useResizeObserver(gridContainer, entries => {
@@ -122,7 +139,7 @@ useResizeObserver(gridContainer, entries => {
   <div class="w-full">
     <div class="mx-auto max-w-content" ref="gridContainer">
       <GridLayout
-        v-model:layout="gridLayout"
+        v-model:layout="layout"
         :col-num="gridColumns"
         :row-height="ROW_HEIGHT_PX"
         :is-draggable="isEditingGrid"
@@ -139,6 +156,9 @@ useResizeObserver(gridContainer, entries => {
           :w="item.w"
           :h="item.h"
           :i="item.i"
+          :is-draggable="item.isDraggable"
+          :is-resizable="item.isResizable"
+          :static="item.static"
           @move="handleItemMove"
           @moved="handleItemMoved"
           @resize="handleItemResize"
