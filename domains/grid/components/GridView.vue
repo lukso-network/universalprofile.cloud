@@ -41,7 +41,7 @@ const handleSaveLayout = async () => {
   layout.value = buildLayout(
     gridLayout.value,
     gridColumns.value,
-    isConnected.value
+    canEditGrid.value
   )
 
   await saveGridLayout(layout.value)
@@ -60,7 +60,7 @@ const handleResize = (width: number) => {
       gridLayout.value = buildLayout(
         gridLayout.value,
         newCols,
-        isConnected.value
+        canEditGrid.value
       )
     }
   }, DEBOUNCE_TIMEOUT)
@@ -73,7 +73,7 @@ const handleResetLayout = async () => {
   gridLayout.value = buildLayout(
     userLayout,
     gridColumns.value,
-    isConnected.value
+    canEditGrid.value
   )
 }
 
@@ -118,14 +118,14 @@ watch(
     layout.value = buildLayout(
       gridLayout.value,
       gridColumns.value,
-      isConnected.value
+      canEditGrid.value
     )
   },
   { immediate: true }
 )
 
 onMounted(async () => {
-  await initializeGridLayout(address)
+  await initializeGridLayout(address, canEditGrid.value)
   layout.value = gridLayout.value
 })
 

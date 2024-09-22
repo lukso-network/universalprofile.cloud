@@ -30,9 +30,11 @@ export const addGridLayoutItem = (newItem: GridWidgetWithoutCords) => {
   hasUnsavedGrid.value = true
 }
 
-const initializeGridLayout = async (address?: Address): Promise<void> => {
-  const { gridLayout, hasUnsavedGrid, gridColumns, isConnected } =
-    storeToRefs(useAppStore())
+const initializeGridLayout = async (
+  address?: Address,
+  withAddWidgetPlaceholder?: boolean
+): Promise<void> => {
+  const { gridLayout, hasUnsavedGrid, gridColumns } = storeToRefs(useAppStore())
   let layout: GridWidget[] = []
 
   if (!address) {
@@ -41,14 +43,22 @@ const initializeGridLayout = async (address?: Address): Promise<void> => {
   }
 
   if (hasUnsavedGrid.value) {
-    layout = buildLayout(gridLayout.value, gridColumns.value, isConnected.value)
+    layout = buildLayout(
+      gridLayout.value,
+      gridColumns.value,
+      withAddWidgetPlaceholder
+    )
 
     if (gridLog.enabled) {
       gridLog('Initialize saved layout', gridLayout.value)
     }
   } else {
     const userLayout = await getUserLayout(address)
-    layout = buildLayout(userLayout, gridColumns.value, isConnected.value)
+    layout = buildLayout(
+      userLayout,
+      gridColumns.value,
+      withAddWidgetPlaceholder
+    )
 
     if (gridLog.enabled) {
       gridLog('Initialize user layout', userLayout)
