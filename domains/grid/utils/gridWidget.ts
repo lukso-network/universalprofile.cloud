@@ -9,6 +9,10 @@ export function parseSupportedPlatformInput(
       return parseXWidgetInput(input)
     case GRID_WIDGET_SUPPORTED_PLATFORMS.YOUTUBE:
       return parseYoutubeWidgetInput(input)
+    case GRID_WIDGET_SUPPORTED_PLATFORMS.SPOTIFY:
+      return parseSpotifyWidgetInput(input)
+    case GRID_WIDGET_SUPPORTED_PLATFORMS.SOUNDCLOUD:
+      return parseSoundCloudWidgetInput(input)
     default:
       return
   }
@@ -67,6 +71,50 @@ function parseXWidgetInput(input: string): Partial<GridWidget> | undefined {
       type: GRID_WIDGET_TYPE.X_TIMELINE,
       properties: {
         src: `https://twitter.com/${xUrlMatch[1]}?ref_src=twsrc%5Etfw`,
+      },
+    }
+  }
+
+  return
+}
+
+function parseSpotifyWidgetInput(
+  input: string
+): Partial<GridWidget> | undefined {
+  const SPOTIFY_URL_REGEX =
+    /https?:\/\/(?:open\.)?spotify\.com\/(?:embed\/)?(track|playlist|artist)\/([^?]+)(?:\?utm_source=generator)?/
+  const SPOTIFY_IFRAME_ALLOW =
+    'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
+
+  const spotifyMatch = input.match(SPOTIFY_URL_REGEX)
+  if (spotifyMatch) {
+    return {
+      type: GRID_WIDGET_TYPE.IFRAME,
+      properties: {
+        src: `https://open.spotify.com/embed/${spotifyMatch[1]}/${spotifyMatch[2]}?utm_source=generator`,
+        allow: SPOTIFY_IFRAME_ALLOW,
+      },
+    }
+  }
+
+  return
+}
+
+function parseSoundCloudWidgetInput(
+  input: string
+): Partial<GridWidget> | undefined {
+  const SOUNDCLOUD_URL_REGEX =
+    /https?:\/\/w\.soundcloud\.com\/player\/\?url=https%3A\/\/api\.soundcloud\.com\/(tracks|playlists)\/(\d+)([^"]*)/
+  const SOUNDCLOUD_IFRAME_ALLOW =
+    'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
+
+  const soundCloudMatch = input.match(SOUNDCLOUD_URL_REGEX)
+  if (soundCloudMatch) {
+    return {
+      type: GRID_WIDGET_TYPE.IFRAME,
+      properties: {
+        src: `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/${soundCloudMatch[1]}/${soundCloudMatch[2]}${soundCloudMatch[3]}`,
+        allow: SOUNDCLOUD_IFRAME_ALLOW,
       },
     }
   }
