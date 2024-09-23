@@ -8,12 +8,16 @@ type Props = {
 const props = defineProps<Props>()
 const widgetComponent = shallowRef<Component | undefined>()
 const { isEditingGrid } = storeToRefs(useAppStore())
+const { canEditGrid } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 const dropdownId = `dropdown-${uuidv4()}`
 
 const canEditWidget = computed(
-  () => isEditingGrid.value && props.widget.type !== GRID_WIDGET_TYPE.ADD_WIDGET
+  () =>
+    canEditGrid.value &&
+    isEditingGrid.value &&
+    props.widget.type !== GRID_WIDGET_TYPE.ADD_WIDGET
 )
 
 // Dynamically import components based on widget type
@@ -55,7 +59,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="relative flex h-full flex-col rounded-12 border border-neutral-90 bg-neutral-100"
+    class="group relative flex h-full flex-col rounded-12 border border-neutral-90 bg-neutral-100"
   >
     <!-- Handle for moving widget -->
     <div
@@ -69,7 +73,7 @@ onMounted(() => {
       ></lukso-icon>
     </div>
 
-    <!-- Widget Options -->
+    <!-- Widget options -->
     <div
       v-if="canEditWidget"
       class="absolute right-0 top-0 z-20 cursor-pointer rounded-12 bg-neutral-100"
@@ -86,6 +90,14 @@ onMounted(() => {
         }}</lukso-dropdown-option>
       </lukso-dropdown>
     </div>
+
+    <!-- Widget move handles -->
+    <img
+      v-if="canEditWidget"
+      id="resize"
+      class="invisible absolute bottom-[3px] right-[3px] z-10 scale-x-[-1] cursor-pointer group-hover:visible"
+      src="/images/resize.svg"
+    />
 
     <!-- Loaded component based on widget type -->
     <component
