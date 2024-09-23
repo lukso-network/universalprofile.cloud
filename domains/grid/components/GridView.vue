@@ -12,15 +12,8 @@ let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid, gridColumns } =
   storeToRefs(useAppStore())
 const address = getCurrentProfileAddress()
-const connectedProfile = useProfile().connectedProfile()
 const { showModal } = useModal()
-const { initializeGridLayout, saveGridLayout } = useGrid()
-
-const canEditGrid = computed(
-  () =>
-    isConnected.value &&
-    connectedProfile.value?.address?.toLowerCase() === address.toLowerCase()
-)
+const { initializeGridLayout, saveGridLayout, canEditGrid } = useGrid()
 
 const layout = ref<GridWidget[]>([])
 
@@ -165,6 +158,14 @@ useResizeObserver(gridContainer, entries => {
           @resized="handleItemResized"
           drag-allow-from=".cursor-move"
           drag-ignore-from=".z-10"
+          :resize-option="{
+            edges: {
+              top: false,
+              left: false,
+              bottom: '#resize',
+              right: '#resize',
+            },
+          }"
         >
           <GridWidget :widget="item" />
         </GridItem>
@@ -223,3 +224,10 @@ useResizeObserver(gridContainer, entries => {
     />
   </div>
 </template>
+
+<style scoped>
+/* stylelint-disable-next-line selector-class-pattern */
+:deep(.vgl-item__resizer) {
+  display: none; /* hide library resizer handle to use custom one */
+}
+</style>
