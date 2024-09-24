@@ -9,6 +9,7 @@ export const breakpoints: Record<number, number> = {
 export enum GRID_WIDGET_SUPPORTED_PLATFORMS {
   YOUTUBE = 'YOUTUBE',
   X = 'X',
+  INSTAGRAM = 'INSTAGRAM',
   SPOTIFY = 'SPOTIFY',
   SOUNDCLOUD = 'SOUNDCLOUD',
 }
