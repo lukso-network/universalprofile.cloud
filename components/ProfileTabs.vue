@@ -21,7 +21,7 @@ const handleToggleGridEditMode = () => {
 
 <template>
   <div
-    class="mb-4 flex items-center justify-between border-b border-b-neutral-90 pb-4"
+    class="mb-4 flex min-h-6 items-center justify-between border-b border-b-neutral-90 pb-4"
   >
     <ul class="flex justify-center gap-6 sm:justify-start">
       <ProfileTabsItem
