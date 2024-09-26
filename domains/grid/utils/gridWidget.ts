@@ -7,6 +7,8 @@ export function parseSupportedPlatformInput(
   switch (platform) {
     case GRID_WIDGET_SUPPORTED_PLATFORMS.X:
       return parseXWidgetInput(input)
+    case GRID_WIDGET_SUPPORTED_PLATFORMS.INSTAGRAM:
+      return parseInstagramWidgetInput(input)
     case GRID_WIDGET_SUPPORTED_PLATFORMS.YOUTUBE:
       return parseYoutubeWidgetInput(input)
     case GRID_WIDGET_SUPPORTED_PLATFORMS.SPOTIFY:
@@ -115,6 +117,22 @@ function parseSoundCloudWidgetInput(
       properties: {
         src: `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/${soundCloudMatch[1]}/${soundCloudMatch[2]}${soundCloudMatch[3]}`,
         allow: SOUNDCLOUD_IFRAME_ALLOW,
+      },
+    }
+  }
+
+  return
+}
+
+function parseInstagramWidgetInput(input: string) {
+  // TODO: Add support for instagram timeline embeds when we have the widget type
+  const INSTAGRAM_PERMALINK_REGEX = /data-instgrm-permalink="([^"]+)"/
+  const instagramMatch = input.match(INSTAGRAM_PERMALINK_REGEX)
+  if (instagramMatch) {
+    return {
+      type: GRID_WIDGET_TYPE.INSTAGRAM_POST,
+      properties: {
+        src: instagramMatch[1],
       },
     }
   }
