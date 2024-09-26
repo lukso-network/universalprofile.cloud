@@ -6,10 +6,10 @@ const { closeModal } = useModal()
 const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
 
 const TEXTAREA_FOCUS_DELAY = 10 // small delay for focusing textarea after element render
-const iframeValue = ref<string>('')
-const iframeError = ref<string>('')
+const inputValue = ref<string>('')
+const inputError = ref<string>('')
 
-const canSubmit = computed(() => iframeValue.value && !iframeError.value)
+const canSubmit = computed(() => inputValue.value && !inputError.value)
 const isEdit = computed(() => !!widgetData.value)
 
 const handleSave = () => {
@@ -21,7 +21,7 @@ const handleSave = () => {
     const updatedWidget: GridWidget = {
       ...(widgetData.value as GridWidget),
       properties: {
-        src: iframeValue.value,
+        src: inputValue.value,
       },
     }
     updateGridLayoutItem(updatedWidget)
@@ -32,7 +32,7 @@ const handleSave = () => {
       h: 1,
       i: generateItemId(),
       properties: {
-        src: iframeValue.value,
+        src: inputValue.value,
       },
     }
 
@@ -50,7 +50,7 @@ const handleCancel = () => {
 const handleInput = async (customEvent: CustomEvent) => {
   const event = customEvent.detail.event
   const input = event.target as HTMLInputElement
-  iframeError.value = ''
+  inputError.value = ''
 
   // if no value is entered we just exit here
   if (!input.value) {
@@ -60,10 +60,10 @@ const handleInput = async (customEvent: CustomEvent) => {
   // validation
   try {
     new URL(input.value)
-    iframeValue.value = input.value
+    inputValue.value = input.value
   } catch (error) {
     console.warn(error)
-    iframeError.value = formatMessage('errors_invalid_url')
+    inputError.value = formatMessage('errors_invalid_url')
     return
   }
 }
@@ -77,7 +77,7 @@ onMounted(() => {
     textarea?.shadowRoot?.querySelector('textarea')?.focus()
   }, TEXTAREA_FOCUS_DELAY)
 
-  iframeValue.value = widgetData.value?.properties.src || ''
+  inputValue.value = widgetData.value?.properties.src || ''
 })
 </script>
 
@@ -103,8 +103,8 @@ onMounted(() => {
       is-full-width
       autofocus
       :placeholder="formatMessage('add_widget_iframe_input_placeholder')"
-      :value="iframeValue"
-      :error="iframeError"
+      :value="inputValue"
+      :error="inputError"
       @on-input="handleInput"
     ></lukso-textarea>
 
