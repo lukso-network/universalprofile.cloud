@@ -26,9 +26,8 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.TEXT]: 'Text',
   [GRID_WIDGET_TYPE.IMAGE]: 'Image',
   [GRID_WIDGET_TYPE.IFRAME]: 'Iframe',
-  [GRID_WIDGET_TYPE.X_POST]: 'XPost',
-  [GRID_WIDGET_TYPE.X_TIMELINE]: 'XTimeline',
-  [GRID_WIDGET_TYPE.INSTAGRAM_POST]: 'InstagramPost',
+  [GRID_WIDGET_TYPE.X]: 'X',
+  [GRID_WIDGET_TYPE.INSTAGRAM]: 'Instagram',
   [GRID_WIDGET_TYPE.ADD_WIDGET]: 'AddWidget',
 }
 
