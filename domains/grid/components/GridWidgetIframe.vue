@@ -1,6 +1,7 @@
 <script setup lang="ts">
 type Props = {
   src: string
+  allow: string
 }
 
 defineProps<Props>()
@@ -10,6 +11,7 @@ defineProps<Props>()
   <div class="h-full p-3">
     <iframe
       :src="src"
+      :allow="allow"
       class="size-full overflow-hidden rounded-12"
       frameborder="0"
     ></iframe>
