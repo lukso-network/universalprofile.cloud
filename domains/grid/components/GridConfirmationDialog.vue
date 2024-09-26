@@ -4,14 +4,15 @@ type Emits = {
   (event: 'save'): void
 }
 
+const emits = defineEmits<Emits>()
 const { hasUnsavedGrid } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
-const emits = defineEmits<Emits>()
+const { canEditGrid } = useGrid()
 </script>
 
 <template>
   <div
-    v-if="hasUnsavedGrid"
+    v-if="hasUnsavedGrid && canEditGrid"
     class="paragraph-inter-12-regular fixed bottom-5 left-[calc(50%-250px)] flex w-[500px] items-center justify-between gap-4 rounded-8 border-[3px] border-green-54 bg-neutral-100 p-4"
   >
     {{ formatMessage('grid_unsaved_changes_text') }}
