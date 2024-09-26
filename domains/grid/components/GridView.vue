@@ -37,6 +37,7 @@ const handleSaveLayout = async () => {
   )
 
   await saveGridLayout(layout.value)
+  isEditingGrid.value = false
 }
 
 const handleResize = (width: number) => {
@@ -57,7 +58,6 @@ const handleResize = (width: number) => {
 }
 
 const handleResetLayout = async () => {
-  isEditingGrid.value = false
   hasUnsavedGrid.value = false
   const userLayout = await getUserLayout(address)
   gridLayout.value = buildLayout(
