@@ -14,18 +14,23 @@ export enum GRID_WIDGET_SUPPORTED_PLATFORMS {
 }
 
 export enum GRID_WIDGET_TYPE {
+  // custom
   TITLE_LINK = 'TITLE_LINK',
   TEXT = 'TEXT',
+  IFRAME = 'IFRAME',
+  IMAGE = 'IMAGE',
+
+  // social media
   X_POST = 'X_POST',
   X_TIMELINE = 'X_TIMELINE',
   INSTAGRAM_POST = 'INSTAGRAM_POST',
-  IMAGE = 'IMAGE',
-  IFRAME = 'IFRAME',
+
+  // music
+
+  // static widgets for visual purposes
   ADD_WIDGET = 'ADD_WIDGET',
 }
 
-// To programmatically generate the form based on the widget type
-// TODO: Once we have the tools to parse widget properties from embed code some of this might change
 export const WIDGET_TYPE_PROPERTIES: Record<
   GridWidgetType,
   GridWidgetProperty[]
@@ -44,11 +49,7 @@ export const WIDGET_TYPE_PROPERTIES: Record<
   [GRID_WIDGET_TYPE.X_POST]: [{ key: 'src', type: 'string' }],
   [GRID_WIDGET_TYPE.X_TIMELINE]: [{ key: 'src', type: 'url' }],
   [GRID_WIDGET_TYPE.INSTAGRAM_POST]: [],
-  [GRID_WIDGET_TYPE.IFRAME]: [
-    { key: 'src', type: 'url' },
-    { key: 'title', type: 'string' },
-    { key: 'allow', type: 'string' },
-  ],
+  [GRID_WIDGET_TYPE.IFRAME]: [{ key: 'src', type: 'url' }],
   [GRID_WIDGET_TYPE.IMAGE]: [{ key: 'src', type: 'url' }],
   [GRID_WIDGET_TYPE.ADD_WIDGET]: [],
 }

@@ -8,6 +8,7 @@ export enum STORAGE_KEY {
   CONNECTION_EXPIRY = 'connectionExpiry',
   CURRENCY_STORE = 'currency',
   APP_STORE = 'app',
+  WIDGET_STORE = 'widget',
 }
 
 export enum CACHE_KEY {

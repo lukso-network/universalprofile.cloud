@@ -24,7 +24,7 @@ const handleDelete = async () => {
         {{ formatMessage('modal_delete_widget_cancel') }}
       </lukso-button>
       <lukso-button
-        variant="landing"
+        variant="danger"
         is-full-width
         @click="handleDelete"
         class="mt-6"

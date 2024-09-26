@@ -11,6 +11,7 @@ const { isEditingGrid } = storeToRefs(useAppStore())
 const { canEditGrid } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
+const { selectWidget, setWidgetData } = useWidgetStore()
 const dropdownId = `dropdown-${uuidv4()}`
 
 const canEditWidget = computed(
@@ -20,7 +21,6 @@ const canEditWidget = computed(
     props.widget.type !== GRID_WIDGET_TYPE.ADD_WIDGET
 )
 
-// Dynamically import components based on widget type
 const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.TITLE_LINK]: 'TitleLink',
   [GRID_WIDGET_TYPE.TEXT]: 'Text',
@@ -33,8 +33,8 @@ const WIDGET_COMPONENTS: Record<string, string> = {
 }
 
 const loadWidgetComponent = (type: string): Component | undefined => {
-  if (WIDGET_COMPONENTS[type] === undefined) {
-    console.error(`Widget type ${type} is not supported`)
+  if (!WIDGET_COMPONENTS[type]) {
+    console.warn(`Widget type ${type} is not supported`)
     return undefined
   }
 
@@ -49,6 +49,14 @@ const handleDelete = () => {
     data: {
       id: props.widget.i,
     },
+  })
+}
+
+const handleEdit = () => {
+  selectWidget(props.widget.type)
+  setWidgetData(props.widget)
+  showModal({
+    template: 'AddGridWidget',
   })
 }
 
@@ -76,18 +84,29 @@ onMounted(() => {
     <!-- Widget options -->
     <div
       v-if="canEditWidget"
-      class="absolute right-0 top-0 z-20 cursor-pointer rounded-12 bg-neutral-100"
+      class="absolute right-2 top-2 z-20 mb-2 cursor-pointer"
     >
-      <lukso-icon
-        :id="dropdownId"
-        name="dots"
-        size="small"
-        class="p-2"
-      ></lukso-icon>
-      <lukso-dropdown :trigger-id="dropdownId" is-right size="small">
-        <lukso-dropdown-option size="small" @click="handleDelete">{{
-          formatMessage('grid_widget_menu_delete')
-        }}</lukso-dropdown-option>
+      <div
+        class="mb-1 flex size-[35px] items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 shadow-neutral-drop-shadow-1xl"
+      >
+        <lukso-icon
+          :id="dropdownId"
+          name="dots"
+          size="medium"
+          class="p-2"
+        ></lukso-icon>
+      </div>
+      <lukso-dropdown :trigger-id="dropdownId" is-right size="medium">
+        <lukso-dropdown-option size="medium" @click="handleEdit">
+          <lukso-icon name="edit" size="small"></lukso-icon>
+          {{ formatMessage('grid_widget_menu_edit') }}</lukso-dropdown-option
+        >
+        <lukso-dropdown-option size="medium" @click="handleDelete"
+          ><lukso-icon name="trash" size="small" color="red-65"></lukso-icon
+          ><span class="text-red-65">{{
+            formatMessage('grid_widget_menu_delete')
+          }}</span></lukso-dropdown-option
+        >
       </lukso-dropdown>
     </div>
 

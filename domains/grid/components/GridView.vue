@@ -12,7 +12,6 @@ let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid, gridColumns } =
   storeToRefs(useAppStore())
 const address = getCurrentProfileAddress()
-const { showModal } = useModal()
 const { initializeGridLayout, saveGridLayout, canEditGrid } = useGrid()
 
 const layout = ref<GridWidget[]>([])
@@ -34,12 +33,10 @@ const handleSaveLayout = async () => {
   layout.value = buildLayout(
     gridLayout.value,
     gridColumns.value,
-    canEditGrid.value
+    isEditingGrid.value
   )
 
   await saveGridLayout(layout.value)
-
-  isEditingGrid.value = false
 }
 
 const handleResize = (width: number) => {
@@ -53,7 +50,7 @@ const handleResize = (width: number) => {
       gridLayout.value = buildLayout(
         gridLayout.value,
         newCols,
-        canEditGrid.value
+        isEditingGrid.value
       )
     }
   }, DEBOUNCE_TIMEOUT)
@@ -66,7 +63,7 @@ const handleResetLayout = async () => {
   gridLayout.value = buildLayout(
     userLayout,
     gridColumns.value,
-    canEditGrid.value
+    isEditingGrid.value
   )
 }
 
@@ -92,18 +89,6 @@ const handleItemResized = (_itemNumber: number) => {
   hasUnsavedGrid.value = true
 }
 
-const handleToggleEditMode = () => {
-  if (canEditGrid.value) {
-    isEditingGrid.value = !isEditingGrid.value
-  }
-}
-
-const handleAddWidget = () => {
-  showModal({
-    template: 'AddGridWidget',
-  })
-}
-
 // rebuild layout when user connects or disconnects
 watch(
   () => isConnected.value,
@@ -111,14 +96,36 @@ watch(
     layout.value = buildLayout(
       gridLayout.value,
       gridColumns.value,
-      canEditGrid.value
+      isEditingGrid.value
     )
   },
   { immediate: true }
 )
 
+watch(
+  () => gridLayout.value.length,
+  () => {
+    layout.value = buildLayout(
+      gridLayout.value,
+      gridColumns.value,
+      isEditingGrid.value
+    )
+  }
+)
+
+watch(
+  () => isEditingGrid.value,
+  () => {
+    layout.value = buildLayout(
+      gridLayout.value,
+      gridColumns.value,
+      isEditingGrid.value
+    )
+  }
+)
+
 onMounted(async () => {
-  await initializeGridLayout(address, canEditGrid.value)
+  await initializeGridLayout(address, isEditingGrid.value)
   layout.value = gridLayout.value
 })
 
@@ -170,50 +177,6 @@ useResizeObserver(gridContainer, entries => {
           <GridWidget :widget="item" />
         </GridItem>
       </GridLayout>
-    </div>
-
-    <!-- This configuration tools are just temporal until we have the proper ones -->
-    <div v-if="canEditGrid" class="fixed bottom-0 right-0 m-2 flex flex-col">
-      <lukso-button
-        v-if="isEditingGrid"
-        size="small"
-        type="button"
-        variant="secondary"
-        is-icon
-        @click="handleAddWidget"
-      >
-        <lukso-icon name="plus" size="medium" class="mx-1"></lukso-icon>
-      </lukso-button>
-      <lukso-button
-        v-if="!isEditingGrid"
-        size="small"
-        type="button"
-        variant="secondary"
-        is-icon
-        @click="handleToggleEditMode"
-      >
-        <lukso-icon name="edit" size="medium" class="mx-1"></lukso-icon>
-      </lukso-button>
-      <template v-else>
-        <lukso-button
-          size="small"
-          type="button"
-          variant="secondary"
-          is-icon
-          @click="handleSaveLayout"
-        >
-          <lukso-icon name="tick" size="medium" class="mx-1"></lukso-icon>
-        </lukso-button>
-        <lukso-button
-          size="small"
-          type="button"
-          variant="secondary"
-          is-icon
-          @click="handleResetLayout"
-        >
-          <lukso-icon name="close-lg" size="medium" class="mx-1"></lukso-icon>
-        </lukso-button>
-      </template>
     </div>
 
     <!-- Confirmation dialog for unsaved changes -->
