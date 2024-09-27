@@ -25,7 +25,7 @@ export enum GRID_WIDGET_TYPE {
   YOUTUBE = 'YOUTUBE',
 
   // static widgets for visual purposes
-  ADD_WIDGET = 'ADD_WIDGET',
+  ADD_CONTENT = 'ADD_CONTENT',
 }
 
 export const WIDGET_TYPE_PROPERTIES: Record<
@@ -53,7 +53,7 @@ export const WIDGET_TYPE_PROPERTIES: Record<
     { key: 'allow', type: 'string' },
   ],
   [GRID_WIDGET_TYPE.IMAGE]: [{ key: 'src', type: 'url' }],
-  [GRID_WIDGET_TYPE.ADD_WIDGET]: [],
+  [GRID_WIDGET_TYPE.ADD_CONTENT]: [],
   [GRID_WIDGET_TYPE.YOUTUBE]: [
     { key: 'src', type: 'url' },
     { key: 'allow', type: 'string' },

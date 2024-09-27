@@ -13,8 +13,12 @@ const { showModal } = useModal()
 const { selectWidget, setWidgetData } = useWidgetStore()
 const dropdownId = `dropdown-${uuidv4()}`
 
-const canEditWidget = computed(
-  () => canEditGrid.value && props.widget.type !== GRID_WIDGET_TYPE.ADD_WIDGET
+const isAllowToEdit = computed(
+  () => canEditGrid.value && props.widget.type !== GRID_WIDGET_TYPE.ADD_CONTENT
+)
+
+const isAddContentWidget = computed(
+  () => props.widget.type === GRID_WIDGET_TYPE.ADD_CONTENT
 )
 
 const WIDGET_COMPONENTS: Record<string, string> = {
@@ -24,7 +28,7 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.IFRAME]: 'Iframe',
   [GRID_WIDGET_TYPE.X]: 'X',
   [GRID_WIDGET_TYPE.INSTAGRAM]: 'Instagram',
-  [GRID_WIDGET_TYPE.ADD_WIDGET]: 'AddWidget',
+  [GRID_WIDGET_TYPE.ADD_CONTENT]: 'AddContent',
   [GRID_WIDGET_TYPE.SPOTIFY]: 'Spotify',
   [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'Iframe',
 }
@@ -64,24 +68,19 @@ onMounted(() => {
 
 <template>
   <div
-    class="group relative flex h-full flex-col rounded-12 border border-neutral-90 bg-neutral-100"
+    class="group relative flex h-full select-none flex-col rounded-12 border border-neutral-90 bg-neutral-100"
+    :class="{ 'shadow-neutral-drop-shadow-1xl': !isAddContentWidget }"
   >
-    <!-- Handle for moving widget -->
+    <!-- Overlay for moving widget -->
     <div
-      v-if="canEditWidget"
-      class="absolute left-0 top-0 z-20 cursor-move rounded-12 bg-neutral-100"
-    >
-      <lukso-icon
-        name="hand-right-outline"
-        size="small"
-        class="p-2"
-      ></lukso-icon>
-    </div>
+      v-if="isAllowToEdit"
+      class="grid-move-overlay absolute inset-0 cursor-move rounded-[inherit] bg-neutral-100 opacity-0 transition-opacity group-hover:opacity-60"
+    ></div>
 
     <!-- Widget options -->
     <div
-      v-if="canEditWidget"
-      class="absolute right-2 top-2 z-20 mb-2 cursor-pointer"
+      v-if="isAllowToEdit"
+      class="grid-widget-options absolute right-2 top-2 z-20 mb-2 cursor-pointer"
     >
       <div
         class="mb-1 flex size-[35px] items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 shadow-neutral-drop-shadow-1xl"
@@ -109,9 +108,8 @@ onMounted(() => {
 
     <!-- Widget move handles -->
     <img
-      v-if="canEditWidget"
-      id="resize"
-      class="invisible absolute bottom-[3px] right-[3px] z-10 scale-x-[-1] cursor-pointer group-hover:visible"
+      v-if="isAllowToEdit"
+      class="grid-widget-resize invisible absolute bottom-[3px] right-[3px] z-10 scale-x-[-1] cursor-pointer group-hover:visible"
       src="/images/resize.svg"
     />
 

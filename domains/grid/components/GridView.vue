@@ -134,6 +134,8 @@ useResizeObserver(gridContainer, entries => {
         :is-resizable="canEditGrid"
         :responsive="false"
         :is-bounded="true"
+        :margin="[16, 16]"
+        class="-m-4"
         @layout-updated="handleUpdateLayout"
       >
         <GridItem
@@ -151,14 +153,13 @@ useResizeObserver(gridContainer, entries => {
           @moved="handleItemMoved"
           @resize="handleItemResize"
           @resized="handleItemResized"
-          drag-allow-from=".cursor-move"
-          drag-ignore-from=".z-10"
+          drag-allow-from=".grid-move-overlay"
           :resize-option="{
             edges: {
               top: false,
               left: false,
-              bottom: '#resize',
-              right: '#resize',
+              bottom: '.grid-widget-resize',
+              right: '.grid-widget-resize',
             },
           }"
         >
@@ -177,8 +178,51 @@ useResizeObserver(gridContainer, entries => {
 </template>
 
 <style scoped>
-/* stylelint-disable-next-line selector-class-pattern */
+/* stylelint-disable selector-class-pattern */
+
 :deep(.vgl-item__resizer) {
   display: none; /* hide library resizer handle to use custom one */
+}
+
+:deep(.vgl-item--dragging) {
+  & > div {
+    transform: rotate(-4deg);
+    transition: transform 0.2s;
+    border-radius: 12px;
+    border: 1px solid var(--neutrals-neutral-90, #dee7ed);
+    background: rgb(255 255 255 / 15%);
+    box-shadow:
+      0 185px 52px 0 rgba(63 93 116 / 0%),
+      0 118px 47px 0 rgba(63 93 116 / 2%),
+      0 67px 40px 0 rgba(63 93 116 / 8%),
+      0 30px 30px 0 rgba(63 93 116 / 13%),
+      0 7px 16px 0 rgba(63 93 116 / 15%),
+      0 0 0 0 rgba(63 93 116 / 16%);
+    backdrop-filter: blur(2px);
+  }
+
+  .grid-widget-options,
+  .grid-widget-resize {
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+}
+
+:deep(.vgl-item--placeholder) {
+  border-radius: 12px;
+  border: 1px solid #dee7ed;
+  background: #f5f8fa;
+  box-shadow:
+    0 30px 8px 0 rgba(63 93 116 / 0%) inset,
+    0 19px 8px 0 rgba(63 93 116 / 2%) inset,
+    0 11px 6px 0 rgba(63 93 116 / 8%) inset,
+    0 5px 5px 0 rgba(63 93 116 / 13%) inset,
+    0 1px 3px 0 rgba(63 93 116 / 15%) inset,
+    0 0 0 0 rgba(63 93 116 / 16%) inset;
+}
+
+.vgl-layout {
+  --vgl-placeholder-bg: transparent;
+  --vgl-placeholder-opacity: 100%;
 }
 </style>

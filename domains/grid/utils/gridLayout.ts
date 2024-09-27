@@ -95,21 +95,21 @@ export const configToLayout = (
 export const buildLayout = (
   layout: GridWidgetWithoutCords[],
   gridColumns: number,
-  withAddWidgetPlaceholder?: boolean
+  withAddContentPlaceholder?: boolean
 ): GridWidget[] => {
   const columnHeights = Array(gridColumns).fill(0)
   const updatedLayout: GridWidget[] = []
 
   // remove "add widget" placeholder from layout
   const _layout = layout.filter(
-    item => item.type !== GRID_WIDGET_TYPE.ADD_WIDGET
+    item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
   )
 
   // re-add placeholder
-  if (withAddWidgetPlaceholder) {
+  if (withAddContentPlaceholder) {
     _layout.push({
       i: 'placeholder',
-      type: GRID_WIDGET_TYPE.ADD_WIDGET,
+      type: GRID_WIDGET_TYPE.ADD_CONTENT,
       w: 1,
       h: 1,
       properties: {},
@@ -213,13 +213,13 @@ export const getColumnHeightsFromLayout = (
  * @returns
  */
 export const layoutToConfig = (layout: GridWidget[]): GridConfigItem[] => {
-  // remove "add widget" item from layout before saving
-  const layoutWithoutAddWidget = layout.filter(
-    item => item.type !== GRID_WIDGET_TYPE.ADD_WIDGET
+  // remove "add content" widget from layout before saving
+  const layoutWithoutAddContentWidget = layout.filter(
+    item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
   )
 
   // sort by y and then x to get the correct order
-  const orderedLayout = layoutWithoutAddWidget.sort((a, b) => {
+  const orderedLayout = layoutWithoutAddContentWidget.sort((a, b) => {
     if (a.y === b.y) {
       return a.x - b.x
     }

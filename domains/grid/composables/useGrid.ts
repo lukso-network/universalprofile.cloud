@@ -12,7 +12,7 @@ export const useGrid = () => {
   return {
     initializeGridLayout: async (
       address?: Address,
-      withAddWidgetPlaceholder?: boolean
+      withAddContentPlaceholder?: boolean
     ): Promise<void> => {
       let layout: GridWidget[] = []
 
@@ -25,7 +25,7 @@ export const useGrid = () => {
         layout = buildLayout(
           gridLayout.value,
           gridColumns.value,
-          withAddWidgetPlaceholder
+          withAddContentPlaceholder
         )
 
         if (gridLog.enabled) {
@@ -36,7 +36,7 @@ export const useGrid = () => {
         layout = buildLayout(
           userLayout,
           gridColumns.value,
-          withAddWidgetPlaceholder
+          withAddContentPlaceholder
         )
 
         if (gridLog.enabled) {
