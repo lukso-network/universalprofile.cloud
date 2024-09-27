@@ -1,4 +1,9 @@
 <script setup lang="ts">
+type Props = {
+  platform: GridWidgetType
+}
+
+const props = defineProps<Props>()
 const { formatMessage } = useIntl()
 const { selectWidget, clearWidgetData } = useWidgetStore()
 const { widgetData } = storeToRefs(useWidgetStore())
@@ -18,10 +23,7 @@ const handleSave = () => {
   }
 
   try {
-    const { properties } = parsePlatformInput(
-      GRID_WIDGET_TYPE.X,
-      inputValue.value
-    )
+    const { properties } = parsePlatformInput(props.platform, inputValue.value)
 
     if (isEdit.value) {
       const updatedWidget: GridWidget = {
@@ -31,7 +33,7 @@ const handleSave = () => {
       updateGridLayoutItem(updatedWidget)
     } else {
       const newWidget: GridWidgetWithoutCords = {
-        type: GRID_WIDGET_TYPE.X,
+        type: props.platform,
         w: 1,
         h: 1,
         i: generateItemId(),
@@ -42,7 +44,9 @@ const handleSave = () => {
 
     handleCancel()
   } catch {
-    inputError.value = formatMessage('errors_invalid_input', { name: 'X' })
+    inputError.value = formatMessage('errors_invalid_input', {
+      name: capitalize(props.platform),
+    })
   }
 }
 
@@ -63,11 +67,13 @@ const handleInput = (customEvent: CustomEvent) => {
 
   // validation
   try {
-    const { properties } = parsePlatformInput(GRID_WIDGET_TYPE.X, input.value)
+    const { properties } = parsePlatformInput(props.platform, input.value)
     inputValue.value = properties.src
   } catch (error) {
     console.warn(error)
-    inputError.value = formatMessage('errors_invalid_input', { name: 'X' })
+    inputError.value = formatMessage('errors_invalid_input', {
+      name: capitalize(props.platform),
+    })
     return
   }
 }
@@ -95,18 +101,24 @@ onMounted(() => {
         @click="selectWidget()"
       ></lukso-icon>
       <div class="heading-inter-21-semi-bold">
-        {{ formatMessage('add_widget_x_title') }}
+        {{ formatMessage(`add_widget_${props.platform.toLowerCase()}_title`) }}
       </div>
     </div>
     <div class="paragraph-inter-14-regular pb-6">
-      {{ formatMessage('add_widget_x_description') }}
+      {{
+        formatMessage(`add_widget_${props.platform.toLowerCase()}_description`)
+      }}
     </div>
 
-    <!-- Iframe content -->
+    <!-- Content -->
     <lukso-textarea
       is-full-width
       autofocus
-      :placeholder="formatMessage('add_widget_x_input_placeholder')"
+      :placeholder="
+        formatMessage(
+          `add_widget_${props.platform.toLowerCase()}_input_placeholder`
+        )
+      "
       :value="inputValue"
       :error="inputError"
       @on-input="handleInput"

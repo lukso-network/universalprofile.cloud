@@ -8,10 +8,10 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.TEXT]: 'Text',
   [GRID_WIDGET_TYPE.IMAGE]: 'Image',
   [GRID_WIDGET_TYPE.IFRAME]: 'Iframe',
-  [GRID_WIDGET_TYPE.X]: 'X',
-  [GRID_WIDGET_TYPE.INSTAGRAM]: 'Instagram',
-  [GRID_WIDGET_TYPE.SPOTIFY]: 'Spotify',
-  [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'Soundcloud',
+  [GRID_WIDGET_TYPE.X]: 'GenericPlatform',
+  [GRID_WIDGET_TYPE.INSTAGRAM]: 'GenericPlatform',
+  [GRID_WIDGET_TYPE.SPOTIFY]: 'GenericPlatform',
+  [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'GenericPlatform',
 }
 
 const loadComponent = (type?: string): Component | undefined => {
@@ -34,5 +34,9 @@ watch(
 </script>
 
 <template>
-  <component v-if="component" :is="component"></component>
+  <component
+    v-if="component"
+    :is="component"
+    :platform="selectedWidget"
+  ></component>
 </template>
