@@ -2,10 +2,8 @@
 import { useResizeObserver } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
-const gridContainer = ref<HTMLElement | null>(null)
-
-const DEBOUNCE_TIMEOUT = 250
-let resizeTimeout: ReturnType<typeof setTimeout> | null = null
+const GRID_ROW_HEIGHT_PX = 280 // TODO we should calculate this based on grid column width
+const GRID_RESIZE_DEBOUNCE_TIMEOUT_MS = 250
 
 const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid, gridColumns } =
   storeToRefs(useAppStore())
@@ -13,6 +11,8 @@ const address = getCurrentProfileAddress()
 const { initializeGridLayout, saveGridLayout, canEditGrid } = useGrid()
 
 const layout = ref<GridWidget[]>([])
+const gridContainer = ref<HTMLElement | null>(null)
+let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 
 const handleUpdateLayout = (newLayout: GridWidget[]) => {
   if (gridLog.enabled) {
@@ -52,7 +52,7 @@ const handleResize = (width: number) => {
         canEditGrid.value
       )
     }
-  }, DEBOUNCE_TIMEOUT)
+  }, GRID_RESIZE_DEBOUNCE_TIMEOUT_MS)
 }
 
 const handleResetLayout = async () => {
