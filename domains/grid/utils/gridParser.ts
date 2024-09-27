@@ -116,14 +116,15 @@ const parseSoundCloudWidgetInput = (
   const SOUNDCLOUD_IFRAME_ALLOW =
     'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
 
-  const soundCloudMatch = input.match(SOUNDCLOUD_URL_REGEX)
+  const [, embedType, id, params] = input.match(SOUNDCLOUD_URL_REGEX) || []
 
-  if (soundCloudMatch) {
+  if (id) {
     return {
       type: GRID_WIDGET_TYPE.IFRAME,
       properties: {
-        src: `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/${soundCloudMatch[1]}/${soundCloudMatch[2]}${soundCloudMatch[3]}`,
+        src: `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/${embedType}/${id}${params}`,
         allow: SOUNDCLOUD_IFRAME_ALLOW,
+        embedType,
       },
     }
   }

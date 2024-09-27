@@ -74,7 +74,7 @@ const { selectWidget } = useWidgetStore()
           src="/images/social-media-soundcloud.svg"
           alt="Sound Cloud"
           class="cursor-pointer transition hover:scale-[1.05]"
-          @click="selectWidget()"
+          @click="selectWidget('SOUNDCLOUD')"
         />
       </lukso-tooltip>
     </div>

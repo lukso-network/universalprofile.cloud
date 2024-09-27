@@ -26,6 +26,7 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.INSTAGRAM]: 'Instagram',
   [GRID_WIDGET_TYPE.ADD_WIDGET]: 'AddWidget',
   [GRID_WIDGET_TYPE.SPOTIFY]: 'Spotify',
+  [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'Iframe',
 }
 
 const loadWidgetComponent = (type: string): Component | undefined => {
