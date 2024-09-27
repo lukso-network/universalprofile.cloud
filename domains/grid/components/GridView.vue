@@ -2,8 +2,6 @@
 import { useResizeObserver } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
-const ROW_HEIGHT_PX = 280 // TODO we should calculate this based on grid column width
-
 const gridContainer = ref<HTMLElement | null>(null)
 
 const DEBOUNCE_TIMEOUT = 250
@@ -33,7 +31,7 @@ const handleSaveLayout = async () => {
   layout.value = buildLayout(
     gridLayout.value,
     gridColumns.value,
-    isEditingGrid.value
+    canEditGrid.value
   )
 
   await saveGridLayout(layout.value)
@@ -51,7 +49,7 @@ const handleResize = (width: number) => {
       gridLayout.value = buildLayout(
         gridLayout.value,
         newCols,
-        isEditingGrid.value
+        canEditGrid.value
       )
     }
   }, DEBOUNCE_TIMEOUT)
@@ -63,7 +61,7 @@ const handleResetLayout = async () => {
   gridLayout.value = buildLayout(
     userLayout,
     gridColumns.value,
-    isEditingGrid.value
+    canEditGrid.value
   )
 }
 
@@ -96,7 +94,7 @@ watch(
     layout.value = buildLayout(
       gridLayout.value,
       gridColumns.value,
-      isEditingGrid.value
+      canEditGrid.value
     )
   },
   { immediate: true }
@@ -108,7 +106,7 @@ watch(
     layout.value = buildLayout(
       gridLayout.value,
       gridColumns.value,
-      isEditingGrid.value
+      canEditGrid.value
     )
   }
 )
@@ -119,13 +117,13 @@ watch(
     layout.value = buildLayout(
       gridLayout.value,
       gridColumns.value,
-      isEditingGrid.value
+      canEditGrid.value
     )
   }
 )
 
 onMounted(async () => {
-  await initializeGridLayout(address, isEditingGrid.value)
+  await initializeGridLayout(address, canEditGrid.value)
   layout.value = gridLayout.value
 })
 
@@ -141,9 +139,9 @@ useResizeObserver(gridContainer, entries => {
       <GridLayout
         v-model:layout="layout"
         :col-num="gridColumns"
-        :row-height="ROW_HEIGHT_PX"
-        :is-draggable="isEditingGrid"
-        :is-resizable="isEditingGrid"
+        :row-height="GRID_ROW_HEIGHT_PX"
+        :is-draggable="canEditGrid"
+        :is-resizable="canEditGrid"
         :responsive="false"
         :is-bounded="true"
         @layout-updated="handleUpdateLayout"
@@ -181,7 +179,7 @@ useResizeObserver(gridContainer, entries => {
 
     <!-- Confirmation dialog for unsaved changes -->
     <GridConfirmationDialog
-      v-if="isEditingGrid"
+      v-if="canEditGrid"
       @save="handleSaveLayout"
       @cancel="handleResetLayout"
     />

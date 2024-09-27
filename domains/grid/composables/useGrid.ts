@@ -5,6 +5,7 @@ export const useGrid = () => {
     hasUnsavedGrid,
     gridLayout,
     gridColumns,
+    isEditingGrid,
   } = storeToRefs(useAppStore())
   const viewedProfileAddress = getCurrentProfileAddress()
 
@@ -122,6 +123,7 @@ export const useGrid = () => {
 
     canEditGrid: computed(
       () =>
+        isEditingGrid.value &&
         isConnected.value &&
         connectedProfileAddress.value?.toLowerCase() ===
           viewedProfileAddress.toLowerCase()

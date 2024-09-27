@@ -9,13 +9,10 @@ type Emits = (event: 'activate-tab', value: ProfileViewTab) => void
 defineProps<Props>()
 const emits = defineEmits<Emits>()
 const { formatMessage } = useIntl()
-const { canEditGrid } = useGrid()
 const { isEditingGrid, isConnected } = storeToRefs(useAppStore())
 
 const handleToggleGridEditMode = () => {
-  if (canEditGrid.value) {
-    isEditingGrid.value = !isEditingGrid.value
-  }
+  isEditingGrid.value = !isEditingGrid.value
 }
 </script>
 

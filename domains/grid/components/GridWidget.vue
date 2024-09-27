@@ -7,7 +7,6 @@ type Props = {
 
 const props = defineProps<Props>()
 const widgetComponent = shallowRef<Component | undefined>()
-const { isEditingGrid } = storeToRefs(useAppStore())
 const { canEditGrid } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
@@ -15,10 +14,7 @@ const { selectWidget, setWidgetData } = useWidgetStore()
 const dropdownId = `dropdown-${uuidv4()}`
 
 const canEditWidget = computed(
-  () =>
-    canEditGrid.value &&
-    isEditingGrid.value &&
-    props.widget.type !== GRID_WIDGET_TYPE.ADD_WIDGET
+  () => canEditGrid.value && props.widget.type !== GRID_WIDGET_TYPE.ADD_WIDGET
 )
 
 const WIDGET_COMPONENTS: Record<string, string> = {
@@ -29,6 +25,7 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.X]: 'X',
   [GRID_WIDGET_TYPE.INSTAGRAM]: 'Instagram',
   [GRID_WIDGET_TYPE.ADD_WIDGET]: 'AddWidget',
+  [GRID_WIDGET_TYPE.SPOTIFY]: 'Spotify',
 }
 
 const loadWidgetComponent = (type: string): Component | undefined => {
@@ -121,7 +118,8 @@ onMounted(() => {
     <component
       v-if="widgetComponent"
       :is="widgetComponent"
-      v-bind="props.widget.properties"
+      v-bind="widget.properties"
+      :widget="widget"
     ></component>
   </div>
 </template>
