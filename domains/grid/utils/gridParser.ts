@@ -59,25 +59,25 @@ const parseXWidgetInput = (input: string): LayoutItemExtended | never => {
   const X_TIMELINE_REGEX =
     /https?:\/\/(?:www\.)?(?:x\.com|twitter\.com)\/(\w+)(?:\?ref_src=twsrc%5Etfw)?/
 
-  const xPostMatch = input.match(X_POST_REGEX)
+  const [, postUser, postId] = input.match(X_POST_REGEX) || []
 
-  if (xPostMatch) {
+  if (postUser && postId) {
     return {
       type: GRID_WIDGET_TYPE.X,
       properties: {
-        src: `https://twitter.com/${xPostMatch[1]}/status/${xPostMatch[2]}?ref_src=twsrc%5Etfw`,
+        src: `https://twitter.com/${postUser}/status/${postId}?ref_src=twsrc%5Etfw`,
         embedType: 'post',
       },
     }
   }
 
-  const xTimelineMatch = input.match(X_TIMELINE_REGEX)
+  const [, timelineUser] = input.match(X_TIMELINE_REGEX) || []
 
-  if (xTimelineMatch) {
+  if (timelineUser) {
     return {
       type: GRID_WIDGET_TYPE.X,
       properties: {
-        src: `https://twitter.com/${xTimelineMatch[1]}?ref_src=twsrc%5Etfw`,
+        src: `https://twitter.com/${timelineUser}?ref_src=twsrc%5Etfw`,
         embedType: 'timeline',
       },
     }

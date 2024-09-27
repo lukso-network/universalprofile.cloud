@@ -18,7 +18,7 @@ const handleSave = () => {
   }
 
   try {
-    const parsedInput = parseXWidgetInput(inputValue.value)
+    const parsedInput = parsePlatformInput(GRID_WIDGET_TYPE.X, inputValue.value)
 
     if (isEdit.value) {
       const updatedWidget: GridWidget = {
@@ -60,7 +60,7 @@ const handleInput = (customEvent: CustomEvent) => {
 
   // validation
   try {
-    const parsedInput = parseXWidgetInput(input.value)
+    const parsedInput = parsePlatformInput(GRID_WIDGET_TYPE.X, input.value)
     inputValue.value = parsedInput?.properties.src
   } catch (error) {
     console.warn(error)

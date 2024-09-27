@@ -14,6 +14,7 @@ defineProps<Props>()
       :allow="allow"
       class="size-full overflow-hidden rounded-12"
       frameborder="0"
+      loading="lazy"
     ></iframe>
   </div>
 </template>
