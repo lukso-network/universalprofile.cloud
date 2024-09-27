@@ -17,12 +17,14 @@ const handleSave = () => {
     return
   }
 
+  const properties = {
+    src: inputValue.value,
+  }
+
   if (isEdit.value) {
     const updatedWidget: GridWidget = {
       ...(widgetData.value as GridWidget),
-      properties: {
-        src: inputValue.value,
-      },
+      properties,
     }
     updateGridLayoutItem(updatedWidget)
   } else {
@@ -31,9 +33,7 @@ const handleSave = () => {
       w: 1,
       h: 1,
       i: generateItemId(),
-      properties: {
-        src: inputValue.value,
-      },
+      properties,
     }
 
     addGridLayoutItem(newWidget)
