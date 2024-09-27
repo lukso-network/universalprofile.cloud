@@ -18,7 +18,7 @@ const handleSave = () => {
   }
 
   try {
-    const parsedInput = parsePlatformInput(
+    const { properties } = parsePlatformInput(
       GRID_WIDGET_TYPE.SPOTIFY,
       inputValue.value
     )
@@ -26,7 +26,7 @@ const handleSave = () => {
     if (isEdit.value) {
       const updatedWidget: GridWidget = {
         ...(widgetData.value as GridWidget),
-        properties: parsedInput.properties,
+        properties,
       }
       updateGridLayoutItem(updatedWidget)
     } else {
@@ -35,14 +35,16 @@ const handleSave = () => {
         w: 1,
         h: 1,
         i: generateItemId(),
-        properties: parsedInput.properties,
+        properties,
       }
       addGridLayoutItem(newWidget)
     }
 
     handleCancel()
   } catch {
-    inputError.value = formatMessage('errors_invalid_spotify')
+    inputError.value = formatMessage('errors_invalid_input', {
+      name: 'Spotify',
+    })
   }
 }
 
@@ -63,14 +65,16 @@ const handleInput = (customEvent: CustomEvent) => {
 
   // validation
   try {
-    const parsedInput = parsePlatformInput(
+    const { properties } = parsePlatformInput(
       GRID_WIDGET_TYPE.SPOTIFY,
       input.value
     )
-    inputValue.value = parsedInput?.properties.src
+    inputValue.value = properties.src
   } catch (error) {
     console.warn(error)
-    inputError.value = formatMessage('errors_invalid_spotify')
+    inputError.value = formatMessage('errors_invalid_input', {
+      name: 'Spotify',
+    })
     return
   }
 }

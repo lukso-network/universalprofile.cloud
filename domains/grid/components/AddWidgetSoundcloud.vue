@@ -18,7 +18,7 @@ const handleSave = () => {
   }
 
   try {
-    const parsedInput = parsePlatformInput(
+    const { properties } = parsePlatformInput(
       GRID_WIDGET_TYPE.SOUNDCLOUD,
       inputValue.value
     )
@@ -26,7 +26,7 @@ const handleSave = () => {
     if (isEdit.value) {
       const updatedWidget: GridWidget = {
         ...(widgetData.value as GridWidget),
-        properties: parsedInput.properties,
+        properties,
       }
       updateGridLayoutItem(updatedWidget)
     } else {
@@ -35,7 +35,7 @@ const handleSave = () => {
         w: 1,
         h: 1,
         i: generateItemId(),
-        properties: parsedInput.properties,
+        properties,
       }
       addGridLayoutItem(newWidget)
     }
@@ -65,11 +65,11 @@ const handleInput = (customEvent: CustomEvent) => {
 
   // validation
   try {
-    const parsedInput = parsePlatformInput(
+    const { properties } = parsePlatformInput(
       GRID_WIDGET_TYPE.SOUNDCLOUD,
       input.value
     )
-    inputValue.value = parsedInput?.properties.src
+    inputValue.value = properties.src
   } catch (error) {
     console.warn(error)
     inputError.value = formatMessage('errors_invalid_input', {

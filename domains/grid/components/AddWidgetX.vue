@@ -18,12 +18,15 @@ const handleSave = () => {
   }
 
   try {
-    const parsedInput = parsePlatformInput(GRID_WIDGET_TYPE.X, inputValue.value)
+    const { properties } = parsePlatformInput(
+      GRID_WIDGET_TYPE.X,
+      inputValue.value
+    )
 
     if (isEdit.value) {
       const updatedWidget: GridWidget = {
         ...(widgetData.value as GridWidget),
-        properties: parsedInput.properties,
+        properties,
       }
       updateGridLayoutItem(updatedWidget)
     } else {
@@ -32,14 +35,14 @@ const handleSave = () => {
         w: 1,
         h: 1,
         i: generateItemId(),
-        properties: parsedInput.properties,
+        properties,
       }
       addGridLayoutItem(newWidget)
     }
 
     handleCancel()
   } catch {
-    inputError.value = formatMessage('errors_invalid_x')
+    inputError.value = formatMessage('errors_invalid_input', { name: 'X' })
   }
 }
 
@@ -60,11 +63,11 @@ const handleInput = (customEvent: CustomEvent) => {
 
   // validation
   try {
-    const parsedInput = parsePlatformInput(GRID_WIDGET_TYPE.X, input.value)
-    inputValue.value = parsedInput?.properties.src
+    const { properties } = parsePlatformInput(GRID_WIDGET_TYPE.X, input.value)
+    inputValue.value = properties.src
   } catch (error) {
     console.warn(error)
-    inputError.value = formatMessage('errors_invalid_x')
+    inputError.value = formatMessage('errors_invalid_input', { name: 'X' })
     return
   }
 }
