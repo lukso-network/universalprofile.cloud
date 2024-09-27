@@ -3,7 +3,7 @@ import { GRID_WIDGET_TYPE } from '../shared/config'
 export const parseSupportedPlatformInput = (
   platform: GRID_WIDGET_TYPE,
   input: string
-): LayoutItemExtended | undefined => {
+): LayoutItemExtended | never => {
   switch (platform) {
     case GRID_WIDGET_TYPE.X:
       return parseXWidgetInput(input)
@@ -16,13 +16,11 @@ export const parseSupportedPlatformInput = (
     case GRID_WIDGET_TYPE.SOUNDCLOUD:
       return parseSoundCloudWidgetInput(input)
     default:
-      return
+      throw new Error('Invalid platform')
   }
 }
 
-const parseYoutubeWidgetInput = (
-  input: string
-): LayoutItemExtended | undefined => {
+const parseYoutubeWidgetInput = (input: string): LayoutItemExtended | never => {
   const YOUTUBE_URL_REGEX =
     /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/
   const YOUTUBE_EMBED_REGEX =
@@ -54,7 +52,7 @@ const parseYoutubeWidgetInput = (
     }
   }
 
-  return
+  throw new Error('Invalid YouTube input')
 }
 
 export const parseXWidgetInput = (
@@ -92,9 +90,7 @@ export const parseXWidgetInput = (
   throw new Error('Invalid X input')
 }
 
-const parseSpotifyWidgetInput = (
-  input: string
-): LayoutItemExtended | undefined => {
+const parseSpotifyWidgetInput = (input: string): LayoutItemExtended | never => {
   const SPOTIFY_URL_REGEX =
     /https?:\/\/(?:open\.)?spotify\.com\/(?:embed\/)?(track|playlist|artist)\/([^?]+)(?:\?utm_source=generator)?/
   const SPOTIFY_IFRAME_ALLOW =
@@ -112,12 +108,12 @@ const parseSpotifyWidgetInput = (
     }
   }
 
-  return
+  throw new Error('Invalid Spotify input')
 }
 
 const parseSoundCloudWidgetInput = (
   input: string
-): LayoutItemExtended | undefined => {
+): LayoutItemExtended | never => {
   const SOUNDCLOUD_URL_REGEX =
     /https?:\/\/w\.soundcloud\.com\/player\/\?url=https%3A\/\/api\.soundcloud\.com\/(tracks|playlists)\/(\d+)([^"]*)/
   const SOUNDCLOUD_IFRAME_ALLOW =
@@ -135,10 +131,12 @@ const parseSoundCloudWidgetInput = (
     }
   }
 
-  return
+  throw new Error('Invalid SoundCloud input')
 }
 
-const parseInstagramWidgetInput = (input: string) => {
+const parseInstagramWidgetInput = (
+  input: string
+): LayoutItemExtended | never => {
   // TODO: Add support for instagram timeline embeds when we have the widget type
   const INSTAGRAM_PERMALINK_REGEX = /data-instgrm-permalink="([^"]+)"/
   const instagramMatch = input.match(INSTAGRAM_PERMALINK_REGEX)
@@ -151,5 +149,5 @@ const parseInstagramWidgetInput = (input: string) => {
     }
   }
 
-  return
+  throw new Error('Invalid Instagram input')
 }
