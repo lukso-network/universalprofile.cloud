@@ -180,6 +180,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1856391039&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true',
           allow: SOUNDCLOUD_IFRAME_ALLOW,
+          embedType: 'tracks',
         },
       },
     ],
@@ -192,6 +193,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1850298147&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true',
           allow: SOUNDCLOUD_IFRAME_ALLOW,
+          embedType: 'playlists',
         },
       },
     ],
