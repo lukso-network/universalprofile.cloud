@@ -5,7 +5,7 @@ import { GridItem, GridLayout } from 'grid-layout-plus'
 const GRID_ROW_HEIGHT_PX = 280 // TODO we should calculate this based on grid column width
 const GRID_RESIZE_DEBOUNCE_TIMEOUT_MS = 250
 
-const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid, gridColumns } =
+const { isEditingGrid, gridLayout, hasUnsavedGrid, gridColumns } =
   storeToRefs(useAppStore())
 const address = getCurrentProfileAddress()
 const { initializeGridLayout, saveGridLayout, canEditGrid } = useGrid()
@@ -87,9 +87,10 @@ const handleItemResized = (_itemNumber: number) => {
   hasUnsavedGrid.value = true
 }
 
-// rebuild layout when user connects or disconnects
+// rebuild layout when user connects/disconnects,
+// or when user enters/exit edit mode
 watch(
-  () => isConnected.value,
+  () => canEditGrid.value,
   () => {
     layout.value = buildLayout(
       gridLayout.value,
@@ -102,17 +103,6 @@ watch(
 
 watch(
   () => gridLayout.value.length,
-  () => {
-    layout.value = buildLayout(
-      gridLayout.value,
-      gridColumns.value,
-      canEditGrid.value
-    )
-  }
-)
-
-watch(
-  () => isEditingGrid.value,
   () => {
     layout.value = buildLayout(
       gridLayout.value,
