@@ -1,7 +1,5 @@
-import { GRID_WIDGET_TYPE } from '../shared/config'
-
-export const parseSupportedPlatformInput = (
-  platform: GRID_WIDGET_TYPE,
+export const parsePlatformInput = (
+  platform: GridWidgetType,
   input: string
 ): LayoutItemExtended | never => {
   switch (platform) {
@@ -55,9 +53,7 @@ const parseYoutubeWidgetInput = (input: string): LayoutItemExtended | never => {
   throw new Error('Invalid YouTube input')
 }
 
-export const parseXWidgetInput = (
-  input: string
-): LayoutItemExtended | never => {
+const parseXWidgetInput = (input: string): LayoutItemExtended | never => {
   const X_POST_REGEX =
     /https?:\/\/(?:www\.)?(?:x\.com|twitter\.com)\/(\w+)\/status\/(\d+)(?:\?ref_src=twsrc%5Etfw)?/
   const X_TIMELINE_REGEX =
@@ -96,13 +92,14 @@ const parseSpotifyWidgetInput = (input: string): LayoutItemExtended | never => {
   const SPOTIFY_IFRAME_ALLOW =
     'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
 
-  const spotifyMatch = input.match(SPOTIFY_URL_REGEX)
+  const [, embedType, id] = input.match(SPOTIFY_URL_REGEX) || []
 
-  if (spotifyMatch) {
+  if (embedType && id) {
     return {
-      type: GRID_WIDGET_TYPE.IFRAME,
+      type: GRID_WIDGET_TYPE.SPOTIFY,
       properties: {
-        src: `https://open.spotify.com/embed/${spotifyMatch[1]}/${spotifyMatch[2]}?utm_source=generator`,
+        src: `https://open.spotify.com/embed/${embedType}/${id}?utm_source=generator`,
+        embedType,
         allow: SPOTIFY_IFRAME_ALLOW,
       },
     }

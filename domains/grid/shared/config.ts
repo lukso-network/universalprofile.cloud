@@ -61,6 +61,7 @@ export const WIDGET_TYPE_PROPERTIES: Record<
   [GRID_WIDGET_TYPE.SPOTIFY]: [
     { key: 'src', type: 'url' },
     { key: 'allow', type: 'string' },
+    { key: 'embedType', type: 'string' },
   ],
   [GRID_WIDGET_TYPE.SOUNDCLOUD]: [
     { key: 'src', type: 'url' },

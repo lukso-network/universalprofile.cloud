@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseSupportedPlatformInput } from '../gridParser'
+import { parsePlatformInput } from '../gridParser'
 
 const YOUTUBE_IFRAME_ALLOW =
   'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
@@ -98,10 +98,11 @@ describe('Widget Input Parsing', () => {
       GRID_WIDGET_TYPE.SPOTIFY,
       'https://open.spotify.com/track/7xGfFoTpQ2E7fRF5lN10tr',
       {
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.SPOTIFY,
         properties: {
           src: 'https://open.spotify.com/embed/track/7xGfFoTpQ2E7fRF5lN10tr?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
+          embedType: 'track',
         },
       },
     ],
@@ -110,10 +111,11 @@ describe('Widget Input Parsing', () => {
       GRID_WIDGET_TYPE.SPOTIFY,
       '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2BHj31ufdEqVK5CkYDp9mA?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
       {
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.SPOTIFY,
         properties: {
           src: 'https://open.spotify.com/embed/track/2BHj31ufdEqVK5CkYDp9mA?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
+          embedType: 'track',
         },
       },
     ],
@@ -122,10 +124,11 @@ describe('Widget Input Parsing', () => {
       GRID_WIDGET_TYPE.SPOTIFY,
       'https://open.spotify.com/playlist/7KFoK4LJ23EncELJwYmTDG',
       {
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.SPOTIFY,
         properties: {
           src: 'https://open.spotify.com/embed/playlist/7KFoK4LJ23EncELJwYmTDG?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
+          embedType: 'playlist',
         },
       },
     ],
@@ -134,10 +137,11 @@ describe('Widget Input Parsing', () => {
       GRID_WIDGET_TYPE.SPOTIFY,
       '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/7KFoK4LJ23EncELJwYmTDG?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
       {
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.SPOTIFY,
         properties: {
           src: 'https://open.spotify.com/embed/playlist/7KFoK4LJ23EncELJwYmTDG?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
+          embedType: 'playlist',
         },
       },
     ],
@@ -146,10 +150,11 @@ describe('Widget Input Parsing', () => {
       GRID_WIDGET_TYPE.SPOTIFY,
       'https://open.spotify.com/artist/4KY9rCrokaoFzvMfX98u1q',
       {
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.SPOTIFY,
         properties: {
           src: 'https://open.spotify.com/embed/artist/4KY9rCrokaoFzvMfX98u1q?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
+          embedType: 'artist',
         },
       },
     ],
@@ -158,10 +163,11 @@ describe('Widget Input Parsing', () => {
       GRID_WIDGET_TYPE.SPOTIFY,
       '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/artist/4KY9rCrokaoFzvMfX98u1q?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
       {
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.SPOTIFY,
         properties: {
           src: 'https://open.spotify.com/embed/artist/4KY9rCrokaoFzvMfX98u1q?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
+          embedType: 'artist',
         },
       },
     ],
@@ -190,7 +196,7 @@ describe('Widget Input Parsing', () => {
       },
     ],
   ])('correctly parses %s', (_description, platform, input, expected) => {
-    const result = parseSupportedPlatformInput(platform, input)
+    const result = parsePlatformInput(platform, input)
     expect(result).toEqual(expected)
   })
 })
