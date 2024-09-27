@@ -4,9 +4,9 @@ type Emits = {
   (event: 'save'): void
 }
 
+const emits = defineEmits<Emits>()
 const { hasUnsavedGrid } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
-const emits = defineEmits<Emits>()
 </script>
 
 <template>

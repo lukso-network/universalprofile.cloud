@@ -7,10 +7,12 @@ export type GridConfigItem = {
   properties: Record<string, any>
 }
 
-export type GridWidget = LayoutItem & {
+export type LayoutItemExtended = {
   type: GridWidgetType
   properties: Record<string, any>
 }
+
+export type GridWidget = LayoutItem & LayoutItemExtended
 
 export type GridWidgetWithoutCords = PartialBy<GridWidget, 'x' | 'y'>
 

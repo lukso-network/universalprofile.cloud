@@ -5,6 +5,7 @@ export const useGrid = () => {
     hasUnsavedGrid,
     gridLayout,
     gridColumns,
+    isEditingGrid,
   } = storeToRefs(useAppStore())
   const viewedProfileAddress = getCurrentProfileAddress()
 
@@ -70,6 +71,19 @@ export const useGrid = () => {
       hasUnsavedGrid.value = true
     },
 
+    updateGridLayoutItem: (item: GridWidget) => {
+      const { gridLayout, hasUnsavedGrid } = storeToRefs(useAppStore())
+
+      const index = gridLayout.value.findIndex(({ i }) => i === item.i)
+
+      if (index === -1) {
+        return
+      }
+
+      gridLayout.value[index] = item
+      hasUnsavedGrid.value = true
+    },
+
     removeGridLayoutItem: (id: string | number) => {
       const { gridLayout, hasUnsavedGrid } = storeToRefs(useAppStore())
 
@@ -109,6 +123,7 @@ export const useGrid = () => {
 
     canEditGrid: computed(
       () =>
+        isEditingGrid.value &&
         isConnected.value &&
         connectedProfileAddress.value?.toLowerCase() ===
           viewedProfileAddress.toLowerCase()

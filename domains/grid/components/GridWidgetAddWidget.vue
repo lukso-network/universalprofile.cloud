@@ -1,8 +1,10 @@
 <script setup lang="ts">
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
+const { clearWidgetData } = useWidgetStore()
 
 const handleAddWidget = () => {
+  clearWidgetData()
   showModal({
     template: 'AddGridWidget',
   })

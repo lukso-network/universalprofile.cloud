@@ -2,20 +2,17 @@
 import { useResizeObserver } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
-const ROW_HEIGHT_PX = 280 // TODO we should calculate this based on grid column width
+const GRID_ROW_HEIGHT_PX = 280 // TODO we should calculate this based on grid column width
+const GRID_RESIZE_DEBOUNCE_TIMEOUT_MS = 250
 
-const gridContainer = ref<HTMLElement | null>(null)
-
-const DEBOUNCE_TIMEOUT = 250
-let resizeTimeout: ReturnType<typeof setTimeout> | null = null
-
-const { isEditingGrid, isConnected, gridLayout, hasUnsavedGrid, gridColumns } =
+const { isEditingGrid, gridLayout, hasUnsavedGrid, gridColumns } =
   storeToRefs(useAppStore())
 const address = getCurrentProfileAddress()
-const { showModal } = useModal()
 const { initializeGridLayout, saveGridLayout, canEditGrid } = useGrid()
 
 const layout = ref<GridWidget[]>([])
+const gridContainer = ref<HTMLElement | null>(null)
+let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 
 const handleUpdateLayout = (newLayout: GridWidget[]) => {
   if (gridLog.enabled) {
@@ -38,7 +35,6 @@ const handleSaveLayout = async () => {
   )
 
   await saveGridLayout(layout.value)
-
   isEditingGrid.value = false
 }
 
@@ -56,11 +52,10 @@ const handleResize = (width: number) => {
         canEditGrid.value
       )
     }
-  }, DEBOUNCE_TIMEOUT)
+  }, GRID_RESIZE_DEBOUNCE_TIMEOUT_MS)
 }
 
 const handleResetLayout = async () => {
-  isEditingGrid.value = false
   hasUnsavedGrid.value = false
   const userLayout = await getUserLayout(address)
   gridLayout.value = buildLayout(
@@ -92,21 +87,10 @@ const handleItemResized = (_itemNumber: number) => {
   hasUnsavedGrid.value = true
 }
 
-const handleToggleEditMode = () => {
-  if (canEditGrid.value) {
-    isEditingGrid.value = !isEditingGrid.value
-  }
-}
-
-const handleAddWidget = () => {
-  showModal({
-    template: 'AddGridWidget',
-  })
-}
-
-// rebuild layout when user connects or disconnects
+// rebuild layout when user connects/disconnects,
+// or when user enters/exit edit mode
 watch(
-  () => isConnected.value,
+  () => canEditGrid.value,
   () => {
     layout.value = buildLayout(
       gridLayout.value,
@@ -115,6 +99,17 @@ watch(
     )
   },
   { immediate: true }
+)
+
+watch(
+  () => gridLayout.value.length,
+  () => {
+    layout.value = buildLayout(
+      gridLayout.value,
+      gridColumns.value,
+      canEditGrid.value
+    )
+  }
 )
 
 onMounted(async () => {
@@ -134,9 +129,9 @@ useResizeObserver(gridContainer, entries => {
       <GridLayout
         v-model:layout="layout"
         :col-num="gridColumns"
-        :row-height="ROW_HEIGHT_PX"
-        :is-draggable="isEditingGrid"
-        :is-resizable="isEditingGrid"
+        :row-height="GRID_ROW_HEIGHT_PX"
+        :is-draggable="canEditGrid"
+        :is-resizable="canEditGrid"
         :responsive="false"
         :is-bounded="true"
         @layout-updated="handleUpdateLayout"
@@ -172,53 +167,9 @@ useResizeObserver(gridContainer, entries => {
       </GridLayout>
     </div>
 
-    <!-- This configuration tools are just temporal until we have the proper ones -->
-    <div v-if="canEditGrid" class="fixed bottom-0 right-0 m-2 flex flex-col">
-      <lukso-button
-        v-if="isEditingGrid"
-        size="small"
-        type="button"
-        variant="secondary"
-        is-icon
-        @click="handleAddWidget"
-      >
-        <lukso-icon name="plus" size="medium" class="mx-1"></lukso-icon>
-      </lukso-button>
-      <lukso-button
-        v-if="!isEditingGrid"
-        size="small"
-        type="button"
-        variant="secondary"
-        is-icon
-        @click="handleToggleEditMode"
-      >
-        <lukso-icon name="edit" size="medium" class="mx-1"></lukso-icon>
-      </lukso-button>
-      <template v-else>
-        <lukso-button
-          size="small"
-          type="button"
-          variant="secondary"
-          is-icon
-          @click="handleSaveLayout"
-        >
-          <lukso-icon name="tick" size="medium" class="mx-1"></lukso-icon>
-        </lukso-button>
-        <lukso-button
-          size="small"
-          type="button"
-          variant="secondary"
-          is-icon
-          @click="handleResetLayout"
-        >
-          <lukso-icon name="close-lg" size="medium" class="mx-1"></lukso-icon>
-        </lukso-button>
-      </template>
-    </div>
-
     <!-- Confirmation dialog for unsaved changes -->
     <GridConfirmationDialog
-      v-if="isEditingGrid"
+      v-if="canEditGrid"
       @save="handleSaveLayout"
       @cancel="handleResetLayout"
     />
