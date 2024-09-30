@@ -32,16 +32,17 @@ const handleToggleGridEditMode = () => {
         @click="emits('activate-tab', tab)"
       />
     </ul>
-    <lukso-icon
-      v-if="
-        activeTab === 'grid' &&
-        isConnected &&
-        connectedProfileAddress?.toLowerCase() ===
-          viewedProfileAddress?.toLowerCase()
-      "
-      name="edit"
-      @click="handleToggleGridEditMode"
-      class="cursor-pointer transition hover:opacity-60"
-    ></lukso-icon>
+    <template v-if="activeTab === 'grid'">
+      <lukso-icon
+        v-if="
+          isConnected &&
+          connectedProfileAddress?.toLowerCase() ===
+            viewedProfileAddress?.toLowerCase()
+        "
+        :name="isEditingGrid ? 'close-lg' : 'edit'"
+        @click="handleToggleGridEditMode"
+        class="cursor-pointer transition hover:opacity-60"
+      ></lukso-icon>
+    </template>
   </div>
 </template>
