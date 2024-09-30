@@ -5,21 +5,37 @@ import { GridItem, GridLayout } from 'grid-layout-plus'
 const GRID_ROW_HEIGHT_PX = 280 // TODO we should calculate this based on grid column width
 const GRID_RESIZE_DEBOUNCE_TIMEOUT_MS = 250
 
-const { isEditingGrid, gridLayout, hasUnsavedGrid, gridColumns } =
-  storeToRefs(useAppStore())
-const address = getCurrentProfileAddress()
+const {
+  isEditingGrid,
+  connectedGridLayout,
+  viewedGridLayout,
+  connectedProfileAddress,
+  hasUnsavedGrid,
+  gridColumns,
+} = storeToRefs(useAppStore())
 const { initializeGridLayout, saveGridLayout, canEditGrid } = useGrid()
-
-const layout = ref<GridWidget[]>([])
 const gridContainer = ref<HTMLElement | null>(null)
+const viewedProfileAddress = getCurrentProfileAddress()
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
+
+const address = computed(() => getCurrentProfileAddress())
+const layout = ref<GridWidget[]>([])
+
+const currentLayout = computed(() => {
+  if (
+    connectedProfileAddress.value?.toLowerCase() ===
+    viewedProfileAddress.toLowerCase()
+  ) {
+    return connectedGridLayout.value
+  }
+
+  return viewedGridLayout.value
+})
 
 const handleUpdateLayout = (newLayout: GridWidget[]) => {
   if (gridLog.enabled) {
     gridLog('Layout updated', newLayout)
   }
-
-  gridLayout.value = newLayout
 }
 
 const handleSaveLayout = async () => {
@@ -29,7 +45,7 @@ const handleSaveLayout = async () => {
 
   // rebuild layout to ensure that all widgets are in the correct position
   layout.value = buildLayout(
-    gridLayout.value,
+    connectedGridLayout.value,
     gridColumns.value,
     canEditGrid.value
   )
@@ -46,8 +62,8 @@ const handleResize = (width: number) => {
 
     if (prevCols !== newCols) {
       gridColumns.value = newCols
-      gridLayout.value = buildLayout(
-        gridLayout.value,
+      layout.value = buildLayout(
+        currentLayout.value,
         newCols,
         canEditGrid.value
       )
@@ -57,12 +73,14 @@ const handleResize = (width: number) => {
 
 const handleResetLayout = async () => {
   hasUnsavedGrid.value = false
-  const userLayout = await getUserLayout(address)
-  gridLayout.value = buildLayout(
+  const userLayout = await getUserLayout(address.value)
+  connectedGridLayout.value = buildLayout(
     userLayout,
     gridColumns.value,
     canEditGrid.value
   )
+
+  layout.value = connectedGridLayout.value
 }
 
 const clearSelection = () => {
@@ -93,7 +111,7 @@ watch(
   () => canEditGrid.value,
   () => {
     layout.value = buildLayout(
-      gridLayout.value,
+      currentLayout.value,
       gridColumns.value,
       canEditGrid.value
     )
@@ -102,10 +120,10 @@ watch(
 )
 
 watch(
-  () => gridLayout.value.length,
+  () => connectedGridLayout.value.length,
   () => {
     layout.value = buildLayout(
-      gridLayout.value,
+      currentLayout.value,
       gridColumns.value,
       canEditGrid.value
     )
@@ -113,8 +131,8 @@ watch(
 )
 
 onMounted(async () => {
-  await initializeGridLayout(address, canEditGrid.value)
-  layout.value = gridLayout.value
+  await initializeGridLayout(address.value, canEditGrid.value)
+  layout.value = currentLayout.value
 })
 
 useResizeObserver(gridContainer, entries => {
@@ -134,10 +152,12 @@ useResizeObserver(gridContainer, entries => {
         :is-resizable="canEditGrid"
         :responsive="false"
         :is-bounded="true"
+        :margin="[16, 16]"
+        class="-m-4"
         @layout-updated="handleUpdateLayout"
       >
         <GridItem
-          v-for="item in gridLayout"
+          v-for="item in layout"
           :key="item.i"
           :x="item.x"
           :y="item.y"
@@ -151,14 +171,13 @@ useResizeObserver(gridContainer, entries => {
           @moved="handleItemMoved"
           @resize="handleItemResize"
           @resized="handleItemResized"
-          drag-allow-from=".cursor-move"
-          drag-ignore-from=".z-10"
+          drag-allow-from=".grid-move-overlay"
           :resize-option="{
             edges: {
               top: false,
               left: false,
-              bottom: '#resize',
-              right: '#resize',
+              bottom: '.grid-widget-resize',
+              right: '.grid-widget-resize',
             },
           }"
         >
@@ -177,8 +196,51 @@ useResizeObserver(gridContainer, entries => {
 </template>
 
 <style scoped>
-/* stylelint-disable-next-line selector-class-pattern */
+/* stylelint-disable selector-class-pattern */
+
 :deep(.vgl-item__resizer) {
   display: none; /* hide library resizer handle to use custom one */
+}
+
+:deep(.vgl-item--dragging) {
+  & > div {
+    transform: rotate(-4deg);
+    transition: transform 0.2s;
+    border-radius: 12px;
+    border: 1px solid var(--neutrals-neutral-90, #dee7ed);
+    background: rgb(255 255 255 / 15%);
+    box-shadow:
+      0 185px 52px 0 rgba(63 93 116 / 0%),
+      0 118px 47px 0 rgba(63 93 116 / 2%),
+      0 67px 40px 0 rgba(63 93 116 / 8%),
+      0 30px 30px 0 rgba(63 93 116 / 13%),
+      0 7px 16px 0 rgba(63 93 116 / 15%),
+      0 0 0 0 rgba(63 93 116 / 16%);
+    backdrop-filter: blur(2px);
+  }
+
+  .grid-widget-options,
+  .grid-widget-resize {
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+}
+
+:deep(.vgl-item--placeholder) {
+  border-radius: 12px;
+  border: 1px solid #dee7ed;
+  background: #f5f8fa;
+  box-shadow:
+    0 30px 8px 0 rgba(63 93 116 / 0%) inset,
+    0 19px 8px 0 rgba(63 93 116 / 2%) inset,
+    0 11px 6px 0 rgba(63 93 116 / 8%) inset,
+    0 5px 5px 0 rgba(63 93 116 / 13%) inset,
+    0 1px 3px 0 rgba(63 93 116 / 15%) inset,
+    0 0 0 0 rgba(63 93 116 / 16%) inset;
+}
+
+.vgl-layout {
+  --vgl-placeholder-bg: transparent;
+  --vgl-placeholder-opacity: 100%;
 }
 </style>

@@ -68,6 +68,7 @@ module.exports = {
           'shadow-.*',
           'instagram-.*',
           'twitter-.*',
+          'grid-.*',
         ],
       },
     ],
