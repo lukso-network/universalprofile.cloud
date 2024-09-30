@@ -9,7 +9,9 @@ type Emits = (event: 'activate-tab', value: ProfileViewTab) => void
 defineProps<Props>()
 const emits = defineEmits<Emits>()
 const { formatMessage } = useIntl()
-const { isEditingGrid, isConnected } = storeToRefs(useAppStore())
+const { isEditingGrid, isConnected, connectedProfileAddress } =
+  storeToRefs(useAppStore())
+const viewedProfileAddress = getCurrentProfileAddress()
 
 const handleToggleGridEditMode = () => {
   isEditingGrid.value = !isEditingGrid.value
@@ -18,7 +20,7 @@ const handleToggleGridEditMode = () => {
 
 <template>
   <div
-    class="mb-4 flex min-h-6 items-center justify-between border-b border-b-neutral-90 pb-4"
+    class="mb-4 flex min-h-11 items-center justify-between border-b border-b-neutral-90 pb-4"
   >
     <ul class="flex justify-center gap-6 sm:justify-start">
       <ProfileTabsItem
@@ -31,7 +33,12 @@ const handleToggleGridEditMode = () => {
       />
     </ul>
     <lukso-icon
-      v-if="activeTab === 'grid' && isConnected"
+      v-if="
+        activeTab === 'grid' &&
+        isConnected &&
+        connectedProfileAddress?.toLowerCase() ===
+          viewedProfileAddress?.toLowerCase()
+      "
       name="edit"
       @click="handleToggleGridEditMode"
       class="cursor-pointer transition hover:opacity-60"
