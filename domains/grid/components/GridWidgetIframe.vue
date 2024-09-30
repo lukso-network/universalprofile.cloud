@@ -1,7 +1,7 @@
 <script setup lang="ts">
 type Props = {
   src: string
-  allow: string
+  allow?: string
 }
 
 defineProps<Props>()
