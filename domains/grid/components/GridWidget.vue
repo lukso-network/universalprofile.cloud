@@ -9,9 +9,9 @@ const { canEditGrid, addGridLayoutItem } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 const { selectWidget, setWidgetData } = useWidgetStore()
-const { connectedProfileAddress, isConnected, isEditingGrid } =
-  storeToRefs(useAppStore())
-const viewedProfileAddress = getCurrentProfileAddress()
+const { isEditingGrid, isConnected, isMobile } = storeToRefs(useAppStore())
+const { connect } = useBaseProvider()
+const { browserSupportExtension } = useBrowser()
 const dropdownId = `dropdown-${generateItemId()}`
 
 const isAllowToEdit = computed(
@@ -20,13 +20,6 @@ const isAllowToEdit = computed(
 
 const isAddContentWidget = computed(
   () => props.widget.type === GRID_WIDGET_TYPE.ADD_CONTENT
-)
-
-const isAllowToClone = computed(
-  () =>
-    isConnected.value &&
-    connectedProfileAddress.value?.toLowerCase() !==
-      viewedProfileAddress.toLowerCase()
 )
 
 const WIDGET_COMPONENTS: Record<string, string> = {
@@ -74,7 +67,14 @@ const handleOpenInTab = () => {
 }
 
 const handleClone = async () => {
-  await navigateTo(profileRoute(connectedProfileAddress.value))
+  if (!browserSupportExtension.value && !isMobile.value) {
+    return
+  }
+
+  if (!isConnected.value) {
+    await connect()
+  }
+
   const clonedWidget = {
     type: props.widget.type,
     w: 1,
@@ -82,8 +82,12 @@ const handleClone = async () => {
     i: generateItemId(),
     properties: props.widget.properties,
   }
-  isEditingGrid.value = true
   addGridLayoutItem(clonedWidget)
+  isEditingGrid.value = true // we enable edit mode so user is aware about unsaved state
+
+  showModal({
+    template: 'GridWidgetCloned',
+  })
 }
 
 onMounted(() => {
@@ -105,7 +109,10 @@ onMounted(() => {
     <!-- Widget options -->
     <div
       v-if="!isAddContentWidget"
-      class="grid-widget-options invisible absolute right-2 top-2 z-20 mb-2 cursor-pointer group-hover:visible"
+      class="grid-widget-options absolute right-2 top-2 z-20 mb-2 cursor-pointer"
+      :class="{
+        'invisible group-hover:visible': !isAllowToEdit,
+      }"
     >
       <div
         class="mb-1 flex size-[35px] items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 shadow-neutral-drop-shadow-1xl"
@@ -130,9 +137,11 @@ onMounted(() => {
 
         <!-- Clone option -->
         <lukso-dropdown-option
-          v-if="isAllowToClone"
           size="medium"
           @click="handleClone"
+          :is-disabled="
+            !browserSupportExtension && !isMobile ? true : undefined
+          "
         >
           <lukso-icon name="copy" size="small"></lukso-icon>
           {{ formatMessage('grid_widget_menu_clone') }}</lukso-dropdown-option
