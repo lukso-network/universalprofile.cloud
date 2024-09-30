@@ -14,6 +14,7 @@ const queryClient = useQueryClient()
 const { selectedChainId: chainId } = useAppStore()
 const { isConnected, isMobile } = storeToRefs(useAppStore())
 const { connect } = useBaseProvider()
+const { browserSupportExtension } = useBrowser()
 
 const address = computed(() => props.address?.toLowerCase() as Address)
 const profileFollowers = useFollowingSystem().getFollowersData(address)
@@ -196,6 +197,7 @@ const handleUnfollow = () => {
           isMobile ? '' : formatMessage('profile_card_unfollow_button')
         "
         :is-icon="isMobile ? true : undefined"
+        :disabled="!browserSupportExtension && !isMobile ? true : undefined"
         @click="handleClick"
       >
         <lukso-icon
@@ -221,6 +223,7 @@ const handleUnfollow = () => {
           isMobile ? '' : formatMessage('profile_card_following_button')
         "
         :is-icon="isMobile ? true : undefined"
+        :disabled="!browserSupportExtension && !isMobile ? true : undefined"
       >
         <lukso-icon
           name="profile"
@@ -242,6 +245,7 @@ const handleUnfollow = () => {
         "
         @click="handleClick"
         :is-icon="isMobile ? true : undefined"
+        :disabled="!browserSupportExtension && !isMobile ? true : undefined"
       >
         <lukso-icon
           name="profile-add"

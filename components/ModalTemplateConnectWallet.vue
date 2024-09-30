@@ -5,6 +5,7 @@ const { isUniversalProfileExtension, connect: connectBrowserExtension } =
   useBrowserExtensionProvider()
 const { isConnecting, isMobile } = storeToRefs(useAppStore())
 const isWalletConnect = ref(false)
+const { browserSupportExtension, extensionStore } = useBrowser()
 
 const handleConnectBrowser = async () => {
   // if not supported browser
@@ -23,18 +24,6 @@ const handleConnectBrowser = async () => {
 const handleToggleMobile = () => {
   isWalletConnect.value = !isWalletConnect.value
 }
-
-const extensionStore = computed(() => {
-  const url = browserInfo().storeLink
-  const icon = `logo-${browserInfo().id}`
-
-  return {
-    icon,
-    url,
-  }
-})
-
-const browserSupportExtension = computed(() => extensionStore.value.url !== '')
 </script>
 
 <template>
