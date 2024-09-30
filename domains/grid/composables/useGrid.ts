@@ -61,25 +61,7 @@ export const useGrid = () => {
     },
 
     addGridLayoutItem: (newItem: GridWidgetWithoutCords) => {
-      const columnHeights = getColumnHeightsFromLayout(
-        tempGridLayout.value,
-        gridColumns.value
-      )
-
-      if (gridColumns.value === 1) {
-        // Place the widget in a single column at the end
-        const currentY = Math.max(...columnHeights)
-        tempGridLayout.value.push(placeWidgetInSingleColumn(newItem, currentY))
-      } else {
-        // Place the widget in the best position in multiple columns
-        const { x, y } = findBestPosition(
-          newItem,
-          columnHeights,
-          gridColumns.value
-        )
-        tempGridLayout.value.push(placeWidgetInLayout(newItem, x, y))
-        updateColumnHeights(columnHeights, x, newItem.w, y + newItem.h)
-      }
+      placeWidgetInLayout(newItem, tempGridLayout.value, gridColumns.value)
 
       hasUnsavedGrid.value = true
     },

@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
 import { buildLayout, configToLayout, layoutToConfig } from '../gridLayout'
 
-type GridTests = {
+type GridTest = {
   grid: GridConfigItem[]
   expectedLayouts: Record<number, Partial<GridWidget>[]>
 }
 
-const GRID_TESTS: GridTests[] = [
+const GRID_TESTS: GridTest[] = [
   {
     grid: [],
     expectedLayouts: {
@@ -42,6 +42,16 @@ const GRID_TESTS: GridTests[] = [
       },
     ],
     expectedLayouts: {
+      /*
+      Column 0
+      ---------
+      |   A   |  <-- height 2
+      |       |
+      |   B   |  <-- height 1
+      |   C   |  <-- height 2
+      |       |
+      |   D   |  <-- height 1
+      */
       1: [
         {
           i: 'test-id',
@@ -80,6 +90,14 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
       ],
+      /*
+      Column 0     Column 1
+      ----------------------
+      |   A   |    |   B   |  <-- A: height 2, B: height 1
+      |       |    |-------|
+      |-------|    |   C   |  <-- C: height 2
+      |   D   |    |       |  <-- D: height 1
+      */
       2: [
         {
           i: 'test-id',
@@ -118,6 +136,13 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
       ],
+      /*
+      Column 0     Column 1     Column 2
+      -----------------------------------
+      |   A   |    |   B   |    |   C   |  <-- A: height 2, B: height 1, C: height 2
+      |       |    |-------|    |       |
+      |-------|    |   D   |    |-------|
+      */
       3: [
         {
           i: 'test-id',
@@ -180,12 +205,22 @@ const GRID_TESTS: GridTests[] = [
       },
     ],
     expectedLayouts: {
+      /*
+      Column 0
+      ---------
+      |   A   |  <-- height 2
+      |       |
+      |-------|
+      |   B   |  <-- height 1
+      |-------|
+      |   C   |  <-- height 1
+      */
       1: [
         {
           i: 'test-id',
           x: 0,
           y: 0,
-          w: 2,
+          w: 1,
           h: 2,
           type: GRID_WIDGET_TYPE.IMAGE,
           properties: { prop1: 'value1', prop2: 'value2' },
@@ -209,6 +244,13 @@ const GRID_TESTS: GridTests[] = [
           properties: { prop1: 'value1', prop2: 'value2' },
         },
       ],
+      /*
+      Column 0     Column 1
+      ----------------------
+      |   A   |    |   A   |  <-- height 2 (width spans 2 columns)
+      |-------|    |-------|
+      |   B   |    |   C   |  <-- height 1 each
+      */
       2: [
         {
           i: 'test-id',
@@ -268,7 +310,68 @@ const GRID_TESTS: GridTests[] = [
       },
     ],
     expectedLayouts: {
+      /*
+      Column 0
+      ---------
+      |   A   |  <-- height 1
+      |-------|
+      |   B   |  <-- height 2
+      |   B   |
+      |-------|
+      |   C   |  <-- height 1
+      |-------|
+      |   D   |  <-- height 1
+      */
+      1: [
+        {
+          i: 'test-id',
+          x: 0,
+          y: 0,
+          w: 1,
+          h: 1,
+          type: GRID_WIDGET_TYPE.IMAGE,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+        {
+          i: 'test-id',
+          x: 0,
+          y: 1,
+          w: 1,
+          h: 2,
+          type: GRID_WIDGET_TYPE.IFRAME,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+        {
+          i: 'test-id',
+          x: 0,
+          y: 3,
+          w: 1,
+          h: 1,
+          type: GRID_WIDGET_TYPE.TEXT,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+        {
+          i: 'test-id',
+          x: 0,
+          y: 4,
+          w: 1,
+          h: 1,
+          type: GRID_WIDGET_TYPE.IMAGE,
+          properties: { prop1: 'value1', prop2: 'value2' },
+        },
+      ],
       2: [
+        /*
+        Column 0     Column 1
+        ----------------------
+        |   A   |             |  <-- height 1
+        |-------|             |
+        |   B   |     B       |  <-- height 2 (width spans 2 columns)
+        |-------|-------------|
+        |   C   |             |  <-- height 1
+        |-------|-------------|
+        |   D   |     D       |  <-- height 1 (width spans 2 columns)
+        */
         {
           i: 'test-id',
           x: 0,
@@ -315,90 +418,27 @@ vi.mock('/domains/grid/utils/generateItemId', () => ({
 }))
 
 describe('Grid Layout Handling', () => {
-  describe('configToLayout', () => {
-    describe('should position elements correctly', () => {
-      it.each([
-        {
-          case: 0,
-          gridColumns: 1,
-          grid: GRID_TESTS[0].grid,
-          expectedLayout: GRID_TESTS[0].expectedLayouts[1],
-        },
-        {
-          case: 0,
-          gridColumns: 2,
-          grid: GRID_TESTS[0].grid,
-          expectedLayout: GRID_TESTS[0].expectedLayouts[2],
-        },
-        {
-          case: 1,
-          gridColumns: 1,
-          grid: GRID_TESTS[1].grid,
-          expectedLayout: GRID_TESTS[1].expectedLayouts[1],
-        },
-        {
-          case: 1,
-          gridColumns: 2,
-          grid: GRID_TESTS[1].grid,
-          expectedLayout: GRID_TESTS[1].expectedLayouts[2],
-        },
-        {
-          case: 1,
-          gridColumns: 3,
-          grid: GRID_TESTS[1].grid,
-          expectedLayout: GRID_TESTS[1].expectedLayouts[3],
-        },
-        {
-          case: 2,
-          gridColumns: 2,
-          grid: GRID_TESTS[2].grid,
-          expectedLayout: GRID_TESTS[2].expectedLayouts[2],
-        },
-        {
-          case: 3,
-          gridColumns: 2,
-          grid: GRID_TESTS[3].grid,
-          expectedLayout: GRID_TESTS[3].expectedLayouts[2],
-        },
-      ])(
-        'case=$case gridColumns=$gridColumns',
-        ({ gridColumns, grid, expectedLayout }) => {
-          const gridItems = buildLayout(configToLayout(grid), gridColumns)
-          expect(gridItems).toMatchObject(expectedLayout)
-        }
-      )
-    })
-  })
-
-  describe('Transformation invariance', () => {
-    describe('Grid config to layout and back should produce the original object', () => {
-      it.each([
-        { case: 0, gridColumns: 2, grid: GRID_TESTS[0].grid },
-        { case: 1, gridColumns: 2, grid: GRID_TESTS[1].grid },
-        { case: 2, gridColumns: 2, grid: GRID_TESTS[2].grid },
-        { case: 3, gridColumns: 2, grid: GRID_TESTS[3].grid },
-      ])('case=$case gridColumns=$gridColumns ', ({ gridColumns, grid }) => {
-        const gridItems = buildLayout(configToLayout(grid), gridColumns)
-        const gridItemsBack = layoutToConfig(gridItems)
-        expect(gridItemsBack).toEqual(grid)
-      })
-    })
-
-    describe('Grid layout to config and back should produce the same original layout', () => {
-      it.each([
-        { case: 0, gridColumns: 2, grid: GRID_TESTS[0].grid },
-        { case: 1, gridColumns: 2, grid: GRID_TESTS[1].grid },
-        { case: 2, gridColumns: 2, grid: GRID_TESTS[2].grid },
-        { case: 3, gridColumns: 2, grid: GRID_TESTS[3].grid },
-      ])('case=$case gridColumns=$gridColumns', ({ gridColumns, grid }) => {
-        const gridItems = buildLayout(configToLayout(grid), gridColumns)
-        const gridFromLayout = layoutToConfig(gridItems)
-        const gridLayoutItemsBack = buildLayout(
-          configToLayout(gridFromLayout),
-          gridColumns
+  describe('should build layout correctly and produce same config', () => {
+    it.each(
+      GRID_TESTS.flatMap(({ grid, expectedLayouts }, index) =>
+        Object.entries(expectedLayouts).map(
+          ([gridColumns, expectedLayout]) => ({
+            case: index,
+            gridColumns: Number(gridColumns),
+            grid,
+            expectedLayout,
+          })
         )
-        expect(gridLayoutItemsBack).toEqual(gridItems)
-      })
-    })
+      )
+    )(
+      'case=$case gridColumns=$gridColumns',
+      ({ case: caseIndex, gridColumns, grid, expectedLayout }) => {
+        const builtLayout = buildLayout(configToLayout(grid), gridColumns)
+        expect(builtLayout).toMatchObject(expectedLayout)
+
+        const config = layoutToConfig(builtLayout)
+        expect(config).toEqual(grid)
+      }
+    )
   })
 })
