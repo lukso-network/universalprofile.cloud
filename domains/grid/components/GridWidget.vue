@@ -9,9 +9,11 @@ const { canEditGrid, addGridLayoutItem } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 const { selectWidget, setWidgetData } = useWidgetStore()
-const { isEditingGrid, isConnected, isMobile } = storeToRefs(useAppStore())
+const { isEditingGrid, isConnected, isMobile, connectedProfileAddress } =
+  storeToRefs(useAppStore())
 const { connect } = useBaseProvider()
 const { browserSupportExtension } = useBrowser()
+const viewedProfileAddress = getCurrentProfileAddress()
 const dropdownId = `dropdown-${generateItemId()}`
 
 const isAllowToEdit = computed(
@@ -20,6 +22,12 @@ const isAllowToEdit = computed(
 
 const isAddContentWidget = computed(
   () => props.widget.type === GRID_WIDGET_TYPE.ADD_CONTENT
+)
+
+const isCloneAllowed = computed(
+  () =>
+    connectedProfileAddress.value?.toLowerCase() !==
+    viewedProfileAddress.toLowerCase()
 )
 
 const WIDGET_COMPONENTS: Record<string, string> = {
@@ -137,6 +145,7 @@ onMounted(() => {
 
         <!-- Clone option -->
         <lukso-dropdown-option
+          v-if="isCloneAllowed"
           size="medium"
           @click="handleClone"
           :is-disabled="
