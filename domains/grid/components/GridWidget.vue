@@ -1,24 +1,32 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid'
-
 type Props = {
   widget: GridWidget
 }
 
 const props = defineProps<Props>()
 const widgetComponent = shallowRef<Component | undefined>()
-const { canEditGrid } = useGrid()
+const { canEditGrid, addGridLayoutItem } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 const { selectWidget, setWidgetData } = useWidgetStore()
-const dropdownId = `dropdown-${uuidv4()}`
+const { connectedProfileAddress, isConnected, isEditingGrid } =
+  storeToRefs(useAppStore())
+const viewedProfileAddress = getCurrentProfileAddress()
+const dropdownId = `dropdown-${generateItemId()}`
 
 const isAllowToEdit = computed(
-  () => canEditGrid.value && props.widget.type !== GRID_WIDGET_TYPE.ADD_CONTENT
+  () => canEditGrid.value && !isAddContentWidget.value
 )
 
 const isAddContentWidget = computed(
   () => props.widget.type === GRID_WIDGET_TYPE.ADD_CONTENT
+)
+
+const isAllowToClone = computed(
+  () =>
+    isConnected.value &&
+    connectedProfileAddress.value?.toLowerCase() !==
+      viewedProfileAddress.toLowerCase()
 )
 
 const WIDGET_COMPONENTS: Record<string, string> = {
@@ -61,6 +69,23 @@ const handleEdit = () => {
   })
 }
 
+const handleOpenInTab = () => {
+  window.open(props.widget.properties.src, '_blank')
+}
+
+const handleClone = async () => {
+  await navigateTo(profileRoute(connectedProfileAddress.value))
+  const clonedWidget = {
+    type: props.widget.type,
+    w: 1,
+    h: 1,
+    i: generateItemId(),
+    properties: props.widget.properties,
+  }
+  isEditingGrid.value = true
+  addGridLayoutItem(clonedWidget)
+}
+
 onMounted(() => {
   widgetComponent.value = loadWidgetComponent(props.widget.type)
 })
@@ -79,8 +104,8 @@ onMounted(() => {
 
     <!-- Widget options -->
     <div
-      v-if="isAllowToEdit"
-      class="grid-widget-options absolute right-2 top-2 z-20 mb-2 cursor-pointer"
+      v-if="!isAddContentWidget"
+      class="grid-widget-options invisible absolute right-2 top-2 z-20 mb-2 cursor-pointer group-hover:visible"
     >
       <div
         class="mb-1 flex size-[35px] items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 shadow-neutral-drop-shadow-1xl"
@@ -93,11 +118,43 @@ onMounted(() => {
         ></lukso-icon>
       </div>
       <lukso-dropdown :trigger-id="dropdownId" is-right size="medium">
-        <lukso-dropdown-option size="medium" @click="handleEdit">
+        <!-- Edit option -->
+        <lukso-dropdown-option
+          v-if="isAllowToEdit"
+          size="medium"
+          @click="handleEdit"
+        >
           <lukso-icon name="edit" size="small"></lukso-icon>
           {{ formatMessage('grid_widget_menu_edit') }}</lukso-dropdown-option
         >
-        <lukso-dropdown-option size="medium" @click="handleDelete"
+
+        <!-- Clone option -->
+        <lukso-dropdown-option
+          v-if="isAllowToClone"
+          size="medium"
+          @click="handleClone"
+        >
+          <lukso-icon name="copy" size="small"></lukso-icon>
+          {{ formatMessage('grid_widget_menu_clone') }}</lukso-dropdown-option
+        >
+
+        <!-- Open in new tab option -->
+        <lukso-dropdown-option
+          v-if="widget.properties?.src"
+          size="medium"
+          @click="handleOpenInTab"
+        >
+          <lukso-icon name="link-3" size="small"></lukso-icon>
+          {{
+            formatMessage('grid_widget_menu_open_in_new_tab')
+          }}</lukso-dropdown-option
+        >
+
+        <!-- Delete option -->
+        <lukso-dropdown-option
+          v-if="isAllowToEdit"
+          size="medium"
+          @click="handleDelete"
           ><lukso-icon name="trash" size="small" color="red-65"></lukso-icon
           ><span class="text-red-65">{{
             formatMessage('grid_widget_menu_delete')
