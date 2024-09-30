@@ -36,8 +36,6 @@ const handleUpdateLayout = (newLayout: GridWidget[]) => {
   if (gridLog.enabled) {
     gridLog('Layout updated', newLayout)
   }
-
-  // connectedGridLayout.value = newLayout
 }
 
 const handleSaveLayout = async () => {
