@@ -5,21 +5,39 @@ import { GridItem, GridLayout } from 'grid-layout-plus'
 const GRID_ROW_HEIGHT_PX = 280 // TODO we should calculate this based on grid column width
 const GRID_RESIZE_DEBOUNCE_TIMEOUT_MS = 250
 
-const { isEditingGrid, gridLayout, hasUnsavedGrid, gridColumns } =
-  storeToRefs(useAppStore())
-const address = getCurrentProfileAddress()
+const {
+  isEditingGrid,
+  connectedGridLayout,
+  viewedGridLayout,
+  connectedProfileAddress,
+  hasUnsavedGrid,
+  gridColumns,
+} = storeToRefs(useAppStore())
 const { initializeGridLayout, saveGridLayout, canEditGrid } = useGrid()
-
-const layout = ref<GridWidget[]>([])
 const gridContainer = ref<HTMLElement | null>(null)
+const viewedProfileAddress = getCurrentProfileAddress()
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
+
+const address = computed(() => getCurrentProfileAddress())
+const layout = ref<GridWidget[]>([])
+
+const currentLayout = computed(() => {
+  if (
+    connectedProfileAddress.value?.toLowerCase() ===
+    viewedProfileAddress.toLowerCase()
+  ) {
+    return connectedGridLayout.value
+  }
+
+  return viewedGridLayout.value
+})
 
 const handleUpdateLayout = (newLayout: GridWidget[]) => {
   if (gridLog.enabled) {
     gridLog('Layout updated', newLayout)
   }
 
-  gridLayout.value = newLayout
+  // connectedGridLayout.value = newLayout
 }
 
 const handleSaveLayout = async () => {
@@ -29,7 +47,7 @@ const handleSaveLayout = async () => {
 
   // rebuild layout to ensure that all widgets are in the correct position
   layout.value = buildLayout(
-    gridLayout.value,
+    connectedGridLayout.value,
     gridColumns.value,
     canEditGrid.value
   )
@@ -46,8 +64,8 @@ const handleResize = (width: number) => {
 
     if (prevCols !== newCols) {
       gridColumns.value = newCols
-      gridLayout.value = buildLayout(
-        gridLayout.value,
+      layout.value = buildLayout(
+        currentLayout.value,
         newCols,
         canEditGrid.value
       )
@@ -57,12 +75,14 @@ const handleResize = (width: number) => {
 
 const handleResetLayout = async () => {
   hasUnsavedGrid.value = false
-  const userLayout = await getUserLayout(address)
-  gridLayout.value = buildLayout(
+  const userLayout = await getUserLayout(address.value)
+  connectedGridLayout.value = buildLayout(
     userLayout,
     gridColumns.value,
     canEditGrid.value
   )
+
+  layout.value = connectedGridLayout.value
 }
 
 const clearSelection = () => {
@@ -93,7 +113,7 @@ watch(
   () => canEditGrid.value,
   () => {
     layout.value = buildLayout(
-      gridLayout.value,
+      currentLayout.value,
       gridColumns.value,
       canEditGrid.value
     )
@@ -102,10 +122,10 @@ watch(
 )
 
 watch(
-  () => gridLayout.value.length,
+  () => connectedGridLayout.value.length,
   () => {
     layout.value = buildLayout(
-      gridLayout.value,
+      currentLayout.value,
       gridColumns.value,
       canEditGrid.value
     )
@@ -113,8 +133,8 @@ watch(
 )
 
 onMounted(async () => {
-  await initializeGridLayout(address, canEditGrid.value)
-  layout.value = gridLayout.value
+  await initializeGridLayout(address.value, canEditGrid.value)
+  layout.value = currentLayout.value
 })
 
 useResizeObserver(gridContainer, entries => {
@@ -139,7 +159,7 @@ useResizeObserver(gridContainer, entries => {
         @layout-updated="handleUpdateLayout"
       >
         <GridItem
-          v-for="item in gridLayout"
+          v-for="item in layout"
           :key="item.i"
           :x="item.x"
           :y="item.y"

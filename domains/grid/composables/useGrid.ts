@@ -3,34 +3,44 @@ export const useGrid = () => {
     isConnected,
     connectedProfileAddress,
     hasUnsavedGrid,
-    gridLayout,
+    connectedGridLayout,
+    viewedGridLayout,
     gridColumns,
     isEditingGrid,
   } = storeToRefs(useAppStore())
   const viewedProfileAddress = getCurrentProfileAddress()
 
+  const canEditGrid = computed(
+    () =>
+      isEditingGrid.value &&
+      isConnected.value &&
+      connectedProfileAddress.value?.toLowerCase() ===
+        viewedProfileAddress.toLowerCase()
+  )
+
   return {
     initializeGridLayout: async (
       address?: Address,
       withAddContentPlaceholder?: boolean
-    ): Promise<void> => {
+    ) => {
       let layout: GridWidget[] = []
 
       if (!address) {
-        gridLayout.value = []
-        return
+        return []
       }
 
-      if (hasUnsavedGrid.value) {
+      if (canEditGrid.value && hasUnsavedGrid.value) {
         layout = buildLayout(
-          gridLayout.value,
+          connectedGridLayout.value,
           gridColumns.value,
           withAddContentPlaceholder
         )
 
         if (gridLog.enabled) {
-          gridLog('Initialize saved layout', gridLayout.value)
+          gridLog('Initialize saved layout', layout)
         }
+
+        connectedGridLayout.value = layout
       } else {
         const userLayout = await getUserLayout(address)
         layout = buildLayout(
@@ -42,21 +52,31 @@ export const useGrid = () => {
         if (gridLog.enabled) {
           gridLog('Initialize user layout', userLayout)
         }
-      }
 
-      gridLayout.value = layout
+        if (
+          connectedProfileAddress.value?.toLowerCase() ===
+            viewedProfileAddress.toLowerCase() &&
+          connectedGridLayout.value.length === 0
+        ) {
+          connectedGridLayout.value = layout
+        }
+
+        viewedGridLayout.value = layout
+      }
     },
 
     addGridLayoutItem: (newItem: GridWidgetWithoutCords) => {
       const columnHeights = getColumnHeightsFromLayout(
-        gridLayout.value,
+        connectedGridLayout.value,
         gridColumns.value
       )
 
       if (gridColumns.value === 1) {
         // Place the widget in a single column at the end
         const currentY = Math.max(...columnHeights)
-        gridLayout.value.push(placeWidgetInSingleColumn(newItem, currentY))
+        connectedGridLayout.value.push(
+          placeWidgetInSingleColumn(newItem, currentY)
+        )
       } else {
         // Place the widget in the best position in multiple columns
         const { x, y } = findBestPosition(
@@ -64,7 +84,7 @@ export const useGrid = () => {
           columnHeights,
           gridColumns.value
         )
-        gridLayout.value.push(placeWidgetInLayout(newItem, x, y))
+        connectedGridLayout.value.push(placeWidgetInLayout(newItem, x, y))
         updateColumnHeights(columnHeights, x, newItem.w, y + newItem.h)
       }
 
@@ -72,26 +92,24 @@ export const useGrid = () => {
     },
 
     updateGridLayoutItem: (item: GridWidget) => {
-      const { gridLayout, hasUnsavedGrid } = storeToRefs(useAppStore())
-
-      const index = gridLayout.value.findIndex(({ i }) => i === item.i)
+      const index = connectedGridLayout.value.findIndex(({ i }) => i === item.i)
 
       if (index === -1) {
         return
       }
 
-      gridLayout.value[index] = item
+      connectedGridLayout.value[index] = item
       hasUnsavedGrid.value = true
     },
 
     removeGridLayoutItem: (id: string | number) => {
-      const { gridLayout, hasUnsavedGrid } = storeToRefs(useAppStore())
-
       if (typeof id !== 'string' && typeof id !== 'number') {
         return
       }
 
-      gridLayout.value = gridLayout.value.filter(item => item.i !== id)
+      connectedGridLayout.value = connectedGridLayout.value.filter(
+        item => item.i !== id
+      )
       hasUnsavedGrid.value = true
     },
 
@@ -121,12 +139,6 @@ export const useGrid = () => {
       hasUnsavedGrid.value = false
     },
 
-    canEditGrid: computed(
-      () =>
-        isEditingGrid.value &&
-        isConnected.value &&
-        connectedProfileAddress.value?.toLowerCase() ===
-          viewedProfileAddress.toLowerCase()
-    ),
+    canEditGrid,
   }
 }
