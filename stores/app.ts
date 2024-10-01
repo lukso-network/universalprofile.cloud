@@ -33,7 +33,7 @@ export const useAppStore = defineStore(
     const isEditingGrid = ref(false)
     const hasUnsavedGrid = ref(false)
     const viewedGridLayout = ref<GridWidget[]>([])
-    const connectedGridLayout = ref<GridWidget[]>([])
+    const tempGridLayout = ref<GridWidget[]>([])
     const gridColumns = ref<number>(COL_NUM_LARGE)
 
     // statuses
@@ -107,6 +107,20 @@ export const useAppStore = defineStore(
       return !!route.query?.modalTemplate
     })
 
+    const isConnectedUserViewingOwnProfile = computed(() => {
+      const viewedProfileAddress = computed(() => getCurrentProfileAddress())
+
+      return (
+        // we need to compare lowercase addresses in case of checksummed addresses
+        connectedProfileAddress.value?.toLowerCase() ===
+        viewedProfileAddress.value?.toLowerCase()
+      )
+    })
+
+    const isViewedProfileConnected = computed(() => {
+      return isConnected.value && isConnectedUserViewingOwnProfile.value
+    })
+
     // --- actions
 
     const setModal = (newModal: Modal) => {
@@ -140,8 +154,10 @@ export const useAppStore = defineStore(
       isEditingGrid,
       hasUnsavedGrid,
       viewedGridLayout,
-      connectedGridLayout,
+      tempGridLayout,
       gridColumns,
+      isConnectedUserViewingOwnProfile,
+      isViewedProfileConnected,
     }
   },
   {
@@ -154,7 +170,7 @@ export const useAppStore = defineStore(
         'isWalletConnect',
         'isEditingGrid',
         'hasUnsavedGrid',
-        'connectedGridLayout',
+        'tempGridLayout',
       ],
       key: STORAGE_KEY.APP_STORE,
     },

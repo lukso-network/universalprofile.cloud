@@ -3,19 +3,17 @@ export const useGrid = () => {
     isConnected,
     connectedProfileAddress,
     hasUnsavedGrid,
-    connectedGridLayout,
     viewedGridLayout,
+    tempGridLayout,
     gridColumns,
     isEditingGrid,
+    isConnectedUserViewingOwnProfile,
   } = storeToRefs(useAppStore())
-  const viewedProfileAddress = getCurrentProfileAddress()
-
   const canEditGrid = computed(
     () =>
       isEditingGrid.value &&
       isConnected.value &&
-      connectedProfileAddress.value?.toLowerCase() ===
-        viewedProfileAddress.toLowerCase()
+      isConnectedUserViewingOwnProfile.value
   )
 
   return {
@@ -29,54 +27,49 @@ export const useGrid = () => {
         return []
       }
 
+      // unsaved state case
       if (canEditGrid.value && hasUnsavedGrid.value) {
         layout = buildLayout(
-          connectedGridLayout.value,
+          tempGridLayout.value,
           gridColumns.value,
           withAddContentPlaceholder
         )
 
         if (gridLog.enabled) {
-          gridLog('Initialize saved layout', layout)
+          gridLog('Initialize temp layout', layout)
         }
 
-        connectedGridLayout.value = layout
-      } else {
-        const userLayout = await getUserLayout(address)
-        layout = buildLayout(
-          userLayout,
-          gridColumns.value,
-          withAddContentPlaceholder
-        )
-
-        if (gridLog.enabled) {
-          gridLog('Initialize user layout', userLayout)
-        }
-
-        if (
-          connectedProfileAddress.value?.toLowerCase() ===
-            viewedProfileAddress.toLowerCase() &&
-          connectedGridLayout.value.length === 0
-        ) {
-          connectedGridLayout.value = layout
-        }
-
-        viewedGridLayout.value = layout
+        viewedGridLayout.value = [...layout]
       }
+
+      const userLayout = await getUserLayout(address)
+      layout = buildLayout(
+        userLayout,
+        gridColumns.value,
+        withAddContentPlaceholder
+      )
+
+      if (gridLog.enabled) {
+        gridLog('Initialize user layout', userLayout)
+      }
+
+      if (isConnectedUserViewingOwnProfile.value && !hasUnsavedGrid.value) {
+        tempGridLayout.value = [...layout]
+      }
+
+      viewedGridLayout.value = [...layout]
     },
 
     addGridLayoutItem: (newItem: GridWidgetWithoutCords) => {
       const columnHeights = getColumnHeightsFromLayout(
-        connectedGridLayout.value,
+        tempGridLayout.value,
         gridColumns.value
       )
 
       if (gridColumns.value === 1) {
         // Place the widget in a single column at the end
         const currentY = Math.max(...columnHeights)
-        connectedGridLayout.value.push(
-          placeWidgetInSingleColumn(newItem, currentY)
-        )
+        tempGridLayout.value.push(placeWidgetInSingleColumn(newItem, currentY))
       } else {
         // Place the widget in the best position in multiple columns
         const { x, y } = findBestPosition(
@@ -84,7 +77,7 @@ export const useGrid = () => {
           columnHeights,
           gridColumns.value
         )
-        connectedGridLayout.value.push(placeWidgetInLayout(newItem, x, y))
+        tempGridLayout.value.push(placeWidgetInLayout(newItem, x, y))
         updateColumnHeights(columnHeights, x, newItem.w, y + newItem.h)
       }
 
@@ -92,13 +85,13 @@ export const useGrid = () => {
     },
 
     updateGridLayoutItem: (item: GridWidget) => {
-      const index = connectedGridLayout.value.findIndex(({ i }) => i === item.i)
+      const index = tempGridLayout.value.findIndex(({ i }) => i === item.i)
 
       if (index === -1) {
         return
       }
 
-      connectedGridLayout.value[index] = item
+      tempGridLayout.value[index] = item
       hasUnsavedGrid.value = true
     },
 
@@ -107,9 +100,7 @@ export const useGrid = () => {
         return
       }
 
-      connectedGridLayout.value = connectedGridLayout.value.filter(
-        item => item.i !== id
-      )
+      tempGridLayout.value = tempGridLayout.value.filter(item => item.i !== id)
       hasUnsavedGrid.value = true
     },
 
