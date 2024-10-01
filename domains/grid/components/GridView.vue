@@ -36,6 +36,9 @@ const handleUpdateLayout = (newLayout: GridWidget[]) => {
   if (gridLog.enabled) {
     gridLog('Layout updated', newLayout)
   }
+
+  // reflect any changes like move or resize in the connected user layout
+  connectedGridLayout.value = newLayout
 }
 
 const handleSaveLayout = async () => {

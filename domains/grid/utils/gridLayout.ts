@@ -93,7 +93,7 @@ export const configToLayout = (
 }
 
 export const buildLayout = (
-  layout: GridWidgetWithoutCords[],
+  layout: GridWidgetWithoutCords[] | GridWidget[],
   gridColumns: number,
   withAddContentPlaceholder?: boolean
 ): GridWidget[] => {
@@ -101,9 +101,27 @@ export const buildLayout = (
   const updatedLayout: GridWidget[] = []
 
   // remove "add widget" placeholder from layout
-  const _layout = layout.filter(
+  let _layout = layout.filter(
     item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
   )
+
+  // if items already have x/y cords we re-order layout to reflect that
+  _layout = _layout.slice().sort((a, b) => {
+    if (
+      a.x === undefined ||
+      b.x === undefined ||
+      a.y === undefined ||
+      b.y === undefined
+    ) {
+      return 0
+    }
+
+    if (a.y === b.y) {
+      return a.x - b.x
+    }
+
+    return a.y - b.y
+  })
 
   // re-add placeholder
   if (withAddContentPlaceholder) {
