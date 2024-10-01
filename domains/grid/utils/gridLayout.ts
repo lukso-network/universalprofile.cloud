@@ -160,7 +160,7 @@ export const placeWidgetInLayout = (
     x,
     y,
     w,
-    originalW: w < widget.w ? widget.w : undefined,
+    originalWidth: w < widget.w ? widget.w : undefined,
   }
 
   layout.push(newWidget)
@@ -247,7 +247,7 @@ export const layoutToConfig = (layout: GridWidget[]): GridConfigItem[] => {
   return orderedLayout.map(item => {
     return {
       type: item.type,
-      width: item.originalW || item.w,
+      width: item.originalWidth || item.w,
       height: item.h,
       properties: item.properties,
     }

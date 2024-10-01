@@ -10,7 +10,7 @@ export type GridConfigItem = {
 export type LayoutItemExtended = {
   type: GridWidgetType
   properties: Record<string, any>
-  originalW?: number
+  originalWidth?: number
 }
 
 export type GridWidget = LayoutItem & LayoutItemExtended
