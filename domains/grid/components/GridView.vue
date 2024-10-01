@@ -52,8 +52,8 @@ const handleSaveLayout = async () => {
     canEditGrid.value
   )
 
-  tempGridLayout.value = layout
-  viewedGridLayout.value = layout
+  tempGridLayout.value = [...layout]
+  viewedGridLayout.value = [...layout]
 }
 
 const handleResize = (width: number) => {
@@ -76,13 +76,10 @@ const handleResize = (width: number) => {
 const handleResetLayout = async () => {
   hasUnsavedGrid.value = false
   const userLayout = await getUserLayout(address.value)
-  tempGridLayout.value = buildLayout(
-    userLayout,
-    gridColumns.value,
-    canEditGrid.value
-  )
+  const layout = buildLayout(userLayout, gridColumns.value, canEditGrid.value)
 
-  layout.value = tempGridLayout.value
+  tempGridLayout.value = [...layout]
+  viewedGridLayout.value = [...layout]
 }
 
 const clearSelection = () => {
@@ -114,13 +111,20 @@ const handleItemResized = (_itemNumber: number) => {
 watch(
   () => canEditGrid.value,
   () => {
-    layout.value = buildLayout(
-      currentLayout.value,
-      gridColumns.value,
-      canEditGrid.value
-    )
-  },
-  { immediate: true }
+    if (isEditingGrid.value) {
+      layout.value = buildLayout(
+        tempGridLayout.value,
+        gridColumns.value,
+        canEditGrid.value
+      )
+    } else {
+      layout.value = buildLayout(
+        viewedGridLayout.value,
+        gridColumns.value,
+        canEditGrid.value
+      )
+    }
+  }
 )
 
 // rebuild layout when items are added/removed
@@ -143,10 +147,7 @@ watch(
       hasUnsavedGrid.value = false
     }
 
-    viewedGridLayout.value = await initializeGridLayout(
-      address.value,
-      canEditGrid.value
-    )
+    await initializeGridLayout(address.value, canEditGrid.value)
     layout.value = currentLayout.value
   },
   { immediate: true }

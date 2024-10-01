@@ -3,6 +3,7 @@ export const useGrid = () => {
     isConnected,
     connectedProfileAddress,
     hasUnsavedGrid,
+    viewedGridLayout,
     tempGridLayout,
     gridColumns,
     isEditingGrid,
@@ -38,7 +39,7 @@ export const useGrid = () => {
           gridLog('Initialize temp layout', layout)
         }
 
-        return layout
+        viewedGridLayout.value = [...layout]
       }
 
       const userLayout = await getUserLayout(address)
@@ -52,11 +53,11 @@ export const useGrid = () => {
         gridLog('Initialize user layout', userLayout)
       }
 
-      if (isConnectedUserViewingOwnProfile.value) {
-        tempGridLayout.value = layout
+      if (isConnectedUserViewingOwnProfile.value && !hasUnsavedGrid.value) {
+        tempGridLayout.value = [...layout]
       }
 
-      return layout
+      viewedGridLayout.value = [...layout]
     },
 
     addGridLayoutItem: (newItem: GridWidgetWithoutCords) => {

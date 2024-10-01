@@ -27,6 +27,10 @@ const isAddContentWidget = computed(
   () => props.widget.type === GRID_WIDGET_TYPE.ADD_CONTENT
 )
 
+const isAllowToClone = computed(
+  () => isEditingGrid.value || !isConnectedUserViewingOwnProfile.value
+)
+
 const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.TITLE_LINK]: 'TitleLink',
   [GRID_WIDGET_TYPE.TEXT]: 'Text',
@@ -144,6 +148,7 @@ onMounted(() => {
 
         <!-- Clone option -->
         <lukso-dropdown-option
+          v-if="isAllowToClone"
           size="medium"
           @click="handleClone"
           :is-disabled="
