@@ -15,12 +15,7 @@ const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const assetImage = useAssetImage(asset, false, 260)
 const { showModal } = useModal()
 const { isCreated } = useFilters()
-const viewedProfileAddress = getCurrentProfileAddress()
-const { isMobile } = storeToRefs(useAppStore())
-
-const viewedProfileIsConnected = computed(() =>
-  useProfile().viewedProfileIsConnected(viewedProfileAddress)
-)
+const { isMobile, isViewedProfileConnected } = storeToRefs(useAppStore())
 
 const isStackedCard = computed(
   () => isCollection(props.asset) || (isCreated.value && isLsp8(props.asset))
@@ -170,13 +165,13 @@ onMounted(() => {
                 variant="secondary"
                 @click="handleBuySellAsset"
               >
-                <span v-if="viewedProfileIsConnected">{{
+                <span v-if="isViewedProfileConnected">{{
                   $formatMessage('button_sell')
                 }}</span>
                 <span v-else>{{ $formatMessage('button_buy') }}</span>
               </lukso-button>
               <lukso-button
-                v-if="!isCollection(asset) && viewedProfileIsConnected"
+                v-if="!isCollection(asset) && isViewedProfileConnected"
                 :size="isMobile ? 'medium' : 'small'"
                 variant="secondary"
                 @click="handleSendAsset"

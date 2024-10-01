@@ -111,9 +111,14 @@ export const useAppStore = defineStore(
       const viewedProfileAddress = computed(() => getCurrentProfileAddress())
 
       return (
+        // we need to compare lowercase addresses in case of checksummed addresses
         connectedProfileAddress.value?.toLowerCase() ===
         viewedProfileAddress.value?.toLowerCase()
       )
+    })
+
+    const isViewedProfileConnected = computed(() => {
+      return isConnected.value && isConnectedUserViewingOwnProfile.value
     })
 
     // --- actions
@@ -152,6 +157,7 @@ export const useAppStore = defineStore(
       connectedGridLayout,
       gridColumns,
       isConnectedUserViewingOwnProfile,
+      isViewedProfileConnected,
     }
   },
   {

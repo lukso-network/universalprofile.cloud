@@ -16,12 +16,7 @@ const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 260)
 const { showModal } = useModal()
 const { isCreated } = useFilters()
-const viewedProfileAddress = getCurrentProfileAddress()
-const { isMobile } = storeToRefs(useAppStore())
-
-const viewedProfileIsConnected = computed(() =>
-  useProfile().viewedProfileIsConnected(viewedProfileAddress)
-)
+const { isMobile, isViewedProfileConnected } = storeToRefs(useAppStore())
 
 const handleShowAsset = () => {
   // created LSP8 assets should navigate to collection
@@ -162,13 +157,13 @@ onMounted(() => {
                 variant="secondary"
                 @click="handleBuySellAsset"
               >
-                <span v-if="viewedProfileIsConnected">{{
+                <span v-if="isViewedProfileConnected">{{
                   $formatMessage('button_sell')
                 }}</span>
                 <span v-else>{{ $formatMessage('button_buy') }}</span>
               </lukso-button>
               <lukso-button
-                v-if="viewedProfileIsConnected"
+                v-if="isViewedProfileConnected"
                 :size="isMobile ? 'medium' : 'small'"
                 variant="secondary"
                 @click="handleSendAsset"
