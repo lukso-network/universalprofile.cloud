@@ -136,15 +136,16 @@ const parseInstagramWidgetInput = (
   input: string
 ): LayoutItemExtended | never => {
   const INSTAGRAM_URL_REGEX =
-    /https:\/\/www\.instagram\.com\/(p|reel|profile|tv)\/[\w-]+\/(?:\?[^"]*)?/
+    /https:\/\/www\.instagram\.com\/(p|reel|profile|tv)\/([\w-]+)\/(\?[^"]*)?/
 
-  const match = input.match(INSTAGRAM_URL_REGEX)
-  if (match) {
+  const [, embedType, id, params] = input.match(INSTAGRAM_URL_REGEX) || []
+
+  if (id && embedType) {
     return {
       type: GRID_WIDGET_TYPE.INSTAGRAM,
       properties: {
-        src: match[0],
-        embedType: match[1],
+        src: `https://www.instagram.com/${embedType}/${id}/${params}`,
+        embedType: embedType,
       },
     }
   }
