@@ -135,14 +135,16 @@ const parseSoundCloudWidgetInput = (
 const parseInstagramWidgetInput = (
   input: string
 ): LayoutItemExtended | never => {
-  // TODO: Add support for instagram timeline embeds when we have the widget type
-  const INSTAGRAM_PERMALINK_REGEX = /data-instgrm-permalink="([^"]+)"/
-  const instagramMatch = input.match(INSTAGRAM_PERMALINK_REGEX)
-  if (instagramMatch) {
+  const INSTAGRAM_URL_REGEX =
+    /https:\/\/www\.instagram\.com\/(p|reel|profile|tv)\/[\w-]+\/(?:\?[^"]*)?/
+
+  const match = input.match(INSTAGRAM_URL_REGEX)
+  if (match) {
     return {
       type: GRID_WIDGET_TYPE.INSTAGRAM,
       properties: {
-        src: instagramMatch[1],
+        src: match[0],
+        embedType: match[1],
       },
     }
   }

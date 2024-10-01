@@ -47,7 +47,10 @@ export const WIDGET_TYPE_PROPERTIES: Record<
     { key: 'src', type: 'url' },
     { key: 'embedType', type: 'string' },
   ],
-  [GRID_WIDGET_TYPE.INSTAGRAM]: [],
+  [GRID_WIDGET_TYPE.INSTAGRAM]: [
+    { key: 'src', type: 'url' },
+    { key: 'embedType', type: 'string' },
+  ],
   [GRID_WIDGET_TYPE.IFRAME]: [
     { key: 'src', type: 'url' },
     { key: 'allow', type: 'string' },
