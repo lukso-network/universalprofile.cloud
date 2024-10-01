@@ -9,11 +9,14 @@ const { canEditGrid, addGridLayoutItem } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 const { selectWidget, setWidgetData } = useWidgetStore()
-const { isEditingGrid, isConnected, isMobile, connectedProfileAddress } =
-  storeToRefs(useAppStore())
+const {
+  isEditingGrid,
+  isConnected,
+  isMobile,
+  isConnectedUserViewingOwnProfile,
+} = storeToRefs(useAppStore())
 const { connect } = useBaseProvider()
 const { browserSupportExtension } = useBrowser()
-const viewedProfileAddress = getCurrentProfileAddress()
 const dropdownId = `dropdown-${generateItemId()}`
 
 const isAllowToEdit = computed(
@@ -22,12 +25,6 @@ const isAllowToEdit = computed(
 
 const isAddContentWidget = computed(
   () => props.widget.type === GRID_WIDGET_TYPE.ADD_CONTENT
-)
-
-const isCloneAllowed = computed(
-  () =>
-    connectedProfileAddress.value?.toLowerCase() !==
-    viewedProfileAddress.toLowerCase()
 )
 
 const WIDGET_COMPONENTS: Record<string, string> = {
@@ -93,9 +90,11 @@ const handleClone = async () => {
   addGridLayoutItem(clonedWidget)
   isEditingGrid.value = true // we enable edit mode so user is aware about unsaved state
 
-  showModal({
-    template: 'GridWidgetCloned',
-  })
+  if (!isConnectedUserViewingOwnProfile.value) {
+    showModal({
+      template: 'GridWidgetCloned',
+    })
+  }
 }
 
 onMounted(() => {
@@ -145,7 +144,6 @@ onMounted(() => {
 
         <!-- Clone option -->
         <lukso-dropdown-option
-          v-if="isCloneAllowed"
           size="medium"
           @click="handleClone"
           :is-disabled="
@@ -153,8 +151,13 @@ onMounted(() => {
           "
         >
           <lukso-icon name="copy" size="small"></lukso-icon>
-          {{ formatMessage('grid_widget_menu_clone') }}</lukso-dropdown-option
-        >
+          <span v-if="isConnectedUserViewingOwnProfile">
+            {{ formatMessage('grid_widget_menu_clone') }}
+          </span>
+          <span v-else>
+            {{ formatMessage('grid_widget_menu_clone_to_my_grid') }}
+          </span>
+        </lukso-dropdown-option>
 
         <!-- Open in new tab option -->
         <lukso-dropdown-option

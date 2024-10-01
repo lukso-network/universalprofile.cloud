@@ -107,6 +107,15 @@ export const useAppStore = defineStore(
       return !!route.query?.modalTemplate
     })
 
+    const isConnectedUserViewingOwnProfile = computed(() => {
+      const viewedProfileAddress = computed(() => getCurrentProfileAddress())
+
+      return (
+        connectedProfileAddress.value?.toLowerCase() ===
+        viewedProfileAddress.value?.toLowerCase()
+      )
+    })
+
     // --- actions
 
     const setModal = (newModal: Modal) => {
@@ -142,6 +151,7 @@ export const useAppStore = defineStore(
       viewedGridLayout,
       connectedGridLayout,
       gridColumns,
+      isConnectedUserViewingOwnProfile,
     }
   },
   {
