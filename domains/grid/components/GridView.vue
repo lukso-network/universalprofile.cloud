@@ -12,6 +12,7 @@ const {
   connectedProfileAddress,
   hasUnsavedGrid,
   gridColumns,
+  isConnected,
 } = storeToRefs(useAppStore())
 const { initializeGridLayout, saveGridLayout, canEditGrid } = useGrid()
 const gridContainer = ref<HTMLElement | null>(null)
@@ -24,7 +25,8 @@ const layout = ref<GridWidget[]>([])
 const currentLayout = computed(() => {
   if (
     connectedProfileAddress.value?.toLowerCase() ===
-    viewedProfileAddress.toLowerCase()
+      viewedProfileAddress.toLowerCase() &&
+    isConnected.value
   ) {
     return connectedGridLayout.value
   }
@@ -133,10 +135,18 @@ watch(
   }
 )
 
-onMounted(async () => {
-  await initializeGridLayout(address.value, canEditGrid.value)
-  layout.value = currentLayout.value
-})
+watch(
+  () => isConnected.value,
+  async () => {
+    if (!isConnected.value) {
+      hasUnsavedGrid.value = false
+    }
+
+    await initializeGridLayout(address.value, canEditGrid.value)
+    layout.value = currentLayout.value
+  },
+  { immediate: true }
+)
 
 useResizeObserver(gridContainer, entries => {
   const { contentRect } = entries[0]
