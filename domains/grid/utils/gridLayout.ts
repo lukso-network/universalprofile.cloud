@@ -97,7 +97,6 @@ export const buildLayout = (
   gridColumns: number,
   withAddContentPlaceholder?: boolean
 ): GridWidget[] => {
-  const columnHeights = Array(gridColumns).fill(0)
   const updatedLayout: GridWidget[] = []
 
   // remove "add widget" placeholder from layout
@@ -135,24 +134,36 @@ export const buildLayout = (
     })
   }
 
-  if (gridColumns === 1) {
-    // simple stacking for single column layout
-    let currentY = 0
-
-    for (const widget of _layout) {
-      updatedLayout.push(placeWidgetInSingleColumn(widget, currentY))
-      currentY += widget.h
-    }
-  } else {
-    // general case for multiple columns
-    for (const widget of _layout) {
-      const { x, y } = findBestPosition(widget, columnHeights, gridColumns)
-      updatedLayout.push(placeWidgetInLayout(widget, x, y))
-      updateColumnHeights(columnHeights, x, widget.w, y + widget.h)
-    }
+  for (const widget of _layout) {
+    placeWidgetInLayout(widget, updatedLayout, gridColumns)
   }
 
   return updatedLayout
+}
+
+export const placeWidgetInLayout = (
+  widget: GridWidgetWithoutCords,
+  layout: GridWidget[],
+  gridColumns: number
+): void => {
+  const columnHeights = getColumnHeightsFromLayout(layout, gridColumns)
+  const w = Math.min(widget.w, gridColumns)
+
+  const { x, y } = findBestPosition(
+    { ...widget, w },
+    columnHeights,
+    gridColumns
+  )
+
+  const newWidget: GridWidget = {
+    ...widget,
+    x,
+    y,
+    w,
+    originalWidth: w < widget.w ? widget.w : undefined,
+  }
+
+  layout.push(newWidget)
 }
 
 export const findBestPosition = (
@@ -163,39 +174,18 @@ export const findBestPosition = (
   let bestY = Number.MAX_SAFE_INTEGER
   let bestX = 0
 
+  // Iterate to strictly find left-to-right placement
   for (let x = 0; x <= gridColumns - widget.w; x++) {
     const maxY = Math.max(...columnHeights.slice(x, x + widget.w))
-    if (maxY < bestY) {
+
+    // Find the earliest leftmost column available
+    if (maxY < bestY || (maxY === bestY && x < bestX)) {
       bestY = maxY
       bestX = x
     }
   }
 
   return { x: bestX, y: bestY }
-}
-
-export const placeWidgetInLayout = (
-  widget: GridWidgetWithoutCords,
-  x: number,
-  y: number
-): GridWidget => {
-  return {
-    ...widget,
-    x,
-    y,
-  }
-}
-
-export const placeWidgetInSingleColumn = (
-  widget: GridWidgetWithoutCords,
-  y: number
-): GridWidget => {
-  return {
-    ...widget,
-    x: 0,
-    y,
-    w: 1,
-  }
 }
 
 export const updateColumnHeights = (
@@ -215,10 +205,19 @@ export const getColumnHeightsFromLayout = (
 ): number[] => {
   const columnHeights = Array(gridColumns).fill(0)
 
-  for (const item of layout) {
-    for (let x = item.x; x < item.x + item.w; x++) {
-      columnHeights[x] = Math.max(columnHeights[x], item.y + item.h)
+  // Filter widgets that impact column heights most
+  const sortedWidgets = layout.slice().sort((a, b) => b.y + b.h - (a.y + a.h))
+
+  // Iterate through the sorted widgets until all columns are covered
+  for (const widget of sortedWidgets) {
+    for (let x = widget.x; x < widget.x + widget.w; x++) {
+      if (columnHeights[x] < widget.y + widget.h) {
+        columnHeights[x] = widget.y + widget.h
+      }
     }
+
+    // Early exit if all columns have been covered
+    if (Math.min(...columnHeights) > 0) break
   }
 
   return columnHeights
@@ -248,7 +247,7 @@ export const layoutToConfig = (layout: GridWidget[]): GridConfigItem[] => {
   return orderedLayout.map(item => {
     return {
       type: item.type,
-      width: item.w,
+      width: item.originalWidth || item.w,
       height: item.h,
       properties: item.properties,
     }
