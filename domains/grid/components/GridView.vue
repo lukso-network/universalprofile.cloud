@@ -7,28 +7,23 @@ const GRID_RESIZE_DEBOUNCE_TIMEOUT_MS = 250
 
 const {
   isEditingGrid,
-  connectedGridLayout,
+  tempGridLayout,
   viewedGridLayout,
-  connectedProfileAddress,
   hasUnsavedGrid,
   gridColumns,
   isConnected,
 } = storeToRefs(useAppStore())
 const { initializeGridLayout, saveGridLayout, canEditGrid } = useGrid()
 const gridContainer = ref<HTMLElement | null>(null)
-const viewedProfileAddress = getCurrentProfileAddress()
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 
 const address = computed(() => getCurrentProfileAddress())
 const layout = ref<GridWidget[]>([])
 
 const currentLayout = computed(() => {
-  if (
-    connectedProfileAddress.value?.toLowerCase() ===
-      viewedProfileAddress.toLowerCase() &&
-    isConnected.value
-  ) {
-    return connectedGridLayout.value
+  // when user is editing and has unsaved changes, use temp layout
+  if (canEditGrid.value && hasUnsavedGrid.value) {
+    return tempGridLayout.value
   }
 
   return viewedGridLayout.value
@@ -39,8 +34,7 @@ const handleUpdateLayout = (newLayout: GridWidget[]) => {
     gridLog('Layout updated', newLayout)
   }
 
-  // reflect any changes like move or resize in the connected user layout
-  connectedGridLayout.value = newLayout
+  layout.value = newLayout
 }
 
 const handleSaveLayout = async () => {
@@ -48,15 +42,18 @@ const handleSaveLayout = async () => {
     return
   }
 
+  await saveGridLayout(tempGridLayout.value)
+  isEditingGrid.value = false
+
   // rebuild layout to ensure that all widgets are in the correct position
-  layout.value = buildLayout(
-    connectedGridLayout.value,
+  const layout = buildLayout(
+    tempGridLayout.value,
     gridColumns.value,
     canEditGrid.value
   )
 
-  await saveGridLayout(layout.value)
-  isEditingGrid.value = false
+  tempGridLayout.value = layout
+  viewedGridLayout.value = layout
 }
 
 const handleResize = (width: number) => {
@@ -79,13 +76,13 @@ const handleResize = (width: number) => {
 const handleResetLayout = async () => {
   hasUnsavedGrid.value = false
   const userLayout = await getUserLayout(address.value)
-  connectedGridLayout.value = buildLayout(
+  tempGridLayout.value = buildLayout(
     userLayout,
     gridColumns.value,
     canEditGrid.value
   )
 
-  layout.value = connectedGridLayout.value
+  layout.value = tempGridLayout.value
 }
 
 const clearSelection = () => {
@@ -99,6 +96,7 @@ const handleItemMove = (_itemNumber: number) => {
 const handleItemMoved = (_itemNumber: number) => {
   clearSelection()
   hasUnsavedGrid.value = true
+  tempGridLayout.value = layout.value
 }
 
 const handleItemResize = (_itemNumber: number) => {
@@ -108,6 +106,7 @@ const handleItemResize = (_itemNumber: number) => {
 const handleItemResized = (_itemNumber: number) => {
   clearSelection()
   hasUnsavedGrid.value = true
+  tempGridLayout.value = layout.value
 }
 
 // rebuild layout when user connects/disconnects,
@@ -124,8 +123,9 @@ watch(
   { immediate: true }
 )
 
+// rebuild layout when items are added/removed
 watch(
-  () => connectedGridLayout.value.length,
+  () => tempGridLayout.value.length,
   () => {
     layout.value = buildLayout(
       currentLayout.value,
@@ -135,6 +135,7 @@ watch(
   }
 )
 
+// initialize layout on initial render and when user connects/disconnects
 watch(
   () => isConnected.value,
   async () => {
@@ -142,7 +143,10 @@ watch(
       hasUnsavedGrid.value = false
     }
 
-    await initializeGridLayout(address.value, canEditGrid.value)
+    viewedGridLayout.value = await initializeGridLayout(
+      address.value,
+      canEditGrid.value
+    )
     layout.value = currentLayout.value
   },
   { immediate: true }
