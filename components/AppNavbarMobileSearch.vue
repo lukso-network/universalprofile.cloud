@@ -9,7 +9,7 @@ const handleClose = () => {
 <template>
   <div
     @click="handleClose"
-    class="fixed left-0 top-0 z-[1000] h-[100vh] w-[100vw] animate-fade-in bg-[rgba(36,53,66,0.8)] backdrop-blur-sm animation-duration-200"
+    class="fixed left-0 top-0 z-[1000] h-[100vh] w-[100vw] animate-fade-in bg-[rgba(196,202,206,0.6)] backdrop-blur-sm animation-duration-200"
   ></div>
   <div
     id="mobile-search"
