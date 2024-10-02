@@ -17,6 +17,7 @@ const assetImage = useAssetImage(token, false, 260)
 const { showModal } = useModal()
 const { isCreated } = useFilters()
 const viewedProfileAddress = getCurrentProfileAddress()
+const { isMobile } = storeToRefs(useAppStore())
 
 const viewedProfileIsConnected = computed(() =>
   useProfile().viewedProfileIsConnected(viewedProfileAddress)
@@ -32,7 +33,7 @@ const handleShowAsset = () => {
     return showModal({
       template: 'TokenCollection',
       data: {
-        asset: props.asset,
+        address: props.asset.address,
       },
       size: 'medium',
     })
@@ -149,13 +150,15 @@ onMounted(() => {
           </div>
           <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
           <NftListCardCreatorsRpc :asset="token" class="mt-4" />
+
+          <!-- Buttons -->
           <div
             class="mt-4 flex w-full items-end justify-end gap-2"
             v-if="!isCollection(asset)"
           >
             <template v-if="isLoadedAsset">
               <lukso-button
-                size="small"
+                :size="isMobile ? 'medium' : 'small'"
                 variant="secondary"
                 @click="handleBuySellAsset"
               >
@@ -166,18 +169,24 @@ onMounted(() => {
               </lukso-button>
               <lukso-button
                 v-if="viewedProfileIsConnected"
-                size="small"
+                :size="isMobile ? 'medium' : 'small'"
                 variant="secondary"
                 @click="handleSendAsset"
                 >{{ $formatMessage('button_send') }}</lukso-button
               >
             </template>
             <template v-else>
-              <AppPlaceholderLine class="h-[28px] w-[60px]" />
-              <AppPlaceholderLine class="h-[28px] w-[60px]" />
+              <AppPlaceholderLine
+                class="h-12 w-[80px] !rounded-12 sm:h-[28px] sm:w-[60px] sm:!rounded-4"
+              />
+              <AppPlaceholderLine
+                class="h-12 w-[80px] !rounded-12 sm:h-[28px] sm:w-[60px] sm:!rounded-4"
+              />
             </template>
           </div>
         </div>
+
+        <!-- Bottom -->
         <div
           class="mx-4 flex justify-between border-t border-t-neutral-90 py-3"
         >
@@ -191,7 +200,7 @@ onMounted(() => {
               alt=""
               class="size-3 rounded-full shadow-neutral-above-shadow-1xl outline outline-neutral-100"
             />
-            {{ token?.address?.slice(0, 6) }}
+            {{ toChecksumAddress(token?.address).slice(0, 6) }}
           </div>
           <AppPlaceholderLine v-else class="h-[20px] w-1/5" />
         </div>

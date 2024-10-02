@@ -1,14 +1,9 @@
 <script setup lang="ts">
-type Props = {
-  closeModal: () => void
-}
-
-defineProps<Props>()
+const { closeModal } = useModal()
 const { formatMessage } = useIntl()
 const { isUniversalProfileExtension, connect: connectBrowserExtension } =
   useBrowserExtensionProvider()
-const { isMobile } = useDevice()
-const isConnecting = ref(false)
+const { isConnecting, isMobile } = storeToRefs(useAppStore())
 const isWalletConnect = ref(false)
 
 const handleConnectBrowser = async () => {
@@ -22,9 +17,7 @@ const handleConnectBrowser = async () => {
     return window.open(extensionStore.value.url, '_blank')
   }
 
-  isConnecting.value = true
   await connectBrowserExtension()
-  isConnecting.value = false
 }
 
 const handleToggleMobile = () => {
@@ -93,9 +86,8 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
             )
           }}
         </lukso-button>
-        <WalletConnectButton v-if="isMobile" />
+        <WalletConnectButton v-if="false" />
         <lukso-button
-          v-else
           variant="secondary"
           is-full-width
           disabled
@@ -107,6 +99,7 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
               'modal_connect_wallet_select_provider_connect_mobile_button'
             )
           }}
+          (soon)
         </lukso-button>
       </div>
       <div class="paragraph-inter-12-regular mt-4 text-neutral-40">

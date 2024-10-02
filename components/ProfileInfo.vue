@@ -1,7 +1,8 @@
 <script setup lang="ts">
-const { currentNetwork } = storeToRefs(useAppStore())
+const { currentNetwork, selectedChainId } = storeToRefs(useAppStore())
 const { cacheValue } = useCache()
-const numberOfProfiles = ref<number>()
+const { formatMessage, formatNumber } = useIntl()
+const numberOfProfiles = ref(0)
 
 type IndexerStats = {
   name: string
@@ -17,20 +18,24 @@ const getNumberOfProfiles = async () => {
   return profileStats.entries
 }
 
-onMounted(async () => {
-  numberOfProfiles.value =
-    (await cacheValue<number>(getNumberOfProfiles, {
-      key: 'profile-number',
-      expiryAfter: PROFILE_NUMBER_CACHE_EXPIRY,
-    })) || 0
-})
+watch(
+  () => selectedChainId.value,
+  async () => {
+    numberOfProfiles.value =
+      (await cacheValue<number>(getNumberOfProfiles, {
+        key: 'profile-number',
+        expiryAfter: PROFILE_NUMBER_CACHE_EXPIRY,
+      })) || 0
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
   <lukso-sanitize
     :html-content="
-      $formatMessage('erc725account_info_part1', {
-        numberOfProfiles: `<strong>${numberOfProfiles?.toLocaleString()}</strong>`,
+      formatMessage('erc725account_info_part1', {
+        numberOfProfiles: `<strong>${formatNumber(numberOfProfiles)}</strong>`,
         luksoWebsiteLink: `<strong>on <a
           class='underline hover:text-neutral-20'
           href='https://lukso.network/'
@@ -42,7 +47,7 @@ onMounted(async () => {
   <br />
   <lukso-sanitize
     :html-content="
-      $formatMessage('erc725account_info_part2', {
+      formatMessage('erc725account_info_part2', {
         erc725accountLink: `<a
           class='underline hover:text-neutral-20'
           href='https://docs.lukso.tech/standards/introduction/'
@@ -53,7 +58,7 @@ onMounted(async () => {
           class='underline hover:text-neutral-20'
           href='https://my.universalprofile.cloud'
           target='_blank'
-          >${$formatMessage('erc725account_info_part3')}</a
+          >${formatMessage('erc725account_info_part3')}</a
         >`,
       })
     "

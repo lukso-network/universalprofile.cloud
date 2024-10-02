@@ -28,7 +28,7 @@ exports[`NftListCardCreatorsGraph > large size > render creators 1`] = `
 
 exports[`NftListCardCreatorsGraph > large size > render loading state 1`] = `
 "<div id="test-wrapper">
-  <div class="grid grid-cols-[max-content,auto] gap-1">
+  <div class="grid grid-cols-[max-content,auto] items-center gap-1">
     <div class="animate-pulse rounded-full bg-neutral-90 size-10"></div>
     <div class="grid h-[24px] w-full flex-col items-center gap-1 pl-2">
       <div class="animate-pulse rounded-4 bg-neutral-90 h-2 w-[60px]"></div>
@@ -49,7 +49,7 @@ exports[`NftListCardCreatorsGraph > render empty creators 1`] = `
 
 exports[`NftListCardCreatorsGraph > render loading state 1`] = `
 "<div id="test-wrapper">
-  <div class="grid grid-cols-[max-content,auto] gap-1">
+  <div class="grid grid-cols-[max-content,auto] items-center gap-1">
     <div class="animate-pulse rounded-full bg-neutral-90 size-6"></div>
     <div class="grid h-[24px] w-full flex-col items-center gap-1 pl-1">
       <div class="animate-pulse rounded-4 bg-neutral-90 h-2 w-[40px]"></div>

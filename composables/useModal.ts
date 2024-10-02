@@ -1,49 +1,46 @@
 import type { Modal } from '@/types/modal'
 
 /**
- * Trigger modal
+ * Show modal
  *
  * @param data
  */
-const showModal = (modal: Modal | string) => {
-  const appStore = useAppStore()
+const showModal = async (modal: Modal) => {
+  const route = useRoute()
+  const { isModalOpen } = storeToRefs(useAppStore())
 
-  if (appStore.modal?.isOpen) {
+  if (isModalOpen.value) {
     return
   }
 
-  if (typeof modal === 'object' && modal.isUrlModal) {
-    return setModalQueryParams(modal)
-  }
-
-  const modalDefaults: Modal = {
-    isOpen: true,
-    icon: '/images/up-error.png',
-    size: 'small',
-  }
-
-  if (typeof modal === 'string') {
-    appStore.setModal({ ...modalDefaults, message: modal })
-  } else {
-    appStore.setModal({ ...modalDefaults, ...modal })
-  }
-}
-
-/**
- * Set modal query params
- *
- * @param modal
- */
-const setModalQueryParams = (modal: Modal) => {
-  const route = useRoute()
-
   const modalQueryParams: ModalQueryParams = {
-    modalTemplate: modal.template,
-    modalSize: modal.size,
+    modalTemplate: modal.template || 'Default',
+    modalSize: modal.size || 'small',
     modalData: JSON.stringify(modal.data),
   }
 
-  navigateTo({
+  await navigateTo({
+    path: route.path,
+    query: {
+      ...route.query,
+      ...modalQueryParams,
+    },
+  })
+}
+
+/**
+ * Close modal
+ */
+const closeModal = async () => {
+  const route = useRoute()
+
+  const modalQueryParams: ModalQueryParams = {
+    modalTemplate: undefined,
+    modalSize: undefined,
+    modalData: undefined,
+  }
+
+  await navigateTo({
     path: route.path,
     query: {
       ...route.query,
@@ -61,8 +58,11 @@ const closeModal = () => {
 }
 
 export const useModal = () => {
+  const { modal } = useAppStore()
+
   return {
     showModal,
     closeModal,
+    modal,
   }
 }

@@ -11,9 +11,9 @@ const connectedProfile = useProfile().connectedProfile()
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
-
 const assetImage = useAssetImage(asset, true, 260)
 const viewedProfileAddress = getCurrentProfileAddress()
+const { isMobile } = storeToRefs(useAppStore())
 
 const viewedProfileIsConnected = computed(() =>
   useProfile().viewedProfileIsConnected(viewedProfileAddress)
@@ -85,7 +85,7 @@ onMounted(() => {
               v-if="isLoadedAsset"
               class="paragraph-ptmono-10-bold text-neutral-60"
             >
-              #{{ asset?.address?.slice(2, 8) }}
+              #{{ toChecksumAddress(asset?.address).slice(2, 8) }}
             </div>
             <AppPlaceholderLine v-else class="h-[14px] w-full" />
           </div>
@@ -135,25 +135,31 @@ onMounted(() => {
             >
               {{ $formatCurrency(getBalance(asset), asset.tokenSymbol) }}
             </div>
+
+            <!-- Buttons -->
             <div class="mt-4 flex w-full items-end justify-end gap-2">
               <template v-if="isLoadedAsset">
                 <lukso-button
-                  size="small"
+                  :size="isMobile ? 'medium' : 'small'"
                   variant="secondary"
                   @click="handleBuySellAsset"
                   >{{ $formatMessage('button_buy_sell') }}</lukso-button
                 >
                 <lukso-button
                   v-if="viewedProfileIsConnected"
-                  size="small"
+                  :size="isMobile ? 'medium' : 'small'"
                   variant="secondary"
                   @click="handleSendAsset"
                   >{{ $formatMessage('button_send') }}</lukso-button
                 >
               </template>
               <template v-else>
-                <AppPlaceholderLine class="h-[28px] w-[60px]" />
-                <AppPlaceholderLine class="h-[28px] w-[60px]" />
+                <AppPlaceholderLine
+                  class="h-12 w-[80px] !rounded-12 sm:h-[28px] sm:w-[60px] sm:!rounded-4"
+                />
+                <AppPlaceholderLine
+                  class="h-12 w-[80px] !rounded-12 sm:h-[28px] sm:w-[60px] sm:!rounded-4"
+                />
               </template>
             </div>
           </div>

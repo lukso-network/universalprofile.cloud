@@ -9,7 +9,7 @@ const openStoreLink = () => {
 }
 
 const connect = async () => {
-  const { showModal, closeModal } = useModal()
+  const { showModal, closeModal, modal } = useModal()
   const { formatMessage } = useIntl()
   const { setConnectionExpiry } = useConnectionExpiry()
   const { connectedProfileAddress, isConnecting } = storeToRefs(useAppStore())
@@ -25,8 +25,10 @@ const connect = async () => {
       openStoreLink()
 
       return showModal({
-        title: formatMessage('web3_connect_error_title'),
-        message: formatMessage('web3_connect_no_extension'),
+        data: {
+          title: formatMessage('web3_connect_error_title'),
+          message: formatMessage('web3_connect_no_extension'),
+        },
       })
     }
 
@@ -39,6 +41,11 @@ const connect = async () => {
     setConnectionExpiry()
     closeModal()
 
+    // close connect modal if it's open
+    if (modal?.template === 'ConnectWallet') {
+      closeModal()
+    }
+
     // when we connect on the landing page we redirect to profile
     if (route.name === 'index') {
       navigateTo(profileRoute(address))
@@ -47,9 +54,13 @@ const connect = async () => {
     console.error(error)
     disconnect()
     showModal({
-      title: formatMessage('web3_connect_error_title'),
-      message: getErrorMessage(error),
+      data: {
+        title: formatMessage('web3_connect_error_title'),
+        message: getErrorMessage(error),
+      },
     })
+
+    // TODO: we might want to show toast message when modal is open because then we can't provide error feedback to user
   } finally {
     isConnecting.value = false
   }
