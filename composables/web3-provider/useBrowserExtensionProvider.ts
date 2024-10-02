@@ -39,7 +39,6 @@ const connect = async () => {
     assertAddress(address, 'connection')
     connectedProfileAddress.value = address
     setConnectionExpiry()
-    closeModal()
 
     // close connect modal if it's open
     if (modal?.template === 'ConnectWallet') {
