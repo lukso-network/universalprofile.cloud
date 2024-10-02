@@ -49,14 +49,6 @@ const closeModal = async () => {
   })
 }
 
-/**
- * Close modal
- */
-const closeModal = () => {
-  const appStore = useAppStore()
-  appStore.setModal({ isOpen: false })
-}
-
 export const useModal = () => {
   const { modal } = useAppStore()
 
