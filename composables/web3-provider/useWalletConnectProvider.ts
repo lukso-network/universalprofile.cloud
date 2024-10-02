@@ -89,7 +89,7 @@ const reconnect = async () => {
  * @returns
  */
 const deepLinkParser = (data: string) => {
-  return data.replace('wc:', 'network.lukso.universalprofiles.ios:')
+  return data.replace('wc:', 'io.universaleverything.universalprofiles:')
 }
 
 export const useWalletConnectProvider = () => {
