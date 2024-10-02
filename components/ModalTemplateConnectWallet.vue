@@ -67,7 +67,11 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
           variant="secondary"
           is-full-width
           :disabled="!browserSupportExtension || isMobile ? true : undefined"
-          :is-loading="isConnecting ? true : undefined"
+          :is-loading="
+            browserSupportExtension && !isMobile && isConnecting
+              ? true
+              : undefined
+          "
           :loading-text="
             formatMessage(
               'modal_connect_wallet_select_provider_connect_extension_button'
