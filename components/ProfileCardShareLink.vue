@@ -74,7 +74,6 @@ watch(
     expandedWidth.value = expandedRef.value?.clientWidth || 0
     copyWidth.value = copyRef.value?.clientWidth || 0
 
-    copyRef.value?.classList.add('hidden') // after we measure copy text we hide it
     buttonWidth.value = '0px' // also collapse button
   },
   { immediate: true }
