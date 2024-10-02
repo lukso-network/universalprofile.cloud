@@ -30,11 +30,12 @@ const filteredAddresses = computed(() => {
               ?.toLowerCase()
               .includes(search.value?.toLowerCase() || '')
         )
-        .map(profile => profile.address as Address) || []
+
+        .map(profile => profile.address as Address) || [].reverse()
     )
   }
 
-  return props.addresses
+  return [...props.addresses].reverse()
 })
 
 const addressesForPage = computed(() => {
