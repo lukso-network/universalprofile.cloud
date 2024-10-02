@@ -28,7 +28,6 @@ const connect = async (requestAccounts = true) => {
     walletConnectProvider: provider,
     connectedProfileAddress,
     isWalletConnect,
-    isConnecting,
   } = storeToRefs(useAppStore())
   const { setConnectionExpiry } = useConnectionExpiry()
   const { addWeb3 } = useWeb3Store()
@@ -37,7 +36,6 @@ const connect = async (requestAccounts = true) => {
   const { formatMessage } = useIntl()
 
   try {
-    isConnecting.value = true
     await provider.value?.connect()
 
     if (requestAccounts) {
@@ -69,8 +67,6 @@ const connect = async (requestAccounts = true) => {
         message: getErrorMessage(error),
       },
     })
-  } finally {
-    isConnecting.value = false
   }
 }
 
