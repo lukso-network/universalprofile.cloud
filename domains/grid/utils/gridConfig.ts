@@ -13,6 +13,11 @@ import type { AbiItem } from 'web3-utils'
 let uploadProvider: BaseFormDataUploader | undefined
 const dataKey = ERC725.encodeKeyName('LSP28TheGrid')
 
+/**
+ * Get the IPFS upload provider
+ *
+ * @returns
+ */
 const getUploadProvider = () => {
   if (!uploadProvider) {
     uploadProvider = new AuthenticatedFormDataUploader(IPFS_CLIENT_URL, {})
@@ -20,6 +25,12 @@ const getUploadProvider = () => {
   return uploadProvider
 }
 
+/**
+ * Get the grid config for a given address
+ *
+ * @param address
+ * @returns
+ */
 export const getGridConfig = async (address: Address) => {
   const { contract } = useWeb3(PROVIDERS.RPC)
   const universalProfileContract = contract<UniversalProfile>(
@@ -62,6 +73,13 @@ export const getGridConfig = async (address: Address) => {
   return config
 }
 
+/**
+ * Save the grid config for a given address
+ *
+ * @param address
+ * @param config
+ * @param saveCallback
+ */
 export const saveConfig = async (
   address: Address,
   config: GridConfigItem[],
