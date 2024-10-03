@@ -1,6 +1,6 @@
+import { Buffer } from 'buffer'
 import FormData from 'form-data'
 import fetch from 'isomorphic-fetch'
-import { Buffer } from 'buffer'
 
 import type { PinataPinResponse } from '@pinata/sdk'
 
@@ -41,8 +41,9 @@ export class BaseFormDataUploader {
   private populate(
     dataContent: FormData,
     data: any,
-    meta?: FormDataPostHeaders
+    _meta?: FormDataPostHeaders
   ): FormDataPostHeaders | undefined {
+    let meta = _meta
     if (!('on' in data) && typeof data !== 'string') {
       if ('size' in data && 'type' in data) {
         const blob = data
@@ -70,8 +71,9 @@ export class BaseFormDataUploader {
     }
     return meta
   }
-  async upload(data: any, meta?: FormDataPostHeaders): Promise<string> {
+  async upload(data: any, _meta?: FormDataPostHeaders): Promise<string> {
     const dataContent = new FormData()
+    let meta = _meta
     meta = this.populate(dataContent, data, meta)
     await this.addMetadata(dataContent as FormData, meta)
     const options = await this.getRequestOptions(dataContent as FormData, meta)

@@ -1,14 +1,14 @@
 import ERC725, { type ERC725JSONSchema } from '@erc725/erc725.js'
 import UniversalProfileContract from '@lukso/lsp-smart-contracts/artifacts/UniversalProfile.json'
 
-import { BaseFormDataUploader } from '@/services/ipfs/formdata-base-client'
 import { AuthenticatedFormDataUploader } from '@/services/ipfs/authenticated-formdata-client'
+import { BaseFormDataUploader } from '@/services/ipfs/formdata-base-client'
 import LSP28TheGrid from '@/shared/schemas/LSP28TheGrid.json'
 
 import type { UniversalProfile } from '@/contracts/UniversalProfile'
-import type { AbiItem } from 'web3-utils'
-import type { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
 import type { GridConfigItem } from '@/types/grid'
+import type { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
+import type { AbiItem } from 'web3-utils'
 
 let uploadProvider: BaseFormDataUploader | undefined
 const dataKey = ERC725.encodeKeyName('LSP28TheGrid')
