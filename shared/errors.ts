@@ -33,3 +33,18 @@ export class NoAccountsError extends Error {
     super('No accounts available')
   }
 }
+
+export class NetworkError extends Error {
+  statusCode: number
+
+  constructor(error: Error, statusCode = 500) {
+    super(`Network error status code: ${statusCode}. Message: ${error.message}`)
+    this.stack = error.stack
+    this.name = error.name
+    this.cause = error.cause
+    this.message = error.message
+    this.statusCode = statusCode
+    // Set the prototype explicitly.
+    Object.setPrototypeOf(this, NetworkError.prototype)
+  }
+}

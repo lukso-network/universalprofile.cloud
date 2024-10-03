@@ -5,7 +5,7 @@ type Emits = {
 }
 
 const emits = defineEmits<Emits>()
-const { hasUnsavedGrid } = storeToRefs(useAppStore())
+const { hasUnsavedGrid, isSavingGrid } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 </script>
 
@@ -16,12 +16,21 @@ const { formatMessage } = useIntl()
   >
     {{ formatMessage('grid_unsaved_changes_text') }}
     <div class="flex items-center">
-      <lukso-button size="small" variant="text" @click="emits('cancel')">{{
-        formatMessage('grid_unsaved_changes_reset')
-      }}</lukso-button>
-      <lukso-button size="small" variant="warning" @click="emits('save')">{{
-        formatMessage('grid_unsaved_changes_save')
-      }}</lukso-button>
+      <lukso-button
+        size="small"
+        variant="text"
+        :disabled="isSavingGrid ? true : undefined"
+        @click="emits('cancel')"
+        >{{ formatMessage('grid_unsaved_changes_reset') }}</lukso-button
+      >
+      <lukso-button
+        size="small"
+        variant="warning"
+        :is-loading="isSavingGrid ? true : undefined"
+        :loading-text="formatMessage('grid_unsaved_changes_save')"
+        @click="emits('save')"
+        >{{ formatMessage('grid_unsaved_changes_save') }}</lukso-button
+      >
     </div>
   </div>
 </template>

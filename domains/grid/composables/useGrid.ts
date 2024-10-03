@@ -8,6 +8,7 @@ export const useGrid = () => {
     gridColumns,
     isEditingGrid,
     isConnectedUserViewingOwnProfile,
+    isSavingGrid,
   } = storeToRefs(useAppStore())
   const canEditGrid = computed(
     () =>
@@ -98,18 +99,20 @@ export const useGrid = () => {
         return
       }
 
-      const response = await saveConfig(connectedProfileAddress.value, config)
+      try {
+        isSavingGrid.value = true
+        await saveConfig(connectedProfileAddress.value, config, () => {
+          hasUnsavedGrid.value = false
+          isSavingGrid.value = false
+        })
 
-      if (!response) {
-        console.warn('Failed to save layout')
-        return
+        if (gridLog.enabled) {
+          gridLog('Layout saved', layout)
+        }
+      } catch (error) {
+        console.warn('Error saving layout', error)
+        isSavingGrid.value = false
       }
-
-      if (gridLog.enabled) {
-        gridLog('Layout saved', layout, response)
-      }
-
-      hasUnsavedGrid.value = false
     },
 
     canEditGrid,
