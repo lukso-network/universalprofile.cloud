@@ -111,7 +111,7 @@ onMounted(() => {
     class="group relative flex h-full select-none flex-col rounded-12 border border-neutral-90 bg-neutral-100"
     :class="{ 'shadow-neutral-drop-shadow-1xl': !isAddContentWidget }"
   >
-    <!-- Overlay for moving widget -->
+    <!-- Move handle -->
     <div
       v-if="isAllowToEdit"
       class="grid-move-overlay absolute inset-0 cursor-move rounded-[inherit] bg-neutral-100 opacity-0 transition-opacity group-hover:opacity-60"
@@ -189,12 +189,13 @@ onMounted(() => {
       </lukso-dropdown>
     </div>
 
-    <!-- Widget move handles -->
-    <img
+    <!-- Resize handle -->
+    <div
       v-if="isAllowToEdit"
-      class="grid-widget-resize invisible absolute bottom-[3px] right-[3px] z-10 scale-x-[-1] cursor-pointer group-hover:visible"
-      src="/images/resize.svg"
-    />
+      class="grid-widget-resize absolute bottom-2 right-2 z-10 mb-1 flex size-[35px] cursor-pointer items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 opacity-0 shadow-neutral-drop-shadow-1xl transition-opacity group-hover:opacity-100"
+    >
+      <lukso-icon name="expand" size="medium" class="p-2"></lukso-icon>
+    </div>
 
     <!-- Loaded component based on widget type -->
     <component
