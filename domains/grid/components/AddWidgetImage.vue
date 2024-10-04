@@ -5,7 +5,7 @@ const { widgetData } = storeToRefs(useWidgetStore())
 const { closeModal } = useModal()
 const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
 
-const TEXTAREA_FOCUS_DELAY = 10 // small delay for focusing textarea after element render
+const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
 const inputValue = ref<string>('')
 const inputError = ref<string>('')
 
@@ -29,7 +29,7 @@ const handleSave = () => {
     updateGridLayoutItem(updatedWidget)
   } else {
     const newWidget: GridWidgetWithoutCords = createWidgetObject({
-      type: GRID_WIDGET_TYPE.IFRAME,
+      type: GRID_WIDGET_TYPE.IMAGE,
       properties,
     })
 
@@ -67,12 +67,12 @@ const handleInput = async (customEvent: CustomEvent) => {
 
 onMounted(() => {
   setTimeout(() => {
-    const textarea = document?.querySelector(
-      'lukso-textarea'
+    const input = document?.querySelector(
+      'lukso-input'
     ) as unknown as HTMLElement
 
-    textarea?.shadowRoot?.querySelector('textarea')?.focus()
-  }, TEXTAREA_FOCUS_DELAY)
+    input?.shadowRoot?.querySelector('input')?.focus()
+  }, INPUT_FOCUS_DELAY)
 
   inputValue.value = widgetData.value?.properties.src || ''
 })
@@ -88,22 +88,22 @@ onMounted(() => {
         @click="selectWidget()"
       ></lukso-icon>
       <div class="heading-inter-21-semi-bold">
-        {{ formatMessage('add_widget_iframe_title') }}
+        {{ formatMessage('add_widget_image_title') }}
       </div>
     </div>
     <div class="paragraph-inter-14-regular pb-6">
-      {{ formatMessage('add_widget_iframe_description') }}
+      {{ formatMessage('add_widget_image_description') }}
     </div>
 
-    <!-- Iframe content -->
-    <lukso-textarea
+    <!-- Image src -->
+    <lukso-input
       is-full-width
       autofocus
-      :placeholder="formatMessage('add_widget_iframe_input_placeholder')"
-      :value="inputValue"
+      :placeholder="formatMessage('add_widget_image_input_placeholder')"
+      .value="inputValue"
       :error="inputError"
       @on-input="handleInput"
-    ></lukso-textarea>
+    ></lukso-input>
 
     <!-- Buttons -->
     <div class="grid grid-cols-[max-content,auto] pt-6">

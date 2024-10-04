@@ -1,5 +1,3 @@
-import { generateItemId } from './generateItemId'
-
 /**
  * Default grid config
  *
@@ -80,13 +78,12 @@ export const configToLayout = (
   config: GridConfigItem[]
 ): GridWidgetWithoutCords[] => {
   const layout = config.map(item => {
-    return {
+    return createWidgetObject({
       type: item.type,
       properties: item.properties,
       w: item.width,
       h: item.height,
-      i: generateItemId(),
-    } as GridWidgetWithoutCords
+    })
   })
 
   return layout
@@ -124,14 +121,13 @@ export const buildLayout = (
 
   // re-add placeholder
   if (withAddContentPlaceholder) {
-    _layout.push({
-      i: 'placeholder',
-      type: GRID_WIDGET_TYPE.ADD_CONTENT,
-      w: 1,
-      h: 1,
-      properties: {},
-      isResizable: false,
-    })
+    _layout.push(
+      createWidgetObject({
+        i: 'placeholder',
+        type: GRID_WIDGET_TYPE.ADD_CONTENT,
+        isResizable: false,
+      })
+    )
   }
 
   for (const widget of _layout) {

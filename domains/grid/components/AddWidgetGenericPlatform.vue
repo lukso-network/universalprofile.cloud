@@ -32,13 +32,10 @@ const handleSave = () => {
       }
       updateGridLayoutItem(updatedWidget)
     } else {
-      const newWidget: GridWidgetWithoutCords = {
+      const newWidget: GridWidgetWithoutCords = createWidgetObject({
         type: props.platform,
-        w: 1,
-        h: 1,
-        i: generateItemId(),
         properties,
-      }
+      })
       addGridLayoutItem(newWidget)
     }
 
