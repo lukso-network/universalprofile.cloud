@@ -41,6 +41,20 @@ const { selectWidget } = useWidgetStore()
           ></lukso-icon>
         </div>
       </lukso-tooltip>
+
+      <!-- Image -->
+      <lukso-tooltip variant="light" :text="formatMessage('widget_type_image')">
+        <div
+          class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-[1.05]"
+          @click="selectWidget('IMAGE')"
+        >
+          <lukso-icon
+            name="camera"
+            size="medium"
+            color="neutral-100"
+          ></lukso-icon>
+        </div>
+      </lukso-tooltip>
     </div>
   </section>
 
