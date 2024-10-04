@@ -42,18 +42,19 @@ const handleSaveLayout = async () => {
     return
   }
 
-  await saveGridLayout(tempGridLayout.value)
-  isEditingGrid.value = false
+  saveGridLayout(tempGridLayout.value).then(() => {
+    isEditingGrid.value = false
 
-  // rebuild layout to ensure that all widgets are in the correct position
-  const layout = buildLayout(
-    tempGridLayout.value,
-    gridColumns.value,
-    canEditGrid.value
-  )
+    // rebuild layout to ensure that all widgets are in the correct position
+    const layout = buildLayout(
+      tempGridLayout.value,
+      gridColumns.value,
+      canEditGrid.value
+    )
 
-  tempGridLayout.value = [...layout]
-  viewedGridLayout.value = [...layout]
+    tempGridLayout.value = [...layout]
+    viewedGridLayout.value = [...layout]
+  })
 }
 
 const handleResize = (width: number) => {

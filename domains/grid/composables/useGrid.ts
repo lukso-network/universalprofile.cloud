@@ -101,14 +101,23 @@ export const useGrid = () => {
 
       try {
         isSavingGrid.value = true
-        await saveConfig(connectedProfileAddress.value, config, () => {
-          hasUnsavedGrid.value = false
-          isSavingGrid.value = false
-        })
+        return (await saveConfig(connectedProfileAddress.value, config))
+          ?.send({ from: connectedProfileAddress.value })
+          ?.on('transactionHash', (_hash: string) => {
+            // as soon as user confirm we unblock the UI
+            hasUnsavedGrid.value = false
+            isSavingGrid.value = false
+          })
 
-        if (gridLog.enabled) {
-          gridLog('Layout saved', layout)
-        }
+          ?.on('receipt', (receipt: any) => {
+            if (gridLog.enabled) {
+              gridLog('Layout saved', layout, receipt)
+            }
+          })
+          ?.on('error', (error: Error) => {
+            console.warn(error)
+            isSavingGrid.value = false
+          })
       } catch (error) {
         console.warn('Error saving layout', error)
         isSavingGrid.value = false

@@ -82,8 +82,7 @@ export const getGridConfig = async (address: Address) => {
  */
 export const saveConfig = async (
   address: Address,
-  config: GridConfigItem[],
-  saveCallback: () => void
+  config: GridConfigItem[]
 ) => {
   // convert config to blob
   const blob = new Blob([JSON.stringify(config, null, 2)], {
@@ -124,17 +123,5 @@ export const saveConfig = async (
   )
 
   // save encoded config url to UP
-  await universalProfileContract?.methods
-    .setData(dataKey, encodedJsonUrl)
-    .send({ from: address })
-    .on('receipt', (receipt: any) => {
-      if (gridLog.enabled) {
-        gridLog('Save config receipt', receipt)
-      }
-
-      saveCallback()
-    })
-    ?.on('error', (error: Error) => {
-      console.warn(error)
-    })
+  return universalProfileContract?.methods.setData(dataKey, encodedJsonUrl)
 }
