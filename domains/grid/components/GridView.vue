@@ -31,7 +31,7 @@ const currentLayout = computed(() => {
 
 const handleUpdateLayout = (newLayout: GridWidget[]) => {
   if (gridLog.enabled) {
-    gridLog('Layout updated', newLayout)
+    gridLog('Layout updated', toRaw(newLayout))
   }
 
   layout.value = newLayout
@@ -43,17 +43,6 @@ const handleSaveLayout = async () => {
   }
 
   await saveGridLayout(tempGridLayout.value)
-  isEditingGrid.value = false
-
-  // rebuild layout to ensure that all widgets are in the correct position
-  const layout = buildLayout(
-    tempGridLayout.value,
-    gridColumns.value,
-    canEditGrid.value
-  )
-
-  tempGridLayout.value = [...layout]
-  viewedGridLayout.value = [...layout]
 }
 
 const handleResize = (width: number) => {

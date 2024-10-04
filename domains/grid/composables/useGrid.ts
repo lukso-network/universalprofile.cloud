@@ -8,6 +8,7 @@ export const useGrid = () => {
     gridColumns,
     isEditingGrid,
     isConnectedUserViewingOwnProfile,
+    isSavingGrid,
   } = storeToRefs(useAppStore())
   const canEditGrid = computed(
     () =>
@@ -98,18 +99,40 @@ export const useGrid = () => {
         return
       }
 
-      const response = await saveConfig(connectedProfileAddress.value, config)
+      try {
+        isSavingGrid.value = true
+        return (await saveConfig(connectedProfileAddress.value, config))
+          ?.send({ from: connectedProfileAddress.value })
+          ?.on('transactionHash', (_hash: string) => {
+            // as soon as user confirm we unblock the UI
+            hasUnsavedGrid.value = false
+            isSavingGrid.value = false
+            isEditingGrid.value = false
 
-      if (!response) {
-        console.warn('Failed to save layout')
-        return
+            // rebuild layout to ensure that all widgets are in the correct position
+            const layout = buildLayout(
+              tempGridLayout.value,
+              gridColumns.value,
+              canEditGrid.value
+            )
+
+            tempGridLayout.value = [...layout]
+            viewedGridLayout.value = [...layout]
+          })
+
+          ?.on('receipt', (receipt: any) => {
+            if (gridLog.enabled) {
+              gridLog('Layout saved', toRaw(layout), receipt)
+            }
+          })
+          ?.on('error', (error: Error) => {
+            console.warn(error)
+            isSavingGrid.value = false
+          })
+      } catch (error) {
+        console.warn('Error saving layout', error)
+        isSavingGrid.value = false
       }
-
-      if (gridLog.enabled) {
-        gridLog('Layout saved', layout, response)
-      }
-
-      hasUnsavedGrid.value = false
     },
 
     canEditGrid,

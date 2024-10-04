@@ -35,6 +35,7 @@ export const useAppStore = defineStore(
     const viewedGridLayout = ref<GridWidget[]>([])
     const tempGridLayout = ref<GridWidget[]>([])
     const gridColumns = ref<number>(COL_NUM_LARGE)
+    const isSavingGrid = ref(false)
 
     // statuses
     const isConnecting = ref(false)
@@ -158,6 +159,7 @@ export const useAppStore = defineStore(
       gridColumns,
       isConnectedUserViewingOwnProfile,
       isViewedProfileConnected,
+      isSavingGrid,
     }
   },
   {

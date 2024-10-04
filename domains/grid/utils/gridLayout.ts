@@ -268,11 +268,11 @@ export const getUserLayout = async (
   const userConfig = await getGridConfig(address)
 
   // if user config is invalid we load default one
-  if (isConfigValid(userConfig?.config)) {
-    config = userConfig?.config as GridConfigItem[]
+  if (isConfigValid(userConfig)) {
+    config = userConfig as GridConfigItem[]
   } else {
     if (gridLog.enabled) {
-      gridLog('Invalid config', userConfig?.config)
+      gridLog('Invalid config', userConfig)
     }
 
     config = defaultConfig(address)

@@ -30,6 +30,7 @@ export const LUKSO_PROXY_API = 'https://api.universalprofile.cloud'
 
 // url of the ipfs gateway
 export const IPFS_URL = `${LUKSO_PROXY_API}/ipfs/`
+export const IPFS_CLIENT_URL = `${LUKSO_PROXY_API}/api/v0/add`
 
 // Tanstack expirations. This is important because the sw.js has to cache longer than and no longer than the GC_TIME.
 export const TANSTACK_GC_TIME = 1000 * 60 * 60 * 24 * 7

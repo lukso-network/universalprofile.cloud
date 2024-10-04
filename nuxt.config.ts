@@ -145,6 +145,7 @@ export default defineNuxtConfig({
       TRANSAK_API_KEY: process.env.NUXT_PUBLIC_TRANSAK_API_KEY,
       RAMP_API_KEY: process.env.NUXT_PUBLIC_RAMP_API_KEY,
       BUILD_VERSION: process.env.GITHUB_SHA || 'debug',
+      API_SHARED_SECRET: process.env.NUXT_PUBLIC_API_SHARED_SECRET,
     },
   },
   pwa: {

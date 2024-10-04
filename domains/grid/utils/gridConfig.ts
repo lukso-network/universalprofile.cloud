@@ -1,78 +1,127 @@
-// All this is just temporal until we implement LSP27TheGrid
-// This is a simple way to store the grid configuration in a BaaS database
+import ERC725, { type ERC725JSONSchema } from '@erc725/erc725.js'
+import UniversalProfileContract from '@lukso/lsp-smart-contracts/artifacts/UniversalProfile.json'
 
-import Parse from 'parse'
+import { AuthenticatedFormDataUploader } from '@/services/ipfs/authenticated-formdata-client'
+import { BaseFormDataUploader } from '@/services/ipfs/formdata-base-client'
+import LSP28TheGrid from '@/shared/schemas/LSP28TheGrid.json'
 
-const CLASS_NAME = 'grid_config_new'
+import type { UniversalProfile } from '@/contracts/UniversalProfile'
+import type { GridConfigItem } from '@/types/grid'
+import type { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
+import type { AbiItem } from 'web3-utils'
 
-Parse.initialize(
-  'Y2qPj69JQtmOzHpr49mwNxna9ss2QPsuZV5YH9JH',
-  'gQZwrQ25HQ2y1NZFi2JJy0QdLs7hHzMsEpgL9D5J'
-)
-Parse.serverURL = 'https://parseapi.back4app.com/'
+let uploadProvider: BaseFormDataUploader | undefined
+const dataKey = ERC725.encodeKeyName('LSP28TheGrid')
 
-export type GetGridConfigResponse = {
-  objectId: string
-  config: GridConfigItem[]
-}
-
-export type UpsertGridConfigResponse = {
-  objectId: string
-  createdAt?: string
-  updatedAt?: string
-}
-
-export const getGridConfig = async (
-  username: string
-): Promise<GetGridConfigResponse | undefined> => {
-  const query: Parse.Query = new Parse.Query(CLASS_NAME)
-  query.equalTo('username', username.toLowerCase())
-
-  try {
-    const object = await query.first()
-
-    if (!object) {
-      return
-    }
-
-    return {
-      objectId: object.id,
-      config: object?.get('config'),
-    }
-  } catch (error: any) {
-    console.error(`Error while fetching ${CLASS_NAME}`, error)
+/**
+ * Get the IPFS upload provider
+ *
+ * @returns
+ */
+const getUploadProvider = () => {
+  if (!uploadProvider) {
+    uploadProvider = new AuthenticatedFormDataUploader(IPFS_CLIENT_URL, {})
   }
+  return uploadProvider
 }
 
+/**
+ * Get the grid config for a given address
+ *
+ * @param address
+ * @returns
+ */
+export const getGridConfig = async (address: Address) => {
+  const { contract } = useWeb3(PROVIDERS.RPC)
+  const universalProfileContract = contract<UniversalProfile>(
+    UniversalProfileContract.abi as AbiItem[],
+    address
+  )
+
+  // read encoded config url to UP
+  const getDataValue = await universalProfileContract?.methods
+    .getData(dataKey)
+    .call()
+
+  if (!getDataValue) {
+    return
+  }
+
+  // decode config
+  const decodedData = ERC725.decodeData(
+    [
+      {
+        value: getDataValue,
+        keyName: 'LSP28TheGrid',
+      },
+    ],
+    LSP28TheGrid as ERC725JSONSchema[]
+  )
+  const [decodedJsonUrl] = decodedData as DecodeDataOutput[]
+  const { url } = decodedJsonUrl.value as VerifiableURI
+
+  // fetch config file from IPFS
+  const config = await fetcher<GridConfigItem[], Record<string, never>>({
+    url: resolveUrl(url),
+    method: 'GET',
+  })
+
+  if (gridLog.enabled) {
+    gridLog('Profile config from IPFS', config)
+  }
+
+  return config
+}
+
+/**
+ * Save the grid config for a given address
+ *
+ * @param address
+ * @param config
+ * @param saveCallback
+ */
 export const saveConfig = async (
   address: Address,
   config: GridConfigItem[]
-): Promise<UpsertGridConfigResponse | undefined> => {
-  const query: Parse.Query = new Parse.Query(CLASS_NAME)
-  query.equalTo('username', address.toLowerCase())
+) => {
+  // convert config to blob
+  const blob = new Blob([JSON.stringify(config, null, 2)], {
+    type: 'application/json',
+  })
 
-  try {
-    let object = await query.first()
+  // upload blob to IPFS
+  const uploadProvider = getUploadProvider()
+  const url = await uploadProvider.upload(blob)
 
-    if (!object) {
-      object = new Parse.Object(CLASS_NAME)
-    }
-
-    object.set('config', config)
-    object.set('username', address.toLowerCase())
-
-    try {
-      const response = await object.save()
-
-      return {
-        objectId: response.id,
-        createdAt: response.get('createdAt'),
-        updatedAt: response.get('updatedAt'),
-      }
-    } catch (error: any) {
-      console.error(`Error while updating ${CLASS_NAME}`, error)
-    }
-  } catch (error: any) {
-    console.error(`Error while retrieving object ${CLASS_NAME}`, error)
+  if (gridLog.enabled) {
+    gridLog('Config IPFS url', resolveUrl(url))
   }
+
+  // encode uploaded config url
+  const encodedData = ERC725.encodeData(
+    [
+      {
+        value: {
+          json: config,
+          url,
+        },
+        keyName: 'LSP28TheGrid',
+      },
+    ],
+    LSP28TheGrid as ERC725JSONSchema[]
+  )
+  const [encodedJsonUrl] = encodedData.values
+
+  if (gridLog.enabled) {
+    gridLog('Config encoded JSON url', encodedJsonUrl)
+  }
+
+  const { contract } = useWeb3(PROVIDERS.INJECTED)
+  const universalProfileContract = contract<UniversalProfile>(
+    UniversalProfileContract.abi as AbiItem[],
+    address
+  )
+
+  // save encoded config url to UP
+  return universalProfileContract?.methods.setData(dataKey, encodedJsonUrl)
 }
