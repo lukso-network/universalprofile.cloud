@@ -107,11 +107,22 @@ export const useGrid = () => {
             // as soon as user confirm we unblock the UI
             hasUnsavedGrid.value = false
             isSavingGrid.value = false
+            isEditingGrid.value = false
+
+            // rebuild layout to ensure that all widgets are in the correct position
+            const layout = buildLayout(
+              tempGridLayout.value,
+              gridColumns.value,
+              canEditGrid.value
+            )
+
+            tempGridLayout.value = [...layout]
+            viewedGridLayout.value = [...layout]
           })
 
           ?.on('receipt', (receipt: any) => {
             if (gridLog.enabled) {
-              gridLog('Layout saved', layout, receipt)
+              gridLog('Layout saved', toRaw(layout), receipt)
             }
           })
           ?.on('error', (error: Error) => {
