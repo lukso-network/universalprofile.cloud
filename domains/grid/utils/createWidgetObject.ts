@@ -17,8 +17,8 @@ export const createWidgetObject = (
   return {
     ...newWidget,
     type: newWidget.type,
-    w: 1,
-    h: 1,
+    w: newWidget.w || 1,
+    h: newWidget.h || 1,
     i: newWidget.i || generateItemId(),
     properties: newWidget.properties || {},
   }
