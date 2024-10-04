@@ -28,7 +28,7 @@ const handleSave = () => {
     }
     updateGridLayoutItem(updatedWidget)
   } else {
-    const newWidget: GridWidgetWithoutCords = createWidget({
+    const newWidget: GridWidgetWithoutCords = createWidgetObject({
       type: GRID_WIDGET_TYPE.IMAGE,
       properties,
     })
