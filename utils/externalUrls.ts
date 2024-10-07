@@ -161,7 +161,7 @@ export const walletConnectDeepLinkUrl = (data: string) => {
   }
 
   const urlData = new URL(data)
-  const deepLink = `${MOBILE_APP_DEEP_LINK_PREFIX}://wallet-connect/${urlData.username}${urlData.search}`
+  const deepLink = `${MOBILE_APP_DEEP_LINK_PREFIX}://wallet-connect/${urlData.pathname}${urlData.search}`
 
   if (genericLog.enabled) {
     genericLog(`Mobile App link: ${deepLink}`)
