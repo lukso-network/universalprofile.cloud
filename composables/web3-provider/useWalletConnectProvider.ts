@@ -11,7 +11,7 @@ const initProvider = async () => {
       name: 'Universal Profiles',
       description:
         'Explore Universal Profiles and view all your assets in one place as well as send and receive tokens to other Universal Profile users.',
-      url: 'https://universalprofile.cloud/',
+      url: BASE_DAPP_URL,
       icons: ['https://universalprofile.cloud/favicon.png'],
     },
     showQrModal: false,
@@ -28,7 +28,6 @@ const connect = async (requestAccounts = true) => {
     walletConnectProvider: provider,
     connectedProfileAddress,
     isWalletConnect,
-    isConnecting,
   } = storeToRefs(useAppStore())
   const { setConnectionExpiry } = useConnectionExpiry()
   const { addWeb3 } = useWeb3Store()
@@ -37,7 +36,6 @@ const connect = async (requestAccounts = true) => {
   const { formatMessage } = useIntl()
 
   try {
-    isConnecting.value = true
     await provider.value?.connect()
 
     if (requestAccounts) {
@@ -69,8 +67,6 @@ const connect = async (requestAccounts = true) => {
         message: getErrorMessage(error),
       },
     })
-  } finally {
-    isConnecting.value = false
   }
 }
 
@@ -81,24 +77,10 @@ const reconnect = async () => {
   connect(false)
 }
 
-/**
- * Parse deep link to be used by mobile app
- *
- * By default WalletConnect uses wc: prefix for deep linking, but this also works with
- * other wallets. We replace with own prefix to ensure it works with our app.
- *
- * @param data
- * @returns
- */
-const deepLinkParser = (data: string) => {
-  return data.replace('wc:', 'network.lukso.universalprofiles.ios:')
-}
-
 export const useWalletConnectProvider = () => {
   return {
     initProvider,
     connect,
     reconnect,
-    deepLinkParser,
   }
 }
