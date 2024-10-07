@@ -156,7 +156,16 @@ export const universalSwapsAssetUrl = (address?: Address) => {
  * @returns
  */
 export const walletConnectDeepLinkUrl = (data: string) => {
-  const urlData = new URL(data)
+  if (genericLog.enabled) {
+    genericLog(`Wallet Connect link: ${data}`)
+  }
 
-  return `${MOBILE_APP_DEEP_LINK_PREFIX}://wallet-connect/${urlData.username}${urlData.search}`
+  const urlData = new URL(data)
+  const deepLink = `${MOBILE_APP_DEEP_LINK_PREFIX}://wallet-connect/${urlData.username}${urlData.search}`
+
+  if (genericLog.enabled) {
+    genericLog(`Mobile App link: ${deepLink}`)
+  }
+
+  return deepLink
 }
