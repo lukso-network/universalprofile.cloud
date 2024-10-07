@@ -1,6 +1,8 @@
 import assert from 'assert'
 import { isAddress } from 'web3-utils'
 
+import { MOBILE_APP_DEEP_LINK_PREFIX } from '@/shared/config'
+
 /**
  * URL to transaction on blockchain explorer
  *
@@ -145,4 +147,16 @@ export const universalSwapsAssetUrl = (address?: Address) => {
   assert(address, 'Address is required')
   assert(isAddress(address), 'Address is not a valid address')
   return `https://universalswaps.io/tokens/lukso/${address.toLowerCase()}`
+}
+
+/**
+ * URL to Mobile App deep link used by Wallet Connect
+ *
+ * @param data
+ * @returns
+ */
+export const walletConnectDeepLinkUrl = (data: string) => {
+  const urlData = new URL(data)
+
+  return `${MOBILE_APP_DEEP_LINK_PREFIX}://wallet-connect${urlData.search}`
 }

@@ -6,11 +6,8 @@ type Emits = (event: 'disconnect') => void
 const emit = defineEmits<Emits>()
 
 const qrCodeElement = ref<HTMLDivElement | null>(null)
-const {
-  initProvider,
-  connect: connectWalletConnect,
-  deepLinkParser,
-} = useWalletConnectProvider()
+const { initProvider, connect: connectWalletConnect } =
+  useWalletConnectProvider()
 const isLoading = ref(true)
 const deepLink = ref('')
 const { walletConnectProvider: provider, isMobile } = storeToRefs(useAppStore())
@@ -19,7 +16,7 @@ const { formatMessage } = useIntl()
 const size = computed(() => (isMobile.value ? 300 : 340))
 
 const generateQrCode = (data: string) => {
-  deepLink.value = deepLinkParser(data)
+  deepLink.value = walletConnectDeepLinkUrl(data)
   const qrCode = new QRCodeStyling({
     width: size.value,
     height: size.value,
