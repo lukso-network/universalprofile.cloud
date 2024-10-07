@@ -158,5 +158,5 @@ export const universalSwapsAssetUrl = (address?: Address) => {
 export const walletConnectDeepLinkUrl = (data: string) => {
   const urlData = new URL(data)
 
-  return `${MOBILE_APP_DEEP_LINK_PREFIX}://wallet-connect${urlData.search}`
+  return `${MOBILE_APP_DEEP_LINK_PREFIX}://wallet-connect/${urlData.username}${urlData.search}`
 }
