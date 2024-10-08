@@ -6,6 +6,7 @@ const GRID_ROW_HEIGHT_PX = 280 // TODO we should calculate this based on grid co
 const GRID_RESIZE_DEBOUNCE_TIMEOUT_MS = 250
 
 const {
+  isEditingGrid,
   tempGridLayout,
   viewedGridLayout,
   hasUnsavedGrid,
@@ -92,9 +93,11 @@ const handleItemResized = (_itemNumber: number) => {
   tempGridLayout.value = layout.value
 }
 
-// rebuild layout when items are changed
+// rebuild layout and track unsaved state when:
+// - user make modifications in widgets (add/edit/remove/resize)
+// - user toggles edit mode
 watch(
-  () => tempGridLayout.value,
+  [tempGridLayout, isEditingGrid],
   async () => {
     await nextTick()
     const changes = compareLayouts(viewedGridLayout.value, tempGridLayout.value)
