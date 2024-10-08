@@ -24,3 +24,8 @@ export type GridWidgetProperty = {
   type: 'string' | 'number' | 'boolean' | 'color' | 'url'
   optional?: boolean
 }
+
+export type GridWidgetChange = {
+  oldWidget: GridWidget | null
+  newWidget: GridWidget | null
+}

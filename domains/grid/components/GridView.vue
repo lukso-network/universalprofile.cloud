@@ -63,12 +63,12 @@ const handleResize = (width: number) => {
 }
 
 const handleResetLayout = async () => {
-  hasUnsavedGrid.value = false
   const userLayout = await getUserLayout(address.value)
-  const layout = buildLayout(userLayout, gridColumns.value, canEditGrid.value)
+  const _layout = buildLayout(userLayout, gridColumns.value, canEditGrid.value)
 
-  tempGridLayout.value = [...layout]
-  viewedGridLayout.value = [...layout]
+  tempGridLayout.value = [..._layout]
+  viewedGridLayout.value = [..._layout]
+  layout.value = [..._layout]
 }
 
 const clearSelection = () => {
@@ -81,7 +81,6 @@ const handleItemMove = (_itemNumber: number) => {
 
 const handleItemMoved = (_itemNumber: number) => {
   clearSelection()
-  hasUnsavedGrid.value = true
   tempGridLayout.value = layout.value
 }
 
@@ -91,41 +90,35 @@ const handleItemResize = (_itemNumber: number) => {
 
 const handleItemResized = (_itemNumber: number) => {
   clearSelection()
-  hasUnsavedGrid.value = true
   tempGridLayout.value = layout.value
 }
 
-// rebuild layout when user connects/disconnects,
-// or when user enters/exit edit mode
+// rebuild layout and track unsaved state when:
+// - user make modifications in widgets (add/edit/remove/resize)
+// - user toggles edit mode
 watch(
-  () => canEditGrid.value,
-  () => {
-    if (isEditingGrid.value) {
+  [tempGridLayout, isEditingGrid],
+  async () => {
+    await nextTick()
+    const changes = compareLayouts(viewedGridLayout.value, tempGridLayout.value)
+
+    if (changes.length > 0) {
       layout.value = buildLayout(
         tempGridLayout.value,
         gridColumns.value,
         canEditGrid.value
       )
+      hasUnsavedGrid.value = true
     } else {
       layout.value = buildLayout(
         viewedGridLayout.value,
         gridColumns.value,
         canEditGrid.value
       )
+      hasUnsavedGrid.value = false
     }
-  }
-)
-
-// rebuild layout when items are added/removed
-watch(
-  () => tempGridLayout.value.length,
-  () => {
-    layout.value = buildLayout(
-      currentLayout.value,
-      gridColumns.value,
-      canEditGrid.value
-    )
-  }
+  },
+  { deep: true }
 )
 
 // initialize layout on initial render and when user connects/disconnects
