@@ -63,8 +63,6 @@ export const useGrid = () => {
 
     addGridLayoutItem: (newItem: GridWidgetWithoutCords) => {
       placeWidgetInLayout(newItem, tempGridLayout.value, gridColumns.value)
-
-      hasUnsavedGrid.value = true
     },
 
     updateGridLayoutItem: (item: GridWidget) => {
@@ -75,7 +73,6 @@ export const useGrid = () => {
       }
 
       tempGridLayout.value[index] = item
-      hasUnsavedGrid.value = true
     },
 
     removeGridLayoutItem: (id: string | number) => {
@@ -84,7 +81,6 @@ export const useGrid = () => {
       }
 
       tempGridLayout.value = tempGridLayout.value.filter(item => item.i !== id)
-      hasUnsavedGrid.value = true
     },
 
     saveGridLayout: async (layout?: GridWidget[]) => {
@@ -134,7 +130,6 @@ export const useGrid = () => {
         isSavingGrid.value = false
       }
     },
-
     canEditGrid,
   }
 }
