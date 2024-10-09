@@ -1,7 +1,7 @@
-export const parsePlatformInput = (
+export const parsePlatformInput = async (
   platform: GridWidgetType,
   input: string
-): LayoutItemExtended | never => {
+): Promise<LayoutItemExtended | never> => {
   switch (platform) {
     case GRID_WIDGET_TYPE.X:
       return parseXWidgetInput(input)
@@ -12,7 +12,7 @@ export const parsePlatformInput = (
     case GRID_WIDGET_TYPE.SPOTIFY:
       return parseSpotifyWidgetInput(input)
     case GRID_WIDGET_TYPE.SOUNDCLOUD:
-      return parseSoundCloudWidgetInput(input)
+      return await parseSoundCloudWidgetInput(input)
     default:
       throw new Error('Invalid platform')
   }
@@ -108,21 +108,44 @@ const parseSpotifyWidgetInput = (input: string): LayoutItemExtended | never => {
   throw new Error('Invalid Spotify input')
 }
 
-const parseSoundCloudWidgetInput = (
+const parseSoundCloudWidgetInput = async (
+  input: string
+): Promise<LayoutItemExtended> => {
+  const SOUNDCLOUD_SHARE_URL_REGEX =
+    /https:\/\/soundcloud\.com\/([a-zA-Z0-9_-]+)(?:\/(sets\/[a-zA-Z0-9_-]+|[a-zA-Z0-9_-]+))?\/?/
+
+  // Check if the input already contains an embed URL
+  try {
+    return parseSoundCloudWidgetInputFromEmbed(input)
+  } catch {}
+
+  // Check if the input is a SoundCloud share URL
+  const [shareUrlMatch] = input.match(SOUNDCLOUD_SHARE_URL_REGEX) || []
+  if (shareUrlMatch) {
+    const soundCloudEmbed = await getSoundCloudEmbedUrl(shareUrlMatch)
+
+    if (soundCloudEmbed) {
+      return parseSoundCloudWidgetInputFromEmbed(soundCloudEmbed)
+    }
+  }
+
+  throw new Error('Invalid SoundCloud input')
+}
+
+const parseSoundCloudWidgetInputFromEmbed = (
   input: string
 ): LayoutItemExtended | never => {
-  const SOUNDCLOUD_URL_REGEX =
-    /https?:\/\/w\.soundcloud\.com\/player\/\?url=https%3A\/\/api\.soundcloud\.com\/(tracks|playlists)\/(\d+)([^"]*)/
+  const SOUNDCLOUD_EMBED_URL_REGEX =
+    /https?:\/\/w\.soundcloud\.com\/player\/\?(?:(?!url=https).)*url=https(?::|%3A)(?:\/|%2F){2}api\.soundcloud\.com(?:\/|%2F)(tracks|playlists|users)(?:\/|%2F)\d+(?:[^"]*)?/
   const SOUNDCLOUD_IFRAME_ALLOW =
     'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
+  const [match, type] = input.match(SOUNDCLOUD_EMBED_URL_REGEX) || []
 
-  const [, type, id, params] = input.match(SOUNDCLOUD_URL_REGEX) || []
-
-  if (id) {
+  if (match) {
     return {
       type: GRID_WIDGET_TYPE.IFRAME,
       properties: {
-        src: `https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/${type}/${id}${params}`,
+        src: match,
         allow: SOUNDCLOUD_IFRAME_ALLOW,
         type,
       },
@@ -130,6 +153,24 @@ const parseSoundCloudWidgetInput = (
   }
 
   throw new Error('Invalid SoundCloud input')
+}
+
+const getSoundCloudEmbedUrl = async (
+  url: string
+): Promise<string | undefined> => {
+  const encodedUrl = encodeURI(url)
+  const response = await fetch(
+    `https://soundcloud.com/oembed?url=${encodedUrl}&format=json`
+  )
+
+  if (!response.ok) {
+    return response.statusText
+  }
+
+  const { html } = await response.json()
+  const [, srcMatch] = html.match(/src="([^"]+)"/) || []
+
+  return srcMatch
 }
 
 const parseInstagramWidgetInput = (
