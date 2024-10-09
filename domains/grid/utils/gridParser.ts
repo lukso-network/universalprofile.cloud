@@ -1,7 +1,7 @@
 export const parsePlatformInput = async (
   platform: GridWidgetType,
   input: string
-): Promise<LayoutItemExtended> => {
+): Promise<LayoutItemExtended | never> => {
   switch (platform) {
     case GRID_WIDGET_TYPE.X:
       return parseXWidgetInput(input)
@@ -12,7 +12,7 @@ export const parsePlatformInput = async (
     case GRID_WIDGET_TYPE.SPOTIFY:
       return parseSpotifyWidgetInput(input)
     case GRID_WIDGET_TYPE.SOUNDCLOUD:
-      return parseSoundCloudWidgetInput(input)
+      return await parseSoundCloudWidgetInput(input)
     default:
       throw new Error('Invalid platform')
   }
@@ -132,11 +132,11 @@ const parseSoundCloudWidgetInput = async (
   throw new Error('Invalid SoundCloud input')
 }
 
-export const parseSoundCloudWidgetInputFromEmbed = (
+const parseSoundCloudWidgetInputFromEmbed = (
   input: string
 ): LayoutItemExtended | never => {
   const SOUNDCLOUD_EMBED_URL_REGEX =
-    /https?:\/\/w\.soundcloud\.com\/player\/\?(?:(?!url=https).)*url=https(?::|%3A)(?:\/|%2F){2}api\.soundcloud\.com(?:\/|%2F)(tracks|playlists)(?:\/|%2F)\d+(?:[^"]*)?/
+    /https?:\/\/w\.soundcloud\.com\/player\/\?(?:(?!url=https).)*url=https(?::|%3A)(?:\/|%2F){2}api\.soundcloud\.com(?:\/|%2F)(tracks|playlists|users)(?:\/|%2F)\d+(?:[^"]*)?/
   const SOUNDCLOUD_IFRAME_ALLOW =
     'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
   const [match, embedType] = input.match(SOUNDCLOUD_EMBED_URL_REGEX) || []
@@ -155,7 +155,7 @@ export const parseSoundCloudWidgetInputFromEmbed = (
   throw new Error('Invalid SoundCloud input')
 }
 
-export const getSoundCloudEmbedUrl = async (
+const getSoundCloudEmbedUrl = async (
   url: string
 ): Promise<string | undefined> => {
   const encodedUrl = encodeURI(url)
