@@ -64,14 +64,8 @@ export const useGrid = () => {
 
       viewedGridLayout.value = cloneObject(layout)
 
-      // check for selected layout
-      if (!selectedLayoutId.value) {
+      if (!selectedLayoutId.value || (selectedLayoutId.value && !layout.some(item => item.id === selectedLayoutId.value))) {
         selectedLayoutId.value = layout[0]?.id
-      } else {
-        // if selected layout is not in the layout we reset it
-        if (!layout.some(item => item.id === selectedLayoutId.value)) {
-          selectedLayoutId.value = layout[0]?.id
-        }
       }
 
       // if there is unsaved grid we initialize temp layout
