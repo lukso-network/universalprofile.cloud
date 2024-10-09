@@ -32,10 +32,11 @@ export const useAppStore = defineStore(
     // grid
     const isEditingGrid = ref(false)
     const hasUnsavedGrid = ref(false)
-    const viewedGridLayout = ref<GridWidget[]>([])
-    const tempGridLayout = ref<GridWidget[]>([])
+    const viewedGridLayout = ref<Grid<GridWidget>[]>([])
+    const tempGridLayout = ref<Grid<GridWidget>[]>([])
     const gridColumns = ref<number>(COL_NUM_LARGE)
     const isSavingGrid = ref(false)
+    const selectedLayoutId = ref<string | undefined>()
 
     // statuses
     const isConnecting = ref(false)
@@ -160,6 +161,7 @@ export const useAppStore = defineStore(
       isConnectedUserViewingOwnProfile,
       isViewedProfileConnected,
       isSavingGrid,
+      selectedLayoutId,
     }
   },
   {
@@ -172,6 +174,7 @@ export const useAppStore = defineStore(
         'isWalletConnect',
         'isEditingGrid',
         'hasUnsavedGrid',
+        'selectedLayoutId',
         'tempGridLayout',
       ],
       key: STORAGE_KEY.APP_STORE,

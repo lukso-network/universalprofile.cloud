@@ -1,63 +1,3 @@
-/**
- * Default grid config
- *
- * @param address
- * @returns
- */
-export const defaultConfig = (address: string): GridConfigItem[] => {
-  return [
-    {
-      type: GRID_WIDGET_TYPE.TITLE_LINK,
-      width: 1,
-      height: 1,
-      properties: { title: address, bgColor: '#7a83ae' },
-    },
-    {
-      type: GRID_WIDGET_TYPE.TEXT,
-      width: 1,
-      height: 1,
-      properties: {
-        title: 'Hey',
-        text: 'Customize your grid layout!',
-        bgColor: '#9db9b9',
-      },
-    },
-    {
-      type: GRID_WIDGET_TYPE.IMAGE,
-      width: 1,
-      height: 1,
-      properties: { src: 'https://via.placeholder.com/150' },
-    },
-  ]
-}
-
-/**
- *  Check if the grid config is valid
- *
- * @param grid
- * @returns
- */
-export const isConfigValid = (gridConfig?: GridConfigItem[]): boolean => {
-  if (!gridConfig) {
-    return false
-  }
-
-  if (
-    !gridConfig.every(item => {
-      return (
-        item.type in GRID_WIDGET_TYPE &&
-        typeof item.width === 'number' &&
-        typeof item.height === 'number' &&
-        typeof item.properties === 'object'
-      )
-    })
-  ) {
-    return false
-  }
-
-  return true
-}
-
 export const getGridColumns = (width: number): number => {
   const breakpointsKeys = Object.keys(breakpoints)
     .map(Number)
@@ -65,76 +5,6 @@ export const getGridColumns = (width: number): number => {
   const validBreakpoint = breakpointsKeys.find(bp => width >= bp)
 
   return validBreakpoint ? breakpoints[validBreakpoint] : COL_NUM_SMALL
-}
-
-/**
- * Convert LSP27 config to grid layout
- *
- * @param config
- * @param columns
- * @returns
- */
-export const configToLayout = (
-  config: GridConfigItem[]
-): GridWidgetWithoutCords[] => {
-  const layout = config.map(item => {
-    return createWidgetObject({
-      type: item.type,
-      properties: item.properties,
-      w: item.width,
-      h: item.height,
-    })
-  })
-
-  return layout
-}
-
-export const buildLayout = (
-  layout: GridWidgetWithoutCords[] | GridWidget[],
-  gridColumns: number,
-  withAddContentPlaceholder?: boolean
-): GridWidget[] => {
-  const updatedLayout: GridWidget[] = []
-
-  // remove "add widget" placeholder from layout
-  let _layout = layout.filter(
-    item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
-  )
-
-  // if items already have x/y cords we re-order layout to reflect that
-  _layout = _layout.slice().sort((a, b) => {
-    if (
-      a.x === undefined ||
-      b.x === undefined ||
-      a.y === undefined ||
-      b.y === undefined
-    ) {
-      return 0
-    }
-
-    if (a.y === b.y) {
-      return a.x - b.x
-    }
-
-    return a.y - b.y
-  })
-
-  // re-add placeholder
-  if (withAddContentPlaceholder) {
-    _layout.push(
-      createWidgetObject({
-        i: 'placeholder',
-        type: GRID_WIDGET_TYPE.ADD_CONTENT,
-        isResizable: false,
-      })
-    )
-  }
-
-  for (const widget of _layout) {
-    placeWidgetInLayout(widget, updatedLayout, gridColumns)
-  }
-
-  return updatedLayout
 }
 
 export const placeWidgetInLayout = (
@@ -220,37 +90,6 @@ export const getColumnHeightsFromLayout = (
 }
 
 /**
- * Convert grid layout to LSP27 config
- *
- * @param layout
- * @returns
- */
-export const layoutToConfig = (layout: GridWidget[]): GridConfigItem[] => {
-  // remove "add content" widget from layout before saving
-  const layoutWithoutAddContentWidget = layout.filter(
-    item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
-  )
-
-  // sort by y and then x to get the correct order
-  const orderedLayout = layoutWithoutAddContentWidget.sort((a, b) => {
-    if (a.y === b.y) {
-      return a.x - b.x
-    }
-
-    return a.y - b.y
-  })
-
-  return orderedLayout.map(item => {
-    return {
-      type: item.type,
-      width: item.originalWidth || item.w,
-      height: item.h,
-      properties: item.properties,
-    }
-  })
-}
-
-/**
  * Get grid layout for a given user address and grid column number
  *
  * @param address
@@ -259,19 +98,19 @@ export const layoutToConfig = (layout: GridWidget[]): GridConfigItem[] => {
  */
 export const getUserLayout = async (
   address: Address
-): Promise<GridWidgetWithoutCords[]> => {
-  let config: GridConfigItem[]
+): Promise<Grid<GridWidgetWithoutCords>[]> => {
+  let config: PartialBy<Grid<GridConfigItem>, 'id'>[]
   const userConfig = await getGridConfig(address)
 
   // if user config is invalid we load default one
   if (isConfigValid(userConfig)) {
-    config = userConfig as GridConfigItem[]
+    config = userConfig as Grid<GridConfigItem>[]
   } else {
     if (gridLog.enabled) {
       gridLog('Invalid config', userConfig)
     }
 
-    config = defaultConfig(address)
+    config = defaultGridConfig(address)
   }
 
   return configToLayout(config)
