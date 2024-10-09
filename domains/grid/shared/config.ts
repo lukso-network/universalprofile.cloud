@@ -36,12 +36,14 @@ export const WIDGET_TYPE_PROPERTIES: Record<
     { key: 'title', type: 'string' },
     { key: 'src', type: 'url', optional: true },
     { key: 'textColor', type: 'color', optional: true },
-    { key: 'bgColor', type: 'color', optional: true },
+    { key: 'backgroundColor', type: 'color', optional: true },
   ],
   [GRID_WIDGET_TYPE.TEXT]: [
     { key: 'title', type: 'string' },
     { key: 'text', type: 'string' },
-    { key: 'bgColor', type: 'color', optional: true },
+    { key: 'titleColor', type: 'color' },
+    { key: 'textColor', type: 'color' },
+    { key: 'backgroundColor', type: 'color', optional: true },
   ],
   [GRID_WIDGET_TYPE.X]: [
     { key: 'src', type: 'url' },

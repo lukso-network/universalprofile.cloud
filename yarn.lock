@@ -4723,9 +4723,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lukso/web-components@npm:1.88.1":
-  version: 1.88.1
-  resolution: "@lukso/web-components@npm:1.88.1"
+"@lukso/web-components@npm:1.89.0":
+  version: 1.89.0
+  resolution: "@lukso/web-components@npm:1.89.0"
   dependencies:
     clsx: "npm:^2.0.0"
     ethereum-blockies-base64: "npm:^1.0.2"
@@ -4733,7 +4733,7 @@ __metadata:
     tailwind-variants: "npm:^0.2.1"
     tippy.js: "npm:^6.3.7"
     web3-utils: "npm:^4.3.1"
-  checksum: 337db2026d80749c63e1c96b94f1e6b34de5c0cc16f8a306646f81eac939ced2b2cd42c2b6d847ffe852ecb6861501ab0b924075f3973bffa0a98c0803f5efd5
+  checksum: 4ad73fc1265912241060fd063a869d9f589a6e842cc256a50525d38e40bf4585bd85bf9c616ddb57dfc331c7ebcd87d42b28c6ee618a9b39b747846fd6a0a8d0
   languageName: node
   linkType: hard
 
@@ -7579,6 +7579,13 @@ __metadata:
     fflate: "npm:~0.6.10"
     meshoptimizer: "npm:~0.18.1"
   checksum: 02101a0631adee750e7be3efc0c76cb805565353d200a9cfc3f5b741bc5564129e2e9eb37c57544d9cb7e27608196972b755c6f7829b163155bec530641a0595
+  languageName: node
+  linkType: hard
+
+"@types/tinycolor2@npm:^1":
+  version: 1.4.6
+  resolution: "@types/tinycolor2@npm:1.4.6"
+  checksum: a662fd177135d27779b7ccba39881a85167f969787c71c7bf51903d288a519ad5b9526e0a4af7bde6444df6b7abe88bae893d569c6d804108c03dfec9509bdf6
   languageName: node
   linkType: hard
 
@@ -23413,6 +23420,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tinycolor2@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "tinycolor2@npm:1.6.0"
+  checksum: 066c3acf4f82b81c58a0d3ab85f49407efe95ba87afc3c7a16b1d77625193dfbe10dd46c26d0a263c1137361dd5a6a68bff2fb71def5fb9b9aec940fb030bcd4
+  languageName: node
+  linkType: hard
+
 "tinypool@npm:^0.8.3":
   version: 0.8.4
   resolution: "tinypool@npm:0.8.4"
@@ -24217,7 +24231,7 @@ __metadata:
     "@formatjs/intl": "npm:^2.9.9"
     "@google/model-viewer": "npm:^3.4.0"
     "@lukso/lsp-smart-contracts": "npm:0.15.0-rc.5"
-    "@lukso/web-components": "npm:1.88.1"
+    "@lukso/web-components": "npm:1.89.0"
     "@nuxt/test-utils": "npm:^3.13.1"
     "@nuxtjs/algolia": "npm:^1.10.2"
     "@nuxtjs/device": "npm:^3.1.1"
@@ -24249,6 +24263,7 @@ __metadata:
     "@types/node": "npm:^20.11.24"
     "@types/randombytes": "npm:2.0.3"
     "@types/three": "npm:^0.162.0"
+    "@types/tinycolor2": "npm:^1"
     "@types/uuid": "npm:^10"
     "@typescript-eslint/eslint-plugin": "npm:7.1.1"
     "@typescript-eslint/parser": "npm:7.1.1"
@@ -24309,6 +24324,7 @@ __metadata:
     swiper: "npm:~11.1.4"
     tailwind-variants: "npm:^0.2.1"
     three: "npm:^0.162.0"
+    tinycolor2: "npm:^1.6.0"
     typechain: "npm:^8.3.2"
     typescript: "npm:5.3.3"
     util: "npm:0.12.5"

@@ -24,7 +24,7 @@ const { selectWidget } = useWidgetStore()
     <div class="paragraph-inter-16-semi-bold mb-4">
       {{ formatMessage('add_widget_section_custom') }}
     </div>
-    <div class="flex gap-6">
+    <div class="flex gap-5">
       <!-- Iframe -->
       <lukso-tooltip
         variant="light"
@@ -55,6 +55,20 @@ const { selectWidget } = useWidgetStore()
           ></lukso-icon>
         </div>
       </lukso-tooltip>
+
+      <!-- Text -->
+      <lukso-tooltip variant="light" :text="formatMessage('widget_type_text')">
+        <div
+          class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-[1.05]"
+          @click="selectWidget('TEXT')"
+        >
+          <lukso-icon
+            name="document-outline"
+            size="medium"
+            color="neutral-100"
+          ></lukso-icon>
+        </div>
+      </lukso-tooltip>
     </div>
   </section>
 
@@ -65,7 +79,7 @@ const { selectWidget } = useWidgetStore()
     <div class="paragraph-inter-16-semi-bold mb-4">
       {{ formatMessage('add_widget_section_music') }}
     </div>
-    <div class="flex gap-6">
+    <div class="flex gap-5">
       <!-- Spotify -->
       <lukso-tooltip
         variant="light"
@@ -74,7 +88,7 @@ const { selectWidget } = useWidgetStore()
         <img
           src="/images/social-media-spotify.svg"
           alt="Spotify"
-          class="cursor-pointer transition hover:scale-[1.05]"
+          class="size-10 cursor-pointer transition hover:scale-[1.05]"
           @click="selectWidget('SPOTIFY')"
         />
       </lukso-tooltip>
@@ -101,7 +115,7 @@ const { selectWidget } = useWidgetStore()
     <div class="paragraph-inter-16-semi-bold mb-4">
       {{ formatMessage('add_widget_section_social') }}
     </div>
-    <div class="flex gap-6">
+    <div class="flex gap-5">
       <!-- X -->
       <lukso-tooltip variant="light" :text="formatMessage('widget_type_x')">
         <img

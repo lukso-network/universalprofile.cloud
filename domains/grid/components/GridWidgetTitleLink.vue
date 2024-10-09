@@ -3,7 +3,7 @@ type Props = {
   title: string
   src?: string
   textColor?: string
-  bgColor?: string
+  backgroundColor?: string
 }
 
 defineProps<Props>()
@@ -12,7 +12,7 @@ defineProps<Props>()
 <template>
   <div
     class="m-3 flex h-full items-center justify-center overflow-hidden rounded-12 p-4 text-neutral-100"
-    :style="{ backgroundColor: bgColor, color: textColor }"
+    :style="{ backgroundColor, color: textColor }"
   >
     <a :href="src" target="_blank">
       <h1 class="heading-apax-48-bold">{{ title }}</h1>
