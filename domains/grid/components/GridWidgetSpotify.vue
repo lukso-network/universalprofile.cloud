@@ -2,7 +2,7 @@
 type Props = {
   src: string
   allow: string
-  embedType: string
+  type: string
   widget: GridWidget
 }
 

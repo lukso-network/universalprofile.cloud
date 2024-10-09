@@ -1,7 +1,7 @@
 <script setup lang="ts">
 type Props = {
   src: string
-  embedType: string
+  type: string
 }
 
 const props = defineProps<Props>()
@@ -33,7 +33,7 @@ watch(
 <template>
   <div v-if="embedSrc" class="m-3 h-full overflow-scroll">
     <!-- X post -->
-    <div v-if="embedType === 'post'" class="my-[-10px] size-[inherit]">
+    <div v-if="type === 'post'" class="my-[-10px] size-[inherit]">
       <blockquote class="twitter-tweet size-[inherit]">
         <a
           class="flex size-[inherit] items-center justify-center"
