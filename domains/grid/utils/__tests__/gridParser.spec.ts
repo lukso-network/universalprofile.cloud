@@ -217,7 +217,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1856391039&show_artwork=true',
           allow: SOUNDCLOUD_IFRAME_ALLOW,
-          embedType: 'tracks',
+          type: 'tracks',
         },
       },
     ],
@@ -230,7 +230,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F505007376&show_artwork=true',
           allow: SPOTIFY_IFRAME_ALLOW,
-          embedType: 'playlists',
+          type: 'playlists',
         },
       },
     ],
@@ -243,7 +243,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Fusers%2F227118126&show_artwork=true',
           allow: SOUNDCLOUD_IFRAME_ALLOW,
-          embedType: 'users',
+          type: 'users',
         },
       },
     ],
@@ -256,7 +256,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://w.soundcloud.com/player/?url=https://api.soundcloud.com/tracks/1856391039&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true',
           allow: SOUNDCLOUD_IFRAME_ALLOW,
-          embedType: 'tracks',
+          type: 'tracks',
         },
       },
     ],
