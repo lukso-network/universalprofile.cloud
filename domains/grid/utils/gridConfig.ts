@@ -6,7 +6,6 @@ import { BaseFormDataUploader } from '@/services/ipfs/formdata-base-client'
 import LSP28TheGrid from '@/shared/schemas/LSP28TheGrid.json'
 
 import type { UniversalProfile } from '@/contracts/UniversalProfile'
-import type { GridConfigItem } from '@/types/grid'
 import type { DecodeDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData'
 import type { AbiItem } from 'web3-utils'
 
@@ -61,13 +60,13 @@ export const getGridConfig = async (address: Address) => {
   const { url } = decodedJsonUrl.value as VerifiableURI
 
   // fetch config file from IPFS
-  const config = await fetcher<GridConfigItem[], Record<string, never>>({
+  const config = await fetcher<Grid<GridConfigItem>[], Record<string, never>>({
     url: resolveUrl(url),
     method: 'GET',
   })
 
   if (gridLog.enabled) {
-    gridLog('Profile config from IPFS', config)
+    gridLog('Grid config from IPFS', config)
   }
 
   return config
@@ -82,7 +81,7 @@ export const getGridConfig = async (address: Address) => {
  */
 export const saveConfig = async (
   address: Address,
-  config: GridConfigItem[]
+  config: PartialBy<Grid<GridConfigItem>, 'id'>[]
 ) => {
   // convert config to blob
   const blob = new Blob([JSON.stringify(config, null, 2)], {

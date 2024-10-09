@@ -1,5 +1,11 @@
 import type { LayoutItem } from 'grid-layout-plus'
 
+export type Grid<T> = {
+  title: string
+  grid: T[]
+  id: string
+}
+
 export type GridConfigItem = {
   width: number
   height: number

@@ -71,3 +71,5 @@ export const WIDGET_TYPE_PROPERTIES: Record<
     { key: 'allow', type: 'string' },
   ],
 }
+
+export const DEFAULT_GRID_TITLE = 'Main'

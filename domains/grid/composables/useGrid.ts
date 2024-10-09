@@ -1,3 +1,5 @@
+import type { GridWidget } from '@/types/grid'
+
 export const useGrid = () => {
   const {
     isConnected,
@@ -9,6 +11,7 @@ export const useGrid = () => {
     isEditingGrid,
     isConnectedUserViewingOwnProfile,
     isSavingGrid,
+    selectedLayoutId,
   } = storeToRefs(useAppStore())
   const canEditGrid = computed(
     () =>
@@ -17,30 +20,35 @@ export const useGrid = () => {
       isConnectedUserViewingOwnProfile.value
   )
 
+  const getSelectedLayout = (layouts: Grid<GridWidget>[]): GridWidget[] => {
+    return layouts.find(grid => grid.id === selectedLayoutId.value)?.grid || []
+  }
+
+  const updateSelectedLayout = (layout: GridWidget[]): Grid<GridWidget>[] => {
+    const updatedLayouts = tempGridLayout.value.map(item => {
+      if (item.id === selectedLayoutId.value) {
+        return {
+          id: item.id,
+          title: item.title,
+          grid: layout,
+        }
+      }
+
+      return item
+    })
+
+    return updatedLayouts
+  }
+
   return {
     initializeGridLayout: async (
       address?: Address,
       withAddContentPlaceholder?: boolean
     ) => {
-      let layout: GridWidget[] = []
+      let layout: Grid<GridWidget>[] = []
 
       if (!address) {
         return []
-      }
-
-      // unsaved state case
-      if (canEditGrid.value && hasUnsavedGrid.value) {
-        layout = buildLayout(
-          tempGridLayout.value,
-          gridColumns.value,
-          withAddContentPlaceholder
-        )
-
-        if (gridLog.enabled) {
-          gridLog('Initialize temp layout', layout)
-        }
-
-        viewedGridLayout.value = [...layout]
       }
 
       const userLayout = await getUserLayout(address)
@@ -51,28 +59,58 @@ export const useGrid = () => {
       )
 
       if (gridLog.enabled) {
-        gridLog('Initialize user layout', userLayout)
+        gridLog('Initialize user grid', userLayout)
       }
 
+      viewedGridLayout.value = cloneObject(layout)
+
+      // check for selected layout
+      if (!selectedLayoutId.value) {
+        selectedLayoutId.value = layout[0]?.id
+      } else {
+        // if selected layout is not in the layout we reset it
+        if (!layout.some(item => item.id === selectedLayoutId.value)) {
+          selectedLayoutId.value = layout[0]?.id
+        }
+      }
+
+      // if there is unsaved grid we initialize temp layout
+      if (canEditGrid.value && hasUnsavedGrid.value) {
+        layout = buildLayout(
+          tempGridLayout.value,
+          gridColumns.value,
+          withAddContentPlaceholder
+        )
+
+        if (gridLog.enabled) {
+          gridLog('Initialize temp grid', layout)
+        }
+      }
+
+      // if user is viewing his own profile we initialize temp layout
       if (isConnectedUserViewingOwnProfile.value && !hasUnsavedGrid.value) {
-        tempGridLayout.value = [...layout]
+        tempGridLayout.value = cloneObject(layout)
       }
-
-      viewedGridLayout.value = [...layout]
     },
 
     addGridLayoutItem: (newItem: GridWidgetWithoutCords) => {
-      placeWidgetInLayout(newItem, tempGridLayout.value, gridColumns.value)
+      placeWidgetInLayout(
+        newItem,
+        getSelectedLayout(tempGridLayout.value),
+        gridColumns.value
+      )
     },
 
-    updateGridLayoutItem: (item: GridWidget) => {
-      const index = tempGridLayout.value.findIndex(({ i }) => i === item.i)
+    updateGridLayoutItem: (widget: GridWidget) => {
+      const layout = getSelectedLayout(tempGridLayout.value)
+      const widgetIndex = layout.findIndex(({ i }) => i === widget.i)
 
-      if (index === -1) {
+      if (widgetIndex === -1) {
         return
       }
 
-      tempGridLayout.value[index] = item
+      layout[widgetIndex] = widget
+      tempGridLayout.value = updateSelectedLayout(layout)
     },
 
     removeGridLayoutItem: (id: string | number) => {
@@ -80,10 +118,12 @@ export const useGrid = () => {
         return
       }
 
-      tempGridLayout.value = tempGridLayout.value.filter(item => item.i !== id)
+      tempGridLayout.value = updateSelectedLayout(
+        getSelectedLayout(tempGridLayout.value).filter(item => item.i !== id)
+      )
     },
 
-    saveGridLayout: async (layout?: GridWidget[]) => {
+    saveGridLayout: async (layout?: Grid<GridWidget>[]) => {
       if (!layout || !connectedProfileAddress.value) {
         return
       }
@@ -112,8 +152,8 @@ export const useGrid = () => {
               canEditGrid.value
             )
 
-            tempGridLayout.value = [...layout]
-            viewedGridLayout.value = [...layout]
+            tempGridLayout.value = cloneObject(layout)
+            viewedGridLayout.value = cloneObject(layout)
           })
 
           ?.on('receipt', (receipt: any) => {
@@ -130,6 +170,8 @@ export const useGrid = () => {
         isSavingGrid.value = false
       }
     },
+    getSelectedLayout,
+    updateSelectedLayout,
     canEditGrid,
   }
 }
