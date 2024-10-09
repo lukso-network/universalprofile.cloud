@@ -45,11 +45,11 @@ export const WIDGET_TYPE_PROPERTIES: Record<
   ],
   [GRID_WIDGET_TYPE.X]: [
     { key: 'src', type: 'url' },
-    { key: 'embedType', type: 'string' },
+    { key: 'type', type: 'string' },
   ],
   [GRID_WIDGET_TYPE.INSTAGRAM]: [
     { key: 'src', type: 'url' },
-    { key: 'embedType', type: 'string' },
+    { key: 'type', type: 'string' },
   ],
   [GRID_WIDGET_TYPE.IFRAME]: [
     { key: 'src', type: 'url' },
@@ -64,10 +64,12 @@ export const WIDGET_TYPE_PROPERTIES: Record<
   [GRID_WIDGET_TYPE.SPOTIFY]: [
     { key: 'src', type: 'url' },
     { key: 'allow', type: 'string' },
-    { key: 'embedType', type: 'string' },
+    { key: 'type', type: 'string' },
   ],
   [GRID_WIDGET_TYPE.SOUNDCLOUD]: [
     { key: 'src', type: 'url' },
     { key: 'allow', type: 'string' },
   ],
 }
+
+export const DEFAULT_GRID_TITLE = 'Main'

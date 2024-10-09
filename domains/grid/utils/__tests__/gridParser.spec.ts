@@ -18,7 +18,7 @@ describe('Widget Input Parsing', () => {
         type: GRID_WIDGET_TYPE.X,
         properties: {
           src: 'https://twitter.com/feindura/status/1804519711377436675?ref_src=twsrc%5Etfw',
-          embedType: 'post',
+          type: 'post',
         },
       },
     ],
@@ -30,7 +30,7 @@ describe('Widget Input Parsing', () => {
         type: GRID_WIDGET_TYPE.X,
         properties: {
           src: 'https://twitter.com/feindura/status/1804519711377436675?ref_src=twsrc%5Etfw',
-          embedType: 'post',
+          type: 'post',
         },
       },
     ],
@@ -42,7 +42,7 @@ describe('Widget Input Parsing', () => {
         type: GRID_WIDGET_TYPE.X,
         properties: {
           src: 'https://twitter.com/lukso_io?ref_src=twsrc%5Etfw',
-          embedType: 'timeline',
+          type: 'timeline',
         },
       },
     ],
@@ -54,7 +54,7 @@ describe('Widget Input Parsing', () => {
         type: GRID_WIDGET_TYPE.X,
         properties: {
           src: 'https://twitter.com/lukso_io?ref_src=twsrc%5Etfw',
-          embedType: 'timeline',
+          type: 'timeline',
         },
       },
     ],
@@ -66,7 +66,7 @@ describe('Widget Input Parsing', () => {
         type: GRID_WIDGET_TYPE.INSTAGRAM,
         properties: {
           src: 'https://www.instagram.com/p/C98OXs6yhAq/?utm_source=ig_embed&amp;utm_campaign=loading',
-          embedType: 'p',
+          type: 'p',
         },
       },
     ],
@@ -78,7 +78,7 @@ describe('Widget Input Parsing', () => {
         type: GRID_WIDGET_TYPE.INSTAGRAM,
         properties: {
           src: 'https://www.instagram.com/p/C98OXs6yhAq/?utm_source=ig_embed&amp;utm_campaign=loading',
-          embedType: 'p',
+          type: 'p',
         },
       },
     ],
@@ -90,7 +90,7 @@ describe('Widget Input Parsing', () => {
         type: GRID_WIDGET_TYPE.INSTAGRAM,
         properties: {
           src: 'https://www.instagram.com/reel/DAlOgHkuyxd/?utm_source=ig_embed&amp;utm_campaign=loading',
-          embedType: 'reel',
+          type: 'reel',
         },
       },
     ],
@@ -102,7 +102,7 @@ describe('Widget Input Parsing', () => {
         type: GRID_WIDGET_TYPE.INSTAGRAM,
         properties: {
           src: 'https://www.instagram.com/reel/DAlOgHkuyxd/?utm_source=ig_embed&amp;utm_campaign=loading',
-          embedType: 'reel',
+          type: 'reel',
         },
       },
     ],
@@ -139,7 +139,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://open.spotify.com/embed/track/7xGfFoTpQ2E7fRF5lN10tr?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
-          embedType: 'track',
+          type: 'track',
         },
       },
     ],
@@ -152,7 +152,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://open.spotify.com/embed/track/2BHj31ufdEqVK5CkYDp9mA?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
-          embedType: 'track',
+          type: 'track',
         },
       },
     ],
@@ -165,7 +165,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://open.spotify.com/embed/playlist/7KFoK4LJ23EncELJwYmTDG?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
-          embedType: 'playlist',
+          type: 'playlist',
         },
       },
     ],
@@ -178,7 +178,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://open.spotify.com/embed/playlist/7KFoK4LJ23EncELJwYmTDG?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
-          embedType: 'playlist',
+          type: 'playlist',
         },
       },
     ],
@@ -191,7 +191,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://open.spotify.com/embed/artist/4KY9rCrokaoFzvMfX98u1q?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
-          embedType: 'artist',
+          type: 'artist',
         },
       },
     ],
@@ -204,7 +204,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://open.spotify.com/embed/artist/4KY9rCrokaoFzvMfX98u1q?utm_source=generator',
           allow: SPOTIFY_IFRAME_ALLOW,
-          embedType: 'artist',
+          type: 'artist',
         },
       },
     ],
@@ -269,7 +269,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1856391039&show_artwork=true',
           allow: SOUNDCLOUD_IFRAME_ALLOW,
-          embedType: 'tracks',
+          type: 'tracks',
         },
       },
     ],
@@ -282,7 +282,7 @@ describe('Widget Input Parsing', () => {
         properties: {
           src: 'https://w.soundcloud.com/player/?url=https://api.soundcloud.com/playlists/1850298147&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true',
           allow: SOUNDCLOUD_IFRAME_ALLOW,
-          embedType: 'playlists',
+          type: 'playlists',
         },
       },
     ],

@@ -1,5 +1,11 @@
 import type { LayoutItem } from 'grid-layout-plus'
 
+export type Grid<T> = {
+  title: string
+  grid: T[]
+  id: string
+}
+
 export type GridConfigItem = {
   width: number
   height: number
@@ -23,4 +29,9 @@ export type GridWidgetProperty = {
   key: string
   type: 'string' | 'number' | 'boolean' | 'color' | 'url'
   optional?: boolean
+}
+
+export type GridWidgetChange = {
+  oldWidget: GridWidget | null
+  newWidget: GridWidget | null
 }

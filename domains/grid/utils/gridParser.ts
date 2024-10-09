@@ -66,7 +66,7 @@ const parseXWidgetInput = (input: string): LayoutItemExtended | never => {
       type: GRID_WIDGET_TYPE.X,
       properties: {
         src: `https://twitter.com/${postUser}/status/${postId}?ref_src=twsrc%5Etfw`,
-        embedType: 'post',
+        type: 'post',
       },
     }
   }
@@ -78,7 +78,7 @@ const parseXWidgetInput = (input: string): LayoutItemExtended | never => {
       type: GRID_WIDGET_TYPE.X,
       properties: {
         src: `https://twitter.com/${timelineUser}?ref_src=twsrc%5Etfw`,
-        embedType: 'timeline',
+        type: 'timeline',
       },
     }
   }
@@ -92,14 +92,14 @@ const parseSpotifyWidgetInput = (input: string): LayoutItemExtended | never => {
   const SPOTIFY_IFRAME_ALLOW =
     'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
 
-  const [, embedType, id] = input.match(SPOTIFY_URL_REGEX) || []
+  const [, type, id] = input.match(SPOTIFY_URL_REGEX) || []
 
-  if (embedType && id) {
+  if (type && id) {
     return {
       type: GRID_WIDGET_TYPE.SPOTIFY,
       properties: {
-        src: `https://open.spotify.com/embed/${embedType}/${id}?utm_source=generator`,
-        embedType,
+        src: `https://open.spotify.com/embed/${type}/${id}?utm_source=generator`,
+        type,
         allow: SPOTIFY_IFRAME_ALLOW,
       },
     }
@@ -139,7 +139,7 @@ const parseSoundCloudWidgetInputFromEmbed = (
     /https?:\/\/w\.soundcloud\.com\/player\/\?(?:(?!url=https).)*url=https(?::|%3A)(?:\/|%2F){2}api\.soundcloud\.com(?:\/|%2F)(tracks|playlists|users)(?:\/|%2F)\d+(?:[^"]*)?/
   const SOUNDCLOUD_IFRAME_ALLOW =
     'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
-  const [match, embedType] = input.match(SOUNDCLOUD_EMBED_URL_REGEX) || []
+  const [match, type] = input.match(SOUNDCLOUD_EMBED_URL_REGEX) || []
 
   if (match) {
     return {
@@ -147,7 +147,7 @@ const parseSoundCloudWidgetInputFromEmbed = (
       properties: {
         src: match,
         allow: SOUNDCLOUD_IFRAME_ALLOW,
-        embedType,
+        type,
       },
     }
   }
@@ -179,14 +179,14 @@ const parseInstagramWidgetInput = (
   const INSTAGRAM_URL_REGEX =
     /https:\/\/www\.instagram\.com\/(p|reel|profile|tv)\/([\w-]+)\/(\?[^"]*)?/
 
-  const [, embedType, id, params] = input.match(INSTAGRAM_URL_REGEX) || []
+  const [, type, id, params] = input.match(INSTAGRAM_URL_REGEX) || []
 
-  if (id && embedType) {
+  if (id && type) {
     return {
       type: GRID_WIDGET_TYPE.INSTAGRAM,
       properties: {
-        src: `https://www.instagram.com/${embedType}/${id}/${params}`,
-        embedType: embedType,
+        src: `https://www.instagram.com/${type}/${id}/${params}`,
+        type: type,
       },
     }
   }
