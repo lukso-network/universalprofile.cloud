@@ -64,7 +64,11 @@ export const useGrid = () => {
 
       viewedGridLayout.value = cloneObject(layout)
 
-      if (!selectedLayoutId.value || (selectedLayoutId.value && !layout.some(item => item.id === selectedLayoutId.value))) {
+      if (
+        !selectedLayoutId.value ||
+        (selectedLayoutId.value &&
+          !layout.some(item => item.id === selectedLayoutId.value))
+      ) {
         selectedLayoutId.value = layout[0]?.id
       }
 
