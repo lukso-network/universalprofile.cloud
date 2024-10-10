@@ -28,7 +28,7 @@ describe('layoutToConfig', () => {
             properties: {
               title: 'Hey',
               text: 'Customize your grid layout!',
-              bgColor: '#9db9b9',
+              backgroundColor: '#9db9b9',
             },
             w: 1,
             h: 1,
@@ -70,7 +70,7 @@ describe('layoutToConfig', () => {
             properties: {
               title: 'Hey',
               text: 'Customize your grid layout!',
-              bgColor: '#9db9b9',
+              backgroundColor: '#9db9b9',
             },
           },
           {

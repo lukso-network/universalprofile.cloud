@@ -15,7 +15,7 @@ export const defaultGridConfig = (
           type: GRID_WIDGET_TYPE.TITLE_LINK,
           width: 1,
           height: 1,
-          properties: { title: address, bgColor: '#7a83ae' },
+          properties: { title: address, backgroundColor: '#7a83ae' },
         },
         {
           type: GRID_WIDGET_TYPE.TEXT,
@@ -24,7 +24,7 @@ export const defaultGridConfig = (
           properties: {
             title: 'Hey',
             text: 'Customize your grid layout!',
-            bgColor: '#9db9b9',
+            backgroundColor: '#9db9b9',
           },
         },
         {

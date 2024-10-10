@@ -2,7 +2,9 @@
 type Props = {
   title?: string
   text?: string
-  bgColor?: string
+  backgroundColor?: string
+  titleColor?: string
+  textColor?: string
 }
 
 defineProps<Props>()
@@ -11,9 +13,23 @@ defineProps<Props>()
 <template>
   <div
     class="m-3 flex h-full flex-col items-center justify-center overflow-hidden rounded-12 p-4 text-neutral-100"
-    :style="{ backgroundColor: bgColor }"
+    :style="{ backgroundColor }"
   >
-    <h1 class="heading-apax-24-medium">{{ title }}</h1>
-    <p class="mt-2 text-center text-16">{{ text }}</p>
+    <h1
+      class="heading-apax-24-medium"
+      :style="{
+        color: titleColor,
+      }"
+    >
+      {{ title }}
+    </h1>
+    <p
+      class="mt-2 text-center text-16"
+      :style="{
+        color: textColor,
+      }"
+    >
+      {{ text }}
+    </p>
   </div>
 </template>

@@ -6,8 +6,8 @@ const { closeModal } = useModal()
 const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
 
 const TEXTAREA_FOCUS_DELAY = 10 // small delay for focusing textarea after element render
-const inputValue = ref<string>('')
-const inputError = ref<string>('')
+const inputValue = ref('')
+const inputError = ref('')
 
 const canSubmit = computed(() => inputValue.value && !inputError.value)
 const isEdit = computed(() => !!widgetData.value)
