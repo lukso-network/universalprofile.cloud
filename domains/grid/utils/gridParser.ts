@@ -88,18 +88,20 @@ const parseXWidgetInput = (input: string): LayoutItemExtended | never => {
 
 const parseSpotifyWidgetInput = (input: string): LayoutItemExtended | never => {
   const SPOTIFY_URL_REGEX =
-    /https?:\/\/(?:open\.)?spotify\.com\/(?:embed\/)?(track|playlist|artist)\/([^?]+)(?:\?utm_source=generator)?/
+    /https?:\/\/(?:open\.)?spotify\.com\/(?:embed\/)?(?<type>track|playlist|artist)\/(?<id>[^?]+)(?:\?utm_source=generator)?(?:&theme=(?<theme>\d))?/
   const SPOTIFY_IFRAME_ALLOW =
     'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
 
-  const [, type, id] = input.match(SPOTIFY_URL_REGEX) || []
+  const { groups } = input.match(SPOTIFY_URL_REGEX) || {}
 
-  if (type && id) {
+  if (groups?.type && groups?.id) {
+    const theme = groups.theme ? `&theme=${groups.theme}` : ''
+
     return {
       type: GRID_WIDGET_TYPE.SPOTIFY,
       properties: {
-        src: `https://open.spotify.com/embed/${type}/${id}?utm_source=generator`,
-        type,
+        src: `https://open.spotify.com/embed/${groups.type}/${groups.id}?utm_source=generator${theme}`,
+        type: groups.type,
         allow: SPOTIFY_IFRAME_ALLOW,
       },
     }
