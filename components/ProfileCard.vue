@@ -70,7 +70,7 @@ const hasFollowButton = computed(
             :profile-address="viewedProfile?.address"
             size="2x-large"
             has-identicon
-            class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"
+            class="relative z-[1] flex cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"
             @click="handlePreviewProfileImage"
           >
           </lukso-profile>

@@ -3,8 +3,8 @@ import { tv } from 'tailwind-variants'
 
 type Props = {
   label: string
-  count: number
   isActive: boolean
+  count?: number
 }
 
 const props = defineProps<Props>()

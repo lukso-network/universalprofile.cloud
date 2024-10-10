@@ -29,6 +29,15 @@ export const useAppStore = defineStore(
     const fetchDataProvider = ref<FetchDataProvider>('graph')
     const fetchDataProviderReset = ref(false)
 
+    // grid
+    const isEditingGrid = ref(false)
+    const hasUnsavedGrid = ref(false)
+    const viewedGridLayout = ref<Grid<GridWidget>[]>([])
+    const tempGridLayout = ref<Grid<GridWidget>[]>([])
+    const gridColumns = ref<number>(COL_NUM_LARGE)
+    const isSavingGrid = ref(false)
+    const selectedLayoutId = ref<string | undefined>()
+
     // statuses
     const isConnecting = ref(false)
     const isLoadedApp = ref(false)
@@ -100,6 +109,20 @@ export const useAppStore = defineStore(
       return !!route.query?.modalTemplate
     })
 
+    const isConnectedUserViewingOwnProfile = computed(() => {
+      const viewedProfileAddress = computed(() => getCurrentProfileAddress())
+
+      return (
+        // we need to compare lowercase addresses in case of checksummed addresses
+        connectedProfileAddress.value?.toLowerCase() ===
+        viewedProfileAddress.value?.toLowerCase()
+      )
+    })
+
+    const isViewedProfileConnected = computed(() => {
+      return isConnected.value && isConnectedUserViewingOwnProfile.value
+    })
+
     // --- actions
 
     const setModal = (newModal: Modal) => {
@@ -130,6 +153,15 @@ export const useAppStore = defineStore(
       fetchDataProviderReset,
       walletConnectProvider,
       isWalletConnect,
+      isEditingGrid,
+      hasUnsavedGrid,
+      viewedGridLayout,
+      tempGridLayout,
+      gridColumns,
+      isConnectedUserViewingOwnProfile,
+      isViewedProfileConnected,
+      isSavingGrid,
+      selectedLayoutId,
     }
   },
   {
@@ -140,6 +172,10 @@ export const useAppStore = defineStore(
         'fetchDataProvider',
         'fetchDataProviderReset',
         'isWalletConnect',
+        'isEditingGrid',
+        'hasUnsavedGrid',
+        'selectedLayoutId',
+        'tempGridLayout',
       ],
       key: STORAGE_KEY.APP_STORE,
     },
