@@ -72,6 +72,29 @@ const { selectWidget } = useWidgetStore()
     </div>
   </section>
 
+  <!-- Video section -->
+  <section
+    class="border-b border-b-neutral-90 px-6 py-4 last-of-type:border-b-0 last-of-type:pb-6"
+  >
+    <div class="paragraph-inter-16-semi-bold mb-4">
+      {{ formatMessage('add_widget_section_video') }}
+    </div>
+    <div class="flex gap-5">
+      <!-- Youtube -->
+      <lukso-tooltip
+        variant="light"
+        :text="formatMessage('widget_type_youtube')"
+      >
+        <img
+          src="/images/social-media-youtube.svg"
+          alt="Youtube"
+          class="size-10 cursor-pointer transition hover:scale-[1.05]"
+          @click="selectWidget('YOUTUBE')"
+        />
+      </lukso-tooltip>
+    </div>
+  </section>
+
   <!-- Music section -->
   <section
     class="border-b border-b-neutral-90 px-6 py-4 last-of-type:border-b-0 last-of-type:pb-6"
