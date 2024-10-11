@@ -97,6 +97,8 @@ const handleClone = async () => {
   const clonedWidget = createWidgetObject({
     type: props.widget.type,
     properties: props.widget.properties,
+    w: props.widget.w,
+    h: props.widget.h,
   })
   addGridLayoutItem(clonedWidget)
   isEditingGrid.value = true // we enable edit mode so user is aware about unsaved state
