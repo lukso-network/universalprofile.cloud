@@ -16,6 +16,7 @@ export enum GRID_WIDGET_TYPE {
   // social media
   X = 'X',
   INSTAGRAM = 'INSTAGRAM',
+  WARPCAST = 'WARPCAST',
 
   // music
   SPOTIFY = 'SPOTIFY',
@@ -72,6 +73,7 @@ export const WIDGET_TYPE_PROPERTIES: Record<
     { key: 'src', type: 'url' },
     { key: 'allow', type: 'string' },
   ],
+  [GRID_WIDGET_TYPE.WARPCAST]: [{ key: 'src', type: 'url' }],
 }
 
 export const DEFAULT_GRID_TITLE = 'Main'

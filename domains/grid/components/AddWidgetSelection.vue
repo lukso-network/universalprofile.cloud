@@ -125,6 +125,19 @@ const { selectWidget } = useWidgetStore()
           @click="selectWidget('X')"
         />
       </lukso-tooltip>
+
+      <!-- Warpcast -->
+      <lukso-tooltip
+        variant="light"
+        :text="formatMessage('widget_type_warpcast')"
+      >
+        <img
+          src="/images/social-media-warpcast.png"
+          alt="Warpcast"
+          class="size-10 cursor-pointer rounded-full transition hover:scale-[1.05]"
+          @click="selectWidget('WARPCAST')"
+        />
+      </lukso-tooltip>
     </div>
   </section>
 </template>

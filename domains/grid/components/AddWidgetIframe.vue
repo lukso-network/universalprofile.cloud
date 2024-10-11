@@ -1,4 +1,9 @@
 <script setup lang="ts">
+type Props = {
+  platform: GridWidgetType
+}
+
+const props = defineProps<Props>()
 const { formatMessage } = useIntl()
 const { selectWidget, clearWidgetData } = useWidgetStore()
 const { widgetData } = storeToRefs(useWidgetStore())
@@ -29,7 +34,7 @@ const handleSave = () => {
     updateGridLayoutItem(updatedWidget)
   } else {
     const newWidget: GridWidgetWithoutCords = createWidgetObject({
-      type: GRID_WIDGET_TYPE.IFRAME,
+      type: props.platform,
       properties,
     })
 
@@ -88,11 +93,11 @@ onMounted(() => {
         @click="selectWidget()"
       ></lukso-icon>
       <div class="heading-inter-21-semi-bold">
-        {{ formatMessage('add_widget_iframe_title') }}
+        {{ formatMessage(`add_widget_${platform.toLowerCase()}_title`) }}
       </div>
     </div>
     <div class="paragraph-inter-14-regular pb-6">
-      {{ formatMessage('add_widget_iframe_description') }}
+      {{ formatMessage(`add_widget_${platform.toLowerCase()}_description`) }}
     </div>
 
     <!-- Iframe content -->

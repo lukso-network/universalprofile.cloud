@@ -17,13 +17,16 @@ const inputError = ref('')
 const canSubmit = computed(() => inputValue.value && !inputError.value)
 const isEdit = computed(() => !!widgetData.value)
 
-const handleSave = () => {
+const handleSave = async () => {
   if (!canSubmit.value) {
     return
   }
 
   try {
-    const { properties } = parsePlatformInput(props.platform, inputValue.value)
+    const { properties } = await parsePlatformInput(
+      props.platform,
+      inputValue.value
+    )
 
     if (isEdit.value) {
       const updatedWidget: GridWidget = {
@@ -52,7 +55,7 @@ const handleCancel = () => {
   closeModal()
 }
 
-const handleInput = (customEvent: CustomEvent) => {
+const handleInput = async (customEvent: CustomEvent) => {
   const event = customEvent.detail.event
   const input = event.target as HTMLInputElement
   inputError.value = ''
@@ -64,7 +67,7 @@ const handleInput = (customEvent: CustomEvent) => {
 
   // validation
   try {
-    const { properties } = parsePlatformInput(props.platform, input.value)
+    const { properties } = await parsePlatformInput(props.platform, input.value)
     inputValue.value = properties.src
   } catch (error) {
     console.warn(error)
@@ -98,13 +101,11 @@ onMounted(() => {
         @click="selectWidget()"
       ></lukso-icon>
       <div class="heading-inter-21-semi-bold">
-        {{ formatMessage(`add_widget_${props.platform.toLowerCase()}_title`) }}
+        {{ formatMessage(`add_widget_${platform.toLowerCase()}_title`) }}
       </div>
     </div>
     <div class="paragraph-inter-14-regular pb-6">
-      {{
-        formatMessage(`add_widget_${props.platform.toLowerCase()}_description`)
-      }}
+      {{ formatMessage(`add_widget_${platform.toLowerCase()}_description`) }}
     </div>
 
     <!-- Content -->
@@ -112,9 +113,7 @@ onMounted(() => {
       is-full-width
       autofocus
       :placeholder="
-        formatMessage(
-          `add_widget_${props.platform.toLowerCase()}_input_placeholder`
-        )
+        formatMessage(`add_widget_${platform.toLowerCase()}_input_placeholder`)
       "
       :value="inputValue"
       :error="inputError"
