@@ -1,23 +1,26 @@
 <script setup lang="ts">
+import type { GridWidgetType } from '@/types/grid'
+
 type Props = {
   id?: string
   properties?: GridWidgetProperties
+  width?: number
+  height?: number
+  type?: GridWidgetType
 }
 
-defineProps<Props>()
-const { selectedWidget } = storeToRefs(useGridStore())
+const props = defineProps<Props>()
 const component = shallowRef<Component | undefined>()
 
 const WIDGET_COMPONENTS: Record<string, string> = {
-  [GRID_WIDGET_TYPE.TITLE_LINK]: 'TitleLink',
   [GRID_WIDGET_TYPE.TEXT]: 'Text',
-  [GRID_WIDGET_TYPE.IMAGE]: 'Image',
-  [GRID_WIDGET_TYPE.IFRAME]: 'Iframe',
+  [GRID_WIDGET_TYPE.IMAGE]: 'Basic',
+  [GRID_WIDGET_TYPE.IFRAME]: 'Basic',
   [GRID_WIDGET_TYPE.X]: 'GenericPlatform',
   [GRID_WIDGET_TYPE.INSTAGRAM]: 'GenericPlatform',
   [GRID_WIDGET_TYPE.SPOTIFY]: 'GenericPlatform',
   [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'GenericPlatform',
-  [GRID_WIDGET_TYPE.WARPCAST]: 'Iframe',
+  [GRID_WIDGET_TYPE.WARPCAST]: 'Basic',
   [GRID_WIDGET_TYPE.YOUTUBE]: 'GenericPlatform',
 }
 
@@ -32,9 +35,9 @@ const loadComponent = (type?: string): Component | undefined => {
 }
 
 watch(
-  selectedWidget,
+  () => props.type,
   () => {
-    component.value = loadComponent(selectedWidget.value)
+    component.value = loadComponent(props.type)
   },
   { immediate: true }
 )
@@ -44,8 +47,10 @@ watch(
   <component
     v-if="component"
     :is="component"
-    :platform="selectedWidget"
+    :type="type"
     :properties="properties"
     :id="id"
+    :width="width"
+    :height="height"
   ></component>
 </template>

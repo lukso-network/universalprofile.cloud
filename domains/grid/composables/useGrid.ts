@@ -122,7 +122,12 @@ export const useGrid = () => {
       )
     },
 
-    updateGridLayoutItem: (id: string, widget: Partial<GridWidget>) => {
+    updateGridLayoutItem: (id?: string, widget?: Partial<GridWidget>) => {
+      if (!id) {
+        console.warn('Update requires an id')
+        return
+      }
+
       const layout = getSelectedLayout(tempGridLayout.value)
       const widgetIndex = layout.findIndex(({ i }) => i === id)
 

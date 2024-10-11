@@ -1,12 +1,15 @@
 <script setup lang="ts">
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
-const { clearWidgetData } = useGridStore()
 
 const handleAddContent = () => {
-  clearWidgetData()
   showModal({
     template: 'AddGridWidget',
+    data: {
+      type: undefined, // when no type we display selection screen
+      width: 1,
+      height: 1,
+    },
   })
 }
 </script>

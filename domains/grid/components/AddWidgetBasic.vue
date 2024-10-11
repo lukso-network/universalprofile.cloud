@@ -1,21 +1,23 @@
 <script setup lang="ts">
 type Props = {
+  type: GridWidgetType
   id?: string
   properties?: GridWidgetProperties
+  width?: number
+  height?: number
 }
 
 const props = defineProps<Props>()
 const { formatMessage } = useIntl()
-const { selectWidget, clearWidgetData } = useGridStore()
-const { closeModal } = useModal()
+const { closeModal, showModal } = useModal()
 const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
 
-const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
+const TEXTAREA_FOCUS_DELAY = 10 // small delay for focusing textarea after element render
 const inputValue = ref('')
 const inputError = ref('')
 
 const canSubmit = computed(() => inputValue.value && !inputError.value)
-const isEdit = computed(() => !!props.properties)
+const isEdit = computed(() => !!props.id)
 
 const handleSave = () => {
   if (!canSubmit.value) {
@@ -26,12 +28,18 @@ const handleSave = () => {
     src: inputValue.value,
   }
 
-  if (isEdit.value && props.id) {
-    updateGridLayoutItem(props.id, { properties })
+  if (isEdit.value) {
+    updateGridLayoutItem(props.id, {
+      properties,
+      w: props.width,
+      h: props.height,
+    })
   } else {
     const newWidget: GridWidgetWithoutCords = createWidgetObject({
-      type: GRID_WIDGET_TYPE.IMAGE,
+      type: props.type,
       properties,
+      w: props.width,
+      h: props.height,
     })
 
     addGridLayoutItem(newWidget)
@@ -41,7 +49,6 @@ const handleSave = () => {
 }
 
 const handleCancel = () => {
-  clearWidgetData()
   closeModal()
 }
 
@@ -66,14 +73,24 @@ const handleInput = async (customEvent: CustomEvent) => {
   }
 }
 
+const handleBackToSelection = () => {
+  showModal({
+    template: 'AddGridWidget',
+    forceOpen: true,
+    data: {
+      type: undefined, // when no type we display selection screen
+    },
+  })
+}
+
 onMounted(() => {
   setTimeout(() => {
-    const input = document?.querySelector(
-      'lukso-input'
+    const textarea = document?.querySelector(
+      'lukso-textarea'
     ) as unknown as HTMLElement
 
-    input?.shadowRoot?.querySelector('input')?.focus()
-  }, INPUT_FOCUS_DELAY)
+    textarea?.shadowRoot?.querySelector('textarea')?.focus()
+  }, TEXTAREA_FOCUS_DELAY)
 
   inputValue.value = props.properties?.src || ''
 })
@@ -86,25 +103,35 @@ onMounted(() => {
         v-if="!isEdit"
         name="arrow-left-sm"
         class="relative z-[1] cursor-pointer rounded-full bg-neutral-100 shadow-neutral-above-shadow transition hover:scale-105 hover:shadow-neutral-above-shadow-1xl active:scale-100 active:shadow-neutral-above-shadow"
-        @click="selectWidget()"
+        @click="handleBackToSelection"
       ></lukso-icon>
       <div class="heading-inter-21-semi-bold">
-        {{ formatMessage('add_widget_image_title') }}
+        {{
+          formatMessage(
+            `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_title`
+          )
+        }}
       </div>
     </div>
     <div class="paragraph-inter-14-regular pb-6">
-      {{ formatMessage('add_widget_image_description') }}
+      {{
+        formatMessage(
+          `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_description`
+        )
+      }}
     </div>
 
-    <!-- Image src -->
-    <lukso-input
+    <!-- Input -->
+    <lukso-textarea
       is-full-width
       autofocus
-      :placeholder="formatMessage('add_widget_image_input_placeholder')"
-      .value="inputValue"
+      :placeholder="
+        formatMessage(`add_widget_${type.toLowerCase()}_input_placeholder`)
+      "
+      :value="inputValue"
       :error="inputError"
       @on-input="handleInput"
-    ></lukso-input>
+    ></lukso-textarea>
 
     <!-- Buttons -->
     <div class="grid grid-cols-[max-content,auto] pt-6">
