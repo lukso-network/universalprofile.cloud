@@ -1,7 +1,3 @@
-export const DEFAULT_LARGE_COLUMN_NUMBER = 2
-export const DEFAULT_SMALL_COLUMN_NUMBER = 1
-export const GRID_BREAKPOINT_PX = 768
-
 export enum GRID_WIDGET_TYPE {
   // custom
   TITLE_LINK = 'TITLE_LINK',
@@ -72,4 +68,24 @@ export const WIDGET_TYPE_PROPERTIES: Record<
   [GRID_WIDGET_TYPE.WARPCAST]: [{ key: 'src', type: 'url' }],
 }
 
+// default number of columns in "large" mode
+export const DEFAULT_LARGE_COLUMN_NUMBER = 2
+
+// default number of columns in "small" mode
+export const DEFAULT_SMALL_COLUMN_NUMBER = 1
+
+// grid breakpoint where the grid switches from "large" to "small" mode
+export const GRID_BREAKPOINT_PX = 768
+
+// default title for the grid, this usually is the title of the first grid
 export const DEFAULT_GRID_TITLE = 'Main'
+
+// debounce timeout for grid resize handler
+export const GRID_RESIZE_DEBOUNCE_TIMEOUT_MS = 250
+
+// margin between columns and rows
+export const GRID_SPACING_PX = 16
+
+// default row height ratio based on the column width.
+// 0.75 represents popular 4:3 aspect ratio
+export const DEFAULT_GRID_ROW_HEIGHT_RATIO = 0.75

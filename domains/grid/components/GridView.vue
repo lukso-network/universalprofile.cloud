@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { useResizeObserver } from '@vueuse/core'
+import { useElementSize, useResizeObserver } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
-
-const GRID_ROW_HEIGHT_PX = 280 // TODO we should calculate this based on grid column width
-const GRID_RESIZE_DEBOUNCE_TIMEOUT_MS = 250
 
 const { isConnected } = storeToRefs(useAppStore())
 const {
@@ -12,6 +9,7 @@ const {
   viewedGridLayout,
   hasUnsavedGrid,
   gridColumns,
+  gridRowHeightRatio,
 } = storeToRefs(useGridStore())
 const {
   initializeGridLayout,
@@ -26,6 +24,7 @@ let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 
 const address = computed(() => getCurrentProfileAddress())
 const layout = ref<GridWidget[]>([])
+const { width } = useElementSize(gridContainer)
 
 const currentLayout = computed(() => {
   // when user is editing and has unsaved changes, use temp layout
@@ -34,6 +33,14 @@ const currentLayout = computed(() => {
   }
 
   return viewedGridLayout.value
+})
+
+const gridRowHeight = computed(() => {
+  const columnSpacing = GRID_SPACING_PX * (gridColumns.value - 1)
+  const columnWidth = width.value - columnSpacing
+  const rowHeight = (columnWidth / gridColumns.value) * gridRowHeightRatio.value
+
+  return rowHeight
 })
 
 const handleUpdateLayout = (newLayout: GridWidget[]) => {
@@ -155,12 +162,12 @@ useResizeObserver(gridContainer, entries => {
       <GridLayout
         v-model:layout="layout"
         :col-num="gridColumns"
-        :row-height="GRID_ROW_HEIGHT_PX"
+        :row-height="gridRowHeight"
         :is-draggable="canEditGrid"
         :is-resizable="canEditGrid"
         :responsive="false"
         :is-bounded="true"
-        :margin="[16, 16]"
+        :margin="[GRID_SPACING_PX, GRID_SPACING_PX]"
         class="-m-4"
         @layout-updated="handleUpdateLayout"
       >
