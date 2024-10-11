@@ -112,13 +112,17 @@ watch(
       buildLayout(tempGridLayout.value, gridColumns.value, canEditGrid.value)
     )
 
+    if (isEditingGrid.value) {
+      layout.value = updatedTempLayout
+    } else {
+      layout.value = updatedViewedLayout
+    }
+
     const changes = compareLayouts(updatedViewedLayout, updatedTempLayout)
 
     if (changes.length > 0) {
-      layout.value = updatedTempLayout
       hasUnsavedGrid.value = true
     } else {
-      layout.value = updatedViewedLayout
       hasUnsavedGrid.value = false
     }
   },
