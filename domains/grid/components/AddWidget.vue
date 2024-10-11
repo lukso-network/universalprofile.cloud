@@ -12,6 +12,7 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.INSTAGRAM]: 'GenericPlatform',
   [GRID_WIDGET_TYPE.SPOTIFY]: 'GenericPlatform',
   [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'GenericPlatform',
+  [GRID_WIDGET_TYPE.WARPCAST]: 'Iframe',
 }
 
 const loadComponent = (type?: string): Component | undefined => {
