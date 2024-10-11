@@ -1,10 +1,6 @@
-export const COL_NUM_LARGE = 2
-export const COL_NUM_SMALL = 1
-
-export const breakpoints: Record<number, number> = {
-  0: COL_NUM_SMALL,
-  768: COL_NUM_LARGE,
-}
+export const DEFAULT_LARGE_COLUMN_NUMBER = 2
+export const DEFAULT_SMALL_COLUMN_NUMBER = 1
+export const GRID_BREAKPOINT_PX = 768
 
 export enum GRID_WIDGET_TYPE {
   // custom

@@ -31,6 +31,14 @@ const isAllowToClone = computed(
   () => isEditingGrid.value || !isConnectedUserViewingOwnProfile.value
 )
 
+const isAllowToOpenInNewTab = computed(() => props.widget.properties.src)
+
+const isAllowToShowOptions = computed(
+  () =>
+    !isAddContentWidget.value &&
+    (isAllowToClone.value || isAllowToOpenInNewTab.value || isAllowToEdit.value)
+)
+
 const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.TITLE_LINK]: 'TitleLink',
   [GRID_WIDGET_TYPE.TEXT]: 'Text',
@@ -118,7 +126,7 @@ onMounted(() => {
 
     <!-- Widget options -->
     <div
-      v-if="!isAddContentWidget"
+      v-if="isAllowToShowOptions"
       class="grid-widget-options absolute right-2 top-2 z-20 mb-2 cursor-pointer"
       :class="{
         'invisible group-hover:visible': !isAllowToEdit,
@@ -165,7 +173,7 @@ onMounted(() => {
 
         <!-- Open in new tab option -->
         <lukso-dropdown-option
-          v-if="widget.properties?.src"
+          v-if="isAllowToOpenInNewTab"
           size="medium"
           @click="handleOpenInTab"
         >

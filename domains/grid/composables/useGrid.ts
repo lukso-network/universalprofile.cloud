@@ -12,6 +12,7 @@ export const useGrid = () => {
     isConnectedUserViewingOwnProfile,
     isSavingGrid,
     selectedLayoutId,
+    gridColumnsLarge,
   } = storeToRefs(useAppStore())
   const canEditGrid = computed(
     () =>
@@ -168,6 +169,11 @@ export const useGrid = () => {
         isSavingGrid.value = false
       }
     },
+    getGridColumns: computed(() => (width: number): number => {
+      return width > GRID_BREAKPOINT_PX
+        ? gridColumnsLarge.value
+        : DEFAULT_SMALL_COLUMN_NUMBER
+    }),
     getSelectedLayout,
     updateSelectedLayout,
     canEditGrid,

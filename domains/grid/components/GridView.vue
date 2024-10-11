@@ -19,6 +19,7 @@ const {
   canEditGrid,
   getSelectedLayout,
   updateSelectedLayout,
+  getGridColumns,
 } = useGrid()
 const gridContainer = ref<HTMLElement | null>(null)
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
@@ -55,7 +56,7 @@ const handleResize = (width: number) => {
   if (resizeTimeout) clearTimeout(resizeTimeout)
   resizeTimeout = setTimeout(() => {
     const prevCols = gridColumns.value
-    const newCols = getGridColumns(width)
+    const newCols = getGridColumns.value(width)
 
     if (prevCols !== newCols) {
       gridColumns.value = newCols
