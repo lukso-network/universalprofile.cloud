@@ -10,6 +10,7 @@ export const useGridStore = defineStore(
     const isSavingGrid = ref(false)
     const selectedLayoutId = ref<string | undefined>()
     const selectedWidget = ref<GridWidgetType>()
+    const gridRowHeightRatio = ref(DEFAULT_GRID_ROW_HEIGHT_RATIO)
 
     const selectWidget = (type?: GridWidgetType) => {
       selectedWidget.value = type
@@ -31,16 +32,18 @@ export const useGridStore = defineStore(
       selectedWidget,
       selectWidget,
       clearWidgetData,
+      gridRowHeightRatio,
     }
   },
   {
     persist: {
       paths: [
-        'selectedWidget',
+        'isEditingGrid',
         'hasUnsavedGrid',
+        'selectedWidget',
         'selectedLayoutId',
         'gridColumnsLarge',
-        'isEditingGrid',
+        'gridRowHeightRatio',
         'tempGridLayout',
       ],
       key: STORAGE_KEY.GRID_STORE,
