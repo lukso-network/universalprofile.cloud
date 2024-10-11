@@ -34,7 +34,8 @@ export const useAppStore = defineStore(
     const hasUnsavedGrid = ref(false)
     const viewedGridLayout = ref<Grid<GridWidget>[]>([])
     const tempGridLayout = ref<Grid<GridWidget>[]>([])
-    const gridColumns = ref<number>(COL_NUM_LARGE)
+    const gridColumns = ref<number>(DEFAULT_LARGE_COLUMN_NUMBER)
+    const gridColumnsLarge = ref<number>(DEFAULT_LARGE_COLUMN_NUMBER)
     const isSavingGrid = ref(false)
     const selectedLayoutId = ref<string | undefined>()
 
@@ -162,6 +163,7 @@ export const useAppStore = defineStore(
       isViewedProfileConnected,
       isSavingGrid,
       selectedLayoutId,
+      gridColumnsLarge,
     }
   },
   {
@@ -175,6 +177,7 @@ export const useAppStore = defineStore(
         'isEditingGrid',
         'hasUnsavedGrid',
         'selectedLayoutId',
+        'gridColumnsLarge',
         'tempGridLayout',
       ],
       key: STORAGE_KEY.APP_STORE,
