@@ -161,6 +161,19 @@ const { selectWidget } = useGridStore()
           @click="selectWidget('WARPCAST')"
         />
       </lukso-tooltip>
+
+      <!-- Instagram -->
+      <lukso-tooltip
+        variant="light"
+        :text="formatMessage('widget_type_instagram')"
+      >
+        <img
+          src="/images/social-media-instagram.svg"
+          alt="Warpcast"
+          class="size-10 cursor-pointer rounded-full transition hover:scale-[1.05]"
+          @click="selectWidget('INSTAGRAM')"
+        />
+      </lukso-tooltip>
     </div>
   </section>
 </template>
