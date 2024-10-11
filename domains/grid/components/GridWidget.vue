@@ -42,6 +42,7 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.SPOTIFY]: 'Spotify',
   [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'Iframe',
   [GRID_WIDGET_TYPE.WARPCAST]: 'Iframe',
+  [GRID_WIDGET_TYPE.YOUTUBE]: 'Youtube',
 }
 
 const loadWidgetComponent = (type: string): Component | undefined => {
