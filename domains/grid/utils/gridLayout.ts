@@ -1,12 +1,3 @@
-export const getGridColumns = (width: number): number => {
-  const breakpointsKeys = Object.keys(breakpoints)
-    .map(Number)
-    .sort((a, b) => b - a)
-  const validBreakpoint = breakpointsKeys.find(bp => width >= bp)
-
-  return validBreakpoint ? breakpoints[validBreakpoint] : COL_NUM_SMALL
-}
-
 export const placeWidgetInLayout = (
   widget: GridWidgetWithoutCords,
   layout: GridWidget[],
