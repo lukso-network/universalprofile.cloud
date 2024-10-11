@@ -5,14 +5,14 @@ import { GridItem, GridLayout } from 'grid-layout-plus'
 const GRID_ROW_HEIGHT_PX = 280 // TODO we should calculate this based on grid column width
 const GRID_RESIZE_DEBOUNCE_TIMEOUT_MS = 250
 
+const { isConnected } = storeToRefs(useAppStore())
 const {
   isEditingGrid,
   tempGridLayout,
   viewedGridLayout,
   hasUnsavedGrid,
   gridColumns,
-  isConnected,
-} = storeToRefs(useAppStore())
+} = storeToRefs(useGridStore())
 const {
   initializeGridLayout,
   saveGridLayout,

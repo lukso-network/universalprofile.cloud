@@ -4,16 +4,18 @@ export const useGrid = () => {
   const {
     isConnected,
     connectedProfileAddress,
+    isConnectedUserViewingOwnProfile,
+  } = storeToRefs(useAppStore())
+  const {
+    isEditingGrid,
     hasUnsavedGrid,
     viewedGridLayout,
     tempGridLayout,
     gridColumns,
-    isEditingGrid,
-    isConnectedUserViewingOwnProfile,
     isSavingGrid,
     selectedLayoutId,
     gridColumnsLarge,
-  } = storeToRefs(useAppStore())
+  } = storeToRefs(useGridStore())
   const canEditGrid = computed(
     () =>
       isEditingGrid.value &&

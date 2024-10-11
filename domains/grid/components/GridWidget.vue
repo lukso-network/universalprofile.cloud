@@ -9,12 +9,9 @@ const { canEditGrid, addGridLayoutItem } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 const { selectWidget } = useGridStore()
-const {
-  isEditingGrid,
-  isConnected,
-  isMobile,
-  isConnectedUserViewingOwnProfile,
-} = storeToRefs(useAppStore())
+const { isConnected, isMobile, isConnectedUserViewingOwnProfile } =
+  storeToRefs(useAppStore())
+const { isEditingGrid } = storeToRefs(useGridStore())
 const { connect } = useBaseProvider()
 const { browserSupportExtension } = useBrowser()
 const dropdownId = `dropdown-${generateItemId()}`
