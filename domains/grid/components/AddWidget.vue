@@ -1,6 +1,11 @@
 <script setup lang="ts">
-const { selectedWidget } = storeToRefs(useWidgetStore())
+type Props = {
+  id?: string
+  properties?: GridWidgetProperties
+}
 
+defineProps<Props>()
+const { selectedWidget } = storeToRefs(useGridStore())
 const component = shallowRef<Component | undefined>()
 
 const WIDGET_COMPONENTS: Record<string, string> = {
@@ -40,5 +45,7 @@ watch(
     v-if="component"
     :is="component"
     :platform="selectedWidget"
+    :properties="properties"
+    :id="id"
   ></component>
 </template>

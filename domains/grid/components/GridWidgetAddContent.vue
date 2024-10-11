@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
-const { clearWidgetData } = useWidgetStore()
+const { clearWidgetData } = useGridStore()
 
 const handleAddContent = () => {
   clearWidgetData()

@@ -5,7 +5,7 @@ type Emits = {
 }
 
 const emits = defineEmits<Emits>()
-const { hasUnsavedGrid, isSavingGrid } = storeToRefs(useAppStore())
+const { hasUnsavedGrid, isSavingGrid } = storeToRefs(useGridStore())
 const { formatMessage } = useIntl()
 </script>
 

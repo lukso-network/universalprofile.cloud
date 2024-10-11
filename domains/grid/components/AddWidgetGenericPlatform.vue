@@ -1,12 +1,13 @@
 <script setup lang="ts">
 type Props = {
   platform: GridWidgetType
+  id?: string
+  properties?: GridWidgetProperties
 }
 
 const props = defineProps<Props>()
 const { formatMessage } = useIntl()
-const { selectWidget, clearWidgetData } = useWidgetStore()
-const { widgetData } = storeToRefs(useWidgetStore())
+const { selectWidget, clearWidgetData } = useGridStore()
 const { closeModal } = useModal()
 const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
 
@@ -15,7 +16,7 @@ const inputValue = ref('')
 const inputError = ref('')
 
 const canSubmit = computed(() => inputValue.value && !inputError.value)
-const isEdit = computed(() => !!widgetData.value)
+const isEdit = computed(() => !!props.properties)
 
 const handleSave = async () => {
   if (!canSubmit.value) {
@@ -28,12 +29,8 @@ const handleSave = async () => {
       inputValue.value
     )
 
-    if (isEdit.value) {
-      const updatedWidget: GridWidget = {
-        ...(widgetData.value as GridWidget),
-        properties,
-      }
-      updateGridLayoutItem(updatedWidget)
+    if (isEdit.value && props.id) {
+      updateGridLayoutItem(props.id, { properties })
     } else {
       const newWidget: GridWidgetWithoutCords = createWidgetObject({
         type: props.platform,
@@ -87,7 +84,7 @@ onMounted(() => {
     textarea?.shadowRoot?.querySelector('textarea')?.focus()
   }, TEXTAREA_FOCUS_DELAY)
 
-  inputValue.value = widgetData.value?.properties.src || ''
+  inputValue.value = props.properties?.src || ''
 })
 </script>
 

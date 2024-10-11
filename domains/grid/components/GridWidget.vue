@@ -8,13 +8,10 @@ const widgetComponent = shallowRef<Component | undefined>()
 const { canEditGrid, addGridLayoutItem } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
-const { selectWidget, setWidgetData } = useWidgetStore()
-const {
-  isEditingGrid,
-  isConnected,
-  isMobile,
-  isConnectedUserViewingOwnProfile,
-} = storeToRefs(useAppStore())
+const { selectWidget } = useGridStore()
+const { isConnected, isMobile, isConnectedUserViewingOwnProfile } =
+  storeToRefs(useAppStore())
+const { isEditingGrid } = storeToRefs(useGridStore())
 const { connect } = useBaseProvider()
 const { browserSupportExtension } = useBrowser()
 const dropdownId = `dropdown-${generateItemId()}`
@@ -75,9 +72,12 @@ const handleDelete = () => {
 
 const handleEdit = () => {
   selectWidget(props.widget.type)
-  setWidgetData(props.widget)
   showModal({
     template: 'AddGridWidget',
+    data: {
+      properties: props.widget.properties,
+      id: props.widget.i,
+    },
   })
 }
 

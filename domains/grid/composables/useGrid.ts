@@ -4,16 +4,18 @@ export const useGrid = () => {
   const {
     isConnected,
     connectedProfileAddress,
+    isConnectedUserViewingOwnProfile,
+  } = storeToRefs(useAppStore())
+  const {
+    isEditingGrid,
     hasUnsavedGrid,
     viewedGridLayout,
     tempGridLayout,
     gridColumns,
-    isEditingGrid,
-    isConnectedUserViewingOwnProfile,
     isSavingGrid,
     selectedLayoutId,
     gridColumnsLarge,
-  } = storeToRefs(useAppStore())
+  } = storeToRefs(useGridStore())
   const canEditGrid = computed(
     () =>
       isEditingGrid.value &&
@@ -52,44 +54,64 @@ export const useGrid = () => {
         return []
       }
 
-      const userLayout = await getUserLayout(address)
-      layout = buildLayout(
-        userLayout,
-        gridColumns.value,
-        withAddContentPlaceholder
-      )
-
-      if (gridLog.enabled) {
-        gridLog('Initialize user grid', userLayout)
-      }
-
-      viewedGridLayout.value = cloneObject(layout)
-
-      if (
-        !selectedLayoutId.value ||
-        (selectedLayoutId.value &&
-          !layout.some(item => item.id === selectedLayoutId.value))
-      ) {
-        selectedLayoutId.value = layout[0]?.id
-      }
-
-      // if there is unsaved grid we initialize temp layout
-      if (canEditGrid.value && hasUnsavedGrid.value) {
+      // initialize user layout from the config stored in UP
+      const _initUserLayout = async () => {
+        const userLayout = await getUserLayout(address)
         layout = buildLayout(
-          tempGridLayout.value,
+          userLayout,
           gridColumns.value,
           withAddContentPlaceholder
         )
 
         if (gridLog.enabled) {
-          gridLog('Initialize temp grid', layout)
+          gridLog('Initialize user grid', userLayout)
+        }
+
+        viewedGridLayout.value = cloneObject(layout)
+      }
+
+      // initialize selected layout id, if not set we take the first one
+      const _initSelectedLayoutId = () => {
+        if (
+          !selectedLayoutId.value ||
+          (selectedLayoutId.value &&
+            !layout.some(item => item.id === selectedLayoutId.value))
+        ) {
+          selectedLayoutId.value = layout[0]?.id
         }
       }
 
-      // if user is viewing his own profile we initialize temp layout
-      if (isConnectedUserViewingOwnProfile.value && !hasUnsavedGrid.value) {
-        tempGridLayout.value = cloneObject(layout)
+      // in case we don't have a temp layout yet we initialize it
+      const _initTempLayout = () => {
+        if (
+          tempGridLayout.value.length === 0 &&
+          viewedGridLayout.value.length !== 0
+        ) {
+          tempGridLayout.value = cloneObject(layout)
+        }
       }
+
+      // in edit mode we initialize from temp layout
+      const _initEditMode = () => {
+        if (canEditGrid.value) {
+          layout = buildLayout(
+            tempGridLayout.value,
+            gridColumns.value,
+            withAddContentPlaceholder
+          )
+
+          if (gridLog.enabled) {
+            gridLog('Initialize temp grid', layout)
+          }
+
+          tempGridLayout.value = cloneObject(layout)
+        }
+      }
+
+      await _initUserLayout()
+      _initSelectedLayoutId()
+      _initTempLayout()
+      _initEditMode()
     },
 
     addGridLayoutItem: (newItem: GridWidgetWithoutCords) => {
@@ -100,15 +122,19 @@ export const useGrid = () => {
       )
     },
 
-    updateGridLayoutItem: (widget: GridWidget) => {
+    updateGridLayoutItem: (id: string, widget: Partial<GridWidget>) => {
       const layout = getSelectedLayout(tempGridLayout.value)
-      const widgetIndex = layout.findIndex(({ i }) => i === widget.i)
+      const widgetIndex = layout.findIndex(({ i }) => i === id)
 
       if (widgetIndex === -1) {
+        console.warn('Widget not found', id)
         return
       }
 
-      layout[widgetIndex] = widget
+      layout[widgetIndex] = {
+        ...layout[widgetIndex],
+        ...widget,
+      }
       tempGridLayout.value = updateSelectedLayout(layout)
     },
 

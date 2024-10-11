@@ -10,12 +10,12 @@ export type GridConfigItem = {
   width: number
   height: number
   type: GridWidgetType
-  properties: Record<string, any>
+  properties: GridWidgetProperties
 }
 
 export type LayoutItemExtended = {
   type: GridWidgetType
-  properties: Record<string, any>
+  properties: GridWidgetProperties
   originalWidth?: number
 }
 
@@ -24,6 +24,8 @@ export type GridWidget = LayoutItem & LayoutItemExtended
 export type GridWidgetWithoutCords = PartialBy<GridWidget, 'x' | 'y'>
 
 export type GridWidgetType = keyof typeof GRID_WIDGET_TYPE
+
+export type GridWidgetProperties = Record<string, any>
 
 export type GridWidgetProperty = {
   key: string
