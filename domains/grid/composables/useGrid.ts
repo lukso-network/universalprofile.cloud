@@ -100,15 +100,19 @@ export const useGrid = () => {
       )
     },
 
-    updateGridLayoutItem: (widget: GridWidget) => {
+    updateGridLayoutItem: (id: string, widget: Partial<GridWidget>) => {
       const layout = getSelectedLayout(tempGridLayout.value)
-      const widgetIndex = layout.findIndex(({ i }) => i === widget.i)
+      const widgetIndex = layout.findIndex(({ i }) => i === id)
 
       if (widgetIndex === -1) {
+        console.warn('Widget not found', id)
         return
       }
 
-      layout[widgetIndex] = widget
+      layout[widgetIndex] = {
+        ...layout[widgetIndex],
+        ...widget,
+      }
       tempGridLayout.value = updateSelectedLayout(layout)
     },
 

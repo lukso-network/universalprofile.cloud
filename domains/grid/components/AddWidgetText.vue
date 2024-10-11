@@ -1,20 +1,26 @@
 <script setup lang="ts">
 import tinycolor from 'tinycolor2'
 
+type Props = {
+  id?: string
+  properties?: GridWidgetProperties
+}
+
+const props = defineProps<Props>()
 const { formatMessage } = useIntl()
 const { selectWidget, clearWidgetData } = useWidgetStore()
-const { widgetData } = storeToRefs(useWidgetStore())
 const { closeModal } = useModal()
 const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
 
 const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
-const inputValues = reactive({
+const DEFAULT_PROPERTIES = {
   title: '',
   text: '',
   titleColor: '#243542',
   textColor: '#243542',
   backgroundColor: '#f9f9f9',
-})
+}
+const inputValues = reactive(DEFAULT_PROPERTIES)
 const inputErrors = reactive({
   text: '',
   titleColor: '',
@@ -23,7 +29,7 @@ const inputErrors = reactive({
 })
 
 const canSubmit = ref(false)
-const isEdit = computed(() => !!widgetData.value)
+const isEdit = computed(() => !!props.properties)
 
 const handleSave = () => {
   if (!canSubmit.value) {
@@ -32,12 +38,8 @@ const handleSave = () => {
 
   const properties = toRaw(inputValues)
 
-  if (isEdit.value) {
-    const updatedWidget: GridWidget = {
-      ...(widgetData.value as GridWidget),
-      properties,
-    }
-    updateGridLayoutItem(updatedWidget)
+  if (isEdit.value && props.id) {
+    updateGridLayoutItem(props.id, { properties })
   } else {
     const newWidget: GridWidgetWithoutCords = createWidgetObject({
       type: GRID_WIDGET_TYPE.TEXT,
@@ -134,7 +136,7 @@ onMounted(() => {
     input?.shadowRoot?.querySelector('input')?.focus()
   }, INPUT_FOCUS_DELAY)
 
-  Object.assign(inputValues, widgetData.value?.properties)
+  Object.assign(inputValues, props.properties || DEFAULT_PROPERTIES)
 })
 </script>
 

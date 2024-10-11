@@ -1,7 +1,12 @@
 <script setup lang="ts">
+type Props = {
+  id?: string
+  properties?: GridWidgetProperties
+}
+
+const props = defineProps<Props>()
 const { formatMessage } = useIntl()
 const { selectWidget, clearWidgetData } = useWidgetStore()
-const { widgetData } = storeToRefs(useWidgetStore())
 const { closeModal } = useModal()
 const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
 
@@ -10,7 +15,7 @@ const inputValue = ref('')
 const inputError = ref('')
 
 const canSubmit = computed(() => inputValue.value && !inputError.value)
-const isEdit = computed(() => !!widgetData.value)
+const isEdit = computed(() => !!props.properties)
 
 const handleSave = () => {
   if (!canSubmit.value) {
@@ -21,12 +26,8 @@ const handleSave = () => {
     src: inputValue.value,
   }
 
-  if (isEdit.value) {
-    const updatedWidget: GridWidget = {
-      ...(widgetData.value as GridWidget),
-      properties,
-    }
-    updateGridLayoutItem(updatedWidget)
+  if (isEdit.value && props.id) {
+    updateGridLayoutItem(props.id, { properties })
   } else {
     const newWidget: GridWidgetWithoutCords = createWidgetObject({
       type: GRID_WIDGET_TYPE.IMAGE,
@@ -74,7 +75,7 @@ onMounted(() => {
     input?.shadowRoot?.querySelector('input')?.focus()
   }, INPUT_FOCUS_DELAY)
 
-  inputValue.value = widgetData.value?.properties.src || ''
+  inputValue.value = props.properties?.src || ''
 })
 </script>
 
