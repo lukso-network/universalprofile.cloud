@@ -5,7 +5,7 @@ type Props = {
 }
 
 defineProps<Props>()
-const { selectedWidget } = storeToRefs(useWidgetStore())
+const { selectedWidget } = storeToRefs(useGridStore())
 const component = shallowRef<Component | undefined>()
 
 const WIDGET_COMPONENTS: Record<string, string> = {

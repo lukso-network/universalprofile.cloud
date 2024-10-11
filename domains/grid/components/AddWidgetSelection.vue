@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { formatMessage } = useIntl()
 const { closeModal } = useModal()
-const { selectWidget } = useWidgetStore()
+const { selectWidget } = useGridStore()
 </script>
 
 <template>

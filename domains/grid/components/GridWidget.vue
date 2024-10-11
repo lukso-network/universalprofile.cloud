@@ -8,7 +8,7 @@ const widgetComponent = shallowRef<Component | undefined>()
 const { canEditGrid, addGridLayoutItem } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
-const { selectWidget } = useWidgetStore()
+const { selectWidget } = useGridStore()
 const {
   isEditingGrid,
   isConnected,

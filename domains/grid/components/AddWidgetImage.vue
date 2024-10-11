@@ -6,7 +6,7 @@ type Props = {
 
 const props = defineProps<Props>()
 const { formatMessage } = useIntl()
-const { selectWidget, clearWidgetData } = useWidgetStore()
+const { selectWidget, clearWidgetData } = useGridStore()
 const { closeModal } = useModal()
 const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
 

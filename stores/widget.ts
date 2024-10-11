@@ -1,5 +1,5 @@
-export const useWidgetStore = defineStore(
-  'widget',
+export const useGridStore = defineStore(
+  'grid',
   () => {
     const selectedWidget = ref<GridWidgetType>()
 
@@ -19,8 +19,8 @@ export const useWidgetStore = defineStore(
   },
   {
     persist: {
-      paths: ['selectedWidget', 'widgetData'],
-      key: STORAGE_KEY.WIDGET_STORE,
+      paths: ['selectedWidget'],
+      key: STORAGE_KEY.GRID_STORE,
     },
   }
 )
