@@ -157,6 +157,20 @@ describe('Widget Input Parsing', () => {
       },
     ],
     [
+      'Spotify Track Embed Code with theme',
+      GRID_WIDGET_TYPE.SPOTIFY,
+      '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/48K735Rd3UQExzjXH004k1?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
+      {
+        type: GRID_WIDGET_TYPE.SPOTIFY,
+        properties: {
+          src: 'https://open.spotify.com/embed/track/48K735Rd3UQExzjXH004k1?utm_source=generator&theme=0',
+          allow: SPOTIFY_IFRAME_ALLOW,
+          type: 'track',
+          theme: '0',
+        },
+      },
+    ],
+    [
       'Spotify Playlist URL',
       GRID_WIDGET_TYPE.SPOTIFY,
       'https://open.spotify.com/playlist/7KFoK4LJ23EncELJwYmTDG',
