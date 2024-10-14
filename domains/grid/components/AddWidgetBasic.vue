@@ -65,7 +65,7 @@ const handleInput = async (customEvent: CustomEvent) => {
   // validation
   try {
     new URL(input.value)
-    inputValue.value = input.value
+    inputValue.value = encodeURI(input.value)
   } catch (error) {
     console.warn(error)
     inputError.value = formatMessage('errors_invalid_url')
