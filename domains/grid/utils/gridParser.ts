@@ -103,6 +103,7 @@ const parseSpotifyWidgetInput = (input: string): LayoutItemExtended | never => {
         src: `https://open.spotify.com/embed/${groups.type}/${groups.id}?utm_source=generator${theme}`,
         type: groups.type,
         allow: SPOTIFY_IFRAME_ALLOW,
+        theme: groups.theme,
       },
     }
   }

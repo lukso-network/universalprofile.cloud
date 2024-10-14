@@ -166,6 +166,7 @@ describe('Widget Input Parsing', () => {
           src: 'https://open.spotify.com/embed/track/48K735Rd3UQExzjXH004k1?utm_source=generator&theme=0',
           allow: SPOTIFY_IFRAME_ALLOW,
           type: 'track',
+          theme: '0',
         },
       },
     ],
