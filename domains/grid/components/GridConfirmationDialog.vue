@@ -12,7 +12,7 @@ const { formatMessage } = useIntl()
 <template>
   <div
     v-if="hasUnsavedGrid"
-    class="paragraph-inter-12-regular fixed bottom-4 grid w-[calc(100%-32px)] grid-cols-[auto,max-content] items-center justify-between gap-4 rounded-8 border-[3px] border-yellow-55 bg-neutral-100 p-4 sm:bottom-10 sm:left-[calc(50%-250px)] sm:w-[500px]"
+    class="paragraph-inter-12-regular fixed bottom-4 z-40 grid w-[calc(100%-32px)] grid-cols-[auto,max-content] items-center justify-between gap-4 rounded-8 border-[3px] border-yellow-55 bg-neutral-100 p-4 sm:bottom-10 sm:left-[calc(50%-250px)] sm:w-[500px]"
   >
     {{ formatMessage('grid_unsaved_changes_text') }}
     <div class="flex items-center">

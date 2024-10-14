@@ -89,3 +89,6 @@ export const GRID_SPACING_PX = 16
 // default row height ratio based on the column width.
 // 0.75 represents popular 4:3 aspect ratio
 export const DEFAULT_GRID_ROW_HEIGHT_RATIO = 0.75
+
+// maximum rotation angle in degrees for a widget while moving
+export const MAX_WIDGET_ROTATE_WHILE_MOVE_DEG = 20
