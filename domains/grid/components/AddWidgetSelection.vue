@@ -1,7 +1,29 @@
 <script setup lang="ts">
 const { formatMessage } = useIntl()
-const { closeModal } = useModal()
-const { selectWidget } = useGridStore()
+const { closeModal, showModal } = useModal()
+
+type Props = {
+  type?: GridWidgetType
+  properties?: GridWidgetProperties
+  id?: string
+  width?: number
+  height?: number
+  class?: string
+}
+
+defineProps<Props>()
+
+const handleSelectWidget = (widgetType: GridWidgetType) => {
+  showModal({
+    template: 'AddGridWidget',
+    data: {
+      type: widgetType,
+      width: 1,
+      height: 1,
+    },
+    forceOpen: true,
+  })
+}
 </script>
 
 <template>
@@ -32,7 +54,7 @@ const { selectWidget } = useGridStore()
       >
         <div
           class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-[1.05]"
-          @click="selectWidget('IFRAME')"
+          @click="handleSelectWidget('IFRAME')"
         >
           <lukso-icon
             name="code-outline"
@@ -46,7 +68,7 @@ const { selectWidget } = useGridStore()
       <lukso-tooltip variant="light" :text="formatMessage('widget_type_image')">
         <div
           class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-[1.05]"
-          @click="selectWidget('IMAGE')"
+          @click="handleSelectWidget('IMAGE')"
         >
           <lukso-icon
             name="camera"
@@ -60,7 +82,7 @@ const { selectWidget } = useGridStore()
       <lukso-tooltip variant="light" :text="formatMessage('widget_type_text')">
         <div
           class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-[1.05]"
-          @click="selectWidget('TEXT')"
+          @click="handleSelectWidget('TEXT')"
         >
           <lukso-icon
             name="document-outline"
@@ -89,7 +111,7 @@ const { selectWidget } = useGridStore()
           src="/images/social-media-youtube.svg"
           alt="Youtube"
           class="size-10 cursor-pointer transition hover:scale-[1.05]"
-          @click="selectWidget('YOUTUBE')"
+          @click="handleSelectWidget('YOUTUBE')"
         />
       </lukso-tooltip>
     </div>
@@ -112,7 +134,7 @@ const { selectWidget } = useGridStore()
           src="/images/social-media-spotify.svg"
           alt="Spotify"
           class="size-10 cursor-pointer transition hover:scale-[1.05]"
-          @click="selectWidget('SPOTIFY')"
+          @click="handleSelectWidget('SPOTIFY')"
         />
       </lukso-tooltip>
 
@@ -125,7 +147,7 @@ const { selectWidget } = useGridStore()
           src="/images/social-media-soundcloud.svg"
           alt="Sound Cloud"
           class="cursor-pointer transition hover:scale-[1.05]"
-          @click="selectWidget('SOUNDCLOUD')"
+          @click="handleSelectWidget('SOUNDCLOUD')"
         />
       </lukso-tooltip>
     </div>
@@ -145,7 +167,7 @@ const { selectWidget } = useGridStore()
           src="/images/social-media-x.svg"
           alt="X"
           class="cursor-pointer transition hover:scale-[1.05]"
-          @click="selectWidget('X')"
+          @click="handleSelectWidget('X')"
         />
       </lukso-tooltip>
 
@@ -158,7 +180,7 @@ const { selectWidget } = useGridStore()
           src="/images/social-media-warpcast.png"
           alt="Warpcast"
           class="size-10 cursor-pointer rounded-full transition hover:scale-[1.05]"
-          @click="selectWidget('WARPCAST')"
+          @click="handleSelectWidget('WARPCAST')"
         />
       </lukso-tooltip>
 
@@ -171,7 +193,7 @@ const { selectWidget } = useGridStore()
           src="/images/social-media-instagram.svg"
           alt="Warpcast"
           class="size-10 cursor-pointer rounded-full transition hover:scale-[1.05]"
-          @click="selectWidget('INSTAGRAM')"
+          @click="handleSelectWidget('INSTAGRAM')"
         />
       </lukso-tooltip>
     </div>

@@ -9,16 +9,7 @@ export const useGridStore = defineStore(
     const gridColumnsLarge = ref<number>(DEFAULT_LARGE_COLUMN_NUMBER)
     const isSavingGrid = ref(false)
     const selectedLayoutId = ref<string | undefined>()
-    const selectedWidget = ref<GridWidgetType>()
     const gridRowHeightRatio = ref(DEFAULT_GRID_ROW_HEIGHT_RATIO)
-
-    const selectWidget = (type?: GridWidgetType) => {
-      selectedWidget.value = type
-    }
-
-    const clearWidgetData = () => {
-      selectedWidget.value = undefined
-    }
 
     return {
       isEditingGrid,
@@ -29,9 +20,6 @@ export const useGridStore = defineStore(
       isSavingGrid,
       selectedLayoutId,
       gridColumnsLarge,
-      selectedWidget,
-      selectWidget,
-      clearWidgetData,
       gridRowHeightRatio,
     }
   },
@@ -40,7 +28,6 @@ export const useGridStore = defineStore(
       paths: [
         'isEditingGrid',
         'hasUnsavedGrid',
-        'selectedWidget',
         'selectedLayoutId',
         'gridColumnsLarge',
         'gridRowHeightRatio',

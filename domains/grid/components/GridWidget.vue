@@ -8,7 +8,6 @@ const widgetComponent = shallowRef<Component | undefined>()
 const { canEditGrid, addGridLayoutItem } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
-const { selectWidget } = useGridStore()
 const { isConnected, isMobile, isConnectedUserViewingOwnProfile } =
   storeToRefs(useAppStore())
 const { isEditingGrid } = storeToRefs(useGridStore())
@@ -71,12 +70,14 @@ const handleDelete = () => {
 }
 
 const handleEdit = () => {
-  selectWidget(props.widget.type)
   showModal({
     template: 'AddGridWidget',
     data: {
       properties: props.widget.properties,
       id: props.widget.i,
+      type: props.widget.type,
+      width: props.widget.w,
+      height: props.widget.h,
     },
   })
 }

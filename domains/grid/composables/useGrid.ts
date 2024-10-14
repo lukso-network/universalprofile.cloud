@@ -115,6 +115,11 @@ export const useGrid = () => {
     },
 
     addGridLayoutItem: (newItem: GridWidgetWithoutCords) => {
+      if (!canEditGrid.value) {
+        console.warn('User cannot edit grid')
+        return
+      }
+
       placeWidgetInLayout(
         newItem,
         getSelectedLayout(tempGridLayout.value),
@@ -122,7 +127,17 @@ export const useGrid = () => {
       )
     },
 
-    updateGridLayoutItem: (id: string, widget: Partial<GridWidget>) => {
+    updateGridLayoutItem: (id?: string, widget?: Partial<GridWidget>) => {
+      if (!canEditGrid.value) {
+        console.warn('User cannot edit grid')
+        return
+      }
+
+      if (!id) {
+        console.warn('Update requires an id')
+        return
+      }
+
       const layout = getSelectedLayout(tempGridLayout.value)
       const widgetIndex = layout.findIndex(({ i }) => i === id)
 
@@ -139,6 +154,11 @@ export const useGrid = () => {
     },
 
     removeGridLayoutItem: (id: string | number) => {
+      if (!canEditGrid.value) {
+        console.warn('User cannot edit grid')
+        return
+      }
+
       if (typeof id !== 'string' && typeof id !== 'number') {
         return
       }
@@ -149,6 +169,11 @@ export const useGrid = () => {
     },
 
     saveGridLayout: async (layout?: Grid<GridWidget>[]) => {
+      if (!canEditGrid.value) {
+        console.warn('User cannot edit grid')
+        return
+      }
+
       if (!layout || !connectedProfileAddress.value) {
         return
       }

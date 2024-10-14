@@ -2,14 +2,16 @@
 import tinycolor from 'tinycolor2'
 
 type Props = {
+  type: GridWidgetType
   id?: string
   properties?: GridWidgetProperties
+  width?: number
+  height?: number
 }
 
 const props = defineProps<Props>()
 const { formatMessage } = useIntl()
-const { selectWidget, clearWidgetData } = useGridStore()
-const { closeModal } = useModal()
+const { closeModal, showModal } = useModal()
 const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
 
 const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
@@ -29,7 +31,7 @@ const inputErrors = reactive({
 })
 
 const canSubmit = ref(false)
-const isEdit = computed(() => !!props.properties)
+const isEdit = computed(() => !!props.id)
 
 const handleSave = () => {
   if (!canSubmit.value) {
@@ -38,12 +40,18 @@ const handleSave = () => {
 
   const properties = toRaw(inputValues)
 
-  if (isEdit.value && props.id) {
-    updateGridLayoutItem(props.id, { properties })
+  if (isEdit.value) {
+    updateGridLayoutItem(props.id, {
+      properties,
+      w: props.width,
+      h: props.height,
+    })
   } else {
     const newWidget: GridWidgetWithoutCords = createWidgetObject({
-      type: GRID_WIDGET_TYPE.TEXT,
+      type: props.type,
       properties,
+      w: props.width,
+      h: props.height,
     })
 
     addGridLayoutItem(newWidget)
@@ -53,7 +61,6 @@ const handleSave = () => {
 }
 
 const handleCancel = () => {
-  clearWidgetData()
   closeModal()
 }
 
@@ -127,6 +134,16 @@ watchEffect(() => {
     !inputErrors.backgroundColor
 })
 
+const handleBackToSelection = () => {
+  showModal({
+    template: 'AddGridWidget',
+    forceOpen: true,
+    data: {
+      type: undefined, // when no type we display selection screen
+    },
+  })
+}
+
 onMounted(() => {
   setTimeout(() => {
     const input = document?.querySelector(
@@ -147,14 +164,22 @@ onMounted(() => {
         v-if="!isEdit"
         name="arrow-left-sm"
         class="relative z-[1] cursor-pointer rounded-full bg-neutral-100 shadow-neutral-above-shadow transition hover:scale-105 hover:shadow-neutral-above-shadow-1xl active:scale-100 active:shadow-neutral-above-shadow"
-        @click="selectWidget()"
+        @click="handleBackToSelection"
       ></lukso-icon>
       <div class="heading-inter-21-semi-bold">
-        {{ formatMessage('add_widget_text_title') }}
+        {{
+          formatMessage(
+            `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_title`
+          )
+        }}
       </div>
     </div>
     <div class="paragraph-inter-14-regular pb-6">
-      {{ formatMessage('add_widget_text_description') }}
+      {{
+        formatMessage(
+          `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_description`
+        )
+      }}
     </div>
 
     <div class="flex flex-col gap-4">

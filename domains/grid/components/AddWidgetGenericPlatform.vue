@@ -1,14 +1,15 @@
 <script setup lang="ts">
 type Props = {
-  platform: GridWidgetType
+  type: GridWidgetType
   id?: string
   properties?: GridWidgetProperties
+  width?: number
+  height?: number
 }
 
 const props = defineProps<Props>()
 const { formatMessage } = useIntl()
-const { selectWidget, clearWidgetData } = useGridStore()
-const { closeModal } = useModal()
+const { closeModal, showModal } = useModal()
 const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
 
 const TEXTAREA_FOCUS_DELAY = 10 // small delay for focusing textarea after element render
@@ -16,7 +17,7 @@ const inputValue = ref('')
 const inputError = ref('')
 
 const canSubmit = computed(() => inputValue.value && !inputError.value)
-const isEdit = computed(() => !!props.properties)
+const isEdit = computed(() => !!props.id)
 
 const handleSave = async () => {
   if (!canSubmit.value) {
@@ -25,30 +26,36 @@ const handleSave = async () => {
 
   try {
     const { properties } = await parsePlatformInput(
-      props.platform,
+      props.type,
       inputValue.value
     )
 
-    if (isEdit.value && props.id) {
-      updateGridLayoutItem(props.id, { properties })
+    if (isEdit.value) {
+      updateGridLayoutItem(props.id, {
+        properties,
+        w: props.width,
+        h: props.height,
+      })
     } else {
       const newWidget: GridWidgetWithoutCords = createWidgetObject({
-        type: props.platform,
+        type: props.type,
         properties,
+        w: props.width,
+        h: props.height,
       })
+
       addGridLayoutItem(newWidget)
     }
 
     handleCancel()
   } catch {
     inputError.value = formatMessage('errors_invalid_input', {
-      name: capitalize(props.platform),
+      name: capitalize(props.type),
     })
   }
 }
 
 const handleCancel = () => {
-  clearWidgetData()
   closeModal()
 }
 
@@ -64,15 +71,25 @@ const handleInput = async (customEvent: CustomEvent) => {
 
   // validation
   try {
-    const { properties } = await parsePlatformInput(props.platform, input.value)
+    const { properties } = await parsePlatformInput(props.type, input.value)
     inputValue.value = properties.src
   } catch (error) {
     console.warn(error)
     inputError.value = formatMessage('errors_invalid_input', {
-      name: capitalize(props.platform),
+      name: capitalize(props.type),
     })
     return
   }
+}
+
+const handleBackToSelection = () => {
+  showModal({
+    template: 'AddGridWidget',
+    forceOpen: true,
+    data: {
+      type: undefined, // when no type we display selection screen
+    },
+  })
 }
 
 onMounted(() => {
@@ -95,14 +112,22 @@ onMounted(() => {
         v-if="!isEdit"
         name="arrow-left-sm"
         class="relative z-[1] cursor-pointer rounded-full bg-neutral-100 shadow-neutral-above-shadow transition hover:scale-105 hover:shadow-neutral-above-shadow-1xl active:scale-100 active:shadow-neutral-above-shadow"
-        @click="selectWidget()"
+        @click="handleBackToSelection"
       ></lukso-icon>
       <div class="heading-inter-21-semi-bold">
-        {{ formatMessage(`add_widget_${platform.toLowerCase()}_title`) }}
+        {{
+          formatMessage(
+            `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_title`
+          )
+        }}
       </div>
     </div>
     <div class="paragraph-inter-14-regular pb-6">
-      {{ formatMessage(`add_widget_${platform.toLowerCase()}_description`) }}
+      {{
+        formatMessage(
+          `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_description`
+        )
+      }}
     </div>
 
     <!-- Content -->
@@ -110,7 +135,7 @@ onMounted(() => {
       is-full-width
       autofocus
       :placeholder="
-        formatMessage(`add_widget_${platform.toLowerCase()}_input_placeholder`)
+        formatMessage(`add_widget_${type.toLowerCase()}_input_placeholder`)
       "
       :value="inputValue"
       :error="inputError"

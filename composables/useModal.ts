@@ -9,7 +9,7 @@ const showModal = async (modal: Modal) => {
   const route = useRoute()
   const { isModalOpen } = storeToRefs(useAppStore())
 
-  if (isModalOpen.value) {
+  if (isModalOpen.value && !modal.forceOpen) {
     return
   }
 
