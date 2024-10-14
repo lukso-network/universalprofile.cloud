@@ -21,10 +21,10 @@ const {
 } = useGrid()
 const gridContainer = ref<HTMLElement | null>(null)
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
-
-const address = computed(() => getCurrentProfileAddress())
-const layout = ref<GridWidget[]>([])
 const { width } = useElementSize(gridContainer)
+const layout = ref<GridWidget[]>([])
+const movementX = ref(0)
+const address = computed(() => getCurrentProfileAddress())
 
 const currentLayout = computed(() => {
   // when user is editing and has unsaved changes, use temp layout
@@ -42,6 +42,28 @@ const gridRowHeight = computed(() => {
 
   return rowHeight
 })
+
+const itemStyle = computed(() => (item: GridWidget) => {
+  const element = document.getElementById(`gridItem-${item.i}`)
+
+  // we only want to rotate item while dragging
+  if (element?.classList.contains('vgl-item--dragging')) {
+    // calculate rotation based on mouse movement speed
+    const rotate = Math.min(
+      Math.max(movementX.value, -MAX_WIDGET_ROTATE_WHILE_MOVE_DEG),
+      MAX_WIDGET_ROTATE_WHILE_MOVE_DEG
+    )
+
+    return {
+      transform: `rotate(${rotate}deg)`,
+      transition: 'transform 0.2s',
+    }
+  }
+})
+
+const handleMouseMove = (event: MouseEvent) => {
+  movementX.value = event.movementX
+}
 
 const handleUpdateLayout = (newLayout: GridWidget[]) => {
   if (gridLog.enabled) {
@@ -154,6 +176,14 @@ useResizeObserver(gridContainer, entries => {
   const { contentRect } = entries[0]
   handleResize(contentRect.width)
 })
+
+onMounted(() => {
+  document.addEventListener('mousemove', handleMouseMove)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('mousemove', handleMouseMove)
+})
 </script>
 
 <template>
@@ -166,12 +196,14 @@ useResizeObserver(gridContainer, entries => {
         :is-draggable="canEditGrid"
         :is-resizable="canEditGrid"
         :responsive="false"
-        :is-bounded="true"
+        :is-bounded="false"
         :margin="[GRID_SPACING_PX, GRID_SPACING_PX]"
+        :use-css-transforms="false"
         class="-m-4"
         @layout-updated="handleUpdateLayout"
       >
         <GridItem
+          :id="`gridItem-${item.i}`"
           v-for="item in layout"
           :key="item.i"
           :x="item.x"
@@ -195,6 +227,7 @@ useResizeObserver(gridContainer, entries => {
               right: '.grid-widget-resize',
             },
           }"
+          :style="itemStyle(item)"
         >
           <GridWidget :widget="item" />
         </GridItem>
@@ -213,13 +246,19 @@ useResizeObserver(gridContainer, entries => {
 <style scoped>
 /* stylelint-disable selector-class-pattern */
 
+/* CSS variables for grid layout */
+.vgl-layout {
+  --vgl-placeholder-bg: transparent;
+  --vgl-placeholder-opacity: 100%;
+  --vgl-item-dragging-z-index: 30;
+}
+
 :deep(.vgl-item__resizer) {
   display: none; /* hide library resizer handle to use custom one */
 }
 
 :deep(.vgl-item--dragging) {
   & > div {
-    transform: rotate(-4deg);
     transition: transform 0.2s;
     border-radius: 12px;
     border: 1px solid var(--neutrals-neutral-90, #dee7ed);
@@ -252,10 +291,5 @@ useResizeObserver(gridContainer, entries => {
     0 5px 5px 0 rgba(63 93 116 / 13%) inset,
     0 1px 3px 0 rgba(63 93 116 / 15%) inset,
     0 0 0 0 rgba(63 93 116 / 16%) inset;
-}
-
-.vgl-layout {
-  --vgl-placeholder-bg: transparent;
-  --vgl-placeholder-opacity: 100%;
 }
 </style>
