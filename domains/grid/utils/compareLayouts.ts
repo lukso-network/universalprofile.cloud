@@ -6,8 +6,8 @@
  * @returns Array of changes.
  */
 export const compareLayouts = (
-  _layoutA: GridWidget[],
-  _layoutB: GridWidget[]
+  _layoutA?: GridWidget[],
+  _layoutB?: GridWidget[]
 ): GridWidgetChange[] => {
   const result: GridWidgetChange[] = []
   const propertiesToCheck: (keyof GridWidget)[] = [
@@ -18,12 +18,10 @@ export const compareLayouts = (
     'type',
     'properties',
   ]
-  const layoutA = _layoutA.filter(
-    item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
-  )
-  const layoutB = _layoutB.filter(
-    item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
-  )
+  const layoutA =
+    _layoutA?.filter(item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT) || []
+  const layoutB =
+    _layoutB?.filter(item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT) || []
   const maxLength = Math.max(layoutA.length, layoutB.length)
 
   for (let i = 0; i < maxLength; i++) {

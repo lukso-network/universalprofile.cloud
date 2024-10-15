@@ -12,7 +12,7 @@ export const configToLayout = (
 
   for (const gridItem of config) {
     layout.push({
-      id: _createId(gridItem, layout),
+      id: createGridId(gridItem, layout),
       title: gridItem.title,
       grid: gridItem.grid.map(widget => {
         return createWidgetObject({
@@ -26,23 +26,4 @@ export const configToLayout = (
   }
 
   return layout
-}
-
-const _createId = (
-  gridItem: PartialBy<Grid<GridConfigItem>, 'id'>,
-  config: Grid<GridWidgetWithoutCords>[]
-): string => {
-  // generate id based on title using slug() util
-  // look in config if title exist, if title is not unique, add a number to the end
-
-  const baseId = slug(gridItem.title)
-  let uniqueId = baseId
-  let counter = 0
-
-  while (config.some(item => item.id === uniqueId)) {
-    uniqueId = `${baseId}-${counter}`
-    counter++
-  }
-
-  return uniqueId
 }

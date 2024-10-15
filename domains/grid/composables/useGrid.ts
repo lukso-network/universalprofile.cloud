@@ -220,6 +220,16 @@ export const useGrid = () => {
         isSavingGrid.value = false
       }
     },
+
+    addGrid: (grid: Grid<GridWidget>) => {
+      if (!canEditGrid.value) {
+        console.warn('User cannot edit grid')
+        return
+      }
+
+      tempGridLayout.value.push(grid)
+    },
+
     getGridColumns: computed(() => (width: number): number => {
       return width > GRID_BREAKPOINT_PX
         ? gridColumnsLarge.value

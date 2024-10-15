@@ -10,6 +10,7 @@ const {
   hasUnsavedGrid,
   gridColumns,
   gridRowHeightRatio,
+  selectedLayoutId,
 } = storeToRefs(useGridStore())
 const {
   initializeGridLayout,
@@ -103,6 +104,13 @@ const handleResetLayout = async () => {
   tempGridLayout.value = cloneObject(_layout)
   viewedGridLayout.value = cloneObject(_layout)
   layout.value = getSelectedLayout(cloneObject(_layout))
+
+  // if selected layout is affected by reset, select first layout
+  if (
+    !viewedGridLayout.value.some(item => item.id === selectedLayoutId.value)
+  ) {
+    selectedLayoutId.value = viewedGridLayout.value[0]?.id
+  }
 }
 
 const clearSelection = () => {
@@ -131,23 +139,28 @@ const handleItemResized = () => {
 // - user make modifications in widgets (add/edit/remove/resize)
 // - user toggles edit mode
 watch(
-  [tempGridLayout, isEditingGrid],
+  [tempGridLayout, isEditingGrid, selectedLayoutId],
   async () => {
     await nextTick()
-    const updatedViewedLayout = getSelectedLayout(
-      buildLayout(viewedGridLayout.value, gridColumns.value, canEditGrid.value)
+    const updatedViewedLayout = buildLayout(
+      viewedGridLayout.value,
+      gridColumns.value,
+      canEditGrid.value
     )
-    const updatedTempLayout = getSelectedLayout(
-      buildLayout(tempGridLayout.value, gridColumns.value, canEditGrid.value)
+
+    const updatedTempLayout = buildLayout(
+      tempGridLayout.value,
+      gridColumns.value,
+      canEditGrid.value
     )
 
     if (isEditingGrid.value) {
-      layout.value = updatedTempLayout
+      layout.value = getSelectedLayout(updatedTempLayout)
     } else {
-      layout.value = updatedViewedLayout
+      layout.value = getSelectedLayout(updatedViewedLayout)
     }
 
-    const changes = compareLayouts(updatedViewedLayout, updatedTempLayout)
+    const changes = compareGrids(updatedViewedLayout, updatedTempLayout)
 
     if (changes.length > 0) {
       hasUnsavedGrid.value = true
@@ -189,6 +202,7 @@ onUnmounted(() => {
 <template>
   <div class="w-full">
     <div class="mx-auto max-w-content" ref="gridContainer">
+      <GridTabs :grid="currentLayout" />
       <GridLayout
         v-model:layout="layout"
         :col-num="gridColumns"
