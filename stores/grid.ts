@@ -10,6 +10,7 @@ export const useGridStore = defineStore(
     const isSavingGrid = ref(false)
     const selectedLayoutId = ref<string | undefined>()
     const gridRowHeightRatio = ref(DEFAULT_GRID_ROW_HEIGHT_RATIO)
+    const gridChainId = ref<string>(DEFAULT_NETWORK_CHAIN_ID)
 
     return {
       isEditingGrid,
@@ -21,6 +22,7 @@ export const useGridStore = defineStore(
       selectedLayoutId,
       gridColumnsLarge,
       gridRowHeightRatio,
+      gridChainId,
     }
   },
   {
@@ -31,6 +33,7 @@ export const useGridStore = defineStore(
         'selectedLayoutId',
         'gridColumnsLarge',
         'gridRowHeightRatio',
+        'gridChainId',
         'tempGridLayout',
       ],
       key: STORAGE_KEY.GRID_STORE,

@@ -178,7 +178,7 @@ watch(
 
 // initialize layout on initial render and when user connects/disconnects
 watch(
-  () => isConnected.value,
+  [isConnected.value],
   async () => {
     if (!isConnected.value) {
       hasUnsavedGrid.value = false
@@ -252,6 +252,12 @@ onUnmounted(() => {
         </GridItem>
       </GridLayout>
     </div>
+    {{ viewedGridLayout }}
+
+    <br />
+    <br />
+    <br />
+    {{ tempGridLayout }}
 
     <!-- Confirmation dialog for unsaved changes -->
     <GridConfirmationDialog
