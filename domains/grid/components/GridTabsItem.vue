@@ -8,9 +8,9 @@ type Props = {
 
 const props = defineProps<Props>()
 const { formatMessage } = useIntl()
-const { canEditGrid } = useGrid()
+const { canEditGrid, addGrid } = useGrid()
 const { showModal } = useModal()
-const { selectedLayoutId } = storeToRefs(useGridStore())
+const { selectedLayoutId, tempGridLayout } = storeToRefs(useGridStore())
 const dropdownId = `dropdown-${generateItemId()}`
 
 const styleVariants = tv({
@@ -60,6 +60,17 @@ const handleDelete = () => {
   })
 }
 
+const handleDuplicate = () => {
+  const newGrid: Grid<GridWidget> = {
+    id: createGridId<GridWidget>(props.grid, tempGridLayout.value),
+    title: formatMessage('grid_tabs_copy_of', { title: props.grid.title }),
+    grid: props.grid.grid,
+  }
+
+  addGrid(newGrid)
+  selectedLayoutId.value = newGrid.id
+}
+
 const handleSelectTab = (id: string) => {
   selectedLayoutId.value = id
 }
@@ -83,6 +94,12 @@ const handleSelectTab = (id: string) => {
         <lukso-dropdown-option size="medium" @click="handleEdit">
           <lukso-icon name="edit" size="small"></lukso-icon>
           {{ formatMessage('grid_tabs_menu_edit') }}</lukso-dropdown-option
+        >
+
+        <!-- Duplicate option -->
+        <lukso-dropdown-option size="medium" @click="handleDuplicate">
+          <lukso-icon name="copy" size="small"></lukso-icon>
+          {{ formatMessage('grid_tabs_menu_duplicate') }}</lukso-dropdown-option
         >
 
         <!-- Delete option -->
