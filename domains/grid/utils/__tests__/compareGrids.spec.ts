@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { compareGrids } from '../compareGrids'
 
-//TBA
 describe('compareGrids', () => {
   it('should return no changes for identical grids', () => {
     const gridA: Grid<GridWidget>[] = [
