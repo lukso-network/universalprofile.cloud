@@ -50,6 +50,16 @@ const handleEdit = () => {
   })
 }
 
+const handleDelete = () => {
+  showModal({
+    template: 'DeleteGrid',
+    data: {
+      id: props.grid.id,
+      title: props.grid.title,
+    },
+  })
+}
+
 const handleSelectTab = (id: string) => {
   selectedLayoutId.value = id
 }
@@ -74,6 +84,14 @@ const handleSelectTab = (id: string) => {
           <lukso-icon name="edit" size="small"></lukso-icon>
           {{ formatMessage('grid_tabs_menu_edit') }}</lukso-dropdown-option
         >
+
+        <!-- Delete option -->
+        <lukso-dropdown-option size="medium" @click="handleDelete">
+          <lukso-icon name="trash" size="small" color="red-65"></lukso-icon>
+          <span class="text-red-65">
+            {{ formatMessage('grid_tabs_menu_delete') }}
+          </span>
+        </lukso-dropdown-option>
       </lukso-dropdown>
     </div>
   </li>
