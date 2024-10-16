@@ -43,6 +43,20 @@ export const useGrid = () => {
     return updatedLayouts
   }
 
+  const initSelectedLayoutId = () => {
+    const currentLayout = canEditGrid.value
+      ? tempGridLayout.value
+      : viewedGridLayout.value
+
+    if (
+      !selectedLayoutId.value ||
+      (selectedLayoutId.value &&
+        !currentLayout.some(item => item.id === selectedLayoutId.value))
+    ) {
+      selectedLayoutId.value = currentLayout[0]?.id
+    }
+  }
+
   return {
     initializeGridLayout: async (
       address?: Address,
@@ -68,17 +82,6 @@ export const useGrid = () => {
         }
 
         viewedGridLayout.value = cloneObject(layout)
-      }
-
-      // initialize selected layout id, if not set we take the first one
-      const _initSelectedLayoutId = () => {
-        if (
-          !selectedLayoutId.value ||
-          (selectedLayoutId.value &&
-            !layout.some(item => item.id === selectedLayoutId.value))
-        ) {
-          selectedLayoutId.value = layout[0]?.id
-        }
       }
 
       // in case we don't have a temp layout yet we initialize it
@@ -109,9 +112,9 @@ export const useGrid = () => {
       }
 
       await _initUserLayout()
-      _initSelectedLayoutId()
       _initTempLayout()
       _initEditMode()
+      initSelectedLayoutId()
     },
 
     addGridLayoutItem: (newItem: GridWidgetWithoutCords) => {
@@ -230,6 +233,49 @@ export const useGrid = () => {
       tempGridLayout.value.push(grid)
     },
 
+    updateGrid: (
+      id?: string,
+      grid?: PartialBy<Grid<GridWidget>, 'id' | 'grid'>
+    ) => {
+      if (!canEditGrid.value) {
+        console.warn('User cannot edit grid')
+        return
+      }
+
+      if (!id) {
+        console.warn('Grid update requires an id')
+        return
+      }
+
+      if (!grid?.title) {
+        console.warn('Grid update requires a title')
+        return
+      }
+
+      const index = tempGridLayout.value.findIndex(item => item.id === id)
+
+      if (index === -1) {
+        console.warn('Grid not found', id)
+        return
+      }
+
+      tempGridLayout.value[index] = {
+        ...tempGridLayout.value[index],
+        ...{
+          ...grid,
+        },
+      }
+    },
+
+    removeGrid: (id: string) => {
+      if (!canEditGrid.value) {
+        console.warn('User cannot edit grid')
+        return
+      }
+
+      tempGridLayout.value = tempGridLayout.value.filter(item => item.id !== id)
+    },
+
     getGridColumns: computed(() => (width: number): number => {
       return width > GRID_BREAKPOINT_PX
         ? gridColumnsLarge.value
@@ -238,5 +284,6 @@ export const useGrid = () => {
     getSelectedLayout,
     updateSelectedLayout,
     canEditGrid,
+    initSelectedLayoutId,
   }
 }

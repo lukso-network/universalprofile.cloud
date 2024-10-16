@@ -1,7 +1,6 @@
 <script setup lang="ts">
 type GridTab = {
-  id: string
-  label: string
+  grid: Grid<GridWidget>
 }
 
 type Props = {
@@ -9,22 +8,18 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { selectedLayoutId, isEditingGrid } = storeToRefs(useGridStore())
+const { selectedLayoutId } = storeToRefs(useGridStore())
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
+const { canEditGrid } = useGrid()
 
 const tabs = computed<GridTab[]>(() => {
   return props.grid.map(grid => {
     return {
-      id: grid.id,
-      label: grid.title,
+      grid,
     }
   })
 })
-
-const handleSelectTab = (id: string) => {
-  selectedLayoutId.value = id
-}
 
 const handleAddGrid = () => {
   showModal({
@@ -40,15 +35,14 @@ const handleAddGrid = () => {
 <template>
   <div class="pb-4">
     <ul class="flex justify-center gap-6 sm:justify-start">
-      <ProfileTabsItem
+      <GridTabsItem
         v-for="tab in tabs"
-        :key="tab.id"
-        :label="tab.label"
-        :is-active="tab.id === selectedLayoutId"
-        @click="handleSelectTab(tab.id)"
+        :key="tab.grid.id"
+        :grid="tab.grid"
+        :is-active="tab.grid.id === selectedLayoutId"
       />
       <li
-        v-if="isEditingGrid"
+        v-if="canEditGrid"
         class="heading-inter-17-semi-bold flex cursor-pointer items-center opacity-50 transition hover:opacity-100"
         @click="handleAddGrid"
       >

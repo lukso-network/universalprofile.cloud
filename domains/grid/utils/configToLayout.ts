@@ -1,3 +1,5 @@
+import type { GridConfigItem } from '@/types/grid'
+
 /**
  * Convert Grid config to Grid layout
  *
@@ -12,7 +14,7 @@ export const configToLayout = (
 
   for (const gridItem of config) {
     layout.push({
-      id: createGridId(gridItem, layout),
+      id: createGridId<GridConfigItem>(gridItem, layout),
       title: gridItem.title,
       grid: gridItem.grid.map(widget => {
         return createWidgetObject({

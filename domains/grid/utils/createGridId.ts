@@ -7,8 +7,8 @@ import type { GridWidget } from '@/types/grid'
  * @param config
  * @returns
  */
-export const createGridId = (
-  gridItem: PartialBy<Grid<GridConfigItem>, 'id' | 'grid'>,
+export const createGridId = <T>(
+  gridItem: PartialBy<Grid<T>, 'id' | 'grid'>,
   config: Grid<GridWidgetWithoutCords>[] | Grid<GridWidget>[]
 ): string => {
   // generate id based on title using slug() util

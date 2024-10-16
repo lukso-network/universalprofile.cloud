@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { GridWidget } from '@/types/grid'
+
 const { modal, closeModal } = useModal()
 const { formatMessage } = useIntl()
 const { tempGridLayout, selectedLayoutId } = storeToRefs(useGridStore())
@@ -13,7 +15,7 @@ const inputErrors = reactive({
   title: '',
 })
 
-const id = computed(() => modal?.data?.id)
+const id = computed(() => modal?.data?.grid?.id)
 const canSubmit = ref(false)
 const isEdit = computed(() => !!id.value)
 
@@ -48,7 +50,7 @@ const handleSave = () => {
     })
   } else {
     const newGrid: Grid<GridWidget> = {
-      id: createGridId(grid, tempGridLayout.value),
+      id: createGridId<GridWidget>(grid, tempGridLayout.value),
       title: grid.title,
       grid: [],
     }

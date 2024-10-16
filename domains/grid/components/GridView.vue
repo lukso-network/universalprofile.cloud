@@ -19,6 +19,7 @@ const {
   getSelectedLayout,
   updateSelectedLayout,
   getGridColumns,
+  initSelectedLayoutId,
 } = useGrid()
 const gridContainer = ref<HTMLElement | null>(null)
 let resizeTimeout: ReturnType<typeof setTimeout> | null = null
@@ -154,6 +155,7 @@ watch(
       canEditGrid.value
     )
 
+    // if user is in edit mode we use temp layout, otherwise viewed layout
     if (isEditingGrid.value) {
       layout.value = getSelectedLayout(updatedTempLayout)
     } else {
@@ -167,6 +169,9 @@ watch(
     } else {
       hasUnsavedGrid.value = false
     }
+
+    // re-init selected layout id when user toggles edit mode in case the selected grid was changed
+    initSelectedLayoutId()
   },
   { deep: true }
 )
