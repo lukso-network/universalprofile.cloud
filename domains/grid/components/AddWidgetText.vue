@@ -12,7 +12,8 @@ type Props = {
 const props = defineProps<Props>()
 const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
-const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
+const { addGridLayoutItem, updateGridLayoutItem, getSelectedLayout } = useGrid()
+const { tempGridLayout } = storeToRefs(useGridStore())
 
 const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
 const DEFAULT_PROPERTIES = {
@@ -54,7 +55,7 @@ const handleSave = () => {
       h: props.height,
     })
 
-    addGridLayoutItem(newWidget)
+    addGridLayoutItem(newWidget, getSelectedLayout(tempGridLayout.value))
   }
 
   handleCancel()

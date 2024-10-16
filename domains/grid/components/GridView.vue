@@ -252,12 +252,6 @@ onUnmounted(() => {
         </GridItem>
       </GridLayout>
     </div>
-    {{ viewedGridLayout }}
-
-    <br />
-    <br />
-    <br />
-    {{ tempGridLayout }}
 
     <!-- Confirmation dialog for unsaved changes -->
     <GridConfirmationDialog

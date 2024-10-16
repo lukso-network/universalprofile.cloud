@@ -23,9 +23,11 @@ export const useGrid = () => {
       isConnectedUserViewingOwnProfile.value
   )
 
-  const getSelectedLayout = (layouts: Grid<GridWidget>[]): GridWidget[] => {
-    return layouts.find(grid => grid.id === selectedLayoutId.value)?.grid || []
-  }
+  const getGridById = (grids: Grid<GridWidget>[], id?: string) =>
+    grids.find(grid => grid.id === id)?.grid || []
+
+  const getSelectedLayout = (layouts: Grid<GridWidget>[]): GridWidget[] =>
+    getGridById(layouts, selectedLayoutId.value)
 
   const updateSelectedLayout = (layout: GridWidget[]): Grid<GridWidget>[] => {
     const updatedLayouts = tempGridLayout.value.map(item => {
@@ -117,17 +119,16 @@ export const useGrid = () => {
       initSelectedLayoutId()
     },
 
-    addGridLayoutItem: (newItem: GridWidgetWithoutCords) => {
+    addGridLayoutItem: (
+      newItem: GridWidgetWithoutCords,
+      grid: GridWidget[]
+    ) => {
       if (!canEditGrid.value) {
         console.warn('User cannot edit grid')
         return
       }
 
-      placeWidgetInLayout(
-        newItem,
-        getSelectedLayout(tempGridLayout.value),
-        gridColumns.value
-      )
+      placeWidgetInLayout(newItem, grid, gridColumns.value)
     },
 
     updateGridLayoutItem: (id?: string, widget?: Partial<GridWidget>) => {
@@ -285,5 +286,6 @@ export const useGrid = () => {
     updateSelectedLayout,
     canEditGrid,
     initSelectedLayoutId,
+    getGridById,
   }
 }
