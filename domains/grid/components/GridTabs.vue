@@ -34,7 +34,7 @@ const handleAddGrid = () => {
 
 <template>
   <div class="pb-4">
-    <ul class="flex justify-center gap-6 sm:justify-start">
+    <ul class="flex flex-wrap justify-center gap-x-6 gap-y-3 sm:justify-start">
       <GridTabsItem
         v-for="tab in tabs"
         :key="tab.grid.id"
