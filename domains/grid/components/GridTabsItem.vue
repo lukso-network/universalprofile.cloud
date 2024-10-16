@@ -15,10 +15,10 @@ const dropdownId = `dropdown-${generateItemId()}`
 
 const styleVariants = tv({
   slots: {
-    tab: 'heading-inter-17-semi-bold group flex min-h-[26px] items-center',
+    tab: 'heading-inter-17-semi-bold flex min-h-[26px] items-center',
     menuTrigger:
-      'mx-1 -mr-1 cursor-pointer p-1 opacity-50 transition hover:opacity-100',
-    label: '',
+      'mx-1 -mr-1 cursor-pointer p-1 opacity-0 transition hover:!opacity-100 group-hover:opacity-50',
+    label: 'whitespace-nowrap',
   },
   variants: {
     isActive: {
@@ -78,10 +78,10 @@ const handleSelectTab = (id: string) => {
 
 <template>
   <li :class="styles.tab()">
-    <div :class="styles.label()" @click="handleSelectTab(grid.id)">
-      {{ grid.title }}
-    </div>
-    <div class="relative">
+    <div class="group flex w-full">
+      <div :class="styles.label()" @click="handleSelectTab(grid.id)">
+        {{ grid.title }}
+      </div>
       <lukso-icon
         v-if="canEditGrid"
         :id="dropdownId"
@@ -89,27 +89,32 @@ const handleSelectTab = (id: string) => {
         name="edit"
         size="small"
       ></lukso-icon>
-      <lukso-dropdown :trigger-id="dropdownId" size="medium">
-        <!-- Rename option -->
-        <lukso-dropdown-option size="medium" @click="handleEdit">
-          <lukso-icon name="edit" size="small"></lukso-icon>
-          {{ formatMessage('grid_tabs_menu_edit') }}</lukso-dropdown-option
-        >
-
-        <!-- Duplicate option -->
-        <lukso-dropdown-option size="medium" @click="handleDuplicate">
-          <lukso-icon name="copy" size="small"></lukso-icon>
-          {{ formatMessage('grid_tabs_menu_duplicate') }}</lukso-dropdown-option
-        >
-
-        <!-- Delete option -->
-        <lukso-dropdown-option size="medium" @click="handleDelete">
-          <lukso-icon name="trash" size="small" color="red-65"></lukso-icon>
-          <span class="text-red-65">
-            {{ formatMessage('grid_tabs_menu_delete') }}
-          </span>
-        </lukso-dropdown-option>
-      </lukso-dropdown>
     </div>
+    <lukso-dropdown
+      is-open
+      :trigger-id="dropdownId"
+      size="medium"
+      class="relative -bottom-2 -left-5"
+    >
+      <!-- Rename option -->
+      <lukso-dropdown-option size="medium" @click="handleEdit">
+        <lukso-icon name="edit" size="small"></lukso-icon>
+        {{ formatMessage('grid_tabs_menu_edit') }}</lukso-dropdown-option
+      >
+
+      <!-- Duplicate option -->
+      <lukso-dropdown-option size="medium" @click="handleDuplicate">
+        <lukso-icon name="copy" size="small"></lukso-icon>
+        {{ formatMessage('grid_tabs_menu_duplicate') }}</lukso-dropdown-option
+      >
+
+      <!-- Delete option -->
+      <lukso-dropdown-option size="medium" @click="handleDelete">
+        <lukso-icon name="trash" size="small" color="red-65"></lukso-icon>
+        <span class="text-red-65">
+          {{ formatMessage('grid_tabs_menu_delete') }}
+        </span>
+      </lukso-dropdown-option>
+    </lukso-dropdown>
   </li>
 </template>
