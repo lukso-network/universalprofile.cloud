@@ -131,8 +131,11 @@ onMounted(() => {
 
 <template>
   <div
-    class="group relative flex h-full select-none flex-col rounded-12 border border-neutral-90 bg-neutral-100"
-    :class="{ 'shadow-neutral-drop-shadow-1xl': !isAddContentWidget }"
+    class="group relative flex h-full flex-col rounded-12 border border-neutral-90 bg-neutral-100"
+    :class="{
+      'shadow-neutral-drop-shadow-1xl': !isAddContentWidget,
+      'select-none': isAllowToEdit,
+    }"
   >
     <!-- Move handle -->
     <div
