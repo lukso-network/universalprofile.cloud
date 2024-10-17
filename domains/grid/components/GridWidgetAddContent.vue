@@ -16,7 +16,7 @@ const handleAddContent = () => {
 
 <template>
   <div
-    class="flex h-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-12 p-4 transition hover:opacity-60 hover:shadow-neutral-drop-shadow"
+    class="flex h-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-12 p-4 opacity-60 transition hover:opacity-100 hover:shadow-neutral-drop-shadow"
     @click="handleAddContent"
   >
     <lukso-icon name="plus" size="large" />
