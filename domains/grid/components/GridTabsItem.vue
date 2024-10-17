@@ -15,9 +15,6 @@ const dropdownId = `dropdown-${generateItemId()}`
 
 const styleVariants = tv({
   slots: {
-    tab: 'heading-inter-17-semi-bold flex min-h-[26px] items-center',
-    menuTrigger:
-      'mx-1 -mr-1 cursor-pointer p-1 opacity-0 transition hover:!opacity-100 group-hover:opacity-50',
     label: 'whitespace-nowrap',
   },
   variants: {
@@ -77,15 +74,15 @@ const handleSelectTab = (id: string) => {
 </script>
 
 <template>
-  <li :class="styles.tab()">
-    <div class="group flex w-full items-center">
+  <li class="heading-inter-17-semi-bold flex min-h-[26px] items-center">
+    <div class="group relative flex w-full items-center">
       <div :class="styles.label()" @click="handleSelectTab(grid.id)">
         {{ grid.title }}
       </div>
       <lukso-icon
         v-if="canEditGrid"
         :id="dropdownId"
-        :class="styles.menuTrigger()"
+        class="absolute right-[-18px] mx-1 -mr-1 cursor-pointer p-1 opacity-0 transition hover:!opacity-100 group-hover:opacity-50"
         name="edit"
         size="small"
       ></lukso-icon>
@@ -93,7 +90,7 @@ const handleSelectTab = (id: string) => {
     <lukso-dropdown
       :trigger-id="dropdownId"
       size="medium"
-      class="relative -bottom-2 -left-5"
+      class="relative -bottom-2 -left-2"
     >
       <!-- Rename option -->
       <lukso-dropdown-option size="medium" @click="handleEdit">
