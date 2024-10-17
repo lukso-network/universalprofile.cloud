@@ -91,7 +91,6 @@ const handleSelectTab = (id: string) => {
       ></lukso-icon>
     </div>
     <lukso-dropdown
-      is-open
       :trigger-id="dropdownId"
       size="medium"
       class="relative -bottom-2 -left-5"
