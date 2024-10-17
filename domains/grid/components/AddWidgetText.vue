@@ -25,7 +25,6 @@ const DEFAULT_PROPERTIES = {
 }
 const inputValues = reactive(DEFAULT_PROPERTIES)
 const inputErrors = reactive({
-  text: '',
   titleColor: '',
   textColor: '',
   backgroundColor: '',
@@ -74,13 +73,6 @@ const handleTitleChange = async (customEvent: CustomEvent) => {
 const handleTextChange = async (customEvent: CustomEvent) => {
   const event = customEvent.detail.event
   const input = event.target as HTMLInputElement
-  inputErrors.text = ''
-
-  if (!input.value) {
-    inputErrors.text = formatMessage('errors_required')
-    return
-  }
-
   inputValues.text = input.value
 }
 
@@ -128,8 +120,6 @@ const handleBackgroundColorChange = async (customEvent: CustomEvent) => {
 
 watchEffect(() => {
   canSubmit.value =
-    !!inputValues.text &&
-    !inputErrors.text &&
     !inputErrors.titleColor &&
     !inputErrors.textColor &&
     !inputErrors.backgroundColor
@@ -212,7 +202,6 @@ onMounted(() => {
           :value="inputValues.text"
           :label="formatMessage('add_widget_text_text_label')"
           :placeholder="formatMessage('add_widget_text_text_placeholder')"
-          :error="inputErrors.text"
           is-full-width
           rows="3"
           autofocus
