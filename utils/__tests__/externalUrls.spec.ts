@@ -154,7 +154,7 @@ describe('walletConnectDeepLinkUrl', () => {
     const input =
       'wc:96c935c09bfae76a83d65747651a7e0c77592e3b7aeff8556bc91e9363a86689@2?expiryTimestamp=1728294685&relay-protocol=irn&symKey=8ba498cb98560cb940584b50450e77fe8699c29a5ecf28cbad7ee2f215685815'
     const expectedOutput =
-      'io.universaleverything.universalprofiles://wallet-connect/96c935c09bfae76a83d65747651a7e0c77592e3b7aeff8556bc91e9363a86689@2?expiryTimestamp=1728294685&relay-protocol=irn&symKey=8ba498cb98560cb940584b50450e77fe8699c29a5ecf28cbad7ee2f215685815'
+      'io.universaleverything.universalprofiles://wallet-connect/96c935c09bfae76a83d65747651a7e0c77592e3b7aeff8556bc91e9363a86689@2?expiryTimestamp=1728294685&relay-protocol=irn&symKey=8ba498cb98560cb940584b50450e77fe8699c29a5ecf28cbad7ee2f215685815&redirectUrl=http://localhost:3000/'
     expect(walletConnectDeepLinkUrl(input)).toBe(expectedOutput)
   })
 
