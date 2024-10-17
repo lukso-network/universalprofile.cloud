@@ -78,7 +78,7 @@ const handleSelectTab = (id: string) => {
 
 <template>
   <li :class="styles.tab()">
-    <div class="group flex w-full">
+    <div class="group flex w-full items-center">
       <div :class="styles.label()" @click="handleSelectTab(grid.id)">
         {{ grid.title }}
       </div>
