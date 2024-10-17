@@ -7,7 +7,6 @@ import { MOBILE_APP_DEEP_LINK_PREFIX } from '@/shared/config'
  * URL to transaction on blockchain explorer
  *
  * @param transactionHash
- * @returns
  */
 export const explorerTransactionUrl = (transactionHash: string) => {
   const { currentNetwork } = storeToRefs(useAppStore())
@@ -19,7 +18,6 @@ export const explorerTransactionUrl = (transactionHash: string) => {
  * URL to contract on blockchain explorer
  *
  * @param address
- * @returns
  */
 export const explorerContractUrl = (address?: string | Address) => {
   const { currentNetwork } = storeToRefs(useAppStore())
@@ -29,8 +27,6 @@ export const explorerContractUrl = (address?: string | Address) => {
 
 /**
  * URL to Transak to buy LYX
- *
- * @returns
  */
 export const transakBuyLyxUrl = () => {
   const connectedProfile = useProfile().connectedProfile()
@@ -55,6 +51,9 @@ export const transakBuyLyxUrl = () => {
   return `${TRANSAK_HOST}/?${queryParamsString(queryParams)}`
 }
 
+/**
+ * URL to Ramp to buy LYX
+ */
 export const rampBuyLyxUrl = () => {
   const connectedProfile = useProfile().connectedProfile()
   const { formatMessage } = useIntl()
@@ -77,8 +76,6 @@ export const rampBuyLyxUrl = () => {
 
 /**
  * URL to profile dashboard on my.universalprofile.cloud
- *
- * @returns
  */
 export const myUpDappDashboardUrl = () => {
   const { currentNetwork } = storeToRefs(useAppStore())
@@ -88,8 +85,6 @@ export const myUpDappDashboardUrl = () => {
 
 /**
  * URL to landing page on my.universalprofile.cloud
- *
- * @returns
  */
 export const myUpDappBaseUrl = () => {
   const { currentNetwork } = storeToRefs(useAppStore())
@@ -100,7 +95,7 @@ export const myUpDappBaseUrl = () => {
 /**
  * URL to profile page on universal.page
  *
- * @returns
+ * @param address
  */
 export const universalPageProfileUrl = (address?: Address) => {
   assert(address, 'Address is required')
@@ -113,7 +108,6 @@ export const universalPageProfileUrl = (address?: Address) => {
  *
  * @param address
  * @param tokenId
- * @returns
  */
 export const universalPageAssetUrl = (address?: Address, tokenId?: string) => {
   assert(address, 'Address is required')
@@ -129,7 +123,7 @@ export const universalPageAssetUrl = (address?: Address, tokenId?: string) => {
 /**
  * URL to profile page on universalswaps.io
  *
- * @returns
+ * @param address
  */
 export const universalSwapsProfileUrl = (address?: Address) => {
   assert(address, 'Address is required')
@@ -141,7 +135,6 @@ export const universalSwapsProfileUrl = (address?: Address) => {
  * URL to token page on universalswaps.io
  *
  * @param address
- * @returns
  */
 export const universalSwapsAssetUrl = (address?: Address) => {
   assert(address, 'Address is required')
@@ -153,7 +146,6 @@ export const universalSwapsAssetUrl = (address?: Address) => {
  * URL to Mobile App deep link used by Wallet Connect
  *
  * @param data
- * @returns
  */
 export const walletConnectDeepLinkUrl = (data: string) => {
   if (genericLog.enabled) {
