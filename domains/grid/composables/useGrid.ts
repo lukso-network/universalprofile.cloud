@@ -16,6 +16,7 @@ export const useGrid = () => {
     selectedLayoutId,
     gridColumnsLarge,
   } = storeToRefs(useGridStore())
+
   const canEditGrid = computed(
     () =>
       isEditingGrid.value &&
@@ -58,6 +59,14 @@ export const useGrid = () => {
       selectedLayoutId.value = currentLayout[0]?.id
     }
   }
+
+  const gridCount = computed(() => {
+    if (canEditGrid.value) {
+      return tempGridLayout.value.length
+    }
+
+    return viewedGridLayout.value.length
+  })
 
   return {
     initializeGridLayout: async (
@@ -287,5 +296,6 @@ export const useGrid = () => {
     canEditGrid,
     initSelectedLayoutId,
     getGridById,
+    gridCount,
   }
 }
