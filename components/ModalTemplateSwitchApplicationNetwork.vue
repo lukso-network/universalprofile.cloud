@@ -6,14 +6,14 @@ const handleChangeNetwork = async () => {
   const { getNetworkByChainId } = useAppStore()
   const { disconnect } = useBaseProvider()
 
-  await navigateTo({
-    path: homeRoute(),
-    query: { network: getNetworkByChainId(modal?.data?.chainId).id },
-  })
   disconnect()
-
-  // we reload the page to reinitialize web3 instances
-  location.reload()
+  navigateTo(
+    {
+      path: homeRoute(),
+      query: { network: getNetworkByChainId(modal?.data?.chainId).id },
+    },
+    { external: true }
+  )
 }
 </script>
 
