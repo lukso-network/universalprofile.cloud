@@ -45,6 +45,23 @@ watch(
   },
   { deep: true, immediate: true }
 )
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  const activeElement = document.activeElement?.tagName
+  const key = event.key
+
+  if (key === 'Escape' && activeElement === 'BODY') {
+    closeModal()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeyDown)
+})
 </script>
 
 <template>

@@ -3,8 +3,8 @@ import { tv } from 'tailwind-variants'
 
 type Props = {
   label: string
-  count: number
   isActive: boolean
+  count?: number
 }
 
 const props = defineProps<Props>()
@@ -22,7 +22,7 @@ const styleVariants = tv({
         counter: 'bg-neutral-20 text-neutral-100',
       },
       false: {
-        tab: 'cursor-pointer opacity-50 transition hover:opacity-100 ',
+        tab: 'cursor-pointer opacity-50 transition hover:opacity-100',
         counter: 'bg-transparent text-neutral-20',
       },
     },

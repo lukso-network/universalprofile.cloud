@@ -6,6 +6,7 @@ export type Modal = {
     [key: string]: any
   }
   size?: ModalSizes
+  forceOpen?: boolean
 }
 
 export type ModalQueryParams = {
