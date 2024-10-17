@@ -94,3 +94,7 @@ export const PROFILE_SHOWCASE_POOL_SIZE = 500
 // asset showcase params
 export const ASSET_SHOWCASE_LIMIT = 4
 export const ASSET_SHOWCASE_POOL_SIZE = 500
+
+// deep link prefix used by Mobile App
+export const MOBILE_APP_DEEP_LINK_PREFIX =
+  'io.universaleverything.universalprofiles'
