@@ -10,7 +10,8 @@ type Props = {
 const props = defineProps<Props>()
 const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
-const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
+const { addGridLayoutItem, updateGridLayoutItem, getSelectedLayout } = useGrid()
+const { tempGridLayout } = storeToRefs(useGridStore())
 
 const TEXTAREA_FOCUS_DELAY = 10 // small delay for focusing textarea after element render
 const inputValue = ref('')
@@ -42,7 +43,7 @@ const handleSave = () => {
       h: props.height,
     })
 
-    addGridLayoutItem(newWidget)
+    addGridLayoutItem(newWidget, getSelectedLayout(tempGridLayout.value))
   }
 
   handleCancel()

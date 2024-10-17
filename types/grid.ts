@@ -37,3 +37,8 @@ export type GridWidgetChange = {
   oldWidget: GridWidget | null
   newWidget: GridWidget | null
 }
+
+export type GridChange = {
+  oldGrid: Grid<GridWidget>
+  newGrid: Grid<GridWidget>
+}

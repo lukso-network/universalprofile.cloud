@@ -43,7 +43,7 @@ const handleToggleGridEditMode = async () => {
       <lukso-icon
         :name="isEditingGrid && isConnected ? 'close-lg' : 'edit'"
         @click="handleToggleGridEditMode"
-        class="cursor-pointer transition hover:opacity-60"
+        class="cursor-pointer opacity-50 transition hover:opacity-100"
       ></lukso-icon>
     </template>
   </div>

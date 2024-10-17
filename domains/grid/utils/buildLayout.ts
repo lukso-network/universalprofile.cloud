@@ -3,9 +3,10 @@ export const buildLayout = (
   gridColumns: number,
   withAddContentPlaceholder?: boolean
 ): Grid<GridWidget>[] => {
-  const updatedLayout: GridWidget[] = []
-
-  const _buildLayout = (layout: GridWidgetWithoutCords[]) => {
+  const _buildLayout = (
+    layout: GridWidgetWithoutCords[],
+    updatedLayout: GridWidget[]
+  ) => {
     // remove "add widget" placeholder from layout
     let _layout = layout.filter(
       item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
@@ -48,10 +49,11 @@ export const buildLayout = (
   }
 
   return layout.map(item => {
+    const updatedLayout: GridWidget[] = []
     return {
       id: item.id,
       title: item.title,
-      grid: _buildLayout(item.grid),
+      grid: _buildLayout(item.grid, updatedLayout),
     }
   })
 }

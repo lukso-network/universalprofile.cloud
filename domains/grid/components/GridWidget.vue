@@ -5,12 +5,12 @@ type Props = {
 
 const props = defineProps<Props>()
 const widgetComponent = shallowRef<Component | undefined>()
-const { canEditGrid, addGridLayoutItem } = useGrid()
+const { canEditGrid, addGridLayoutItem, getSelectedLayout } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 const { isConnected, isMobile, isConnectedUserViewingOwnProfile } =
   storeToRefs(useAppStore())
-const { isEditingGrid } = storeToRefs(useGridStore())
+const { isEditingGrid, tempGridLayout } = storeToRefs(useGridStore())
 const { connect } = useBaseProvider()
 const { browserSupportExtension } = useBrowser()
 const dropdownId = `dropdown-${generateItemId()}`
@@ -82,6 +82,19 @@ const handleEdit = () => {
   })
 }
 
+const handleMove = () => {
+  showModal({
+    template: 'MoveGridWidget',
+    data: {
+      type: props.widget.type,
+      properties: props.widget.properties,
+      id: props.widget.i,
+      w: props.widget.w,
+      h: props.widget.h,
+    },
+  })
+}
+
 const handleOpenInTab = () => {
   window.open(props.widget.properties.src, '_blank')
 }
@@ -101,7 +114,7 @@ const handleClone = async () => {
     w: props.widget.w,
     h: props.widget.h,
   })
-  addGridLayoutItem(clonedWidget)
+  addGridLayoutItem(clonedWidget, getSelectedLayout(tempGridLayout.value))
   isEditingGrid.value = true // we enable edit mode so user is aware about unsaved state
 
   if (!isConnectedUserViewingOwnProfile.value) {
@@ -136,7 +149,7 @@ onMounted(() => {
       }"
     >
       <div
-        class="mb-1 flex size-[35px] items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 shadow-neutral-drop-shadow-1xl"
+        class="mb-1 flex size-[35px] items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 shadow-neutral-drop-shadow-1xl transition hover:scale-[1.05]"
       >
         <lukso-icon
           :id="dropdownId"
@@ -154,6 +167,16 @@ onMounted(() => {
         >
           <lukso-icon name="edit" size="small"></lukso-icon>
           {{ formatMessage('grid_widget_menu_edit') }}</lukso-dropdown-option
+        >
+
+        <!-- Move option -->
+        <lukso-dropdown-option
+          v-if="isAllowToEdit"
+          size="medium"
+          @click="handleMove"
+        >
+          <lukso-icon name="link-1" size="small"></lukso-icon>
+          {{ formatMessage('grid_widget_menu_move') }}</lukso-dropdown-option
         >
 
         <!-- Clone option -->
@@ -202,7 +225,7 @@ onMounted(() => {
     <!-- Resize handle -->
     <div
       v-if="isAllowToEdit"
-      class="grid-widget-resize absolute bottom-2 right-2 z-10 mb-1 flex size-[35px] cursor-pointer items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 opacity-0 shadow-neutral-drop-shadow-1xl transition-opacity group-hover:opacity-100"
+      class="grid-widget-resize absolute bottom-2 right-2 z-10 mb-1 flex size-[35px] cursor-pointer items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 opacity-0 shadow-neutral-drop-shadow-1xl transition hover:scale-[1.05] group-hover:opacity-100"
     >
       <lukso-icon name="expand" size="medium" class="p-2"></lukso-icon>
     </div>
