@@ -91,7 +91,6 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
           v-else
           variant="secondary"
           is-full-width
-          disabled
           @click="handleToggleMobile"
         >
           <lukso-icon name="phone-portrait-outline" class="mr-2"></lukso-icon>
