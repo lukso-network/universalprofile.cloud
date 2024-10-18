@@ -100,6 +100,20 @@ export const useAppStore = defineStore(
       return !!route.query?.modalTemplate
     })
 
+    const isConnectedUserViewingOwnProfile = computed(() => {
+      const viewedProfileAddress = computed(() => getCurrentProfileAddress())
+
+      return (
+        // we need to compare lowercase addresses in case of checksummed addresses
+        connectedProfileAddress.value?.toLowerCase() ===
+        viewedProfileAddress.value?.toLowerCase()
+      )
+    })
+
+    const isViewedProfileConnected = computed(() => {
+      return isConnected.value && isConnectedUserViewingOwnProfile.value
+    })
+
     // --- actions
 
     const setModal = (newModal: Modal) => {
@@ -130,6 +144,8 @@ export const useAppStore = defineStore(
       fetchDataProviderReset,
       walletConnectProvider,
       isWalletConnect,
+      isConnectedUserViewingOwnProfile,
+      isViewedProfileConnected,
     }
   },
   {

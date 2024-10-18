@@ -7,6 +7,7 @@ declare global {
     lukso: any
     ethereum: any
     web3: any
+    instgrm: any
   }
 
   // TODO remove when LSP package is released
