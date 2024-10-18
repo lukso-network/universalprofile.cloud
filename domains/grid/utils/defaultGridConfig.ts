@@ -34,6 +34,7 @@ export const defaultGridConfig = (
           properties: { src: 'https://via.placeholder.com/150' },
         },
       ],
+      gridColumns: 2,
     },
   ]
 }

@@ -48,12 +48,12 @@ describe('layoutToConfig', () => {
             y: 2,
           },
         ],
+        gridColumns: 2,
       },
     ]
     const result = [
       {
         title: 'single',
-
         grid: [
           {
             type: 'IFRAME',
@@ -82,6 +82,7 @@ describe('layoutToConfig', () => {
             },
           },
         ],
+        gridColumns: 2,
       },
     ]
 

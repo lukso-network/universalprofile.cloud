@@ -11,10 +11,12 @@ describe('configToLayout', () => {
       {
         title: 'default',
         grid: [],
+        gridColumns: 2,
       },
       {
         title: 'default',
         grid: [],
+        gridColumns: 2,
       },
     ]
     const result = [
@@ -22,11 +24,13 @@ describe('configToLayout', () => {
         id: 'default',
         title: 'default',
         grid: [],
+        gridColumns: 2,
       },
       {
         id: 'default-0',
         title: 'default',
         grid: [],
+        gridColumns: 2,
       },
     ]
 
@@ -69,6 +73,7 @@ describe('configToLayout', () => {
             },
           },
         ],
+        gridColumns: 2,
       },
     ]
     const result = [
@@ -106,6 +111,7 @@ describe('configToLayout', () => {
             i: 'test-id',
           },
         ],
+        gridColumns: 2,
       },
     ]
 

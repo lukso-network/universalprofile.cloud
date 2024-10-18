@@ -27,6 +27,7 @@ const handleAddGrid = () => {
     data: {
       id: undefined,
       grid: undefined,
+      gridColumns: undefined,
     },
   })
 }
@@ -34,7 +35,7 @@ const handleAddGrid = () => {
 
 <template>
   <div class="pb-4">
-    <ul class="flex flex-wrap justify-center gap-x-6 gap-y-3 sm:justify-start">
+    <ul class="flex flex-wrap justify-start gap-x-6 gap-y-3">
       <GridTabsItem
         v-for="tab in tabs"
         :key="tab.grid.id"

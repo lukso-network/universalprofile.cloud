@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { useElementSize, useResizeObserver } from '@vueuse/core'
+import { useElementSize } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
-const { isConnected } = storeToRefs(useAppStore())
+const { isConnected, isMobile } = storeToRefs(useAppStore())
 const {
   isEditingGrid,
   tempGridLayout,
   viewedGridLayout,
   hasUnsavedGrid,
-  gridColumns,
   gridRowHeightRatio,
   selectedLayoutId,
 } = storeToRefs(useGridStore())
@@ -18,11 +17,10 @@ const {
   canEditGrid,
   getSelectedLayout,
   updateSelectedLayout,
-  getGridColumns,
   initSelectedLayoutId,
+  getGridById,
 } = useGrid()
 const gridContainer = ref<HTMLElement | null>(null)
-let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 const { width } = useElementSize(gridContainer)
 const layout = ref<GridWidget[]>([])
 const movementX = ref(0)
@@ -37,13 +35,21 @@ const currentLayout = computed(() => {
   return viewedGridLayout.value
 })
 
-const gridRowHeight = computed(() => {
-  const columnSpacing = GRID_SPACING_PX * (gridColumns.value - 1)
+const layoutRowHeight = computed(() => {
+  const columnSpacing = GRID_SPACING_PX * (layoutColumnNumber.value - 1)
   const columnWidth = width.value - columnSpacing
-  const rowHeight = (columnWidth / gridColumns.value) * gridRowHeightRatio.value
+  const rowHeight =
+    (columnWidth / layoutColumnNumber.value) * gridRowHeightRatio.value
 
   return rowHeight
 })
+
+const layoutColumnNumber = computed(() =>
+  isMobile.value
+    ? 1
+    : getGridById(currentLayout.value, selectedLayoutId.value)?.gridColumns ||
+      GRID_COLUMNS_MIN
+)
 
 const itemStyle = computed(() => (item: GridWidget) => {
   const element = document.getElementById(`gridItem-${item.i}`)
@@ -83,24 +89,9 @@ const handleSaveLayout = async () => {
   await saveGridLayout(tempGridLayout.value)
 }
 
-const handleResize = (width: number) => {
-  if (resizeTimeout) clearTimeout(resizeTimeout)
-  resizeTimeout = setTimeout(() => {
-    const prevCols = gridColumns.value
-    const newCols = getGridColumns.value(width)
-
-    if (prevCols !== newCols) {
-      gridColumns.value = newCols
-      layout.value = getSelectedLayout(
-        buildLayout(currentLayout.value, newCols, canEditGrid.value)
-      )
-    }
-  }, GRID_RESIZE_DEBOUNCE_TIMEOUT_MS)
-}
-
 const handleResetLayout = async () => {
   const userLayout = await getUserLayout(address.value)
-  const _layout = buildLayout(userLayout, gridColumns.value, canEditGrid.value)
+  const _layout = buildLayout(userLayout, isMobile.value, canEditGrid.value)
 
   tempGridLayout.value = cloneObject(_layout)
   viewedGridLayout.value = cloneObject(_layout)
@@ -140,18 +131,18 @@ const handleItemResized = () => {
 // - user make modifications in widgets (add/edit/remove/resize)
 // - user toggles edit mode
 watch(
-  [tempGridLayout, isEditingGrid, selectedLayoutId],
+  [tempGridLayout, isEditingGrid, selectedLayoutId, isMobile],
   async () => {
     await nextTick()
     const updatedViewedLayout = buildLayout(
       viewedGridLayout.value,
-      gridColumns.value,
+      isMobile.value,
       canEditGrid.value
     )
 
     const updatedTempLayout = buildLayout(
       tempGridLayout.value,
-      gridColumns.value,
+      isMobile.value,
       canEditGrid.value
     )
 
@@ -178,22 +169,13 @@ watch(
 
 // initialize layout on initial render and when user connects/disconnects
 watch(
-  [isConnected.value],
+  [isConnected],
   async () => {
-    if (!isConnected.value) {
-      hasUnsavedGrid.value = false
-    }
-
     await initializeGridLayout(address.value, canEditGrid.value)
     layout.value = getSelectedLayout(currentLayout.value)
   },
   { immediate: true }
 )
-
-useResizeObserver(gridContainer, entries => {
-  const { contentRect } = entries[0]
-  handleResize(contentRect.width)
-})
 
 onMounted(() => {
   document.addEventListener('mousemove', handleMouseMove)
@@ -210,8 +192,8 @@ onUnmounted(() => {
       <GridTabs :grid="currentLayout" />
       <GridLayout
         v-model:layout="layout"
-        :col-num="gridColumns"
-        :row-height="gridRowHeight"
+        :col-num="layoutColumnNumber"
+        :row-height="layoutRowHeight"
         :is-draggable="canEditGrid"
         :is-resizable="canEditGrid"
         :responsive="false"

@@ -3,7 +3,7 @@ import { createGridId } from '../createGridId'
 
 describe('createGridId', () => {
   it('should generate a unique ID based on the title', () => {
-    const gridItem = { title: 'Test Title' }
+    const gridItem = { title: 'Test Title', gridColumns: 2 }
     const config: Grid<GridWidget>[] = []
 
     const id = createGridId(gridItem, config)
@@ -11,9 +11,9 @@ describe('createGridId', () => {
   })
 
   it('should append a number to the ID if the title is not unique', () => {
-    const gridItem = { title: 'Test Title' }
+    const gridItem = { title: 'Test Title', gridColumns: 2 }
     const config: Grid<GridWidget>[] = [
-      { id: 'test-title', title: 'Test Title', grid: [] },
+      { id: 'test-title', title: 'Test Title', grid: [], gridColumns: 2 },
     ]
 
     const id = createGridId(gridItem, config)
@@ -21,7 +21,7 @@ describe('createGridId', () => {
   })
 
   it('should handle an empty title', () => {
-    const gridItem = { title: '' }
+    const gridItem = { title: '', gridColumns: 2 }
     const config: Grid<GridWidget>[] = []
 
     const id = createGridId(gridItem, config)
@@ -29,7 +29,7 @@ describe('createGridId', () => {
   })
 
   it('should handle special characters in the title', () => {
-    const gridItem = { title: 'Test @ Title!' }
+    const gridItem = { title: 'Test @ Title!', gridColumns: 2 }
     const config: Grid<GridWidget>[] = []
 
     const id = createGridId(gridItem, config)
