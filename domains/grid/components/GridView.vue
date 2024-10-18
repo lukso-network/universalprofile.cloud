@@ -130,33 +130,30 @@ const handleItemResized = () => {
 // - user toggles edit mode
 watch(
   [tempGrid, isEditingGrid, selectedGridId, isMobile],
-  async () => {
-    await nextTick()
+  () => {
     const updatedViewedGrid = buildGrid(
       viewedGrid.value,
       isMobile.value,
       canEditGrid.value
     )
 
-    const updatedTempGrid = buildGrid(
-      tempGrid.value,
-      isMobile.value,
-      canEditGrid.value
-    )
-
     // if user is in edit mode we use temp grid, otherwise viewed grid
-    if (isEditingGrid.value) {
+    if (canEditGrid.value) {
+      const updatedTempGrid = buildGrid(
+        tempGrid.value,
+        isMobile.value,
+        canEditGrid.value
+      )
       gridWidgets.value = getSelectedGridWidgets(updatedTempGrid)
+      const changes = compareGrids(updatedViewedGrid, updatedTempGrid)
+
+      if (changes.length > 0) {
+        hasUnsavedGrid.value = true
+      } else {
+        hasUnsavedGrid.value = false
+      }
     } else {
       gridWidgets.value = getSelectedGridWidgets(updatedViewedGrid)
-    }
-
-    const changes = compareGrids(updatedViewedGrid, updatedTempGrid)
-
-    if (changes.length > 0) {
-      hasUnsavedGrid.value = true
-    } else {
-      hasUnsavedGrid.value = false
     }
 
     // re-init selected grid id when user toggles edit mode in case the selected grid was changed
@@ -170,6 +167,7 @@ watch(
   [isConnected],
   async () => {
     await initializeGrid(address.value, canEditGrid.value)
+    console.log('Grid initialized', getSelectedGridWidgets(currentGrid.value))
     gridWidgets.value = getSelectedGridWidgets(currentGrid.value)
   },
   { immediate: true }
@@ -186,7 +184,7 @@ onUnmounted(() => {
 
 <template>
   <div class="w-full">
-    <div class="mx-auto max-w-content" ref="gridContainer">
+    <div class="mx-auto min-h-[200px] max-w-content" ref="gridContainer">
       <GridTabs :grid="currentGrid" />
       <GridLayout
         v-model:layout="gridWidgets"
