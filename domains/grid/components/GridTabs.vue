@@ -14,12 +14,20 @@ const { showModal } = useModal()
 const { canEditGrid } = useGrid()
 
 const tabs = computed<GridTab[]>(() => {
-  return props.grid.map(grid => {
-    return {
-      grid,
-    }
-  })
+  return (
+    props.grid
+      // filter out empty grids
+      .filter(grid => grid.grid.length > 0)
+      .map(grid => {
+        return {
+          grid,
+        }
+      })
+  )
 })
+
+// we only show tabs when user has more then one
+const hasTabs = computed(() => tabs.value.length > 1)
 
 const handleAddGrid = () => {
   showModal({
@@ -34,7 +42,7 @@ const handleAddGrid = () => {
 </script>
 
 <template>
-  <div class="pb-4">
+  <div v-if="hasTabs" class="pb-4">
     <ul class="flex flex-wrap justify-start gap-x-6 gap-y-3">
       <GridTabsItem
         v-for="tab in tabs"
