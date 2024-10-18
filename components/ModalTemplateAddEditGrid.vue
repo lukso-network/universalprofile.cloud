@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { GridWidget } from '@/types/grid'
+import type { SelectStringOption } from '@lukso/web-components'
 
 const { modal, closeModal } = useModal()
 const { formatMessage } = useIntl()
@@ -9,6 +10,7 @@ const { addGrid, updateGrid } = useGrid()
 const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
 const DEFAULT_PROPERTIES = {
   title: '',
+  gridColumns: GRID_COLUMNS_MIN,
 }
 const inputValues = reactive(DEFAULT_PROPERTIES)
 const inputErrors = reactive({
@@ -18,6 +20,21 @@ const inputErrors = reactive({
 const id = computed(() => modal?.data?.grid?.id)
 const canSubmit = ref(false)
 const isEdit = computed(() => !!id.value)
+
+const gridColumnsOptions = computed(() => {
+  return Array.from({ length: GRID_COLUMNS_MAX - GRID_COLUMNS_MIN + 1 }).map(
+    (_, index) => ({
+      id: index + GRID_COLUMNS_MIN,
+      value: index + GRID_COLUMNS_MIN,
+    })
+  )
+})
+
+const selectedGridColumns = computed(() => {
+  return gridColumnsOptions.value.find(
+    option => option.id === inputValues.gridColumns
+  )
+})
 
 const handleTitleChange = async (customEvent: CustomEvent) => {
   const event = customEvent.detail.event
@@ -31,6 +48,12 @@ const handleTitleChange = async (customEvent: CustomEvent) => {
   }
 
   inputValues.title = input.value
+}
+
+const handleChangeColumnNumber = async (customEvent: CustomEvent) => {
+  const option = customEvent.detail.value as SelectStringOption
+
+  inputValues.gridColumns = Number.parseInt(option.id as string)
 }
 
 const handleCancel = () => {
@@ -51,7 +74,7 @@ const handleSave = () => {
   } else {
     const newGrid: Grid<GridWidget> = {
       id: createGridId<GridWidget>(grid, tempGridLayout.value),
-      title: grid.title,
+      ...grid,
       grid: [],
     }
 
@@ -90,14 +113,28 @@ onMounted(() => {
       }}
     </div>
 
-    <lukso-input
-      .value="inputValues.title"
-      :placeholder="formatMessage('add_grid_title_placeholder')"
-      :error="inputErrors.title"
-      is-full-width
-      autofocus
-      @on-input="handleTitleChange"
-    ></lukso-input>
+    <div class="flex flex-col gap-4">
+      <!-- Title -->
+      <lukso-input
+        .value="inputValues.title"
+        :placeholder="formatMessage('add_grid_title_placeholder')"
+        :error="inputErrors.title"
+        :label="formatMessage('add_grid_title_label')"
+        is-full-width
+        autofocus
+        @on-input="handleTitleChange"
+      ></lukso-input>
+
+      <!-- Column number -->
+      <lukso-select
+        :value="JSON.stringify(selectedGridColumns)"
+        :options="JSON.stringify(gridColumnsOptions)"
+        :label="formatMessage('add_grid_columns_label')"
+        is-full-width
+        autofocus
+        @on-select="handleChangeColumnNumber"
+      ></lukso-select>
+    </div>
 
     <!-- Buttons -->
     <div class="grid grid-cols-[max-content,auto] pt-6">

@@ -36,6 +36,7 @@ export const layoutToConfig = (
     return {
       title: item.title,
       grid: convertGrid(item.grid),
+      gridColumns: item.gridColumns,
     }
   })
 }

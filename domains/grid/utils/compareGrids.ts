@@ -18,7 +18,12 @@ export const compareGrids = (
 
     // compare differences in title or grid array
     const comparedWidgets = compareLayouts(oldGrid?.grid, newGrid?.grid)
-    if (oldGrid?.title !== newGrid?.title || comparedWidgets.length > 0) {
+
+    if (
+      oldGrid?.title !== newGrid?.title ||
+      comparedWidgets.length > 0 ||
+      oldGrid?.gridColumns !== newGrid?.gridColumns
+    ) {
       result.push({
         oldGrid: gridA[i],
         newGrid: gridB[i],

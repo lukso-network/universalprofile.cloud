@@ -5,16 +5,15 @@ export const useGrid = () => {
     isConnected,
     connectedProfileAddress,
     isConnectedUserViewingOwnProfile,
+    isMobile,
   } = storeToRefs(useAppStore())
   const {
     isEditingGrid,
     hasUnsavedGrid,
     viewedGridLayout,
     tempGridLayout,
-    gridColumns,
     isSavingGrid,
     selectedLayoutId,
-    gridColumnsLarge,
   } = storeToRefs(useGridStore())
 
   const canEditGrid = computed(
@@ -25,10 +24,10 @@ export const useGrid = () => {
   )
 
   const getGridById = (grids: Grid<GridWidget>[], id?: string) =>
-    grids.find(grid => grid.id === id)?.grid || []
+    grids.find(grid => grid.id === id)
 
   const getSelectedLayout = (layouts: Grid<GridWidget>[]): GridWidget[] =>
-    getGridById(layouts, selectedLayoutId.value)
+    getGridById(layouts, selectedLayoutId.value)?.grid || []
 
   const updateSelectedLayout = (layout: GridWidget[]): Grid<GridWidget>[] => {
     const updatedLayouts = tempGridLayout.value.map(item => {
@@ -37,6 +36,7 @@ export const useGrid = () => {
           id: item.id,
           title: item.title,
           grid: layout,
+          gridColumns: item.gridColumns,
         }
       }
 
@@ -84,7 +84,7 @@ export const useGrid = () => {
         const userLayout = await getUserLayout(address)
         layout = buildLayout(
           userLayout,
-          gridColumns.value,
+          isMobile.value,
           withAddContentPlaceholder
         )
 
@@ -110,7 +110,7 @@ export const useGrid = () => {
         if (canEditGrid.value) {
           layout = buildLayout(
             tempGridLayout.value,
-            gridColumns.value,
+            isMobile.value,
             withAddContentPlaceholder
           )
 
@@ -130,14 +130,19 @@ export const useGrid = () => {
 
     addGridLayoutItem: (
       newItem: GridWidgetWithoutCords,
-      grid: GridWidget[]
+      grid?: Grid<GridWidget>
     ) => {
       if (!canEditGrid.value) {
         console.warn('User cannot edit grid')
         return
       }
 
-      placeWidgetInLayout(newItem, grid, gridColumns.value)
+      if (!grid) {
+        console.warn('Grid is required')
+        return
+      }
+
+      placeWidgetInLayout(newItem, grid.grid, grid.gridColumns)
     },
 
     updateGridLayoutItem: (id?: string, widget?: Partial<GridWidget>) => {
@@ -211,7 +216,7 @@ export const useGrid = () => {
             // rebuild layout to ensure that all widgets are in the correct position
             const layout = buildLayout(
               tempGridLayout.value,
-              gridColumns.value,
+              isMobile.value,
               canEditGrid.value
             )
 
@@ -285,12 +290,6 @@ export const useGrid = () => {
 
       tempGridLayout.value = tempGridLayout.value.filter(item => item.id !== id)
     },
-
-    getGridColumns: computed(() => (width: number): number => {
-      return width > GRID_BREAKPOINT_PX
-        ? gridColumnsLarge.value
-        : DEFAULT_SMALL_COLUMN_NUMBER
-    }),
     getSelectedLayout,
     updateSelectedLayout,
     canEditGrid,

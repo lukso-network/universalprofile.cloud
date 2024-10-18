@@ -4,6 +4,7 @@ export type Grid<T> = {
   title: string
   grid: T[]
   id: string
+  gridColumns: number
 }
 
 export type GridConfigItem = {

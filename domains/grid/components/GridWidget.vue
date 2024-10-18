@@ -1,19 +1,23 @@
 <script setup lang="ts">
+import type { LuksoDropdownOnChangeEventDetail } from '@lukso/web-components'
+
 type Props = {
   widget: GridWidget
 }
 
 const props = defineProps<Props>()
 const widgetComponent = shallowRef<Component | undefined>()
-const { canEditGrid, addGridLayoutItem, getSelectedLayout } = useGrid()
+const { canEditGrid, addGridLayoutItem, getGridById } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 const { isConnected, isMobile, isConnectedUserViewingOwnProfile } =
   storeToRefs(useAppStore())
-const { isEditingGrid, tempGridLayout } = storeToRefs(useGridStore())
+const { isEditingGrid, tempGridLayout, selectedLayoutId } =
+  storeToRefs(useGridStore())
 const { connect } = useBaseProvider()
 const { browserSupportExtension } = useBrowser()
 const dropdownId = `dropdown-${generateItemId()}`
+const isOpen = ref<boolean | undefined>(undefined)
 
 const isAllowToEdit = computed(
   () => canEditGrid.value && !isAddContentWidget.value
@@ -114,7 +118,10 @@ const handleClone = async () => {
     w: props.widget.w,
     h: props.widget.h,
   })
-  addGridLayoutItem(clonedWidget, getSelectedLayout(tempGridLayout.value))
+  addGridLayoutItem(
+    clonedWidget,
+    getGridById(tempGridLayout.value, selectedLayoutId.value)
+  )
   isEditingGrid.value = true // we enable edit mode so user is aware about unsaved state
 
   if (!isConnectedUserViewingOwnProfile.value) {
@@ -122,6 +129,12 @@ const handleClone = async () => {
       template: 'GridWidgetCloned',
     })
   }
+}
+
+const handleDropdownChange = (
+  event: CustomEvent<LuksoDropdownOnChangeEventDetail>
+) => {
+  isOpen.value = event.detail?.isOpen ? true : undefined
 }
 
 onMounted(() => {
@@ -135,9 +148,10 @@ onMounted(() => {
     :class="{
       'shadow-neutral-drop-shadow-1xl': !isAddContentWidget,
       'select-none': isAllowToEdit,
+      'z-50': isOpen,
     }"
   >
-    <!-- Move handle -->
+    <!-- Move overlay -->
     <div
       v-if="isAllowToEdit"
       class="grid-move-overlay absolute inset-0 cursor-move rounded-[inherit] bg-neutral-100 opacity-0 transition-opacity group-hover:opacity-60"
@@ -161,7 +175,12 @@ onMounted(() => {
           class="p-2"
         ></lukso-icon>
       </div>
-      <lukso-dropdown :trigger-id="dropdownId" is-right size="medium">
+      <lukso-dropdown
+        :trigger-id="dropdownId"
+        is-right
+        size="medium"
+        @on-change="handleDropdownChange"
+      >
         <!-- Edit option -->
         <lukso-dropdown-option
           v-if="isAllowToEdit"

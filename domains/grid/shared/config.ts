@@ -68,13 +68,7 @@ export const WIDGET_TYPE_PROPERTIES: Record<
   [GRID_WIDGET_TYPE.WARPCAST]: [{ key: 'src', type: 'url' }],
 }
 
-// default number of columns in "large" mode
-export const DEFAULT_LARGE_COLUMN_NUMBER = 2
-
-// default number of columns in "small" mode
-export const DEFAULT_SMALL_COLUMN_NUMBER = 1
-
-// grid breakpoint where the grid switches from "large" to "small" mode
+// grid breakpoint where the grid switches into mobile mode
 export const GRID_BREAKPOINT_PX = 768
 
 // default title for the grid, this usually is the title of the first grid
@@ -92,3 +86,10 @@ export const DEFAULT_GRID_ROW_HEIGHT_RATIO = 0.75
 
 // maximum rotation angle in degrees for a widget while moving
 export const MAX_WIDGET_ROTATE_WHILE_MOVE_DEG = 20
+
+// default number of columns in "small" mode
+export const DEFAULT_SMALL_COLUMN_NUMBER = 1
+
+// minimum and maximum number of columns in the grid
+export const GRID_COLUMNS_MIN = 2
+export const GRID_COLUMNS_MAX = 4

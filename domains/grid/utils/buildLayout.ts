@@ -1,11 +1,12 @@
 export const buildLayout = (
   layout: Grid<GridWidgetWithoutCords>[] | Grid<GridWidget>[],
-  gridColumns: number,
+  isMobile?: boolean,
   withAddContentPlaceholder?: boolean
 ): Grid<GridWidget>[] => {
   const _buildLayout = (
     layout: GridWidgetWithoutCords[],
-    updatedLayout: GridWidget[]
+    updatedLayout: GridWidget[],
+    gridColumns: number
   ) => {
     // remove "add widget" placeholder from layout
     let _layout = layout.filter(
@@ -50,10 +51,28 @@ export const buildLayout = (
 
   return layout.map(item => {
     const updatedLayout: GridWidget[] = []
+    const gridColumns = getGridColumns(item.gridColumns)
     return {
       id: item.id,
       title: item.title,
-      grid: _buildLayout(item.grid, updatedLayout),
+      grid: _buildLayout(
+        item.grid,
+        updatedLayout,
+        isMobile ? DEFAULT_SMALL_COLUMN_NUMBER : gridColumns
+      ),
+      gridColumns,
     }
   })
+}
+
+const getGridColumns = (gridColumns?: number) => {
+  if (!gridColumns) {
+    return GRID_COLUMNS_MIN
+  }
+
+  if (gridColumns > GRID_COLUMNS_MAX) {
+    return GRID_COLUMNS_MAX
+  }
+
+  return gridColumns
 }

@@ -42,6 +42,7 @@ const handleEdit = () => {
       grid: {
         id: props.grid.id,
         title: props.grid.title,
+        gridColumns: props.grid.gridColumns,
       },
     },
   })
@@ -62,6 +63,7 @@ const handleDuplicate = () => {
     id: createGridId<GridWidget>(props.grid, tempGridLayout.value),
     title: formatMessage('grid_tabs_copy_of', { title: props.grid.title }),
     grid: props.grid.grid,
+    gridColumns: props.grid.gridColumns,
   }
 
   addGrid(newGrid)
@@ -92,7 +94,7 @@ const handleSelectTab = (id: string) => {
       size="medium"
       class="relative -bottom-2 -left-2"
     >
-      <!-- Rename option -->
+      <!-- Edit option -->
       <lukso-dropdown-option size="medium" @click="handleEdit">
         <lukso-icon name="edit" size="small"></lukso-icon>
         {{ formatMessage('grid_tabs_menu_edit') }}</lukso-dropdown-option
