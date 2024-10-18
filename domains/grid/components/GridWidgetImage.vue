@@ -30,7 +30,7 @@ const handleClick = () => {
       :class="{
         'cursor-pointer': !!src,
       }"
-      class="min-h-full min-w-full shrink-0 object-cover"
+      class="min-h-full min-w-full"
       alt="image"
       @click="handleClick"
     ></lukso-image>

@@ -3,25 +3,21 @@ import type { SelectStringOption } from '@lukso/web-components'
 
 const { modal, closeModal } = useModal()
 const { formatMessage } = useIntl()
-const { tempGridLayout, selectedLayoutId } = storeToRefs(useGridStore())
-const { addGridLayoutItem, removeGridLayoutItem, getGridById } = useGrid()
+const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
+const { addGridWidget, removeGridWidget, getGridById } = useGrid()
 const selectedOption = ref<string>()
 
-const canSubmit = computed(
-  () => selectedOption.value !== selectedLayoutId.value
-)
+const canSubmit = computed(() => selectedOption.value !== selectedGridId.value)
 
 const options = computed<SelectStringOption[]>(() => {
-  return tempGridLayout.value.map(grid => ({
+  return tempGrid.value.map(grid => ({
     id: grid.id,
     value: grid.title,
   }))
 })
 
 const selectedOptionValue = computed(() => {
-  const grid = tempGridLayout.value.find(
-    grid => grid.id === selectedOption.value
-  )
+  const grid = tempGrid.value.find(grid => grid.id === selectedOption.value)
   return {
     id: grid?.id,
     value: grid?.title,
@@ -50,16 +46,16 @@ const handleSave = () => {
     h: modal?.data?.h,
   })
 
-  removeGridLayoutItem(modal?.data?.id)
-  addGridLayoutItem(
+  removeGridWidget(modal?.data?.id)
+  addGridWidget(
     duplicatedWidget,
-    getGridById(tempGridLayout.value, selectedOption.value)
+    getGridById(tempGrid.value, selectedOption.value)
   )
   handleCancel()
 }
 
 onMounted(() => {
-  selectedOption.value = selectedLayoutId.value
+  selectedOption.value = selectedGridId.value
 })
 </script>
 

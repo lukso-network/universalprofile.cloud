@@ -1,7 +1,7 @@
 export const parsePlatformInput = async (
   platform: GridWidgetType,
   input: string
-): Promise<LayoutItemExtended | never> => {
+): Promise<GridWidgetExtended | never> => {
   switch (platform) {
     case GRID_WIDGET_TYPE.X:
       return parseXWidgetInput(input)
@@ -18,7 +18,7 @@ export const parsePlatformInput = async (
   }
 }
 
-const parseYoutubeWidgetInput = (input: string): LayoutItemExtended | never => {
+const parseYoutubeWidgetInput = (input: string): GridWidgetExtended | never => {
   const YOUTUBE_URL_REGEX =
     /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/
   const YOUTUBE_EMBED_REGEX =
@@ -53,7 +53,7 @@ const parseYoutubeWidgetInput = (input: string): LayoutItemExtended | never => {
   throw new Error('Invalid YouTube input')
 }
 
-const parseXWidgetInput = (input: string): LayoutItemExtended | never => {
+const parseXWidgetInput = (input: string): GridWidgetExtended | never => {
   const X_POST_REGEX =
     /https?:\/\/(?:www\.)?(?:x\.com|twitter\.com)\/(\w+)\/status\/(\d+)(?:\?ref_src=twsrc%5Etfw)?/
   const X_TIMELINE_REGEX =
@@ -86,7 +86,7 @@ const parseXWidgetInput = (input: string): LayoutItemExtended | never => {
   throw new Error('Invalid X input')
 }
 
-const parseSpotifyWidgetInput = (input: string): LayoutItemExtended | never => {
+const parseSpotifyWidgetInput = (input: string): GridWidgetExtended | never => {
   const SPOTIFY_URL_REGEX =
     /https?:\/\/(?:open\.)?spotify\.com\/(?:embed\/)?(?<type>track|playlist|artist)\/(?<id>[^?]+)(?:\?utm_source=generator)?(?:&theme=(?<theme>\d))?/
   const SPOTIFY_IFRAME_ALLOW =
@@ -113,7 +113,7 @@ const parseSpotifyWidgetInput = (input: string): LayoutItemExtended | never => {
 
 const parseSoundCloudWidgetInput = async (
   input: string
-): Promise<LayoutItemExtended> => {
+): Promise<GridWidgetExtended> => {
   const SOUNDCLOUD_SHARE_URL_REGEX =
     /https:\/\/soundcloud\.com\/([a-zA-Z0-9_-]+)(?:\/(sets\/[a-zA-Z0-9_-]+|[a-zA-Z0-9_-]+))?\/?/
 
@@ -137,7 +137,7 @@ const parseSoundCloudWidgetInput = async (
 
 const parseSoundCloudWidgetInputFromEmbed = (
   input: string
-): LayoutItemExtended | never => {
+): GridWidgetExtended | never => {
   const SOUNDCLOUD_EMBED_URL_REGEX =
     /https?:\/\/w\.soundcloud\.com\/player\/\?(?:(?!url=https).)*url=https(?::|%3A)(?:\/|%2F){2}api\.soundcloud\.com(?:\/|%2F)(tracks|playlists|users)(?:\/|%2F)\d+(?:[^"]*)?/
   const SOUNDCLOUD_IFRAME_ALLOW =
@@ -178,7 +178,7 @@ const getSoundCloudEmbedUrl = async (
 
 const parseInstagramWidgetInput = (
   input: string
-): LayoutItemExtended | never => {
+): GridWidgetExtended | never => {
   const INSTAGRAM_URL_REGEX =
     /https:\/\/www\.instagram\.com\/(p|reel|profile|tv)\/([\w-]+)\/(\?[^"]*)?/
 
