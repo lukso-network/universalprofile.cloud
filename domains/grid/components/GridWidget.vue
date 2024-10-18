@@ -140,9 +140,10 @@ onMounted(() => {
 
 <template>
   <div
-    class="group relative flex h-full flex-col rounded-12 border border-neutral-90 bg-neutral-100"
+    class="group relative flex h-full flex-col rounded-12"
     :class="{
-      'shadow-neutral-drop-shadow-1xl': !isAddContentWidget,
+      'border border-neutral-90 bg-neutral-100 shadow-neutral-drop-shadow-1xl':
+        !isAddContentWidget,
       'select-none': isAllowToEdit,
       'z-50': isOpen,
     }"
