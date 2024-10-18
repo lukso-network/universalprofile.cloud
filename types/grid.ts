@@ -14,13 +14,13 @@ export type GridConfigItem = {
   properties: GridWidgetProperties
 }
 
-export type LayoutItemExtended = {
+export type GridWidgetExtended = {
   type: GridWidgetType
   properties: GridWidgetProperties
   originalWidth?: number
 }
 
-export type GridWidget = LayoutItem & LayoutItemExtended
+export type GridWidget = LayoutItem & GridWidgetExtended
 
 export type GridWidgetWithoutCords = PartialBy<GridWidget, 'x' | 'y'>
 

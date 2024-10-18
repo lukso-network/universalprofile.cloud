@@ -4,7 +4,7 @@ import type { SelectStringOption } from '@lukso/web-components'
 
 const { modal, closeModal } = useModal()
 const { formatMessage } = useIntl()
-const { tempGridLayout, selectedLayoutId } = storeToRefs(useGridStore())
+const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
 const { addGrid, updateGrid } = useGrid()
 
 const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
@@ -73,13 +73,13 @@ const handleSave = () => {
     })
   } else {
     const newGrid: Grid<GridWidget> = {
-      id: createGridId<GridWidget>(grid, tempGridLayout.value),
+      id: createGridId<GridWidget>(grid, tempGrid.value),
       ...grid,
       grid: [],
     }
 
     addGrid(newGrid)
-    selectedLayoutId.value = newGrid.id
+    selectedGridId.value = newGrid.id
   }
 
   handleCancel()

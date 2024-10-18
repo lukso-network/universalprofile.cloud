@@ -10,7 +10,7 @@ const props = defineProps<Props>()
 const { formatMessage } = useIntl()
 const { canEditGrid, addGrid } = useGrid()
 const { showModal } = useModal()
-const { selectedLayoutId, tempGridLayout } = storeToRefs(useGridStore())
+const { selectedGridId, tempGrid } = storeToRefs(useGridStore())
 const dropdownId = `dropdown-${generateItemId()}`
 
 const styleVariants = tv({
@@ -60,18 +60,18 @@ const handleDelete = () => {
 
 const handleDuplicate = () => {
   const newGrid: Grid<GridWidget> = {
-    id: createGridId<GridWidget>(props.grid, tempGridLayout.value),
+    id: createGridId<GridWidget>(props.grid, tempGrid.value),
     title: formatMessage('grid_tabs_copy_of', { title: props.grid.title }),
     grid: props.grid.grid,
     gridColumns: props.grid.gridColumns,
   }
 
   addGrid(newGrid)
-  selectedLayoutId.value = newGrid.id
+  selectedGridId.value = newGrid.id
 }
 
 const handleSelectTab = (id: string) => {
-  selectedLayoutId.value = id
+  selectedGridId.value = id
 }
 </script>
 

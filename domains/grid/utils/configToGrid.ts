@@ -6,14 +6,14 @@ import type { GridConfigItem } from '@/types/grid'
  * @param config
  * @param columns
  */
-export const configToLayout = (
+export const configToGrid = (
   config: PartialBy<Grid<GridConfigItem>, 'id'>[]
 ): Grid<GridWidgetWithoutCords>[] => {
-  const layout: Grid<GridWidgetWithoutCords>[] = []
+  const grid: Grid<GridWidgetWithoutCords>[] = []
 
   for (const gridItem of config) {
-    layout.push({
-      id: createGridId<GridConfigItem>(gridItem, layout),
+    grid.push({
+      id: createGridId<GridConfigItem>(gridItem, grid),
       title: gridItem.title,
       grid: gridItem.grid.map(widget => {
         return createWidgetObject({
@@ -27,7 +27,7 @@ export const configToLayout = (
     })
   }
 
-  return layout
+  return grid
 }
 
 /**

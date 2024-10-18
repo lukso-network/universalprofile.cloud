@@ -7,13 +7,12 @@ type Props = {
 
 const props = defineProps<Props>()
 const widgetComponent = shallowRef<Component | undefined>()
-const { canEditGrid, addGridLayoutItem, getGridById } = useGrid()
+const { canEditGrid, addGridWidget, getGridById } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 const { isConnected, isMobile, isConnectedUserViewingOwnProfile } =
   storeToRefs(useAppStore())
-const { isEditingGrid, tempGridLayout, selectedLayoutId } =
-  storeToRefs(useGridStore())
+const { isEditingGrid, tempGrid, selectedGridId } = storeToRefs(useGridStore())
 const { connect } = useBaseProvider()
 const { browserSupportExtension } = useBrowser()
 const dropdownId = `dropdown-${generateItemId()}`
@@ -118,10 +117,7 @@ const handleClone = async () => {
     w: props.widget.w,
     h: props.widget.h,
   })
-  addGridLayoutItem(
-    clonedWidget,
-    getGridById(tempGridLayout.value, selectedLayoutId.value)
-  )
+  addGridWidget(clonedWidget, getGridById(tempGrid.value, selectedGridId.value))
   isEditingGrid.value = true // we enable edit mode so user is aware about unsaved state
 
   if (!isConnectedUserViewingOwnProfile.value) {

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 const { closeModal, modal } = useModal()
 const { formatMessage } = useIntl()
-const { removeGridLayoutItem } = useGrid()
+const { removeGridWidget } = useGrid()
 
 const handleDelete = async () => {
-  removeGridLayoutItem(modal?.data?.id)
+  removeGridWidget(modal?.data?.id)
   closeModal()
 }
 </script>
