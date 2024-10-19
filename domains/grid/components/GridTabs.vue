@@ -8,16 +8,8 @@ type GridTab = {
 const { selectedGridId, tempGrid, viewedGrid } = storeToRefs(useGridStore())
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
-const { canEditGrid } = useGrid()
+const { canEditGrid, gridsForDisplay } = useGrid()
 const tabs = ref<GridTab[]>([])
-
-const grid = computed(() => {
-  if (canEditGrid.value) {
-    return tempGrid.value
-  }
-
-  return viewedGrid.value
-})
 
 // we only show tabs when user has more then one
 const hasTabs = computed(() => tabs.value.length > 1)
@@ -42,15 +34,9 @@ const checkMove = (event: any) => {
 watch(
   [canEditGrid, tempGrid, viewedGrid],
   () => {
-    tabs.value = grid.value
-      .filter(grid => grid.grid.length > 0)
-      .map(grid => {
-        return {
-          grid,
-        }
-      })
+    tabs.value = gridsForDisplay.value
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 </script>
 
