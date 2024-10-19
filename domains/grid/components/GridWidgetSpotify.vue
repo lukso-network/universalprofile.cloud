@@ -22,7 +22,7 @@ const iframeHeight = computed(() => {
 
 <template>
   <div class="h-full p-3">
-    <div ref="wrapperRef" class="h-[inherit] overflow-scroll rounded-12">
+    <div ref="wrapperRef" class="h-[inherit] overflow-scroll rounded-8">
       <iframe
         ref="iframeRef"
         :src="src"

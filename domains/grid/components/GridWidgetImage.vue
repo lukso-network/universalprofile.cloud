@@ -24,7 +24,7 @@ const handleClick = () => {
 </script>
 
 <template>
-  <div class="m-3 flex h-full overflow-hidden rounded-12">
+  <div class="m-3 flex h-full overflow-hidden rounded-8">
     <lukso-image
       :src="src"
       :class="{
