@@ -40,11 +40,18 @@ const handleToggleGridEditMode = async () => {
       />
     </ul>
     <template v-if="activeTab === 'grid' && isConnectedUserViewingOwnProfile">
-      <lukso-icon
-        :name="isEditingGrid && isConnected ? 'close-lg' : 'edit'"
-        @click="handleToggleGridEditMode"
-        class="cursor-pointer opacity-50 transition hover:opacity-100"
-      ></lukso-icon>
+      <lukso-tooltip
+        variant="white"
+        :text="isEditingGrid ? '' : formatMessage('grid_enable_edit_mode')"
+        :show-delay="1500"
+        placement="left"
+      >
+        <lukso-icon
+          :name="isEditingGrid && isConnected ? 'close-lg' : 'edit'"
+          @click="handleToggleGridEditMode"
+          class="cursor-pointer opacity-50 transition hover:opacity-100"
+        ></lukso-icon>
+      </lukso-tooltip>
     </template>
   </div>
 </template>
