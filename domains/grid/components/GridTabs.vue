@@ -40,7 +40,7 @@ const checkMove = (event: any) => {
 }
 
 watch(
-  [canEditGrid, tempGrid],
+  [canEditGrid, tempGrid, viewedGrid],
   () => {
     tabs.value = grid.value
       .filter(grid => grid.grid.length > 0)
