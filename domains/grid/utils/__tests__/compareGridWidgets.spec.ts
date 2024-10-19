@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { compareLayouts } from '../compareLayouts'
+import { compareGridWidgets } from '../compareGridWidgets'
 
-describe('compareLayouts', () => {
-  it('returns empty array when both layouts are the same', () => {
-    const layoutA = [
+describe('compareGridWidgets', () => {
+  it('returns empty array when both grids are the same', () => {
+    const gridA = [
       {
         i: 'widget-1',
         x: 0,
@@ -16,7 +16,7 @@ describe('compareLayouts', () => {
         },
       },
     ]
-    const layoutB = [
+    const gridB = [
       {
         i: 'widget-1',
         x: 0,
@@ -30,12 +30,12 @@ describe('compareLayouts', () => {
       },
     ]
 
-    expect(compareLayouts(layoutA, layoutB)).toEqual([])
-    expect(compareLayouts([], [])).toEqual([])
+    expect(compareGridWidgets(gridA, gridB)).toEqual([])
+    expect(compareGridWidgets([], [])).toEqual([])
   })
 
   it('returns array of changes when widgets change positions', () => {
-    const layoutA = [
+    const gridA = [
       {
         i: 'widget-1',
         x: 0,
@@ -48,7 +48,7 @@ describe('compareLayouts', () => {
         },
       },
     ]
-    const layoutB = [
+    const gridB = [
       {
         i: 'widget-1',
         x: 1,
@@ -62,16 +62,16 @@ describe('compareLayouts', () => {
       },
     ]
 
-    expect(compareLayouts(layoutA, layoutB)).toEqual([
+    expect(compareGridWidgets(gridA, gridB)).toEqual([
       {
-        oldWidget: layoutA[0],
-        newWidget: layoutB[0],
+        oldWidget: gridA[0],
+        newWidget: gridB[0],
       },
     ])
   })
 
   it('returns array of changes when widgets change sizes', () => {
-    const layoutA = [
+    const gridA = [
       {
         i: 'widget-1',
         x: 0,
@@ -84,7 +84,7 @@ describe('compareLayouts', () => {
         },
       },
     ]
-    const layoutB = [
+    const gridB = [
       {
         i: 'widget-1',
         x: 0,
@@ -98,16 +98,16 @@ describe('compareLayouts', () => {
       },
     ]
 
-    expect(compareLayouts(layoutA, layoutB)).toEqual([
+    expect(compareGridWidgets(gridA, gridB)).toEqual([
       {
-        oldWidget: layoutA[0],
-        newWidget: layoutB[0],
+        oldWidget: gridA[0],
+        newWidget: gridB[0],
       },
     ])
   })
 
   it('returns array of changes when widgets change types', () => {
-    const layoutA = [
+    const gridA = [
       {
         i: 'widget-1',
         x: 0,
@@ -120,7 +120,7 @@ describe('compareLayouts', () => {
         },
       },
     ]
-    const layoutB = [
+    const gridB = [
       {
         i: 'widget-1',
         x: 0,
@@ -134,16 +134,16 @@ describe('compareLayouts', () => {
       },
     ]
 
-    expect(compareLayouts(layoutA, layoutB)).toEqual([
+    expect(compareGridWidgets(gridA, gridB)).toEqual([
       {
-        oldWidget: layoutA[0],
-        newWidget: layoutB[0],
+        oldWidget: gridA[0],
+        newWidget: gridB[0],
       },
     ])
   })
 
   it('returns array of changes when widgets change properties', () => {
-    const layoutA = [
+    const gridA = [
       {
         i: 'widget-1',
         x: 0,
@@ -156,7 +156,7 @@ describe('compareLayouts', () => {
         },
       },
     ]
-    const layoutB = [
+    const gridB = [
       {
         i: 'widget-1',
         x: 0,
@@ -170,17 +170,17 @@ describe('compareLayouts', () => {
       },
     ]
 
-    expect(compareLayouts(layoutA, layoutB)).toEqual([
+    expect(compareGridWidgets(gridA, gridB)).toEqual([
       {
-        oldWidget: layoutA[0],
-        newWidget: layoutB[0],
+        oldWidget: gridA[0],
+        newWidget: gridB[0],
       },
     ])
   })
 
   it('returns array of changes when widgets are added', () => {
-    const layoutA = [] as GridWidget[]
-    const layoutB = [
+    const gridA = [] as GridWidget[]
+    const gridB = [
       {
         i: 'widget-1',
         x: 0,
@@ -194,16 +194,16 @@ describe('compareLayouts', () => {
       },
     ]
 
-    expect(compareLayouts(layoutA, layoutB)).toEqual([
+    expect(compareGridWidgets(gridA, gridB)).toEqual([
       {
         oldWidget: null,
-        newWidget: layoutB[0],
+        newWidget: gridB[0],
       },
     ])
   })
 
   it('returns array of changes when widgets are removed', () => {
-    const layoutA = [
+    const gridA = [
       {
         i: 'widget-1',
         x: 0,
@@ -216,18 +216,18 @@ describe('compareLayouts', () => {
         },
       },
     ]
-    const layoutB = [] as GridWidget[]
+    const gridB = [] as GridWidget[]
 
-    expect(compareLayouts(layoutA, layoutB)).toEqual([
+    expect(compareGridWidgets(gridA, gridB)).toEqual([
       {
-        oldWidget: layoutA[0],
+        oldWidget: gridA[0],
         newWidget: null,
       },
     ])
   })
 
   it('returns array of changes when multiple widgets change', () => {
-    const layoutA = [
+    const gridA = [
       {
         i: 'widget-1',
         x: 0,
@@ -262,7 +262,7 @@ describe('compareLayouts', () => {
         },
       },
     ]
-    const layoutB = [
+    const gridB = [
       {
         i: 'widget-1',
         x: 1,
@@ -298,20 +298,20 @@ describe('compareLayouts', () => {
       },
     ]
 
-    expect(compareLayouts(layoutA, layoutB)).toEqual([
+    expect(compareGridWidgets(gridA, gridB)).toEqual([
       {
-        oldWidget: layoutA[0],
-        newWidget: layoutB[0],
+        oldWidget: gridA[0],
+        newWidget: gridB[0],
       },
       {
-        oldWidget: layoutA[1],
-        newWidget: layoutB[1],
+        oldWidget: gridA[1],
+        newWidget: gridB[1],
       },
     ])
   })
 
   it('ignores ADD_CONTENT widgets', () => {
-    const layoutA = [
+    const gridA = [
       {
         i: 'widget-1',
         x: 0,
@@ -333,7 +333,7 @@ describe('compareLayouts', () => {
         properties: {},
       },
     ]
-    const layoutB = [
+    const gridB = [
       {
         i: 'widget-1',
         x: 0,
@@ -347,6 +347,6 @@ describe('compareLayouts', () => {
       },
     ]
 
-    expect(compareLayouts(layoutA, layoutB)).toEqual([])
+    expect(compareGridWidgets(gridA, gridB)).toEqual([])
   })
 })

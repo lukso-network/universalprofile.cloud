@@ -5,16 +5,15 @@ import type { GridConfigItem } from '@/types/grid'
  *
  * @param config
  * @param columns
- * @returns
  */
-export const configToLayout = (
+export const configToGrid = (
   config: PartialBy<Grid<GridConfigItem>, 'id'>[]
 ): Grid<GridWidgetWithoutCords>[] => {
-  const layout: Grid<GridWidgetWithoutCords>[] = []
+  const grid: Grid<GridWidgetWithoutCords>[] = []
 
   for (const gridItem of config) {
-    layout.push({
-      id: createGridId<GridConfigItem>(gridItem, layout),
+    grid.push({
+      id: createGridId<GridConfigItem>(gridItem, grid),
       title: gridItem.title,
       grid: gridItem.grid.map(widget => {
         return createWidgetObject({
@@ -24,8 +23,22 @@ export const configToLayout = (
           h: widget.height,
         })
       }),
+      gridColumns: getGridColumns(gridItem.gridColumns),
     })
   }
 
-  return layout
+  return grid
+}
+
+/**
+ * Get grid column number
+ *
+ * @param gridColumns
+ */
+const getGridColumns = (gridColumns?: number): number => {
+  if (!gridColumns) {
+    return GRID_COLUMNS_MIN
+  }
+
+  return gridColumns
 }

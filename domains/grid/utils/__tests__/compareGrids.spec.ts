@@ -18,6 +18,7 @@ describe('compareGrids', () => {
             properties: {},
           },
         ],
+        gridColumns: 2,
       },
     ]
     const gridB: Grid<GridWidget>[] = [
@@ -35,6 +36,7 @@ describe('compareGrids', () => {
             properties: {},
           },
         ],
+        gridColumns: 2,
       },
     ]
 
@@ -44,10 +46,27 @@ describe('compareGrids', () => {
 
   it('should return changes for grids with different titles', () => {
     const gridA: Grid<GridWidget>[] = [
-      { id: 'grid-1', title: 'Grid 1', grid: [] },
+      { id: 'grid-1', title: 'Grid 1', grid: [], gridColumns: 2 },
     ]
     const gridB: Grid<GridWidget>[] = [
-      { id: 'grid-2', title: 'Grid 2', grid: [] },
+      { id: 'grid-2', title: 'Grid 2', grid: [], gridColumns: 2 },
+    ]
+
+    const result = compareGrids(gridA, gridB)
+    expect(result).toEqual([
+      {
+        oldGrid: gridA[0],
+        newGrid: gridB[0],
+      },
+    ])
+  })
+
+  it('should return changes for grids with different column numbers', () => {
+    const gridA: Grid<GridWidget>[] = [
+      { id: 'grid-1', title: 'Grid 1', grid: [], gridColumns: 2 },
+    ]
+    const gridB: Grid<GridWidget>[] = [
+      { id: 'grid-1', title: 'Grid 1', grid: [], gridColumns: 3 },
     ]
 
     const result = compareGrids(gridA, gridB)
@@ -75,6 +94,7 @@ describe('compareGrids', () => {
             properties: {},
           },
         ],
+        gridColumns: 2,
       },
     ]
     const gridB: Grid<GridWidget>[] = [
@@ -92,6 +112,7 @@ describe('compareGrids', () => {
             properties: {},
           },
         ],
+        gridColumns: 2,
       },
     ]
 
@@ -121,6 +142,7 @@ describe('compareGrids', () => {
             properties: {},
           },
         ],
+        gridColumns: 2,
       },
     ]
 

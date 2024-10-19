@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest'
-import { layoutToConfig } from '../layoutToConfig'
+import { gridToConfig } from '../gridToConfig'
 
-describe('layoutToConfig', () => {
-  it('should return an empty config for an empty layout', () => {
-    expect(layoutToConfig([])).toEqual([])
+describe('gridToConfig', () => {
+  it('should return an empty config for an empty grid', () => {
+    expect(gridToConfig([])).toEqual([])
   })
 
-  it('should correctly handle a single item layout', () => {
-    const layout = [
+  it('should correctly handle a single item grid', () => {
+    const grid = [
       {
         id: 'single',
         title: 'single',
@@ -27,7 +27,7 @@ describe('layoutToConfig', () => {
             type: GRID_WIDGET_TYPE.TEXT,
             properties: {
               title: 'Hey',
-              text: 'Customize your grid layout!',
+              text: 'Customize your grid grid!',
               backgroundColor: '#9db9b9',
             },
             w: 1,
@@ -48,12 +48,12 @@ describe('layoutToConfig', () => {
             y: 2,
           },
         ],
+        gridColumns: 2,
       },
     ]
     const result = [
       {
         title: 'single',
-
         grid: [
           {
             type: 'IFRAME',
@@ -69,7 +69,7 @@ describe('layoutToConfig', () => {
             height: 1,
             properties: {
               title: 'Hey',
-              text: 'Customize your grid layout!',
+              text: 'Customize your grid grid!',
               backgroundColor: '#9db9b9',
             },
           },
@@ -82,9 +82,10 @@ describe('layoutToConfig', () => {
             },
           },
         ],
+        gridColumns: 2,
       },
     ]
 
-    expect(layoutToConfig(layout)).toEqual(result)
+    expect(gridToConfig(grid)).toEqual(result)
   })
 })

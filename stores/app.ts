@@ -1,3 +1,5 @@
+import { useWindowSize } from '@vueuse/core'
+
 import type { Modal } from '@/types/modal'
 import type { NetworkId, NetworkInfo } from '@/types/network'
 import type EthereumProvider from '@walletconnect/ethereum-provider'
@@ -81,7 +83,11 @@ export const useAppStore = defineStore(
 
     const isMobile = computed(() => {
       const { isMobile } = useDevice()
-      return isMobile
+      const { width } = useWindowSize()
+      const isSmallScreen = width.value < GRID_BREAKPOINT_PX
+
+      // since device plugin check only User-Agent, we need to check also screen width
+      return isMobile || isSmallScreen
     })
 
     const isMobileOrTablet = computed(() => {

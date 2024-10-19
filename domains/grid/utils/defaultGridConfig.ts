@@ -23,7 +23,7 @@ export const defaultGridConfig = (
           height: 1,
           properties: {
             title: 'Hey',
-            text: 'Customize your grid layout!',
+            text: 'Customize your grid!',
             backgroundColor: '#9db9b9',
           },
         },
@@ -34,6 +34,7 @@ export const defaultGridConfig = (
           properties: { src: 'https://via.placeholder.com/150' },
         },
       ],
+      gridColumns: 2,
     },
   ]
 }

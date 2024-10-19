@@ -5,16 +5,15 @@ export const useGrid = () => {
     isConnected,
     connectedProfileAddress,
     isConnectedUserViewingOwnProfile,
+    isMobile,
   } = storeToRefs(useAppStore())
   const {
     isEditingGrid,
     hasUnsavedGrid,
-    viewedGridLayout,
-    tempGridLayout,
-    gridColumns,
+    viewedGrid,
+    tempGrid,
     isSavingGrid,
-    selectedLayoutId,
-    gridColumnsLarge,
+    selectedGridId,
   } = storeToRefs(useGridStore())
 
   const canEditGrid = computed(
@@ -25,122 +24,121 @@ export const useGrid = () => {
   )
 
   const getGridById = (grids: Grid<GridWidget>[], id?: string) =>
-    grids.find(grid => grid.id === id)?.grid || []
+    grids.find(grid => grid.id === id)
 
-  const getSelectedLayout = (layouts: Grid<GridWidget>[]): GridWidget[] =>
-    getGridById(layouts, selectedLayoutId.value)
+  const getSelectedGridWidgets = (grids: Grid<GridWidget>[]): GridWidget[] =>
+    getGridById(grids, selectedGridId.value)?.grid || []
 
-  const updateSelectedLayout = (layout: GridWidget[]): Grid<GridWidget>[] => {
-    const updatedLayouts = tempGridLayout.value.map(item => {
-      if (item.id === selectedLayoutId.value) {
+  const updateSelectedGrid = (
+    gridWidgets: GridWidget[]
+  ): Grid<GridWidget>[] => {
+    const updatedGrids = tempGrid.value.map(item => {
+      if (item.id === selectedGridId.value) {
         return {
           id: item.id,
           title: item.title,
-          grid: layout,
+          grid: gridWidgets,
+          gridColumns: item.gridColumns,
         }
       }
 
       return item
     })
 
-    return updatedLayouts
+    return updatedGrids
   }
 
-  const initSelectedLayoutId = () => {
-    const currentLayout = canEditGrid.value
-      ? tempGridLayout.value
-      : viewedGridLayout.value
+  const initSelectedGridId = () => {
+    const currentGrid = canEditGrid.value ? tempGrid.value : viewedGrid.value
 
     if (
-      !selectedLayoutId.value ||
-      (selectedLayoutId.value &&
-        !currentLayout.some(item => item.id === selectedLayoutId.value))
+      !selectedGridId.value ||
+      (selectedGridId.value &&
+        !currentGrid.some(item => item.id === selectedGridId.value))
     ) {
-      selectedLayoutId.value = currentLayout[0]?.id
+      selectedGridId.value = currentGrid[0]?.id
     }
   }
 
   const gridCount = computed(() => {
     if (canEditGrid.value) {
-      return tempGridLayout.value.length
+      return tempGrid.value.length
     }
 
-    return viewedGridLayout.value.length
+    return viewedGrid.value.length
   })
 
   return {
-    initializeGridLayout: async (
+    initializeGrid: async (
       address?: Address,
       withAddContentPlaceholder?: boolean
     ) => {
-      let layout: Grid<GridWidget>[] = []
+      let grid: Grid<GridWidget>[] = []
 
       if (!address) {
         return []
       }
 
-      // initialize user layout from the config stored in UP
-      const _initUserLayout = async () => {
-        const userLayout = await getUserLayout(address)
-        layout = buildLayout(
-          userLayout,
-          gridColumns.value,
-          withAddContentPlaceholder
-        )
+      // initialize user grid from the config stored in UP
+      const _initUserGrid = async () => {
+        const userGrid = await getUserGrid(address)
+        grid = buildGrid(userGrid, isMobile.value, withAddContentPlaceholder)
 
         if (gridLog.enabled) {
-          gridLog('Initialize user grid', userLayout)
+          gridLog('Initialize user grid', userGrid)
         }
 
-        viewedGridLayout.value = cloneObject(layout)
+        viewedGrid.value = cloneObject(grid)
       }
 
-      // in case we don't have a temp layout yet we initialize it
-      const _initTempLayout = () => {
-        if (
-          tempGridLayout.value.length === 0 &&
-          viewedGridLayout.value.length !== 0
-        ) {
-          tempGridLayout.value = cloneObject(layout)
+      // in case we don't have a temp grid yet we initialize it
+      const _initTempGrid = () => {
+        if (tempGrid.value.length === 0 && viewedGrid.value.length !== 0) {
+          tempGrid.value = cloneObject(grid)
         }
       }
 
-      // in edit mode we initialize from temp layout
+      // in edit mode we initialize from temp grid
       const _initEditMode = () => {
         if (canEditGrid.value) {
-          layout = buildLayout(
-            tempGridLayout.value,
-            gridColumns.value,
+          grid = buildGrid(
+            tempGrid.value,
+            isMobile.value,
             withAddContentPlaceholder
           )
 
           if (gridLog.enabled) {
-            gridLog('Initialize temp grid', layout)
+            gridLog('Initialize temp grid', grid)
           }
 
-          tempGridLayout.value = cloneObject(layout)
+          tempGrid.value = cloneObject(grid)
         }
       }
 
-      await _initUserLayout()
-      _initTempLayout()
+      await _initUserGrid()
+      _initTempGrid()
       _initEditMode()
-      initSelectedLayoutId()
+      initSelectedGridId()
     },
 
-    addGridLayoutItem: (
-      newItem: GridWidgetWithoutCords,
-      grid: GridWidget[]
+    addGridWidget: (
+      widget: GridWidgetWithoutCords,
+      grid?: Grid<GridWidget>
     ) => {
       if (!canEditGrid.value) {
         console.warn('User cannot edit grid')
         return
       }
 
-      placeWidgetInLayout(newItem, grid, gridColumns.value)
+      if (!grid) {
+        console.warn('Grid is required')
+        return
+      }
+
+      placeWidgetInGrid(widget, grid.grid, grid.gridColumns)
     },
 
-    updateGridLayoutItem: (id?: string, widget?: Partial<GridWidget>) => {
+    updateGridWidget: (id?: string, widget?: Partial<GridWidget>) => {
       if (!canEditGrid.value) {
         console.warn('User cannot edit grid')
         return
@@ -151,22 +149,22 @@ export const useGrid = () => {
         return
       }
 
-      const layout = getSelectedLayout(tempGridLayout.value)
-      const widgetIndex = layout.findIndex(({ i }) => i === id)
+      const gridWidgets = getSelectedGridWidgets(tempGrid.value)
+      const widgetIndex = gridWidgets.findIndex(({ i }) => i === id)
 
       if (widgetIndex === -1) {
         console.warn('Widget not found', id)
         return
       }
 
-      layout[widgetIndex] = {
-        ...layout[widgetIndex],
+      gridWidgets[widgetIndex] = {
+        ...gridWidgets[widgetIndex],
         ...widget,
       }
-      tempGridLayout.value = updateSelectedLayout(layout)
+      tempGrid.value = updateSelectedGrid(gridWidgets)
     },
 
-    removeGridLayoutItem: (id: string | number) => {
+    removeGridWidget: (id: string | number) => {
       if (!canEditGrid.value) {
         console.warn('User cannot edit grid')
         return
@@ -176,22 +174,22 @@ export const useGrid = () => {
         return
       }
 
-      tempGridLayout.value = updateSelectedLayout(
-        getSelectedLayout(tempGridLayout.value).filter(item => item.i !== id)
+      tempGrid.value = updateSelectedGrid(
+        getSelectedGridWidgets(tempGrid.value).filter(item => item.i !== id)
       )
     },
 
-    saveGridLayout: async (layout?: Grid<GridWidget>[]) => {
+    saveGrid: async (grid?: Grid<GridWidget>[]) => {
       if (!canEditGrid.value) {
         console.warn('User cannot edit grid')
         return
       }
 
-      if (!layout || !connectedProfileAddress.value) {
+      if (!grid || !connectedProfileAddress.value) {
         return
       }
 
-      const config = layoutToConfig(layout)
+      const config = gridToConfig(grid)
 
       if (!isConfigValid(config)) {
         console.warn('Invalid schema')
@@ -208,20 +206,20 @@ export const useGrid = () => {
             isSavingGrid.value = false
             isEditingGrid.value = false
 
-            // rebuild layout to ensure that all widgets are in the correct position
-            const layout = buildLayout(
-              tempGridLayout.value,
-              gridColumns.value,
+            // rebuild grid to ensure that all widgets are in the correct position
+            const grid = buildGrid(
+              tempGrid.value,
+              isMobile.value,
               canEditGrid.value
             )
 
-            tempGridLayout.value = cloneObject(layout)
-            viewedGridLayout.value = cloneObject(layout)
+            tempGrid.value = cloneObject(grid)
+            viewedGrid.value = cloneObject(grid)
           })
 
           ?.on('receipt', (receipt: any) => {
             if (gridLog.enabled) {
-              gridLog('Layout saved', toRaw(layout), receipt)
+              gridLog('Grid saved', toRaw(grid), receipt)
             }
           })
           ?.on('error', (error: Error) => {
@@ -229,7 +227,7 @@ export const useGrid = () => {
             isSavingGrid.value = false
           })
       } catch (error) {
-        console.warn('Error saving layout', error)
+        console.warn('Error saving grid', error)
         isSavingGrid.value = false
       }
     },
@@ -240,7 +238,7 @@ export const useGrid = () => {
         return
       }
 
-      tempGridLayout.value.push(grid)
+      tempGrid.value.push(grid)
     },
 
     updateGrid: (
@@ -262,15 +260,15 @@ export const useGrid = () => {
         return
       }
 
-      const index = tempGridLayout.value.findIndex(item => item.id === id)
+      const index = tempGrid.value.findIndex(item => item.id === id)
 
       if (index === -1) {
         console.warn('Grid not found', id)
         return
       }
 
-      tempGridLayout.value[index] = {
-        ...tempGridLayout.value[index],
+      tempGrid.value[index] = {
+        ...tempGrid.value[index],
         ...{
           ...grid,
         },
@@ -283,18 +281,12 @@ export const useGrid = () => {
         return
       }
 
-      tempGridLayout.value = tempGridLayout.value.filter(item => item.id !== id)
+      tempGrid.value = tempGrid.value.filter(item => item.id !== id)
     },
-
-    getGridColumns: computed(() => (width: number): number => {
-      return width > GRID_BREAKPOINT_PX
-        ? gridColumnsLarge.value
-        : DEFAULT_SMALL_COLUMN_NUMBER
-    }),
-    getSelectedLayout,
-    updateSelectedLayout,
+    getSelectedGridWidgets,
+    updateSelectedGrid,
     canEditGrid,
-    initSelectedLayoutId,
+    initSelectedGridId,
     getGridById,
     gridCount,
   }
