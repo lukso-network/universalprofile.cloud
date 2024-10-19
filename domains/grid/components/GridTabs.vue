@@ -8,7 +8,7 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-const { selectedLayoutId } = storeToRefs(useGridStore())
+const { selectedGridId } = storeToRefs(useGridStore())
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 const { canEditGrid } = useGrid()
@@ -40,7 +40,7 @@ const handleAddGrid = () => {
         v-for="tab in tabs"
         :key="tab.grid.id"
         :grid="tab.grid"
-        :is-active="tab.grid.id === selectedLayoutId"
+        :is-active="tab.grid.id === selectedGridId"
       />
       <li
         v-if="canEditGrid"

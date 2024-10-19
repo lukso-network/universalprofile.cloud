@@ -1,20 +1,18 @@
-export const buildLayout = (
-  layout: Grid<GridWidgetWithoutCords>[] | Grid<GridWidget>[],
+export const buildGrid = (
+  grid: Grid<GridWidgetWithoutCords>[] | Grid<GridWidget>[],
   isMobile?: boolean,
   withAddContentPlaceholder?: boolean
 ): Grid<GridWidget>[] => {
-  const _buildLayout = (
-    layout: GridWidgetWithoutCords[],
-    updatedLayout: GridWidget[],
+  const _buildGrid = (
+    grid: GridWidgetWithoutCords[],
+    updatedGrid: GridWidget[],
     gridColumns: number
   ) => {
-    // remove "add widget" placeholder from layout
-    let _layout = layout.filter(
-      item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
-    )
+    // remove "add widget" placeholder from grid
+    let _grid = grid.filter(item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT)
 
-    // if items already have x/y cords we re-order layout to reflect that
-    _layout = _layout.slice().sort((a, b) => {
+    // if items already have x/y cords we re-order grid to reflect that
+    _grid = _grid.slice().sort((a, b) => {
       if (
         a.x === undefined ||
         b.x === undefined ||
@@ -33,7 +31,7 @@ export const buildLayout = (
 
     // re-add placeholder
     if (withAddContentPlaceholder) {
-      _layout.push(
+      _grid.push(
         createWidgetObject({
           i: 'placeholder',
           type: GRID_WIDGET_TYPE.ADD_CONTENT,
@@ -42,22 +40,22 @@ export const buildLayout = (
       )
     }
 
-    for (const widget of _layout) {
-      placeWidgetInLayout(widget, updatedLayout, gridColumns)
+    for (const widget of _grid) {
+      placeWidgetInGrid(widget, updatedGrid, gridColumns)
     }
 
-    return updatedLayout
+    return updatedGrid
   }
 
-  return layout.map(item => {
-    const updatedLayout: GridWidget[] = []
+  return grid.map(item => {
+    const updatedGrid: GridWidget[] = []
     const gridColumns = getGridColumns(item.gridColumns)
     return {
       id: item.id,
       title: item.title,
-      grid: _buildLayout(
+      grid: _buildGrid(
         item.grid,
-        updatedLayout,
+        updatedGrid,
         isMobile ? DEFAULT_SMALL_COLUMN_NUMBER : gridColumns
       ),
       gridColumns,
