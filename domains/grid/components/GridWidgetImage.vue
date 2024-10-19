@@ -24,13 +24,13 @@ const handleClick = () => {
 </script>
 
 <template>
-  <div class="m-3 flex h-full overflow-hidden rounded-12">
+  <div class="m-3 flex h-full overflow-hidden rounded-8">
     <lukso-image
       :src="src"
       :class="{
         'cursor-pointer': !!src,
       }"
-      class="min-h-full min-w-full shrink-0 object-cover"
+      class="min-h-full min-w-full"
       alt="image"
       @click="handleClick"
     ></lukso-image>

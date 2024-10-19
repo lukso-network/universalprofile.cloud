@@ -87,7 +87,7 @@ const tabs = computed<ProfileViewTab[]>(() => {
   return [
     {
       id: 'grid',
-      count: gridCount.value,
+      count: gridCount.value > 1 ? gridCount.value : 0,
     },
     {
       id: 'collectibles',

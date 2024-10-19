@@ -174,6 +174,17 @@ onMounted(() => {
     </div>
 
     <div class="flex flex-col gap-4">
+      <!-- Background color -->
+      <lukso-color-picker
+        .value="inputValues.backgroundColor"
+        :label="formatMessage('add_widget_text_background_color_label')"
+        :placeholder="
+          formatMessage('add_widget_text_background_color_placeholder')
+        "
+        :error="inputErrors.backgroundColor"
+        @on-input="handleBackgroundColorChange"
+      ></lukso-color-picker>
+
       <div class="flex flex-col gap-2">
         <!-- Title -->
         <lukso-input
@@ -216,17 +227,6 @@ onMounted(() => {
           @on-input="handleTextColorChange"
         ></lukso-color-picker>
       </div>
-
-      <!-- Background color -->
-      <lukso-color-picker
-        .value="inputValues.backgroundColor"
-        :label="formatMessage('add_widget_text_background_color_label')"
-        :placeholder="
-          formatMessage('add_widget_text_background_color_placeholder')
-        "
-        :error="inputErrors.backgroundColor"
-        @on-input="handleBackgroundColorChange"
-      ></lukso-color-picker>
     </div>
 
     <!-- Buttons -->

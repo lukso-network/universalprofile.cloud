@@ -15,7 +15,7 @@ defineProps<Props>()
       frameborder="0"
       referrerpolicy="strict-origin-when-cross-origin"
       allowfullscreen
-      class="size-full overflow-hidden rounded-12"
+      class="size-full overflow-hidden rounded-8"
     ></iframe>
   </div>
 </template>

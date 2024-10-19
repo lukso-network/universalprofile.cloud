@@ -140,9 +140,10 @@ onMounted(() => {
 
 <template>
   <div
-    class="group relative flex h-full flex-col rounded-12 border border-neutral-90 bg-neutral-100"
+    class="group relative flex h-full flex-col rounded-12"
     :class="{
-      'shadow-neutral-drop-shadow-1xl': !isAddContentWidget,
+      'border border-neutral-90 bg-neutral-100 shadow-neutral-drop-shadow-1xl':
+        !isAddContentWidget,
       'select-none': isAllowToEdit,
       'z-50': isOpen,
     }"
@@ -150,7 +151,7 @@ onMounted(() => {
     <!-- Move overlay -->
     <div
       v-if="isAllowToEdit"
-      class="grid-move-overlay absolute inset-0 cursor-move rounded-[inherit] bg-neutral-100 opacity-0 transition-opacity group-hover:opacity-60"
+      class="grid-move-overlay absolute inset-0 z-10 cursor-move rounded-[inherit] bg-neutral-100 opacity-0 transition-opacity group-hover:opacity-60"
     ></div>
 
     <!-- Widget options -->
