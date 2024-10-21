@@ -84,7 +84,7 @@ const PLATFORM_PARSING_PARAMETERS: Record<
 export const parsePlatformInput = async (
   platform: GridWidgetType,
   input: string
-): Promise<LayoutItemExtended | never> => {
+): Promise<GridWidgetProperties | never> => {
   const platformParsingParameters = PLATFORM_PARSING_PARAMETERS[platform]
   if (!platformParsingParameters) throw new Error('Invalid platform')
 
@@ -116,8 +116,8 @@ export const parsePlatformInput = async (
 const parsePlatformEmbed = (
   input: string,
   platformParsingParameters: PlatformParsingParameters
-): LayoutItemExtended | never => {
-  const { type, embedRegex, constantProperties } = platformParsingParameters
+): GridWidgetProperties | never => {
+  const { embedRegex, constantProperties } = platformParsingParameters
   const match = input.match(embedRegex)
 
   if (!match) throw new Error('Invalid input')
@@ -137,12 +137,9 @@ const parsePlatformEmbed = (
   }
 
   return {
-    type,
-    properties: {
-      src: match[0],
-      ...constantProperties,
-      ...extractedProperties,
-    },
+    src: match[0],
+    ...constantProperties,
+    ...extractedProperties,
   }
 }
 
