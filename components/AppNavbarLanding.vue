@@ -17,8 +17,8 @@ const handleDisconnect = async () => {
 
 <template>
   <lukso-navbar
-    :title="$formatMessage('header_title')"
     :is-testnet="isTestnet ? true : undefined"
+    logo-url="/images/logo-ue.svg"
     is-transparent
     has-menu
   >

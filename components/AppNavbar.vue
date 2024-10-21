@@ -49,9 +49,10 @@ const handleNavigateSettings = () => {
 
 <template>
   <lukso-navbar
-    is-sticky
-    :title="$formatMessage('header_title')"
     :is-testnet="isTestnet ? true : undefined"
+    logo-url="/images/logo-ue.svg"
+    is-sticky
+    is-transparent
     has-menu
     mobile-breakpoint="lg"
     @on-brand-click="handleNavigateLanding"
