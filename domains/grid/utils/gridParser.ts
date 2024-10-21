@@ -75,8 +75,18 @@ const PLATFORM_PARSING_PARAMETERS: Record<
     },
   },
   [GRID_WIDGET_TYPE.YOUTUBE]: {
-    type: GRID_WIDGET_TYPE.IFRAME,
-    embedRegex: /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/,
+    type: GRID_WIDGET_TYPE.YOUTUBE,
+    embedRegex: /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^?]+)/,
+    secondaryRegexesWithCallbacks: [
+      {
+        regex: /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/,
+        callback: async url => sanitizeYoutubeEmbedUrl(url),
+      },
+    ],
+    constantProperties: {
+      allow:
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+    },
   },
   [GRID_WIDGET_TYPE.ADD_CONTENT]: undefined,
 }
@@ -143,41 +153,6 @@ const parsePlatformEmbed = (
   }
 }
 
-// const parseYoutubeWidgetInput = (input: string): LayoutItemExtended | never => {
-//   const YOUTUBE_URL_REGEX =
-//     /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/
-//   const YOUTUBE_EMBED_REGEX =
-//     /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^?]+)/
-//   const YOUTUBE_IFRAME_ALLOW =
-//     'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
-
-//   const youtubeUrlMatch = input.match(YOUTUBE_URL_REGEX)
-
-//   if (youtubeUrlMatch) {
-//     return {
-//       type: GRID_WIDGET_TYPE.IFRAME,
-//       properties: {
-//         src: `https://www.youtube.com/embed/${youtubeUrlMatch[1]}`,
-//         allow: YOUTUBE_IFRAME_ALLOW,
-//       },
-//     }
-//   }
-
-//   const youtubeEmbedMatch = input.match(YOUTUBE_EMBED_REGEX)
-
-//   if (youtubeEmbedMatch) {
-//     return {
-//       type: GRID_WIDGET_TYPE.IFRAME,
-//       properties: {
-//         src: `https://www.youtube.com/embed/${youtubeEmbedMatch[1]}`,
-//         allow: YOUTUBE_IFRAME_ALLOW,
-//       },
-//     }
-//   }
-
-//   throw new Error('Invalid YouTube input')
-// }
-
 async function getSoundCloudOEmbed(url: string): Promise<string | undefined> {
   const encodedUrl = encodeURI(url)
   const response = await fetch(
@@ -206,6 +181,16 @@ async function getXOEmbedFromHandle(handle: string) {
 
 function sanitizeXEmbedUrl(url: string): string {
   url = url.replace('x.com', 'twitter.com')
+
+  if (!url.startsWith('https://')) {
+    url = `https://${url}`
+  }
+
+  return url
+}
+
+function sanitizeYoutubeEmbedUrl(url: string): string {
+  url = url.replace('watch?v=', 'embed/')
 
   if (!url.startsWith('https://')) {
     url = `https://${url}`
