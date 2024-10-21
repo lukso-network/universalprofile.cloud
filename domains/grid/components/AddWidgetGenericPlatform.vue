@@ -25,10 +25,7 @@ const handleSave = async () => {
   }
 
   try {
-    const { properties } = await parsePlatformInput(
-      props.type,
-      inputValue.value
-    )
+    const properties = await parsePlatformInput(props.type, inputValue.value)
 
     if (isEdit.value) {
       updateGridLayoutItem(props.id, {
@@ -71,7 +68,7 @@ const handleInput = async (customEvent: CustomEvent) => {
 
   // validation
   try {
-    const { properties } = await parsePlatformInput(props.type, input.value)
+    const properties = await parsePlatformInput(props.type, input.value)
     inputValue.value = properties.src
   } catch (error) {
     console.warn(error)
