@@ -12,12 +12,7 @@ const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
 const asset = computed(() => (targetIsVisible.value ? props.asset : null))
 const assetImage = useAssetImage(asset, true, 260)
-const viewedProfileAddress = getCurrentProfileAddress()
-const { isMobile } = storeToRefs(useAppStore())
-
-const viewedProfileIsConnected = computed(() =>
-  useProfile().viewedProfileIsConnected(viewedProfileAddress)
-)
+const { isMobile, isViewedProfileConnected } = storeToRefs(useAppStore())
 
 const handleShowAsset = () => {
   navigateTo(assetRoute(props.asset.address))
@@ -146,7 +141,7 @@ onMounted(() => {
                   >{{ $formatMessage('button_buy_sell') }}</lukso-button
                 >
                 <lukso-button
-                  v-if="viewedProfileIsConnected"
+                  v-if="isViewedProfileConnected"
                   :size="isMobile ? 'medium' : 'small'"
                   variant="secondary"
                   @click="handleSendAsset"
