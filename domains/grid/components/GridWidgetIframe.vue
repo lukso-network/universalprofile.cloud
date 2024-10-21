@@ -12,7 +12,7 @@ defineProps<Props>()
     <iframe
       :src="src"
       :allow="allow"
-      class="size-full overflow-hidden rounded-12"
+      class="size-full overflow-hidden rounded-8"
       frameborder="0"
       loading="lazy"
     ></iframe>

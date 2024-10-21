@@ -3,24 +3,22 @@ export const useGridStore = defineStore(
   () => {
     const isEditingGrid = ref(false)
     const hasUnsavedGrid = ref(false)
-    const viewedGridLayout = ref<Grid<GridWidget>[]>([])
-    const tempGridLayout = ref<Grid<GridWidget>[]>([])
-    const gridColumns = ref<number>(DEFAULT_LARGE_COLUMN_NUMBER)
-    const gridColumnsLarge = ref<number>(DEFAULT_LARGE_COLUMN_NUMBER)
+    const viewedGrid = ref<Grid<GridWidget>[]>([])
+    const tempGrid = ref<Grid<GridWidget>[]>([])
     const isSavingGrid = ref(false)
-    const selectedLayoutId = ref<string | undefined>()
+    const selectedGridId = ref<string | undefined>()
     const gridRowHeightRatio = ref(DEFAULT_GRID_ROW_HEIGHT_RATIO)
+    const gridChainId = ref<string>(DEFAULT_NETWORK_CHAIN_ID)
 
     return {
       isEditingGrid,
       hasUnsavedGrid,
-      viewedGridLayout,
-      tempGridLayout,
-      gridColumns,
+      viewedGrid,
+      tempGrid,
       isSavingGrid,
-      selectedLayoutId,
-      gridColumnsLarge,
+      selectedGridId,
       gridRowHeightRatio,
+      gridChainId,
     }
   },
   {
@@ -28,10 +26,10 @@ export const useGridStore = defineStore(
       paths: [
         'isEditingGrid',
         'hasUnsavedGrid',
-        'selectedLayoutId',
-        'gridColumnsLarge',
+        'selectedGridId',
         'gridRowHeightRatio',
-        'tempGridLayout',
+        'gridChainId',
+        'tempGrid',
       ],
       key: STORAGE_KEY.GRID_STORE,
     },

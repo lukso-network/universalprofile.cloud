@@ -3,16 +3,17 @@ const { closeModal, modal } = useModal()
 const { formatMessage } = useIntl()
 
 const handleChangeNetwork = async () => {
-  const { selectedChainId } = storeToRefs(useAppStore())
   const { getNetworkByChainId } = useAppStore()
   const { disconnect } = useBaseProvider()
 
-  selectedChainId.value = modal?.data?.chainId
-  await navigateTo({
-    path: homeRoute(),
-    query: { network: getNetworkByChainId(modal?.data?.chainId).id },
-  })
   disconnect()
+  navigateTo(
+    {
+      path: homeRoute(),
+      query: { network: getNetworkByChainId(modal?.data?.chainId).id },
+    },
+    { external: true }
+  )
 }
 </script>
 

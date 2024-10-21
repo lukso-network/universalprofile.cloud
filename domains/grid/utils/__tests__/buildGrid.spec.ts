@@ -1,16 +1,16 @@
 import { e } from 'pinia-orm/dist/shared/pinia-orm.ed84a779'
 import { describe, expect, it } from 'vitest'
-import { buildLayout } from '../buildLayout'
+import { buildGrid } from '../buildGrid'
 
-describe('buildLayout', () => {
-  it('should return an empty layout when given an empty layout', () => {
-    const layout: Grid<GridWidgetWithoutCords>[] = []
-    const result = buildLayout(layout, 1)
+describe('buildGrid', () => {
+  it('should return an empty grid when given an empty grid', () => {
+    const grid: Grid<GridWidgetWithoutCords>[] = []
+    const result = buildGrid(grid)
     expect(result).toEqual([])
   })
 
-  it('should re-order layout based on x/y cords', () => {
-    const layout: Grid<GridWidgetWithoutCords>[] = [
+  it('should re-order grid based on x/y cords', () => {
+    const grid: Grid<GridWidgetWithoutCords>[] = [
       {
         id: '1',
         title: 'Test Grid',
@@ -43,9 +43,10 @@ describe('buildLayout', () => {
             y: 1,
           },
         ],
+        gridColumns: 1,
       },
     ]
-    const result = buildLayout(layout, 1)
+    const result = buildGrid(grid)
     expect(result).toEqual([
       {
         id: '1',
@@ -79,13 +80,14 @@ describe('buildLayout', () => {
             y: 2,
           },
         ],
+        gridColumns: 1,
       },
     ])
   })
 
   describe('withAddContentPlaceholder', () => {
-    it('should remove "add content" placeholder from layout', () => {
-      const layout: Grid<GridWidgetWithoutCords>[] = [
+    it('should remove "add content" placeholder from grid', () => {
+      const grid: Grid<GridWidgetWithoutCords>[] = [
         {
           id: '1',
           title: 'Test Grid',
@@ -109,9 +111,10 @@ describe('buildLayout', () => {
               properties: {},
             },
           ],
+          gridColumns: 1,
         },
       ]
-      const result = buildLayout(layout, 1)
+      const result = buildGrid(grid)
       expect(result).toEqual([
         {
           id: '1',
@@ -127,12 +130,13 @@ describe('buildLayout', () => {
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
+          gridColumns: 1,
         },
       ])
     })
 
     it('should add placeholder', () => {
-      const layout: Grid<GridWidgetWithoutCords>[] = [
+      const grid: Grid<GridWidgetWithoutCords>[] = [
         {
           id: '1',
           title: 'Test Grid',
@@ -147,9 +151,10 @@ describe('buildLayout', () => {
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
+          gridColumns: 1,
         },
       ]
-      const result = buildLayout(layout, 1, true)
+      const result = buildGrid(grid, undefined, true)
       expect(result).toEqual([
         {
           id: '1',
@@ -175,50 +180,14 @@ describe('buildLayout', () => {
               isResizable: false,
             },
           ],
+          gridColumns: 1,
         },
       ])
     })
   })
 
-  describe('layout 1', () => {
-    const layout: Grid<GridWidgetWithoutCords>[] = [
-      {
-        id: '1',
-        title: 'Test Grid',
-        grid: [
-          {
-            i: '1',
-            type: GRID_WIDGET_TYPE.TITLE_LINK,
-            w: 1,
-            h: 2,
-            properties: { prop1: 'value1', prop2: 'value2' },
-          },
-          {
-            i: '2',
-            type: GRID_WIDGET_TYPE.TEXT,
-            w: 1,
-            h: 1,
-            properties: { prop1: 'value1', prop2: 'value2' },
-          },
-          {
-            i: '3',
-            type: GRID_WIDGET_TYPE.IFRAME,
-            w: 1,
-            h: 2,
-            properties: { prop1: 'value1', prop2: 'value2' },
-          },
-          {
-            i: '4',
-            type: GRID_WIDGET_TYPE.IMAGE,
-            w: 1,
-            h: 1,
-            properties: { prop1: 'value1', prop2: 'value2' },
-          },
-        ],
-      },
-    ]
-
-    it('should build 1 column layout', () => {
+  describe('grid 1', () => {
+    it('should build 1 column grid', () => {
       /*
       Column 0
       ---------
@@ -229,7 +198,45 @@ describe('buildLayout', () => {
       |       |
       |   D   |  <-- height 1
       */
-      expect(buildLayout(layout, 1)).toEqual([
+      const grid: Grid<GridWidgetWithoutCords>[] = [
+        {
+          id: '1',
+          title: 'Test Grid',
+          grid: [
+            {
+              i: '1',
+              type: GRID_WIDGET_TYPE.TITLE_LINK,
+              w: 1,
+              h: 2,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '2',
+              type: GRID_WIDGET_TYPE.TEXT,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '3',
+              type: GRID_WIDGET_TYPE.IFRAME,
+              w: 1,
+              h: 2,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '4',
+              type: GRID_WIDGET_TYPE.IMAGE,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+          ],
+          gridColumns: 1,
+        },
+      ]
+
+      expect(buildGrid(grid)).toEqual([
         {
           id: '1',
           title: 'Test Grid',
@@ -271,11 +278,12 @@ describe('buildLayout', () => {
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
+          gridColumns: 1,
         },
       ])
     })
 
-    it('should build 2 column layout', () => {
+    it('should build 2 column grid', () => {
       /*
       Column 0     Column 1
       ----------------------
@@ -284,7 +292,45 @@ describe('buildLayout', () => {
       |-------|    |   C   |  <-- C: height 2
       |   D   |    |       |  <-- D: height 1
       */
-      expect(buildLayout(layout, 2)).toEqual([
+      const grid: Grid<GridWidgetWithoutCords>[] = [
+        {
+          id: '1',
+          title: 'Test Grid',
+          grid: [
+            {
+              i: '1',
+              type: GRID_WIDGET_TYPE.TITLE_LINK,
+              w: 1,
+              h: 2,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '2',
+              type: GRID_WIDGET_TYPE.TEXT,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '3',
+              type: GRID_WIDGET_TYPE.IFRAME,
+              w: 1,
+              h: 2,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '4',
+              type: GRID_WIDGET_TYPE.IMAGE,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+          ],
+          gridColumns: 2,
+        },
+      ]
+
+      expect(buildGrid(grid)).toEqual([
         {
           id: '1',
           title: 'Test Grid',
@@ -326,11 +372,12 @@ describe('buildLayout', () => {
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
+          gridColumns: 2,
         },
       ])
     })
 
-    it('should build 3 column layout', () => {
+    it('should build 3 column grid', () => {
       /*
       Column 0     Column 1     Column 2
       -----------------------------------
@@ -338,7 +385,45 @@ describe('buildLayout', () => {
       |       |    |-------|    |       |
       |-------|    |   D   |    |-------|
       */
-      expect(buildLayout(layout, 3)).toEqual([
+      const grid: Grid<GridWidgetWithoutCords>[] = [
+        {
+          id: '1',
+          title: 'Test Grid',
+          grid: [
+            {
+              i: '1',
+              type: GRID_WIDGET_TYPE.TITLE_LINK,
+              w: 1,
+              h: 2,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '2',
+              type: GRID_WIDGET_TYPE.TEXT,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '3',
+              type: GRID_WIDGET_TYPE.IFRAME,
+              w: 1,
+              h: 2,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '4',
+              type: GRID_WIDGET_TYPE.IMAGE,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+          ],
+          gridColumns: 3,
+        },
+      ]
+
+      expect(buildGrid(grid)).toEqual([
         {
           id: '1',
           title: 'Test Grid',
@@ -380,43 +465,14 @@ describe('buildLayout', () => {
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
+          gridColumns: 3,
         },
       ])
     })
   })
 
-  describe('layout 2', () => {
-    const layout: Grid<GridWidgetWithoutCords>[] = [
-      {
-        id: '1',
-        title: 'Test Grid',
-        grid: [
-          {
-            i: '1',
-            type: GRID_WIDGET_TYPE.IMAGE,
-            w: 2,
-            h: 2,
-            properties: { prop1: 'value1', prop2: 'value2' },
-          },
-          {
-            i: '2',
-            type: GRID_WIDGET_TYPE.TEXT,
-            w: 1,
-            h: 1,
-            properties: { prop1: 'value1', prop2: 'value2' },
-          },
-          {
-            i: '3',
-            type: GRID_WIDGET_TYPE.IMAGE,
-            w: 1,
-            h: 1,
-            properties: { prop1: 'value1', prop2: 'value2' },
-          },
-        ],
-      },
-    ]
-
-    it('should build 1 column layout', () => {
+  describe('grid 2', () => {
+    it('should build 1 column grid', () => {
       /*
       Column 0
       ---------
@@ -427,7 +483,38 @@ describe('buildLayout', () => {
       |-------|
       |   C   |  <-- height 1
       */
-      expect(buildLayout(layout, 1)).toEqual([
+      const grid: Grid<GridWidgetWithoutCords>[] = [
+        {
+          id: '1',
+          title: 'Test Grid',
+          grid: [
+            {
+              i: '1',
+              type: GRID_WIDGET_TYPE.IMAGE,
+              w: 2,
+              h: 2,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '2',
+              type: GRID_WIDGET_TYPE.TEXT,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '3',
+              type: GRID_WIDGET_TYPE.IMAGE,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+          ],
+          gridColumns: 1,
+        },
+      ]
+
+      expect(buildGrid(grid)).toEqual([
         {
           id: '1',
           title: 'Test Grid',
@@ -461,11 +548,12 @@ describe('buildLayout', () => {
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
+          gridColumns: 1,
         },
       ])
     })
 
-    it('should build 2 column layout', () => {
+    it('should build 2 column grid', () => {
       /*
       Column 0     Column 1
       ----------------------
@@ -473,7 +561,38 @@ describe('buildLayout', () => {
       |-------|    |-------|
       |   B   |    |   C   |  <-- height 1 each
       */
-      expect(buildLayout(layout, 2)).toEqual([
+      const grid: Grid<GridWidgetWithoutCords>[] = [
+        {
+          id: '1',
+          title: 'Test Grid',
+          grid: [
+            {
+              i: '1',
+              type: GRID_WIDGET_TYPE.IMAGE,
+              w: 2,
+              h: 2,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '2',
+              type: GRID_WIDGET_TYPE.TEXT,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '3',
+              type: GRID_WIDGET_TYPE.IMAGE,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+          ],
+          gridColumns: 2,
+        },
+      ]
+
+      expect(buildGrid(grid)).toEqual([
         {
           id: '1',
           title: 'Test Grid',
@@ -506,50 +625,14 @@ describe('buildLayout', () => {
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
+          gridColumns: 2,
         },
       ])
     })
   })
 
-  describe('layout 3', () => {
-    const layout: Grid<GridWidgetWithoutCords>[] = [
-      {
-        id: '1',
-        title: 'Test Grid',
-        grid: [
-          {
-            i: '1',
-            type: GRID_WIDGET_TYPE.IMAGE,
-            w: 1,
-            h: 1,
-            properties: { prop1: 'value1', prop2: 'value2' },
-          },
-          {
-            i: '2',
-            type: GRID_WIDGET_TYPE.IFRAME,
-            w: 2,
-            h: 2,
-            properties: { prop1: 'value1', prop2: 'value2' },
-          },
-          {
-            i: '3',
-            type: GRID_WIDGET_TYPE.TEXT,
-            w: 1,
-            h: 1,
-            properties: { prop1: 'value1', prop2: 'value2' },
-          },
-          {
-            i: '4',
-            type: GRID_WIDGET_TYPE.IMAGE,
-            w: 2,
-            h: 1,
-            properties: { prop1: 'value1', prop2: 'value2' },
-          },
-        ],
-      },
-    ]
-
-    it('should build 1 column layout', () => {
+  describe('grid 3', () => {
+    it('should build 1 column grid', () => {
       /*
       Column 0
       ---------
@@ -562,7 +645,45 @@ describe('buildLayout', () => {
       |-------|
       |   D   |  <-- height 1
       */
-      expect(buildLayout(layout, 1)).toEqual([
+      const grid: Grid<GridWidgetWithoutCords>[] = [
+        {
+          id: '1',
+          title: 'Test Grid',
+          grid: [
+            {
+              i: '1',
+              type: GRID_WIDGET_TYPE.IMAGE,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '2',
+              type: GRID_WIDGET_TYPE.IFRAME,
+              w: 2,
+              h: 2,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '3',
+              type: GRID_WIDGET_TYPE.TEXT,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '4',
+              type: GRID_WIDGET_TYPE.IMAGE,
+              w: 2,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+          ],
+          gridColumns: 1,
+        },
+      ]
+
+      expect(buildGrid(grid)).toEqual([
         {
           id: '1',
           title: 'Test Grid',
@@ -606,11 +727,12 @@ describe('buildLayout', () => {
               originalWidth: 2,
             },
           ],
+          gridColumns: 1,
         },
       ])
     })
 
-    it('should build 2 column layout', () => {
+    it('should build 2 column grid', () => {
       /*
       Column 0     Column 1
       ----------------------
@@ -622,7 +744,45 @@ describe('buildLayout', () => {
       |-------|-------------|
       |   D   |     D       |  <-- height 1 (width spans 2 columns)
       */
-      expect(buildLayout(layout, 2)).toEqual([
+      const grid: Grid<GridWidgetWithoutCords>[] = [
+        {
+          id: '1',
+          title: 'Test Grid',
+          grid: [
+            {
+              i: '1',
+              type: GRID_WIDGET_TYPE.IMAGE,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '2',
+              type: GRID_WIDGET_TYPE.IFRAME,
+              w: 2,
+              h: 2,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '3',
+              type: GRID_WIDGET_TYPE.TEXT,
+              w: 1,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+            {
+              i: '4',
+              type: GRID_WIDGET_TYPE.IMAGE,
+              w: 2,
+              h: 1,
+              properties: { prop1: 'value1', prop2: 'value2' },
+            },
+          ],
+          gridColumns: 2,
+        },
+      ]
+
+      expect(buildGrid(grid)).toEqual([
         {
           id: '1',
           title: 'Test Grid',
@@ -664,6 +824,7 @@ describe('buildLayout', () => {
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
+          gridColumns: 2,
         },
       ])
     })

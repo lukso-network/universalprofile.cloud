@@ -1,13 +1,13 @@
 /**
- * Compare two grid layouts and return an array of changes.
+ * Compare two grids and return an array of changes.
  *
- * @param layoutA - Old grid layout.
- * @param layoutB - New grid layout.
+ * @param gridA - Old grid.
+ * @param gridB - New grid.
  * @returns Array of changes.
  */
-export const compareLayouts = (
-  _layoutA: GridWidget[],
-  _layoutB: GridWidget[]
+export const compareGridWidgets = (
+  _gridA?: GridWidget[],
+  _gridB?: GridWidget[]
 ): GridWidgetChange[] => {
   const result: GridWidgetChange[] = []
   const propertiesToCheck: (keyof GridWidget)[] = [
@@ -18,17 +18,15 @@ export const compareLayouts = (
     'type',
     'properties',
   ]
-  const layoutA = _layoutA.filter(
-    item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
-  )
-  const layoutB = _layoutB.filter(
-    item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
-  )
-  const maxLength = Math.max(layoutA.length, layoutB.length)
+  const gridA =
+    _gridA?.filter(item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT) || []
+  const gridB =
+    _gridB?.filter(item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT) || []
+  const maxLength = Math.max(gridA.length, gridB.length)
 
   for (let i = 0; i < maxLength; i++) {
-    const oldWidget = layoutA[i]
-    const newWidget = layoutB[i]
+    const oldWidget = gridA[i]
+    const newWidget = gridB[i]
 
     if (!oldWidget) {
       result.push({ oldWidget: null, newWidget })

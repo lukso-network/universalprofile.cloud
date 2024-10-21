@@ -4,6 +4,7 @@ export type Grid<T> = {
   title: string
   grid: T[]
   id: string
+  gridColumns: number
 }
 
 export type GridConfigItem = {
@@ -13,13 +14,13 @@ export type GridConfigItem = {
   properties: GridWidgetProperties
 }
 
-export type LayoutItemExtended = {
+export type GridWidgetExtended = {
   type: GridWidgetType
   properties: GridWidgetProperties
   originalWidth?: number
 }
 
-export type GridWidget = LayoutItem & LayoutItemExtended
+export type GridWidget = LayoutItem & GridWidgetExtended
 
 export type GridWidgetWithoutCords = PartialBy<GridWidget, 'x' | 'y'>
 
@@ -36,4 +37,9 @@ export type GridWidgetProperty = {
 export type GridWidgetChange = {
   oldWidget: GridWidget | null
   newWidget: GridWidget | null
+}
+
+export type GridChange = {
+  oldGrid: Grid<GridWidget>
+  newGrid: Grid<GridWidget>
 }

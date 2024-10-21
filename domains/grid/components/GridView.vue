@@ -1,47 +1,55 @@
 <script setup lang="ts">
-import { useElementSize, useResizeObserver } from '@vueuse/core'
+import { useElementSize } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
-const { isConnected } = storeToRefs(useAppStore())
+const { isConnected, isMobile } = storeToRefs(useAppStore())
 const {
   isEditingGrid,
-  tempGridLayout,
-  viewedGridLayout,
+  tempGrid,
+  viewedGrid,
   hasUnsavedGrid,
-  gridColumns,
   gridRowHeightRatio,
+  selectedGridId,
 } = storeToRefs(useGridStore())
 const {
-  initializeGridLayout,
-  saveGridLayout,
+  initializeGrid,
+  saveGrid,
   canEditGrid,
-  getSelectedLayout,
-  updateSelectedLayout,
-  getGridColumns,
+  getSelectedGridWidgets,
+  updateSelectedGrid,
+  initSelectedGridId,
+  getGridById,
 } = useGrid()
 const gridContainer = ref<HTMLElement | null>(null)
-let resizeTimeout: ReturnType<typeof setTimeout> | null = null
 const { width } = useElementSize(gridContainer)
-const layout = ref<GridWidget[]>([])
+const gridWidgets = ref<GridWidget[]>([])
 const movementX = ref(0)
 const address = computed(() => getCurrentProfileAddress())
 
-const currentLayout = computed(() => {
-  // when user is editing and has unsaved changes, use temp layout
+const currentGrid = computed(() => {
+  // when user is editing and has unsaved changes, use temp grid
   if (canEditGrid.value && hasUnsavedGrid.value) {
-    return tempGridLayout.value
+    return tempGrid.value
   }
 
-  return viewedGridLayout.value
+  return viewedGrid.value
 })
 
 const gridRowHeight = computed(() => {
-  const columnSpacing = GRID_SPACING_PX * (gridColumns.value - 1)
+  const columnSpacing = GRID_SPACING_PX * (gridColumnNumber.value - 1)
   const columnWidth = width.value - columnSpacing
-  const rowHeight = (columnWidth / gridColumns.value) * gridRowHeightRatio.value
+  const rowHeight =
+    (columnWidth / gridColumnNumber.value) * gridRowHeightRatio.value
 
   return rowHeight
 })
+
+const gridColumnNumber = computed(() =>
+  isMobile.value
+    ? 1
+    : getGridById(currentGrid.value, selectedGridId.value)?.gridColumns ||
+      GRID_COLUMNS_MIN
+)
 
 const itemStyle = computed(() => (item: GridWidget) => {
   const element = document.getElementById(`gridItem-${item.i}`)
@@ -65,44 +73,34 @@ const handleMouseMove = (event: MouseEvent) => {
   movementX.value = event.movementX
 }
 
-const handleUpdateLayout = (newLayout: GridWidget[]) => {
+const handleUpdateGrid = (newGrid: GridWidget[]) => {
   if (gridLog.enabled) {
-    gridLog('Layout updated', toRaw(newLayout))
+    gridLog('Grid updated', toRaw(newGrid))
   }
 
-  layout.value = newLayout
+  gridWidgets.value = newGrid
 }
 
-const handleSaveLayout = async () => {
+const handleSaveGrid = async () => {
   if (!canEditGrid.value) {
     return
   }
 
-  await saveGridLayout(tempGridLayout.value)
+  await saveGrid(tempGrid.value)
 }
 
-const handleResize = (width: number) => {
-  if (resizeTimeout) clearTimeout(resizeTimeout)
-  resizeTimeout = setTimeout(() => {
-    const prevCols = gridColumns.value
-    const newCols = getGridColumns.value(width)
+const handleResetGrid = async () => {
+  const userGrid = await getUserGrid(address.value)
+  const _grid = buildGrid(userGrid, isMobile.value, canEditGrid.value)
 
-    if (prevCols !== newCols) {
-      gridColumns.value = newCols
-      layout.value = getSelectedLayout(
-        buildLayout(currentLayout.value, newCols, canEditGrid.value)
-      )
-    }
-  }, GRID_RESIZE_DEBOUNCE_TIMEOUT_MS)
-}
+  tempGrid.value = cloneObject(_grid)
+  viewedGrid.value = cloneObject(_grid)
+  gridWidgets.value = getSelectedGridWidgets(cloneObject(_grid))
 
-const handleResetLayout = async () => {
-  const userLayout = await getUserLayout(address.value)
-  const _layout = buildLayout(userLayout, gridColumns.value, canEditGrid.value)
-
-  tempGridLayout.value = cloneObject(_layout)
-  viewedGridLayout.value = cloneObject(_layout)
-  layout.value = getSelectedLayout(cloneObject(_layout))
+  // if selected grid is affected by reset, select first grid
+  if (!viewedGrid.value.some(item => item.id === selectedGridId.value)) {
+    selectedGridId.value = viewedGrid.value[0]?.id
+  }
 }
 
 const clearSelection = () => {
@@ -115,7 +113,7 @@ const handleItemMove = () => {
 
 const handleItemMoved = () => {
   clearSelection()
-  tempGridLayout.value = updateSelectedLayout(layout.value)
+  tempGrid.value = updateSelectedGrid(gridWidgets.value)
 }
 
 const handleItemResize = () => {
@@ -124,58 +122,56 @@ const handleItemResize = () => {
 
 const handleItemResized = () => {
   clearSelection()
-  tempGridLayout.value = updateSelectedLayout(layout.value)
+  tempGrid.value = updateSelectedGrid(gridWidgets.value)
 }
 
-// rebuild layout and track unsaved state when:
+// rebuild grid and track unsaved state when:
 // - user make modifications in widgets (add/edit/remove/resize)
 // - user toggles edit mode
 watch(
-  [tempGridLayout, isEditingGrid],
-  async () => {
-    await nextTick()
-    const updatedViewedLayout = getSelectedLayout(
-      buildLayout(viewedGridLayout.value, gridColumns.value, canEditGrid.value)
-    )
-    const updatedTempLayout = getSelectedLayout(
-      buildLayout(tempGridLayout.value, gridColumns.value, canEditGrid.value)
+  [tempGrid, isEditingGrid, selectedGridId, isMobile],
+  () => {
+    const updatedViewedGrid = buildGrid(
+      viewedGrid.value,
+      isMobile.value,
+      canEditGrid.value
     )
 
-    if (isEditingGrid.value) {
-      layout.value = updatedTempLayout
+    // if user is in edit mode we use temp grid, otherwise viewed grid
+    if (canEditGrid.value) {
+      const updatedTempGrid = buildGrid(
+        tempGrid.value,
+        isMobile.value,
+        canEditGrid.value
+      )
+      gridWidgets.value = getSelectedGridWidgets(updatedTempGrid)
+      const changes = compareGrids(updatedViewedGrid, updatedTempGrid)
+
+      if (changes.length > 0) {
+        hasUnsavedGrid.value = true
+      } else {
+        hasUnsavedGrid.value = false
+      }
     } else {
-      layout.value = updatedViewedLayout
+      gridWidgets.value = getSelectedGridWidgets(updatedViewedGrid)
     }
 
-    const changes = compareLayouts(updatedViewedLayout, updatedTempLayout)
-
-    if (changes.length > 0) {
-      hasUnsavedGrid.value = true
-    } else {
-      hasUnsavedGrid.value = false
-    }
+    // re-init selected grid id when user toggles edit mode in case the selected grid was changed
+    initSelectedGridId()
   },
   { deep: true }
 )
 
-// initialize layout on initial render and when user connects/disconnects
+// initialize grid on initial render and when user connects/disconnects
 watch(
-  () => isConnected.value,
+  [isConnected],
   async () => {
-    if (!isConnected.value) {
-      hasUnsavedGrid.value = false
-    }
-
-    await initializeGridLayout(address.value, canEditGrid.value)
-    layout.value = getSelectedLayout(currentLayout.value)
+    await initializeGrid(address.value, canEditGrid.value)
+    console.log('Grid initialized', getSelectedGridWidgets(currentGrid.value))
+    gridWidgets.value = getSelectedGridWidgets(currentGrid.value)
   },
   { immediate: true }
 )
-
-useResizeObserver(gridContainer, entries => {
-  const { contentRect } = entries[0]
-  handleResize(contentRect.width)
-})
 
 onMounted(() => {
   document.addEventListener('mousemove', handleMouseMove)
@@ -188,10 +184,11 @@ onUnmounted(() => {
 
 <template>
   <div class="w-full">
-    <div class="mx-auto max-w-content" ref="gridContainer">
+    <div class="mx-auto min-h-[200px] max-w-content" ref="gridContainer">
+      <GridTabs :grid="currentGrid" />
       <GridLayout
-        v-model:layout="layout"
-        :col-num="gridColumns"
+        v-model:layout="gridWidgets"
+        :col-num="gridColumnNumber"
         :row-height="gridRowHeight"
         :is-draggable="canEditGrid"
         :is-resizable="canEditGrid"
@@ -200,11 +197,11 @@ onUnmounted(() => {
         :margin="[GRID_SPACING_PX, GRID_SPACING_PX]"
         :use-css-transforms="false"
         class="-m-4"
-        @layout-updated="handleUpdateLayout"
+        @layout-updated="handleUpdateGrid"
       >
         <GridItem
           :id="`gridItem-${item.i}`"
-          v-for="item in layout"
+          v-for="item in gridWidgets"
           :key="item.i"
           :x="item.x"
           :y="item.y"
@@ -237,8 +234,8 @@ onUnmounted(() => {
     <!-- Confirmation dialog for unsaved changes -->
     <GridConfirmationDialog
       v-if="canEditGrid"
-      @save="handleSaveLayout"
-      @cancel="handleResetLayout"
+      @save="handleSaveGrid"
+      @cancel="handleResetGrid"
     />
   </div>
 </template>

@@ -12,7 +12,8 @@ type Props = {
 const props = defineProps<Props>()
 const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
-const { addGridLayoutItem, updateGridLayoutItem } = useGrid()
+const { addGridWidget, updateGridWidget, getGridById } = useGrid()
+const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
 
 const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
 const DEFAULT_PROPERTIES = {
@@ -24,7 +25,6 @@ const DEFAULT_PROPERTIES = {
 }
 const inputValues = reactive(DEFAULT_PROPERTIES)
 const inputErrors = reactive({
-  text: '',
   titleColor: '',
   textColor: '',
   backgroundColor: '',
@@ -41,7 +41,7 @@ const handleSave = () => {
   const properties = toRaw(inputValues)
 
   if (isEdit.value) {
-    updateGridLayoutItem(props.id, {
+    updateGridWidget(props.id, {
       properties,
       w: props.width,
       h: props.height,
@@ -54,7 +54,7 @@ const handleSave = () => {
       h: props.height,
     })
 
-    addGridLayoutItem(newWidget)
+    addGridWidget(newWidget, getGridById(tempGrid.value, selectedGridId.value))
   }
 
   handleCancel()
@@ -73,13 +73,6 @@ const handleTitleChange = async (customEvent: CustomEvent) => {
 const handleTextChange = async (customEvent: CustomEvent) => {
   const event = customEvent.detail.event
   const input = event.target as HTMLInputElement
-  inputErrors.text = ''
-
-  if (!input.value) {
-    inputErrors.text = formatMessage('errors_required')
-    return
-  }
-
   inputValues.text = input.value
 }
 
@@ -127,8 +120,6 @@ const handleBackgroundColorChange = async (customEvent: CustomEvent) => {
 
 watchEffect(() => {
   canSubmit.value =
-    !!inputValues.text &&
-    !inputErrors.text &&
     !inputErrors.titleColor &&
     !inputErrors.textColor &&
     !inputErrors.backgroundColor
@@ -183,6 +174,17 @@ onMounted(() => {
     </div>
 
     <div class="flex flex-col gap-4">
+      <!-- Background color -->
+      <lukso-color-picker
+        .value="inputValues.backgroundColor"
+        :label="formatMessage('add_widget_text_background_color_label')"
+        :placeholder="
+          formatMessage('add_widget_text_background_color_placeholder')
+        "
+        :error="inputErrors.backgroundColor"
+        @on-input="handleBackgroundColorChange"
+      ></lukso-color-picker>
+
       <div class="flex flex-col gap-2">
         <!-- Title -->
         <lukso-input
@@ -211,7 +213,6 @@ onMounted(() => {
           :value="inputValues.text"
           :label="formatMessage('add_widget_text_text_label')"
           :placeholder="formatMessage('add_widget_text_text_placeholder')"
-          :error="inputErrors.text"
           is-full-width
           rows="3"
           autofocus
@@ -226,17 +227,6 @@ onMounted(() => {
           @on-input="handleTextColorChange"
         ></lukso-color-picker>
       </div>
-
-      <!-- Background color -->
-      <lukso-color-picker
-        .value="inputValues.backgroundColor"
-        :label="formatMessage('add_widget_text_background_color_label')"
-        :placeholder="
-          formatMessage('add_widget_text_background_color_placeholder')
-        "
-        :error="inputErrors.backgroundColor"
-        @on-input="handleBackgroundColorChange"
-      ></lukso-color-picker>
     </div>
 
     <!-- Buttons -->

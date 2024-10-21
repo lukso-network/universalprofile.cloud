@@ -1,20 +1,23 @@
 import { describe, expect, it, vi } from 'vitest'
-import { configToLayout } from '../configToLayout'
+
+import { configToGrid } from '../configToGrid'
 
 vi.mock('/domains/grid/utils/generateItemId', () => ({
   generateItemId: () => 'test-id',
 }))
 
-describe('configToLayout', () => {
+describe('configToGrid', () => {
   it('should create unique id for each grid item', () => {
     const config = [
       {
         title: 'default',
         grid: [],
+        gridColumns: 2,
       },
       {
         title: 'default',
         grid: [],
+        gridColumns: 2,
       },
     ]
     const result = [
@@ -22,19 +25,21 @@ describe('configToLayout', () => {
         id: 'default',
         title: 'default',
         grid: [],
+        gridColumns: 2,
       },
       {
         id: 'default-0',
         title: 'default',
         grid: [],
+        gridColumns: 2,
       },
     ]
 
-    expect(configToLayout(config)).toEqual(result)
+    expect(configToGrid(config)).toEqual(result)
   })
 
-  it('should return an empty layout for an empty config', () => {
-    expect(configToLayout([])).toEqual([])
+  it('should return an empty grid for an empty config', () => {
+    expect(configToGrid([])).toEqual([])
   })
 
   it('should correctly handle a single item config', () => {
@@ -56,7 +61,7 @@ describe('configToLayout', () => {
             height: 1,
             properties: {
               title: 'Hey',
-              text: 'Customize your grid layout!',
+              text: 'Customize your grid grid!',
               backgroundColor: '#9db9b9',
             },
           },
@@ -69,6 +74,7 @@ describe('configToLayout', () => {
             },
           },
         ],
+        gridColumns: 2,
       },
     ]
     const result = [
@@ -89,7 +95,7 @@ describe('configToLayout', () => {
             type: 'TEXT',
             properties: {
               title: 'Hey',
-              text: 'Customize your grid layout!',
+              text: 'Customize your grid grid!',
               backgroundColor: '#9db9b9',
             },
             w: 1,
@@ -106,9 +112,10 @@ describe('configToLayout', () => {
             i: 'test-id',
           },
         ],
+        gridColumns: 2,
       },
     ]
 
-    expect(configToLayout(config)).toEqual(result)
+    expect(configToGrid(config)).toEqual(result)
   })
 })
