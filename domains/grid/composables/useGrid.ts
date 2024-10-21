@@ -60,12 +60,16 @@ export const useGrid = () => {
     }
   }
 
-  const gridCount = computed(() => {
-    if (canEditGrid.value) {
-      return tempGrid.value.length
-    }
+  const gridsForDisplay = computed(() => {
+    const grids = canEditGrid.value
+      ? tempGrid.value
+      : viewedGrid.value.filter(grid => grid.grid.length > 0)
 
-    return viewedGrid.value.length
+    return grids.map(grid => {
+      return {
+        grid,
+      }
+    })
   })
 
   return {
@@ -288,6 +292,6 @@ export const useGrid = () => {
     canEditGrid,
     initSelectedGridId,
     getGridById,
-    gridCount,
+    gridsForDisplay,
   }
 }

@@ -7,7 +7,7 @@ const assets = computed(() => assetsData.value || [])
 const isLoadingAssets = computed(() =>
   assets.value.some(asset => asset.isLoading)
 )
-const { gridCount } = useGrid()
+const { gridsForDisplay } = useGrid()
 
 const filteredAssets = computed(() => {
   return (
@@ -87,7 +87,8 @@ const tabs = computed<ProfileViewTab[]>(() => {
   return [
     {
       id: 'grid',
-      count: gridCount.value > 1 ? gridCount.value : 0,
+      count:
+        gridsForDisplay.value.length > 1 ? gridsForDisplay.value.length : 0,
     },
     {
       id: 'collectibles',

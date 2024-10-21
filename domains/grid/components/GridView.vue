@@ -184,8 +184,8 @@ onUnmounted(() => {
 
 <template>
   <div class="w-full">
-    <div class="mx-auto min-h-[200px] max-w-content" ref="gridContainer">
-      <GridTabs :grid="currentGrid" />
+    <div class="mx-auto max-w-content" ref="gridContainer">
+      <GridTabs />
       <GridLayout
         v-model:layout="gridWidgets"
         :col-num="gridColumnNumber"

@@ -2,6 +2,8 @@
 const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 
+const SHOW_TOOLTIP_DELAY = 1500
+
 type Props = {
   type?: GridWidgetType
   properties?: GridWidgetProperties
@@ -50,6 +52,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
       <!-- Iframe -->
       <lukso-tooltip
         variant="light"
+        :show-delay="SHOW_TOOLTIP_DELAY"
         :text="formatMessage('widget_type_iframe')"
       >
         <div
@@ -65,7 +68,11 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
       </lukso-tooltip>
 
       <!-- Image -->
-      <lukso-tooltip variant="light" :text="formatMessage('widget_type_image')">
+      <lukso-tooltip
+        variant="light"
+        :show-delay="SHOW_TOOLTIP_DELAY"
+        :text="formatMessage('widget_type_image')"
+      >
         <div
           class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-[1.05]"
           @click="handleSelectWidget('IMAGE')"
@@ -79,7 +86,11 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
       </lukso-tooltip>
 
       <!-- Text -->
-      <lukso-tooltip variant="light" :text="formatMessage('widget_type_text')">
+      <lukso-tooltip
+        variant="light"
+        :show-delay="SHOW_TOOLTIP_DELAY"
+        :text="formatMessage('widget_type_text')"
+      >
         <div
           class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-[1.05]"
           @click="handleSelectWidget('TEXT')"
@@ -105,6 +116,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
       <!-- Youtube -->
       <lukso-tooltip
         variant="light"
+        :show-delay="SHOW_TOOLTIP_DELAY"
         :text="formatMessage('widget_type_youtube')"
       >
         <img
@@ -128,6 +140,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
       <!-- Spotify -->
       <lukso-tooltip
         variant="light"
+        :show-delay="SHOW_TOOLTIP_DELAY"
         :text="formatMessage('widget_type_spotify')"
       >
         <img
@@ -141,6 +154,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
       <!-- Sound Cloud -->
       <lukso-tooltip
         variant="light"
+        :show-delay="SHOW_TOOLTIP_DELAY"
         :text="formatMessage('widget_type_soundcloud')"
       >
         <img
@@ -162,7 +176,11 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
     </div>
     <div class="flex gap-5">
       <!-- X -->
-      <lukso-tooltip variant="light" :text="formatMessage('widget_type_x')">
+      <lukso-tooltip
+        variant="light"
+        :show-delay="SHOW_TOOLTIP_DELAY"
+        :text="formatMessage('widget_type_x')"
+      >
         <img
           src="/images/social-media-x.svg"
           alt="X"
@@ -174,6 +192,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
       <!-- Warpcast -->
       <lukso-tooltip
         variant="light"
+        :show-delay="SHOW_TOOLTIP_DELAY"
         :text="formatMessage('widget_type_warpcast')"
       >
         <img
@@ -187,6 +206,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
       <!-- Instagram -->
       <lukso-tooltip
         variant="light"
+        :show-delay="SHOW_TOOLTIP_DELAY"
         :text="formatMessage('widget_type_instagram')"
       >
         <img

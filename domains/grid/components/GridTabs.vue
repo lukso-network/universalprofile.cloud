@@ -1,25 +1,18 @@
 <script setup lang="ts">
+import draggable from 'vuedraggable'
+
 type GridTab = {
   grid: Grid<GridWidget>
 }
 
-type Props = {
-  grid: Grid<GridWidget>[]
-}
-
-const props = defineProps<Props>()
-const { selectedGridId } = storeToRefs(useGridStore())
+const { selectedGridId, tempGrid, viewedGrid } = storeToRefs(useGridStore())
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
-const { canEditGrid } = useGrid()
+const { canEditGrid, gridsForDisplay } = useGrid()
+const tabs = ref<GridTab[]>([])
 
-const tabs = computed<GridTab[]>(() => {
-  return props.grid.map(grid => {
-    return {
-      grid,
-    }
-  })
-})
+// we only show tabs when user has more then one
+const hasTabs = computed(() => tabs.value.length > 1)
 
 const handleAddGrid = () => {
   showModal({
@@ -31,20 +24,52 @@ const handleAddGrid = () => {
     },
   })
 }
+
+const handleDragEnd = () => {
+  tempGrid.value = cloneObject(tabs.value.map(tab => tab.grid))
+}
+
+watch(
+  [canEditGrid, tempGrid, viewedGrid],
+  () => {
+    tabs.value = gridsForDisplay.value
+  },
+  { immediate: true, deep: true }
+)
 </script>
 
 <template>
-  <div class="pb-4">
-    <ul class="flex flex-wrap justify-start gap-x-6 gap-y-3">
+  <div v-if="hasTabs" class="flex select-none gap-x-6 gap-y-3 pb-4">
+    <draggable
+      v-if="canEditGrid"
+      v-model="tabs"
+      tag="ul"
+      :animation="300"
+      item-key="grid.id"
+      class="flex flex-wrap justify-start gap-x-6 gap-y-3"
+      @end="handleDragEnd"
+    >
+      <template #item="{ element: tab }">
+        <GridTabsItem
+          :grid="tab.grid"
+          :is-active="tab.grid.id === selectedGridId"
+        />
+      </template>
+    </draggable>
+
+    <ul v-else class="flex flex-wrap justify-start gap-x-6 gap-y-3">
       <GridTabsItem
         v-for="tab in tabs"
         :key="tab.grid.id"
         :grid="tab.grid"
         :is-active="tab.grid.id === selectedGridId"
       />
+    </ul>
+
+    <ul class="flex flex-wrap justify-start gap-x-6 gap-y-3">
       <li
         v-if="canEditGrid"
-        class="heading-inter-17-semi-bold flex cursor-pointer items-center opacity-50 transition hover:opacity-100"
+        class="heading-inter-17-semi-bold flex cursor-pointer select-none items-center opacity-50 transition hover:opacity-100"
         @click="handleAddGrid"
       >
         {{ formatMessage('grid_tabs_add_widget') }}
