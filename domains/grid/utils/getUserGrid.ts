@@ -6,7 +6,7 @@
 export const getUserGrid = async (
   address: Address
 ): Promise<Grid<GridWidgetWithoutCords>[]> => {
-  let config: PartialBy<Grid<GridConfigItem>, 'id'>[]
+  let config: PartialBy<Grid<GridConfigItem>, 'id'>[] = []
   const userConfig = await getGridConfig(address)
 
   // if user config is invalid we load default one
@@ -16,8 +16,6 @@ export const getUserGrid = async (
     if (gridLog.enabled) {
       gridLog('Invalid config', userConfig)
     }
-
-    config = defaultGridConfig(address)
   }
 
   return configToGrid(config)
