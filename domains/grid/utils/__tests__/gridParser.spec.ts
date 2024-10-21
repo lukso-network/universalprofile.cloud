@@ -276,6 +276,8 @@ describe('parsePlatformInput', () => {
         {
           src: 'https://www.instagram.com/p/C98OXs6yhAq/?utm_source=ig_embed&amp;utm_campaign=loading',
           type: 'p',
+          id: 'C98OXs6yhAq',
+          params: '?utm_source=ig_embed&amp;utm_campaign=loading',
         },
       ],
       [
@@ -285,6 +287,8 @@ describe('parsePlatformInput', () => {
         {
           src: 'https://www.instagram.com/p/C98OXs6yhAq/?utm_source=ig_embed&amp;utm_campaign=loading',
           type: 'p',
+          id: 'C98OXs6yhAq',
+          params: '?utm_source=ig_embed&amp;utm_campaign=loading',
         },
       ],
       [
@@ -294,6 +298,8 @@ describe('parsePlatformInput', () => {
         {
           src: 'https://www.instagram.com/reel/DAlOgHkuyxd/?utm_source=ig_embed&amp;utm_campaign=loading',
           type: 'reel',
+          id: 'DAlOgHkuyxd',
+          params: '?utm_source=ig_embed&amp;utm_campaign=loading',
         },
       ],
       [
@@ -303,6 +309,8 @@ describe('parsePlatformInput', () => {
         {
           src: 'https://www.instagram.com/reel/DAlOgHkuyxd/?utm_source=ig_embed&amp;utm_campaign=loading',
           type: 'reel',
+          id: 'DAlOgHkuyxd',
+          params: '?utm_source=ig_embed&amp;utm_campaign=loading',
         },
       ],
     ])(

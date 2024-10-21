@@ -39,7 +39,7 @@ const PLATFORM_PARSING_PARAMETERS: Record<
   [GRID_WIDGET_TYPE.INSTAGRAM]: {
     type: GRID_WIDGET_TYPE.INSTAGRAM,
     embedRegex:
-      /https:\/\/www\.instagram\.com\/(p|reel|profile|tv)\/([\w-]+)\/(\?[^"]*)?/,
+      /https:\/\/www\.instagram\.com\/(?<type>p|reel|profile|tv)\/(?<id>[\w-]+)\/(?<params>\?[^"]*)?/,
   },
   [GRID_WIDGET_TYPE.WARPCAST]: undefined,
   [GRID_WIDGET_TYPE.SPOTIFY]: {
@@ -198,24 +198,3 @@ function sanitizeYoutubeEmbedUrl(url: string): string {
 
   return url
 }
-
-// const parseInstagramWidgetInput = (
-//   input: string
-// ): LayoutItemExtended | never => {
-//   const INSTAGRAM_URL_REGEX =
-//     /https:\/\/www\.instagram\.com\/(p|reel|profile|tv)\/([\w-]+)\/(\?[^"]*)?/
-
-//   const [, type, id, params] = input.match(INSTAGRAM_URL_REGEX) || []
-
-//   if (id && type) {
-//     return {
-//       type: GRID_WIDGET_TYPE.INSTAGRAM,
-//       properties: {
-//         src: `https://www.instagram.com/${type}/${id}/${params}`,
-//         type: type,
-//       },
-//     }
-//   }
-
-//   throw new Error('Invalid Instagram input')
-// }
