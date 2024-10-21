@@ -25,9 +25,7 @@ const handleAddGrid = () => {
   })
 }
 
-const checkMove = (event: any) => {
-  console.log(event)
-  console.log(tabs.value)
+const handleDragEnd = () => {
   tempGrid.value = cloneObject(tabs.value.map(tab => tab.grid))
 }
 
@@ -49,7 +47,7 @@ watch(
       :animation="300"
       item-key="grid.id"
       class="flex flex-wrap justify-start gap-x-6 gap-y-3"
-      @end="checkMove"
+      @end="handleDragEnd"
     >
       <template #item="{ element: tab }">
         <GridTabsItem
