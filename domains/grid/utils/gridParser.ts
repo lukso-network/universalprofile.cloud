@@ -171,30 +171,27 @@ async function getSpotifyOEmbed(url: string): Promise<string | undefined> {
 }
 
 async function getXOEmbedFromHandle(handle: string) {
-  handle = handle.replace('@', '')
   const response = await fetch(
-    `https://publish.twitter.com/oembed?url=https://twitter.com/${handle}`
+    `https://publish.twitter.com/oembed?url=https://twitter.com/${handle.replace('@', '')}`
   )
 
   return response.ok ? ((await response.json())?.html as string) : undefined
 }
 
 function sanitizeXEmbedUrl(url: string): string {
-  url = url.replace('x.com', 'twitter.com')
-
-  if (!url.startsWith('https://')) {
-    url = `https://${url}`
+  let newUrl = url.replace('x.com', 'twitter.com')
+  if (!newUrl.startsWith('https://')) {
+    newUrl = `https://${newUrl}`
   }
 
-  return url
+  return newUrl
 }
 
 function sanitizeYoutubeEmbedUrl(url: string): string {
-  url = url.replace('watch?v=', 'embed/')
-
+  let newUrl = url.replace('watch?v=', 'embed/')
   if (!url.startsWith('https://')) {
-    url = `https://${url}`
+    newUrl = `https://${newUrl}`
   }
 
-  return url
+  return newUrl
 }
