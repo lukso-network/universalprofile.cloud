@@ -39,7 +39,6 @@ const isAllowToShowOptions = computed(
 )
 
 const WIDGET_COMPONENTS: Record<string, string> = {
-  [GRID_WIDGET_TYPE.TITLE_LINK]: 'TitleLink',
   [GRID_WIDGET_TYPE.TEXT]: 'Text',
   [GRID_WIDGET_TYPE.IMAGE]: 'Image',
   [GRID_WIDGET_TYPE.IFRAME]: 'Iframe',

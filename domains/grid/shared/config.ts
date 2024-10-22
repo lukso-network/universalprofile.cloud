@@ -1,6 +1,5 @@
 export enum GRID_WIDGET_TYPE {
   // custom
-  TITLE_LINK = 'TITLE_LINK',
   TEXT = 'TEXT',
   IFRAME = 'IFRAME',
   IMAGE = 'IMAGE',
@@ -25,12 +24,6 @@ export const WIDGET_TYPE_PROPERTIES: Record<
   GridWidgetType,
   GridWidgetProperty[]
 > = {
-  [GRID_WIDGET_TYPE.TITLE_LINK]: [
-    { key: 'title', type: 'string' },
-    { key: 'src', type: 'url', optional: true },
-    { key: 'textColor', type: 'color', optional: true },
-    { key: 'backgroundColor', type: 'color', optional: true },
-  ],
   [GRID_WIDGET_TYPE.TEXT]: [
     { key: 'title', type: 'string' },
     { key: 'text', type: 'string' },

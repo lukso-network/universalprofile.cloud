@@ -205,7 +205,7 @@ describe('buildGrid', () => {
           grid: [
             {
               i: '1',
-              type: GRID_WIDGET_TYPE.TITLE_LINK,
+              type: GRID_WIDGET_TYPE.TEXT,
               w: 1,
               h: 2,
               properties: { prop1: 'value1', prop2: 'value2' },
@@ -247,7 +247,7 @@ describe('buildGrid', () => {
               y: 0,
               w: 1,
               h: 2,
-              type: GRID_WIDGET_TYPE.TITLE_LINK,
+              type: GRID_WIDGET_TYPE.TEXT,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
             {
@@ -299,7 +299,7 @@ describe('buildGrid', () => {
           grid: [
             {
               i: '1',
-              type: GRID_WIDGET_TYPE.TITLE_LINK,
+              type: GRID_WIDGET_TYPE.TEXT,
               w: 1,
               h: 2,
               properties: { prop1: 'value1', prop2: 'value2' },
@@ -341,7 +341,7 @@ describe('buildGrid', () => {
               y: 0,
               w: 1,
               h: 2,
-              type: GRID_WIDGET_TYPE.TITLE_LINK,
+              type: GRID_WIDGET_TYPE.TEXT,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
             {
@@ -392,7 +392,7 @@ describe('buildGrid', () => {
           grid: [
             {
               i: '1',
-              type: GRID_WIDGET_TYPE.TITLE_LINK,
+              type: GRID_WIDGET_TYPE.TEXT,
               w: 1,
               h: 2,
               properties: { prop1: 'value1', prop2: 'value2' },
@@ -434,7 +434,7 @@ describe('buildGrid', () => {
               y: 0,
               w: 1,
               h: 2,
-              type: GRID_WIDGET_TYPE.TITLE_LINK,
+              type: GRID_WIDGET_TYPE.TEXT,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
             {
