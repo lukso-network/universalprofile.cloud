@@ -1,5 +1,3 @@
-const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
-
 /**
  * Update value from input field event
  *
@@ -35,19 +33,4 @@ export const getFieldErrorMessage = (
   }
 
   return errors[field]?._errors[0]
-}
-
-/**
- * Autofocus input field
- *
- * @param name
- */
-export const autofocusInput = (name: string) => {
-  setTimeout(() => {
-    const input = document?.querySelector(name) as unknown as HTMLElement
-
-    ;(
-      input?.shadowRoot?.querySelector('input[autofocus]') as HTMLInputElement
-    )?.focus()
-  }, INPUT_FOCUS_DELAY)
 }

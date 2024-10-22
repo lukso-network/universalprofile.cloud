@@ -13,7 +13,6 @@ const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
 
-const TEXTAREA_FOCUS_DELAY = 10 // small delay for focusing textarea after element render
 const inputValue = ref('')
 const inputError = ref('')
 
@@ -85,14 +84,6 @@ const handleBackToSelection = () => {
 }
 
 onMounted(() => {
-  setTimeout(() => {
-    const textarea = document?.querySelector(
-      'lukso-textarea'
-    ) as unknown as HTMLElement
-
-    textarea?.shadowRoot?.querySelector('textarea')?.focus()
-  }, TEXTAREA_FOCUS_DELAY)
-
   inputValue.value = props.properties?.src || ''
 })
 </script>

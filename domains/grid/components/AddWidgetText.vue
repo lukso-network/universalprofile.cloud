@@ -83,7 +83,6 @@ const handleBackToSelection = () => {
 }
 
 onMounted(() => {
-  autofocusInput('lukso-color-picker')
   inputValues.value = props.properties || textWidgetSchema.optional().parse({})
 })
 </script>
@@ -123,7 +122,7 @@ onMounted(() => {
           formatMessage('add_widget_text_background_color_placeholder')
         "
         :error="getFieldErrorMessage(inputErrors, 'backgroundColor')"
-        :autofocus="true"
+        autofocus
         @on-input="
           (customEvent: CustomEvent) =>
             handleFieldChange(customEvent, 'backgroundColor', inputValues)
@@ -137,7 +136,6 @@ onMounted(() => {
           :label="formatMessage('add_widget_text_title_label')"
           :placeholder="formatMessage('add_widget_text_title_placeholder')"
           is-full-width
-          autofocus
           @on-input="
             (customEvent: CustomEvent) =>
               handleFieldChange(customEvent, 'title', inputValues)
@@ -166,7 +164,6 @@ onMounted(() => {
           :placeholder="formatMessage('add_widget_text_text_placeholder')"
           is-full-width
           rows="3"
-          autofocus
           @on-input="
             (customEvent: CustomEvent) =>
               handleFieldChange(customEvent, 'text', inputValues)

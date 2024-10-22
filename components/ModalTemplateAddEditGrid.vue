@@ -7,7 +7,6 @@ const { formatMessage } = useIntl()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
 const { addGrid, updateGrid } = useGrid()
 
-const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
 const DEFAULT_PROPERTIES = {
   title: '',
   gridColumns: GRID_COLUMNS_MIN,
@@ -90,14 +89,6 @@ watchEffect(() => {
 })
 
 onMounted(() => {
-  setTimeout(() => {
-    const input = document?.querySelector(
-      'lukso-input'
-    ) as unknown as HTMLElement
-
-    input?.shadowRoot?.querySelector('input')?.focus()
-  }, INPUT_FOCUS_DELAY)
-
   Object.assign(inputValues, modal?.data?.grid || DEFAULT_PROPERTIES)
 })
 </script>
@@ -131,7 +122,6 @@ onMounted(() => {
         :options="JSON.stringify(gridColumnsOptions)"
         :label="formatMessage('add_grid_columns_label')"
         is-full-width
-        autofocus
         @on-select="handleChangeColumnNumber"
       ></lukso-select>
     </div>

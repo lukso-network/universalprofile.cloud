@@ -72,7 +72,6 @@ onMounted(() => {
       :value="JSON.stringify(selectedOptionValue)"
       :options="JSON.stringify(options)"
       is-full-width
-      autofocus
       @on-select="handleChange"
     ></lukso-select>
 
