@@ -246,7 +246,11 @@ onMounted(() => {
       v-if="isAllowToEdit"
       class="grid-widget-resize absolute bottom-2 right-2 z-10 mb-1 flex size-[35px] cursor-pointer items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 opacity-0 shadow-neutral-drop-shadow-1xl transition hover:scale-[1.05] group-hover:opacity-100"
     >
-      <lukso-icon name="expand" size="medium" class="p-2"></lukso-icon>
+      <lukso-icon
+        name="expand"
+        size="medium"
+        class="rotate-90 p-2"
+      ></lukso-icon>
     </div>
 
     <!-- Loaded component based on widget type -->
