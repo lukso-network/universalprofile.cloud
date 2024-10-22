@@ -57,7 +57,7 @@ onUnmounted(() => {
       has-identicon
     ></lukso-profile>
     <div
-      class="absolute right-0 z-[1000] mt-8 animate-fade-in select-none rounded-12 bg-neutral-100 shadow-pink-drop-shadow animation-duration-150 before:absolute before:right-0 before:top-0 before:-mt-1 before:mr-4 before:size-3 before:rotate-45 before:bg-neutral-100"
+      class="absolute right-0 z-[1000] mt-4 animate-fade-in select-none rounded-12 bg-neutral-100 shadow-pink-drop-shadow animation-duration-150 before:absolute before:right-0 before:top-0 before:-mt-1 before:mr-4 before:size-3 before:rotate-45 before:bg-neutral-100"
       :class="isDropdownOpen ? 'block' : 'hidden'"
     >
       <lukso-button
