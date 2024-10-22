@@ -4,7 +4,7 @@ import { ZodError } from 'zod'
 type Props = {
   type: GridWidgetType
   id?: string
-  properties?: GridWidgetProperties
+  properties?: TextWidgetProperties
   width?: number
   height?: number
 }
@@ -14,9 +14,7 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
-const inputValues = ref<Partial<TextWidget>>({
-  widgetType: GRID_WIDGET_TYPE.TEXT,
-})
+const inputValues = ref<TextWidgetProperties | undefined>()
 
 const inputErrors = computed(() => {
   if (!inputValues.value) {
@@ -86,8 +84,7 @@ const handleBackToSelection = () => {
 
 onMounted(() => {
   autofocusInput('lukso-color-picker')
-  inputValues.value =
-    props.properties || textWidgetSchema.parse(inputValues.value)
+  inputValues.value = props.properties || textWidgetSchema.optional().parse({})
 })
 </script>
 

@@ -22,7 +22,6 @@ export const textWidgetSchema = z.object({
     .refine(validateHexColor, {
       message: formatMessage('errors_invalid_hex_color'),
     }),
-  widgetType: z.literal(GRID_WIDGET_TYPE.TEXT),
 })
 
-export type TextWidget = z.infer<typeof textWidgetSchema>
+export type TextWidgetProperties = z.infer<typeof textWidgetSchema>
