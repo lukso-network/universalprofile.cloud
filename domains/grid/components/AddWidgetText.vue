@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import tinycolor from 'tinycolor2'
+import { ZodError } from 'zod'
 
 type Props = {
   type: GridWidgetType
@@ -14,23 +14,33 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
-
-const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
-const DEFAULT_PROPERTIES = {
-  title: '',
-  text: '',
-  titleColor: '#243542',
-  textColor: '#243542',
-  backgroundColor: '#f9f9f9',
-}
-const inputValues = reactive(DEFAULT_PROPERTIES)
-const inputErrors = reactive({
-  titleColor: '',
-  textColor: '',
-  backgroundColor: '',
+const inputValues = ref<Partial<TextWidget>>({
+  widgetType: GRID_WIDGET_TYPE.TEXT,
 })
 
-const canSubmit = ref(false)
+const inputErrors = computed(() => {
+  if (!inputValues.value) {
+    return undefined
+  }
+
+  try {
+    textWidgetSchema.parse(inputValues.value)
+    return undefined
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
+      return error?.format()
+    }
+  }
+})
+
+const canSubmit = computed(() => {
+  try {
+    textWidgetSchema.parse(inputValues.value)
+    return true
+  } catch {
+    return false
+  }
+})
 const isEdit = computed(() => !!props.id)
 
 const handleSave = () => {
@@ -38,7 +48,7 @@ const handleSave = () => {
     return
   }
 
-  const properties = toRaw(inputValues)
+  const properties = textWidgetSchema.parse(inputValues.value)
 
   if (isEdit.value) {
     updateGridWidget(props.id, {
@@ -64,67 +74,6 @@ const handleCancel = () => {
   closeModal()
 }
 
-const handleTitleChange = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const input = event.target as HTMLInputElement
-  inputValues.title = input.value
-}
-
-const handleTextChange = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const input = event.target as HTMLInputElement
-  inputValues.text = input.value
-}
-
-const handleTitleColorChange = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const color = event.target as HTMLInputElement
-  const tColor = tinycolor(color.value)
-  inputErrors.titleColor = ''
-
-  if (!tColor.isValid()) {
-    inputErrors.titleColor = formatMessage('errors_invalid_hex_color')
-    return
-  }
-
-  inputValues.titleColor = color.value
-}
-
-const handleTextColorChange = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const color = event.target as HTMLInputElement
-  const tColor = tinycolor(color.value)
-  inputErrors.textColor = ''
-
-  if (!tColor.isValid()) {
-    inputErrors.textColor = formatMessage('errors_invalid_hex_color')
-    return
-  }
-
-  inputValues.textColor = color.value
-}
-
-const handleBackgroundColorChange = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const color = event.target as HTMLInputElement
-  const tColor = tinycolor(color.value)
-  inputErrors.backgroundColor = ''
-
-  if (!tColor.isValid()) {
-    inputErrors.backgroundColor = formatMessage('errors_invalid_hex_color')
-    return
-  }
-
-  inputValues.backgroundColor = color.value
-}
-
-watchEffect(() => {
-  canSubmit.value =
-    !inputErrors.titleColor &&
-    !inputErrors.textColor &&
-    !inputErrors.backgroundColor
-})
-
 const handleBackToSelection = () => {
   showModal({
     template: 'AddGridWidget',
@@ -136,15 +85,9 @@ const handleBackToSelection = () => {
 }
 
 onMounted(() => {
-  setTimeout(() => {
-    const input = document?.querySelector(
-      'lukso-input'
-    ) as unknown as HTMLElement
-
-    input?.shadowRoot?.querySelector('input')?.focus()
-  }, INPUT_FOCUS_DELAY)
-
-  Object.assign(inputValues, props.properties || DEFAULT_PROPERTIES)
+  autofocusInput('lukso-color-picker')
+  inputValues.value =
+    props.properties || textWidgetSchema.parse(inputValues.value)
 })
 </script>
 
@@ -176,55 +119,72 @@ onMounted(() => {
     <div class="flex flex-col gap-4">
       <!-- Background color -->
       <lukso-color-picker
-        .value="inputValues.backgroundColor"
+        .value="inputValues?.backgroundColor"
+        id="background-color"
         :label="formatMessage('add_widget_text_background_color_label')"
         :placeholder="
           formatMessage('add_widget_text_background_color_placeholder')
         "
-        :error="inputErrors.backgroundColor"
-        @on-input="handleBackgroundColorChange"
+        :error="getFieldErrorMessage(inputErrors, 'backgroundColor')"
+        :autofocus="true"
+        @on-input="
+          (customEvent: CustomEvent) =>
+            handleFieldChange(customEvent, 'backgroundColor', inputValues)
+        "
       ></lukso-color-picker>
 
       <div class="flex flex-col gap-2">
         <!-- Title -->
         <lukso-input
-          .value="inputValues.title"
+          .value="inputValues?.title"
           :label="formatMessage('add_widget_text_title_label')"
           :placeholder="formatMessage('add_widget_text_title_placeholder')"
           is-full-width
           autofocus
-          @on-input="handleTitleChange"
+          @on-input="
+            (customEvent: CustomEvent) =>
+              handleFieldChange(customEvent, 'title', inputValues)
+          "
         ></lukso-input>
 
         <!-- Title color -->
         <lukso-color-picker
-          .value="inputValues.titleColor"
+          .value="inputValues?.titleColor"
           :placeholder="
             formatMessage('add_widget_text_title_color_placeholder')
           "
-          :error="inputErrors.titleColor"
-          @on-input="handleTitleColorChange"
+          :error="getFieldErrorMessage(inputErrors, 'titleColor')"
+          @on-input="
+            (customEvent: CustomEvent) =>
+              handleFieldChange(customEvent, 'titleColor', inputValues)
+          "
         ></lukso-color-picker>
       </div>
 
       <div class="flex flex-col gap-2">
         <!-- Description -->
         <lukso-textarea
-          :value="inputValues.text"
+          :value="inputValues?.text"
           :label="formatMessage('add_widget_text_text_label')"
           :placeholder="formatMessage('add_widget_text_text_placeholder')"
           is-full-width
           rows="3"
           autofocus
-          @on-input="handleTextChange"
+          @on-input="
+            (customEvent: CustomEvent) =>
+              handleFieldChange(customEvent, 'text', inputValues)
+          "
         ></lukso-textarea>
 
         <!-- Description color -->
         <lukso-color-picker
-          .value="inputValues.textColor"
+          .value="inputValues?.textColor"
           :placeholder="formatMessage('add_widget_text_text_color_placeholder')"
-          :error="inputErrors.textColor"
-          @on-input="handleTextColorChange"
+          :error="getFieldErrorMessage(inputErrors, 'textColor')"
+          @on-input="
+            (customEvent: CustomEvent) =>
+              handleFieldChange(customEvent, 'textColor', inputValues)
+          "
         ></lukso-color-picker>
       </div>
     </div>

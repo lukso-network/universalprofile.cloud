@@ -135,7 +135,8 @@
     "web3-bzz": "1.10.4",
     "web3-utils": "~1.10.4",
     "web3-validator": "^2.0.4",
-    "yata-fetch": "2.1.5"
+    "yata-fetch": "2.1.5",
+    "zod": "^3.23.8"
   },
   "resolutions": {
     "@tanstack/query-core": "^5.20.5",
