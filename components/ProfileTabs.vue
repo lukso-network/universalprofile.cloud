@@ -27,7 +27,7 @@ const handleToggleGridEditMode = async () => {
 
 <template>
   <div
-    class="mb-4 flex min-h-11 items-center justify-between border-b border-b-neutral-90 pb-4"
+    class="mb-4 flex min-h-11 select-none items-center justify-between border-b border-b-neutral-90 pb-4"
   >
     <ul class="flex justify-center gap-6 sm:justify-start">
       <ProfileTabsItem
@@ -40,11 +40,18 @@ const handleToggleGridEditMode = async () => {
       />
     </ul>
     <template v-if="activeTab === 'grid' && isConnectedUserViewingOwnProfile">
-      <lukso-icon
-        :name="isEditingGrid && isConnected ? 'close-lg' : 'edit'"
-        @click="handleToggleGridEditMode"
-        class="cursor-pointer opacity-50 transition hover:opacity-100"
-      ></lukso-icon>
+      <lukso-tooltip
+        variant="white"
+        :text="isEditingGrid ? '' : formatMessage('grid_enable_edit_mode')"
+        :show-delay="1500"
+        placement="left"
+      >
+        <lukso-icon
+          :name="isEditingGrid && isConnected ? 'close-lg' : 'edit'"
+          @click="handleToggleGridEditMode"
+          class="cursor-pointer opacity-50 transition hover:opacity-100"
+        ></lukso-icon>
+      </lukso-tooltip>
     </template>
   </div>
 </template>
