@@ -10,11 +10,10 @@ export const handleFieldChange = (
   field: string,
   values?: Record<string, any>
 ) => {
-  const event = customEvent.detail.event
-  const target = event.target as HTMLInputElement
+  const value = customEvent.detail?.value
 
   if (values) {
-    values[field] = target.value
+    values[field] = value
   }
 }
 

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ZodError } from 'zod'
+
 type Props = {
   type: GridWidgetType
   id?: string
@@ -12,11 +14,35 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
+const inputValues = ref<UrlWidgetProperties>({
+  src: '',
+})
+const inputErrors = ref<Record<string, any>>()
 
-const inputValue = ref('')
-const inputError = ref('')
+watch(
+  [inputValues],
+  () => {
+    try {
+      inputErrors.value = undefined
+      urlWidgetSchema.parse(inputValues.value)
+    } catch (error: unknown) {
+      if (error instanceof ZodError) {
+        inputErrors.value = error?.format()
+      }
+    }
+  },
+  { deep: true }
+)
 
-const canSubmit = computed(() => inputValue.value && !inputError.value)
+const canSubmit = computed(() => {
+  try {
+    urlWidgetSchema.parse(inputValues.value)
+    return true
+  } catch {
+    return false
+  }
+})
+
 const isEdit = computed(() => !!props.id)
 
 const handleSave = () => {
@@ -24,9 +50,7 @@ const handleSave = () => {
     return
   }
 
-  const properties = {
-    src: inputValue.value,
-  }
+  const properties = urlWidgetSchema.parse(inputValues.value)
 
   if (isEdit.value) {
     updateGridWidget(props.id, {
@@ -52,27 +76,6 @@ const handleCancel = () => {
   closeModal()
 }
 
-const handleInput = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const input = event.target as HTMLInputElement
-  inputError.value = ''
-
-  // if no value is entered we just exit here
-  if (!input.value) {
-    return
-  }
-
-  // validation
-  try {
-    new URL(input.value)
-    inputValue.value = encodeURI(input.value)
-  } catch (error) {
-    console.warn(error)
-    inputError.value = formatMessage('errors_invalid_url')
-    return
-  }
-}
-
 const handleBackToSelection = () => {
   showModal({
     template: 'AddGridWidget',
@@ -84,7 +87,9 @@ const handleBackToSelection = () => {
 }
 
 onMounted(() => {
-  inputValue.value = props.properties?.src || ''
+  if (isEdit.value) {
+    inputValues.value = urlWidgetSchema.parse(props.properties)
+  }
 })
 </script>
 
@@ -120,9 +125,12 @@ onMounted(() => {
       :placeholder="
         formatMessage(`add_widget_${type.toLowerCase()}_input_placeholder`)
       "
-      :value="inputValue"
-      :error="inputError"
-      @on-input="handleInput"
+      :value="inputValues?.src"
+      :error="getFieldErrorMessage(inputErrors, 'src')"
+      @on-input="
+        (customEvent: CustomEvent) =>
+          handleFieldChange(customEvent, 'src', inputValues)
+      "
     ></lukso-textarea>
 
     <!-- Buttons -->

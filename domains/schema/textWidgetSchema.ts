@@ -1,4 +1,5 @@
 import * as z from 'zod'
+
 const { formatMessage } = useIntl()
 
 export const textWidgetSchema = z.object({

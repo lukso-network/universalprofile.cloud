@@ -1,7 +1,5 @@
 import * as z from 'zod'
 
-export const imageWidgetSchema = z.object({
-  src: z.string().url(),
-})
+export const imageWidgetSchema = urlWidgetSchema.extend({})
 
 export type ImageWidgetProperties = z.infer<typeof imageWidgetSchema>

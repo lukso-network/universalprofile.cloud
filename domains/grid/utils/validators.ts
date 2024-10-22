@@ -14,3 +14,17 @@ export const validateHexColor = (value: string) => {
 
   return true
 }
+
+/**
+ * Validate url
+ *
+ * @param value
+ */
+export const validateUrl = (value: string) => {
+  try {
+    new URL(value)
+    return true
+  } catch (error) {
+    return false
+  }
+}

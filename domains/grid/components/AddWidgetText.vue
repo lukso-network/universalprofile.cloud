@@ -15,21 +15,22 @@ const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
 const inputValues = ref<TextWidgetProperties | undefined>()
+const inputErrors = ref<Record<string, any>>()
 
-const inputErrors = computed(() => {
-  if (!inputValues.value) {
-    return undefined
-  }
-
-  try {
-    textWidgetSchema.parse(inputValues.value)
-    return undefined
-  } catch (error: unknown) {
-    if (error instanceof ZodError) {
-      return error?.format()
+watch(
+  [inputValues],
+  () => {
+    try {
+      inputErrors.value = undefined
+      textWidgetSchema.parse(inputValues.value)
+    } catch (error: unknown) {
+      if (error instanceof ZodError) {
+        inputErrors.value = error?.format()
+      }
     }
-  }
-})
+  },
+  { deep: true }
+)
 
 const canSubmit = computed(() => {
   try {
@@ -39,6 +40,7 @@ const canSubmit = computed(() => {
     return false
   }
 })
+
 const isEdit = computed(() => !!props.id)
 
 const handleSave = () => {
