@@ -1,5 +1,3 @@
-import type { GridWidget } from '@/types/grid'
-
 /**
  * Create a unique id for a grid item based on title
  *

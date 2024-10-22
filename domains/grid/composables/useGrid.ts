@@ -1,5 +1,3 @@
-import type { GridWidget } from '@/types/grid'
-
 export const useGrid = () => {
   const {
     isConnected,
