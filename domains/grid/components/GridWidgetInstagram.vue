@@ -32,9 +32,9 @@ const processInstagramEmbeds = () => {
 </script>
 
 <template>
-  <div class="m-3 overflow-auto">
+  <div class="relative m-3 overflow-auto">
     <blockquote
-      class="instagram-media w-full"
+      class="instagram-media w-full !bg-transparent"
       data-instgrm-captioned
       :data-instgrm-permalink="src"
       data-instgrm-version="14"
