@@ -1,5 +1,15 @@
 import * as z from 'zod'
 
-export const imageWidgetSchema = urlWidgetSchema.extend({})
+const { formatMessage } = useIntl()
+
+export const imageWidgetSchema = z.object({
+  src: z
+    .string()
+    .default('')
+    .refine(validateUrl, {
+      message: formatMessage('errors_invalid_url'),
+    })
+    .transform(value => encodeURI(value)),
+})
 
 export type ImageWidgetProperties = z.infer<typeof imageWidgetSchema>
