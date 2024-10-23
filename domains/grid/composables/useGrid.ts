@@ -137,6 +137,10 @@ export const useGrid = () => {
         return
       }
 
+      if (gridLog.enabled) {
+        gridLog('Add grid widget', widget)
+      }
+
       placeWidgetInGrid(widget, grid.grid, grid.gridColumns)
     },
 
@@ -163,6 +167,11 @@ export const useGrid = () => {
         ...gridWidgets[widgetIndex],
         ...widget,
       }
+
+      if (gridLog.enabled) {
+        gridLog('Update grid widget', gridWidgets[widgetIndex])
+      }
+
       tempGrid.value = updateSelectedGrid(gridWidgets)
     },
 
@@ -174,6 +183,10 @@ export const useGrid = () => {
 
       if (typeof id !== 'string' && typeof id !== 'number') {
         return
+      }
+
+      if (gridLog.enabled) {
+        gridLog('Remove grid widget', id)
       }
 
       tempGrid.value = updateSelectedGrid(
