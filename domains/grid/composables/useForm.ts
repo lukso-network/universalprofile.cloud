@@ -1,20 +1,21 @@
-import { ZodError, type ZodObject } from 'zod'
+import { computedAsync } from '@vueuse/core'
+import { ZodEffects, ZodError, type ZodObject } from 'zod'
 
 export const useForm = (
-  schema?: ZodObject<any>,
+  schema?: ZodObject<any> | ZodEffects<ZodObject<any>>,
   initialValues: Record<string, any> = {}
 ) => {
   const inputValues = ref(initialValues)
   const inputErrors = ref<Record<string, any> | undefined>()
 
-  const canSubmit = computed(() => {
+  const canSubmit = computedAsync(async () => {
     try {
-      schema?.parse(inputValues.value)
+      await schema?.parseAsync(inputValues.value)
       return true
     } catch {
       return false
     }
-  })
+  }, null)
 
   const getFieldErrorMessage = (field: string) => {
     return inputErrors.value?.[field]?._errors[0]
@@ -26,16 +27,20 @@ export const useForm = (
     inputValues.value[field] = value
   }
 
+  const handleFormErrors = (error: unknown) => {
+    if (error instanceof ZodError) {
+      inputErrors.value = error?.format()
+    }
+  }
+
   watch(
     [inputValues],
-    () => {
+    async () => {
       try {
         inputErrors.value = undefined
-        schema?.parse(inputValues.value)
+        await schema?.parseAsync(inputValues.value)
       } catch (error: unknown) {
-        if (error instanceof ZodError) {
-          inputErrors.value = error?.format()
-        }
+        handleFormErrors(error)
       }
     },
     { deep: true }
@@ -47,5 +52,6 @@ export const useForm = (
     canSubmit,
     getFieldErrorMessage,
     handleFieldChange,
+    handleFormErrors,
   }
 }

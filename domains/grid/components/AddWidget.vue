@@ -16,12 +16,12 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.TEXT]: 'Text',
   [GRID_WIDGET_TYPE.IMAGE]: 'Basic',
   [GRID_WIDGET_TYPE.IFRAME]: 'Basic',
-  [GRID_WIDGET_TYPE.X]: 'GenericPlatform',
-  [GRID_WIDGET_TYPE.INSTAGRAM]: 'GenericPlatform',
-  [GRID_WIDGET_TYPE.SPOTIFY]: 'GenericPlatform',
-  [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'GenericPlatform',
+  [GRID_WIDGET_TYPE.X]: 'Basic',
+  [GRID_WIDGET_TYPE.INSTAGRAM]: 'Basic',
+  [GRID_WIDGET_TYPE.SPOTIFY]: 'Basic',
+  [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'Basic',
   [GRID_WIDGET_TYPE.WARPCAST]: 'Basic',
-  [GRID_WIDGET_TYPE.YOUTUBE]: 'GenericPlatform',
+  [GRID_WIDGET_TYPE.YOUTUBE]: 'Basic',
 }
 
 const loadComponent = (type?: string): Component | undefined => {

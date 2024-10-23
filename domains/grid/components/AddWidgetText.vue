@@ -14,34 +14,46 @@ const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
 const schema = widgetSchemaMap[props.type]
 const isEdit = computed(() => !!props.id)
-const { inputValues, canSubmit, getFieldErrorMessage, handleFieldChange } =
-  useForm(schema, schema?.optional().parse(props.properties || {}))
+const {
+  inputValues,
+  canSubmit,
+  getFieldErrorMessage,
+  handleFieldChange,
+  handleFormErrors,
+} = useForm(schema, schema?.optional().parse(props.properties || {}))
 
 const handleSave = () => {
   if (!canSubmit.value) {
     return
   }
 
-  const properties = schema?.parse(inputValues.value)
+  try {
+    const properties = schema?.parse(inputValues.value)
 
-  if (isEdit.value) {
-    updateGridWidget(props.id, {
-      properties,
-      w: props.width,
-      h: props.height,
-    })
-  } else {
-    const newWidget: GridWidgetWithoutCords = createWidgetObject({
-      type: props.type,
-      properties,
-      w: props.width,
-      h: props.height,
-    })
+    if (isEdit.value) {
+      updateGridWidget(props.id, {
+        properties,
+        w: props.width,
+        h: props.height,
+      })
+    } else {
+      const newWidget: GridWidgetWithoutCords = createWidgetObject({
+        type: props.type,
+        properties,
+        w: props.width,
+        h: props.height,
+      })
 
-    addGridWidget(newWidget, getGridById(tempGrid.value, selectedGridId.value))
+      addGridWidget(
+        newWidget,
+        getGridById(tempGrid.value, selectedGridId.value)
+      )
+    }
+
+    handleCancel()
+  } catch (error: unknown) {
+    handleFormErrors(error)
   }
-
-  handleCancel()
 }
 
 const handleCancel = () => {
