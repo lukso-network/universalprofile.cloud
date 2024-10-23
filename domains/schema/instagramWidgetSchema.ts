@@ -6,7 +6,7 @@ export const instagramWidgetSchema = z
     type: z.string(),
   })
   .transform((values, ctx) =>
-    parsePlatform(values, ctx, GRID_WIDGET_TYPE.enum.X)
+    parsePlatform(values, ctx, GRID_WIDGET_TYPE.enum.INSTAGRAM)
   )
 
 export type InstagramWidgetProperties = z.infer<typeof instagramWidgetSchema>
