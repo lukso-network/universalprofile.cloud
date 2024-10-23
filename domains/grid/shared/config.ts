@@ -1,3 +1,5 @@
+import type { ZodEffects, ZodObject } from 'zod'
+
 export enum GRID_WIDGET_TYPE {
   // custom
   TEXT = 'TEXT',
@@ -20,45 +22,19 @@ export enum GRID_WIDGET_TYPE {
   ADD_CONTENT = 'ADD_CONTENT',
 }
 
-export const WIDGET_TYPE_PROPERTIES: Record<
-  GridWidgetType,
-  GridWidgetProperty[]
+// map zod schema to widget type
+export const WIDGET_SCHEMA_MAP: Partial<
+  Record<GridWidgetType, ZodObject<any> | ZodEffects<ZodObject<any>>>
 > = {
-  [GRID_WIDGET_TYPE.TEXT]: [
-    { key: 'title', type: 'string' },
-    { key: 'text', type: 'string' },
-    { key: 'titleColor', type: 'color' },
-    { key: 'textColor', type: 'color' },
-    { key: 'backgroundColor', type: 'color', optional: true },
-  ],
-  [GRID_WIDGET_TYPE.X]: [
-    { key: 'src', type: 'url' },
-    { key: 'type', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.INSTAGRAM]: [
-    { key: 'src', type: 'url' },
-    { key: 'type', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.IFRAME]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.IMAGE]: [{ key: 'src', type: 'url' }],
-  [GRID_WIDGET_TYPE.ADD_CONTENT]: [],
-  [GRID_WIDGET_TYPE.YOUTUBE]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.SPOTIFY]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-    { key: 'type', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.SOUNDCLOUD]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.WARPCAST]: [{ key: 'src', type: 'url' }],
+  [GRID_WIDGET_TYPE.TEXT]: textWidgetSchema,
+  [GRID_WIDGET_TYPE.X]: xWidgetSchema,
+  [GRID_WIDGET_TYPE.INSTAGRAM]: instagramWidgetSchema,
+  [GRID_WIDGET_TYPE.IFRAME]: iframeWidgetSchema,
+  [GRID_WIDGET_TYPE.IMAGE]: imageWidgetSchema,
+  [GRID_WIDGET_TYPE.YOUTUBE]: youtubeWidgetSchema,
+  [GRID_WIDGET_TYPE.SPOTIFY]: spotifyWidgetSchema,
+  [GRID_WIDGET_TYPE.SOUNDCLOUD]: soundCloudWidgetSchema,
+  [GRID_WIDGET_TYPE.WARPCAST]: warpcastWidgetSchema,
 }
 
 // grid breakpoint where the grid switches into mobile mode
