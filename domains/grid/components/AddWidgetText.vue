@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ZodError } from 'zod'
-
 type Props = {
   type: GridWidgetType
   id?: string
@@ -14,41 +12,17 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
-const inputValues = ref<TextWidgetProperties | undefined>()
-const inputErrors = ref<Record<string, any>>()
-
-watch(
-  [inputValues],
-  () => {
-    try {
-      inputErrors.value = undefined
-      textWidgetSchema.parse(inputValues.value)
-    } catch (error: unknown) {
-      if (error instanceof ZodError) {
-        inputErrors.value = error?.format()
-      }
-    }
-  },
-  { deep: true }
-)
-
-const canSubmit = computed(() => {
-  try {
-    textWidgetSchema.parse(inputValues.value)
-    return true
-  } catch {
-    return false
-  }
-})
-
+const schema = widgetSchemaMap[props.type]
 const isEdit = computed(() => !!props.id)
+const { inputValues, canSubmit, getFieldErrorMessage, handleFieldChange } =
+  useForm(schema, schema?.optional().parse(props.properties || {}))
 
 const handleSave = () => {
   if (!canSubmit.value) {
     return
   }
 
-  const properties = textWidgetSchema.parse(inputValues.value)
+  const properties = schema?.parse(inputValues.value)
 
   if (isEdit.value) {
     updateGridWidget(props.id, {
@@ -83,10 +57,6 @@ const handleBackToSelection = () => {
     },
   })
 }
-
-onMounted(() => {
-  inputValues.value = props.properties || textWidgetSchema.optional().parse({})
-})
 </script>
 
 <template>
@@ -123,11 +93,11 @@ onMounted(() => {
         :placeholder="
           formatMessage('add_widget_text_background_color_placeholder')
         "
-        :error="getFieldErrorMessage(inputErrors, 'backgroundColor')"
+        :error="getFieldErrorMessage('backgroundColor')"
         autofocus
         @on-input="
           (customEvent: CustomEvent) =>
-            handleFieldChange(customEvent, 'backgroundColor', inputValues)
+            handleFieldChange(customEvent, 'backgroundColor')
         "
       ></lukso-color-picker>
 
@@ -140,7 +110,7 @@ onMounted(() => {
           is-full-width
           @on-input="
             (customEvent: CustomEvent) =>
-              handleFieldChange(customEvent, 'title', inputValues)
+              handleFieldChange(customEvent, 'title')
           "
         ></lukso-input>
 
@@ -150,10 +120,10 @@ onMounted(() => {
           :placeholder="
             formatMessage('add_widget_text_title_color_placeholder')
           "
-          :error="getFieldErrorMessage(inputErrors, 'titleColor')"
+          :error="getFieldErrorMessage('titleColor')"
           @on-input="
             (customEvent: CustomEvent) =>
-              handleFieldChange(customEvent, 'titleColor', inputValues)
+              handleFieldChange(customEvent, 'titleColor')
           "
         ></lukso-color-picker>
       </div>
@@ -167,8 +137,7 @@ onMounted(() => {
           is-full-width
           rows="3"
           @on-input="
-            (customEvent: CustomEvent) =>
-              handleFieldChange(customEvent, 'text', inputValues)
+            (customEvent: CustomEvent) => handleFieldChange(customEvent, 'text')
           "
         ></lukso-textarea>
 
@@ -176,10 +145,10 @@ onMounted(() => {
         <lukso-color-picker
           .value="inputValues?.textColor"
           :placeholder="formatMessage('add_widget_text_text_color_placeholder')"
-          :error="getFieldErrorMessage(inputErrors, 'textColor')"
+          :error="getFieldErrorMessage('textColor')"
           @on-input="
             (customEvent: CustomEvent) =>
-              handleFieldChange(customEvent, 'textColor', inputValues)
+              handleFieldChange(customEvent, 'textColor')
           "
         ></lukso-color-picker>
       </div>

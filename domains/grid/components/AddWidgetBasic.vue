@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ZodError } from 'zod'
-
 type Props = {
   type: GridWidgetType
   id?: string
@@ -14,43 +12,17 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
-const inputValues = ref<UrlWidgetProperties>({
-  src: '',
-})
-const inputErrors = ref<Record<string, any>>()
-
-watch(
-  [inputValues],
-  () => {
-    try {
-      inputErrors.value = undefined
-      urlWidgetSchema.parse(inputValues.value)
-    } catch (error: unknown) {
-      if (error instanceof ZodError) {
-        inputErrors.value = error?.format()
-      }
-    }
-  },
-  { deep: true }
-)
-
-const canSubmit = computed(() => {
-  try {
-    urlWidgetSchema.parse(inputValues.value)
-    return true
-  } catch {
-    return false
-  }
-})
-
+const schema = widgetSchemaMap[props.type]
 const isEdit = computed(() => !!props.id)
+const { inputValues, canSubmit, getFieldErrorMessage, handleFieldChange } =
+  useForm(schema, schema?.safeParse(props.properties).data)
 
 const handleSave = () => {
   if (!canSubmit.value) {
     return
   }
 
-  const properties = urlWidgetSchema.parse(inputValues.value)
+  const properties = schema?.parse(inputValues.value)
 
   if (isEdit.value) {
     updateGridWidget(props.id, {
@@ -85,12 +57,6 @@ const handleBackToSelection = () => {
     },
   })
 }
-
-onMounted(() => {
-  if (isEdit.value) {
-    inputValues.value = urlWidgetSchema.parse(props.properties)
-  }
-})
 </script>
 
 <template>
@@ -125,11 +91,10 @@ onMounted(() => {
       :placeholder="
         formatMessage(`add_widget_${type.toLowerCase()}_input_placeholder`)
       "
-      :value="inputValues?.src"
-      :error="getFieldErrorMessage(inputErrors, 'src')"
+      :value="inputValues.src"
+      :error="getFieldErrorMessage('src')"
       @on-input="
-        (customEvent: CustomEvent) =>
-          handleFieldChange(customEvent, 'src', inputValues)
+        (customEvent: CustomEvent) => handleFieldChange(customEvent, 'src')
       "
     ></lukso-textarea>
 
