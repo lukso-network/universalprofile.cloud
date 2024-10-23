@@ -19,7 +19,7 @@ describe('isConfigValid', () => {
         title: 'default',
         grid: [
           {
-            type: GRID_WIDGET_TYPE.IFRAME,
+            type: GRID_WIDGET_TYPE.enum.IFRAME,
             width: 1,
             height: 1,
             properties: {},
@@ -30,7 +30,7 @@ describe('isConfigValid', () => {
         title: 'grid-1',
         grid: [
           {
-            type: GRID_WIDGET_TYPE.IFRAME,
+            type: GRID_WIDGET_TYPE.enum.IFRAME,
             width: 1,
             height: 1,
             properties: {},
@@ -80,7 +80,7 @@ describe('isConfigValid', () => {
         title: 'someName',
         grid: [
           {
-            type: GRID_WIDGET_TYPE.IFRAME,
+            type: GRID_WIDGET_TYPE.enum.IFRAME,
             width: '1',
             height: 1,
             properties: {},
@@ -97,7 +97,7 @@ describe('isConfigValid', () => {
         title: 'someName',
         grid: [
           {
-            type: GRID_WIDGET_TYPE.IFRAME,
+            type: GRID_WIDGET_TYPE.enum.IFRAME,
             width: 1,
             height: '1',
             properties: {},
@@ -114,7 +114,7 @@ describe('isConfigValid', () => {
         title: 'someName',
         grid: [
           {
-            type: GRID_WIDGET_TYPE.IFRAME,
+            type: GRID_WIDGET_TYPE.enum.IFRAME,
             width: 1,
             height: 1,
           },

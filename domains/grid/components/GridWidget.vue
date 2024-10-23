@@ -23,7 +23,7 @@ const isAllowToEdit = computed(
 )
 
 const isAddContentWidget = computed(
-  () => props.widget.type === GRID_WIDGET_TYPE.ADD_CONTENT
+  () => props.widget.type === GRID_WIDGET_TYPE.enum.ADD_CONTENT
 )
 
 const isAllowToClone = computed(
@@ -39,16 +39,16 @@ const isAllowToShowOptions = computed(
 )
 
 const WIDGET_COMPONENTS: Record<string, string> = {
-  [GRID_WIDGET_TYPE.TEXT]: 'Text',
-  [GRID_WIDGET_TYPE.IMAGE]: 'Image',
-  [GRID_WIDGET_TYPE.IFRAME]: 'Iframe',
-  [GRID_WIDGET_TYPE.X]: 'X',
-  [GRID_WIDGET_TYPE.INSTAGRAM]: 'Instagram',
-  [GRID_WIDGET_TYPE.ADD_CONTENT]: 'AddContent',
-  [GRID_WIDGET_TYPE.SPOTIFY]: 'Spotify',
-  [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'Iframe',
-  [GRID_WIDGET_TYPE.WARPCAST]: 'Iframe',
-  [GRID_WIDGET_TYPE.YOUTUBE]: 'Youtube',
+  [GRID_WIDGET_TYPE.enum.TEXT]: 'Text',
+  [GRID_WIDGET_TYPE.enum.IMAGE]: 'Image',
+  [GRID_WIDGET_TYPE.enum.IFRAME]: 'Iframe',
+  [GRID_WIDGET_TYPE.enum.X]: 'X',
+  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: 'Instagram',
+  [GRID_WIDGET_TYPE.enum.ADD_CONTENT]: 'AddContent',
+  [GRID_WIDGET_TYPE.enum.SPOTIFY]: 'Spotify',
+  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: 'Iframe',
+  [GRID_WIDGET_TYPE.enum.WARPCAST]: 'Iframe',
+  [GRID_WIDGET_TYPE.enum.YOUTUBE]: 'Youtube',
 }
 
 const loadWidgetComponent = (type: string): Component | undefined => {

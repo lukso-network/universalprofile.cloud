@@ -12,7 +12,7 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
-const schema = widgetSchemaMap[props.type]
+const schema = WIDGET_SCHEMA_MAP[props.type]
 const isEdit = computed(() => !!props.id)
 const {
   inputValues,

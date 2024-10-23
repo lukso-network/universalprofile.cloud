@@ -1,40 +1,40 @@
-import type { ZodEffects, ZodObject } from 'zod'
+import { type ZodEffects, type ZodObject, z } from 'zod'
 
-export enum GRID_WIDGET_TYPE {
+export const GRID_WIDGET_TYPE = z.enum([
   // custom
-  TEXT = 'TEXT',
-  IFRAME = 'IFRAME',
-  IMAGE = 'IMAGE',
+  'TEXT',
+  'IFRAME',
+  'IMAGE',
 
   // social media
-  X = 'X',
-  INSTAGRAM = 'INSTAGRAM',
-  WARPCAST = 'WARPCAST',
+  'X',
+  'INSTAGRAM',
+  'WARPCAST',
 
   // music
-  SPOTIFY = 'SPOTIFY',
-  SOUNDCLOUD = 'SOUNDCLOUD',
+  'SPOTIFY',
+  'SOUNDCLOUD',
 
   // video
-  YOUTUBE = 'YOUTUBE',
+  'YOUTUBE',
 
   // static widgets for visual purposes
-  ADD_CONTENT = 'ADD_CONTENT',
-}
+  'ADD_CONTENT',
+])
 
 // map zod schema to widget type
 export const WIDGET_SCHEMA_MAP: Partial<
   Record<GridWidgetType, ZodObject<any> | ZodEffects<ZodObject<any>>>
 > = {
-  [GRID_WIDGET_TYPE.TEXT]: textWidgetSchema,
-  [GRID_WIDGET_TYPE.X]: xWidgetSchema,
-  [GRID_WIDGET_TYPE.INSTAGRAM]: instagramWidgetSchema,
-  [GRID_WIDGET_TYPE.IFRAME]: iframeWidgetSchema,
-  [GRID_WIDGET_TYPE.IMAGE]: imageWidgetSchema,
-  [GRID_WIDGET_TYPE.YOUTUBE]: youtubeWidgetSchema,
-  [GRID_WIDGET_TYPE.SPOTIFY]: spotifyWidgetSchema,
-  [GRID_WIDGET_TYPE.SOUNDCLOUD]: soundCloudWidgetSchema,
-  [GRID_WIDGET_TYPE.WARPCAST]: warpcastWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.TEXT]: textWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.X]: xWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: instagramWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.IFRAME]: iframeWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.IMAGE]: imageWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.YOUTUBE]: youtubeWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.SPOTIFY]: spotifyWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: soundCloudWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.WARPCAST]: warpcastWidgetSchema,
 }
 
 // grid breakpoint where the grid switches into mobile mode

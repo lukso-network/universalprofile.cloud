@@ -1,4 +1,5 @@
 import type { LayoutItem } from 'grid-layout-plus'
+import type { z } from 'zod'
 
 export type Grid<T> = {
   title: string
@@ -24,7 +25,7 @@ export type GridWidget = LayoutItem & GridWidgetExtended
 
 export type GridWidgetWithoutCords = PartialBy<GridWidget, 'x' | 'y'>
 
-export type GridWidgetType = keyof typeof GRID_WIDGET_TYPE
+export type GridWidgetType = z.infer<typeof GRID_WIDGET_TYPE>
 
 export type GridWidgetProperties = Record<string, any>
 

@@ -10,7 +10,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -23,7 +23,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -42,7 +42,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -55,7 +55,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -78,7 +78,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -91,7 +91,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 2,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -114,7 +114,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -127,7 +127,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IMAGE,
+        type: GRID_WIDGET_TYPE.enum.IMAGE,
         properties: {
           src: 'https://example.com',
         },
@@ -150,7 +150,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -163,7 +163,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.org',
         },
@@ -187,7 +187,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -210,7 +210,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -234,7 +234,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -245,7 +245,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IMAGE,
+        type: GRID_WIDGET_TYPE.enum.IMAGE,
         properties: {
           src: 'https://example.org/image.png',
         },
@@ -256,7 +256,7 @@ describe('compareGridWidgets', () => {
         y: 1,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IMAGE,
+        type: GRID_WIDGET_TYPE.enum.IMAGE,
         properties: {
           src: 'https://example.org/image.png',
         },
@@ -269,7 +269,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IMAGE,
+        type: GRID_WIDGET_TYPE.enum.IMAGE,
         properties: {
           src: 'https://example.org',
         },
@@ -280,7 +280,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -291,7 +291,7 @@ describe('compareGridWidgets', () => {
         y: 1,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IMAGE,
+        type: GRID_WIDGET_TYPE.enum.IMAGE,
         properties: {
           src: 'https://example.org/image.png',
         },
@@ -318,7 +318,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },
@@ -329,7 +329,7 @@ describe('compareGridWidgets', () => {
         y: 1,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.ADD_CONTENT,
+        type: GRID_WIDGET_TYPE.enum.ADD_CONTENT,
         properties: {},
       },
     ]
@@ -340,7 +340,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.IFRAME,
+        type: GRID_WIDGET_TYPE.enum.IFRAME,
         properties: {
           src: 'https://example.com',
         },

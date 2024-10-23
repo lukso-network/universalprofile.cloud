@@ -9,7 +9,9 @@ export const buildGrid = (
     gridColumns: number
   ) => {
     // remove "add widget" placeholder from grid
-    let _grid = grid.filter(item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT)
+    let _grid = grid.filter(
+      item => item.type !== GRID_WIDGET_TYPE.enum.ADD_CONTENT
+    )
 
     // if items already have x/y cords we re-order grid to reflect that
     _grid = _grid.slice().sort((a, b) => {
@@ -34,7 +36,7 @@ export const buildGrid = (
       _grid.push(
         createWidgetObject({
           i: 'placeholder',
-          type: GRID_WIDGET_TYPE.ADD_CONTENT,
+          type: GRID_WIDGET_TYPE.enum.ADD_CONTENT,
           isResizable: false,
         })
       )

@@ -13,15 +13,15 @@ const props = defineProps<Props>()
 const component = shallowRef<Component | undefined>()
 
 const WIDGET_COMPONENTS: Record<string, string> = {
-  [GRID_WIDGET_TYPE.TEXT]: 'Text',
-  [GRID_WIDGET_TYPE.IMAGE]: 'Basic',
-  [GRID_WIDGET_TYPE.IFRAME]: 'Basic',
-  [GRID_WIDGET_TYPE.X]: 'Basic',
-  [GRID_WIDGET_TYPE.INSTAGRAM]: 'Basic',
-  [GRID_WIDGET_TYPE.SPOTIFY]: 'Basic',
-  [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'Basic',
-  [GRID_WIDGET_TYPE.WARPCAST]: 'Basic',
-  [GRID_WIDGET_TYPE.YOUTUBE]: 'Basic',
+  [GRID_WIDGET_TYPE.enum.TEXT]: 'Text',
+  [GRID_WIDGET_TYPE.enum.IMAGE]: 'Basic',
+  [GRID_WIDGET_TYPE.enum.IFRAME]: 'Basic',
+  [GRID_WIDGET_TYPE.enum.X]: 'Basic',
+  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: 'Basic',
+  [GRID_WIDGET_TYPE.enum.SPOTIFY]: 'Basic',
+  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: 'Basic',
+  [GRID_WIDGET_TYPE.enum.WARPCAST]: 'Basic',
+  [GRID_WIDGET_TYPE.enum.YOUTUBE]: 'Basic',
 }
 
 const loadComponent = (type?: string): Component | undefined => {

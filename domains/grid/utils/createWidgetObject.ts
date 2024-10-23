@@ -10,7 +10,7 @@ export const createWidgetObject = (
   newWidget: Partial<GridWidgetWithoutCords>
 ): GridWidgetWithoutCords => {
   assertNotUndefined(newWidget.type, 'Widget `type` field is undefined')
-  assert(newWidget.type in GRID_WIDGET_TYPE, 'Invalid widget `type` filed')
+  assert(newWidget.type in GRID_WIDGET_TYPE.enum, 'Invalid widget `type` filed')
 
   // TODO add validation for properties based on widget type
 

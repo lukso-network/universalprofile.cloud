@@ -24,7 +24,7 @@ export function isConfigValid(gridConfig?: any): boolean {
 
     for (const gridItem of item.grid) {
       if (
-        !Object.values(GRID_WIDGET_TYPE).includes(gridItem.type) ||
+        !Object.values(GRID_WIDGET_TYPE.enum).includes(gridItem.type) ||
         typeof gridItem.width !== 'number' ||
         typeof gridItem.height !== 'number' ||
         typeof gridItem.properties !== 'object'

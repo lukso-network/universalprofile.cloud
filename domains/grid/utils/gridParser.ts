@@ -3,15 +3,15 @@ export const parsePlatformInput = async (
   input: string
 ): Promise<GridWidgetExtended | never> => {
   switch (platform) {
-    case GRID_WIDGET_TYPE.X:
+    case GRID_WIDGET_TYPE.enum.X:
       return parseXWidgetInput(input)
-    case GRID_WIDGET_TYPE.INSTAGRAM:
+    case GRID_WIDGET_TYPE.enum.INSTAGRAM:
       return parseInstagramWidgetInput(input)
-    case GRID_WIDGET_TYPE.YOUTUBE:
+    case GRID_WIDGET_TYPE.enum.YOUTUBE:
       return parseYoutubeWidgetInput(input)
-    case GRID_WIDGET_TYPE.SPOTIFY:
+    case GRID_WIDGET_TYPE.enum.SPOTIFY:
       return parseSpotifyWidgetInput(input)
-    case GRID_WIDGET_TYPE.SOUNDCLOUD:
+    case GRID_WIDGET_TYPE.enum.SOUNDCLOUD:
       return await parseSoundCloudWidgetInput(input)
     default:
       throw new Error('Invalid platform')
@@ -30,7 +30,7 @@ const parseYoutubeWidgetInput = (input: string): GridWidgetExtended | never => {
 
   if (youtubeUrlMatch) {
     return {
-      type: GRID_WIDGET_TYPE.IFRAME,
+      type: GRID_WIDGET_TYPE.enum.IFRAME,
       properties: {
         src: `https://www.youtube.com/embed/${youtubeUrlMatch[1]}`,
         allow: YOUTUBE_IFRAME_ALLOW,
@@ -42,7 +42,7 @@ const parseYoutubeWidgetInput = (input: string): GridWidgetExtended | never => {
 
   if (youtubeEmbedMatch) {
     return {
-      type: GRID_WIDGET_TYPE.IFRAME,
+      type: GRID_WIDGET_TYPE.enum.IFRAME,
       properties: {
         src: `https://www.youtube.com/embed/${youtubeEmbedMatch[1]}`,
         allow: YOUTUBE_IFRAME_ALLOW,
@@ -63,7 +63,7 @@ const parseXWidgetInput = (input: string): GridWidgetExtended | never => {
 
   if (postUser && postId) {
     return {
-      type: GRID_WIDGET_TYPE.X,
+      type: GRID_WIDGET_TYPE.enum.X,
       properties: {
         src: `https://twitter.com/${postUser}/status/${postId}?ref_src=twsrc%5Etfw`,
         type: 'post',
@@ -75,7 +75,7 @@ const parseXWidgetInput = (input: string): GridWidgetExtended | never => {
 
   if (timelineUser) {
     return {
-      type: GRID_WIDGET_TYPE.X,
+      type: GRID_WIDGET_TYPE.enum.X,
       properties: {
         src: `https://twitter.com/${timelineUser}?ref_src=twsrc%5Etfw`,
         type: 'timeline',
@@ -98,7 +98,7 @@ const parseSpotifyWidgetInput = (input: string): GridWidgetExtended | never => {
     const theme = groups.theme ? `&theme=${groups.theme}` : ''
 
     return {
-      type: GRID_WIDGET_TYPE.SPOTIFY,
+      type: GRID_WIDGET_TYPE.enum.SPOTIFY,
       properties: {
         src: `https://open.spotify.com/embed/${groups.type}/${groups.id}?utm_source=generator${theme}`,
         type: groups.type,
@@ -146,7 +146,7 @@ const parseSoundCloudWidgetInputFromEmbed = (
 
   if (match) {
     return {
-      type: GRID_WIDGET_TYPE.IFRAME,
+      type: GRID_WIDGET_TYPE.enum.IFRAME,
       properties: {
         src: match,
         allow: SOUNDCLOUD_IFRAME_ALLOW,
@@ -186,7 +186,7 @@ const parseInstagramWidgetInput = (
 
   if (id && type) {
     return {
-      type: GRID_WIDGET_TYPE.INSTAGRAM,
+      type: GRID_WIDGET_TYPE.enum.INSTAGRAM,
       properties: {
         src: `https://www.instagram.com/${type}/${id}/${params}`,
         type: type,

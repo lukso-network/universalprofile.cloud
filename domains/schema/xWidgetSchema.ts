@@ -5,6 +5,8 @@ export const xWidgetSchema = z
     src: z.string(),
     type: z.string(),
   })
-  .transform((values, ctx) => parsePlatform(values, ctx, GRID_WIDGET_TYPE.X))
+  .transform((values, ctx) =>
+    parsePlatform(values, ctx, GRID_WIDGET_TYPE.enum.X)
+  )
 
 export type XWidgetProperties = z.infer<typeof xWidgetSchema>
