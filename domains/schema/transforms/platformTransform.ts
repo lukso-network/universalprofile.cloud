@@ -9,7 +9,7 @@ const { formatMessage } = useIntl()
  * @param ctx
  * @param type
  */
-export const parsePlatform = async (
+export const platformTransform = async (
   values: {
     src: string
   },
@@ -27,7 +27,6 @@ export const parsePlatform = async (
       }),
       path: ['src'],
     })
-
     return z.NEVER
   }
 }
