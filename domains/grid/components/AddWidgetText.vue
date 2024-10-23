@@ -20,15 +20,18 @@ const {
   getFieldErrorMessage,
   handleFieldChange,
   handleFormErrors,
-} = useForm(schema, schema?.optional().parse(props.properties || {}))
+} = useForm(
+  schema,
+  (await schema?.optional().safeParseAsync(props.properties || {}))?.data
+)
 
-const handleSave = () => {
+const handleSave = async () => {
   if (!canSubmit.value) {
     return
   }
 
   try {
-    const properties = schema?.parse(inputValues.value)
+    const properties = await schema?.parseAsync(inputValues.value)
 
     if (isEdit.value) {
       updateGridWidget(props.id, {

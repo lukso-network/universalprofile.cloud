@@ -3,12 +3,12 @@ import { z } from 'zod'
 export const spotifyWidgetSchema = z
   .object({
     src: z.string(),
-    type: z.string(),
-    allow: z.string(),
-    theme: z.string(),
+    type: z.string().optional(),
+    allow: z.string().optional(),
+    theme: z.string().optional(),
   })
   .transform((values, ctx) =>
-    parsePlatform(values, ctx, GRID_WIDGET_TYPE.enum.SPOTIFY)
+    platformTransform(values, ctx, GRID_WIDGET_TYPE.enum.SPOTIFY)
   )
 
 export type SpotifyWidgetProperties = z.infer<typeof spotifyWidgetSchema>
