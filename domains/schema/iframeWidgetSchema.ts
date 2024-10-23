@@ -5,7 +5,6 @@ const { formatMessage } = useIntl()
 export const iframeWidgetSchema = z.object({
   src: z
     .string()
-    .default('')
     .refine(validateUrl, {
       message: formatMessage('errors_invalid_url'),
     })
