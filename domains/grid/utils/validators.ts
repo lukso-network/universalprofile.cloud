@@ -5,7 +5,7 @@ import tinycolor from 'tinycolor2'
  *
  * @param value
  */
-export const validateHexColor = (value: string) => {
+export const validateHexColor = async (value: string) => {
   const tColor = tinycolor(value)
 
   if (!tColor.isValid()) {
@@ -20,7 +20,7 @@ export const validateHexColor = (value: string) => {
  *
  * @param value
  */
-export const validateUrl = (value: string) => {
+export const validateUrl = async (value: string) => {
   try {
     new URL(value)
     return true
