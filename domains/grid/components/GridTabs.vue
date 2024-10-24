@@ -39,7 +39,8 @@ watch(
 </script>
 
 <template>
-  <div v-if="hasTabs" class="flex select-none gap-x-6 gap-y-3 pb-4">
+  <div class="flex select-none gap-x-6 gap-y-3 pb-4">
+    <!-- Draggable Grid tabs -->
     <draggable
       v-if="canEditGrid"
       v-model="tabs"
@@ -58,7 +59,11 @@ watch(
       </template>
     </draggable>
 
-    <ul v-else class="flex flex-wrap justify-start gap-x-6 gap-y-3">
+    <!-- Static Grid tabs -->
+    <ul
+      v-else-if="hasTabs"
+      class="flex flex-wrap justify-start gap-x-6 gap-y-3"
+    >
       <GridTabsItem
         v-for="tab in tabs"
         :key="tab.grid.id"
