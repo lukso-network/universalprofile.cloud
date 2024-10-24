@@ -1,25 +1,25 @@
 export const buildGrid = (
-  grid: Grid<GridWidgetWithoutCords>[] | Grid<GridWidget>[],
+  grid: Grid[],
   isMobile?: boolean,
   withAddContentPlaceholder?: boolean
-): Grid<GridWidget>[] => {
+): Grid[] => {
   const _buildGrid = (
-    grid: GridWidgetWithoutCords[],
-    updatedGrid: GridWidget[],
+    gridWidgets: GridWidget[],
+    updatedGridWidgets: GridWidget[],
     gridColumns: number
   ) => {
     // remove "add widget" placeholder from grid
-    let _grid = grid.filter(
+    let _grid = gridWidgets.filter(
       item => item.type !== GRID_WIDGET_TYPE.enum.ADD_CONTENT
     )
 
     // if items already have x/y cords we re-order grid to reflect that
     _grid = _grid.slice().sort((a, b) => {
       if (
-        a.x === undefined ||
-        b.x === undefined ||
-        a.y === undefined ||
-        b.y === undefined
+        typeof a.x !== 'number' ||
+        typeof a.y !== 'number' ||
+        typeof b.x !== 'number' ||
+        typeof b.y !== 'number'
       ) {
         return 0
       }
@@ -38,15 +38,15 @@ export const buildGrid = (
           i: 'placeholder',
           type: GRID_WIDGET_TYPE.enum.ADD_CONTENT,
           isResizable: false,
-        })
+        }) as GridWidget
       )
     }
 
     for (const widget of _grid) {
-      placeWidgetInGrid(widget, updatedGrid, gridColumns)
+      placeWidgetInGrid(widget, updatedGridWidgets, gridColumns)
     }
 
-    return updatedGrid
+    return updatedGridWidgets
   }
 
   return grid.map(item => {

@@ -9,4 +9,4 @@ export const instagramWidgetSchema = z
     platformTransform(values, ctx, GRID_WIDGET_TYPE.enum.INSTAGRAM)
   )
 
-export type InstagramWidgetProperties = z.infer<typeof instagramWidgetSchema>
+export type InstagramWidgetProperties = z.input<typeof instagramWidgetSchema>

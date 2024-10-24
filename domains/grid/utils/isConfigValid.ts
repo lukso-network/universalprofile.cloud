@@ -4,7 +4,7 @@
  * @param grid
  * @returns
  */
-export function isConfigValid(gridConfig?: any): boolean {
+export const isConfigValid = async (gridConfig?: any): Promise<boolean> => {
   if (!Array.isArray(gridConfig)) {
     return false
   }
@@ -29,6 +29,13 @@ export function isConfigValid(gridConfig?: any): boolean {
         typeof gridItem.height !== 'number' ||
         typeof gridItem.properties !== 'object'
       ) {
+        return false
+      }
+
+      const widgetSchema = WIDGET_SCHEMA_MAP[gridItem.type as GridWidgetType]
+      const validation = await widgetSchema?.safeParseAsync(gridItem.properties)
+
+      if (!validation?.success) {
         return false
       }
     }

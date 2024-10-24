@@ -9,4 +9,4 @@ export const xWidgetSchema = z
     platformTransform(values, ctx, GRID_WIDGET_TYPE.enum.X)
   )
 
-export type XWidgetProperties = z.infer<typeof xWidgetSchema>
+export type XWidgetProperties = z.input<typeof xWidgetSchema>

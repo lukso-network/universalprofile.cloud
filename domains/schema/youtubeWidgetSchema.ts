@@ -9,4 +9,4 @@ export const youtubeWidgetSchema = z
     platformTransform(values, ctx, GRID_WIDGET_TYPE.enum.YOUTUBE)
   )
 
-export type YoutubeWidgetProperties = z.infer<typeof youtubeWidgetSchema>
+export type YoutubeWidgetProperties = z.input<typeof youtubeWidgetSchema>

@@ -5,4 +5,4 @@ export const warpcastWidgetSchema = z.object({
   allow: z.string().optional(),
 })
 
-export type WarpcastWidgetProperties = z.infer<typeof warpcastWidgetSchema>
+export type WarpcastWidgetProperties = z.input<typeof warpcastWidgetSchema>

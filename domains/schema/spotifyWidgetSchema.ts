@@ -11,4 +11,4 @@ export const spotifyWidgetSchema = z
     platformTransform(values, ctx, GRID_WIDGET_TYPE.enum.SPOTIFY)
   )
 
-export type SpotifyWidgetProperties = z.infer<typeof spotifyWidgetSchema>
+export type SpotifyWidgetProperties = z.input<typeof spotifyWidgetSchema>

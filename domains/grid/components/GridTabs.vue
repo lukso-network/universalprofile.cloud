@@ -2,7 +2,7 @@
 import draggable from 'vuedraggable'
 
 type GridTab = {
-  grid: Grid<GridWidget>
+  grid: Grid
 }
 
 const { selectedGridId, tempGrid, viewedGrid } = storeToRefs(useGridStore())

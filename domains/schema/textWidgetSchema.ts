@@ -8,4 +8,4 @@ export const textWidgetSchema = z.object({
   text: z.string().optional(),
 })
 
-export type TextWidgetProperties = z.infer<typeof textWidgetSchema>
+export type TextWidgetProperties = z.input<typeof textWidgetSchema>

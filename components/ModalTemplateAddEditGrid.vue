@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { GridWidget } from '@/types/grid'
 import type { SelectStringOption } from '@lukso/web-components'
 
 const { modal, closeModal } = useModal()
@@ -71,8 +70,8 @@ const handleSave = () => {
       ...grid,
     })
   } else {
-    const newGrid: Grid<GridWidget> = {
-      id: createGridId<GridWidget>(grid, tempGrid.value),
+    const newGrid: Grid = {
+      id: createGridId(grid, tempGrid.value),
       ...grid,
       grid: [],
     }

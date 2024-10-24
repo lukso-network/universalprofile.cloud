@@ -5,4 +5,4 @@ export const iframeWidgetSchema = z.object({
   allow: z.string().optional(),
 })
 
-export type IframeWidgetProperties = z.infer<typeof iframeWidgetSchema>
+export type IframeWidgetProperties = z.input<typeof iframeWidgetSchema>

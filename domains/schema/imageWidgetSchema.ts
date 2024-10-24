@@ -4,4 +4,4 @@ export const imageWidgetSchema = z.object({
   src: z.string().transform(urlTransform),
 })
 
-export type ImageWidgetProperties = z.infer<typeof imageWidgetSchema>
+export type ImageWidgetProperties = z.input<typeof imageWidgetSchema>

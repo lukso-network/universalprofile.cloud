@@ -2,7 +2,7 @@
 import { tv } from 'tailwind-variants'
 
 type Props = {
-  grid: Grid<GridWidget>
+  grid: Grid
   isActive: boolean
 }
 
@@ -59,8 +59,8 @@ const handleDelete = () => {
 }
 
 const handleDuplicate = () => {
-  const newGrid: Grid<GridWidget> = {
-    id: createGridId<GridWidget>(props.grid, tempGrid.value),
+  const newGrid: Grid = {
+    id: createGridId(props.grid, tempGrid.value),
     title: formatMessage('grid_tabs_copy_of', { title: props.grid.title }),
     grid: props.grid.grid,
     gridColumns: props.grid.gridColumns,

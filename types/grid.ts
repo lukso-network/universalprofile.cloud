@@ -1,39 +1,13 @@
-import type { LayoutItem } from 'grid-layout-plus'
 import type { z } from 'zod'
 
-export type Grid<T> = {
-  title: string
-  grid: T[]
-  id: string
-  gridColumns: number
-}
-
-export type GridConfigItem = {
-  width: number
-  height: number
-  type: GridWidgetType
-  properties: GridWidgetProperties
-}
-
+// TODO refactor parser into zod schema
 export type GridWidgetExtended = {
   type: GridWidgetType
-  properties: GridWidgetProperties
+  properties: Record<string, any>
   originalWidth?: number
 }
 
-export type GridWidget = LayoutItem & GridWidgetExtended
-
-export type GridWidgetWithoutCords = PartialBy<GridWidget, 'x' | 'y'>
-
-export type GridWidgetType = z.infer<typeof GRID_WIDGET_TYPE>
-
-export type GridWidgetProperties = Record<string, any>
-
-export type GridWidgetProperty = {
-  key: string
-  type: 'string' | 'number' | 'boolean' | 'color' | 'url'
-  optional?: boolean
-}
+export type GridWidgetType = z.input<typeof GRID_WIDGET_TYPE>
 
 export type GridWidgetChange = {
   oldWidget: GridWidget | null
@@ -41,6 +15,6 @@ export type GridWidgetChange = {
 }
 
 export type GridChange = {
-  oldGrid: Grid<GridWidget>
-  newGrid: Grid<GridWidget>
+  oldGrid: Grid
+  newGrid: Grid
 }

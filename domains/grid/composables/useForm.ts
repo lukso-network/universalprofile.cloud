@@ -15,7 +15,7 @@ export const useForm = (
     } catch {
       return false
     }
-  }, null)
+  }, false)
 
   const getFieldErrorMessage = (field: string) => {
     return inputErrors.value?.[field]?._errors[0]

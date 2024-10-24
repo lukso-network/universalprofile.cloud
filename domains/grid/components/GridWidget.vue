@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { computedAsync } from '@vueuse/core'
+import { z } from 'zod'
+
 import type { LuksoDropdownOnChangeEventDetail } from '@lukso/web-components'
 
 type Props = {
@@ -30,7 +33,16 @@ const isAllowToClone = computed(
   () => isEditingGrid.value || !isConnectedUserViewingOwnProfile.value
 )
 
-const isAllowToOpenInNewTab = computed(() => props.widget.properties.src)
+const src = computedAsync(async () => {
+  const schema = z.object({
+    src: z.string().transform(urlTransform),
+  })
+  const validate = await schema.safeParseAsync(props.widget.properties)
+
+  return validate.data?.src
+})
+
+const isAllowToOpenInNewTab = computed(() => !!src.value)
 
 const isAllowToShowOptions = computed(
   () =>
@@ -98,7 +110,7 @@ const handleMove = () => {
 }
 
 const handleOpenInTab = () => {
-  window.open(props.widget.properties.src, '_blank')
+  window.open(src.value, '_blank')
 }
 
 const handleClone = async () => {

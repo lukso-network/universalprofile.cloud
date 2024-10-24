@@ -10,4 +10,4 @@ export const soundCloudWidgetSchema = z
     platformTransform(values, ctx, GRID_WIDGET_TYPE.enum.SOUNDCLOUD)
   )
 
-export type SoundCloudWidgetProperties = z.infer<typeof soundCloudWidgetSchema>
+export type SoundCloudWidgetProperties = z.input<typeof soundCloudWidgetSchema>
