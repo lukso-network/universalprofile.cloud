@@ -5,6 +5,7 @@ import { z } from 'zod'
  * Validate hex color
  *
  * @param value
+ * @param ctx
  */
 export const hexColorValidator = async (
   value: string,
