@@ -28,22 +28,10 @@ const viewedProfile = () => {
   return getProfile(viewedProfileAddress)
 }
 
-const viewedProfileIsConnected = (viewedProfileAddress?: Address) => {
-  const { connectedProfileAddress, isConnected } = storeToRefs(useAppStore())
-
-  return (
-    isConnected.value &&
-    // we need to compare lowercase addresses in case of checksummed addresses
-    connectedProfileAddress.value?.toLowerCase() ===
-      viewedProfileAddress?.toLowerCase()
-  )
-}
-
 export function useProfile() {
   return {
     getProfile,
     connectedProfile,
     viewedProfile,
-    viewedProfileIsConnected,
   }
 }
