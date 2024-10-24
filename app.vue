@@ -15,13 +15,14 @@ const {
   isSearchOpen,
   isModalOpen,
   isWalletConnect,
+  connectedProfileAddress,
 } = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents } =
   useBrowserExtensionProvider()
 const { disconnect } = useBaseProvider()
 const { cacheValue } = useCache()
 const { currencyList } = storeToRefs(useCurrencyStore())
-const { initProvider, reconnect } = useWalletConnectProvider()
+const { initProvider, connect } = useWalletConnectProvider()
 const { formatMessage } = useIntl()
 
 const setupTranslations = () => {
@@ -34,12 +35,6 @@ const setupTranslations = () => {
  * RPC - from RPC endpoint
  */
 const setupWeb3Instances = async () => {
-  // reconnect wallet connect
-  if (isWalletConnect.value) {
-    await initProvider()
-    await reconnect()
-  }
-
   // set injected provider
   if (INJECTED_PROVIDER) {
     // for chain interactions through dapp
@@ -56,6 +51,13 @@ const setupWeb3Instances = async () => {
     addWeb3(PROVIDERS.RPC, rpcNode?.host, { headers: rpcNode.headers })
     // expose web3 instance to global scope for console access
     window.web3 = getWeb3(PROVIDERS.RPC)
+  }
+
+  // reconnect wallet connect
+  if (isWalletConnect.value) {
+    connectedProfileAddress.value = undefined
+    await initProvider()
+    await connect()
   }
 }
 
@@ -183,16 +185,20 @@ const resetDataProvider = () => {
 }
 
 onMounted(async () => {
-  setupTranslations()
-  setupNetwork()
-  await setupWeb3Instances()
-  checkConnectionExpiry()
-  await setupConnectedProfile()
-  resetDataProvider()
-  isLoadedApp.value = true
-  await setupCurrencies()
-  window.scrollTo(0, 0)
-  checkBuyLyx()
+  try {
+    setupTranslations()
+    setupNetwork()
+    await setupWeb3Instances()
+    checkConnectionExpiry()
+    await setupConnectedProfile()
+    resetDataProvider()
+    isLoadedApp.value = true
+    await setupCurrencies()
+    window.scrollTo(0, 0)
+    checkBuyLyx()
+  } catch (error) {
+    console.error(error)
+  }
 })
 
 onUnmounted(() => {

@@ -25,11 +25,11 @@ const initProvider = async () => {
   })
 }
 
-const connect = async (requestAccounts = true) => {
+const connect = async () => {
   const {
     walletConnectProvider: provider,
     connectedProfileAddress,
-    isWalletConnect,
+    walletConnectSession,
   } = storeToRefs(useAppStore())
   const { setConnectionExpiry } = useConnectionExpiry()
   const { addWeb3 } = useWeb3Store()
@@ -38,24 +38,21 @@ const connect = async (requestAccounts = true) => {
   const { formatMessage } = useIntl()
 
   try {
-    await provider.value?.connect()
+    await provider.value?.connect(walletConnectSession.value)
+    walletConnectSession.value = provider.value?.session
+    const result = (await provider.value?.request({
+      method: 'eth_requestAccounts',
+    })) as Address[]
 
-    if (requestAccounts) {
-      const result = (await provider.value?.request({
-        method: 'eth_requestAccounts',
-      })) as Address[]
-
-      if (!result) {
-        throw new NoAccountsError()
-      }
-
-      const [address] = result
-      connectedProfileAddress.value = address
+    if (!result) {
+      throw new NoAccountsError()
     }
+
+    const [address] = result
+    connectedProfileAddress.value = address
 
     setConnectionExpiry()
     navigateTo(profileRoute(connectedProfileAddress.value))
-    isWalletConnect.value = true
 
     if (provider.value) {
       addWeb3(PROVIDERS.WALLET_CONNECT, provider.value as EthereumProvider)
@@ -72,17 +69,9 @@ const connect = async (requestAccounts = true) => {
   }
 }
 
-/**
- * Reconnect WalletConnect but don't trigger request accounts
- */
-const reconnect = async () => {
-  connect(false)
-}
-
 export const useWalletConnectProvider = () => {
   return {
     initProvider,
     connect,
-    reconnect,
   }
 }
