@@ -3,7 +3,10 @@ import { EthereumProvider as WalletConnectProvider } from '@walletconnect/ethere
 import type EthereumProvider from '@walletconnect/ethereum-provider'
 
 const initProvider = async () => {
-  const { walletConnectProvider: provider } = storeToRefs(useAppStore())
+  const { walletConnectProvider: provider, selectedChainId: chainId } =
+    storeToRefs(useAppStore())
+  const numberChainId = hexToNumber(chainId.value) as number
+  const rpcNode = (await selectRpcNode())?.host as string
 
   provider.value = await WalletConnectProvider.init({
     projectId: '68cee9cbecf1293488f207237e89f337',
@@ -15,10 +18,9 @@ const initProvider = async () => {
       icons: ['https://universalprofile.cloud/favicon.png'],
     },
     showQrModal: false,
-    optionalChains: [42, 4201],
+    optionalChains: [numberChainId],
     rpcMap: {
-      42: 'https://rpc1.mainnet.lukso.dev',
-      4201: 'https://rpc.testnet.lukso.network',
+      [numberChainId]: rpcNode,
     },
   })
 }
