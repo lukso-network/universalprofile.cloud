@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computedAsync } from '@vueuse/core'
+import { computedAsync, useIntersectionObserver } from '@vueuse/core'
 import { z } from 'zod'
 
 import type { LuksoDropdownOnChangeEventDetail } from '@lukso/web-components'
@@ -20,6 +20,8 @@ const { connect } = useBaseProvider()
 const { browserSupportExtension } = useBrowser()
 const dropdownId = `dropdown-${generateItemId()}`
 const isOpen = ref<boolean | undefined>(undefined)
+const targetIsVisible = ref(false)
+const target = ref<HTMLElement | null>(null)
 
 const isAllowToEdit = computed(
   () => canEditGrid.value && !isAddContentWidget.value
@@ -146,11 +148,24 @@ const handleDropdownChange = (
 
 onMounted(() => {
   widgetComponent.value = loadWidgetComponent(props.widget.type)
+
+  setTimeout(() => {
+    useIntersectionObserver(
+      target,
+      ([{ isIntersecting }], _observerElement) => {
+        targetIsVisible.value = targetIsVisible.value || isIntersecting
+      },
+      {
+        rootMargin: '100px', // load margin before target appear in viewport
+      }
+    )
+  }, 1)
 })
 </script>
 
 <template>
   <div
+    ref="target"
     class="group relative flex h-full flex-col rounded-12"
     :class="{
       'border border-neutral-90 bg-neutral-100 shadow-neutral-drop-shadow-1xl':
@@ -266,7 +281,7 @@ onMounted(() => {
 
     <!-- Loaded component based on widget type -->
     <component
-      v-if="widgetComponent"
+      v-if="widgetComponent && targetIsVisible"
       :is="widgetComponent"
       v-bind="widget.properties"
       :widget="widget"
