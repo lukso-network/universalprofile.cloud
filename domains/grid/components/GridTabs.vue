@@ -53,6 +53,7 @@ watch(
         <GridTabsItem
           :grid="tab.grid"
           :is-active="tab.grid.id === selectedGridId"
+          is-moveable
         />
       </template>
     </draggable>

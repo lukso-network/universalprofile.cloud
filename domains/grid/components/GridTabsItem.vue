@@ -4,6 +4,7 @@ import { tv } from 'tailwind-variants'
 type Props = {
   grid: Grid
   isActive: boolean
+  isMoveable?: boolean
 }
 
 const props = defineProps<Props>()
@@ -26,12 +27,18 @@ const styleVariants = tv({
         label: 'cursor-pointer opacity-50 transition hover:opacity-100',
       },
     },
+    isMoveable: {
+      true: {
+        label: '!cursor-ew-resize',
+      },
+    },
   },
 })
 
 const styles = computed(() => {
   return styleVariants({
     isActive: props.isActive,
+    isMoveable: props.isMoveable,
   })
 })
 
