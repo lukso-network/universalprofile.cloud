@@ -43,7 +43,7 @@ export const getGridConfig = async (address: Address) => {
     .call()
 
   if (!getDataValue) {
-    return
+    return []
   }
 
   // decode config
@@ -69,7 +69,7 @@ export const getGridConfig = async (address: Address) => {
     gridLog('Grid config from IPFS', config)
   }
 
-  return config
+  return config || []
 }
 
 /**
