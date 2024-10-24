@@ -15,7 +15,7 @@ export const checkNetwork = async (
   try {
     const chainId = (await currentProvider.value?.request({
       method: 'eth_chainId',
-    })) as string
+    })) as string | number
 
     // when we can't get network information from ext it's very likely it's not installed yet, then we just exit
     if (!chainId) {
@@ -23,7 +23,7 @@ export const checkNetwork = async (
     }
 
     // if network mismatch then show modal and break further execution by throwing an error
-    if (currentNetwork.chainId !== chainId) {
+    if (currentNetwork.chainId !== numberToHex(chainId)) {
       showModal({
         template: 'SwitchExtensionNetwork',
       })

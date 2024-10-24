@@ -15,13 +15,17 @@ const connect = async () => {
 
 const disconnect = () => {
   const { removeItem } = useLocalStorage()
-  const { connectedProfileAddress, isWalletConnect, walletConnectProvider } =
-    storeToRefs(useAppStore())
+  const {
+    connectedProfileAddress,
+    isWalletConnect,
+    walletConnectProvider,
+    walletConnectSession,
+  } = storeToRefs(useAppStore())
 
   // disconnect WalletConnect
   if (isWalletConnect.value) {
     walletConnectProvider.value?.disconnect()
-    isWalletConnect.value = false
+    walletConnectSession.value = undefined
   }
 
   connectedProfileAddress.value = undefined
