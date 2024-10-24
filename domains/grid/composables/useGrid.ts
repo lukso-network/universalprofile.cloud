@@ -84,6 +84,17 @@ export const useGrid = () => {
         const userGrid = await getUserGrid(address)
         grid = buildGrid(userGrid, isMobile.value, withAddContentPlaceholder)
 
+        if (grid.length === 0) {
+          grid = [
+            {
+              id: 'main',
+              title: 'Main',
+              grid: [],
+              gridColumns: GRID_COLUMNS_MIN,
+            },
+          ]
+        }
+
         if (gridLog.enabled) {
           gridLog('Initialize user grid', userGrid)
         }
