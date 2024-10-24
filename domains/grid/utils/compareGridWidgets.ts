@@ -19,9 +19,11 @@ export const compareGridWidgets = (
     'properties',
   ]
   const gridA =
-    _gridA?.filter(item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT) || []
+    _gridA?.filter(item => item.type !== GRID_WIDGET_TYPE.enum.ADD_CONTENT) ||
+    []
   const gridB =
-    _gridB?.filter(item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT) || []
+    _gridB?.filter(item => item.type !== GRID_WIDGET_TYPE.enum.ADD_CONTENT) ||
+    []
   const maxLength = Math.max(gridA.length, gridB.length)
 
   for (let i = 0; i < maxLength; i++) {

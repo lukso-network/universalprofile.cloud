@@ -43,7 +43,7 @@ export const getGridConfig = async (address: Address) => {
     .call()
 
   if (!getDataValue) {
-    return
+    return []
   }
 
   // decode config
@@ -60,7 +60,7 @@ export const getGridConfig = async (address: Address) => {
   const { url } = decodedJsonUrl.value as VerifiableURI
 
   // fetch config file from IPFS
-  const config = await fetcher<Grid<GridConfigItem>[], Record<string, never>>({
+  const config = await fetcher<GridConfig[], Record<string, never>>({
     url: resolveUrl(url),
     method: 'GET',
   })
@@ -69,7 +69,7 @@ export const getGridConfig = async (address: Address) => {
     gridLog('Grid config from IPFS', config)
   }
 
-  return config
+  return config || []
 }
 
 /**
@@ -79,10 +79,7 @@ export const getGridConfig = async (address: Address) => {
  * @param config
  * @param saveCallback
  */
-export const saveConfig = async (
-  address: Address,
-  config: PartialBy<Grid<GridConfigItem>, 'id'>[]
-) => {
+export const saveConfig = async (address: Address, config: GridConfig[]) => {
   // convert config to blob
   const blob = new Blob([JSON.stringify(config, null, 2)], {
     type: 'application/json',

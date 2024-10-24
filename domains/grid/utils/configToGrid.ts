@@ -1,29 +1,25 @@
-import type { GridConfigItem } from '@/types/grid'
-
 /**
  * Convert Grid config to Grid layout
  *
  * @param config
- * @param columns
  */
-export const configToGrid = (
-  config: PartialBy<Grid<GridConfigItem>, 'id'>[]
-): Grid<GridWidgetWithoutCords>[] => {
-  const grid: Grid<GridWidgetWithoutCords>[] = []
+export const configToGrid = (config: GridConfig[]): Grid[] => {
+  const grid: Grid[] = []
 
-  for (const gridItem of config) {
+  for (const configItem of config) {
     grid.push({
-      id: createGridId<GridConfigItem>(gridItem, grid),
-      title: gridItem.title,
-      grid: gridItem.grid.map(widget => {
-        return createWidgetObject({
-          type: widget.type,
-          properties: widget.properties,
-          w: widget.width,
-          h: widget.height,
-        })
-      }),
-      gridColumns: getGridColumns(gridItem.gridColumns),
+      id: createGridId(configItem, grid),
+      title: configItem.title || DEFAULT_GRID_TITLE,
+      grid:
+        configItem.grid?.map(widget => {
+          return createWidgetObject({
+            type: widget.type,
+            properties: widget.properties,
+            w: widget.width,
+            h: widget.height,
+          }) as GridWidget
+        }) || [],
+      gridColumns: getGridColumns(configItem.gridColumns),
     })
   }
 

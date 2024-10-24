@@ -2,7 +2,7 @@
 import draggable from 'vuedraggable'
 
 type GridTab = {
-  grid: Grid<GridWidget>
+  grid: Grid
 }
 
 const { selectedGridId, tempGrid, viewedGrid } = storeToRefs(useGridStore())
@@ -39,7 +39,8 @@ watch(
 </script>
 
 <template>
-  <div v-if="hasTabs" class="flex select-none gap-x-6 gap-y-3 pb-4">
+  <div class="flex select-none gap-x-6 gap-y-3 pb-4">
+    <!-- Draggable Grid tabs -->
     <draggable
       v-if="canEditGrid"
       v-model="tabs"
@@ -53,11 +54,16 @@ watch(
         <GridTabsItem
           :grid="tab.grid"
           :is-active="tab.grid.id === selectedGridId"
+          is-moveable
         />
       </template>
     </draggable>
 
-    <ul v-else class="flex flex-wrap justify-start gap-x-6 gap-y-3">
+    <!-- Static Grid tabs -->
+    <ul
+      v-else-if="hasTabs"
+      class="flex flex-wrap justify-start gap-x-6 gap-y-3"
+    >
       <GridTabsItem
         v-for="tab in tabs"
         :key="tab.grid.id"

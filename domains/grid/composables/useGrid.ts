@@ -1,5 +1,3 @@
-import type { GridWidget } from '@/types/grid'
-
 export const useGrid = () => {
   const {
     isConnected,
@@ -23,16 +21,14 @@ export const useGrid = () => {
       isConnectedUserViewingOwnProfile.value
   )
 
-  const getGridById = (grids: Grid<GridWidget>[], id?: string) =>
-    grids.find(grid => grid.id === id)
+  const getGridById = (grid: Grid[], id?: string) =>
+    grid.find(item => item.id === id)
 
-  const getSelectedGridWidgets = (grids: Grid<GridWidget>[]): GridWidget[] =>
-    getGridById(grids, selectedGridId.value)?.grid || []
+  const getSelectedGridWidgets = (grid: Grid[]): GridWidget[] =>
+    getGridById(grid, selectedGridId.value)?.grid || []
 
-  const updateSelectedGrid = (
-    gridWidgets: GridWidget[]
-  ): Grid<GridWidget>[] => {
-    const updatedGrids = tempGrid.value.map(item => {
+  const updateSelectedGrid = (gridWidgets: GridWidget[]): Grid[] => {
+    const updatedGrid = tempGrid.value.map(item => {
       if (item.id === selectedGridId.value) {
         return {
           id: item.id,
@@ -45,7 +41,7 @@ export const useGrid = () => {
       return item
     })
 
-    return updatedGrids
+    return updatedGrid
   }
 
   const initSelectedGridId = () => {
@@ -77,7 +73,7 @@ export const useGrid = () => {
       address?: Address,
       withAddContentPlaceholder?: boolean
     ) => {
-      let grid: Grid<GridWidget>[] = []
+      let grid: Grid[] = []
 
       if (!address) {
         return []
@@ -87,6 +83,17 @@ export const useGrid = () => {
       const _initUserGrid = async () => {
         const userGrid = await getUserGrid(address)
         grid = buildGrid(userGrid, isMobile.value, withAddContentPlaceholder)
+
+        if (grid.length === 0) {
+          grid = [
+            {
+              id: 'main',
+              title: 'Main',
+              grid: [],
+              gridColumns: GRID_COLUMNS_MIN,
+            },
+          ]
+        }
 
         if (gridLog.enabled) {
           gridLog('Initialize user grid', userGrid)
@@ -125,10 +132,7 @@ export const useGrid = () => {
       initSelectedGridId()
     },
 
-    addGridWidget: (
-      widget: GridWidgetWithoutCords,
-      grid?: Grid<GridWidget>
-    ) => {
+    addGridWidget: (widget: GridWidgetWithoutCords, grid?: Grid) => {
       if (!canEditGrid.value) {
         console.warn('User cannot edit grid')
         return
@@ -137,6 +141,10 @@ export const useGrid = () => {
       if (!grid) {
         console.warn('Grid is required')
         return
+      }
+
+      if (gridLog.enabled) {
+        gridLog('Add grid widget', widget)
       }
 
       placeWidgetInGrid(widget, grid.grid, grid.gridColumns)
@@ -165,6 +173,11 @@ export const useGrid = () => {
         ...gridWidgets[widgetIndex],
         ...widget,
       }
+
+      if (gridLog.enabled) {
+        gridLog('Update grid widget', gridWidgets[widgetIndex])
+      }
+
       tempGrid.value = updateSelectedGrid(gridWidgets)
     },
 
@@ -178,12 +191,16 @@ export const useGrid = () => {
         return
       }
 
+      if (gridLog.enabled) {
+        gridLog('Remove grid widget', id)
+      }
+
       tempGrid.value = updateSelectedGrid(
         getSelectedGridWidgets(tempGrid.value).filter(item => item.i !== id)
       )
     },
 
-    saveGrid: async (grid?: Grid<GridWidget>[]) => {
+    saveGrid: async (grid?: Grid[]) => {
       if (!canEditGrid.value) {
         console.warn('User cannot edit grid')
         return
@@ -194,9 +211,10 @@ export const useGrid = () => {
       }
 
       const config = gridToConfig(grid)
+      const validation = await gridConfigSchema.array().safeParseAsync(config)
 
-      if (!isConfigValid(config)) {
-        console.warn('Invalid schema')
+      if (!validation.success) {
+        console.warn('Invalid schema', validation.error)
         return
       }
 
@@ -236,7 +254,7 @@ export const useGrid = () => {
       }
     },
 
-    addGrid: (grid: Grid<GridWidget>) => {
+    addGrid: (grid: Grid) => {
       if (!canEditGrid.value) {
         console.warn('User cannot edit grid')
         return
@@ -245,10 +263,7 @@ export const useGrid = () => {
       tempGrid.value.push(grid)
     },
 
-    updateGrid: (
-      id?: string,
-      grid?: PartialBy<Grid<GridWidget>, 'id' | 'grid'>
-    ) => {
+    updateGrid: (id?: string, grid?: Partial<Grid>) => {
       if (!canEditGrid.value) {
         console.warn('User cannot edit grid')
         return

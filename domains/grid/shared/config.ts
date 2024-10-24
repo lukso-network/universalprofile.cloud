@@ -1,71 +1,40 @@
-export enum GRID_WIDGET_TYPE {
+import { type ZodEffects, type ZodObject, z } from 'zod'
+
+export const GRID_WIDGET_TYPE = z.enum([
   // custom
-  TITLE_LINK = 'TITLE_LINK',
-  TEXT = 'TEXT',
-  IFRAME = 'IFRAME',
-  IMAGE = 'IMAGE',
+  'TEXT',
+  'IFRAME',
+  'IMAGE',
 
   // social media
-  X = 'X',
-  INSTAGRAM = 'INSTAGRAM',
-  WARPCAST = 'WARPCAST',
+  'X',
+  'INSTAGRAM',
+  'WARPCAST',
 
   // music
-  SPOTIFY = 'SPOTIFY',
-  SOUNDCLOUD = 'SOUNDCLOUD',
+  'SPOTIFY',
+  'SOUNDCLOUD',
 
   // video
-  YOUTUBE = 'YOUTUBE',
+  'YOUTUBE',
 
   // static widgets for visual purposes
-  ADD_CONTENT = 'ADD_CONTENT',
-}
+  'ADD_CONTENT',
+])
 
-export const WIDGET_TYPE_PROPERTIES: Record<
-  GridWidgetType,
-  GridWidgetProperty[]
+// map zod schema to widget type
+export const WIDGET_SCHEMA_MAP: Partial<
+  Record<GridWidgetType, ZodObject<any> | ZodEffects<ZodObject<any>>>
 > = {
-  [GRID_WIDGET_TYPE.TITLE_LINK]: [
-    { key: 'title', type: 'string' },
-    { key: 'src', type: 'url', optional: true },
-    { key: 'textColor', type: 'color', optional: true },
-    { key: 'backgroundColor', type: 'color', optional: true },
-  ],
-  [GRID_WIDGET_TYPE.TEXT]: [
-    { key: 'title', type: 'string' },
-    { key: 'text', type: 'string' },
-    { key: 'titleColor', type: 'color' },
-    { key: 'textColor', type: 'color' },
-    { key: 'backgroundColor', type: 'color', optional: true },
-  ],
-  [GRID_WIDGET_TYPE.X]: [
-    { key: 'src', type: 'url' },
-    { key: 'type', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.INSTAGRAM]: [
-    { key: 'src', type: 'url' },
-    { key: 'type', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.IFRAME]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.IMAGE]: [{ key: 'src', type: 'url' }],
-  [GRID_WIDGET_TYPE.ADD_CONTENT]: [],
-  [GRID_WIDGET_TYPE.YOUTUBE]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.SPOTIFY]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-    { key: 'type', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.SOUNDCLOUD]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.WARPCAST]: [{ key: 'src', type: 'url' }],
+  [GRID_WIDGET_TYPE.enum.TEXT]: textWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.X]: xWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: instagramWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.IFRAME]: iframeWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.IMAGE]: imageWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.YOUTUBE]: youtubeWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.SPOTIFY]: spotifyWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: soundCloudWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.WARPCAST]: warpcastWidgetSchema,
 }
 
 // grid breakpoint where the grid switches into mobile mode

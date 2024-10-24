@@ -7,10 +7,10 @@
  */
 export const placeWidgetInGrid = (
   widget: GridWidgetWithoutCords,
-  grid: GridWidget[],
+  gridWidgets: GridWidget[],
   gridColumns: number
 ): void => {
-  const columnHeights = getColumnHeightsFromGrid(grid, gridColumns)
+  const columnHeights = getColumnHeightsFromGrid(gridWidgets, gridColumns)
   const w = Math.min(widget.w, gridColumns)
 
   const { x, y } = findBestPosition(
@@ -27,5 +27,5 @@ export const placeWidgetInGrid = (
     originalWidth: w < widget.w ? widget.w : undefined,
   }
 
-  grid.push(newWidget)
+  gridWidgets.push(newWidget)
 }

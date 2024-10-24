@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { computedAsync } from '@vueuse/core'
+import { z } from 'zod'
+
 import type { LuksoDropdownOnChangeEventDetail } from '@lukso/web-components'
 
 type Props = {
@@ -23,14 +26,23 @@ const isAllowToEdit = computed(
 )
 
 const isAddContentWidget = computed(
-  () => props.widget.type === GRID_WIDGET_TYPE.ADD_CONTENT
+  () => props.widget.type === GRID_WIDGET_TYPE.enum.ADD_CONTENT
 )
 
 const isAllowToClone = computed(
   () => isEditingGrid.value || !isConnectedUserViewingOwnProfile.value
 )
 
-const isAllowToOpenInNewTab = computed(() => props.widget.properties.src)
+const src = computedAsync(async () => {
+  const schema = z.object({
+    src: z.string().transform(urlTransform),
+  })
+  const validate = await schema.safeParseAsync(props.widget.properties)
+
+  return validate.data?.src
+})
+
+const isAllowToOpenInNewTab = computed(() => !!src.value)
 
 const isAllowToShowOptions = computed(
   () =>
@@ -39,17 +51,16 @@ const isAllowToShowOptions = computed(
 )
 
 const WIDGET_COMPONENTS: Record<string, string> = {
-  [GRID_WIDGET_TYPE.TITLE_LINK]: 'TitleLink',
-  [GRID_WIDGET_TYPE.TEXT]: 'Text',
-  [GRID_WIDGET_TYPE.IMAGE]: 'Image',
-  [GRID_WIDGET_TYPE.IFRAME]: 'Iframe',
-  [GRID_WIDGET_TYPE.X]: 'X',
-  [GRID_WIDGET_TYPE.INSTAGRAM]: 'Instagram',
-  [GRID_WIDGET_TYPE.ADD_CONTENT]: 'AddContent',
-  [GRID_WIDGET_TYPE.SPOTIFY]: 'Spotify',
-  [GRID_WIDGET_TYPE.SOUNDCLOUD]: 'Iframe',
-  [GRID_WIDGET_TYPE.WARPCAST]: 'Iframe',
-  [GRID_WIDGET_TYPE.YOUTUBE]: 'Youtube',
+  [GRID_WIDGET_TYPE.enum.TEXT]: 'Text',
+  [GRID_WIDGET_TYPE.enum.IMAGE]: 'Image',
+  [GRID_WIDGET_TYPE.enum.IFRAME]: 'Iframe',
+  [GRID_WIDGET_TYPE.enum.X]: 'X',
+  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: 'Instagram',
+  [GRID_WIDGET_TYPE.enum.ADD_CONTENT]: 'AddContent',
+  [GRID_WIDGET_TYPE.enum.SPOTIFY]: 'Spotify',
+  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: 'Iframe',
+  [GRID_WIDGET_TYPE.enum.WARPCAST]: 'Iframe',
+  [GRID_WIDGET_TYPE.enum.YOUTUBE]: 'Youtube',
 }
 
 const loadWidgetComponent = (type: string): Component | undefined => {
@@ -99,7 +110,7 @@ const handleMove = () => {
 }
 
 const handleOpenInTab = () => {
-  window.open(props.widget.properties.src, '_blank')
+  window.open(src.value, '_blank')
 }
 
 const handleClone = async () => {
@@ -246,7 +257,11 @@ onMounted(() => {
       v-if="isAllowToEdit"
       class="grid-widget-resize absolute bottom-2 right-2 z-10 mb-1 flex size-[35px] cursor-pointer items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 opacity-0 shadow-neutral-drop-shadow-1xl transition hover:scale-[1.05] group-hover:opacity-100"
     >
-      <lukso-icon name="expand" size="medium" class="p-2"></lukso-icon>
+      <lukso-icon
+        name="expand"
+        size="medium"
+        class="rotate-90 p-2"
+      ></lukso-icon>
     </div>
 
     <!-- Loaded component based on widget type -->
