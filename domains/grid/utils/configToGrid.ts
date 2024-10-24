@@ -9,15 +9,16 @@ export const configToGrid = (config: GridConfig[]): Grid[] => {
   for (const configItem of config) {
     grid.push({
       id: createGridId(configItem, grid),
-      title: configItem.title,
-      grid: configItem.grid.map(widget => {
-        return createWidgetObject({
-          type: widget.type,
-          properties: widget.properties,
-          w: widget.width,
-          h: widget.height,
-        }) as GridWidget
-      }),
+      title: configItem.title || DEFAULT_GRID_TITLE,
+      grid:
+        configItem.grid?.map(widget => {
+          return createWidgetObject({
+            type: widget.type,
+            properties: widget.properties,
+            w: widget.width,
+            h: widget.height,
+          }) as GridWidget
+        }) || [],
       gridColumns: getGridColumns(configItem.gridColumns),
     })
   }
