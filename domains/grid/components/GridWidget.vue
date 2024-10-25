@@ -166,9 +166,9 @@ onMounted(() => {
 <template>
   <div
     ref="target"
-    class="group relative flex h-full flex-col rounded-12"
+    class="group relative flex h-full flex-col rounded-12 transition"
     :class="{
-      'border border-neutral-90 bg-neutral-100 shadow-neutral-drop-shadow-1xl':
+      'bg-neutral-100 shadow-neutral-drop-shadow hover:shadow-neutral-drop-shadow-1xl':
         !isAddContentWidget,
       'select-none': isAllowToEdit,
       'z-50': isOpen,

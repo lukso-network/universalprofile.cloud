@@ -41,12 +41,12 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
     </div>
   </div>
 
-  <!-- Custom section -->
+  <!-- Website section -->
   <section
     class="border-b border-b-neutral-90 px-6 py-4 last-of-type:border-b-0 last-of-type:pb-6"
   >
     <div class="paragraph-inter-16-semi-bold mb-4">
-      {{ formatMessage('add_widget_section_custom') }}
+      {{ formatMessage('add_widget_section_website') }}
     </div>
     <div class="flex gap-5">
       <!-- Iframe -->
@@ -66,7 +66,17 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           ></lukso-icon>
         </div>
       </lukso-tooltip>
+    </div>
+  </section>
 
+  <!-- Custom section -->
+  <section
+    class="border-b border-b-neutral-90 px-6 py-4 last-of-type:border-b-0 last-of-type:pb-6"
+  >
+    <div class="paragraph-inter-16-semi-bold mb-4">
+      {{ formatMessage('add_widget_section_custom') }}
+    </div>
+    <div class="flex gap-5">
       <!-- Image -->
       <lukso-tooltip
         variant="light"
