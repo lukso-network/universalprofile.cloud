@@ -15,7 +15,6 @@ const {
   isSearchOpen,
   isModalOpen,
   isWalletConnect,
-  connectedProfileAddress,
 } = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents } =
   useBrowserExtensionProvider()
