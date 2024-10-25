@@ -56,7 +56,7 @@ const hasFollowButton = computed(
       :background-url="profileBackground?.url"
       is-full-width
       shadow="small"
-      :border-radius="isMobile ? 'none' : 'medium'"
+      :border-radius="isMobile ? 'none' : 'small'"
       class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full"
     >
       <div slot="header" class="relative flex size-full flex-col items-center">
