@@ -55,7 +55,6 @@ const setupWeb3Instances = async () => {
 
   // reconnect wallet connect
   if (isWalletConnect.value) {
-    connectedProfileAddress.value = undefined
     await initProvider()
     await connect()
   }
