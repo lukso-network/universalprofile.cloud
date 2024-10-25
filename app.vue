@@ -34,7 +34,7 @@ const setupTranslations = () => {
  * RPC - from RPC endpoint
  */
 const setupWeb3Instances = async () => {
-  // set injected provider
+  // set web3 for injected provider
   if (INJECTED_PROVIDER) {
     // for chain interactions through dapp
     addWeb3(PROVIDERS.INJECTED, INJECTED_PROVIDER)

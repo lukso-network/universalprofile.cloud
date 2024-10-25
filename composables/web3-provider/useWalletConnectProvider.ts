@@ -30,15 +30,22 @@ const connect = async () => {
     walletConnectProvider: provider,
     connectedProfileAddress,
     walletConnectSession,
+    isWalletConnect,
   } = storeToRefs(useAppStore())
   const { setConnectionExpiry } = useConnectionExpiry()
   const { addWeb3 } = useWeb3Store()
   const { disconnect } = useBaseProvider()
-  const { showModal } = useModal()
+  const { showModal, modal, closeModal } = useModal()
   const { formatMessage } = useIntl()
+  const route = useRoute()
 
   try {
-    await provider.value?.connect(walletConnectSession.value)
+    if (isWalletConnect.value) {
+      await provider.value?.enable()
+    } else {
+      await provider.value?.connect()
+    }
+
     walletConnectSession.value = provider.value?.session
     const result = (await provider.value?.request({
       method: 'eth_requestAccounts',
@@ -50,10 +57,19 @@ const connect = async () => {
 
     const [address] = result
     connectedProfileAddress.value = address
-
     setConnectionExpiry()
-    navigateTo(profileRoute(connectedProfileAddress.value))
 
+    // close connect modal if it's open
+    if (modal?.template === 'ConnectWallet') {
+      closeModal()
+    }
+
+    // when we connect on the landing page we redirect to profile
+    if (route.name === 'index') {
+      navigateTo(profileRoute(address))
+    }
+
+    // set web3 for wallet connect
     if (provider.value) {
       addWeb3(PROVIDERS.WALLET_CONNECT, provider.value as EthereumProvider)
     }
