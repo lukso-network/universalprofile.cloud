@@ -8,7 +8,7 @@ export const SUPPORTED_NETWORK_IDS = ['mainnet', 'testnet'] as const
 export const MODAL_DEFAULT_TEMPLATE = 'Default'
 
 // connection expiry time
-export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 60 * 2 // 2 hours
+export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 60 * 24 // 24 hours
 
 // interval to check if the user is still connected
 export const CONNECTION_EXPIRY_CHECK_INTERVAL_MS = 1000 * 10 // 10 seconds
