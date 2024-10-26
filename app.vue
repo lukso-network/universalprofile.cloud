@@ -23,7 +23,7 @@ const { cacheValue } = useCache()
 const { currencyList } = storeToRefs(useCurrencyStore())
 const { initProvider, reconnect } = useWalletConnectProvider()
 const { formatMessage } = useIntl()
-const { gridChainId, tempGrid } = storeToRefs(useGridStore())
+const { gridChainId, tempGrids } = storeToRefs(useGridStore())
 
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
@@ -117,7 +117,7 @@ const setupNetwork = async () => {
 
     // reset temp grid layout if network is changed
     if (gridChainId.value !== selectedChainId.value) {
-      tempGrid.value = []
+      tempGrids.value = {}
     }
 
     gridChainId.value = selectedChainId.value

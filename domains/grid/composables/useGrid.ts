@@ -68,6 +68,19 @@ export const useGrid = () => {
     })
   })
 
+  const gridsForTabs = computed(() => {
+    const grids =
+      isConnected.value && isConnectedUserViewingOwnProfile.value
+        ? tempGrid.value
+        : viewedGrid.value.filter(grid => grid.grid.length > 0)
+
+    return grids.map(grid => {
+      return {
+        grid,
+      }
+    })
+  })
+
   return {
     initializeGrid: async (
       address?: Address,
@@ -104,7 +117,11 @@ export const useGrid = () => {
 
       // in case we don't have a temp grid yet we initialize it
       const _initTempGrid = () => {
-        if (tempGrid.value.length === 0 && viewedGrid.value.length !== 0) {
+        if (
+          tempGrid.value.length === 0 &&
+          viewedGrid.value.length !== 0 &&
+          isConnectedUserViewingOwnProfile.value
+        ) {
           tempGrid.value = cloneObject(grid)
         }
       }
@@ -308,5 +325,6 @@ export const useGrid = () => {
     initSelectedGridId,
     getGridById,
     gridsForDisplay,
+    gridsForTabs,
   }
 }
