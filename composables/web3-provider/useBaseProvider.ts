@@ -17,7 +17,7 @@ const disconnect = () => {
   const { removeItem } = useLocalStorage()
   const { connectedProfileAddress, isWalletConnect, walletConnectProvider } =
     storeToRefs(useAppStore())
-  const { tempGrid } = storeToRefs(useGridStore())
+  const { isEditingGrid } = storeToRefs(useGridStore())
 
   // disconnect WalletConnect
   if (isWalletConnect.value) {
@@ -29,8 +29,8 @@ const disconnect = () => {
   connectedProfileAddress.value = undefined
   // remove connection expiry
   removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
-  // clear temp grid for the profile
-  tempGrid.value = []
+  // exit edit mode for grid
+  isEditingGrid.value = false
 }
 
 /**
