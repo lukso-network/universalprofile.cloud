@@ -71,10 +71,12 @@ onUnmounted(() => {
     :data-template="modal?.template"
     @on-backdrop-click="closeModal"
   >
-    <component
-      v-if="modalTemplateComponent"
-      :is="modalTemplateComponent"
-      class="animate-fade-in"
-    ></component>
+    <div class="max-h-[calc(100vh-100px)] overflow-y-auto">
+      <component
+        v-if="modalTemplateComponent"
+        :is="modalTemplateComponent"
+        class="animate-fade-in"
+      ></component>
+    </div>
   </lukso-modal>
 </template>
