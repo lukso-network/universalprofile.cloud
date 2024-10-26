@@ -1,5 +1,7 @@
 <script setup lang="ts">
+const { gridsForTabs, gridsForDisplay, canEditGrid, initializeGrid } = useGrid()
 const { isOwned, setFilters, filters } = useFilters()
+const { isConnected } = storeToRefs(useAppStore())
 const viewedProfileAddress = getCurrentProfileAddress()
 const viewedProfile = useProfile().getProfile(viewedProfileAddress)
 const assetsData = useProfileAssets()(viewedProfileAddress)
@@ -7,7 +9,6 @@ const assets = computed(() => assetsData.value || [])
 const isLoadingAssets = computed(() =>
   assets.value.some(asset => asset.isLoading)
 )
-const { gridsForDisplay } = useGrid()
 
 const filteredAssets = computed(() => {
   return (
@@ -84,28 +85,52 @@ const handleTabChange = (tab: ProfileViewTab) => {
 }
 
 const tabs = computed<ProfileViewTab[]>(() => {
-  return [
-    {
+  const _tabs = [] as ProfileViewTab[]
+
+  if (gridsForTabs.value.length > 0) {
+    _tabs.push({
       id: 'grid',
       count:
         gridsForDisplay.value.length > 1 ? gridsForDisplay.value.length : 0,
-    },
-    {
-      id: 'collectibles',
-      count: isOwned.value
-        ? ownedCollectiblesCount.value
-        : createdCollectiblesCount.value,
-    },
-    {
-      id: 'tokens',
-      count: isOwned.value ? ownedTokensCount.value : createdTokensCount.value,
-    },
-  ]
+    })
+  }
+
+  _tabs.push({
+    id: 'collectibles',
+    count: isOwned.value
+      ? ownedCollectiblesCount.value
+      : createdCollectiblesCount.value,
+  })
+  _tabs.push({
+    id: 'tokens',
+    count: isOwned.value ? ownedTokensCount.value : createdTokensCount.value,
+  })
+
+  return _tabs
 })
 
 const activeTab = computed(() => {
   return filters.assetGroup
 })
+
+watch(
+  [isConnected, viewedProfileAddress],
+  async () => {
+    // we initialize grid at this point so we can switch tabs if user has no grids
+    await initializeGrid(viewedProfileAddress, canEditGrid.value)
+    await nextTick()
+
+    // if user has grids we switch to grid tab, otherwise we switch to collectibles or tokens
+    if (gridsForDisplay.value.length > 0) {
+      setFilters({ assetGroup: 'grid' }, undefined, true)
+    } else if (ownedCollectiblesCount.value > 0) {
+      setFilters({ assetGroup: 'collectibles' }, undefined, true)
+    } else {
+      setFilters({ assetGroup: 'tokens' }, undefined, true)
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
