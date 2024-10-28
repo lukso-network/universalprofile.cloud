@@ -58,7 +58,7 @@ const handleNavigateMyUpDashboard = () => {
     is-sticky
     is-transparent
     has-menu
-    mobile-breakpoint="lg"
+    mobile-breakpoint="md"
     @on-brand-click="handleNavigateLanding"
   >
     <!-- Desktop Menu -->
@@ -91,15 +91,13 @@ const handleNavigateMyUpDashboard = () => {
       <!-- Connect -->
       <lukso-button
         v-else
-        variant="secondary"
+        variant="landing"
         custom-class="text-12 nav-apax-12-medium-uppercase"
         @click="handleConnect"
         :is-loading="isConnecting ? true : undefined"
         :loading-text="$formatMessage('header_connect')"
       >
-        <span class="text-purple-41">
-          {{ $formatMessage('header_connect') }}
-        </span>
+        {{ $formatMessage('header_connect') }}
       </lukso-button>
 
       <!-- Settings -->
@@ -224,12 +222,30 @@ const handleNavigateMyUpDashboard = () => {
     </div>
 
     <!-- Mobile Icons -->
-    <div slot="mobile-icons" class="flex">
+    <div slot="mobile-icons" class="flex items-center">
       <lukso-icon
         name="search"
         class="cursor-pointer"
         @click="handleMobileSearch"
       ></lukso-icon>
+      <lukso-button
+        v-if="!isConnected"
+        variant="landing"
+        size="small"
+        custom-class="text-12 nav-apax-12-medium-uppercase"
+        @click="handleConnect"
+        :is-loading="isConnecting ? true : undefined"
+        :loading-text="$formatMessage('header_connect')"
+        class="ml-4 mr-1"
+      >
+        {{ $formatMessage('header_connect') }}
+      </lukso-button>
+      <AppNavbarAvatar
+        v-if="isConnected"
+        size="x-small"
+        class="ml-4 mr-1 cursor-pointer"
+        @click="handleNavigateProfile"
+      />
     </div>
     <div slot="desktop-center" class="w-full">
       <AppNavbarProfileSearch />
