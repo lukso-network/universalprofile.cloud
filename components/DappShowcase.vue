@@ -35,8 +35,11 @@ const handleCardClick = (url: string) => {
         clickableClass: 'swiper-pagination-clickable',
       }"
       :breakpoints="{
-        1300: {
+        1400: {
           slidesPerView: 5,
+        },
+        1300: {
+          slidesPerView: 4,
         },
         1024: {
           slidesPerView: 3,
@@ -45,7 +48,7 @@ const handleCardClick = (url: string) => {
           slidesPerView: 2,
         },
       }"
-      class="w-[calc(100vw-48px)] lg:w-full"
+      class="w-[calc(100vw-48px)] max-w-[1200px] xl:w-full"
     >
       <SwiperSlide
         v-for="index in SHOWCASE_ITEM_COUNT"
@@ -78,12 +81,12 @@ const handleCardClick = (url: string) => {
     <lukso-icon
       name="arrow-left-lg"
       id="prev"
-      class="absolute left-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.05] hover:border-neutral-80 active:scale-[0.99] lg:left-[-60px]"
+      class="absolute left-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.05] hover:border-neutral-80 active:scale-[0.99] xl:left-[-60px]"
     ></lukso-icon>
     <lukso-icon
       name="arrow-right-lg"
       id="next"
-      class="absolute right-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.05] hover:border-neutral-80 active:scale-[0.99] lg:right-[-60px]"
+      class="absolute right-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.05] hover:border-neutral-80 active:scale-[0.99] xl:right-[-60px]"
     ></lukso-icon>
   </div>
 </template>
