@@ -1,4 +1,4 @@
-import { renderSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime'
+import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime'
 import { describe, expect, it, vi } from 'vitest'
 
 import ProfileCardShareUniversalPage from '@/components/ProfileCardShareUniversalPage.vue'
