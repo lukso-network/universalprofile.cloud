@@ -38,10 +38,12 @@ const handleLoad = () => {
 
 const handleOpenVerificationDocs = (event: Event) => {
   event.stopPropagation()
-  window.open(
-    'https://docs.lukso.tech/learn/assets#generate-the-json-file',
-    '_blank'
-  )
+  navigateTo('https://docs.lukso.tech/learn/assets#generate-the-json-file', {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 
 const isVerificationInvalid = computed(

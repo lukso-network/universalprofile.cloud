@@ -47,7 +47,7 @@ const handleNavigateSettings = () => {
 }
 
 const handleNavigateMyUpDashboard = () => {
-  window.open(myUpDappDashboardUrl(), '_self')
+  navigateTo(myUpDappDashboardUrl(), { external: true })
 }
 </script>
 

@@ -31,7 +31,12 @@ const handleSendAsset = (event: Event) => {
 
 const handleBuySellAsset = (event: Event) => {
   event.stopPropagation()
-  window.open(universalSwapsAssetUrl(props.asset.address), '_blank')
+  navigateTo(universalSwapsAssetUrl(props.asset.address), {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 
 const isLoadedToken = computed(() => token.value && !token.value.isLoading)

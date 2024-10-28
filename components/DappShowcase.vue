@@ -4,7 +4,12 @@ import { Navigation, Pagination } from 'swiper/modules'
 const SHOWCASE_ITEM_COUNT = 8
 
 const handleCardClick = (url: string) => {
-  window.open(url, '_blank')
+  navigateTo(url, {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 </script>
 

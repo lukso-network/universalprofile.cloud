@@ -60,10 +60,12 @@ const handleSendAsset = (event: Event) => {
 
 const handleBuySellAsset = (event: Event) => {
   event.stopPropagation()
-  window.open(
-    universalPageAssetUrl(props.asset.address, props.asset.tokenId),
-    '_blank'
-  )
+  navigateTo(universalPageAssetUrl(props.asset.address, props.asset.tokenId), {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 
 const assetTokenId = computed(() => {

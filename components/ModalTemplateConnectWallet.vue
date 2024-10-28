@@ -15,7 +15,10 @@ const handleConnectBrowser = async () => {
 
   // extension not installed then link to store
   if (!isUniversalProfileExtension) {
-    return window.open(extensionStore.value.url, '_blank')
+    return navigateTo(extensionStore.value.url, {
+      external: true,
+      open: { target: '_blank' },
+    })
   }
 
   await connectBrowserExtension()
