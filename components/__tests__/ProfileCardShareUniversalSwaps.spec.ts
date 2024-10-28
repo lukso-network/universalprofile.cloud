@@ -1,7 +1,12 @@
-import { renderSuspended } from '@nuxt/test-utils/runtime'
+import { renderSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { describe, expect, it, vi } from 'vitest'
 
 import ProfileCardShareUniversalSwaps from '@/components/ProfileCardShareUniversalSwaps.vue'
+
+const navigateToMock = vi.hoisted(() => vi.fn())
+mockNuxtImport('navigateTo', () => {
+  return navigateToMock
+})
 
 describe('ProfileCardShareUniversalSwaps', () => {
   const profile: Profile = {
@@ -21,13 +26,16 @@ describe('ProfileCardShareUniversalSwaps', () => {
       props: { profile },
     })
 
-    const windowOpenSpy = vi.spyOn(window, 'open')
-
     ;(await component.findByRole('img')).click()
 
-    expect(windowOpenSpy).toHaveBeenCalledWith(
+    expect(navigateToMock).toHaveBeenCalledWith(
       'https://universalswaps.io/social/0x1234567890abcdef1234567890abcdef12345678',
-      '_blank'
+      {
+        external: true,
+        open: {
+          target: '_blank',
+        },
+      }
     )
   })
 })
