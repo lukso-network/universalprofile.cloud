@@ -19,7 +19,12 @@ watch(
     }
     // anything that is not LSP7/8 we open in explorer
     if (!isAsset(asset)) {
-      return window.open(explorerContractUrl(asset.address), '_blank')
+      return navigateTo(explorerContractUrl(asset.address), {
+        external: true,
+        open: {
+          target: '_blank',
+        },
+      })
     }
 
     navigateTo(assetRoute(asset.address, asset.tokenId))

@@ -112,7 +112,12 @@ const handleMove = () => {
 }
 
 const handleOpenInTab = () => {
-  window.open(src.value, '_blank')
+  navigateTo(src.value, {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 
 const handleClone = async () => {

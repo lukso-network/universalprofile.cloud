@@ -6,7 +6,14 @@ type Props = {
 const props = defineProps<Props>()
 
 const handleClick = () => {
-  'url' in props.asset && window.open(props.asset.url, '_blank')
+  if (props.asset && 'url' in props.asset) {
+    navigateTo(props.asset.url, {
+      external: true,
+      open: {
+        target: '_blank',
+      },
+    })
+  }
 }
 </script>
 

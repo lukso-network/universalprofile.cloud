@@ -60,9 +60,14 @@ const handleViewCollection = () => {
 
 const handleBuySellAsset = (event: Event) => {
   event.stopPropagation()
-  window.open(
+  navigateTo(
     universalPageAssetUrl(asset.value?.address, asset.value?.tokenId),
-    '_blank'
+    {
+      external: true,
+      open: {
+        target: '_blank',
+      },
+    }
   )
 }
 </script>

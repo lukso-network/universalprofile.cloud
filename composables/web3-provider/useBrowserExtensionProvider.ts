@@ -5,7 +5,12 @@ import type { ProviderAPI } from '@/types/provider'
 const openStoreLink = () => {
   const storeLink = browserInfo().storeLink
 
-  window.open(storeLink, '_blank')
+  navigateTo(storeLink, {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 
 const connect = async () => {

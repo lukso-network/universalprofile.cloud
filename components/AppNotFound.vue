@@ -6,7 +6,12 @@ const handleVisitHomepage = () => {
 }
 
 const handleGetHelp = () => {
-  window.open(formatMessage('not_found_get_help_url'), '_blank')
+  navigateTo(formatMessage('not_found_get_help_url'), {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 </script>
 
