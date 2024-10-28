@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { isTestnet, isConnected, connectedProfileAddress } =
+const { isTestnet, isConnected, connectedProfileAddress, isConnecting } =
   storeToRefs(useAppStore())
 const { disconnect } = useBaseProvider()
 const { showModal } = useModal()
@@ -34,7 +34,6 @@ const handleNavigateMyUpDashboard = () => {
     logo-url="/images/logo-ue.svg"
     is-transparent
     has-menu
-    mobile-breakpoint="lg"
   >
     <!-- Desktop Menu -->
     <div
@@ -277,6 +276,28 @@ const handleNavigateMyUpDashboard = () => {
           </span>
         </lukso-button>
       </div>
+    </div>
+
+    <!-- Mobile Icons -->
+    <div slot="mobile-icons" class="flex items-center">
+      <lukso-button
+        v-if="!isConnected"
+        variant="landing"
+        size="small"
+        custom-class="text-12 nav-apax-12-medium-uppercase"
+        @click="handleConnect"
+        :is-loading="isConnecting ? true : undefined"
+        :loading-text="$formatMessage('header_connect')"
+        class="ml-4 mr-1"
+      >
+        {{ $formatMessage('header_connect') }}
+      </lukso-button>
+      <AppNavbarAvatar
+        v-if="isConnected"
+        size="x-small"
+        class="ml-4 mr-1 cursor-pointer"
+        @click="handleNavigateProfile"
+      />
     </div>
   </lukso-navbar>
 </template>
