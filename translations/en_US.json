@@ -58,7 +58,7 @@
   "landing_hero_description_no_extension": "Looks like you don’t have the <span class=\"paragraph-inter-16-semi-bold\">Universal Profile browser extension</span> installed. You’ll need it before you can log in to our wallet service.",
   "asset_standard_badge_collection_contract": "LSP8 COLLECTION",
   "tooltip_text_copy_raw": "Copy raw",
-  "add_widget_section_website": "Website or Mini-App",
+  "add_widget_section_website": "Website",
   "data_provider_graph_description": "Load data via the our Envio indexing service. This results in faster loading times and smoother UX, however inappropriate content might be removed.",
   "transak_success_message": "Please note that it can take some time for your balance to update.",
   "missing_asset_label_added": "Added",
