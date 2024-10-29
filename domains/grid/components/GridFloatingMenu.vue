@@ -7,15 +7,24 @@ type Emits = {
   (event: 'on-add-grid'): void
 }
 
+const BOTTOM_MARGIN_DESKTOP_PX = 40
+const BOTTOM_MARGIN_MOBILE_PX = 16
+
 const emits = defineEmits<Emits>()
 const { isEditingGrid, hasUnsavedGrid, isSavingGrid } =
   storeToRefs(useGridStore())
 const { isConnected, isMobile } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
+const bottom = ref(
+  isMobile.value ? BOTTOM_MARGIN_MOBILE_PX : BOTTOM_MARGIN_DESKTOP_PX
+)
 
 const handleToggleGridEditMode = async () => {
   isEditingGrid.value = !isEditingGrid.value
+  setTimeout(() => {
+    handleScroll()
+  }, 200)
 }
 
 const handleAddContent = () => {
@@ -29,6 +38,13 @@ const handleAddGrid = () => {
     template: 'AddEditGrid',
   })
 }
+
+const handleStyle = computed(() => {
+  return {
+    bottom: `${bottom.value}px`,
+    transition: 'bottom 0.3s ease-in-out',
+  }
+})
 
 const baseButtonVariants = tv({
   base: 'flex size-10 items-center justify-center rounded-full transition-all duration-300',
@@ -84,16 +100,50 @@ const styles = computed(() => {
     toggleButton: defaultButtonVariants(),
   }
 })
+
+const handleScroll = () => {
+  if (isMobile.value) {
+    bottom.value = BOTTOM_MARGIN_MOBILE_PX
+    return
+  }
+
+  const bottomOffset =
+    (document.querySelector('lukso-footer')?.clientHeight || 0) +
+    BOTTOM_MARGIN_DESKTOP_PX
+  const scrollTop = window.scrollY
+  const windowHeight = window.innerHeight
+  const documentHeight = document.documentElement.scrollHeight
+
+  if (scrollTop + windowHeight + bottomOffset >= documentHeight) {
+    bottom.value =
+      scrollTop +
+      windowHeight +
+      bottomOffset +
+      BOTTOM_MARGIN_DESKTOP_PX -
+      documentHeight
+  } else {
+    bottom.value = BOTTOM_MARGIN_DESKTOP_PX
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
 
 <template>
   <div
     v-if="isConnected"
-    class="fixed bottom-4 right-4 z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-drop-shadow duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition-height lg:right-[calc(50%-540px)]"
+    class="fixed right-4 z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-drop-shadow duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition-height lg:right-[calc(50%-540px)]"
     :class="{
       'h-[64px] w-[320px] sm:h-[320px] sm:w-[64px]': isEditingGrid,
       'size-[64px]': !isEditingGrid,
     }"
+    :style="handleStyle"
   >
     <div v-if="isEditingGrid" class="flex animate-fade-in gap-6 sm:flex-col">
       <!-- Add widget  -->
