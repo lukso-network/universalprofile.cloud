@@ -86,14 +86,14 @@ const handleDelete = () => {
 }
 
 const handleEdit = () => {
-  showModal({
+  showModal<Partial<GridWidget>>({
     template: 'AddGridWidget',
     data: {
       properties: props.widget.properties,
-      id: props.widget.i,
+      i: props.widget.i,
       type: props.widget.type,
-      width: props.widget.w,
-      height: props.widget.h,
+      w: props.widget.w,
+      h: props.widget.h,
     },
   })
 }

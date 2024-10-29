@@ -31,6 +31,7 @@ const loadComponent = (type?: string): Component | undefined => {
     )
   }
 
+  // when no type we display selection screen
   return defineAsyncComponent(() => import('./AddWidgetSelection.vue'))
 }
 

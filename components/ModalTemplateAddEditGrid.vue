@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SelectStringOption } from '@lukso/web-components'
 
-const { modal, closeModal } = useModal()
+const { modal, closeModal } = useModal<Partial<Grid>>()
 const { formatMessage } = useIntl()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
 const { addGrid, updateGrid } = useGrid()
@@ -15,7 +15,7 @@ const inputErrors = reactive({
   title: '',
 })
 
-const id = computed(() => modal?.data?.grid?.id)
+const id = computed(() => modal?.data?.id)
 const canSubmit = ref(false)
 const isEdit = computed(() => !!id.value)
 

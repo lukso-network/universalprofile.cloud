@@ -16,12 +16,12 @@ type Props = {
 defineProps<Props>()
 
 const handleSelectWidget = (widgetType: GridWidgetType) => {
-  showModal({
+  showModal<Partial<GridWidget>>({
     template: 'AddGridWidget',
     data: {
       type: widgetType,
-      width: 1,
-      height: 1,
+      w: 1,
+      h: 1,
     },
     forceOpen: true,
   })

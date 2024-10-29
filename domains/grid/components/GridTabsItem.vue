@@ -44,14 +44,12 @@ const styles = computed(() => {
 })
 
 const handleEdit = () => {
-  showModal({
+  showModal<Partial<Grid>>({
     template: 'AddEditGrid',
     data: {
-      grid: {
-        id: props.grid.id,
-        title: props.grid.title,
-        gridColumns: props.grid.gridColumns,
-      },
+      id: props.grid.id,
+      title: props.grid.title,
+      gridColumns: props.grid.gridColumns,
     },
   })
 }
