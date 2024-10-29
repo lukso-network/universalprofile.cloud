@@ -6,6 +6,7 @@ type GridTab = {
 }
 
 const { selectedGridId, tempGrid, viewedGrid } = storeToRefs(useGridStore())
+const { isMobile } = storeToRefs(useAppStore())
 const { canEditGrid, gridsForDisplay } = useGrid()
 const tabs = ref<GridTab[]>([])
 
@@ -29,7 +30,7 @@ watch(
   <div class="flex select-none gap-x-6 gap-y-3 pb-4">
     <!-- Draggable Grid tabs -->
     <draggable
-      v-if="canEditGrid"
+      v-if="canEditGrid && !isMobile"
       v-model="tabs"
       tag="ul"
       :animation="300"
