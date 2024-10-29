@@ -10,7 +10,7 @@ type Emits = {
 const emits = defineEmits<Emits>()
 const { isEditingGrid, hasUnsavedGrid, isSavingGrid } =
   storeToRefs(useGridStore())
-const { isConnected } = storeToRefs(useAppStore())
+const { isConnected, isMobile } = storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 
@@ -99,17 +99,17 @@ const styles = computed(() => {
 <template>
   <div
     v-if="isConnected"
-    class="fixed bottom-10 right-10 flex animate-fade-in flex-col gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-drop-shadow transition-height duration-300 ease-in-out"
+    class="fixed bottom-4 right-4 z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-drop-shadow duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition-height"
     :class="{
-      'h-[320px]': isEditingGrid,
-      'h-[64px]': !isEditingGrid,
+      'h-[64px] w-[320px] sm:h-[320px] sm:w-[64px]': isEditingGrid,
+      'size-[64px]': !isEditingGrid,
     }"
   >
-    <div v-if="isEditingGrid" class="flex animate-fade-in flex-col gap-6">
+    <div v-if="isEditingGrid" class="flex animate-fade-in gap-6 sm:flex-col">
       <!-- Add widget  -->
       <lukso-tooltip
         :class="styles.addWidgetButton"
-        :text="formatMessage('grid_add_widget')"
+        :text="!isMobile ? formatMessage('grid_add_widget') : ''"
         placement="left"
         :offset="15"
         :show-delay="1000"
@@ -121,7 +121,7 @@ const styles = computed(() => {
       <!-- Add grid  -->
       <lukso-tooltip
         :class="styles.addGridButton"
-        :text="formatMessage('grid_add_grid')"
+        :text="!isMobile ? formatMessage('grid_add_grid') : ''"
         placement="left"
         :offset="15"
         :show-delay="1000"
@@ -134,9 +134,7 @@ const styles = computed(() => {
       <lukso-tooltip
         :class="styles.saveButton"
         :text="
-          hasUnsavedGrid
-            ? formatMessage('grid_can_save')
-            : formatMessage('grid_no_changes_to_save')
+          hasUnsavedGrid && !isMobile ? formatMessage('grid_can_save') : ''
         "
         placement="left"
         :offset="15"
@@ -156,9 +154,7 @@ const styles = computed(() => {
       <lukso-tooltip
         :class="styles.resetButton"
         :text="
-          hasUnsavedGrid
-            ? formatMessage('grid_can_reset')
-            : formatMessage('grid_no_changes_to_reset')
+          hasUnsavedGrid && !isMobile ? formatMessage('grid_can_reset') : ''
         "
         placement="left"
         :offset="15"
@@ -177,9 +173,11 @@ const styles = computed(() => {
     <lukso-tooltip
       :class="styles.toggleButton"
       :text="
-        isEditingGrid
-          ? formatMessage('grid_exit_edit_mode')
-          : formatMessage('grid_enable_edit_mode')
+        !isMobile
+          ? isEditingGrid
+            ? formatMessage('grid_exit_edit_mode')
+            : formatMessage('grid_enable_edit_mode')
+          : ''
       "
       placement="left"
       :offset="15"
