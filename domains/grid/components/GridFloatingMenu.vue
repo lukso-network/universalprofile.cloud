@@ -89,7 +89,7 @@ const styles = computed(() => {
 <template>
   <div
     v-if="isConnected"
-    class="fixed bottom-4 right-4 z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-drop-shadow duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition-height"
+    class="fixed bottom-4 right-4 z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-drop-shadow duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition-height lg:right-[calc(50%-540px)]"
     :class="{
       'h-[64px] w-[320px] sm:h-[320px] sm:w-[64px]': isEditingGrid,
       'size-[64px]': !isEditingGrid,
@@ -120,6 +120,24 @@ const styles = computed(() => {
         <lukso-icon name="menu-1" color="purple-41"></lukso-icon>
       </lukso-tooltip>
 
+      <!-- Reset  -->
+      <lukso-tooltip
+        :class="styles.resetButton"
+        :text="
+          hasUnsavedGrid && !isMobile ? formatMessage('grid_can_reset') : ''
+        "
+        placement="left"
+        :offset="15"
+        :show-delay="1000"
+        @click="hasUnsavedGrid ? emits('on-reset') : undefined"
+      >
+        <lukso-icon
+          name="reload"
+          :color="hasUnsavedGrid ? 'red-65' : 'neutral-85'"
+          class="-rotate-90 transition"
+        ></lukso-icon>
+      </lukso-tooltip>
+
       <!-- Save  -->
       <lukso-tooltip
         :class="styles.saveButton"
@@ -137,24 +155,6 @@ const styles = computed(() => {
           :class="{
             'animate-spin': isSavingGrid,
           }"
-        ></lukso-icon>
-      </lukso-tooltip>
-
-      <!-- Reset  -->
-      <lukso-tooltip
-        :class="styles.resetButton"
-        :text="
-          hasUnsavedGrid && !isMobile ? formatMessage('grid_can_reset') : ''
-        "
-        placement="left"
-        :offset="15"
-        :show-delay="1000"
-        @click="hasUnsavedGrid ? emits('on-reset') : undefined"
-      >
-        <lukso-icon
-          name="reload"
-          :color="hasUnsavedGrid ? 'red-65' : 'neutral-85'"
-          class="-rotate-90 transition"
         ></lukso-icon>
       </lukso-tooltip>
     </div>
