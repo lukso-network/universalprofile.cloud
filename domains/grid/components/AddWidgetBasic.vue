@@ -21,6 +21,7 @@ const {
   handleFieldChange,
   handleFormErrors,
 } = useForm(schema, (await schema?.safeParseAsync(props.properties))?.data)
+const isInstructionsVisible = ref(false)
 
 const handleSave = async () => {
   if (!canSubmit.value) {
@@ -69,6 +70,12 @@ const handleBackToSelection = () => {
     },
   })
 }
+
+const widgetInstructions = computed(() => {
+  return formatMessage(`add_widget_${props.type.toLowerCase()}_instructions`)
+})
+
+const hasInstructions = computed(() => widgetInstructions.value !== '-')
 </script>
 
 <template>
@@ -94,6 +101,28 @@ const handleBackToSelection = () => {
           `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_description`
         )
       }}
+
+      <!-- Instructions -->
+      <template v-if="hasInstructions">
+        <span
+          v-if="isInstructionsVisible"
+          class="cursor-pointer text-blue-60 underline hover:text-blue-50"
+          @click="isInstructionsVisible = !isInstructionsVisible"
+          >Hide instructions</span
+        >
+        <span
+          v-else
+          class="cursor-pointer text-blue-60 underline hover:text-blue-50"
+          @click="isInstructionsVisible = !isInstructionsVisible"
+          >Show instructions</span
+        >
+        <div
+          v-if="isInstructionsVisible"
+          class="mt-4 animate-fade-in whitespace-pre-line font-600 break-word"
+        >
+          {{ widgetInstructions }}
+        </div>
+      </template>
     </div>
 
     <!-- Content -->
