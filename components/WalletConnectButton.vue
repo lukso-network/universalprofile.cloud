@@ -1,17 +1,14 @@
 <script setup lang="ts">
 const { formatMessage } = useIntl()
 const deepLink = ref('')
-const {
-  initProvider,
-  connect: connectWalletConnect,
-  deepLinkParser,
-} = useWalletConnectProvider()
+const { initProvider, connect: connectWalletConnect } =
+  useWalletConnectProvider()
 const { walletConnectProvider: provider } = storeToRefs(useAppStore())
 
 onMounted(async () => {
   await initProvider()
   provider.value?.on('display_uri', (data: string) => {
-    deepLink.value = deepLinkParser(data)
+    deepLink.value = walletConnectDeepLinkUrl(data)
   })
 
   try {

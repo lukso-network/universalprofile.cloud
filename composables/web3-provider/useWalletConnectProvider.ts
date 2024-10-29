@@ -3,7 +3,10 @@ import { EthereumProvider as WalletConnectProvider } from '@walletconnect/ethere
 import type EthereumProvider from '@walletconnect/ethereum-provider'
 
 const initProvider = async () => {
-  const { walletConnectProvider: provider } = storeToRefs(useAppStore())
+  const { walletConnectProvider: provider, selectedChainId: chainId } =
+    storeToRefs(useAppStore())
+  const numberChainId = hexToNumber(chainId.value) as number
+  const rpcNode = (await selectRpcNode())?.host as string
 
   provider.value = await WalletConnectProvider.init({
     projectId: '68cee9cbecf1293488f207237e89f337',
@@ -11,52 +14,62 @@ const initProvider = async () => {
       name: 'Universal Profiles',
       description:
         'Explore Universal Profiles and view all your assets in one place as well as send and receive tokens to other Universal Profile users.',
-      url: 'https://universalprofile.cloud/',
+      url: BASE_DAPP_URL,
       icons: ['https://universalprofile.cloud/favicon.png'],
     },
     showQrModal: false,
-    optionalChains: [42, 4201],
+    optionalChains: [numberChainId],
     rpcMap: {
-      42: 'https://rpc1.mainnet.lukso.dev',
-      4201: 'https://rpc.testnet.lukso.network',
+      [numberChainId]: rpcNode,
     },
   })
 }
 
-const connect = async (requestAccounts = true) => {
+const connect = async () => {
   const {
     walletConnectProvider: provider,
     connectedProfileAddress,
+    walletConnectSession,
     isWalletConnect,
-    isConnecting,
   } = storeToRefs(useAppStore())
   const { setConnectionExpiry } = useConnectionExpiry()
   const { addWeb3 } = useWeb3Store()
   const { disconnect } = useBaseProvider()
-  const { showModal } = useModal()
+  const { showModal, modal, closeModal } = useModal()
   const { formatMessage } = useIntl()
+  const route = useRoute()
 
   try {
-    isConnecting.value = true
-    await provider.value?.connect()
-
-    if (requestAccounts) {
-      const result = (await provider.value?.request({
-        method: 'eth_requestAccounts',
-      })) as Address[]
-
-      if (!result) {
-        throw new NoAccountsError()
-      }
-
-      const [address] = result
-      connectedProfileAddress.value = address
+    if (isWalletConnect.value) {
+      await provider.value?.enable()
+    } else {
+      await provider.value?.connect()
     }
 
-    setConnectionExpiry()
-    navigateTo(profileRoute(connectedProfileAddress.value))
-    isWalletConnect.value = true
+    walletConnectSession.value = provider.value?.session
+    const result = (await provider.value?.request({
+      method: 'eth_requestAccounts',
+    })) as Address[]
 
+    if (!result) {
+      throw new NoAccountsError()
+    }
+
+    const [address] = result
+    connectedProfileAddress.value = address
+    setConnectionExpiry()
+
+    // close connect modal if it's open
+    if (modal?.template === 'ConnectWallet') {
+      closeModal()
+    }
+
+    // when we connect on the landing page we redirect to profile
+    if (route.name === 'index') {
+      navigateTo(profileRoute(address))
+    }
+
+    // set web3 for wallet connect
     if (provider.value) {
       addWeb3(PROVIDERS.WALLET_CONNECT, provider.value as EthereumProvider)
     }
@@ -69,36 +82,12 @@ const connect = async (requestAccounts = true) => {
         message: getErrorMessage(error),
       },
     })
-  } finally {
-    isConnecting.value = false
   }
-}
-
-/**
- * Reconnect WalletConnect but don't trigger request accounts
- */
-const reconnect = async () => {
-  connect(false)
-}
-
-/**
- * Parse deep link to be used by mobile app
- *
- * By default WalletConnect uses wc: prefix for deep linking, but this also works with
- * other wallets. We replace with own prefix to ensure it works with our app.
- *
- * @param data
- * @returns
- */
-const deepLinkParser = (data: string) => {
-  return data.replace('wc:', 'network.lukso.universalprofiles.ios:')
 }
 
 export const useWalletConnectProvider = () => {
   return {
     initProvider,
     connect,
-    reconnect,
-    deepLinkParser,
   }
 }
