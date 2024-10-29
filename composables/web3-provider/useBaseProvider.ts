@@ -21,6 +21,7 @@ const disconnect = () => {
     walletConnectProvider,
     walletConnectSession,
   } = storeToRefs(useAppStore())
+  const { isEditingGrid } = storeToRefs(useGridStore())
 
   // disconnect WalletConnect
   if (isWalletConnect.value) {
@@ -28,8 +29,12 @@ const disconnect = () => {
     walletConnectSession.value = undefined
   }
 
+  // reset connected profile address
   connectedProfileAddress.value = undefined
+  // remove connection expiry
   removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
+  // exit edit mode for grid
+  isEditingGrid.value = false
 }
 
 /**

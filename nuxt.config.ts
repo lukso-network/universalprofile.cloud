@@ -123,7 +123,14 @@ export default defineNuxtConfig({
     },
   },
   imports: {
-    dirs: ['stores/**', 'shared/**', 'utils/**', 'types/**', 'composables/**'],
+    dirs: [
+      'stores/**',
+      'shared/**',
+      'utils/**',
+      'types/**',
+      'composables/**',
+      'domains/**',
+    ],
   },
   ssr: false,
   spaLoadingTemplate: 'public/loading-template.html',
@@ -138,6 +145,7 @@ export default defineNuxtConfig({
       TRANSAK_API_KEY: process.env.NUXT_PUBLIC_TRANSAK_API_KEY,
       RAMP_API_KEY: process.env.NUXT_PUBLIC_RAMP_API_KEY,
       BUILD_VERSION: process.env.GITHUB_SHA || 'debug',
+      API_SHARED_SECRET: process.env.NUXT_PUBLIC_API_SHARED_SECRET,
     },
   },
   pwa: {
@@ -214,5 +222,5 @@ export default defineNuxtConfig({
       },
     },
   },
-  extends: ['./domains/rpc', './domains/graph'],
+  extends: ['./domains/rpc', './domains/graph', './domains/grid'],
 })

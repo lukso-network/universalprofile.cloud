@@ -20,3 +20,6 @@ export const followersLog = debug('dapp:followers')
 
 // Logger for sending assets
 export const graphLog = debug('dapp:graph')
+
+// Logger for Grid
+export const gridLog = debug('dapp:grid')

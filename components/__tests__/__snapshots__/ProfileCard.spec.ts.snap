@@ -3,7 +3,7 @@
 exports[`ProfileCard > should render empty profile 1`] = `
 "<div id="test-wrapper">
   <div class="relative">
-    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="small" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
       <div slot="header" class="relative flex size-full flex-col items-center">
         <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
           <div>
@@ -29,7 +29,7 @@ exports[`ProfileCard > should render empty profile 1`] = `
       <div slot="content" class="relative flex flex-col p-4 pb-6 sm:p-8">
         <!-- Profile picture -->
         <div class="absolute top-[-60px]">
-          <lukso-profile profile-address="" size="2x-large" has-identicon="" class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
+          <lukso-profile profile-address="" size="2x-large" has-identicon="" class="relative z-[1] flex cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
         </div>
         <div class="flex min-h-7 justify-end">
           <!-- Follow Button -->
@@ -61,7 +61,7 @@ exports[`ProfileCard > should render empty profile 1`] = `
 exports[`ProfileCard > should render followed by info 1`] = `
 "<div id="test-wrapper">
   <div class="relative">
-    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="small" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
       <div slot="header" class="relative flex size-full flex-col items-center">
         <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
           <div>
@@ -87,16 +87,16 @@ exports[`ProfileCard > should render followed by info 1`] = `
       <div slot="content" class="relative flex flex-col p-4 pb-6 sm:p-8">
         <!-- Profile picture -->
         <div class="absolute top-[-60px]">
-          <lukso-profile profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
+          <lukso-profile profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] flex cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
         </div>
         <div class="flex min-h-7 justify-end">
           <!-- Follow Button -->
           <div class="group flex">
             <!-- Unfollow -->
-            <lukso-button size="small" variant="secondary" class="hidden group-hover:block" loading-text="Unfollow">
+            <lukso-button size="small" variant="secondary" class="hidden group-hover:block" loading-text="Unfollow" disabled="true">
               <lukso-icon name="profile-remove" size="small" class="mr-2"></lukso-icon><span>Unfollow</span>
             </lukso-button><!-- Following -->
-            <lukso-button size="small" variant="secondary" class="block group-hover:hidden" loading-text="Following">
+            <lukso-button size="small" variant="secondary" class="block group-hover:hidden" loading-text="Following" disabled="true">
               <lukso-icon name="profile" size="small" class="mr-2"></lukso-icon><span>Following</span>
             </lukso-button>
           </div>
@@ -140,7 +140,7 @@ exports[`ProfileCard > should render followed by info 1`] = `
 exports[`ProfileCard > should render profile when connected 1`] = `
 "<div id="test-wrapper">
   <div class="relative">
-    <lukso-card variant="dapp" background-url="https://example.com/background.jpg" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+    <lukso-card variant="dapp" background-url="https://example.com/background.jpg" is-full-width="" shadow="small" border-radius="small" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
       <div slot="header" class="relative flex size-full flex-col items-center">
         <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
           <div>
@@ -166,13 +166,13 @@ exports[`ProfileCard > should render profile when connected 1`] = `
       <div slot="content" class="relative flex flex-col p-4 pb-6 sm:p-8">
         <!-- Profile picture -->
         <div class="absolute top-[-60px]">
-          <lukso-profile profile-url="https://example.com/profile.jpg" profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
+          <lukso-profile profile-url="https://example.com/profile.jpg" profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] flex cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
         </div>
         <div class="flex min-h-7 justify-end">
           <!-- Follow Button -->
           <div class="group flex">
             <!-- Follow -->
-            <lukso-button size="small" loading-text="Follow">
+            <lukso-button size="small" loading-text="Follow" disabled="true">
               <lukso-icon name="profile-add" size="small" color="neutral-100" class="mr-2"></lukso-icon><span>Follow</span>
             </lukso-button>
           </div>
@@ -219,7 +219,7 @@ exports[`ProfileCard > should render profile when connected 1`] = `
 exports[`ProfileCard > should render profile when not connected 1`] = `
 "<div id="test-wrapper">
   <div class="relative">
-    <lukso-card variant="dapp" background-url="https://example.com/background.jpg" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+    <lukso-card variant="dapp" background-url="https://example.com/background.jpg" is-full-width="" shadow="small" border-radius="small" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
       <div slot="header" class="relative flex size-full flex-col items-center">
         <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
           <div>
@@ -245,13 +245,13 @@ exports[`ProfileCard > should render profile when not connected 1`] = `
       <div slot="content" class="relative flex flex-col p-4 pb-6 sm:p-8">
         <!-- Profile picture -->
         <div class="absolute top-[-60px]">
-          <lukso-profile profile-url="https://example.com/profile.jpg" profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
+          <lukso-profile profile-url="https://example.com/profile.jpg" profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] flex cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
         </div>
         <div class="flex min-h-7 justify-end">
           <!-- Follow Button -->
           <div class="group flex">
             <!-- Follow -->
-            <lukso-button size="small" loading-text="Follow">
+            <lukso-button size="small" loading-text="Follow" disabled="true">
               <lukso-icon name="profile-add" size="small" color="neutral-100" class="mr-2"></lukso-icon><span>Follow</span>
             </lukso-button>
           </div>
@@ -298,7 +298,7 @@ exports[`ProfileCard > should render profile when not connected 1`] = `
 exports[`ProfileCard > should render unfollow button 1`] = `
 "<div id="test-wrapper">
   <div class="relative">
-    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="small" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
       <div slot="header" class="relative flex size-full flex-col items-center">
         <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
           <div>
@@ -324,16 +324,16 @@ exports[`ProfileCard > should render unfollow button 1`] = `
       <div slot="content" class="relative flex flex-col p-4 pb-6 sm:p-8">
         <!-- Profile picture -->
         <div class="absolute top-[-60px]">
-          <lukso-profile profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
+          <lukso-profile profile-address="0x1234567890abcdef1234567890abcdef12345678" size="2x-large" has-identicon="" class="relative z-[1] flex cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"></lukso-profile>
         </div>
         <div class="flex min-h-7 justify-end">
           <!-- Follow Button -->
           <div class="group flex">
             <!-- Unfollow -->
-            <lukso-button size="small" variant="secondary" class="hidden group-hover:block" loading-text="Unfollow">
+            <lukso-button size="small" variant="secondary" class="hidden group-hover:block" loading-text="Unfollow" disabled="true">
               <lukso-icon name="profile-remove" size="small" class="mr-2"></lukso-icon><span>Unfollow</span>
             </lukso-button><!-- Following -->
-            <lukso-button size="small" variant="secondary" class="block group-hover:hidden" loading-text="Following">
+            <lukso-button size="small" variant="secondary" class="block group-hover:hidden" loading-text="Following" disabled="true">
               <lukso-icon name="profile" size="small" class="mr-2"></lukso-icon><span>Following</span>
             </lukso-button>
           </div>

@@ -6,7 +6,7 @@ import type {
 
 const FILTER_DEFAULTS: Filters = {
   assetType: 'owned',
-  assetGroup: 'collectibles',
+  assetGroup: 'grid',
   orderBy: 'name-asc',
   search: undefined,
   collections: undefined,

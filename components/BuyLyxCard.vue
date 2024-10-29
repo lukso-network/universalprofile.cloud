@@ -8,7 +8,12 @@ type Props = {
 const props = defineProps<Props>()
 
 const handleBuyLyx = () => {
-  window.open(props.buyUrl, '_blank')
+  navigateTo(props.buyUrl, {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 </script>
 

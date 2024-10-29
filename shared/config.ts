@@ -8,7 +8,7 @@ export const SUPPORTED_NETWORK_IDS = ['mainnet', 'testnet'] as const
 export const MODAL_DEFAULT_TEMPLATE = 'Default'
 
 // connection expiry time
-export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 60 * 2 // 2 hours
+export const CONNECTION_EXPIRY_TIME_MS = 1000 * 60 * 60 * 24 // 24 hours
 
 // interval to check if the user is still connected
 export const CONNECTION_EXPIRY_CHECK_INTERVAL_MS = 1000 * 10 // 10 seconds
@@ -30,6 +30,7 @@ export const LUKSO_PROXY_API = 'https://api.universalprofile.cloud'
 
 // url of the ipfs gateway
 export const IPFS_URL = `${LUKSO_PROXY_API}/ipfs/`
+export const IPFS_CLIENT_URL = `${LUKSO_PROXY_API}/api/v0/add`
 
 // Tanstack expirations. This is important because the sw.js has to cache longer than and no longer than the GC_TIME.
 export const TANSTACK_GC_TIME = 1000 * 60 * 60 * 24 * 7
