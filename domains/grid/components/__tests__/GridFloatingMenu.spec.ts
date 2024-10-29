@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderSuspended } from '@nuxt/test-utils/runtime'
 import { createTestingPinia } from '@pinia/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import GridFloatingMenu from '../GridFloatingMenu.vue'
 
 describe('GridFloatingMenu', () => {
