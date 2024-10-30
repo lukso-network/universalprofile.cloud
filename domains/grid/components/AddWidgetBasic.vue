@@ -62,12 +62,9 @@ const handleCancel = () => {
 }
 
 const handleBackToSelection = () => {
-  showModal({
+  showModal<Partial<GridWidget>>({
     template: 'AddGridWidget',
     forceOpen: true,
-    data: {
-      type: undefined, // when no type we display selection screen
-    },
   })
 }
 

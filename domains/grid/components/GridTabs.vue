@@ -6,24 +6,12 @@ type GridTab = {
 }
 
 const { selectedGridId, tempGrid, viewedGrid } = storeToRefs(useGridStore())
-const { formatMessage } = useIntl()
-const { showModal } = useModal()
+const { isMobile } = storeToRefs(useAppStore())
 const { canEditGrid, gridsForDisplay } = useGrid()
 const tabs = ref<GridTab[]>([])
 
 // we only show tabs when user has more then one
 const hasTabs = computed(() => tabs.value.length > 1)
-
-const handleAddGrid = () => {
-  showModal({
-    template: 'AddEditGrid',
-    data: {
-      id: undefined,
-      grid: undefined,
-      gridColumns: undefined,
-    },
-  })
-}
 
 const handleDragEnd = () => {
   tempGrid.value = cloneObject(tabs.value.map(tab => tab.grid))
@@ -42,7 +30,7 @@ watch(
   <div class="flex select-none gap-x-6 gap-y-3 pb-4">
     <!-- Draggable Grid tabs -->
     <draggable
-      v-if="canEditGrid"
+      v-if="canEditGrid && !isMobile"
       v-model="tabs"
       tag="ul"
       :animation="300"
@@ -70,17 +58,6 @@ watch(
         :grid="tab.grid"
         :is-active="tab.grid.id === selectedGridId"
       />
-    </ul>
-
-    <ul class="flex flex-wrap justify-start gap-x-6 gap-y-3">
-      <li
-        v-if="canEditGrid"
-        class="heading-inter-17-semi-bold flex cursor-pointer select-none items-center opacity-50 transition hover:opacity-100"
-        @click="handleAddGrid"
-      >
-        {{ formatMessage('grid_tabs_add_widget') }}
-        <lukso-icon name="plus" size="small" class="ml-2" />
-      </li>
     </ul>
   </div>
 </template>

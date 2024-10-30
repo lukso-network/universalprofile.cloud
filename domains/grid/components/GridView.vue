@@ -10,6 +10,7 @@ const {
   hasUnsavedGrid,
   gridRowHeightRatio,
   selectedGridId,
+  isSavingGrid,
 } = storeToRefs(useGridStore())
 const {
   saveGrid,
@@ -95,6 +96,7 @@ const handleResetGrid = async () => {
   tempGrid.value = cloneObject(_grid)
   viewedGrid.value = cloneObject(_grid)
   gridWidgets.value = getSelectedGridWidgets(cloneObject(_grid))
+  isSavingGrid.value = false
 
   // if selected grid is affected by reset, select first grid
   if (!viewedGrid.value.some(item => item.id === selectedGridId.value)) {
@@ -219,12 +221,8 @@ onUnmounted(() => {
       </GridLayout>
     </div>
 
-    <!-- Confirmation dialog for unsaved changes -->
-    <GridConfirmationDialog
-      v-if="canEditGrid"
-      @save="handleSaveGrid"
-      @cancel="handleResetGrid"
-    />
+    <!-- Grid floating menu -->
+    <GridFloatingMenu @on-save="handleSaveGrid" @on-reset="handleResetGrid" />
   </div>
 </template>
 

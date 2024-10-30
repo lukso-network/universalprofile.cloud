@@ -1,13 +1,13 @@
 <script setup lang="ts">
-const { modal } = useModal()
+const { modal } = useModal<Partial<GridWidget>>()
 </script>
 
 <template>
   <AddWidget
     :properties="modal?.data?.properties"
-    :id="modal?.data?.id"
-    :width="modal?.data?.width"
-    :height="modal?.data?.height"
+    :id="modal?.data?.i"
+    :width="modal?.data?.w"
+    :height="modal?.data?.h"
     :type="modal?.data?.type"
   />
 </template>

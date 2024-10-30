@@ -3,13 +3,8 @@ const { showModal } = useModal()
 const { formatMessage } = useIntl()
 
 const handleAddContent = () => {
-  showModal({
+  showModal<Partial<GridWidget>>({
     template: 'AddGridWidget',
-    data: {
-      type: undefined, // when no type we display selection screen
-      width: 1,
-      height: 1,
-    },
   })
 }
 </script>

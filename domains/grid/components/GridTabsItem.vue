@@ -12,6 +12,7 @@ const { formatMessage } = useIntl()
 const { canEditGrid, addGrid } = useGrid()
 const { showModal } = useModal()
 const { selectedGridId, tempGrid } = storeToRefs(useGridStore())
+const { isMobile } = storeToRefs(useAppStore())
 const dropdownId = `dropdown-${generateItemId()}`
 
 const styleVariants = tv({
@@ -43,14 +44,12 @@ const styles = computed(() => {
 })
 
 const handleEdit = () => {
-  showModal({
+  showModal<Partial<Grid>>({
     template: 'AddEditGrid',
     data: {
-      grid: {
-        id: props.grid.id,
-        title: props.grid.title,
-        gridColumns: props.grid.gridColumns,
-      },
+      id: props.grid.id,
+      title: props.grid.title,
+      gridColumns: props.grid.gridColumns,
     },
   })
 }
@@ -89,7 +88,7 @@ const handleSelectTab = (id: string) => {
         {{ grid.title }}
       </div>
       <lukso-icon
-        v-if="canEditGrid"
+        v-if="canEditGrid && !isMobile"
         :id="dropdownId"
         class="absolute right-[-18px] mx-1 -mr-1 cursor-pointer p-1 opacity-0 transition hover:!opacity-100 group-hover:opacity-50"
         name="edit"
