@@ -196,7 +196,8 @@ watch(
         <GridView
           :class="{
             'visible relative z-10 opacity-100': activeTab === 'grid',
-            'invisible absolute z-0 opacity-0': activeTab !== 'grid',
+            'invisible absolute z-0 h-0 overflow-hidden opacity-0':
+              activeTab !== 'grid',
           }"
         />
         <ProfileAssets
