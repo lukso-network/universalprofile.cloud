@@ -13,9 +13,14 @@ const widgetComponent = shallowRef<Component | undefined>()
 const { canEditGrid, addGridWidget, getGridById } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
-const { isConnected, isMobile, isConnectedUserViewingOwnProfile } =
-  storeToRefs(useAppStore())
-const { isEditingGrid, tempGrid, selectedGridId } = storeToRefs(useGridStore())
+const {
+  isConnected,
+  isMobile,
+  isConnectedUserViewingOwnProfile,
+  connectedProfileAddress,
+} = storeToRefs(useAppStore())
+const { isEditingGrid, tempGrid, selectedGridId, tempGrids } =
+  storeToRefs(useGridStore())
 const { connect } = useBaseProvider()
 const { browserSupportExtension } = useBrowser()
 const dropdownId = `dropdown-${generateItemId()}`
@@ -129,20 +134,44 @@ const handleClone = async () => {
     await connect()
   }
 
+  const _connectedProfileAddress =
+    connectedProfileAddress.value?.toLowerCase() as Address
   const clonedWidget = createWidgetObject({
     type: props.widget.type,
     properties: props.widget.properties,
     w: props.widget.w,
     h: props.widget.h,
   })
-  addGridWidget(clonedWidget, getGridById(tempGrid.value, selectedGridId.value))
   isEditingGrid.value = true // we enable edit mode so user is aware about unsaved state
 
-  if (!isConnectedUserViewingOwnProfile.value) {
-    showModal({
-      template: 'GridWidgetCloned',
-    })
+  // in case we are on own profile we do simply widget copy
+  if (isConnectedUserViewingOwnProfile.value) {
+    addGridWidget(
+      clonedWidget,
+      getGridById(tempGrid.value, selectedGridId.value)
+    )
+    return
   }
+
+  // re-create temp grid if missing
+  if (!tempGrids.value[_connectedProfileAddress]) {
+    const userGrid = await getUserGrid(_connectedProfileAddress)
+    tempGrids.value[_connectedProfileAddress] = buildGrid(
+      userGrid,
+      isMobile.value
+    )
+  }
+
+  addGridWidget(
+    clonedWidget,
+    getGridById(
+      tempGrids.value[_connectedProfileAddress],
+      tempGrids.value[_connectedProfileAddress][0].id
+    )
+  )
+  showModal({
+    template: 'GridWidgetCloned',
+  })
 }
 
 const handleDropdownChange = (

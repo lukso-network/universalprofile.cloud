@@ -150,8 +150,8 @@ export const useGrid = () => {
     },
 
     addGridWidget: (widget: GridWidgetWithoutCords, grid?: Grid) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -168,8 +168,8 @@ export const useGrid = () => {
     },
 
     updateGridWidget: (id?: string, widget?: Partial<GridWidget>) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -199,8 +199,8 @@ export const useGrid = () => {
     },
 
     removeGridWidget: (id: string | number) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -272,8 +272,8 @@ export const useGrid = () => {
     },
 
     addGrid: (grid: Grid) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -281,8 +281,8 @@ export const useGrid = () => {
     },
 
     updateGrid: (id?: string, grid?: Partial<Grid>) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -312,8 +312,8 @@ export const useGrid = () => {
     },
 
     removeGrid: (id: string) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
