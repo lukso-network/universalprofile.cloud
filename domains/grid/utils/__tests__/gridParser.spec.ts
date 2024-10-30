@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
 const YOUTUBE_IFRAME_ALLOW =
-  'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+  'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
 const SPOTIFY_IFRAME_ALLOW =
-  'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
+  'clipboard-write; encrypted-media; fullscreen; picture-in-picture'
 const SOUNDCLOUD_IFRAME_ALLOW =
-  'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
+  'clipboard-write; encrypted-media; fullscreen; picture-in-picture'
 
 describe('parsePlatformInput', () => {
   describe('X', () => {

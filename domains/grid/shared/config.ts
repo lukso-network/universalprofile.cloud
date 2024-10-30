@@ -102,8 +102,7 @@ export const PLATFORM_PARSING_PARAMETERS: Partial<
       },
     ],
     constantProperties: {
-      allow:
-        'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+      allow: 'clipboard-write; encrypted-media; fullscreen; picture-in-picture',
     },
   },
   [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: {
@@ -118,8 +117,7 @@ export const PLATFORM_PARSING_PARAMETERS: Partial<
       },
     ],
     constantProperties: {
-      allow:
-        'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+      allow: 'clipboard-write; encrypted-media; fullscreen; picture-in-picture',
     },
   },
   [GRID_WIDGET_TYPE.enum.YOUTUBE]: {
@@ -133,7 +131,7 @@ export const PLATFORM_PARSING_PARAMETERS: Partial<
     ],
     constantProperties: {
       allow:
-        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+        'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
     },
   },
 }
