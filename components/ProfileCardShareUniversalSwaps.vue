@@ -6,7 +6,12 @@ type Props = {
 const props = defineProps<Props>()
 
 const handleOpen = () => {
-  window.open(universalSwapsProfileUrl(props.profile?.address), '_blank')
+  navigateTo(universalSwapsProfileUrl(props.profile?.address), {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 </script>
 

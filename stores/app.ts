@@ -25,7 +25,7 @@ export const useAppStore = defineStore(
     // connection
     const connectedProfileAddress = ref<Address>()
     const walletConnectProvider = ref<EthereumProvider | undefined>()
-    const isWalletConnect = ref(false)
+    const walletConnectSession = ref()
 
     // data provider
     const fetchDataProvider = ref<FetchDataProvider>('graph')
@@ -106,7 +106,9 @@ export const useAppStore = defineStore(
       return !!route.query?.modalTemplate
     })
 
-    const isConnectedUserViewingOwnProfile = computed(() => {
+    const isWalletConnect = computed(() => !!walletConnectSession.value)
+
+    const isViewingOwnProfile = computed(() => {
       const viewedProfileAddress = computed(() => getCurrentProfileAddress())
 
       return (
@@ -117,7 +119,7 @@ export const useAppStore = defineStore(
     })
 
     const isViewedProfileConnected = computed(() => {
-      return isConnected.value && isConnectedUserViewingOwnProfile.value
+      return isConnected.value && isViewingOwnProfile.value
     })
 
     // --- actions
@@ -150,7 +152,8 @@ export const useAppStore = defineStore(
       fetchDataProviderReset,
       walletConnectProvider,
       isWalletConnect,
-      isConnectedUserViewingOwnProfile,
+      walletConnectSession,
+      isViewingOwnProfile,
       isViewedProfileConnected,
     }
   },
@@ -161,7 +164,7 @@ export const useAppStore = defineStore(
         'selectedChainId',
         'fetchDataProvider',
         'fetchDataProviderReset',
-        'isWalletConnect',
+        'walletConnectSession',
       ],
       key: STORAGE_KEY.APP_STORE,
     },

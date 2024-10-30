@@ -12,89 +12,67 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
-
-const TEXTAREA_FOCUS_DELAY = 10 // small delay for focusing textarea after element render
-const inputValue = ref('')
-const inputError = ref('')
-
-const canSubmit = computed(() => inputValue.value && !inputError.value)
+const schema = WIDGET_SCHEMA_MAP[props.type]
 const isEdit = computed(() => !!props.id)
+const {
+  inputValues,
+  canSubmit,
+  getFieldErrorMessage,
+  handleFieldChange,
+  handleFormErrors,
+} = useForm(schema, (await schema?.safeParseAsync(props.properties))?.data)
+const isInstructionsVisible = ref(false)
 
-const handleSave = () => {
+const handleSave = async () => {
   if (!canSubmit.value) {
     return
   }
 
-  const properties = {
-    src: inputValue.value,
+  try {
+    const properties = await schema?.parseAsync(inputValues.value)
+
+    if (isEdit.value) {
+      updateGridWidget(props.id, {
+        properties,
+        w: props.width,
+        h: props.height,
+      })
+    } else {
+      const newWidget: GridWidgetWithoutCords = createWidgetObject({
+        type: props.type,
+        properties,
+        w: props.width,
+        h: props.height,
+      })
+
+      addGridWidget(
+        newWidget,
+        getGridById(tempGrid.value, selectedGridId.value)
+      )
+    }
+
+    handleCancel()
+  } catch (error: unknown) {
+    handleFormErrors(error)
   }
-
-  if (isEdit.value) {
-    updateGridWidget(props.id, {
-      properties,
-      w: props.width,
-      h: props.height,
-    })
-  } else {
-    const newWidget: GridWidgetWithoutCords = createWidgetObject({
-      type: props.type,
-      properties,
-      w: props.width,
-      h: props.height,
-    })
-
-    addGridWidget(newWidget, getGridById(tempGrid.value, selectedGridId.value))
-  }
-
-  handleCancel()
 }
 
 const handleCancel = () => {
   closeModal()
 }
 
-const handleInput = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const input = event.target as HTMLInputElement
-  inputError.value = ''
-
-  // if no value is entered we just exit here
-  if (!input.value) {
-    return
-  }
-
-  // validation
-  try {
-    new URL(input.value)
-    inputValue.value = encodeURI(input.value)
-  } catch (error) {
-    console.warn(error)
-    inputError.value = formatMessage('errors_invalid_url')
-    return
-  }
-}
-
 const handleBackToSelection = () => {
-  showModal({
+  showModal<Partial<GridWidget>>({
     template: 'AddGridWidget',
     forceOpen: true,
-    data: {
-      type: undefined, // when no type we display selection screen
-    },
   })
 }
 
-onMounted(() => {
-  setTimeout(() => {
-    const textarea = document?.querySelector(
-      'lukso-textarea'
-    ) as unknown as HTMLElement
-
-    textarea?.shadowRoot?.querySelector('textarea')?.focus()
-  }, TEXTAREA_FOCUS_DELAY)
-
-  inputValue.value = props.properties?.src || ''
+const widgetInstructions = computed(() => {
+  return formatMessage(`add_widget_${props.type.toLowerCase()}_instructions`)
 })
+
+const hasInstructions = computed(() => widgetInstructions.value !== '-')
 </script>
 
 <template>
@@ -120,18 +98,42 @@ onMounted(() => {
           `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_description`
         )
       }}
+
+      <!-- Instructions -->
+      <template v-if="hasInstructions">
+        <span
+          v-if="isInstructionsVisible"
+          class="cursor-pointer text-blue-60 underline hover:text-blue-50"
+          @click="isInstructionsVisible = !isInstructionsVisible"
+          >Hide instructions</span
+        >
+        <span
+          v-else
+          class="cursor-pointer text-blue-60 underline hover:text-blue-50"
+          @click="isInstructionsVisible = !isInstructionsVisible"
+          >Show instructions</span
+        >
+        <div
+          v-if="isInstructionsVisible"
+          class="mt-4 animate-fade-in whitespace-pre-line font-600 break-word"
+        >
+          {{ widgetInstructions }}
+        </div>
+      </template>
     </div>
 
-    <!-- Input -->
+    <!-- Content -->
     <lukso-textarea
       is-full-width
       autofocus
       :placeholder="
         formatMessage(`add_widget_${type.toLowerCase()}_input_placeholder`)
       "
-      :value="inputValue"
-      :error="inputError"
-      @on-input="handleInput"
+      :value="inputValues.src"
+      :error="getFieldErrorMessage('src')"
+      @on-input="
+        (customEvent: CustomEvent) => handleFieldChange(customEvent, 'src')
+      "
     ></lukso-textarea>
 
     <!-- Buttons -->

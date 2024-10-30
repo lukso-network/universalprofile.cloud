@@ -2,8 +2,9 @@
 import { tv } from 'tailwind-variants'
 
 type Props = {
-  grid: Grid<GridWidget>
+  grid: Grid
   isActive: boolean
+  isMoveable?: boolean
 }
 
 const props = defineProps<Props>()
@@ -11,6 +12,7 @@ const { formatMessage } = useIntl()
 const { canEditGrid, addGrid } = useGrid()
 const { showModal } = useModal()
 const { selectedGridId, tempGrid } = storeToRefs(useGridStore())
+const { isMobile } = storeToRefs(useAppStore())
 const dropdownId = `dropdown-${generateItemId()}`
 
 const styleVariants = tv({
@@ -26,24 +28,28 @@ const styleVariants = tv({
         label: 'cursor-pointer opacity-50 transition hover:opacity-100',
       },
     },
+    isMoveable: {
+      true: {
+        label: '!cursor-ew-resize',
+      },
+    },
   },
 })
 
 const styles = computed(() => {
   return styleVariants({
     isActive: props.isActive,
+    isMoveable: props.isMoveable,
   })
 })
 
 const handleEdit = () => {
-  showModal({
+  showModal<Partial<Grid>>({
     template: 'AddEditGrid',
     data: {
-      grid: {
-        id: props.grid.id,
-        title: props.grid.title,
-        gridColumns: props.grid.gridColumns,
-      },
+      id: props.grid.id,
+      title: props.grid.title,
+      gridColumns: props.grid.gridColumns,
     },
   })
 }
@@ -59,8 +65,8 @@ const handleDelete = () => {
 }
 
 const handleDuplicate = () => {
-  const newGrid: Grid<GridWidget> = {
-    id: createGridId<GridWidget>(props.grid, tempGrid.value),
+  const newGrid: Grid = {
+    id: createGridId(props.grid, tempGrid.value),
     title: formatMessage('grid_tabs_copy_of', { title: props.grid.title }),
     grid: props.grid.grid,
     gridColumns: props.grid.gridColumns,
@@ -82,7 +88,7 @@ const handleSelectTab = (id: string) => {
         {{ grid.title }}
       </div>
       <lukso-icon
-        v-if="canEditGrid"
+        v-if="canEditGrid && !isMobile"
         :id="dropdownId"
         class="absolute right-[-18px] mx-1 -mr-1 cursor-pointer p-1 opacity-0 transition hover:!opacity-100 group-hover:opacity-50"
         name="edit"

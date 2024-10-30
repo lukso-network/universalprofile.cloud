@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import tinycolor from 'tinycolor2'
-
 type Props = {
   type: GridWidgetType
   id?: string
-  properties?: GridWidgetProperties
+  properties?: TextWidgetProperties
   width?: number
   height?: number
 }
@@ -14,138 +12,63 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
-
-const INPUT_FOCUS_DELAY = 10 // small delay for focusing input after element render
-const DEFAULT_PROPERTIES = {
-  title: '',
-  text: '',
-  titleColor: '#243542',
-  textColor: '#243542',
-  backgroundColor: '#f9f9f9',
-}
-const inputValues = reactive(DEFAULT_PROPERTIES)
-const inputErrors = reactive({
-  titleColor: '',
-  textColor: '',
-  backgroundColor: '',
-})
-
-const canSubmit = ref(false)
+const schema = WIDGET_SCHEMA_MAP[props.type]
 const isEdit = computed(() => !!props.id)
+const {
+  inputValues,
+  canSubmit,
+  getFieldErrorMessage,
+  handleFieldChange,
+  handleFormErrors,
+} = useForm(
+  schema,
+  (await schema?.optional().safeParseAsync(props.properties || {}))?.data
+)
 
-const handleSave = () => {
+const handleSave = async () => {
   if (!canSubmit.value) {
     return
   }
 
-  const properties = toRaw(inputValues)
+  try {
+    const properties = await schema?.parseAsync(inputValues.value)
 
-  if (isEdit.value) {
-    updateGridWidget(props.id, {
-      properties,
-      w: props.width,
-      h: props.height,
-    })
-  } else {
-    const newWidget: GridWidgetWithoutCords = createWidgetObject({
-      type: props.type,
-      properties,
-      w: props.width,
-      h: props.height,
-    })
+    if (isEdit.value) {
+      updateGridWidget(props.id, {
+        properties,
+        w: props.width,
+        h: props.height,
+      })
+    } else {
+      const newWidget: GridWidgetWithoutCords = createWidgetObject({
+        type: props.type,
+        properties,
+        w: props.width,
+        h: props.height,
+      })
 
-    addGridWidget(newWidget, getGridById(tempGrid.value, selectedGridId.value))
+      addGridWidget(
+        newWidget,
+        getGridById(tempGrid.value, selectedGridId.value)
+      )
+    }
+
+    handleCancel()
+  } catch (error: unknown) {
+    handleFormErrors(error)
   }
-
-  handleCancel()
 }
 
 const handleCancel = () => {
   closeModal()
 }
 
-const handleTitleChange = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const input = event.target as HTMLInputElement
-  inputValues.title = input.value
-}
-
-const handleTextChange = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const input = event.target as HTMLInputElement
-  inputValues.text = input.value
-}
-
-const handleTitleColorChange = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const color = event.target as HTMLInputElement
-  const tColor = tinycolor(color.value)
-  inputErrors.titleColor = ''
-
-  if (!tColor.isValid()) {
-    inputErrors.titleColor = formatMessage('errors_invalid_hex_color')
-    return
-  }
-
-  inputValues.titleColor = color.value
-}
-
-const handleTextColorChange = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const color = event.target as HTMLInputElement
-  const tColor = tinycolor(color.value)
-  inputErrors.textColor = ''
-
-  if (!tColor.isValid()) {
-    inputErrors.textColor = formatMessage('errors_invalid_hex_color')
-    return
-  }
-
-  inputValues.textColor = color.value
-}
-
-const handleBackgroundColorChange = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const color = event.target as HTMLInputElement
-  const tColor = tinycolor(color.value)
-  inputErrors.backgroundColor = ''
-
-  if (!tColor.isValid()) {
-    inputErrors.backgroundColor = formatMessage('errors_invalid_hex_color')
-    return
-  }
-
-  inputValues.backgroundColor = color.value
-}
-
-watchEffect(() => {
-  canSubmit.value =
-    !inputErrors.titleColor &&
-    !inputErrors.textColor &&
-    !inputErrors.backgroundColor
-})
-
 const handleBackToSelection = () => {
-  showModal({
+  showModal<Partial<GridWidget>>({
     template: 'AddGridWidget',
     forceOpen: true,
-    data: {
-      type: undefined, // when no type we display selection screen
-    },
   })
 }
-
-onMounted(() => {
-  setTimeout(() => {
-    const input = document?.querySelector(
-      'lukso-input'
-    ) as unknown as HTMLElement
-
-    input?.shadowRoot?.querySelector('input')?.focus()
-  }, INPUT_FOCUS_DELAY)
-
-  Object.assign(inputValues, props.properties || DEFAULT_PROPERTIES)
-})
 </script>
 
 <template>
@@ -176,55 +99,69 @@ onMounted(() => {
     <div class="flex flex-col gap-4">
       <!-- Background color -->
       <lukso-color-picker
-        .value="inputValues.backgroundColor"
+        .value="inputValues?.backgroundColor"
+        id="background-color"
         :label="formatMessage('add_widget_text_background_color_label')"
         :placeholder="
           formatMessage('add_widget_text_background_color_placeholder')
         "
-        :error="inputErrors.backgroundColor"
-        @on-input="handleBackgroundColorChange"
+        :error="getFieldErrorMessage('backgroundColor')"
+        autofocus
+        @on-input="
+          (customEvent: CustomEvent) =>
+            handleFieldChange(customEvent, 'backgroundColor')
+        "
       ></lukso-color-picker>
 
       <div class="flex flex-col gap-2">
         <!-- Title -->
         <lukso-input
-          .value="inputValues.title"
+          .value="inputValues?.title"
           :label="formatMessage('add_widget_text_title_label')"
           :placeholder="formatMessage('add_widget_text_title_placeholder')"
           is-full-width
-          autofocus
-          @on-input="handleTitleChange"
+          @on-input="
+            (customEvent: CustomEvent) =>
+              handleFieldChange(customEvent, 'title')
+          "
         ></lukso-input>
 
         <!-- Title color -->
         <lukso-color-picker
-          .value="inputValues.titleColor"
+          .value="inputValues?.titleColor"
           :placeholder="
             formatMessage('add_widget_text_title_color_placeholder')
           "
-          :error="inputErrors.titleColor"
-          @on-input="handleTitleColorChange"
+          :error="getFieldErrorMessage('titleColor')"
+          @on-input="
+            (customEvent: CustomEvent) =>
+              handleFieldChange(customEvent, 'titleColor')
+          "
         ></lukso-color-picker>
       </div>
 
       <div class="flex flex-col gap-2">
         <!-- Description -->
         <lukso-textarea
-          :value="inputValues.text"
+          :value="inputValues?.text"
           :label="formatMessage('add_widget_text_text_label')"
           :placeholder="formatMessage('add_widget_text_text_placeholder')"
           is-full-width
           rows="3"
-          autofocus
-          @on-input="handleTextChange"
+          @on-input="
+            (customEvent: CustomEvent) => handleFieldChange(customEvent, 'text')
+          "
         ></lukso-textarea>
 
         <!-- Description color -->
         <lukso-color-picker
-          .value="inputValues.textColor"
+          .value="inputValues?.textColor"
           :placeholder="formatMessage('add_widget_text_text_color_placeholder')"
-          :error="inputErrors.textColor"
-          @on-input="handleTextColorChange"
+          :error="getFieldErrorMessage('textColor')"
+          @on-input="
+            (customEvent: CustomEvent) =>
+              handleFieldChange(customEvent, 'textColor')
+          "
         ></lukso-color-picker>
       </div>
     </div>

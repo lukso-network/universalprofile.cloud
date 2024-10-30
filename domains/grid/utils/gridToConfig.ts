@@ -3,13 +3,11 @@
  *
  * @param _grid
  */
-export const gridToConfig = (
-  _grid: Grid<GridWidget>[]
-): PartialBy<Grid<GridConfigItem>, 'id'>[] => {
-  const convertGrid = (grid: GridWidget[]): GridConfigItem[] => {
+export const gridToConfig = (_grid: Grid[]): GridConfig[] => {
+  const convertGrid = (gridWidgets: GridWidget[]): GridConfigWidget[] => {
     // remove "add content" widget from grid before saving
-    const gridWithoutAddContentWidget = grid.filter(
-      item => item.type !== GRID_WIDGET_TYPE.ADD_CONTENT
+    const gridWithoutAddContentWidget = gridWidgets.filter(
+      item => item.type !== GRID_WIDGET_TYPE.enum.ADD_CONTENT
     )
 
     // sort by y and then x to get the correct order

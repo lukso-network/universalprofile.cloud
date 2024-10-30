@@ -13,7 +13,7 @@ describe('gridToConfig', () => {
         title: 'single',
         grid: [
           {
-            type: GRID_WIDGET_TYPE.IFRAME,
+            type: GRID_WIDGET_TYPE.enum.IFRAME,
             properties: {
               src: 'https://via.placeholder.com/150',
             },
@@ -24,7 +24,7 @@ describe('gridToConfig', () => {
             y: 0,
           },
           {
-            type: GRID_WIDGET_TYPE.TEXT,
+            type: GRID_WIDGET_TYPE.enum.TEXT,
             properties: {
               title: 'Hey',
               text: 'Customize your grid grid!',
@@ -37,7 +37,7 @@ describe('gridToConfig', () => {
             y: 1,
           },
           {
-            type: GRID_WIDGET_TYPE.IMAGE,
+            type: GRID_WIDGET_TYPE.enum.IMAGE,
             properties: {
               src: 'https://via.placeholder.com/150',
             },

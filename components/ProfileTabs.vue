@@ -9,25 +9,11 @@ type Emits = (event: 'activate-tab', value: ProfileViewTab) => void
 defineProps<Props>()
 const emits = defineEmits<Emits>()
 const { formatMessage } = useIntl()
-const { isConnected, isConnectedUserViewingOwnProfile } =
-  storeToRefs(useAppStore())
-const { isEditingGrid } = storeToRefs(useGridStore())
-const { connect } = useBaseProvider()
-
-const handleToggleGridEditMode = async () => {
-  if (!isConnected.value) {
-    await connect()
-    isEditingGrid.value = true
-    return
-  }
-
-  isEditingGrid.value = !isEditingGrid.value
-}
 </script>
 
 <template>
   <div
-    class="mb-4 flex min-h-11 items-center justify-between border-b border-b-neutral-90 pb-4"
+    class="mb-4 flex min-h-11 select-none items-center justify-between border-b border-b-neutral-90 pb-4"
   >
     <ul class="flex justify-center gap-6 sm:justify-start">
       <ProfileTabsItem
@@ -39,12 +25,5 @@ const handleToggleGridEditMode = async () => {
         @click="emits('activate-tab', tab)"
       />
     </ul>
-    <template v-if="activeTab === 'grid' && isConnectedUserViewingOwnProfile">
-      <lukso-icon
-        :name="isEditingGrid && isConnected ? 'close-lg' : 'edit'"
-        @click="handleToggleGridEditMode"
-        class="cursor-pointer opacity-50 transition hover:opacity-100"
-      ></lukso-icon>
-    </template>
   </div>
 </template>

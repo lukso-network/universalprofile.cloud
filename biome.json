@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
@@ -22,7 +22,7 @@
       "enabled": false,
       "semicolons": "asNeeded",
       "quoteStyle": "single",
-      "trailingComma": "all"
+      "trailingCommas": "all"
     }
   },
   "files": {

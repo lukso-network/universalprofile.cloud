@@ -48,7 +48,7 @@ describe('configToGrid', () => {
         title: 'single',
         grid: [
           {
-            type: GRID_WIDGET_TYPE.IFRAME,
+            type: GRID_WIDGET_TYPE.enum.IFRAME,
             width: 1,
             height: 1,
             properties: {
@@ -56,7 +56,7 @@ describe('configToGrid', () => {
             },
           },
           {
-            type: GRID_WIDGET_TYPE.TEXT,
+            type: GRID_WIDGET_TYPE.enum.TEXT,
             width: 1,
             height: 1,
             properties: {
@@ -66,7 +66,7 @@ describe('configToGrid', () => {
             },
           },
           {
-            type: GRID_WIDGET_TYPE.IMAGE,
+            type: GRID_WIDGET_TYPE.enum.IMAGE,
             width: 1,
             height: 1,
             properties: {

@@ -69,10 +69,12 @@ const handleBuySellAsset = (event: Event) => {
     return navigateTo(collectionRoute(props.asset.address))
   }
 
-  window.open(
-    universalPageAssetUrl(props.asset.address, props.asset.tokenId),
-    '_blank'
-  )
+  navigateTo(universalPageAssetUrl(props.asset.address, props.asset.tokenId), {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 
 const assetTokenId = computed(() => {

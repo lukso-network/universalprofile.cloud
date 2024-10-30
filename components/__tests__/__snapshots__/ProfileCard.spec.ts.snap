@@ -3,7 +3,7 @@
 exports[`ProfileCard > should render empty profile 1`] = `
 "<div id="test-wrapper">
   <div class="relative">
-    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="small" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
       <div slot="header" class="relative flex size-full flex-col items-center">
         <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
           <div>
@@ -61,7 +61,7 @@ exports[`ProfileCard > should render empty profile 1`] = `
 exports[`ProfileCard > should render followed by info 1`] = `
 "<div id="test-wrapper">
   <div class="relative">
-    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="small" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
       <div slot="header" class="relative flex size-full flex-col items-center">
         <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
           <div>
@@ -140,7 +140,7 @@ exports[`ProfileCard > should render followed by info 1`] = `
 exports[`ProfileCard > should render profile when connected 1`] = `
 "<div id="test-wrapper">
   <div class="relative">
-    <lukso-card variant="dapp" background-url="https://example.com/background.jpg" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+    <lukso-card variant="dapp" background-url="https://example.com/background.jpg" is-full-width="" shadow="small" border-radius="small" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
       <div slot="header" class="relative flex size-full flex-col items-center">
         <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
           <div>
@@ -219,7 +219,7 @@ exports[`ProfileCard > should render profile when connected 1`] = `
 exports[`ProfileCard > should render profile when not connected 1`] = `
 "<div id="test-wrapper">
   <div class="relative">
-    <lukso-card variant="dapp" background-url="https://example.com/background.jpg" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+    <lukso-card variant="dapp" background-url="https://example.com/background.jpg" is-full-width="" shadow="small" border-radius="small" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
       <div slot="header" class="relative flex size-full flex-col items-center">
         <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
           <div>
@@ -298,7 +298,7 @@ exports[`ProfileCard > should render profile when not connected 1`] = `
 exports[`ProfileCard > should render unfollow button 1`] = `
 "<div id="test-wrapper">
   <div class="relative">
-    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="medium" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
+    <lukso-card variant="dapp" is-full-width="" shadow="small" border-radius="small" class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full">
       <div slot="header" class="relative flex size-full flex-col items-center">
         <div class="absolute right-4 top-4 flex flex-col items-end gap-2">
           <div>

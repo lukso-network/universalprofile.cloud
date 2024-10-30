@@ -5,7 +5,7 @@ import type { Modal } from '@/types/modal'
  *
  * @param data
  */
-const showModal = async (modal: Modal) => {
+const showModal = async <T = ModalData>(modal: Modal<T>) => {
   const route = useRoute()
   const { isModalOpen } = storeToRefs(useAppStore())
 
@@ -49,12 +49,12 @@ const closeModal = async () => {
   })
 }
 
-export const useModal = () => {
+export const useModal = <T = ModalData>() => {
   const { modal } = useAppStore()
 
   return {
     showModal,
     closeModal,
-    modal,
+    modal: modal as Modal<T>,
   }
 }

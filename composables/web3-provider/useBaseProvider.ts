@@ -15,17 +15,26 @@ const connect = async () => {
 
 const disconnect = () => {
   const { removeItem } = useLocalStorage()
-  const { connectedProfileAddress, isWalletConnect, walletConnectProvider } =
-    storeToRefs(useAppStore())
+  const {
+    connectedProfileAddress,
+    isWalletConnect,
+    walletConnectProvider,
+    walletConnectSession,
+  } = storeToRefs(useAppStore())
+  const { isEditingGrid } = storeToRefs(useGridStore())
 
   // disconnect WalletConnect
   if (isWalletConnect.value) {
     walletConnectProvider.value?.disconnect()
-    isWalletConnect.value = false
+    walletConnectSession.value = undefined
   }
 
+  // reset connected profile address
   connectedProfileAddress.value = undefined
+  // remove connection expiry
   removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
+  // exit edit mode for grid
+  isEditingGrid.value = false
 }
 
 /**

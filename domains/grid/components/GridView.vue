@@ -2,7 +2,7 @@
 import { useElementSize } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
-const { isConnected, isMobile } = storeToRefs(useAppStore())
+const { isMobile } = storeToRefs(useAppStore())
 const {
   isEditingGrid,
   tempGrid,
@@ -10,9 +10,9 @@ const {
   hasUnsavedGrid,
   gridRowHeightRatio,
   selectedGridId,
+  isSavingGrid,
 } = storeToRefs(useGridStore())
 const {
-  initializeGrid,
   saveGrid,
   canEditGrid,
   getSelectedGridWidgets,
@@ -26,14 +26,14 @@ const gridWidgets = ref<GridWidget[]>([])
 const movementX = ref(0)
 const address = computed(() => getCurrentProfileAddress())
 
-const currentGrid = computed(() => {
+const currentGrid = () => {
   // when user is editing and has unsaved changes, use temp grid
   if (canEditGrid.value && hasUnsavedGrid.value) {
     return tempGrid.value
   }
 
   return viewedGrid.value
-})
+}
 
 const gridRowHeight = computed(() => {
   const columnSpacing = GRID_SPACING_PX * (gridColumnNumber.value - 1)
@@ -47,7 +47,7 @@ const gridRowHeight = computed(() => {
 const gridColumnNumber = computed(() =>
   isMobile.value
     ? 1
-    : getGridById(currentGrid.value, selectedGridId.value)?.gridColumns ||
+    : getGridById(currentGrid(), selectedGridId.value)?.gridColumns ||
       GRID_COLUMNS_MIN
 )
 
@@ -96,6 +96,7 @@ const handleResetGrid = async () => {
   tempGrid.value = cloneObject(_grid)
   viewedGrid.value = cloneObject(_grid)
   gridWidgets.value = getSelectedGridWidgets(cloneObject(_grid))
+  isSavingGrid.value = false
 
   // if selected grid is affected by reset, select first grid
   if (!viewedGrid.value.some(item => item.id === selectedGridId.value)) {
@@ -129,7 +130,7 @@ const handleItemResized = () => {
 // - user make modifications in widgets (add/edit/remove/resize)
 // - user toggles edit mode
 watch(
-  [tempGrid, isEditingGrid, selectedGridId, isMobile],
+  [tempGrid, isEditingGrid, selectedGridId, isMobile, viewedGrid],
   () => {
     const updatedViewedGrid = buildGrid(
       viewedGrid.value,
@@ -159,18 +160,7 @@ watch(
     // re-init selected grid id when user toggles edit mode in case the selected grid was changed
     initSelectedGridId()
   },
-  { deep: true }
-)
-
-// initialize grid on initial render and when user connects/disconnects
-watch(
-  [isConnected],
-  async () => {
-    await initializeGrid(address.value, canEditGrid.value)
-    console.log('Grid initialized', getSelectedGridWidgets(currentGrid.value))
-    gridWidgets.value = getSelectedGridWidgets(currentGrid.value)
-  },
-  { immediate: true }
+  { deep: true, immediate: true }
 )
 
 onMounted(() => {
@@ -184,8 +174,8 @@ onUnmounted(() => {
 
 <template>
   <div class="w-full">
-    <div class="mx-auto min-h-[200px] max-w-content" ref="gridContainer">
-      <GridTabs :grid="currentGrid" />
+    <div class="mx-auto max-w-content" ref="gridContainer">
+      <GridTabs />
       <GridLayout
         v-model:layout="gridWidgets"
         :col-num="gridColumnNumber"
@@ -231,12 +221,8 @@ onUnmounted(() => {
       </GridLayout>
     </div>
 
-    <!-- Confirmation dialog for unsaved changes -->
-    <GridConfirmationDialog
-      v-if="canEditGrid"
-      @save="handleSaveGrid"
-      @cancel="handleResetGrid"
-    />
+    <!-- Grid floating menu -->
+    <GridFloatingMenu @on-save="handleSaveGrid" @on-reset="handleResetGrid" />
   </div>
 </template>
 

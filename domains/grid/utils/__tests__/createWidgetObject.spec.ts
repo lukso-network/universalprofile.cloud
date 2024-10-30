@@ -8,7 +8,7 @@ vi.mock('/domains/grid/utils/generateItemId', () => ({
 describe('createWidgetObject', () => {
   it('should create a widget object with default values', () => {
     const newWidget = {
-      type: GRID_WIDGET_TYPE.IFRAME,
+      type: GRID_WIDGET_TYPE.enum.IFRAME,
     }
     const result = createWidgetObject(newWidget)
 
@@ -23,7 +23,7 @@ describe('createWidgetObject', () => {
 
   it('should create a widget object with passed values', () => {
     const newWidget = {
-      type: GRID_WIDGET_TYPE.IFRAME,
+      type: GRID_WIDGET_TYPE.enum.IFRAME,
       w: 2,
       h: 2,
       properties: {

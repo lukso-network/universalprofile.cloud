@@ -2,28 +2,26 @@
 
 exports[`ProfileTabs > renders active state 1`] = `
 "<div id="test-wrapper">
-  <div class="mb-4 flex min-h-11 items-center justify-between border-b border-b-neutral-90 pb-4">
+  <div class="mb-4 flex min-h-11 select-none items-center justify-between border-b border-b-neutral-90 pb-4">
     <ul class="flex justify-center gap-6 sm:justify-start">
       <li class="heading-inter-17-semi-bold flex items-center cursor-pointer opacity-50 transition hover:opacity-100">Tokens
         <!--v-if-->
       </li>
       <li class="heading-inter-17-semi-bold flex items-center cursor-default">Collectibles <span class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 px-1 py-[1px] bg-neutral-20 text-neutral-100">2</span></li>
     </ul>
-    <!--v-if-->
   </div>
 </div>"
 `;
 
 exports[`ProfileTabs > renders default state 1`] = `
 "<div id="test-wrapper">
-  <div class="mb-4 flex min-h-11 items-center justify-between border-b border-b-neutral-90 pb-4">
+  <div class="mb-4 flex min-h-11 select-none items-center justify-between border-b border-b-neutral-90 pb-4">
     <ul class="flex justify-center gap-6 sm:justify-start">
       <li class="heading-inter-17-semi-bold flex items-center cursor-pointer opacity-50 transition hover:opacity-100">Tokens
         <!--v-if-->
       </li>
       <li class="heading-inter-17-semi-bold flex items-center cursor-pointer opacity-50 transition hover:opacity-100">Collectibles <span class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 px-1 py-[1px] bg-transparent text-neutral-20">2</span></li>
     </ul>
-    <!--v-if-->
   </div>
 </div>"
 `;

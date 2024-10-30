@@ -1,71 +1,40 @@
-export enum GRID_WIDGET_TYPE {
+import { type ZodEffects, type ZodObject, z } from 'zod'
+
+export const GRID_WIDGET_TYPE = z.enum([
   // custom
-  TITLE_LINK = 'TITLE_LINK',
-  TEXT = 'TEXT',
-  IFRAME = 'IFRAME',
-  IMAGE = 'IMAGE',
+  'TEXT',
+  'IFRAME',
+  'IMAGE',
 
   // social media
-  X = 'X',
-  INSTAGRAM = 'INSTAGRAM',
-  WARPCAST = 'WARPCAST',
+  'X',
+  'INSTAGRAM',
+  'WARPCAST',
 
   // music
-  SPOTIFY = 'SPOTIFY',
-  SOUNDCLOUD = 'SOUNDCLOUD',
+  'SPOTIFY',
+  'SOUNDCLOUD',
 
   // video
-  YOUTUBE = 'YOUTUBE',
+  'YOUTUBE',
 
   // static widgets for visual purposes
-  ADD_CONTENT = 'ADD_CONTENT',
-}
+  'ADD_CONTENT',
+])
 
-export const WIDGET_TYPE_PROPERTIES: Record<
-  GridWidgetType,
-  GridWidgetProperty[]
+// map zod schema to widget type
+export const WIDGET_SCHEMA_MAP: Partial<
+  Record<GridWidgetType, ZodObject<any> | ZodEffects<ZodObject<any>>>
 > = {
-  [GRID_WIDGET_TYPE.TITLE_LINK]: [
-    { key: 'title', type: 'string' },
-    { key: 'src', type: 'url', optional: true },
-    { key: 'textColor', type: 'color', optional: true },
-    { key: 'backgroundColor', type: 'color', optional: true },
-  ],
-  [GRID_WIDGET_TYPE.TEXT]: [
-    { key: 'title', type: 'string' },
-    { key: 'text', type: 'string' },
-    { key: 'titleColor', type: 'color' },
-    { key: 'textColor', type: 'color' },
-    { key: 'backgroundColor', type: 'color', optional: true },
-  ],
-  [GRID_WIDGET_TYPE.X]: [
-    { key: 'src', type: 'url' },
-    { key: 'type', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.INSTAGRAM]: [
-    { key: 'src', type: 'url' },
-    { key: 'type', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.IFRAME]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.IMAGE]: [{ key: 'src', type: 'url' }],
-  [GRID_WIDGET_TYPE.ADD_CONTENT]: [],
-  [GRID_WIDGET_TYPE.YOUTUBE]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.SPOTIFY]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-    { key: 'type', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.SOUNDCLOUD]: [
-    { key: 'src', type: 'url' },
-    { key: 'allow', type: 'string' },
-  ],
-  [GRID_WIDGET_TYPE.WARPCAST]: [{ key: 'src', type: 'url' }],
+  [GRID_WIDGET_TYPE.enum.TEXT]: textWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.X]: xWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: instagramWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.IFRAME]: iframeWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.IMAGE]: imageWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.YOUTUBE]: youtubeWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.SPOTIFY]: spotifyWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: soundCloudWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.WARPCAST]: warpcastWidgetSchema,
 }
 
 // grid breakpoint where the grid switches into mobile mode
@@ -93,3 +62,78 @@ export const DEFAULT_SMALL_COLUMN_NUMBER = 1
 // minimum and maximum number of columns in the grid
 export const GRID_COLUMNS_MIN = 2
 export const GRID_COLUMNS_MAX = 4
+
+// TODO instead of this huge object we should break down into individual parser files
+export const PLATFORM_PARSING_PARAMETERS: Partial<
+  Record<GridWidgetType, PlatformParsingParameters | undefined>
+> = {
+  [GRID_WIDGET_TYPE.enum.X]: {
+    type: GRID_WIDGET_TYPE.enum.X,
+    embedRegex:
+      /https?:\/\/twitter\.com\/(?<handle>[a-zA-Z0-9_]+)(?:\/status\/(?<id>\d+))?(?:\?[^"'\s]*)?/,
+    secondaryRegexesWithCallbacks: [
+      // Match a handle with @ symbol
+      {
+        regex: /@([a-zA-Z0-9_]{1,15})/,
+        callback: getXOEmbedFromHandle,
+      },
+      // Match a Twitter URL with or without https www and status
+      {
+        regex:
+          /(https?:\/\/)?(?:x\.com|twitter\.com)\/[a-zA-Z0-9_]+(?:\/status\/(\d+))?/,
+        callback: async url => sanitizeXEmbedUrl(url),
+      },
+    ],
+  },
+  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: {
+    type: GRID_WIDGET_TYPE.enum.INSTAGRAM,
+    embedRegex:
+      /https:\/\/www\.instagram\.com\/(?<type>p|reel|profile|tv)\/(?<id>[\w-]+)\/(?<params>\?[^"]*)?/,
+  },
+  [GRID_WIDGET_TYPE.enum.SPOTIFY]: {
+    type: GRID_WIDGET_TYPE.enum.IFRAME,
+    embedRegex:
+      /https?:\/\/(?:open\.)?spotify\.com\/embed\/?(?<type>track|playlist|artist)\/(?<id>[^?]+)(?:\?utm_source=(?:generator|oembed))?(?:&theme=(?<theme>\d))?/,
+    secondaryRegexesWithCallbacks: [
+      {
+        regex:
+          /https:\/\/open\.spotify\.com\/(?<type>track|playlist|artist)\/(?<id>[^?]+)/,
+        callback: getSpotifyOEmbed,
+      },
+    ],
+    constantProperties: {
+      allow:
+        'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+    },
+  },
+  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: {
+    type: GRID_WIDGET_TYPE.enum.IFRAME,
+    embedRegex:
+      /https?:\/\/w\.soundcloud\.com\/player\/\?(?:(?!url=https).)*url=https(?::|%3A)(?:\/|%2F){2}api\.soundcloud\.com(?:\/|%2F)(?<type>tracks|playlists|users)(?:\/|%2F)\d+(?:[^"]*)?/,
+    secondaryRegexesWithCallbacks: [
+      {
+        regex:
+          /https:\/\/soundcloud\.com\/([a-zA-Z0-9_-]+)(?:\/(sets\/[a-zA-Z0-9_-]+|[a-zA-Z0-9_-]+))?\/?/,
+        callback: getSoundCloudOEmbed,
+      },
+    ],
+    constantProperties: {
+      allow:
+        'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+    },
+  },
+  [GRID_WIDGET_TYPE.enum.YOUTUBE]: {
+    type: GRID_WIDGET_TYPE.enum.YOUTUBE,
+    embedRegex: /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^?]+)/,
+    secondaryRegexesWithCallbacks: [
+      {
+        regex: /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/,
+        callback: async url => sanitizeYoutubeEmbedUrl(url),
+      },
+    ],
+    constantProperties: {
+      allow:
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+    },
+  },
+}

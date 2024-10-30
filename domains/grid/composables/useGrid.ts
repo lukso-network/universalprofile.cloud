@@ -1,10 +1,8 @@
-import type { GridWidget } from '@/types/grid'
-
 export const useGrid = () => {
   const {
     isConnected,
     connectedProfileAddress,
-    isConnectedUserViewingOwnProfile,
+    isViewingOwnProfile,
     isMobile,
   } = storeToRefs(useAppStore())
   const {
@@ -17,22 +15,17 @@ export const useGrid = () => {
   } = storeToRefs(useGridStore())
 
   const canEditGrid = computed(
-    () =>
-      isEditingGrid.value &&
-      isConnected.value &&
-      isConnectedUserViewingOwnProfile.value
+    () => isEditingGrid.value && isConnected.value && isViewingOwnProfile.value
   )
 
-  const getGridById = (grids: Grid<GridWidget>[], id?: string) =>
-    grids.find(grid => grid.id === id)
+  const getGridById = (grid: Grid[], id?: string) =>
+    grid.find(item => item.id === id)
 
-  const getSelectedGridWidgets = (grids: Grid<GridWidget>[]): GridWidget[] =>
-    getGridById(grids, selectedGridId.value)?.grid || []
+  const getSelectedGridWidgets = (grid: Grid[]): GridWidget[] =>
+    getGridById(grid, selectedGridId.value)?.grid || []
 
-  const updateSelectedGrid = (
-    gridWidgets: GridWidget[]
-  ): Grid<GridWidget>[] => {
-    const updatedGrids = tempGrid.value.map(item => {
+  const updateSelectedGrid = (gridWidgets: GridWidget[]): Grid[] => {
+    const updatedGrid = tempGrid.value.map(item => {
       if (item.id === selectedGridId.value) {
         return {
           id: item.id,
@@ -45,7 +38,7 @@ export const useGrid = () => {
       return item
     })
 
-    return updatedGrids
+    return updatedGrid
   }
 
   const initSelectedGridId = () => {
@@ -60,12 +53,29 @@ export const useGrid = () => {
     }
   }
 
-  const gridCount = computed(() => {
-    if (canEditGrid.value) {
-      return tempGrid.value.length
-    }
+  const gridsForDisplay = computed(() => {
+    const grids = canEditGrid.value
+      ? tempGrid.value
+      : viewedGrid.value.filter(grid => grid.grid.length > 0)
 
-    return viewedGrid.value.length
+    return grids.map(grid => {
+      return {
+        grid,
+      }
+    })
+  })
+
+  const gridsForTabs = computed(() => {
+    const grids =
+      isConnected.value && isViewingOwnProfile.value
+        ? tempGrid.value
+        : viewedGrid.value.filter(grid => grid.grid.length > 0)
+
+    return grids.map(grid => {
+      return {
+        grid,
+      }
+    })
   })
 
   return {
@@ -73,7 +83,7 @@ export const useGrid = () => {
       address?: Address,
       withAddContentPlaceholder?: boolean
     ) => {
-      let grid: Grid<GridWidget>[] = []
+      let grid: Grid[] = []
 
       if (!address) {
         return []
@@ -84,6 +94,17 @@ export const useGrid = () => {
         const userGrid = await getUserGrid(address)
         grid = buildGrid(userGrid, isMobile.value, withAddContentPlaceholder)
 
+        if (grid.length === 0) {
+          grid = [
+            {
+              id: 'main',
+              title: 'Main',
+              grid: [],
+              gridColumns: GRID_COLUMNS_MIN,
+            },
+          ]
+        }
+
         if (gridLog.enabled) {
           gridLog('Initialize user grid', userGrid)
         }
@@ -93,7 +114,11 @@ export const useGrid = () => {
 
       // in case we don't have a temp grid yet we initialize it
       const _initTempGrid = () => {
-        if (tempGrid.value.length === 0 && viewedGrid.value.length !== 0) {
+        if (
+          tempGrid.value.length === 0 &&
+          viewedGrid.value.length !== 0 &&
+          isViewingOwnProfile.value
+        ) {
           tempGrid.value = cloneObject(grid)
         }
       }
@@ -121,12 +146,9 @@ export const useGrid = () => {
       initSelectedGridId()
     },
 
-    addGridWidget: (
-      widget: GridWidgetWithoutCords,
-      grid?: Grid<GridWidget>
-    ) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+    addGridWidget: (widget: GridWidgetWithoutCords, grid?: Grid) => {
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -135,12 +157,16 @@ export const useGrid = () => {
         return
       }
 
+      if (gridLog.enabled) {
+        gridLog('Add grid widget', widget)
+      }
+
       placeWidgetInGrid(widget, grid.grid, grid.gridColumns)
     },
 
     updateGridWidget: (id?: string, widget?: Partial<GridWidget>) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -161,12 +187,17 @@ export const useGrid = () => {
         ...gridWidgets[widgetIndex],
         ...widget,
       }
+
+      if (gridLog.enabled) {
+        gridLog('Update grid widget', gridWidgets[widgetIndex])
+      }
+
       tempGrid.value = updateSelectedGrid(gridWidgets)
     },
 
     removeGridWidget: (id: string | number) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -174,12 +205,16 @@ export const useGrid = () => {
         return
       }
 
+      if (gridLog.enabled) {
+        gridLog('Remove grid widget', id)
+      }
+
       tempGrid.value = updateSelectedGrid(
         getSelectedGridWidgets(tempGrid.value).filter(item => item.i !== id)
       )
     },
 
-    saveGrid: async (grid?: Grid<GridWidget>[]) => {
+    saveGrid: async (grid?: Grid[]) => {
       if (!canEditGrid.value) {
         console.warn('User cannot edit grid')
         return
@@ -190,9 +225,10 @@ export const useGrid = () => {
       }
 
       const config = gridToConfig(grid)
+      const validation = await gridConfigSchema.array().safeParseAsync(config)
 
-      if (!isConfigValid(config)) {
-        console.warn('Invalid schema')
+      if (!validation.success) {
+        console.warn('Invalid schema', validation.error)
         return
       }
 
@@ -232,21 +268,18 @@ export const useGrid = () => {
       }
     },
 
-    addGrid: (grid: Grid<GridWidget>) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+    addGrid: (grid: Grid) => {
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
       tempGrid.value.push(grid)
     },
 
-    updateGrid: (
-      id?: string,
-      grid?: PartialBy<Grid<GridWidget>, 'id' | 'grid'>
-    ) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+    updateGrid: (id?: string, grid?: Partial<Grid>) => {
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -276,8 +309,8 @@ export const useGrid = () => {
     },
 
     removeGrid: (id: string) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -288,6 +321,7 @@ export const useGrid = () => {
     canEditGrid,
     initSelectedGridId,
     getGridById,
-    gridCount,
+    gridsForDisplay,
+    gridsForTabs,
   }
 }
