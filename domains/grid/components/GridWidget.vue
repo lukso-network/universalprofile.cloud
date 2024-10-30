@@ -13,12 +13,8 @@ const widgetComponent = shallowRef<Component | undefined>()
 const { canEditGrid, addGridWidget, getGridById } = useGrid()
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
-const {
-  isConnected,
-  isMobile,
-  isConnectedUserViewingOwnProfile,
-  connectedProfileAddress,
-} = storeToRefs(useAppStore())
+const { isConnected, isMobile, isViewingOwnProfile, connectedProfileAddress } =
+  storeToRefs(useAppStore())
 const { isEditingGrid, tempGrid, selectedGridId, tempGrids } =
   storeToRefs(useGridStore())
 const { connect } = useBaseProvider()
@@ -37,7 +33,7 @@ const isAddContentWidget = computed(
 )
 
 const isAllowToClone = computed(
-  () => isEditingGrid.value || !isConnectedUserViewingOwnProfile.value
+  () => isEditingGrid.value || !isViewingOwnProfile.value
 )
 
 const src = computedAsync(async () => {
@@ -145,7 +141,7 @@ const handleClone = async () => {
   isEditingGrid.value = true // we enable edit mode so user is aware about unsaved state
 
   // in case we are on own profile we do simply widget copy
-  if (isConnectedUserViewingOwnProfile.value) {
+  if (isViewingOwnProfile.value) {
     addGridWidget(
       clonedWidget,
       getGridById(tempGrid.value, selectedGridId.value)
@@ -268,7 +264,7 @@ onMounted(() => {
           "
         >
           <lukso-icon name="copy" size="small"></lukso-icon>
-          <span v-if="isConnectedUserViewingOwnProfile">
+          <span v-if="isViewingOwnProfile">
             {{ formatMessage('grid_widget_menu_clone') }}
           </span>
           <span v-else>

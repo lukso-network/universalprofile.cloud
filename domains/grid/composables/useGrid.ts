@@ -2,7 +2,7 @@ export const useGrid = () => {
   const {
     isConnected,
     connectedProfileAddress,
-    isConnectedUserViewingOwnProfile,
+    isViewingOwnProfile,
     isMobile,
   } = storeToRefs(useAppStore())
   const {
@@ -15,10 +15,7 @@ export const useGrid = () => {
   } = storeToRefs(useGridStore())
 
   const canEditGrid = computed(
-    () =>
-      isEditingGrid.value &&
-      isConnected.value &&
-      isConnectedUserViewingOwnProfile.value
+    () => isEditingGrid.value && isConnected.value && isViewingOwnProfile.value
   )
 
   const getGridById = (grid: Grid[], id?: string) =>
@@ -70,7 +67,7 @@ export const useGrid = () => {
 
   const gridsForTabs = computed(() => {
     const grids =
-      isConnected.value && isConnectedUserViewingOwnProfile.value
+      isConnected.value && isViewingOwnProfile.value
         ? tempGrid.value
         : viewedGrid.value.filter(grid => grid.grid.length > 0)
 
@@ -120,7 +117,7 @@ export const useGrid = () => {
         if (
           tempGrid.value.length === 0 &&
           viewedGrid.value.length !== 0 &&
-          isConnectedUserViewingOwnProfile.value
+          isViewingOwnProfile.value
         ) {
           tempGrid.value = cloneObject(grid)
         }
