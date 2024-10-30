@@ -6,6 +6,8 @@ import { balanceOfABI } from '@/shared/abis/balanceOfABI'
 import type { LSP7DigitalAsset as LSP7DigitalAssetInterface } from '@/contracts'
 
 const connectedProfile = useProfile().connectedProfile()
+const address = computed(() => connectedProfile.value?.address)
+const assetsData = useProfileAssets()(address.value)
 const { formatMessage } = useIntl()
 const checkError = ref('')
 const assetAddress = ref('')
@@ -60,7 +62,11 @@ const handleInput = async (customEvent: CustomEvent) => {
   assertAddress(assetAddress.value)
 
   // check if user doesn't already have the asset
-  if (connectedProfile.value?.receivedAssets?.includes(assetAddress.value)) {
+  const filteredAssetsAddresses = assetsData.value
+    ?.filter(asset => asset.isOwned)
+    .map(asset => asset.address)
+
+  if (filteredAssetsAddresses?.includes(assetAddress.value)) {
     checkError.value = formatMessage('errors_already_owned')
     return
   }
