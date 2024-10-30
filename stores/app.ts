@@ -108,7 +108,7 @@ export const useAppStore = defineStore(
 
     const isWalletConnect = computed(() => !!walletConnectSession.value)
 
-    const isConnectedUserViewingOwnProfile = computed(() => {
+    const isViewingOwnProfile = computed(() => {
       const viewedProfileAddress = computed(() => getCurrentProfileAddress())
 
       return (
@@ -119,7 +119,7 @@ export const useAppStore = defineStore(
     })
 
     const isViewedProfileConnected = computed(() => {
-      return isConnected.value && isConnectedUserViewingOwnProfile.value
+      return isConnected.value && isViewingOwnProfile.value
     })
 
     // --- actions
@@ -153,7 +153,7 @@ export const useAppStore = defineStore(
       walletConnectProvider,
       isWalletConnect,
       walletConnectSession,
-      isConnectedUserViewingOwnProfile,
+      isViewingOwnProfile,
       isViewedProfileConnected,
     }
   },

@@ -3,6 +3,10 @@ import { createTestingPinia } from '@pinia/testing'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import GridFloatingMenu from '../GridFloatingMenu.vue'
 
+vi.mock('/utils/getCurrentProfileAddress', () => ({
+  getCurrentProfileAddress: () => '0xcafebabe',
+}))
+
 describe('GridFloatingMenu', () => {
   beforeEach(() => {
     useIntl().setupIntl(defaultConfig)

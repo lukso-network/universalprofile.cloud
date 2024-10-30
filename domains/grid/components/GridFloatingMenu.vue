@@ -13,7 +13,8 @@ const BOTTOM_MARGIN_MOBILE_PX = 16
 const emits = defineEmits<Emits>()
 const { isEditingGrid, hasUnsavedGrid, isSavingGrid } =
   storeToRefs(useGridStore())
-const { isConnected, isMobile } = storeToRefs(useAppStore())
+const { isConnected, isMobile, isViewingOwnProfile } =
+  storeToRefs(useAppStore())
 const { formatMessage } = useIntl()
 const { showModal } = useModal()
 const bottom = ref(
@@ -137,7 +138,7 @@ onUnmounted(() => {
 
 <template>
   <div
-    v-if="isConnected"
+    v-if="isConnected && isViewingOwnProfile"
     class="fixed right-4 z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-drop-shadow duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition-height lg:right-[calc(50%-540px)]"
     :class="{
       'h-[64px] w-[320px] sm:h-[320px] sm:w-[64px]': isEditingGrid,

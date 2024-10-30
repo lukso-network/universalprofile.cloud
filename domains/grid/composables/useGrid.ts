@@ -2,7 +2,7 @@ export const useGrid = () => {
   const {
     isConnected,
     connectedProfileAddress,
-    isConnectedUserViewingOwnProfile,
+    isViewingOwnProfile,
     isMobile,
   } = storeToRefs(useAppStore())
   const {
@@ -15,10 +15,7 @@ export const useGrid = () => {
   } = storeToRefs(useGridStore())
 
   const canEditGrid = computed(
-    () =>
-      isEditingGrid.value &&
-      isConnected.value &&
-      isConnectedUserViewingOwnProfile.value
+    () => isEditingGrid.value && isConnected.value && isViewingOwnProfile.value
   )
 
   const getGridById = (grid: Grid[], id?: string) =>
@@ -70,7 +67,7 @@ export const useGrid = () => {
 
   const gridsForTabs = computed(() => {
     const grids =
-      isConnected.value && isConnectedUserViewingOwnProfile.value
+      isConnected.value && isViewingOwnProfile.value
         ? tempGrid.value
         : viewedGrid.value.filter(grid => grid.grid.length > 0)
 
@@ -120,7 +117,7 @@ export const useGrid = () => {
         if (
           tempGrid.value.length === 0 &&
           viewedGrid.value.length !== 0 &&
-          isConnectedUserViewingOwnProfile.value
+          isViewingOwnProfile.value
         ) {
           tempGrid.value = cloneObject(grid)
         }
@@ -150,8 +147,8 @@ export const useGrid = () => {
     },
 
     addGridWidget: (widget: GridWidgetWithoutCords, grid?: Grid) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -168,8 +165,8 @@ export const useGrid = () => {
     },
 
     updateGridWidget: (id?: string, widget?: Partial<GridWidget>) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -199,8 +196,8 @@ export const useGrid = () => {
     },
 
     removeGridWidget: (id: string | number) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -272,8 +269,8 @@ export const useGrid = () => {
     },
 
     addGrid: (grid: Grid) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -281,8 +278,8 @@ export const useGrid = () => {
     },
 
     updateGrid: (id?: string, grid?: Partial<Grid>) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
@@ -312,8 +309,8 @@ export const useGrid = () => {
     },
 
     removeGrid: (id: string) => {
-      if (!canEditGrid.value) {
-        console.warn('User cannot edit grid')
+      if (!isConnected.value) {
+        console.warn('User not connected')
         return
       }
 
