@@ -86,8 +86,9 @@ const handleTabChange = (tab: ProfileViewTab) => {
 
 const tabs = computed<ProfileViewTab[]>(() => {
   const _tabs = [] as ProfileViewTab[]
+  const grids = canEditGrid.value ? gridsForDisplay.value : gridsForTabs.value
 
-  if (gridsForTabs.value.length > 0) {
+  if (grids.length > 0) {
     _tabs.push({
       id: 'grid',
       count:
@@ -113,21 +114,51 @@ const activeTab = computed(() => {
   return filters.assetGroup
 })
 
-watch(
-  [isConnected, viewedProfileAddress],
-  async () => {
-    // we initialize grid at this point so we can switch tabs if user has no grids
-    await initializeGrid(viewedProfileAddress, canEditGrid.value)
-    await nextTick()
+const selectBestTab = () => {
+  const route = useRoute()
+  const assetGroup = route.query.assetGroup as FiltersAssetGroup | undefined
+  const grids = canEditGrid.value ? gridsForDisplay.value : gridsForTabs.value
 
-    // if user has grids we switch to grid tab, otherwise we switch to collectibles or tokens
-    if (gridsForDisplay.value.length > 0) {
+  // if user has grids we switch to grid tab, otherwise we switch to collectibles or tokens
+  const _changeTab = () => {
+    if (grids.length > 0) {
       setFilters({ assetGroup: 'grid' }, undefined, true)
     } else if (ownedCollectiblesCount.value > 0) {
       setFilters({ assetGroup: 'collectibles' }, undefined, true)
     } else {
       setFilters({ assetGroup: 'tokens' }, undefined, true)
     }
+  }
+
+  // if filter is set we don't change it
+  // which might be in case user hit back button
+  if (assetGroup) {
+    // for grid we still need to check if user has grids
+    // in case user connect/disconnect profile without grids
+    if (assetGroup === 'grid') {
+      _changeTab()
+    }
+
+    return
+  }
+
+  _changeTab()
+}
+
+watch(
+  [isConnected, viewedProfileAddress],
+  async () => {
+    // we initialize grid at this point so we can switch tabs if user has no grids
+    await initializeGrid(viewedProfileAddress, canEditGrid.value)
+  },
+  { immediate: true }
+)
+
+watch(
+  [isConnected, gridsForDisplay, ownedCollectiblesCount],
+  () => {
+    // select best tab based for initial display
+    selectBestTab()
   },
   { immediate: true }
 )
