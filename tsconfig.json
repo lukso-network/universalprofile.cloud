@@ -2,6 +2,7 @@
   // https://nuxt.com/docs/guide/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
+    "lib": ["webworker", "dom", "esnext"],
     "paths": {
       "@/*": [
         "./*"

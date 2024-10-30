@@ -216,12 +216,29 @@ useHead({
       return bodyClass.join(' ')
     }),
   },
-  script: [
-    {
-      innerHTML: `if('serviceWorker' in navigator){window.addEventListener('load', () => {navigator.serviceWorker.register('/sw.js', { scope: '/' })})}`,
-    },
-  ],
 })
+const hasUpgrade = ref<boolean>(false)
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(registration => {
+    // Listen for updates
+    registration.addEventListener('updatefound', () => {
+      const newWorker = registration.installing
+      if (newWorker) {
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'activated') {
+            // Notify the user that an update is available
+            console.log('A new version is available. Please refresh.')
+            hasUpgrade.value = true
+            // Optionally, prompt the user for a refresh, or defer it to a better time.
+          }
+        })
+      }
+    })
+  })
+}
+// Make the service worker update available to the rest of the app
+// any view can use
+provide('swHasUpgrade', hasUpgrade)
 </script>
 
 <template>

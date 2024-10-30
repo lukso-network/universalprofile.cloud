@@ -1,5 +1,4 @@
 import { keccak256 } from 'js-sha3'
-import { clientsClaim } from 'workbox-core'
 /// <reference lib="WebWorker" />
 /// <reference types="vite/client" />
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
@@ -57,6 +56,12 @@ registerRoute(
 )
 // registerRoute(new NavigationRoute(createHandlerBoundToURL('/'), { allowlist }))
 
-// @ts-ignore
-self.skipWaiting()
-clientsClaim()
+self.addEventListener('install', () => {
+  self.skipWaiting() // Skip waiting to activate the new SW immediately
+})
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    self.clients.claim() // Ensure the SW controls the clients
+  )
+})
