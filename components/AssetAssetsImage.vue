@@ -24,7 +24,7 @@ const handleClick = () => {
 
 <template>
   <div
-    class="paragraph-inter-10-bold-uppercase flex size-14 cursor-pointer flex-col items-center justify-center rounded-8 border border-neutral-90 bg-neutral-100 bg-cover transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
+    class="paragraph-inter-10-bold-uppercase hover:shadow-neutral-shadow-round flex size-14 cursor-pointer flex-col items-center justify-center rounded-8 border border-neutral-90 bg-neutral-100 bg-cover transition hover:scale-[1.02] hover:border-transparent"
     @click="handleClick"
   >
     <lukso-icon name="camera" class="mb-1"></lukso-icon>

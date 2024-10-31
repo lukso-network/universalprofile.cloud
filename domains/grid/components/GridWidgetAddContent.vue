@@ -11,7 +11,7 @@ const handleAddContent = () => {
 
 <template>
   <div
-    class="flex h-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-12 p-4 opacity-50 transition hover:opacity-100 hover:shadow-neutral-drop-shadow"
+    class="hover:shadow-neutral-shadow-round flex h-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-12 p-4 opacity-50 transition hover:opacity-100"
     :class="{ 'bg-dashed-border': true }"
     @click="handleAddContent"
   >
