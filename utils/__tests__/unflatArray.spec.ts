@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+
 import { unflatArray } from '../unflatArray'
 
 test('handles consecutive indexes', () => {

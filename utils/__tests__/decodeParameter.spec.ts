@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from 'vitest'
 import ABICoder from 'web3-eth-abi'
+
 import { decodeParameter } from '../decodeParameter'
 
 describe('decodeParameter function', () => {

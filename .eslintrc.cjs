@@ -78,7 +78,6 @@ module.exports = {
       files: ['**/*.spec.ts'],
       extends: ['plugin:playwright/playwright-test'],
       rules: {
-        'import/order': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
         'playwright/no-standalone-expect': 'off',
         'playwright/no-networkidle': 'off',

@@ -1,8 +1,9 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { ProfileFollowers } from '@/types/profile'
 import FollowCounters from '../FollowCounters.vue'
+
+import type { ProfileFollowers } from '@/types/profile'
 
 describe('FollowCounters', () => {
   beforeEach(() => {

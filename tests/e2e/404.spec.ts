@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test'
+
 import { test } from './helpers/fixtures'
 
 test('can access 404 page', async ({ page }) => {
