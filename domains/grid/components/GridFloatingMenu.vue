@@ -168,7 +168,7 @@ onUnmounted(() => {
         :show-delay="1000"
         @click="handleAddGrid"
       >
-        <lukso-icon name="menu-1" color="purple-41"></lukso-icon>
+        <lukso-icon name="add-grid" color="purple-41"></lukso-icon>
       </lukso-tooltip>
 
       <!-- Reset  -->
