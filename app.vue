@@ -120,9 +120,7 @@ const setupNetwork = async () => {
     }
   } else {
     console.warn(
-      `Invalid network: ${network}, valid networks are ${SUPPORTED_NETWORK_IDS.join(
-        ', '
-      )}`
+      `Invalid network: ${network}, valid networks are ${SUPPORTED_NETWORK_IDS.join(', ')}`
     )
   }
 }
