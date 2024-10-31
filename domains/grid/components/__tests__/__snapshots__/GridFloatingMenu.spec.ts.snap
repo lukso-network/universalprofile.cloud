@@ -9,7 +9,7 @@ exports[`GridFloatingMenu > should render when edit mode is enabled 1`] = `
         <lukso-icon name="plus" color="purple-41"></lukso-icon>
       </lukso-tooltip><!-- Add grid  -->
       <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97 cursor-pointer hover:scale-105 hover:bg-neutral-95" text="Add grid" placement="left" offset="15" show-delay="1000">
-        <lukso-icon name="menu-1" color="purple-41"></lukso-icon>
+        <lukso-icon name="add-grid" color="purple-41"></lukso-icon>
       </lukso-tooltip><!-- Reset  -->
       <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97" text="" placement="left" offset="15" show-delay="1000">
         <lukso-icon name="reload" color="neutral-85" class="-rotate-90 transition"></lukso-icon>
@@ -34,7 +34,7 @@ exports[`GridFloatingMenu > should render when has unsaved changes 1`] = `
         <lukso-icon name="plus" color="purple-41"></lukso-icon>
       </lukso-tooltip><!-- Add grid  -->
       <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97 cursor-pointer hover:scale-105 hover:bg-neutral-95" text="Add grid" placement="left" offset="15" show-delay="1000">
-        <lukso-icon name="menu-1" color="purple-41"></lukso-icon>
+        <lukso-icon name="add-grid" color="purple-41"></lukso-icon>
       </lukso-tooltip><!-- Reset  -->
       <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 cursor-pointer bg-[#ffe0e0] hover:scale-105 hover:bg-[#ffd1d1]" text="Reset changes" placement="left" offset="15" show-delay="1000">
         <lukso-icon name="reload" color="red-65" class="-rotate-90 transition"></lukso-icon>
