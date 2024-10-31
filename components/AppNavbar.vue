@@ -102,7 +102,7 @@ const handleNavigateMyUpDashboard = () => {
       <!-- Settings -->
       <div
         v-if="!isConnected"
-        class="ml-4 h-6 w-[1px] border-l border-purple-82 pl-4"
+        class="ml-4 h-6 w-px border-l border-purple-82 pl-4"
       >
         <lukso-icon
           name="settings"

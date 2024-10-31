@@ -13,7 +13,7 @@ const styleVariants = tv({
   slots: {
     tab: 'heading-inter-17-semi-bold flex items-center',
     counter:
-      'paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 px-1 py-[1px]',
+      'paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 px-1 py-px',
   },
   variants: {
     isActive: {
