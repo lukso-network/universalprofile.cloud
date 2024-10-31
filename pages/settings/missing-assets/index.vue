@@ -65,7 +65,7 @@ const handleInput = async (customEvent: CustomEvent) => {
   const filteredAssetsAddresses = assetsData.value
     ?.filter(asset => asset.isOwned)
     .map(asset => asset.address)
-
+    .filter(asset => !!asset)
   if (filteredAssetsAddresses?.includes(assetAddress.value)) {
     checkError.value = formatMessage('errors_already_owned')
     return
