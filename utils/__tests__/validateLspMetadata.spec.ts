@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest'
+
 import {
   validateAssets,
   validateAttributes,
   validateDescription,
-  validateImage,
   validateImages,
   validateLinks,
   validateName,

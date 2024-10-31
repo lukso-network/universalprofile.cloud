@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { slug } from '../slug'
 
 describe('slug', () => {

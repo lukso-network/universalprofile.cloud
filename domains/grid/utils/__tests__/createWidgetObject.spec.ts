@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+
 import { createWidgetObject } from '../createWidgetObject'
 
 vi.mock('/domains/grid/utils/generateItemId', () => ({

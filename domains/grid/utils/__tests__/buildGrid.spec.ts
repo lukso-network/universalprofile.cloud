@@ -1,5 +1,5 @@
-import { e } from 'pinia-orm/dist/shared/pinia-orm.ed84a779'
 import { describe, expect, it } from 'vitest'
+
 import { buildGrid } from '../buildGrid'
 
 describe('buildGrid', () => {

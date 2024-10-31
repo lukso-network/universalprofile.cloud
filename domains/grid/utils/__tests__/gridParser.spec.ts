@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { parsePlatformInput } from '../gridParser'
 
 const YOUTUBE_IFRAME_ALLOW =

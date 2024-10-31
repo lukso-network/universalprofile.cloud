@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest'
+
 import { paddedToAddress } from '../paddedToAddress'
 
 test('paddedToAddress should remove zero padding from an address', async () => {

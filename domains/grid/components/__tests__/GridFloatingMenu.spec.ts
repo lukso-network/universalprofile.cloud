@@ -1,6 +1,7 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime'
 import { createTestingPinia } from '@pinia/testing'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import GridFloatingMenu from '../GridFloatingMenu.vue'
 
 vi.mock('/utils/getCurrentProfileAddress', () => ({
