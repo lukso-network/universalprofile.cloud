@@ -16,11 +16,6 @@ import {
   isToken,
 } from '../assetChecks'
 
-import type {
-  SelectProfileOption,
-  SelectStringOption,
-} from '@lukso/web-components'
-
 describe('isLyx', () => {
   test('should return true if the asset is a LYX', async () => {
     expect(

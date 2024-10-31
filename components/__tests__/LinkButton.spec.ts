@@ -4,10 +4,6 @@ import { describe, expect, it } from 'vitest'
 import LinkButton from '@/components/LinkButton.vue'
 
 describe('LinkButton', () => {
-  const profile: Profile = {
-    address: '0x1234567890abcdef1234567890abcdef12345678',
-  }
-
   it('should render empty state', async () => {
     const component = await renderSuspended(LinkButton, {})
 

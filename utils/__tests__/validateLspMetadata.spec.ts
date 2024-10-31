@@ -4,7 +4,6 @@ import {
   validateAssets,
   validateAttributes,
   validateDescription,
-  validateImage,
   validateImages,
   validateLinks,
   validateName,
