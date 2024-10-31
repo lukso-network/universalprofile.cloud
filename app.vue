@@ -23,6 +23,11 @@ const { cacheValue } = useCache()
 const { currencyList } = storeToRefs(useCurrencyStore())
 const { initProvider, reconnect } = useWalletConnectProvider()
 const { formatMessage } = useIntl()
+const swHasUpgrade = ref<boolean>(false)
+
+// Make the service worker update available to the rest of the app
+// any view can use inject('swHasUpgrade') to access this value
+provide('swHasUpgrade', swHasUpgrade)
 
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
@@ -217,7 +222,6 @@ useHead({
     }),
   },
 })
-const hasUpgrade = ref<boolean>(false)
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').then(registration => {
     // Listen for updates
@@ -226,19 +230,13 @@ if ('serviceWorker' in navigator) {
       if (newWorker) {
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'activated') {
-            // Notify the user that an update is available
-            console.log('A new version is available. Please refresh.')
-            hasUpgrade.value = true
-            // Optionally, prompt the user for a refresh, or defer it to a better time.
+            swHasUpgrade.value = true
           }
         })
       }
     })
   })
 }
-// Make the service worker update available to the rest of the app
-// any view can use
-provide('swHasUpgrade', hasUpgrade)
 </script>
 
 <template>
