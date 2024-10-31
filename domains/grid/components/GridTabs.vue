@@ -27,7 +27,7 @@ watch(
 </script>
 
 <template>
-  <div class="flex select-none gap-x-6 gap-y-3 pb-4">
+  <div class="ml-4 flex select-none gap-x-6 gap-y-3 pb-4">
     <!-- Draggable Grid tabs -->
     <draggable
       v-if="canEditGrid && !isMobile"
