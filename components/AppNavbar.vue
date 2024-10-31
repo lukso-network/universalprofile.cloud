@@ -26,7 +26,6 @@ const handleNavigateSend = () => {
 const handleConnect = () => {
   showModal({
     template: 'ConnectWallet',
-    size: 'auto',
   })
 }
 
