@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'vitest'
 import { LSP4_TOKEN_TYPES } from '@lukso/lsp-smart-contracts'
+import { describe, expect, test } from 'vitest'
 
 import {
   getBalance,
