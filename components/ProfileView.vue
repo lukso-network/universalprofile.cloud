@@ -177,7 +177,7 @@ watch(
       >
         {{ $formatMessage('asset_creations') }}
         <span
-          class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 bg-neutral-20 px-1 py-[1px] text-neutral-100"
+          class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 bg-neutral-20 px-1 py-px text-neutral-100"
           >{{ createdCollectiblesCount }}</span
         >
       </div>

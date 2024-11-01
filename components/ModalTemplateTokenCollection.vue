@@ -77,7 +77,7 @@ const handleViewEntireCollection = () => {
       </lukso-button>
     </div>
     <div
-      class="-mx-4 grid max-h-[calc(100vh-300px)] grid-cols-1 gap-6 overflow-y-auto px-4 pb-6 sm:grid-cols-2 md:grid-cols-3"
+      class="-mx-4 -mt-4 grid max-h-[calc(100vh-300px)] grid-cols-1 gap-6 overflow-y-auto px-4 pb-6 pt-4 sm:grid-cols-2 md:grid-cols-3"
     >
       <NftListCard
         v-for="(token, index) in tokenIdsData"
@@ -85,7 +85,7 @@ const handleViewEntireCollection = () => {
         :asset="token"
       />
       <div
-        class="paragraph-inter-16-semi-bold flex min-h-[400px] cursor-pointer items-center justify-center rounded-12 border border-neutral-90 bg-neutral-100 p-6 transition hover:shadow-neutral-drop-shadow-1xl"
+        class="paragraph-inter-16-semi-bold flex min-h-[400px] cursor-pointer items-center justify-center rounded-12 border border-neutral-90 bg-neutral-100 p-6 transition hover:border-transparent hover:shadow-neutral-shadow-round-1xl"
         @click="handleViewEntireCollection"
       >
         <lukso-icon size="medium" name="eye-show" class="mr-2"></lukso-icon>

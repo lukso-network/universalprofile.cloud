@@ -145,7 +145,7 @@ onMounted(() => {
               {{ $formatNumber(getBalance(token)) }}
             </span>
           </div>
-          <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
+          <AppPlaceholderLine v-else class="my-px h-[12px] w-1/4" />
           <NftListCardCreatorsRpc :asset="token" class="mt-4" />
 
           <!-- Buttons -->

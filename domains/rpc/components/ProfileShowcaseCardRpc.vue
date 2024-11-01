@@ -50,7 +50,7 @@ const isLoading = computed(() => {
       variant="profile"
       size="small"
       is-hoverable
-      custom-class="rounded-24 shadow-neutral-drop-shadow"
+      custom-class="rounded-24 shadow-neutral-shadow-round"
       class="transition hover:scale-[1.01]"
       height="230"
     >

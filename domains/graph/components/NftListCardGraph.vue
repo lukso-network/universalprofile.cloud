@@ -156,7 +156,7 @@ onMounted(() => {
               {{ $formatNumber(getBalance(asset)) }}
             </span>
           </div>
-          <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
+          <AppPlaceholderLine v-else class="my-px h-[12px] w-1/4" />
           <NftListCardCreatorsGraph :asset="asset" class="mt-4" />
 
           <!-- Buttons -->
