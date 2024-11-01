@@ -1,5 +1,11 @@
 import { type ZodEffects, type ZodObject, z } from 'zod'
 
+import { PLATFORM_PARSING_PARAMETERS_X } from '../platform-parser/xParser'
+import { PLATFORM_PARSING_PARAMETERS_INSTAGRAM } from '../platform-parser/instagramParser'
+import { PLATFORM_PARSING_PARAMETERS_SOUNDCLOUD } from '../platform-parser/soundcloudParser'
+import { PLATFORM_PARSING_PARAMETERS_YOUTUBE } from '../platform-parser/youtubeParser'
+import { PLATFORM_PARSING_PARAMETERS_SPOTIFY } from '../platform-parser/spotifyParser'
+
 export const GRID_WIDGET_TYPE = z.enum([
   // custom
   'TEXT',
@@ -67,71 +73,9 @@ export const GRID_COLUMNS_MAX = 4
 export const PLATFORM_PARSING_PARAMETERS: Partial<
   Record<GridWidgetType, PlatformParsingParameters | undefined>
 > = {
-  [GRID_WIDGET_TYPE.enum.X]: {
-    type: GRID_WIDGET_TYPE.enum.X,
-    embedRegex:
-      /https?:\/\/twitter\.com\/(?<handle>[a-zA-Z0-9_]+)(?:\/status\/(?<id>\d+))?(?:\?[^"'\s]*)?/,
-    secondaryRegexesWithCallbacks: [
-      // Match a handle with @ symbol
-      {
-        regex: /@([a-zA-Z0-9_]{1,15})/,
-        callback: getXOEmbedFromHandle,
-      },
-      // Match a Twitter URL with or without https www and status
-      {
-        regex:
-          /(https?:\/\/)?(?:x\.com|twitter\.com)\/[a-zA-Z0-9_]+(?:\/status\/(\d+))?/,
-        callback: async url => sanitizeXEmbedUrl(url),
-      },
-    ],
-  },
-  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: {
-    type: GRID_WIDGET_TYPE.enum.INSTAGRAM,
-    embedRegex:
-      /https:\/\/www\.instagram\.com\/(?<type>p|reel|profile|tv)\/(?<id>[\w-]+)\/(?<params>\?[^"]*)?/,
-  },
-  [GRID_WIDGET_TYPE.enum.SPOTIFY]: {
-    type: GRID_WIDGET_TYPE.enum.IFRAME,
-    embedRegex:
-      /https?:\/\/(?:open\.)?spotify\.com\/embed\/?(?<type>track|playlist|artist)\/(?<id>[^?]+)(?:\?utm_source=(?:generator|oembed))?(?:&theme=(?<theme>\d))?/,
-    secondaryRegexesWithCallbacks: [
-      {
-        regex:
-          /https:\/\/open\.spotify\.com\/(?<type>track|playlist|artist)\/(?<id>[^?]+)/,
-        callback: getSpotifyOEmbed,
-      },
-    ],
-    constantProperties: {
-      allow: 'clipboard-write; encrypted-media; fullscreen; picture-in-picture',
-    },
-  },
-  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: {
-    type: GRID_WIDGET_TYPE.enum.IFRAME,
-    embedRegex:
-      /https?:\/\/w\.soundcloud\.com\/player\/\?(?:(?!url=https).)*url=https(?::|%3A)(?:\/|%2F){2}api\.soundcloud\.com(?:\/|%2F)(?<type>tracks|playlists|users)(?:\/|%2F)\d+(?:[^"]*)?/,
-    secondaryRegexesWithCallbacks: [
-      {
-        regex:
-          /https:\/\/soundcloud\.com\/([a-zA-Z0-9_-]+)(?:\/(sets\/[a-zA-Z0-9_-]+|[a-zA-Z0-9_-]+))?\/?/,
-        callback: getSoundCloudOEmbed,
-      },
-    ],
-    constantProperties: {
-      allow: 'clipboard-write; encrypted-media; fullscreen; picture-in-picture',
-    },
-  },
-  [GRID_WIDGET_TYPE.enum.YOUTUBE]: {
-    type: GRID_WIDGET_TYPE.enum.YOUTUBE,
-    embedRegex: /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^?]+)/,
-    secondaryRegexesWithCallbacks: [
-      {
-        regex: /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/,
-        callback: async url => sanitizeYoutubeEmbedUrl(url),
-      },
-    ],
-    constantProperties: {
-      allow:
-        'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
-    },
-  },
+  [GRID_WIDGET_TYPE.enum.X]: PLATFORM_PARSING_PARAMETERS_X,
+  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: PLATFORM_PARSING_PARAMETERS_INSTAGRAM,
+  [GRID_WIDGET_TYPE.enum.SPOTIFY]: PLATFORM_PARSING_PARAMETERS_SPOTIFY,
+  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: PLATFORM_PARSING_PARAMETERS_SOUNDCLOUD,
+  [GRID_WIDGET_TYPE.enum.YOUTUBE]: PLATFORM_PARSING_PARAMETERS_YOUTUBE,
 }

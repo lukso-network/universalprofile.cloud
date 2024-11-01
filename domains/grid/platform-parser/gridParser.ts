@@ -1,13 +1,13 @@
 export type RegexWithCallback = {
   regex: RegExp
-  callback: (url: string) => Promise<string | undefined>
+  callback: (
+    matches: RegExpMatchArray[]
+  ) => Promise<Record<string, string | boolean> | undefined>
 }
 
 export type PlatformParsingParameters = {
-  type: GridWidgetType
-  embedRegex: RegExp
-  secondaryRegexesWithCallbacks?: RegexWithCallback[]
-  constantProperties?: Record<string, string>
+  // type: GridWidgetType // TODO: Does the parser need to select the type?
+  regexWithCallbacks?: RegexWithCallback[]
 }
 
 export const parsePlatformInput = async (
@@ -20,115 +20,45 @@ export const parsePlatformInput = async (
     throw new Error('Invalid platform')
   }
 
-  // Check if the input matches the embed regex
-  try {
-    return parsePlatformEmbed(input, platformParsingParameters)
-  } catch {}
+  const { regexWithCallbacks: regexesWithCallbacks } = platformParsingParameters
 
-  const { secondaryRegexesWithCallbacks } = platformParsingParameters
-
-  if (!secondaryRegexesWithCallbacks) {
-    throw new Error('Invalid input')
+  if (!regexesWithCallbacks?.length) {
+    throw new Error('No regex patterns configured')
   }
 
-  // Check if the input matches a secondary regex
-  let callbackResult: string | undefined
+  // Check each regex in order
+  for (const { regex, callback } of regexesWithCallbacks) {
+    let matches: RegExpMatchArray[] = []
+    // Check if the regex is global
+    if (regex.global) {
+      matches = Array.from(input.matchAll(regex))
+    } else {
+      const match = input.match(regex)
+      console.log(JSON.stringify(match))
+      if (match) {
+        matches.push(match)
+      }
+    }
 
-  for (const { regex, callback } of secondaryRegexesWithCallbacks) {
-    const match = input.match(regex)
-
-    if (match) {
-      callbackResult = await callback(match[0])
-
-      break
+    if (matches.length) {
+      console.log(matches)
+      return await callback(matches)
     }
   }
 
-  if (!callbackResult) {
-    throw new Error('Invalid input')
-  }
-
-  return parsePlatformEmbed(callbackResult, platformParsingParameters)
+  throw new Error('Invalid input')
 }
 
-const parsePlatformEmbed = (
-  input: string,
-  platformParsingParameters: PlatformParsingParameters
-) => {
-  const { embedRegex, constantProperties } = platformParsingParameters
-  const match = input.match(embedRegex)
-
-  if (!match) {
-    throw new Error('Invalid input')
-  }
-
-  const { groups } = match
-  let extractedProperties: Record<string, string> = {}
-
-  if (groups) {
-    // Extract the  properties from capture groups from the regex match
-    extractedProperties = Object.entries(groups).reduce(
-      (acc: Record<string, string>, [key, value]) => {
-        if (value) acc[key] = value
-
-        return acc
-      },
-      {}
-    )
-  }
-
-  return {
-    src: match[0],
-    ...constantProperties,
-    ...extractedProperties,
-  }
-}
-
-export async function getSoundCloudOEmbed(
-  url: string
-): Promise<string | undefined> {
-  const encodedUrl = encodeURI(url)
-  const response = await fetch(
-    `https://soundcloud.com/oembed?url=${encodedUrl}&format=json`
+export const getPropertiesFromGroups = (matches: RegExpMatchArray[]) => {
+  return matches.reduce(
+    (acc, match) => ({
+      ...acc,
+      ...Object.fromEntries(
+        Object.entries(match.groups || {}).filter(
+          ([, value]) => value !== undefined
+        ) // Filter out undefined values
+      ),
+    }),
+    {} as Record<string, string>
   )
-
-  return response.ok ? ((await response.json())?.html as string) : undefined
-}
-
-export async function getSpotifyOEmbed(
-  url: string
-): Promise<string | undefined> {
-  const response = await fetch(
-    `https://open.spotify.com/oembed?url=${url}&format=json`
-  )
-
-  return response.ok ? ((await response.json())?.html as string) : undefined
-}
-
-export async function getXOEmbedFromHandle(handle: string) {
-  const response = await fetch(
-    `https://publish.twitter.com/oembed?url=https://twitter.com/${handle.replace('@', '')}`
-  )
-
-  return response.ok ? ((await response.json())?.html as string) : undefined
-}
-
-export function sanitizeXEmbedUrl(url: string): string {
-  let newUrl = url.replace('x.com', 'twitter.com')
-
-  if (!newUrl.startsWith('https://')) {
-    newUrl = `https://${newUrl}`
-  }
-
-  return newUrl
-}
-
-export function sanitizeYoutubeEmbedUrl(url: string): string {
-  let newUrl = url.replace('watch?v=', 'embed/')
-
-  if (!url.startsWith('https://')) {
-    newUrl = `https://${newUrl}`
-  }
-
-  return newUrl
 }
