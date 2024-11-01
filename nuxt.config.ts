@@ -28,19 +28,19 @@ export default defineNuxtConfig({
       {
         path: '~/node_modules/vue-instantsearch/src/components',
         sourcemap: true,
-      }, // Enable source map generation for components
+      },
       {
         path: '~/domains/rpc/components',
         sourcemap: true,
-      }, // Enable source map generation for components
+      },
       {
         path: '~/domains/graph/components',
         sourcemap: true,
-      }, // Enable source map generation for components
+      },
       {
         path: '~/layouts',
         sourcemap: true,
-      }, // Enable source map generation for components
+      },
     ],
   },
   typescript: {
