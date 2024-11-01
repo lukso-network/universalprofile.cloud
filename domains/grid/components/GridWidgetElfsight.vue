@@ -6,7 +6,10 @@ type Props = {
 }
 
 defineProps<Props>()
-useScriptTag('https://static.elfsight.com/platform/platform.js')
+useScriptTag('https://static.elfsight.com/platform/platform.js', () => {}, {
+  async: true,
+  defer: true,
+})
 </script>
 
 <template>
