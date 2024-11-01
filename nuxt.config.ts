@@ -25,17 +25,8 @@ export default defineNuxtConfig({
     dirs: [
       // Use this to find all the dirs `find . -name "*.vue" -exec dirname {} \; | sort -u`
       { path: '~/components', sourcemap: true }, // Enable source map generation for components
-      { path: '~/pages', sourcemap: true }, // Enable source map generation for components
       {
         path: '~/node_modules/vue-instantsearch/src/components',
-        sourcemap: true,
-      }, // Enable source map generation for components
-      {
-        path: '~/node_modules/vite-plugin-vue-inspector/src',
-        sourcemap: true,
-      }, // Enable source map generation for components
-      {
-        path: '~/node_modules/@vite-pwa/nuxt/dist/runtime/components',
         sourcemap: true,
       }, // Enable source map generation for components
       {
