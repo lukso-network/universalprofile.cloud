@@ -69,7 +69,7 @@ export const processIframeAttributes = (
     ...(style && { style }),
     ...(width && { width }),
     ...(height && { height }),
-    ...(frameBorder && { frameBorder: parseInt(frameBorder) }),
+    ...(frameBorder && { frameBorder: Number.parseInt(frameBorder) }),
     ...((allow && { allow }) ||
       (platformDefaults.defaultAllow && {
         allow: platformDefaults.defaultAllow,

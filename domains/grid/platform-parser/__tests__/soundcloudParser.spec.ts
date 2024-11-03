@@ -1,6 +1,4 @@
 import { describe, expect, it } from 'vitest'
-const SOUNDCLOUD_IFRAME_ALLOW =
-  'clipboard-write; encrypted-media; fullscreen; picture-in-picture'
 
 describe('SOUNDCLOUD Input Parser', () => {
   it.each([

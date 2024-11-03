@@ -1,10 +1,10 @@
-import { type ZodEffects, type ZodObject, z } from 'zod'
+import { z } from 'zod'
 
-import { PLATFORM_PARSING_PARAMETERS_X } from '../platform-parser/xParser'
 import { PLATFORM_PARSING_PARAMETERS_INSTAGRAM } from '../platform-parser/instagramParser'
 import { PLATFORM_PARSING_PARAMETERS_SOUNDCLOUD } from '../platform-parser/soundcloudParser'
-import { PLATFORM_PARSING_PARAMETERS_YOUTUBE } from '../platform-parser/youtubeParser'
 import { PLATFORM_PARSING_PARAMETERS_SPOTIFY } from '../platform-parser/spotifyParser'
+import { PLATFORM_PARSING_PARAMETERS_X } from '../platform-parser/xParser'
+import { PLATFORM_PARSING_PARAMETERS_YOUTUBE } from '../platform-parser/youtubeParser'
 
 export const GRID_WIDGET_TYPE = z.enum([
   // custom
@@ -29,9 +29,7 @@ export const GRID_WIDGET_TYPE = z.enum([
 ])
 
 // map zod schema to widget type
-export const WIDGET_SCHEMA_MAP: Partial<
-  Record<GridWidgetType, ZodObject<any> | ZodEffects<ZodObject<any>>>
-> = {
+export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, any>> = {
   [GRID_WIDGET_TYPE.enum.TEXT]: textWidgetSchema,
   [GRID_WIDGET_TYPE.enum.X]: xWidgetSchema,
   [GRID_WIDGET_TYPE.enum.INSTAGRAM]: instagramWidgetSchema,

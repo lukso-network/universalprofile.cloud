@@ -133,7 +133,7 @@ onUnmounted(() => {
 <template>
   <div
     v-if="isConnected && isViewingOwnProfile"
-    class="fixed z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-shadow-round duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition lg:right-[calc(50%-540px)]"
+    class="shadow-neutral-shadow-round fixed z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition lg:right-[calc(50%-540px)]"
     :class="{
       'right-[calc(50%-160px)] h-[64px] w-[320px] sm:h-[320px] sm:w-[64px]':
         isEditingGrid,

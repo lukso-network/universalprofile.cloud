@@ -51,14 +51,16 @@ export const parsePlatformInput = async (
 
 export const getPropertiesFromGroups = (matches: RegExpMatchArray[]) => {
   return matches.reduce(
-    (acc, match) => ({
-      ...acc,
-      ...Object.fromEntries(
-        Object.entries(match.groups || {}).filter(
-          ([, value]) => value !== undefined
-        ) // Filter out undefined values
-      ),
-    }),
+    (acc, match) => {
+      return Object.assign(
+        acc,
+        Object.fromEntries(
+          Object.entries(match.groups || {}).filter(
+            ([, value]) => value !== undefined
+          ) // Filter out undefined values
+        )
+      )
+    },
     {} as Record<string, string>
   )
 }

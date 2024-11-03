@@ -1,6 +1,4 @@
 import { describe, expect, it } from 'vitest'
-const YOUTUBE_IFRAME_ALLOW =
-  'accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
 
 describe('YOUTUBE Input Parser', () => {
   it.each([

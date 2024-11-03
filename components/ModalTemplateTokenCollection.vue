@@ -85,7 +85,7 @@ const handleViewEntireCollection = () => {
         :asset="token"
       />
       <div
-        class="paragraph-inter-16-semi-bold flex min-h-[400px] cursor-pointer items-center justify-center rounded-12 border border-neutral-90 bg-neutral-100 p-6 transition hover:border-transparent hover:shadow-neutral-shadow-round-1xl"
+        class="paragraph-inter-16-semi-bold hover:shadow-neutral-shadow-round-1xl flex min-h-[400px] cursor-pointer items-center justify-center rounded-12 border border-neutral-90 bg-neutral-100 p-6 transition hover:border-transparent"
         @click="handleViewEntireCollection"
       >
         <lukso-icon size="medium" name="eye-show" class="mr-2"></lukso-icon>
