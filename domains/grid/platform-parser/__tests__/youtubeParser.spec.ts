@@ -9,8 +9,14 @@ describe('YOUTUBE Input Parser', () => {
       GRID_WIDGET_TYPE.enum.YOUTUBE,
       'https://www.youtube.com/watch?v=Vw4JE64hsO8',
       {
-        src: 'https://www.youtube.com/embed/Vw4JE64hsO8',
-        allow: YOUTUBE_IFRAME_ALLOW,
+        allow:
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+        allowfullscreen: true,
+        frameborder: '0',
+        height: '315',
+        referrerpolicy: 'strict-origin-when-cross-origin',
+        src: 'https://www.youtube-nocookie.com/embed/Vw4JE64hsO8',
+        width: '560',
       },
     ],
     [
@@ -18,8 +24,14 @@ describe('YOUTUBE Input Parser', () => {
       GRID_WIDGET_TYPE.enum.YOUTUBE,
       '<iframe width="560" height="315" src="https://www.youtube.com/embed/Vw4JE64hsO8?si=OwVdFZCStaL90G2W" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
       {
-        src: 'https://www.youtube.com/embed/Vw4JE64hsO8',
-        allow: YOUTUBE_IFRAME_ALLOW,
+        allow:
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+        allowfullscreen: true,
+        frameborder: '0',
+        height: '315',
+        referrerpolicy: 'strict-origin-when-cross-origin',
+        src: 'https://www.youtube-nocookie.com/embed/Vw4JE64hsO8?si=OwVdFZCStaL90G2W',
+        width: '560',
       },
     ],
   ])('correctly parses %s', async (_description, platform, input, expected) => {

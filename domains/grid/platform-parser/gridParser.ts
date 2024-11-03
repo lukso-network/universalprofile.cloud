@@ -2,7 +2,7 @@ export type RegexWithCallback = {
   regex: RegExp
   callback: (
     matches: RegExpMatchArray[]
-  ) => Promise<Record<string, string | boolean> | undefined>
+  ) => Promise<Record<string, unknown> | undefined>
 }
 
 export type PlatformParsingParameters = {

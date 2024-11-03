@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest'
 
-const SPOTIFY_IFRAME_ALLOW =
-  'clipboard-write; encrypted-media; fullscreen; picture-in-picture'
-
 describe('SPOTIFY Input Parser', () => {
   it.each([
     [
@@ -10,10 +7,9 @@ describe('SPOTIFY Input Parser', () => {
       GRID_WIDGET_TYPE.enum.SPOTIFY,
       'https://open.spotify.com/track/7xGfFoTpQ2E7fRF5lN10tr',
       {
-        src: 'https://open.spotify.com/embed/track/7xGfFoTpQ2E7fRF5lN10tr?utm_source=oembed',
-        type: 'track',
-        id: '7xGfFoTpQ2E7fRF5lN10tr',
-        allow: SPOTIFY_IFRAME_ALLOW,
+        src: 'https://open.spotify.com/embed/track/7xGfFoTpQ2E7fRF5lN10tr',
+        allow:
+          'clipboard-write; encrypted-media; fullscreen; picture-in-picture',
       },
     ],
     [
@@ -22,9 +18,14 @@ describe('SPOTIFY Input Parser', () => {
       '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2BHj31ufdEqVK5CkYDp9mA?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
       {
         src: 'https://open.spotify.com/embed/track/2BHj31ufdEqVK5CkYDp9mA?utm_source=generator',
-        type: 'track',
-        id: '2BHj31ufdEqVK5CkYDp9mA',
-        allow: SPOTIFY_IFRAME_ALLOW,
+        allow:
+          'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+        style: 'border-radius:12px',
+        width: '100%',
+        allowfullscreen: true,
+        frameBorder: 0,
+        height: '352',
+        loading: 'lazy',
       },
     ],
     [
@@ -33,10 +34,14 @@ describe('SPOTIFY Input Parser', () => {
       '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/48K735Rd3UQExzjXH004k1?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
       {
         src: 'https://open.spotify.com/embed/track/48K735Rd3UQExzjXH004k1?utm_source=generator&theme=0',
-        type: 'track',
-        id: '48K735Rd3UQExzjXH004k1',
-        allow: SPOTIFY_IFRAME_ALLOW,
-        theme: '0',
+        allow:
+          'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+        allowfullscreen: true,
+        frameBorder: 0,
+        height: '352',
+        loading: 'lazy',
+        style: 'border-radius:12px',
+        width: '100%',
       },
     ],
     [
@@ -44,10 +49,9 @@ describe('SPOTIFY Input Parser', () => {
       GRID_WIDGET_TYPE.enum.SPOTIFY,
       'https://open.spotify.com/playlist/7KFoK4LJ23EncELJwYmTDG',
       {
-        src: 'https://open.spotify.com/embed/playlist/7KFoK4LJ23EncELJwYmTDG?utm_source=oembed',
-        type: 'playlist',
-        id: '7KFoK4LJ23EncELJwYmTDG',
-        allow: SPOTIFY_IFRAME_ALLOW,
+        src: 'https://open.spotify.com/embed/playlist/7KFoK4LJ23EncELJwYmTDG',
+        allow:
+          'clipboard-write; encrypted-media; fullscreen; picture-in-picture',
       },
     ],
     [
@@ -56,9 +60,14 @@ describe('SPOTIFY Input Parser', () => {
       '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/7KFoK4LJ23EncELJwYmTDG?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
       {
         src: 'https://open.spotify.com/embed/playlist/7KFoK4LJ23EncELJwYmTDG?utm_source=generator',
-        type: 'playlist',
-        id: '7KFoK4LJ23EncELJwYmTDG',
-        allow: SPOTIFY_IFRAME_ALLOW,
+        allow:
+          'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+        allowfullscreen: true,
+        frameBorder: 0,
+        height: '352',
+        loading: 'lazy',
+        style: 'border-radius:12px',
+        width: '100%',
       },
     ],
     [
@@ -66,10 +75,9 @@ describe('SPOTIFY Input Parser', () => {
       GRID_WIDGET_TYPE.enum.SPOTIFY,
       'https://open.spotify.com/artist/4KY9rCrokaoFzvMfX98u1q',
       {
-        src: 'https://open.spotify.com/embed/artist/4KY9rCrokaoFzvMfX98u1q?utm_source=oembed',
-        type: 'artist',
-        id: '4KY9rCrokaoFzvMfX98u1q',
-        allow: SPOTIFY_IFRAME_ALLOW,
+        src: 'https://open.spotify.com/embed/artist/4KY9rCrokaoFzvMfX98u1q',
+        allow:
+          'clipboard-write; encrypted-media; fullscreen; picture-in-picture',
       },
     ],
     [
@@ -78,9 +86,14 @@ describe('SPOTIFY Input Parser', () => {
       '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/artist/4KY9rCrokaoFzvMfX98u1q?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
       {
         src: 'https://open.spotify.com/embed/artist/4KY9rCrokaoFzvMfX98u1q?utm_source=generator',
-        type: 'artist',
-        id: '4KY9rCrokaoFzvMfX98u1q',
-        allow: SPOTIFY_IFRAME_ALLOW,
+        allow:
+          'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+        allowfullscreen: true,
+        frameBorder: 0,
+        height: '352',
+        loading: 'lazy',
+        style: 'border-radius:12px',
+        width: '100%',
       },
     ],
   ])('correctly parses %s', async (_description, platform, input, expected) => {
