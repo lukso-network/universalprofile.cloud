@@ -95,14 +95,7 @@ export const useGrid = () => {
         grid = buildGrid(userGrid, isMobile.value, withAddContentPlaceholder)
 
         if (grid.length === 0) {
-          grid = [
-            {
-              id: 'main',
-              title: 'Main',
-              grid: [],
-              gridColumns: GRID_COLUMNS_MIN,
-            },
-          ]
+          grid = cloneObject(EMPTY_GRID)
         }
 
         if (gridLog.enabled) {
