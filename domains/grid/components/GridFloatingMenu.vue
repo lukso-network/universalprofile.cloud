@@ -43,7 +43,7 @@ const handleAddGrid = () => {
 const handleStyle = computed(() => {
   return {
     bottom: `${bottom.value}px`,
-    transition: 'bottom 0.3s ease-in-out',
+    transition: 'all 0.3s ease-in-out',
   }
 })
 
@@ -103,11 +103,9 @@ const styles = computed(() => {
 })
 
 const handleScroll = () => {
-  if (isMobile.value) {
-    bottom.value = BOTTOM_MARGIN_MOBILE_PX
-    return
-  }
-
+  const bottomMargin = isMobile.value
+    ? BOTTOM_MARGIN_MOBILE_PX
+    : BOTTOM_MARGIN_DESKTOP_PX
   const bottomOffset =
     (document.querySelector('lukso-footer')?.clientHeight || 0) +
     BOTTOM_MARGIN_DESKTOP_PX
@@ -117,13 +115,9 @@ const handleScroll = () => {
 
   if (scrollTop + windowHeight + bottomOffset >= documentHeight) {
     bottom.value =
-      scrollTop +
-      windowHeight +
-      bottomOffset +
-      BOTTOM_MARGIN_DESKTOP_PX -
-      documentHeight
+      scrollTop + windowHeight + bottomOffset + bottomMargin - documentHeight
   } else {
-    bottom.value = BOTTOM_MARGIN_DESKTOP_PX
+    bottom.value = bottomMargin
   }
 }
 
@@ -139,10 +133,11 @@ onUnmounted(() => {
 <template>
   <div
     v-if="isConnected && isViewingOwnProfile"
-    class="fixed right-4 z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-drop-shadow duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition-height lg:right-[calc(50%-540px)]"
+    class="fixed z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-shadow-round duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition lg:right-[calc(50%-540px)]"
     :class="{
-      'h-[64px] w-[320px] sm:h-[320px] sm:w-[64px]': isEditingGrid,
-      'size-[64px]': !isEditingGrid,
+      'right-[calc(50%-160px)] h-[64px] w-[320px] sm:h-[320px] sm:w-[64px]':
+        isEditingGrid,
+      'right-4 size-[64px]': !isEditingGrid,
     }"
     :style="handleStyle"
   >
@@ -168,7 +163,7 @@ onUnmounted(() => {
         :show-delay="1000"
         @click="handleAddGrid"
       >
-        <lukso-icon name="menu-1" color="purple-41"></lukso-icon>
+        <lukso-icon name="add-grid" color="purple-41"></lukso-icon>
       </lukso-tooltip>
 
       <!-- Reset  -->

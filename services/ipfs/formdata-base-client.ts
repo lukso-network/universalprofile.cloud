@@ -131,9 +131,7 @@ export class BaseFormDataUploader {
             error = (error as any).error || error
             throw new NetworkError(
               new Error(
-                `unknown server response while pinning File to IPFS: ${
-                  error || response.status
-                }`
+                `unknown server response while pinning File to IPFS: ${error || response.status}`
               ),
               response.status
             )

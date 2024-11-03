@@ -53,7 +53,7 @@ const handleToggleMobile = () => {
           'flex-col-reverse': isMobile,
           'flex-col': !isMobile,
         }"
-        class="flex gap-2"
+        class="flex w-full gap-2"
       >
         <lukso-button
           variant="secondary"

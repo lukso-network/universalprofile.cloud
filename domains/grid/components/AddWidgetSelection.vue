@@ -57,7 +57,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           :text="formatMessage('widget_type_iframe')"
         >
           <div
-            class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-[1.05]"
+            class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-105"
             @click="handleSelectWidget('IFRAME')"
           >
             <lukso-icon
@@ -85,7 +85,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           :text="formatMessage('widget_type_image')"
         >
           <div
-            class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-[1.05]"
+            class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-105"
             @click="handleSelectWidget('IMAGE')"
           >
             <lukso-icon
@@ -103,7 +103,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           :text="formatMessage('widget_type_text')"
         >
           <div
-            class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-[1.05]"
+            class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-105"
             @click="handleSelectWidget('TEXT')"
           >
             <lukso-icon
@@ -133,7 +133,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           <img
             src="/images/social-media-youtube.svg"
             alt="Youtube"
-            class="size-10 cursor-pointer transition hover:scale-[1.05]"
+            class="size-10 cursor-pointer transition hover:scale-105"
             @click="handleSelectWidget('YOUTUBE')"
           />
         </lukso-tooltip>
@@ -157,7 +157,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           <img
             src="/images/social-media-spotify.svg"
             alt="Spotify"
-            class="size-10 cursor-pointer transition hover:scale-[1.05]"
+            class="size-10 cursor-pointer transition hover:scale-105"
             @click="handleSelectWidget('SPOTIFY')"
           />
         </lukso-tooltip>
@@ -171,7 +171,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           <img
             src="/images/social-media-soundcloud.svg"
             alt="Sound Cloud"
-            class="cursor-pointer transition hover:scale-[1.05]"
+            class="cursor-pointer transition hover:scale-105"
             @click="handleSelectWidget('SOUNDCLOUD')"
           />
         </lukso-tooltip>
@@ -195,7 +195,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           <img
             src="/images/social-media-x.svg"
             alt="X"
-            class="cursor-pointer transition hover:scale-[1.05]"
+            class="cursor-pointer transition hover:scale-105"
             @click="handleSelectWidget('X')"
           />
         </lukso-tooltip>
@@ -209,7 +209,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           <img
             src="/images/social-media-warpcast.png"
             alt="Warpcast"
-            class="size-10 cursor-pointer rounded-full transition hover:scale-[1.05]"
+            class="size-10 cursor-pointer rounded-full transition hover:scale-105"
             @click="handleSelectWidget('WARPCAST')"
           />
         </lukso-tooltip>
@@ -223,7 +223,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           <img
             src="/images/social-media-instagram.svg"
             alt="Warpcast"
-            class="size-10 cursor-pointer rounded-full transition hover:scale-[1.05]"
+            class="size-10 cursor-pointer rounded-full transition hover:scale-105"
             @click="handleSelectWidget('INSTAGRAM')"
           />
         </lukso-tooltip>

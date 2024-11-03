@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from 'vitest'
+
 import { hexToUtf8 } from '../hexToUtf8'
 
 describe('hexToUtf8 function', () => {

@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest'
+
 import { getAssetType } from '../assetTypes'
 
 test('getAssetType', () => {

@@ -16,7 +16,7 @@ defineProps<Props>()
     :style="{ backgroundColor }"
   >
     <h1
-      class="heading-apax-24-medium"
+      class="heading-apax-24-medium break-word"
       :style="{
         color: titleColor,
       }"
@@ -24,7 +24,7 @@ defineProps<Props>()
       {{ title }}
     </h1>
     <p
-      class="mt-2 text-center text-16"
+      class="mt-2 whitespace-pre-line text-center text-16 break-word"
       :style="{
         color: textColor,
       }"

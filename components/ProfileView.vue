@@ -177,7 +177,7 @@ watch(
       >
         {{ $formatMessage('asset_creations') }}
         <span
-          class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 bg-neutral-20 px-1 py-[1px] text-neutral-100"
+          class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 bg-neutral-20 px-1 py-px text-neutral-100"
           >{{ createdCollectiblesCount }}</span
         >
       </div>
@@ -196,7 +196,8 @@ watch(
         <GridView
           :class="{
             'visible relative z-10 opacity-100': activeTab === 'grid',
-            'invisible absolute z-0 opacity-0': activeTab !== 'grid',
+            'invisible absolute z-0 h-0 overflow-hidden opacity-0':
+              activeTab !== 'grid',
           }"
         />
         <ProfileAssets

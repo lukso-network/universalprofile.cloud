@@ -100,26 +100,35 @@ const hasInstructions = computed(() => widgetInstructions.value !== '-')
       }}
 
       <!-- Instructions -->
-      <template v-if="hasInstructions">
-        <span
-          v-if="isInstructionsVisible"
-          class="cursor-pointer text-blue-60 underline hover:text-blue-50"
-          @click="isInstructionsVisible = !isInstructionsVisible"
-          >Hide instructions</span
-        >
-        <span
-          v-else
-          class="cursor-pointer text-blue-60 underline hover:text-blue-50"
-          @click="isInstructionsVisible = !isInstructionsVisible"
-          >Show instructions</span
-        >
+      <div v-if="hasInstructions" class="mt-2">
+        <div class="flex items-center">
+          <span
+            v-if="isInstructionsVisible"
+            class="cursor-pointer text-purple-51 underline hover:text-purple-41"
+            @click="isInstructionsVisible = !isInstructionsVisible"
+            >Hide instructions</span
+          >
+          <span
+            v-else
+            class="cursor-pointer text-purple-51 underline hover:text-purple-41"
+            @click="isInstructionsVisible = !isInstructionsVisible"
+            >Show instructions</span
+          >
+          <lukso-icon
+            name="arrow-down-sm"
+            color="purple-51"
+            :class="{
+              'rotate-180 transition': isInstructionsVisible,
+            }"
+          ></lukso-icon>
+        </div>
         <div
           v-if="isInstructionsVisible"
           class="mt-4 animate-fade-in whitespace-pre-line font-600 break-word"
         >
           {{ widgetInstructions }}
         </div>
-      </template>
+      </div>
     </div>
 
     <!-- Content -->

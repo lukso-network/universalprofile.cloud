@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from 'vitest'
+
 import { hexToNumber } from '../hexToNumber'
 
 describe('hexToNumber function', () => {

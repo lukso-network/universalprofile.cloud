@@ -5,6 +5,8 @@ import type { UniversalProfile } from '@/contracts'
 import type { AbiItem } from 'web3-utils'
 
 const connectedProfile = useProfile().connectedProfile()
+const address = computed(() => connectedProfile.value?.address)
+const assetsData = useProfileAssets()(address.value)
 const assetAddress = useRouter().currentRoute.value.params?.assetAddress
 const isPending = ref(false)
 const { providerWeb3Instance } = useBaseProvider()
@@ -27,11 +29,16 @@ const handleAddAsset = async () => {
     ).filter(([, value]) => value)[0]?.[0]
     const profileAddress = connectedProfile.value?.address
 
+    const filteredAssetsAddresses = assetsData.value
+      ?.filter(asset => asset.isOwned)
+      .map(asset => asset.address)
+      .filter(asset => !!asset)
+
     const { keys, values } = generateAddReceivedAssetKeys(
       assetAddress,
       interfaceId,
       profileAddress,
-      connectedProfile.value?.receivedAssets
+      filteredAssetsAddresses
     )
     const { contract } = providerWeb3Instance.value
     const profileContract = contract<UniversalProfile>(

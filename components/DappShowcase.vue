@@ -86,12 +86,12 @@ const handleCardClick = (url: string) => {
     <lukso-icon
       name="arrow-left-lg"
       id="prev"
-      class="absolute left-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.05] hover:border-neutral-80 active:scale-[0.99] xl:left-[-60px]"
+      class="absolute left-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-105 hover:border-neutral-80 active:scale-[0.99] xl:left-[-60px]"
     ></lukso-icon>
     <lukso-icon
       name="arrow-right-lg"
       id="next"
-      class="absolute right-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-[1.05] hover:border-neutral-80 active:scale-[0.99] xl:right-[-60px]"
+      class="absolute right-[20px] top-[calc(50%-45px)] z-10 cursor-pointer select-none rounded-8 border border-neutral-90 bg-neutral-100 p-2 transition hover:scale-105 hover:border-neutral-80 active:scale-[0.99] xl:right-[-60px]"
     ></lukso-icon>
   </div>
 </template>

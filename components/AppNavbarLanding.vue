@@ -7,7 +7,6 @@ const { showModal } = useModal()
 const handleConnect = async () => {
   showModal({
     template: 'ConnectWallet',
-    size: 'auto',
   })
 }
 
@@ -108,10 +107,7 @@ const handleNavigateMyUpDashboard = () => {
       </lukso-button>
 
       <!-- Settings -->
-      <div
-        v-if="!isConnected"
-        class="h-6 w-[1px] border-l border-purple-82 pl-4"
-      >
+      <div v-if="!isConnected" class="h-6 w-px border-l border-purple-82 pl-4">
         <lukso-icon
           name="settings"
           color="purple-41"

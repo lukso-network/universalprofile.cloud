@@ -14,7 +14,7 @@ const isLoaded = computed(() => !isLoading.value)
 <template>
   <div class="relative">
     <div
-      class="relative px-4 py-6 sm:py-20"
+      class="relative px-4 pb-20 pt-6 sm:pt-20"
       :class="{
         'opacity-0': !isLoaded,
         'animate-fade-in opacity-100 transition-opacity delay-200  duration-300':

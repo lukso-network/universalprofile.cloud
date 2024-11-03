@@ -198,7 +198,7 @@ onMounted(() => {
     ref="target"
     class="group relative flex h-full flex-col rounded-12 transition"
     :class="{
-      'bg-neutral-100 shadow-neutral-drop-shadow hover:shadow-neutral-drop-shadow-1xl':
+      'bg-neutral-100 shadow-neutral-shadow-round hover:shadow-neutral-shadow-round-1xl':
         !isAddContentWidget,
       'select-none': isAllowToEdit,
       'z-50': isOpen,
@@ -219,7 +219,7 @@ onMounted(() => {
       }"
     >
       <div
-        class="mb-1 flex size-[35px] items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 shadow-neutral-drop-shadow-1xl transition hover:scale-[1.05]"
+        class="mb-1 flex size-[35px] items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 shadow-neutral-shadow-round-1xl transition hover:scale-105"
       >
         <lukso-icon
           :id="dropdownId"
@@ -300,7 +300,7 @@ onMounted(() => {
     <!-- Resize handle -->
     <div
       v-if="isAllowToEdit && !isMobile"
-      class="grid-widget-resize absolute bottom-2 right-2 z-10 mb-1 flex size-[35px] cursor-pointer items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 opacity-0 shadow-neutral-drop-shadow-1xl transition hover:scale-[1.05] group-hover:opacity-100"
+      class="grid-widget-resize absolute bottom-2 right-2 z-10 mb-1 flex size-[35px] cursor-pointer items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 opacity-0 shadow-neutral-shadow-round-1xl transition hover:scale-105 group-hover:opacity-100"
     >
       <lukso-icon
         name="expand"
