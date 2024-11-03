@@ -46,7 +46,7 @@ describe('X Input Parser', () => {
         id: '1804519711377436675',
         theme: 'dark',
         language: 'en',
-        doNotTrack: true,
+        donottrack: true,
       },
     ],
     [

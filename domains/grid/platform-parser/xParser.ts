@@ -18,7 +18,7 @@ export const PLATFORM_PARSING_PARAMETERS_X: PlatformParsingParameters = {
           ...(id && { id }),
           ...(theme && { theme }),
           ...(language && { language }),
-          ...(doNotTrack && { doNotTrack: doNotTrack === 'true' }),
+          ...(doNotTrack && { donottrack: doNotTrack === 'true' }),
         }
       },
     },
