@@ -1,11 +1,5 @@
 import { z } from 'zod'
 
-import { PLATFORM_PARSING_PARAMETERS_INSTAGRAM } from '../platform-parser/instagramParser'
-import { PLATFORM_PARSING_PARAMETERS_SOUNDCLOUD } from '../platform-parser/soundcloudParser'
-import { PLATFORM_PARSING_PARAMETERS_SPOTIFY } from '../platform-parser/spotifyParser'
-import { PLATFORM_PARSING_PARAMETERS_X } from '../platform-parser/xParser'
-import { PLATFORM_PARSING_PARAMETERS_YOUTUBE } from '../platform-parser/youtubeParser'
-
 export const GRID_WIDGET_TYPE = z.enum([
   // custom
   'TEXT',
