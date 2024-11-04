@@ -25,8 +25,8 @@ const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
 
 const widgetProperties = computedAsync(async () => {
-  const schema = WIDGET_SCHEMA_MAP[props.widget.type]
-  const parse = await schema?.build?.safeParseAsync(props.widget.properties)
+  const schemaMap = WIDGET_SCHEMA_MAP[props.widget.type]
+  const parse = await schemaMap?.build?.safeParseAsync(props.widget.properties)
 
   return parse?.data
 })

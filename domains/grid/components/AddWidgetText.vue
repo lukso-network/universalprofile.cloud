@@ -12,7 +12,7 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
-const schema = WIDGET_SCHEMA_MAP[props.type]
+const schemaMap = WIDGET_SCHEMA_MAP[props.type]
 const isEdit = computed(() => !!props.id)
 const {
   inputValues,
@@ -21,8 +21,8 @@ const {
   handleFieldChange,
   handleFormErrors,
 } = useForm(
-  schema,
-  (await schema?.optional().safeParseAsync(props.properties || {}))?.data
+  schemaMap,
+  (await schemaMap?.optional().safeParseAsync(props.properties || {}))?.data
 )
 
 const handleSave = async () => {
@@ -31,7 +31,7 @@ const handleSave = async () => {
   }
 
   try {
-    const properties = await schema?.parseAsync(inputValues.value)
+    const properties = await schemaMap?.parseAsync(inputValues.value)
 
     if (isEdit.value) {
       updateGridWidget(props.id, {

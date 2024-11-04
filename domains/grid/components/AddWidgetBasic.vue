@@ -12,7 +12,7 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
-const schema = WIDGET_SCHEMA_MAP[props.type]
+const schemaMap = WIDGET_SCHEMA_MAP[props.type]
 const isEdit = computed(() => !!props.id)
 const {
   inputValues,
@@ -20,8 +20,8 @@ const {
   getFieldErrorMessage,
   handleFieldChange,
   handleFormErrors,
-} = useForm(schema, {
-  input: (await schema?.build?.safeParseAsync(props.properties))?.data?.src,
+} = useForm(schemaMap, {
+  input: (await schemaMap?.build?.safeParseAsync(props.properties))?.data?.src,
 })
 const isInstructionsVisible = ref(false)
 
@@ -31,8 +31,8 @@ const handleSave = async () => {
   }
 
   try {
-    const inputParse = await schema?.input?.safeParseAsync(inputValues.value)
-    const properties = await schema?.output?.parseAsync(inputParse?.data)
+    const inputParse = await schemaMap?.input?.safeParseAsync(inputValues.value)
+    const properties = await schemaMap?.output?.parseAsync(inputParse?.data)
 
     if (isEdit.value) {
       updateGridWidget(props.id, {
@@ -42,7 +42,7 @@ const handleSave = async () => {
       })
     } else {
       const newWidget: GridWidgetWithoutCords = createWidgetObject({
-        type: inputParse?.data.widgetType, // widget type is not based on selection but on the parsing result
+        type: inputParse?.data?.widgetType, // widget type is not based on selection but on the parsing result
         properties,
         w: props.width,
         h: props.height,

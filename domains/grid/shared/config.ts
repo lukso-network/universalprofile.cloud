@@ -1,4 +1,3 @@
-import { buildGrid } from './../utils/buildGrid'
 import { z } from 'zod'
 
 export const GRID_WIDGET_TYPE = z.enum([
@@ -25,31 +24,23 @@ export const GRID_WIDGET_TYPE = z.enum([
 ])
 
 // map zod schema to widget type
-export const WIDGET_SCHEMA_MAP: Partial<
-  Record<
-    GridWidgetType,
-    {
-      input: z.ZodSchema<any>
-      output: z.ZodSchema<any>
-      build: z.ZodSchema<any>
-    }
-  >
-> = {
-  [GRID_WIDGET_TYPE.enum.TEXT]: textWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.X]: {
-    input: xInputSchema,
-    output: xPropertiesSchema,
-    build: xBuilderSchema,
-  },
-  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: instagramWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.IFRAME]: iframeWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.IMAGE]: imageWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.YOUTUBE]: youtubeWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.SPOTIFY]: spotifyWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: soundCloudWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.WARPCAST]: warpcastWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.ELFSIGHT]: elfsightWidgetSchema,
-}
+export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, GridSchemaMap>> =
+  {
+    [GRID_WIDGET_TYPE.enum.TEXT]: textWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.X]: {
+      input: xInputSchema,
+      output: xPropertiesSchema,
+      build: xBuilderSchema,
+    },
+    [GRID_WIDGET_TYPE.enum.INSTAGRAM]: instagramWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.IFRAME]: iframeWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.IMAGE]: imageWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.YOUTUBE]: youtubeWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.SPOTIFY]: spotifyWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: soundCloudWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.WARPCAST]: warpcastWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.ELFSIGHT]: elfsightWidgetSchema,
+  }
 
 // grid breakpoint where the grid switches into mobile mode
 export const GRID_BREAKPOINT_PX = 768
@@ -86,4 +77,5 @@ export const PLATFORM_PARSING_PARAMETERS: Partial<
   [GRID_WIDGET_TYPE.enum.SPOTIFY]: PLATFORM_PARSING_PARAMETERS_SPOTIFY,
   [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: PLATFORM_PARSING_PARAMETERS_SOUNDCLOUD,
   [GRID_WIDGET_TYPE.enum.YOUTUBE]: PLATFORM_PARSING_PARAMETERS_YOUTUBE,
+  [GRID_WIDGET_TYPE.enum.ELFSIGHT]: PLATFORM_PARSING_PARAMETERS_ELFSIGHT,
 }

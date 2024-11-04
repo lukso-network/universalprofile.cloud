@@ -1,4 +1,4 @@
-import type { z } from 'zod'
+import type { z, ZodEffects, ZodObject } from 'zod'
 
 // TODO refactor parser into zod schema
 export type GridWidgetExtended = {
@@ -17,4 +17,10 @@ export type GridWidgetChange = {
 export type GridChange = {
   oldGrid: Grid
   newGrid: Grid
+}
+
+export type GridSchemaMap = {
+  input: ZodObject<any> | ZodEffects<ZodObject<any>>
+  output: ZodObject<any> | ZodEffects<ZodObject<any>>
+  build: ZodObject<any> | ZodEffects<ZodObject<any>>
 }
