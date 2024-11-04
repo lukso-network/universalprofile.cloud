@@ -18,7 +18,10 @@ export const platformTransform = async (
 ) => {
   try {
     const properties = await parsePlatformInput(type, values.src)
-    return properties
+    return {
+      src: values.src,
+      ...properties,
+    }
   } catch (error: unknown) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,

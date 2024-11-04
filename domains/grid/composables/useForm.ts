@@ -2,7 +2,10 @@ import { computedAsync } from '@vueuse/core'
 import { ZodEffects, ZodError, type ZodObject } from 'zod'
 
 export const useForm = (
-  schema?: ZodObject<any> | ZodEffects<ZodObject<any>>,
+  schema?: {
+    input: ZodObject<any> | ZodEffects<ZodObject<any>>
+    output: ZodObject<any> | ZodEffects<ZodObject<any>>
+  },
   initialValues: Record<string, any> = {}
 ) => {
   const inputValues = ref(initialValues)
@@ -10,7 +13,7 @@ export const useForm = (
 
   const canSubmit = computedAsync(async () => {
     try {
-      await schema?.parseAsync(inputValues.value)
+      await schema?.input?.parseAsync(inputValues.value)
       return true
     } catch {
       return false
@@ -38,7 +41,7 @@ export const useForm = (
     async () => {
       try {
         inputErrors.value = undefined
-        await schema?.parseAsync(inputValues.value)
+        await schema?.input?.parseAsync(inputValues.value)
       } catch (error: unknown) {
         handleFormErrors(error)
       }

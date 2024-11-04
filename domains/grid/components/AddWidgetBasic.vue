@@ -20,7 +20,10 @@ const {
   getFieldErrorMessage,
   handleFieldChange,
   handleFormErrors,
-} = useForm(schema, (await schema?.safeParseAsync(props.properties))?.data)
+} = useForm(
+  schema,
+  (await schema?.input?.safeParseAsync({ src: '', ...props.properties }))?.data
+)
 const isInstructionsVisible = ref(false)
 
 const handleSave = async () => {
@@ -29,7 +32,8 @@ const handleSave = async () => {
   }
 
   try {
-    const properties = await schema?.parseAsync(inputValues.value)
+    const inputParse = await schema?.input?.safeParseAsync(inputValues.value)
+    const properties = await schema?.output?.parseAsync(inputParse?.data)
 
     if (isEdit.value) {
       updateGridWidget(props.id, {

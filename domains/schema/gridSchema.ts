@@ -8,7 +8,7 @@ export const gridWidgetProperties = z.union([
   soundCloudWidgetSchema,
   spotifyWidgetSchema,
   warpcastWidgetSchema,
-  xWidgetSchema,
+  xOutputSchema,
   youtubeWidgetSchema,
 ])
 
