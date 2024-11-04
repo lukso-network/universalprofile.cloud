@@ -22,7 +22,7 @@ const {
   handleFormErrors,
 } = useForm(
   schemaMap,
-  (await schemaMap?.optional().safeParseAsync(props.properties || {}))?.data
+  (await schemaMap?.build?.safeParseAsync(props.properties))?.data
 )
 
 const handleSave = async () => {
@@ -31,7 +31,7 @@ const handleSave = async () => {
   }
 
   try {
-    const properties = await schemaMap?.parseAsync(inputValues.value)
+    const properties = await schemaMap?.input?.parseAsync(inputValues.value)
 
     if (isEdit.value) {
       updateGridWidget(props.id, {
