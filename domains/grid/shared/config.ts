@@ -1,3 +1,4 @@
+import { buildGrid } from './../utils/buildGrid'
 import { z } from 'zod'
 
 export const GRID_WIDGET_TYPE = z.enum([
@@ -5,6 +6,7 @@ export const GRID_WIDGET_TYPE = z.enum([
   'TEXT',
   'IFRAME',
   'IMAGE',
+  'ELFSIGHT',
 
   // social media
   'X',
@@ -23,7 +25,16 @@ export const GRID_WIDGET_TYPE = z.enum([
 ])
 
 // map zod schema to widget type
-export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, any>> = {
+export const WIDGET_SCHEMA_MAP: Partial<
+  Record<
+    GridWidgetType,
+    {
+      input: z.ZodSchema<any>
+      output: z.ZodSchema<any>
+      build: z.ZodSchema<any>
+    }
+  >
+> = {
   [GRID_WIDGET_TYPE.enum.TEXT]: textWidgetSchema,
   [GRID_WIDGET_TYPE.enum.X]: {
     input: xInputSchema,
@@ -37,6 +48,7 @@ export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, any>> = {
   [GRID_WIDGET_TYPE.enum.SPOTIFY]: spotifyWidgetSchema,
   [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: soundCloudWidgetSchema,
   [GRID_WIDGET_TYPE.enum.WARPCAST]: warpcastWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.ELFSIGHT]: elfsightWidgetSchema,
 }
 
 // grid breakpoint where the grid switches into mobile mode
