@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const xType = z.enum(['timeline', 'status', 'video'])
 
 // properties schema that is used by JSON config
-export const xPropertiesSchema = z.object({
+export const xWidgetSchema = z.object({
   type: xType,
   username: z.string(),
   id: z.string().optional(),
@@ -13,7 +13,7 @@ export const xPropertiesSchema = z.object({
 })
 
 // input schema used to validate user input
-export const xInputSchema = xPropertiesSchema
+export const xWidgetInputSchema = xWidgetSchema
   .partial()
   .extend({
     input: z.string(),
@@ -25,7 +25,7 @@ export const xInputSchema = xPropertiesSchema
   )
 
 // builder schema used to re-create src/embed from properties
-export const xBuilderSchema = xPropertiesSchema
+export const xWidgetBuilderSchema = xWidgetSchema
   .extend({
     src: z.string().optional(),
   })
@@ -34,8 +34,8 @@ export const xBuilderSchema = xPropertiesSchema
       await platformBuildTransform(values, GRID_WIDGET_TYPE.enum.X)
   )
 
-export type XProperties = z.input<typeof xPropertiesSchema>
-export type XInput = z.input<typeof xInputSchema>
-export type XParser = Omit<XInput, 'input'>
-export type XBuilder = z.infer<typeof xBuilderSchema>
+export type XWidgetProperties = z.input<typeof xWidgetSchema>
+export type XWidgetInput = z.input<typeof xWidgetInputSchema>
+export type XWidgetParser = Omit<XWidgetInput, 'input'>
+export type XWidgetBuilder = z.infer<typeof xWidgetBuilderSchema>
 export type XType = z.input<typeof xType>

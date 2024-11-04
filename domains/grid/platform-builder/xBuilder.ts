@@ -1,5 +1,5 @@
 export const xBuilder = (
-  properties: XProperties
+  properties: XWidgetProperties
 ): {
   src: string
 } => {

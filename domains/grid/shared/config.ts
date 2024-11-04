@@ -26,11 +26,15 @@ export const GRID_WIDGET_TYPE = z.enum([
 // map zod schema to widget type
 export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, GridSchemaMap>> =
   {
-    [GRID_WIDGET_TYPE.enum.TEXT]: textWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.TEXT]: {
+      input: textInputSchema,
+      output: textPropertiesSchema,
+      build: textBuilderSchema,
+    },
     [GRID_WIDGET_TYPE.enum.X]: {
-      input: xInputSchema,
-      output: xPropertiesSchema,
-      build: xBuilderSchema,
+      input: xWidgetInputSchema,
+      output: xWidgetSchema,
+      build: xWidgetBuilderSchema,
     },
     [GRID_WIDGET_TYPE.enum.INSTAGRAM]: instagramWidgetSchema,
     [GRID_WIDGET_TYPE.enum.IFRAME]: iframeWidgetSchema,

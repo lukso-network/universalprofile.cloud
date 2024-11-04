@@ -4,7 +4,7 @@ export const buildPlatformOutput = async (
 ) => {
   switch (type) {
     case GRID_WIDGET_TYPE.enum.X:
-      return xBuilder(properties as XProperties)
+      return xBuilder(properties as XWidgetProperties)
 
     default:
       return {
