@@ -27,9 +27,9 @@ export const GRID_WIDGET_TYPE = z.enum([
 export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, GridSchemaMap>> =
   {
     [GRID_WIDGET_TYPE.enum.TEXT]: {
-      input: textInputSchema,
-      output: textPropertiesSchema,
-      build: textBuilderSchema,
+      input: textWidgetSchema,
+      output: textWidgetSchema,
+      build: textWidgetSchema,
     },
     [GRID_WIDGET_TYPE.enum.X]: {
       input: xWidgetInputSchema,
