@@ -13,6 +13,8 @@ export const parsePlatformInput = async (
       return parseSpotifyWidgetInput(input)
     case GRID_WIDGET_TYPE.enum.SOUNDCLOUD:
       return await parseSoundCloudWidgetInput(input)
+    case GRID_WIDGET_TYPE.enum.ELFSIGHT:
+      return parseElfSightWidgetInput(input)
     default:
       throw new Error('Invalid platform')
   }
@@ -195,4 +197,23 @@ const parseInstagramWidgetInput = (
   }
 
   throw new Error('Invalid Instagram input')
+}
+
+const parseElfSightWidgetInput = (
+  input: string
+): GridWidgetExtended | never => {
+  const ELFSIGHT_URL_REGEX = /class="elfsight-app-([\w-]+)"/
+
+  const [, id] = input.match(ELFSIGHT_URL_REGEX) || []
+
+  if (id) {
+    return {
+      type: GRID_WIDGET_TYPE.enum.ELFSIGHT,
+      properties: {
+        id: id,
+      },
+    }
+  }
+
+  throw new Error('Invalid ElfSight input')
 }

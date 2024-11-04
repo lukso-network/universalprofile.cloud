@@ -5,6 +5,7 @@ export const GRID_WIDGET_TYPE = z.enum([
   'TEXT',
   'IFRAME',
   'IMAGE',
+  'ELFSIGHT',
 
   // social media
   'X',
@@ -35,6 +36,7 @@ export const WIDGET_SCHEMA_MAP: Partial<
   [GRID_WIDGET_TYPE.enum.SPOTIFY]: spotifyWidgetSchema,
   [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: soundCloudWidgetSchema,
   [GRID_WIDGET_TYPE.enum.WARPCAST]: warpcastWidgetSchema,
+  [GRID_WIDGET_TYPE.enum.ELFSIGHT]: elfsightWidgetSchema,
 }
 
 // grid breakpoint where the grid switches into mobile mode
