@@ -34,14 +34,13 @@ export const parsePlatformInput = async (
       matches = Array.from(input.matchAll(regex))
     } else {
       const match = input.match(regex)
-      console.log(JSON.stringify(match))
+
       if (match) {
         matches.push(match)
       }
     }
 
     if (matches.length) {
-      console.log(matches)
       return await callback(matches)
     }
   }
