@@ -17,7 +17,7 @@ export const platformTransform = async (
   type: GridWidgetType
 ) => {
   try {
-    const properties = await parsePlatformInput(type, values.src)
+    const { properties } = await parsePlatformInput(type, values.src)
     return {
       src: values.src,
       ...properties,

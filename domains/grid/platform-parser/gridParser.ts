@@ -1,12 +1,17 @@
+import type { GridWidgetType } from '@/types/grid'
+
 export type RegexWithCallback = {
   regex: RegExp
   callback: (
     matches: RegExpMatchArray[]
-  ) => Promise<Record<string, unknown> | undefined>
+  ) => Promise<{
+    properties: Record<string, unknown> | undefined
+    type: GridWidgetType
+  }>
 }
 
 export type PlatformParsingParameters = {
-  // type: GridWidgetType // TODO: Does the parser need to select the type?
+  type: GridWidgetType
   regexWithCallbacks?: RegexWithCallback[]
 }
 

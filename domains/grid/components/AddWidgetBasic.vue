@@ -43,7 +43,7 @@ const handleSave = async () => {
       })
     } else {
       const newWidget: GridWidgetWithoutCords = createWidgetObject({
-        type: props.type,
+        type: inputParse?.data.widgetType, // widget type is not based on selection but on the parsing result
         properties,
         w: props.width,
         h: props.height,
