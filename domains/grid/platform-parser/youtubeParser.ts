@@ -21,6 +21,7 @@ export const PLATFORM_PARSING_PARAMETERS_YOUTUBE: PlatformParsingParameters = {
             'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
           additionalProcessing: properties => ({
             ...properties,
+            widgetType: 'IFRAME',
             width: properties.width || '560',
             height: properties.height || '315',
             frameborder: properties.frameborder || '0',
@@ -39,6 +40,7 @@ export const PLATFORM_PARSING_PARAMETERS_YOUTUBE: PlatformParsingParameters = {
       ): Promise<Record<string, any>> => {
         const { videoId } = getPropertiesFromGroups(matches)
         return {
+          widgetType: 'IFRAME',
           videoId,
           src: `https://www.youtube-nocookie.com/embed/${videoId}`,
           width: '560',

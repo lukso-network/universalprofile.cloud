@@ -10,6 +10,7 @@ export const PLATFORM_PARSING_PARAMETERS_INSTAGRAM: PlatformParsingParameters =
           const { type, id } = properties
 
           return {
+            widgetType: 'INSTAGRAM',
             type,
             id,
           }

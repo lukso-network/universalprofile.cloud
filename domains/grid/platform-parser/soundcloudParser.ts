@@ -31,6 +31,7 @@ export const PLATFORM_PARSING_PARAMETERS_SOUNDCLOUD: PlatformParsingParameters =
               'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
             additionalProcessing: properties => ({
               ...properties,
+              widgetType: 'IFRAME',
               height: properties.height || '166',
               width: properties.width || '100%',
             }),

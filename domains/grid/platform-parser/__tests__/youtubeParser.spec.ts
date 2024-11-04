@@ -7,6 +7,7 @@ describe('YOUTUBE Input Parser', () => {
       GRID_WIDGET_TYPE.enum.YOUTUBE,
       'https://www.youtube.com/watch?v=Vw4JE64hsO8',
       {
+        widgetType: 'IFRAME',
         allow:
           'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
         allowfullscreen: true,
@@ -22,6 +23,7 @@ describe('YOUTUBE Input Parser', () => {
       GRID_WIDGET_TYPE.enum.YOUTUBE,
       '<iframe width="560" height="315" src="https://www.youtube.com/embed/Vw4JE64hsO8?si=OwVdFZCStaL90G2W" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
       {
+        widgetType: 'IFRAME',
         allow:
           'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
         allowfullscreen: true,

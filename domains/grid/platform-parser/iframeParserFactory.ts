@@ -43,7 +43,7 @@ export const createIframeRegex = (
 // Generic callback processor for iframe attributes
 export const processIframeAttributes = (
   matches: RegExpMatchArray[],
-  platformDefaults: {
+  options: {
     createSrc: (properties: Record<string, any>) => string
     defaultAllow?: string
     additionalProcessing?: (
@@ -64,21 +64,21 @@ export const processIframeAttributes = (
   } = properties
 
   const baseProperties = {
-    src: platformDefaults.createSrc(platformSpecific),
+    src: options.createSrc(platformSpecific),
     // ...platformSpecific,
     ...(style && { style }),
     ...(width && { width }),
     ...(height && { height }),
     ...(frameBorder && { frameBorder: Number.parseInt(frameBorder) }),
     ...((allow && { allow }) ||
-      (platformDefaults.defaultAllow && {
-        allow: platformDefaults.defaultAllow,
+      (options.defaultAllow && {
+        allow: options.defaultAllow,
       })),
     ...(loading && { loading }),
     ...(allowfullscreen && { allowfullscreen: true }),
   }
 
-  return platformDefaults.additionalProcessing
-    ? platformDefaults.additionalProcessing(baseProperties)
+  return options.additionalProcessing
+    ? options.additionalProcessing(baseProperties)
     : baseProperties
 }

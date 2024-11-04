@@ -15,6 +15,10 @@ export const PLATFORM_PARSING_PARAMETERS_SPOTIFY: PlatformParsingParameters = {
             `https://open.spotify.com/embed/${type}/${id}${params ? `?${params}` : ''}`,
           defaultAllow:
             'clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+          additionalProcessing: properties => ({
+            ...properties,
+            widgetType: 'IFRAME',
+          }),
         })
       },
     },
