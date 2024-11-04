@@ -24,6 +24,13 @@ const isOpen = ref<boolean | undefined>(undefined)
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
 
+const widgetProperties = computedAsync(async () => {
+  const schema = WIDGET_SCHEMA_MAP[props.widget.type]
+  const parse = await schema?.build?.safeParseAsync(props.widget.properties)
+
+  return parse?.data
+})
+
 const isAllowToEdit = computed(
   () => canEditGrid.value && !isAddContentWidget.value
 )
@@ -313,7 +320,7 @@ onMounted(() => {
     <component
       v-if="widgetComponent && targetIsVisible"
       :is="widgetComponent"
-      v-bind="widget.properties"
+      v-bind="widgetProperties"
       :widget="widget"
     ></component>
   </div>

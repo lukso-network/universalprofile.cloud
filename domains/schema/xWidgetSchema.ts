@@ -2,8 +2,8 @@ import { z } from 'zod'
 
 export const xType = z.enum(['timeline', 'status', 'video'])
 
-// output schema defines properties that are expected by the standard
-export const xOutputSchema = z.object({
+// properties schema that is used by JSON config
+export const xPropertiesSchema = z.object({
   type: xType,
   username: z.string(),
   id: z.string().optional(),
@@ -12,35 +12,30 @@ export const xOutputSchema = z.object({
   doNotTrack: z.boolean().optional(),
 })
 
-// input schema defines properties that comes from user input and should be "validated" in the form
-export const xInputSchema = xOutputSchema
+// input schema used to validate user input
+export const xInputSchema = xPropertiesSchema
   .partial()
   .extend({
-    src: z.string(),
+    input: z.string(),
     widgetType: z.literal('X').optional(),
   })
-  .transform(async (values, ctx) => {
-    let src = values.src
+  .transform(
+    async (values, ctx) =>
+      await platformParseTransform(values.input, ctx, GRID_WIDGET_TYPE.enum.X)
+  )
 
-    // we construct src based on the input values
-    if (!src && values.username) {
-      if (values.type === 'timeline') {
-        src = `https://twitter.com/${values.username}`
-      } else if (values.id) {
-        src = `https://twitter.com/${values.username}/status/${values.id}`
-      }
-    }
-
-    return {
-      ...(await platformTransform(
-        { ...values, src },
-        ctx,
-        GRID_WIDGET_TYPE.enum.X
-      )),
-      widgetType: GRID_WIDGET_TYPE.enum.X,
-    }
+// builder schema used to re-create src/embed from properties
+export const xBuilderSchema = xPropertiesSchema
+  .extend({
+    src: z.string().optional(),
   })
+  .transform(
+    async values =>
+      await platformBuildTransform(values, GRID_WIDGET_TYPE.enum.X)
+  )
 
-export type XInputProperties = z.input<typeof xInputSchema>
-export type XOutputProperties = z.input<typeof xOutputSchema>
+export type XProperties = z.input<typeof xPropertiesSchema>
+export type XInput = z.input<typeof xInputSchema>
+export type XParser = Omit<XInput, 'input'>
+export type XBuilder = z.infer<typeof xBuilderSchema>
 export type XType = z.input<typeof xType>

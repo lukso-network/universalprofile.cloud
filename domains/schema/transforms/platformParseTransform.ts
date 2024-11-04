@@ -2,24 +2,14 @@ import { z } from 'zod'
 
 const { formatMessage } = useIntl()
 
-/**
- *
- *
- * @param values
- * @param ctx
- * @param type
- */
-export const platformTransform = async (
-  values: {
-    src: string
-  },
+export const platformParseTransform = async (
+  input: string,
   ctx: z.RefinementCtx,
   type: GridWidgetType
 ) => {
   try {
-    const { properties } = await parsePlatformInput(type, values.src)
+    const properties = await parsePlatformInput(type, input)
     return {
-      src: values.src,
       ...properties,
     }
   } catch (error: unknown) {

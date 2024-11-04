@@ -27,7 +27,8 @@ export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, any>> = {
   [GRID_WIDGET_TYPE.enum.TEXT]: textWidgetSchema,
   [GRID_WIDGET_TYPE.enum.X]: {
     input: xInputSchema,
-    output: xOutputSchema,
+    output: xPropertiesSchema,
+    build: xBuilderSchema,
   },
   [GRID_WIDGET_TYPE.enum.INSTAGRAM]: instagramWidgetSchema,
   [GRID_WIDGET_TYPE.enum.IFRAME]: iframeWidgetSchema,

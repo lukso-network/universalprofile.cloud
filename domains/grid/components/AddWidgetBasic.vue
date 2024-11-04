@@ -20,10 +20,9 @@ const {
   getFieldErrorMessage,
   handleFieldChange,
   handleFormErrors,
-} = useForm(
-  schema,
-  (await schema?.input?.safeParseAsync({ src: '', ...props.properties }))?.data
-)
+} = useForm(schema, {
+  input: (await schema?.build?.safeParseAsync(props.properties))?.data?.src,
+})
 const isInstructionsVisible = ref(false)
 
 const handleSave = async () => {
@@ -142,10 +141,10 @@ const hasInstructions = computed(() => widgetInstructions.value !== '-')
       :placeholder="
         formatMessage(`add_widget_${type.toLowerCase()}_input_placeholder`)
       "
-      :value="inputValues.src"
-      :error="getFieldErrorMessage('src')"
+      :value="inputValues.input"
+      :error="getFieldErrorMessage('input')"
       @on-input="
-        (customEvent: CustomEvent) => handleFieldChange(customEvent, 'src')
+        (customEvent: CustomEvent) => handleFieldChange(customEvent, 'input')
       "
     ></lukso-textarea>
 

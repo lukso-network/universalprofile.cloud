@@ -4,14 +4,10 @@ export type RegexWithCallback = {
   regex: RegExp
   callback: (
     matches: RegExpMatchArray[]
-  ) => Promise<{
-    properties: Record<string, unknown> | undefined
-    type: GridWidgetType
-  }>
+  ) => Promise<Record<string, unknown> | undefined>
 }
 
 export type PlatformParsingParameters = {
-  type: GridWidgetType
   regexWithCallbacks?: RegexWithCallback[]
 }
 

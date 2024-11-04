@@ -7,7 +7,7 @@ export const soundCloudWidgetSchema = z
     allow: z.string().optional(),
   })
   .transform((values, ctx) =>
-    platformTransform(values, ctx, GRID_WIDGET_TYPE.enum.SOUNDCLOUD)
+    platformParseTransform(values, ctx, GRID_WIDGET_TYPE.enum.SOUNDCLOUD)
   )
 
 export type SoundCloudWidgetProperties = z.input<typeof soundCloudWidgetSchema>

@@ -8,7 +8,7 @@ export const spotifyWidgetSchema = z
     theme: z.string().optional(),
   })
   .transform((values, ctx) =>
-    platformTransform(values, ctx, GRID_WIDGET_TYPE.enum.SPOTIFY)
+    platformParseTransform(values, ctx, GRID_WIDGET_TYPE.enum.SPOTIFY)
   )
 
 export type SpotifyWidgetProperties = z.input<typeof spotifyWidgetSchema>

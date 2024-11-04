@@ -6,7 +6,7 @@ export const youtubeWidgetSchema = z
     allow: z.string().optional(),
   })
   .transform((values, ctx) =>
-    platformTransform(values, ctx, GRID_WIDGET_TYPE.enum.YOUTUBE)
+    platformParseTransform(values, ctx, GRID_WIDGET_TYPE.enum.YOUTUBE)
   )
 
 export type YoutubeWidgetProperties = z.input<typeof youtubeWidgetSchema>
