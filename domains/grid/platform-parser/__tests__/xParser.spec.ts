@@ -7,11 +7,9 @@ describe('X Parser', () => {
       const result = await parsePlatformInput(GRID_WIDGET_TYPE.Enum.X, input)
 
       expect(result).toEqual({
-        type: 'X',
-        properties: {
-          type: 'timeline',
-          username: 'feindura',
-        },
+        widgetType: 'X',
+        type: 'timeline',
+        username: 'feindura',
       })
     })
 
@@ -20,11 +18,9 @@ describe('X Parser', () => {
       const result = await parsePlatformInput(GRID_WIDGET_TYPE.Enum.X, input)
 
       expect(result).toEqual({
-        type: 'X',
-        properties: {
-          type: 'timeline',
-          username: 'feindura',
-        },
+        widgetType: 'X',
+        type: 'timeline',
+        username: 'feindura',
       })
     })
 
@@ -33,11 +29,9 @@ describe('X Parser', () => {
       const result = await parsePlatformInput(GRID_WIDGET_TYPE.Enum.X, input)
 
       expect(result).toEqual({
-        type: 'X',
-        properties: {
-          type: 'timeline',
-          username: 'lukso_io',
-        },
+        widgetType: 'X',
+        type: 'timeline',
+        username: 'lukso_io',
       })
     })
 
@@ -46,11 +40,9 @@ describe('X Parser', () => {
       const result = await parsePlatformInput(GRID_WIDGET_TYPE.Enum.X, input)
 
       expect(result).toEqual({
-        type: 'X',
-        properties: {
-          type: 'timeline',
-          username: 'lukso_io',
-        },
+        widgetType: 'X',
+        type: 'timeline',
+        username: 'lukso_io',
       })
     })
 
@@ -60,11 +52,9 @@ describe('X Parser', () => {
       const result = await parsePlatformInput(GRID_WIDGET_TYPE.Enum.X, input)
 
       expect(result).toEqual({
-        type: 'X',
-        properties: {
-          type: 'timeline',
-          username: 'lukso_io',
-        },
+        widgetType: 'X',
+        type: 'timeline',
+        username: 'lukso_io',
       })
     })
   })
@@ -75,12 +65,10 @@ describe('X Parser', () => {
       const result = await parsePlatformInput(GRID_WIDGET_TYPE.Enum.X, input)
 
       expect(result).toEqual({
-        type: 'X',
-        properties: {
-          type: 'status',
-          username: 'feindura',
-          id: '1804519711377436675',
-        },
+        widgetType: 'X',
+        type: 'status',
+        username: 'feindura',
+        id: '1804519711377436675',
       })
     })
 
@@ -89,12 +77,10 @@ describe('X Parser', () => {
       const result = await parsePlatformInput(GRID_WIDGET_TYPE.Enum.X, input)
 
       expect(result).toEqual({
-        type: 'X',
-        properties: {
-          type: 'status',
-          username: 'feindura',
-          id: '1804519711377436675',
-        },
+        widgetType: 'X',
+        type: 'status',
+        username: 'feindura',
+        id: '1804519711377436675',
       })
     })
 
@@ -104,15 +90,13 @@ describe('X Parser', () => {
       const result = await parsePlatformInput(GRID_WIDGET_TYPE.Enum.X, input)
 
       expect(result).toEqual({
-        type: 'X',
-        properties: {
-          type: 'status',
-          username: 'feindura',
-          id: '1804519711377436675',
-          theme: 'dark',
-          language: 'en',
-          donottrack: true,
-        },
+        widgetType: 'X',
+        type: 'status',
+        username: 'feindura',
+        id: '1804519711377436675',
+        theme: 'dark',
+        language: 'en',
+        donottrack: true,
       })
     })
   })
@@ -124,12 +108,10 @@ describe('X Parser', () => {
 
       const result = await parsePlatformInput(GRID_WIDGET_TYPE.Enum.X, input)
       expect(result).toEqual({
-        type: 'X',
-        properties: {
-          type: 'video',
-          id: '1852375479275192423',
-          username: 'lukso_io',
-        },
+        widgetType: 'X',
+        type: 'video',
+        id: '1852375479275192423',
+        username: 'lukso_io',
       })
     })
   })
