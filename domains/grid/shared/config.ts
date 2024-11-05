@@ -38,7 +38,11 @@ export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, GridSchemaMap>> =
     },
     [GRID_WIDGET_TYPE.enum.INSTAGRAM]: instagramWidgetSchema,
     [GRID_WIDGET_TYPE.enum.IFRAME]: iframeWidgetSchema,
-    [GRID_WIDGET_TYPE.enum.IMAGE]: imageWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.IMAGE]: {
+      input: imageWidgetSchema,
+      output: imageWidgetSchema,
+      build: imageWidgetSchema,
+    },
     [GRID_WIDGET_TYPE.enum.YOUTUBE]: youtubeWidgetSchema,
     [GRID_WIDGET_TYPE.enum.SPOTIFY]: spotifyWidgetSchema,
     [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: soundCloudWidgetSchema,
