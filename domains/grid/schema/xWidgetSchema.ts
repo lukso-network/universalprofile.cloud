@@ -17,7 +17,6 @@ export const xWidgetInputSchema = xWidgetSchema
   .partial()
   .extend({
     input: z.string(),
-    widgetType: z.literal('X').optional(),
   })
   .transform(
     async (values, ctx) =>

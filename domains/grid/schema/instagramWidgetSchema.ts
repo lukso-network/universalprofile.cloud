@@ -13,7 +13,6 @@ export const instagramWidgetInputSchema = instagramWidgetSchema
   .partial()
   .extend({
     input: z.string(),
-    widgetType: z.literal('X').optional(),
   })
 
   .transform((values, ctx) =>
