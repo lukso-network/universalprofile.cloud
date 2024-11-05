@@ -1,23 +1,25 @@
 <script setup lang="ts">
-import type { SelectStringOption } from '@lukso/web-components'
-
 const { modal, closeModal } = useModal<Partial<Grid>>()
 const { formatMessage } = useIntl()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
 const { addGrid, updateGrid } = useGrid()
-
-const DEFAULT_PROPERTIES = {
-  title: '',
-  gridColumns: GRID_COLUMNS_MIN,
-}
-const inputValues = reactive(DEFAULT_PROPERTIES)
-const inputErrors = reactive({
-  title: '',
-})
-
 const id = computed(() => modal?.data?.id)
-const canSubmit = ref(false)
 const isEdit = computed(() => !!id.value)
+const {
+  inputValues,
+  canSubmit,
+  getFieldErrorMessage,
+  handleFieldChange,
+  handleFormErrors,
+  handleSelectChange,
+} = useForm(
+  gridInputSchema,
+  (
+    await gridInputSchema
+      .partial({ title: true })
+      ?.safeParseAsync(modal?.data || {})
+  )?.data
+)
 
 const gridColumnsOptions = computed(() => {
   return Array.from({ length: GRID_COLUMNS_MAX - GRID_COLUMNS_MIN + 1 }).map(
@@ -30,66 +32,43 @@ const gridColumnsOptions = computed(() => {
 
 const selectedGridColumns = computed(() => {
   return gridColumnsOptions.value.find(
-    option => option.id === inputValues.gridColumns
+    option =>
+      option.id === (inputValues.value as { gridColumns: number }).gridColumns
   )
 })
-
-const handleTitleChange = async (customEvent: CustomEvent) => {
-  const event = customEvent.detail.event
-  const input = event.target as HTMLInputElement
-
-  inputErrors.title = ''
-
-  if (!input.value) {
-    inputErrors.title = formatMessage('errors_required')
-    return
-  }
-
-  inputValues.title = input.value
-}
-
-const handleChangeColumnNumber = async (customEvent: CustomEvent) => {
-  const option = customEvent.detail.value as SelectStringOption
-
-  inputValues.gridColumns = Number.parseInt(option.id as string)
-}
 
 const handleCancel = () => {
   closeModal()
 }
 
-const handleSave = () => {
+const handleSave = async () => {
   if (!canSubmit.value) {
     return
   }
 
-  const grid = toRaw(inputValues)
+  try {
+    const grid = await gridInputSchema?.parseAsync(inputValues.value)
 
-  if (isEdit.value) {
-    updateGrid(id.value, {
-      ...grid,
-    })
-  } else {
-    const newGrid: Grid = {
-      id: createGridId(grid, tempGrid.value),
-      ...grid,
-      grid: [],
+    if (isEdit.value) {
+      updateGrid(id.value, {
+        ...grid,
+      })
+    } else {
+      const newGrid: Grid = {
+        id: createGridId(grid, tempGrid.value),
+        ...grid,
+        grid: [],
+      }
+
+      addGrid(newGrid)
+      selectedGridId.value = newGrid.id
     }
 
-    addGrid(newGrid)
-    selectedGridId.value = newGrid.id
+    handleCancel()
+  } catch (error: unknown) {
+    handleFormErrors(error)
   }
-
-  handleCancel()
 }
-
-watchEffect(() => {
-  canSubmit.value = !!inputValues.title && !inputErrors.title
-})
-
-onMounted(() => {
-  Object.assign(inputValues, modal?.data?.grid || DEFAULT_PROPERTIES)
-})
 </script>
 
 <template>
@@ -108,11 +87,13 @@ onMounted(() => {
       <lukso-input
         .value="inputValues.title"
         :placeholder="formatMessage('add_grid_title_placeholder')"
-        :error="inputErrors.title"
+        :error="getFieldErrorMessage('title')"
         :label="formatMessage('add_grid_title_label')"
         is-full-width
         autofocus
-        @on-input="handleTitleChange"
+        @on-input="
+          (customEvent: CustomEvent) => handleFieldChange(customEvent, 'title')
+        "
       ></lukso-input>
 
       <!-- Column number -->
@@ -121,7 +102,10 @@ onMounted(() => {
         :options="JSON.stringify(gridColumnsOptions)"
         :label="formatMessage('add_grid_columns_label')"
         is-full-width
-        @on-select="handleChangeColumnNumber"
+        @on-select="
+          (customEvent: CustomEvent) =>
+            handleSelectChange(customEvent, 'gridColumns')
+        "
       ></lukso-select>
     </div>
 
