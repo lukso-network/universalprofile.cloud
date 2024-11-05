@@ -41,6 +41,10 @@ export const useForm = (
         await schemaMap?.input?.parseAsync(inputValues.value)
       } catch (error: unknown) {
         handleFormErrors(error)
+
+        if (gridLog.enabled) {
+          gridLog('Input error', error)
+        }
       }
     },
     { deep: true }

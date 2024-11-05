@@ -36,7 +36,11 @@ export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, GridSchemaMap>> =
       output: xWidgetSchema,
       build: xWidgetBuilderSchema,
     },
-    [GRID_WIDGET_TYPE.enum.INSTAGRAM]: instagramWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.INSTAGRAM]: {
+      input: instagramWidgetInputSchema,
+      output: instagramWidgetSchema,
+      build: instagramWidgetBuilderSchema,
+    },
     [GRID_WIDGET_TYPE.enum.IFRAME]: iframeWidgetSchema,
     [GRID_WIDGET_TYPE.enum.IMAGE]: {
       input: imageWidgetSchema,
@@ -86,4 +90,5 @@ export const PLATFORM_PARSING_PARAMETERS: Partial<
   [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: PLATFORM_PARSING_PARAMETERS_SOUNDCLOUD,
   [GRID_WIDGET_TYPE.enum.YOUTUBE]: PLATFORM_PARSING_PARAMETERS_YOUTUBE,
   [GRID_WIDGET_TYPE.enum.ELFSIGHT]: PLATFORM_PARSING_PARAMETERS_ELFSIGHT,
+  [GRID_WIDGET_TYPE.enum.WARPCAST]: PLATFORM_PARSING_PARAMETERS_WARPCAST,
 }

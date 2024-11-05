@@ -18,7 +18,7 @@ export const platformParseTransform = async (
       message: formatMessage('errors_invalid_input', {
         name: capitalize(type),
       }),
-      path: ['src'],
+      path: ['input'],
     })
     return z.NEVER
   }
