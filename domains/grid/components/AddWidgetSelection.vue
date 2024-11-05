@@ -119,6 +119,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           variant="light"
           :show-delay="SHOW_TOOLTIP_DELAY"
           :text="formatMessage('widget_type_elfsight')"
+          class="hidden"
         >
           <img
             src="/images/elfsight.png"

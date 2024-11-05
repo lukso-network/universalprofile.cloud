@@ -71,7 +71,11 @@ export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, GridSchemaMap>> =
       output: warpcastWidgetSchema,
       build: warpcastWidgetSchema,
     },
-    [GRID_WIDGET_TYPE.enum.ELFSIGHT]: elfsightWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.ELFSIGHT]: {
+      input: elfsightInputSchema,
+      output: elfsightWidgetSchema,
+      build: elfsightWidgetSchema,
+    },
   }
 
 // grid breakpoint where the grid switches into mobile mode
