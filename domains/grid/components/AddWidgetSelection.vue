@@ -123,7 +123,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
         >
           <img
             src="/images/elfsight.png"
-            alt="Elfsight"
+            :alt="formatMessage('widget_type_elfsight')"
             class="size-10 cursor-pointer transition hover:scale-105"
             @click="handleSelectWidget('ELFSIGHT')"
           />
@@ -147,7 +147,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
         >
           <img
             src="/images/social-media-youtube.svg"
-            alt="Youtube"
+            :alt="formatMessage('widget_type_youtube')"
             class="size-10 cursor-pointer transition hover:scale-105"
             @click="handleSelectWidget('YOUTUBE')"
           />
@@ -171,7 +171,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
         >
           <img
             src="/images/social-media-spotify.svg"
-            alt="Spotify"
+            :alt="formatMessage('widget_type_spotify')"
             class="size-10 cursor-pointer transition hover:scale-105"
             @click="handleSelectWidget('SPOTIFY')"
           />
@@ -185,7 +185,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
         >
           <img
             src="/images/social-media-soundcloud.svg"
-            alt="Sound Cloud"
+            :alt="formatMessage('widget_type_soundcloud')"
             class="cursor-pointer transition hover:scale-105"
             @click="handleSelectWidget('SOUNDCLOUD')"
           />
@@ -209,7 +209,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
         >
           <img
             src="/images/social-media-x.svg"
-            alt="X"
+            :alt="formatMessage('widget_type_x')"
             class="cursor-pointer transition hover:scale-105"
             @click="handleSelectWidget('X')"
           />
@@ -223,7 +223,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
         >
           <img
             src="/images/social-media-warpcast.png"
-            alt="Warpcast"
+            :alt="formatMessage('widget_type_warpcast')"
             class="size-10 cursor-pointer rounded-full transition hover:scale-105"
             @click="handleSelectWidget('WARPCAST')"
           />
@@ -237,7 +237,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
         >
           <img
             src="/images/social-media-instagram.svg"
-            alt="Warpcast"
+            :alt="formatMessage('widget_type_instagram')"
             class="size-10 cursor-pointer rounded-full transition hover:scale-105"
             @click="handleSelectWidget('INSTAGRAM')"
           />
