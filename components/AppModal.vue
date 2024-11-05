@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useElementSize, useWindowSize } from '@vueuse/core'
+
 import type { ModalSizes } from '@lukso/web-components'
 
 const { setModal } = useAppStore()
@@ -6,6 +8,9 @@ const { isModalOpen, modal } = storeToRefs(useAppStore())
 const modalTemplateComponent = shallowRef()
 const route = useRoute()
 const { closeModal } = useModal()
+const modalContainer = ref<HTMLElement | null>(null)
+const { height: modalHeight } = useElementSize(modalContainer)
+const { height: screenHeight } = useWindowSize()
 
 /**
  * Load modal template component
@@ -71,7 +76,13 @@ onUnmounted(() => {
     :data-template="modal?.template"
     @on-backdrop-click="closeModal"
   >
-    <div class="max-h-[calc(100vh-100px)] overflow-y-auto">
+    <div
+      ref="modalContainer"
+      class="max-h-[calc(100vh-100px)]"
+      :class="{
+        'overflow-y-auto': modalHeight > screenHeight - 150,
+      }"
+    >
       <component
         v-if="modalTemplateComponent"
         :is="modalTemplateComponent"
