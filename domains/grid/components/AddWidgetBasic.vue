@@ -20,7 +20,7 @@ const {
   getFieldErrorMessage,
   handleFieldChange,
   handleFormErrors,
-} = useForm(schemaMap, {
+} = useForm(schemaMap?.input, {
   input: (await schemaMap?.build?.safeParseAsync(props.properties))?.data?.src,
 })
 const isInstructionsVisible = ref(false)

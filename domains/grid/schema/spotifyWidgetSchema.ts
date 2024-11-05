@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const spotifyWidgetSchema = iframeWidgetSchema.extend({})
 
-export const spotifyInputSchema = iframeWidgetSchema
+export const spotifyWidgetInputSchema = iframeWidgetSchema
   .partial()
   .extend({
     input: z.string(),

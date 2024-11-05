@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const soundCloudWidgetSchema = iframeWidgetSchema.extend({})
 
-export const soundCloudInputSchema = iframeWidgetSchema
+export const soundCloudWidgetInputSchema = iframeWidgetSchema
   .partial()
   .extend({
     input: z.string(),

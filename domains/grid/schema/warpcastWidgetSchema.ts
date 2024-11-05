@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const warpcastWidgetSchema = iframeWidgetSchema.extend({})
 
-export const warpcastInputSchema = iframeWidgetSchema
+export const warpcastWidgetInputSchema = iframeWidgetSchema
   .partial()
   .extend({
     input: z.string(),

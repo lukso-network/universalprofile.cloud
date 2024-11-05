@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const elfsightWidgetSchema = iframeWidgetSchema.extend({})
 
-export const elfsightInputSchema = iframeWidgetSchema
+export const elfsightWidgetInputSchema = iframeWidgetSchema
   .partial()
   .extend({
     input: z.string(),

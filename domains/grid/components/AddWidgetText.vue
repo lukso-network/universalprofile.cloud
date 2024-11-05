@@ -21,8 +21,8 @@ const {
   handleFieldChange,
   handleFormErrors,
 } = useForm(
-  schemaMap,
-  (await schemaMap?.build?.safeParseAsync(props.properties))?.data
+  schemaMap?.input,
+  (await schemaMap?.build?.safeParseAsync(props.properties || {}))?.data
 )
 
 const handleSave = async () => {

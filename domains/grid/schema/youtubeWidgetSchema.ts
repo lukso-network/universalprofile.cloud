@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const youtubeWidgetSchema = iframeWidgetSchema.extend({})
 
-export const youtubeInputSchema = iframeWidgetSchema
+export const youtubeWidgetInputSchema = iframeWidgetSchema
   .partial()
   .extend({
     input: z.string(),
