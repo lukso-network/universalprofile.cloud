@@ -41,7 +41,11 @@ export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, GridSchemaMap>> =
       output: instagramWidgetSchema,
       build: instagramWidgetBuilderSchema,
     },
-    [GRID_WIDGET_TYPE.enum.IFRAME]: iframeWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.IFRAME]: {
+      input: iframeInputSchema,
+      output: iframeWidgetSchema,
+      build: iframeWidgetSchema,
+    },
     [GRID_WIDGET_TYPE.enum.IMAGE]: {
       input: imageWidgetSchema,
       output: imageWidgetSchema,
