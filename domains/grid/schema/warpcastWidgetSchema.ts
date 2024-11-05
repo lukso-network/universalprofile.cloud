@@ -1,9 +1,6 @@
 import { z } from 'zod'
 
-export const warpcastWidgetSchema = z.object({
-  src: z.string().transform(urlTransform),
-  allow: z.string().optional(),
-})
+export const warpcastWidgetSchema = iframeWidgetSchema.extend({})
 
 export const warpcastInputSchema = iframeWidgetSchema
   .partial()

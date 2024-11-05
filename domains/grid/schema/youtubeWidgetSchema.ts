@@ -1,9 +1,6 @@
 import { z } from 'zod'
 
-export const youtubeWidgetSchema = z.object({
-  src: z.string().transform(urlTransform),
-  allow: z.string().optional(),
-})
+export const youtubeWidgetSchema = iframeWidgetSchema.extend({})
 
 export const youtubeInputSchema = iframeWidgetSchema
   .partial()

@@ -3,6 +3,9 @@ import { z } from 'zod'
 export const iframeWidgetSchema = z.object({
   src: z.string().transform(urlTransform),
   allow: z.string().optional(),
+  sandbox: z.string().optional(),
+  allowfullscreen: z.boolean().optional(),
+  referrerpolicy: z.string().optional(),
 })
 
 export const iframeInputSchema = iframeWidgetSchema
