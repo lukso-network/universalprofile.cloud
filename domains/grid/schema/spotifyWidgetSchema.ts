@@ -1,14 +1,14 @@
 import { z } from 'zod'
 
-export const spotifyWidgetSchema = z
-  .object({
-    src: z.string(),
-    type: z.string().optional(),
-    allow: z.string().optional(),
-    theme: z.string().optional(),
+export const spotifyWidgetSchema = iframeWidgetSchema.extend({})
+
+export const spotifyInputSchema = iframeWidgetSchema
+  .partial()
+  .extend({
+    input: z.string(),
   })
   .transform((values, ctx) =>
-    platformParseTransform(values, ctx, GRID_WIDGET_TYPE.enum.SPOTIFY)
+    platformParseTransform(values.input, ctx, GRID_WIDGET_TYPE.enum.SPOTIFY)
   )
 
 export type SpotifyWidgetProperties = z.input<typeof spotifyWidgetSchema>
