@@ -14,7 +14,6 @@ export const instagramWidgetInputSchema = instagramWidgetSchema
   .extend({
     input: z.string(),
   })
-
   .transform((values, ctx) =>
     platformParseTransform(values.input, ctx, GRID_WIDGET_TYPE.enum.INSTAGRAM)
   )
@@ -30,9 +29,3 @@ export const instagramWidgetBuilderSchema = instagramWidgetSchema
   )
 
 export type InstagramWidgetProperties = z.input<typeof instagramWidgetSchema>
-export type InstagramWidgetInput = z.input<typeof instagramWidgetInputSchema>
-export type InstagramWidgetParser = Omit<InstagramWidgetInput, 'input'>
-export type InstagramWidgetBuilder = z.infer<
-  typeof instagramWidgetBuilderSchema
->
-export type InstagramType = z.input<typeof instagramType>

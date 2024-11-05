@@ -19,4 +19,3 @@ export const iframeInputSchema = iframeWidgetSchema
   })
 
 export type IframeWidgetProperties = z.input<typeof iframeWidgetSchema>
-export type IframeWidgetInput = z.input<typeof iframeInputSchema>
