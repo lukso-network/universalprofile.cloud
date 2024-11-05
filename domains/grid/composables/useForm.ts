@@ -1,8 +1,10 @@
 import { computedAsync } from '@vueuse/core'
-import { ZodError } from 'zod'
+import { type ZodEffects, ZodError, type ZodObject } from 'zod'
+
+import type { SelectStringOption } from '@lukso/web-components'
 
 export const useForm = (
-  schemaMap?: GridSchemaMap,
+  schema?: ZodObject<any> | ZodEffects<ZodObject<any>>,
   initialValues: Record<string, unknown> = {}
 ) => {
   const inputValues = ref(initialValues)
@@ -10,9 +12,9 @@ export const useForm = (
 
   const canSubmit = computedAsync(async () => {
     try {
-      await schemaMap?.input?.parseAsync(inputValues.value)
+      await schema?.parseAsync(inputValues.value)
       return true
-    } catch {
+    } catch (error: unknown) {
       return false
     }
   }, false)
@@ -23,8 +25,12 @@ export const useForm = (
 
   const handleFieldChange = (customEvent: CustomEvent, field: string) => {
     const value = customEvent.detail?.value
-
     inputValues.value[field] = value
+  }
+
+  const handleSelectChange = (customEvent: CustomEvent, field: string) => {
+    const option = customEvent.detail.value as SelectStringOption
+    inputValues.value[field] = Number.parseInt(option.id as string)
   }
 
   const handleFormErrors = (error: unknown) => {
@@ -38,7 +44,7 @@ export const useForm = (
     async () => {
       try {
         inputErrors.value = undefined
-        await schemaMap?.input?.parseAsync(inputValues.value)
+        await schema?.parseAsync(inputValues.value)
       } catch (error: unknown) {
         handleFormErrors(error)
 
@@ -57,5 +63,6 @@ export const useForm = (
     getFieldErrorMessage,
     handleFieldChange,
     handleFormErrors,
+    handleSelectChange,
   }
 }

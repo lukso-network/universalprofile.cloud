@@ -38,6 +38,11 @@ export const gridSchema = z.object({
   id: z.string(),
 })
 
+export const gridInputSchema = z.object({
+  title: z.string().trim().superRefine(nonEmptyValidator),
+  gridColumns: z.number().default(GRID_COLUMNS_MIN),
+})
+
 export type GridWidget = z.input<typeof gridWidgetSchema>
 export type GridWidgetWithoutCords = z.input<
   typeof gridWidgetWithoutCordsSchema
