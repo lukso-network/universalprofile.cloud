@@ -8,14 +8,15 @@ export const warpcastWidgetSchema = z.object({
 export const warpcastInputSchema = iframeWidgetSchema
   .partial()
   .extend({
-    input: z.string().transform(urlTransform),
+    input: z.string(),
   })
-  .transform(values => {
-    return {
-      ...values,
-      src: values.input,
-      widgetType: GRID_WIDGET_TYPE.enum.WARPCAST,
-    }
-  })
+  .transform(
+    async (values, ctx) =>
+      await platformParseTransform(
+        values.input,
+        ctx,
+        GRID_WIDGET_TYPE.enum.WARPCAST
+      )
+  )
 
 export type WarpcastWidgetProperties = z.input<typeof warpcastWidgetSchema>
