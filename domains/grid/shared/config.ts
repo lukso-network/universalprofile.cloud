@@ -64,3 +64,13 @@ export const DEFAULT_SMALL_COLUMN_NUMBER = 1
 // minimum and maximum number of columns in the grid
 export const GRID_COLUMNS_MIN = 2
 export const GRID_COLUMNS_MAX = 4
+
+// initial grid
+export const EMPTY_GRID = [
+  {
+    id: DEFAULT_GRID_TITLE.toLowerCase(),
+    title: DEFAULT_GRID_TITLE,
+    grid: [],
+    gridColumns: GRID_COLUMNS_MIN,
+  },
+]

@@ -19,6 +19,7 @@ const {
   updateSelectedGrid,
   initSelectedGridId,
   getGridById,
+  gridsForTabs,
 } = useGrid()
 const gridContainer = ref<HTMLElement | null>(null)
 const { width } = useElementSize(gridContainer)
@@ -93,8 +94,15 @@ const handleResetGrid = async () => {
   const userGrid = await getUserGrid(address.value)
   const _grid = buildGrid(userGrid, isMobile.value, canEditGrid.value)
 
-  tempGrid.value = cloneObject(_grid)
-  viewedGrid.value = cloneObject(_grid)
+  // when user has no grids we re-create empty grids
+  if (gridsForTabs.value.length === 1) {
+    viewedGrid.value = cloneObject(EMPTY_GRID)
+    tempGrid.value = cloneObject(EMPTY_GRID)
+  } else {
+    tempGrid.value = cloneObject(_grid)
+    viewedGrid.value = cloneObject(_grid)
+  }
+
   gridWidgets.value = getSelectedGridWidgets(cloneObject(_grid))
   isSavingGrid.value = false
 
@@ -135,7 +143,7 @@ watch(
     const updatedViewedGrid = buildGrid(
       viewedGrid.value,
       isMobile.value,
-      canEditGrid.value
+      canEditGrid.value || gridsForTabs.value.length === 1
     )
 
     // if user is in edit mode we use temp grid, otherwise viewed grid
@@ -143,7 +151,7 @@ watch(
       const updatedTempGrid = buildGrid(
         tempGrid.value,
         isMobile.value,
-        canEditGrid.value
+        canEditGrid.value || gridsForTabs.value.length === 1
       )
       gridWidgets.value = getSelectedGridWidgets(updatedTempGrid)
       const changes = compareGrids(updatedViewedGrid, updatedTempGrid)
