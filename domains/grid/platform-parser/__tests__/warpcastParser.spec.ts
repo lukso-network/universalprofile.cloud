@@ -1,20 +1,31 @@
 import { describe, expect, it } from 'vitest'
 
-describe('WARPCAST Input Parser', () => {
-  it.each([
-    [
-      'correctly parses URL',
-      GRID_WIDGET_TYPE.enum.WARPCAST,
-      'https://warpcast.com/vitalik.eth',
-      {
-        widgetType: 'IFRAME',
-        src: 'https://warpcast.com/vitalik.eth',
-        allow:
-          'clipboard-write; encrypted-media; fullscreen; picture-in-picture',
-      },
-    ],
-  ])('correctly parses %s', async (_description, platform, input, expected) => {
-    const result = await parsePlatformInput(platform, input)
-    expect(result).toEqual(expected)
+describe('Warpcast Parser', () => {
+  it('can parse from profile URL', async () => {
+    const input = 'https://warpcast.com/realfeindura'
+    const result = await parsePlatformInput(
+      GRID_WIDGET_TYPE.Enum.WARPCAST,
+      input
+    )
+
+    expect(result).toEqual({
+      widgetType: 'IFRAME',
+      src: 'https://warpcast.com/realfeindura',
+      allow: 'clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+    })
+  })
+
+  it.skip('can parse from post URL', async () => {
+    const input = 'https://warpcast.com/realfeindura/0x0952bbc3'
+    const result = await parsePlatformInput(
+      GRID_WIDGET_TYPE.Enum.WARPCAST,
+      input
+    )
+
+    expect(result).toEqual({
+      widgetType: 'IFRAME',
+      src: 'https://warpcast.com/realfeindura/0x0952bbc3',
+      allow: 'clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+    })
   })
 })
