@@ -3,7 +3,7 @@ import { ZodError } from 'zod'
 
 export const useForm = (
   schemaMap?: GridSchemaMap,
-  initialValues: Record<string, any> = {}
+  initialValues: Record<string, unknown> = {}
 ) => {
   const inputValues = ref(initialValues)
   const inputErrors = ref<Record<string, any> | undefined>()
