@@ -1,13 +1,14 @@
 import { z } from 'zod'
 
-export const soundCloudWidgetSchema = z
-  .object({
-    src: z.string(),
-    type: z.string().optional(),
-    allow: z.string().optional(),
+export const soundCloudWidgetSchema = iframeWidgetSchema.extend({})
+
+export const soundCloudInputSchema = iframeWidgetSchema
+  .partial()
+  .extend({
+    input: z.string(),
   })
   .transform((values, ctx) =>
-    platformParseTransform(values, ctx, GRID_WIDGET_TYPE.enum.SOUNDCLOUD)
+    platformParseTransform(values.input, ctx, GRID_WIDGET_TYPE.enum.SOUNDCLOUD)
   )
 
 export type SoundCloudWidgetProperties = z.input<typeof soundCloudWidgetSchema>
