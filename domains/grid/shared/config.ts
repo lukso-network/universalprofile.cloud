@@ -104,7 +104,6 @@ export const DEFAULT_SMALL_COLUMN_NUMBER = 1
 export const GRID_COLUMNS_MIN = 2
 export const GRID_COLUMNS_MAX = 4
 
-// TODO instead of this huge object we should break down into individual parser files
 export const PLATFORM_PARSING_PARAMETERS: Partial<
   Record<GridWidgetType, PlatformParsingParameters | undefined>
 > = {
@@ -116,3 +115,13 @@ export const PLATFORM_PARSING_PARAMETERS: Partial<
   [GRID_WIDGET_TYPE.enum.ELFSIGHT]: PLATFORM_PARSING_PARAMETERS_ELFSIGHT,
   [GRID_WIDGET_TYPE.enum.WARPCAST]: PLATFORM_PARSING_PARAMETERS_WARPCAST,
 }
+
+// initial grid
+export const EMPTY_GRID = [
+  {
+    id: DEFAULT_GRID_TITLE.toLowerCase(),
+    title: DEFAULT_GRID_TITLE,
+    grid: [],
+    gridColumns: GRID_COLUMNS_MIN,
+  },
+]

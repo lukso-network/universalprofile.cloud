@@ -1,9 +1,16 @@
 <script setup lang="ts">
 const { showModal } = useModal()
 const { formatMessage } = useIntl()
+const { isEditingGrid } = storeToRefs(useGridStore())
+const { gridsForTabs } = useGrid()
 
-const handleAddContent = () => {
-  showModal<Partial<GridWidget>>({
+const handleAddContent = async () => {
+  // we enable editing mode in case user has no grids yet but see add content placeholder
+  if (gridsForTabs.value.length === 1) {
+    isEditingGrid.value = true
+  }
+
+  await showModal<Partial<GridWidget>>({
     template: 'AddGridWidget',
   })
 }
