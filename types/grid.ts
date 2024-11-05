@@ -1,4 +1,4 @@
-import type { z, ZodEffects, ZodObject } from 'zod'
+import type { ZodEffects, ZodObject, z } from 'zod'
 
 // TODO refactor parser into zod schema
 export type GridWidgetExtended = {
