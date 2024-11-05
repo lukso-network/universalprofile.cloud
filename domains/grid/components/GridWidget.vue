@@ -70,7 +70,6 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.enum.SPOTIFY]: 'Spotify',
   [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: 'Iframe',
   [GRID_WIDGET_TYPE.enum.WARPCAST]: 'Iframe',
-  [GRID_WIDGET_TYPE.enum.YOUTUBE]: 'Youtube',
   [GRID_WIDGET_TYPE.enum.ELFSIGHT]: 'Elfsight',
 }
 

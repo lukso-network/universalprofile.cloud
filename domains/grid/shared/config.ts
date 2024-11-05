@@ -51,7 +51,11 @@ export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, GridSchemaMap>> =
       output: imageWidgetSchema,
       build: imageWidgetSchema,
     },
-    [GRID_WIDGET_TYPE.enum.YOUTUBE]: youtubeWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.YOUTUBE]: {
+      input: youtubeInputSchema,
+      output: youtubeWidgetSchema,
+      build: youtubeWidgetSchema,
+    },
     [GRID_WIDGET_TYPE.enum.SPOTIFY]: spotifyWidgetSchema,
     [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: soundCloudWidgetSchema,
     [GRID_WIDGET_TYPE.enum.WARPCAST]: {
