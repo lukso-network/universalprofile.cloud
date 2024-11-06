@@ -66,11 +66,12 @@ describe('configToGrid', () => {
             },
           },
           {
-            type: GRID_WIDGET_TYPE.enum.IMAGE,
+            type: GRID_WIDGET_TYPE.enum.IMAGES,
             width: 1,
             height: 1,
             properties: {
-              src: 'https://via.placeholder.com/150',
+              images: ['https://via.placeholder.com/150'],
+              type: 'grid',
             },
           },
         ],
@@ -103,9 +104,10 @@ describe('configToGrid', () => {
             i: 'test-id',
           },
           {
-            type: 'IMAGE',
+            type: 'IMAGES',
             properties: {
-              src: 'https://via.placeholder.com/150',
+              images: ['https://via.placeholder.com/150'],
+              type: 'grid',
             },
             w: 1,
             h: 1,

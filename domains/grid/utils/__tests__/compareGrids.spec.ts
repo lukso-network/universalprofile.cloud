@@ -109,7 +109,7 @@ describe('compareGrids', () => {
             y: 0,
             w: 1,
             h: 1,
-            type: GRID_WIDGET_TYPE.enum.IMAGE,
+            type: GRID_WIDGET_TYPE.enum.IMAGES,
             properties: {},
           },
         ],

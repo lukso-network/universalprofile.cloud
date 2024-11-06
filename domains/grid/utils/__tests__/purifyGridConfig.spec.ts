@@ -29,11 +29,12 @@ describe('purifyGridConfig', () => {
         gridColumns: 3,
         grid: [
           {
-            type: 'IMAGE',
+            type: 'IMAGES',
             width: 1,
             height: 1,
             properties: {
-              src: 'https://example.com',
+              images: ['https://via.placeholder.com/150'],
+              type: 'grid',
             },
           },
         ],
@@ -59,11 +60,12 @@ describe('purifyGridConfig', () => {
         gridColumns: 3,
         grid: [
           {
-            type: 'IMAGE',
+            type: 'IMAGES',
             width: 1,
             height: 1,
             properties: {
-              src: 'https://example.com',
+              images: ['https://via.placeholder.com/150'],
+              type: 'grid',
             },
           },
         ],

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { detectSocialMedia } from '@lukso/web-components/tools'
+import { computedAsync } from '@vueuse/core'
+
 type Props = {
   type: GridWidgetType
   id?: string
@@ -12,15 +15,45 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
-const schema = WIDGET_SCHEMA_MAP[props.type]
 const isEdit = computed(() => !!props.id)
+
+const getSrc = async () => {
+  // in edit we read src from properties
+  if (isEdit.value) {
+    const parse = await WIDGET_SCHEMA_MAP[props.type]?.build?.safeParseAsync(
+      props.properties
+    )
+    return parse?.data?.src
+  }
+}
+
+const getType = async () => {
+  // in edit mode we want to detect if the iframe is not a supported platform
+  if (isEdit.value && props.type === GRID_WIDGET_TYPE.enum.IFRAME) {
+    const platform = detectSocialMedia(await getSrc())
+
+    if (platform) {
+      return platform.toUpperCase() as GridWidgetType
+    }
+  }
+
+  return props.type
+}
+
+const widgetType = computedAsync(async () => {
+  return await getType()
+})
+
+const schemaMap = WIDGET_SCHEMA_MAP[await getType()]
 const {
   inputValues,
   canSubmit,
   getFieldErrorMessage,
   handleFieldChange,
   handleFormErrors,
-} = useForm(schema, (await schema?.safeParseAsync(props.properties))?.data)
+} = useForm(schemaMap?.input, {
+  input: await getSrc(),
+})
 const isInstructionsVisible = ref(false)
 
 const handleSave = async () => {
@@ -29,7 +62,8 @@ const handleSave = async () => {
   }
 
   try {
-    const properties = await schema?.parseAsync(inputValues.value)
+    const inputParse = await schemaMap?.input?.safeParseAsync(inputValues.value)
+    const properties = await schemaMap?.output?.parseAsync(inputParse?.data)
 
     if (isEdit.value) {
       updateGridWidget(props.id, {
@@ -39,7 +73,7 @@ const handleSave = async () => {
       })
     } else {
       const newWidget: GridWidgetWithoutCords = createWidgetObject({
-        type: props.type,
+        type: inputParse?.data?.widgetType, // widget type is not based on selection but on the parsing result
         properties,
         w: props.width,
         h: props.height,
@@ -69,7 +103,9 @@ const handleBackToSelection = () => {
 }
 
 const widgetInstructions = computed(() => {
-  return formatMessage(`add_widget_${props.type.toLowerCase()}_instructions`)
+  return formatMessage(
+    `add_widget_${widgetType.value.toLowerCase()}_instructions`
+  )
 })
 
 const hasInstructions = computed(() => widgetInstructions.value !== '-')
@@ -87,7 +123,7 @@ const hasInstructions = computed(() => widgetInstructions.value !== '-')
       <div class="heading-inter-21-semi-bold">
         {{
           formatMessage(
-            `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_title`
+            `${isEdit ? 'edit' : 'add'}_widget_${widgetType.toLowerCase()}_title`
           )
         }}
       </div>
@@ -95,7 +131,7 @@ const hasInstructions = computed(() => widgetInstructions.value !== '-')
     <div class="paragraph-inter-14-regular pb-6">
       {{
         formatMessage(
-          `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_description`
+          `${isEdit ? 'edit' : 'add'}_widget_${widgetType.toLowerCase()}_description`
         )
       }}
 
@@ -136,12 +172,14 @@ const hasInstructions = computed(() => widgetInstructions.value !== '-')
       is-full-width
       autofocus
       :placeholder="
-        formatMessage(`add_widget_${type.toLowerCase()}_input_placeholder`)
+        formatMessage(
+          `add_widget_${widgetType.toLowerCase()}_input_placeholder`
+        )
       "
-      :value="inputValues.src"
-      :error="getFieldErrorMessage('src')"
+      :value="inputValues.input"
+      :error="getFieldErrorMessage('input')"
       @on-input="
-        (customEvent: CustomEvent) => handleFieldChange(customEvent, 'src')
+        (customEvent: CustomEvent) => handleFieldChange(customEvent, 'input')
       "
     ></lukso-textarea>
 

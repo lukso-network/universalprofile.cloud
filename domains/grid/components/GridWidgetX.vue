@@ -1,7 +1,11 @@
 <script setup lang="ts">
 type Props = {
   src: string
-  type?: string
+  type?: XType
+  theme?: string
+  username?: string
+  id?: string
+  widget?: GridWidget
 }
 
 const props = defineProps<Props>()
@@ -9,7 +13,7 @@ const embedSrc = ref('')
 
 // each change (add, edit) of the widget require to "reinstall" the twitter script
 watch(
-  () => props.src,
+  () => props,
   async () => {
     embedSrc.value = ''
     await nextTick()
@@ -23,17 +27,17 @@ watch(
       existingScript.remove()
     }
 
-    document.body.appendChild(script)
     embedSrc.value = props.src
+    document.body.appendChild(script)
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 </script>
 
 <template>
   <div v-if="embedSrc" class="m-3 h-full overflow-scroll">
     <!-- X post -->
-    <div v-if="type === 'post'" class="my-[-10px] size-[inherit]">
+    <div v-if="type === 'status'" class="my-[-10px] size-[inherit]">
       <blockquote class="twitter-tweet size-[inherit]">
         <a
           class="flex size-[inherit] items-center justify-center"

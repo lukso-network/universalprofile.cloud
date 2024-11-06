@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { detectSocialMedia } from '@lukso/web-components/tools'
 import { computedAsync, useIntersectionObserver } from '@vueuse/core'
 import { z } from 'zod'
 
+import type { GridWidgetType } from '@/types/grid'
 import type { LuksoDropdownOnChangeEventDetail } from '@lukso/web-components'
 
 type Props = {
@@ -23,6 +25,13 @@ const dropdownId = `dropdown-${generateItemId()}`
 const isOpen = ref<boolean | undefined>(undefined)
 const targetIsVisible = ref(false)
 const target = ref<HTMLElement | null>(null)
+
+const widgetProperties = computedAsync(async () => {
+  const schemaMap = WIDGET_SCHEMA_MAP[props.widget.type]
+  const parse = await schemaMap?.build?.safeParseAsync(props.widget.properties)
+
+  return parse?.data
+})
 
 const isAllowToEdit = computed(
   () => canEditGrid.value && !isAddContentWidget.value
@@ -53,9 +62,9 @@ const isAllowToShowOptions = computed(
     (isAllowToClone.value || isAllowToOpenInNewTab.value || isAllowToEdit.value)
 )
 
-const WIDGET_COMPONENTS: Record<string, string> = {
+const WIDGET_COMPONENTS: Record<GridWidgetType, string> = {
   [GRID_WIDGET_TYPE.enum.TEXT]: 'Text',
-  [GRID_WIDGET_TYPE.enum.IMAGE]: 'Image',
+  [GRID_WIDGET_TYPE.enum.IMAGES]: 'Images',
   [GRID_WIDGET_TYPE.enum.IFRAME]: 'Iframe',
   [GRID_WIDGET_TYPE.enum.X]: 'X',
   [GRID_WIDGET_TYPE.enum.INSTAGRAM]: 'Instagram',
@@ -63,11 +72,21 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.enum.SPOTIFY]: 'Spotify',
   [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: 'Iframe',
   [GRID_WIDGET_TYPE.enum.WARPCAST]: 'Iframe',
-  [GRID_WIDGET_TYPE.enum.YOUTUBE]: 'Youtube',
   [GRID_WIDGET_TYPE.enum.ELFSIGHT]: 'Elfsight',
+  [GRID_WIDGET_TYPE.enum.YOUTUBE]: 'Iframe',
 }
 
-const loadWidgetComponent = (type: string): Component | undefined => {
+const loadWidgetComponent = async (widget: GridWidget) => {
+  let type = widget.type
+
+  if (type === GRID_WIDGET_TYPE.enum.IFRAME && 'src' in widget.properties) {
+    const platform = detectSocialMedia(widget?.properties?.src)
+
+    if (platform) {
+      type = platform.toUpperCase() as GridWidgetType
+    }
+  }
+
   if (!WIDGET_COMPONENTS[type]) {
     console.warn(`Widget type ${type} is not supported`)
     return undefined
@@ -177,8 +196,8 @@ const handleDropdownChange = (
   isOpen.value = event.detail?.isOpen ? true : undefined
 }
 
-onMounted(() => {
-  widgetComponent.value = loadWidgetComponent(props.widget.type)
+onMounted(async () => {
+  widgetComponent.value = await loadWidgetComponent(props.widget)
 
   setTimeout(() => {
     useIntersectionObserver(
@@ -314,7 +333,7 @@ onMounted(() => {
     <component
       v-if="widgetComponent && targetIsVisible"
       :is="widgetComponent"
-      v-bind="widget.properties"
+      v-bind="widgetProperties"
       :widget="widget"
     ></component>
   </div>

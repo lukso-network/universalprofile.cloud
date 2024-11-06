@@ -2,6 +2,8 @@
 type Props = {
   src: string
   allow?: string
+  referrerpolicy?: IframeReferrerPolicy
+  allowfullscreen?: boolean
 }
 
 defineProps<Props>()
@@ -12,9 +14,11 @@ defineProps<Props>()
     <iframe
       :src="src"
       :allow="allow"
-      class="size-full overflow-hidden rounded-8"
+      :referrerpolicy="referrerpolicy"
+      :allowfullscreen="allowfullscreen"
       frameborder="0"
       loading="lazy"
+      class="size-full overflow-hidden rounded-8"
     ></iframe>
   </div>
 </template>

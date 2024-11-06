@@ -1,10 +1,10 @@
-import { type ZodEffects, type ZodObject, z } from 'zod'
+import { z } from 'zod'
 
 export const GRID_WIDGET_TYPE = z.enum([
   // custom
   'TEXT',
   'IFRAME',
-  'IMAGE',
+  'IMAGES',
   'ELFSIGHT',
 
   // social media
@@ -24,20 +24,59 @@ export const GRID_WIDGET_TYPE = z.enum([
 ])
 
 // map zod schema to widget type
-export const WIDGET_SCHEMA_MAP: Partial<
-  Record<GridWidgetType, ZodObject<any> | ZodEffects<ZodObject<any>>>
-> = {
-  [GRID_WIDGET_TYPE.enum.TEXT]: textWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.X]: xWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: instagramWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.IFRAME]: iframeWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.IMAGE]: imageWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.YOUTUBE]: youtubeWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.SPOTIFY]: spotifyWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: soundCloudWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.WARPCAST]: warpcastWidgetSchema,
-  [GRID_WIDGET_TYPE.enum.ELFSIGHT]: elfsightWidgetSchema,
-}
+export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, GridSchemaMap>> =
+  {
+    [GRID_WIDGET_TYPE.enum.TEXT]: {
+      input: textWidgetSchema,
+      output: textWidgetSchema,
+      build: textWidgetSchema,
+    },
+    [GRID_WIDGET_TYPE.enum.X]: {
+      input: xWidgetInputSchema,
+      output: xWidgetSchema,
+      build: xWidgetBuilderSchema,
+    },
+    [GRID_WIDGET_TYPE.enum.INSTAGRAM]: {
+      input: instagramWidgetInputSchema,
+      output: instagramWidgetSchema,
+      build: instagramWidgetBuilderSchema,
+    },
+    [GRID_WIDGET_TYPE.enum.IFRAME]: {
+      input: iframeWidgetInputSchema,
+      output: iframeWidgetSchema,
+      build: iframeWidgetSchema,
+    },
+    [GRID_WIDGET_TYPE.enum.IMAGES]: {
+      input: imagesWidgetSchema,
+      output: imagesWidgetSchema,
+      build: imagesWidgetSchema,
+    },
+    [GRID_WIDGET_TYPE.enum.YOUTUBE]: {
+      input: youtubeWidgetInputSchema,
+      output: youtubeWidgetSchema,
+      build: youtubeWidgetSchema,
+    },
+    [GRID_WIDGET_TYPE.enum.SPOTIFY]: {
+      input: spotifyWidgetInputSchema,
+      output: spotifyWidgetSchema,
+      build: spotifyWidgetSchema,
+    },
+    [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: {
+      input: soundCloudWidgetInputSchema,
+      output: soundCloudWidgetSchema,
+      build: soundCloudWidgetSchema,
+    },
+    [GRID_WIDGET_TYPE.enum.WARPCAST]: {
+      input: warpcastWidgetInputSchema,
+      output: warpcastWidgetSchema,
+      build: warpcastWidgetSchema,
+    },
+    [GRID_WIDGET_TYPE.enum.ELFSIGHT]: {
+      input: elfsightWidgetInputSchema,
+      output: elfsightWidgetSchema,
+      build: elfsightWidgetSchema,
+    },
+  }
 
 // grid breakpoint where the grid switches into mobile mode
 export const GRID_BREAKPOINT_PX = 768
@@ -64,6 +103,18 @@ export const DEFAULT_SMALL_COLUMN_NUMBER = 1
 // minimum and maximum number of columns in the grid
 export const GRID_COLUMNS_MIN = 2
 export const GRID_COLUMNS_MAX = 4
+
+export const PLATFORM_PARSING_PARAMETERS: Partial<
+  Record<GridWidgetType, PlatformParsingParameters | undefined>
+> = {
+  [GRID_WIDGET_TYPE.enum.X]: PLATFORM_PARSING_PARAMETERS_X,
+  [GRID_WIDGET_TYPE.enum.INSTAGRAM]: PLATFORM_PARSING_PARAMETERS_INSTAGRAM,
+  [GRID_WIDGET_TYPE.enum.SPOTIFY]: PLATFORM_PARSING_PARAMETERS_SPOTIFY,
+  [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: PLATFORM_PARSING_PARAMETERS_SOUNDCLOUD,
+  [GRID_WIDGET_TYPE.enum.YOUTUBE]: PLATFORM_PARSING_PARAMETERS_YOUTUBE,
+  [GRID_WIDGET_TYPE.enum.ELFSIGHT]: PLATFORM_PARSING_PARAMETERS_ELFSIGHT,
+  [GRID_WIDGET_TYPE.enum.WARPCAST]: PLATFORM_PARSING_PARAMETERS_WARPCAST,
+}
 
 // initial grid
 export const EMPTY_GRID = [

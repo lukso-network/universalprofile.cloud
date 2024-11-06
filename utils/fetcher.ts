@@ -2,7 +2,8 @@
  * Generic url fetcher.
  *
  * @param string url - an url to call
- * @param string address - a method used in the request, either 'GET' or 'POST'
+ * @param string method - a method used in the request, either 'GET' or 'POST'
+ * @param RequestMode mode - a mode of the request
  * @param Request data - a request data to be sent
  * @param Record headers - additional headers to be sent
  * @returns a result from calling the url
@@ -11,6 +12,7 @@
 export const fetcher = async <Response, Request>(config: {
   url: string
   method: 'GET' | 'POST'
+  mode?: RequestMode
   data?: Request
   headers?: Record<string, string>
 }): Promise<Response> => {
@@ -21,6 +23,7 @@ export const fetcher = async <Response, Request>(config: {
       ...(config.data ? { 'Content-Type': 'application/json' } : {}),
     },
     redirect: 'follow',
+    mode: config.mode || 'cors',
   }
   if (config.data) {
     fetchConfig.body = JSON.stringify(config.data)

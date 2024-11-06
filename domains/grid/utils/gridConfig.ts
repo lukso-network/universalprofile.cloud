@@ -59,6 +59,10 @@ export const getGridConfig = async (address: Address) => {
   const [decodedJsonUrl] = decodedData as DecodeDataOutput[]
   const { url } = decodedJsonUrl.value as VerifiableURI
 
+  if (gridLog.enabled) {
+    gridLog('Grid config URL', resolveUrl(url))
+  }
+
   // fetch config file from IPFS
   const config = await fetcher<GridConfig[], Record<string, never>>({
     url: resolveUrl(url),

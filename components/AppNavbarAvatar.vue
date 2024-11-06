@@ -2,7 +2,7 @@
 import type { ProfileSize } from '@lukso/web-components'
 
 type Props = {
-  size: ProfileSize
+  size?: ProfileSize
 }
 
 withDefaults(defineProps<Props>(), {
