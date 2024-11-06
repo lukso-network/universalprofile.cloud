@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { detectSocialMedia } from '@lukso/web-components/tools'
+import { computedAsync } from '@vueuse/core'
+
 type Props = {
   type: GridWidgetType
   id?: string
@@ -12,8 +15,36 @@ const { formatMessage } = useIntl()
 const { closeModal, showModal } = useModal()
 const { addGridWidget, updateGridWidget, getGridById } = useGrid()
 const { tempGrid, selectedGridId } = storeToRefs(useGridStore())
-const schemaMap = WIDGET_SCHEMA_MAP[props.type]
 const isEdit = computed(() => !!props.id)
+
+const getSrc = async () => {
+  // in edit we read src from properties
+  if (isEdit.value) {
+    const parse = await WIDGET_SCHEMA_MAP[props.type]?.build?.safeParseAsync(
+      props.properties
+    )
+    return parse?.data?.src
+  }
+}
+
+const getType = async () => {
+  // in edit mode we want to detect if the iframe is not a supported platform
+  if (isEdit.value && props.type === GRID_WIDGET_TYPE.enum.IFRAME) {
+    const platform = detectSocialMedia(await getSrc())
+
+    if (platform) {
+      return platform.toUpperCase() as GridWidgetType
+    }
+  }
+
+  return props.type
+}
+
+const widgetType = computedAsync(async () => {
+  return await getType()
+})
+
+const schemaMap = WIDGET_SCHEMA_MAP[await getType()]
 const {
   inputValues,
   canSubmit,
@@ -21,7 +52,7 @@ const {
   handleFieldChange,
   handleFormErrors,
 } = useForm(schemaMap?.input, {
-  input: (await schemaMap?.build?.safeParseAsync(props.properties))?.data?.src,
+  input: await getSrc(),
 })
 const isInstructionsVisible = ref(false)
 
@@ -72,7 +103,9 @@ const handleBackToSelection = () => {
 }
 
 const widgetInstructions = computed(() => {
-  return formatMessage(`add_widget_${props.type.toLowerCase()}_instructions`)
+  return formatMessage(
+    `add_widget_${widgetType.value.toLowerCase()}_instructions`
+  )
 })
 
 const hasInstructions = computed(() => widgetInstructions.value !== '-')
@@ -90,7 +123,7 @@ const hasInstructions = computed(() => widgetInstructions.value !== '-')
       <div class="heading-inter-21-semi-bold">
         {{
           formatMessage(
-            `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_title`
+            `${isEdit ? 'edit' : 'add'}_widget_${widgetType.toLowerCase()}_title`
           )
         }}
       </div>
@@ -98,7 +131,7 @@ const hasInstructions = computed(() => widgetInstructions.value !== '-')
     <div class="paragraph-inter-14-regular pb-6">
       {{
         formatMessage(
-          `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_description`
+          `${isEdit ? 'edit' : 'add'}_widget_${widgetType.toLowerCase()}_description`
         )
       }}
 
@@ -139,7 +172,9 @@ const hasInstructions = computed(() => widgetInstructions.value !== '-')
       is-full-width
       autofocus
       :placeholder="
-        formatMessage(`add_widget_${type.toLowerCase()}_input_placeholder`)
+        formatMessage(
+          `add_widget_${widgetType.toLowerCase()}_input_placeholder`
+        )
       "
       :value="inputValues.input"
       :error="getFieldErrorMessage('input')"
