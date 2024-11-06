@@ -21,6 +21,28 @@ export default defineNuxtConfig({
   app: {
     head: siteMeta,
   },
+  components: {
+    dirs: [
+      // Use this to find all the dirs `find . -name "*.vue" -exec dirname {} \; | sort -u`
+      { path: '~/components', sourcemap: true }, // Enable source map generation for components
+      {
+        path: '~/node_modules/vue-instantsearch/src/components',
+        sourcemap: true,
+      },
+      {
+        path: '~/domains/rpc/components',
+        sourcemap: true,
+      },
+      {
+        path: '~/domains/graph/components',
+        sourcemap: true,
+      },
+      {
+        path: '~/layouts',
+        sourcemap: true,
+      },
+    ],
+  },
   typescript: {
     strict: true,
   },
@@ -65,16 +87,20 @@ export default defineNuxtConfig({
         nodePolyfills({
           include: ['node_modules/**/*.js', /node_modules\/.vite\/.*js/],
         }),
-      sentryVitePlugin({
-        authToken: process.env.NUXT_PUBLIC_SENTRY_AUTH_TOKEN,
-        debug: true,
-        org: 'lukso',
-        project: 'universalprofile-cloud',
-        sourcemaps: {
-          assets: ['./.nuxt/dist/client/**'],
-        },
-        telemetry: false,
-      }),
+      ...(process.env.NUXT_PUBLIC_SENTRY_AUTH_TOKEN
+        ? [
+            sentryVitePlugin({
+              authToken: process.env.NUXT_PUBLIC_SENTRY_AUTH_TOKEN,
+              debug: true,
+              org: 'lukso',
+              project: 'universalprofile-cloud',
+              sourcemaps: {
+                assets: ['./.nuxt/dist/client/**'],
+              },
+              telemetry: false,
+            }),
+          ]
+        : []),
     ],
     build: {
       rollupOptions: {
@@ -82,9 +108,25 @@ export default defineNuxtConfig({
           // ↓ Needed for build
           nodePolyfills(),
         ],
+        output: {
+          sourcemap: true,
+        },
+        onwarn(warning, warn) {
+          // If we can't show which files have bad source map then we might as well not show the error/warning
+          if (warning.message.includes('Sourcemap is likely to be incorrect')) {
+            if (warning.loc?.file || warning.id) {
+              console.warn(
+                `${warning.message} ${warning.loc?.file || warning.id || 'unknown file'}`
+              )
+            }
+            return
+          }
+          warn(warning) // Default behavior
+        },
       },
       commonjsOptions: {
         transformMixedEsModules: true,
+        sourceMap: true,
       },
       sourcemap: true,
     },
@@ -100,7 +142,10 @@ export default defineNuxtConfig({
       },
     },
     optimizeDeps: {
+      // Don't generate source maps for vue files in node_modules.
+      exclude: ['node_modules/**/*.vue'],
       esbuildOptions: {
+        sourcemap: true,
         // Node.js global to browser globalThis
         define: {
           global: 'globalThis',
@@ -117,6 +162,7 @@ export default defineNuxtConfig({
   },
   vue: {
     compilerOptions: {
+      sourceMap: true,
       isCustomElement: (tag: string) => {
         return tag.startsWith('lukso-')
       },
@@ -174,12 +220,6 @@ export default defineNuxtConfig({
     injectManifest: {
       globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
     },
-    client: {
-      installPrompt: true,
-      // you don't need to include this: only for testing purposes
-      // if enabling periodic sync for update use 1 hour or so (periodicSyncForUpdates: 3600)
-      // periodicSyncForUpdates: 20,
-    },
     resolve: {
       alias: {
         process: 'process/browser',
@@ -208,6 +248,7 @@ export default defineNuxtConfig({
         target: 'esnext',
       },
     },
+    sourceMaps: true,
   },
   'graphql-client': {
     watch: true,
