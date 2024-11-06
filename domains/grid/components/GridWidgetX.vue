@@ -13,7 +13,7 @@ const embedSrc = ref('')
 
 // each change (add, edit) of the widget require to "reinstall" the twitter script
 watch(
-  () => props,
+  () => props.src,
   async () => {
     embedSrc.value = ''
     await nextTick()
