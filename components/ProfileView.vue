@@ -150,17 +150,8 @@ watch(
   async () => {
     // we initialize grid at this point so we can switch tabs if user has no grids
     await initializeGrid(viewedProfileAddress, canEditGrid.value)
-  },
-  { immediate: true }
-)
-
-watch(
-  [isConnected, gridsForDisplay, ownedCollectiblesCount],
-  () => {
     // select best tab based for initial display
-    if (gridsForDisplay.value.length === 0) {
-      selectBestTab()
-    }
+    selectBestTab()
   },
   { immediate: true }
 )
