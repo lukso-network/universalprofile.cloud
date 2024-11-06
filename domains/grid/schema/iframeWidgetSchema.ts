@@ -12,24 +12,9 @@ const iframeReferrerPolicy = z.enum([
   'unsafe-url',
 ])
 
-const iframeSandbox = z.enum([
-  'allow-forms',
-  'allow-modals',
-  'allow-orientation-lock',
-  'allow-pointer-lock',
-  'allow-popups',
-  'allow-popups-to-escape-sandbox',
-  'allow-presentation',
-  'allow-same-origin',
-  'allow-scripts',
-  'allow-top-navigation',
-  'allow-top-navigation-by-user-activation',
-])
-
 export const iframeWidgetSchema = z.object({
   src: z.string().transform(urlTransform),
   allow: z.string().optional(),
-  sandbox: iframeSandbox.optional(),
   allowfullscreen: z.boolean().optional(),
   referrerpolicy: iframeReferrerPolicy.optional(),
 })
@@ -47,4 +32,3 @@ export const iframeWidgetInputSchema = iframeWidgetSchema
 
 export type IframeWidgetProperties = z.input<typeof iframeWidgetSchema>
 export type IframeReferrerPolicy = z.infer<typeof iframeReferrerPolicy>
-export type IframeSandbox = z.infer<typeof iframeSandbox>

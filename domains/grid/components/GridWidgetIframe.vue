@@ -4,7 +4,6 @@ type Props = {
   allow?: string
   referrerpolicy?: IframeReferrerPolicy
   allowfullscreen?: boolean
-  sandbox?: IframeSandbox
 }
 
 defineProps<Props>()
@@ -17,7 +16,6 @@ defineProps<Props>()
       :allow="allow"
       :referrerpolicy="referrerpolicy"
       :allowfullscreen="allowfullscreen"
-      :sandbox="sandbox"
       frameborder="0"
       loading="lazy"
       class="size-full overflow-hidden rounded-8"
