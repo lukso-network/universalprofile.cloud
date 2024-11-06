@@ -158,7 +158,9 @@ watch(
   [isConnected, gridsForDisplay, ownedCollectiblesCount],
   () => {
     // select best tab based for initial display
-    selectBestTab()
+    if (gridsForDisplay.value.length === 0) {
+      selectBestTab()
+    }
   },
   { immediate: true }
 )

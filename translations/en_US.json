@@ -378,5 +378,10 @@
   "success_missing_assets_description": "The below asset has been added to your profile.",
   "modal_delete_widget_cancel": "Cancel",
   "edit_widget_x_title": "Edit X (Twitter) widget",
-  "asset_filter_collection_placeholder": "Collection"
+  "asset_filter_collection_placeholder": "Collection",
+  "widget_type_elfsight": "Elfsight",
+  "add_widget_elfsight_title": "Add Elfsight widget",
+  "add_widget_elfsight_description": "Allows to embed Elfsight widget.",
+  "add_widget_elfsight_instructions": "1. Go into Elfsight widget settings\r\n2. Copy widget code and paste into textarea",
+  "add_widget_elfsight_input_placeholder": "Embed code"
 }
