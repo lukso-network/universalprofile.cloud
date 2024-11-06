@@ -5,11 +5,36 @@ const filterValidWidgetSchema = z.array(z.unknown()).transform(
     await widgetItems.reduce<Promise<unknown[]>>(
       async (accPromise, widgetItem) => {
         const acc = await accPromise
-        const widgetValidation =
-          await gridConfigWidgetSchema.safeParseAsync(widgetItem)
+        // validate widget structure without properties
+        const widgetValidation = await gridConfigWidgetSchema
+          .omit({ properties: true })
+          .safeParseAsync(widgetItem)
 
-        if (widgetValidation.success) {
-          acc.push(widgetValidation.data)
+        if (
+          widgetValidation.success &&
+          typeof widgetItem === 'object' &&
+          widgetItem &&
+          'type' in widgetItem &&
+          'properties' in widgetItem
+        ) {
+          // validate widget properties
+          const schema = WIDGET_SCHEMA_MAP[widgetItem.type as GridWidgetType]
+          const propertyValidation = await schema?.output?.safeParseAsync(
+            widgetItem.properties
+          )
+
+          if (propertyValidation?.success) {
+            acc.push({
+              ...widgetItem,
+              properties: propertyValidation.data,
+            })
+          } else {
+            console.warn(
+              'Invalid properties',
+              propertyValidation?.error,
+              widgetItem
+            )
+          }
         } else {
           console.warn('Invalid widget', widgetValidation.error, widgetItem)
         }
