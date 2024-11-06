@@ -25,7 +25,7 @@ const filterValidWidgetSchema = z.array(z.unknown()).transform(
 
           if (propertyValidation?.success) {
             acc.push({
-              ...widgetItem,
+              ...widgetValidation.data,
               properties: propertyValidation.data,
             })
           } else {
