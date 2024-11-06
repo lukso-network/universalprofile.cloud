@@ -19,7 +19,11 @@ export const useForm = (
     }
   }, false)
 
-  const getFieldErrorMessage = (field: string) => {
+  const getFieldErrorMessage = (field: string, index?: number) => {
+    if (index !== undefined) {
+      return inputErrors.value?.[field][index]?._errors[0]
+    }
+
     return inputErrors.value?.[field]?._errors[0]
   }
 
@@ -31,6 +35,18 @@ export const useForm = (
   const handleSelectChange = (customEvent: CustomEvent, field: string) => {
     const option = customEvent.detail.value as SelectStringOption
     inputValues.value[field] = Number.parseInt(option.id as string)
+  }
+
+  const handleArrayChange = (
+    customEvent: CustomEvent,
+    field: string,
+    index: number
+  ) => {
+    const value = customEvent.detail?.value
+
+    if (Array.isArray(inputValues.value[field])) {
+      ;(inputValues.value[field] as unknown[])[index] = value
+    }
   }
 
   const handleFormErrors = (error: unknown) => {
@@ -64,5 +80,6 @@ export const useForm = (
     handleFieldChange,
     handleFormErrors,
     handleSelectChange,
+    handleArrayChange,
   }
 }

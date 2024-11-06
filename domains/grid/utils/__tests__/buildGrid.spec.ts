@@ -232,7 +232,7 @@ describe('buildGrid', () => {
             },
             {
               i: '4',
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               w: 1,
               h: 1,
               x: 0,
@@ -282,7 +282,7 @@ describe('buildGrid', () => {
               y: 5,
               w: 1,
               h: 1,
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
@@ -334,7 +334,7 @@ describe('buildGrid', () => {
             },
             {
               i: '4',
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               w: 1,
               h: 1,
               x: 0,
@@ -384,7 +384,7 @@ describe('buildGrid', () => {
               y: 2,
               w: 1,
               h: 1,
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
@@ -435,7 +435,7 @@ describe('buildGrid', () => {
             },
             {
               i: '4',
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               w: 1,
               h: 1,
               x: 0,
@@ -485,7 +485,7 @@ describe('buildGrid', () => {
               y: 1,
               w: 1,
               h: 1,
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
@@ -514,7 +514,7 @@ describe('buildGrid', () => {
           grid: [
             {
               i: '1',
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               w: 2,
               h: 2,
               x: 0,
@@ -532,7 +532,7 @@ describe('buildGrid', () => {
             },
             {
               i: '3',
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               w: 1,
               h: 1,
               x: 0,
@@ -555,7 +555,7 @@ describe('buildGrid', () => {
               y: 0,
               w: 1,
               h: 2,
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               properties: { prop1: 'value1', prop2: 'value2' },
               originalWidth: 2,
             },
@@ -574,7 +574,7 @@ describe('buildGrid', () => {
               y: 3,
               w: 1,
               h: 1,
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
@@ -598,7 +598,7 @@ describe('buildGrid', () => {
           grid: [
             {
               i: '1',
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               w: 2,
               h: 2,
               x: 0,
@@ -616,7 +616,7 @@ describe('buildGrid', () => {
             },
             {
               i: '3',
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               w: 1,
               h: 1,
               x: 0,
@@ -639,7 +639,7 @@ describe('buildGrid', () => {
               y: 0,
               w: 2,
               h: 2,
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
             {
@@ -657,7 +657,7 @@ describe('buildGrid', () => {
               y: 2,
               w: 1,
               h: 1,
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],
@@ -688,7 +688,7 @@ describe('buildGrid', () => {
           grid: [
             {
               i: '1',
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               w: 1,
               h: 1,
               x: 0,
@@ -715,7 +715,7 @@ describe('buildGrid', () => {
             },
             {
               i: '4',
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               w: 2,
               h: 1,
               x: 0,
@@ -738,7 +738,7 @@ describe('buildGrid', () => {
               y: 0,
               w: 1,
               h: 1,
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
             {
@@ -766,7 +766,7 @@ describe('buildGrid', () => {
               y: 4,
               w: 1,
               h: 1,
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               properties: { prop1: 'value1', prop2: 'value2' },
               originalWidth: 2,
             },
@@ -795,7 +795,7 @@ describe('buildGrid', () => {
           grid: [
             {
               i: '1',
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               w: 1,
               h: 1,
               x: 0,
@@ -822,7 +822,7 @@ describe('buildGrid', () => {
             },
             {
               i: '4',
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               w: 2,
               h: 1,
               x: 0,
@@ -845,7 +845,7 @@ describe('buildGrid', () => {
               y: 0,
               w: 1,
               h: 1,
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
             {
@@ -872,7 +872,7 @@ describe('buildGrid', () => {
               y: 4,
               w: 2,
               h: 1,
-              type: GRID_WIDGET_TYPE.enum.IMAGE,
+              type: GRID_WIDGET_TYPE.enum.IMAGES,
               properties: { prop1: 'value1', prop2: 'value2' },
             },
           ],

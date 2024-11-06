@@ -128,7 +128,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.enum.IMAGE,
+        type: GRID_WIDGET_TYPE.enum.IMAGES,
         properties: {
           src: 'https://example.com',
         },
@@ -246,7 +246,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.enum.IMAGE,
+        type: GRID_WIDGET_TYPE.enum.IMAGES,
         properties: {
           src: 'https://example.org/image.png',
         },
@@ -257,7 +257,7 @@ describe('compareGridWidgets', () => {
         y: 1,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.enum.IMAGE,
+        type: GRID_WIDGET_TYPE.enum.IMAGES,
         properties: {
           src: 'https://example.org/image.png',
         },
@@ -270,7 +270,7 @@ describe('compareGridWidgets', () => {
         y: 0,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.enum.IMAGE,
+        type: GRID_WIDGET_TYPE.enum.IMAGES,
         properties: {
           src: 'https://example.org',
         },
@@ -292,7 +292,7 @@ describe('compareGridWidgets', () => {
         y: 1,
         w: 1,
         h: 1,
-        type: GRID_WIDGET_TYPE.enum.IMAGE,
+        type: GRID_WIDGET_TYPE.enum.IMAGES,
         properties: {
           src: 'https://example.org/image.png',
         },

@@ -4,7 +4,7 @@ export const GRID_WIDGET_TYPE = z.enum([
   // custom
   'TEXT',
   'IFRAME',
-  'IMAGE',
+  'IMAGES',
   'ELFSIGHT',
 
   // social media
@@ -46,10 +46,10 @@ export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, GridSchemaMap>> =
       output: iframeWidgetSchema,
       build: iframeWidgetSchema,
     },
-    [GRID_WIDGET_TYPE.enum.IMAGE]: {
-      input: imageWidgetInputSchema,
-      output: imageWidgetSchema,
-      build: imageWidgetSchema,
+    [GRID_WIDGET_TYPE.enum.IMAGES]: {
+      input: imagesWidgetSchema,
+      output: imagesWidgetSchema,
+      build: imagesWidgetSchema,
     },
     [GRID_WIDGET_TYPE.enum.YOUTUBE]: {
       input: youtubeWidgetInputSchema,

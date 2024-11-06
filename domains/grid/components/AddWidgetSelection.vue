@@ -86,7 +86,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
         >
           <div
             class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-105"
-            @click="handleSelectWidget('IMAGE')"
+            @click="handleSelectWidget('IMAGES')"
           >
             <lukso-icon
               name="camera"

@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const gridWidgetProperties = z.union([
   iframeWidgetSchema,
-  imageWidgetSchema,
+  imagesWidgetSchema,
   textWidgetSchema,
   instagramWidgetSchema,
   soundCloudWidgetSchema,

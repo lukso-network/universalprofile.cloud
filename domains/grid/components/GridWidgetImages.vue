@@ -1,13 +1,19 @@
 <script setup lang="ts">
 type Props = {
-  src?: string
+  images?: string[]
+  type: ImagesType
 }
 
 const props = defineProps<Props>()
 const { showModal } = useModal()
 
-const handleClick = () => {
-  if (!props.src) {
+// for now we support only single image
+const imageSrc = computed(() => {
+  return props.images?.[0]
+})
+
+const handleClick = (src?: string) => {
+  if (!src) {
     return
   }
 
@@ -15,7 +21,7 @@ const handleClick = () => {
     template: 'AssetImage',
     data: {
       image: {
-        url: props.src,
+        url: src,
       },
     },
     size: 'auto',
@@ -26,13 +32,13 @@ const handleClick = () => {
 <template>
   <div class="m-3 flex h-full overflow-hidden rounded-8">
     <lukso-image
-      :src="src"
+      :src="imageSrc"
       :class="{
-        'cursor-pointer': !!src,
+        'cursor-pointer': !!imageSrc,
       }"
       class="min-h-full min-w-full"
       alt="image"
-      @click="handleClick"
+      @click="handleClick(imageSrc)"
     ></lukso-image>
   </div>
 </template>

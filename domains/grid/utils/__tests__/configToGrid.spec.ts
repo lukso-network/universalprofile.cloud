@@ -66,7 +66,7 @@ describe('configToGrid', () => {
             },
           },
           {
-            type: GRID_WIDGET_TYPE.enum.IMAGE,
+            type: GRID_WIDGET_TYPE.enum.IMAGES,
             width: 1,
             height: 1,
             properties: {

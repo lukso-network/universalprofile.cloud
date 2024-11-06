@@ -64,7 +64,7 @@ const isAllowToShowOptions = computed(
 
 const WIDGET_COMPONENTS: Record<GridWidgetType, string> = {
   [GRID_WIDGET_TYPE.enum.TEXT]: 'Text',
-  [GRID_WIDGET_TYPE.enum.IMAGE]: 'Image',
+  [GRID_WIDGET_TYPE.enum.IMAGES]: 'Images',
   [GRID_WIDGET_TYPE.enum.IFRAME]: 'Iframe',
   [GRID_WIDGET_TYPE.enum.X]: 'X',
   [GRID_WIDGET_TYPE.enum.INSTAGRAM]: 'Instagram',

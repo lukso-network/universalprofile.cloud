@@ -38,7 +38,7 @@ describe('gridToConfig', () => {
             y: 1,
           },
           {
-            type: GRID_WIDGET_TYPE.enum.IMAGE,
+            type: GRID_WIDGET_TYPE.enum.IMAGES,
             properties: {
               src: 'https://via.placeholder.com/150',
             },
