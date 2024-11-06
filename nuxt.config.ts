@@ -143,7 +143,7 @@ export default defineNuxtConfig({
     },
     optimizeDeps: {
       // Don't generate source maps for vue files in node_modules.
-      exclude: ['node_modules/**/*.vue'],
+      exclude: isProduction ? ['node_modules/**/*.vue'] : [],
       esbuildOptions: {
         sourcemap: true,
         // Node.js global to browser globalThis
