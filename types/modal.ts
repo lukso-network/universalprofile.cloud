@@ -16,3 +16,10 @@ export type ModalQueryParams = {
 export type ModalData = {
   [key: string]: any
 }
+
+export type DefaultModalData = {
+  message: string
+  title?: string
+  confirmButtonText?: string
+  icon?: string
+}
