@@ -26,6 +26,13 @@ const reloadIframe = () => {
   onResize()
 }
 
+watch(
+  () => props.src,
+  () => {
+    reloadIframe()
+  }
+)
+
 useResizeObserver(iframeRef, useDebounceFn(reloadIframe, 100))
 </script>
 
