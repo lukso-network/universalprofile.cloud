@@ -8,7 +8,9 @@ const { walletConnectProvider: provider } = storeToRefs(useAppStore())
 onMounted(async () => {
   await initProvider()
   provider.value?.on('display_uri', (data: string) => {
-    deepLink.value = walletConnectDeepLinkUrl(data)
+    deepLink.value = walletConnectDeepLinkUrl(data, {
+      withRedirectUrl: true,
+    })
   })
 
   try {
