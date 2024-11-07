@@ -169,7 +169,7 @@ export const walletConnectDeepLinkUrl = (
     redirectQueryParam = `&redirectUrl=${redirectUrl}`
   }
 
-  const deepLink = `${MOBILE_APP_DEEP_LINK_PREFIX}://wallet-connect/${urlData.pathname}${urlData.search}${redirectQueryParam}`
+  const deepLink = `${MOBILE_APP_DEEP_LINK_PREFIX}:${urlData.pathname}${urlData.search}${redirectQueryParam}`
 
   if (genericLog.enabled) {
     genericLog(`Mobile App link: ${deepLink}`)
