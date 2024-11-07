@@ -34,3 +34,4 @@ export const xWidgetBuilderSchema = xWidgetSchema
   )
 
 export type XWidgetProperties = z.input<typeof xWidgetSchema>
+export type XType = z.infer<typeof xType>
