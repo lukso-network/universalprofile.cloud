@@ -5,15 +5,18 @@ type Props = {
   backgroundColor?: string
   titleColor?: string
   textColor?: string
+  link?: string
 }
 
 defineProps<Props>()
 </script>
 
 <template>
-  <div
+  <a
     class="m-3 flex h-full flex-col items-center justify-center overflow-hidden rounded-8 p-4 text-neutral-100"
     :style="{ backgroundColor }"
+    :href="link"
+    target="_blank"
   >
     <h1
       class="heading-apax-24-medium break-word"
@@ -31,5 +34,5 @@ defineProps<Props>()
     >
       {{ text }}
     </p>
-  </div>
+  </a>
 </template>
