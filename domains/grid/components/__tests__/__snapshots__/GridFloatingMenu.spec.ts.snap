@@ -5,10 +5,10 @@ exports[`GridFloatingMenu > should render when edit mode is enabled 1`] = `
   <div class="fixed z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-shadow-round duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition lg:right-[calc(50%-540px)] right-[calc(50%-160px)] h-[64px] w-[320px] sm:h-[320px] sm:w-[64px]" style="bottom: 40px; transition: all 0.3s ease-in-out;">
     <div class="flex animate-fade-in gap-6 sm:flex-col">
       <!-- Add widget  -->
-      <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97 cursor-pointer hover:scale-105 hover:bg-neutral-95" text="Add widget" placement="left" offset="15" show-delay="1000">
+      <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97 cursor-pointer hover:scale-105 hover:bg-neutral-95" text="Add new content" placement="left" offset="15" show-delay="1000">
         <lukso-icon name="plus" color="purple-41"></lukso-icon>
       </lukso-tooltip><!-- Add grid  -->
-      <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97 cursor-pointer hover:scale-105 hover:bg-neutral-95" text="Add grid" placement="left" offset="15" show-delay="1000">
+      <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97 cursor-pointer hover:scale-105 hover:bg-neutral-95" text="Add new grid" placement="left" offset="15" show-delay="1000">
         <lukso-icon name="add-grid" color="purple-41"></lukso-icon>
       </lukso-tooltip><!-- Reset  -->
       <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97" text="" placement="left" offset="15" show-delay="1000">
@@ -30,10 +30,10 @@ exports[`GridFloatingMenu > should render when has unsaved changes 1`] = `
   <div class="fixed z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-shadow-round duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition lg:right-[calc(50%-540px)] right-[calc(50%-160px)] h-[64px] w-[320px] sm:h-[320px] sm:w-[64px]" style="bottom: 40px; transition: all 0.3s ease-in-out;">
     <div class="flex animate-fade-in gap-6 sm:flex-col">
       <!-- Add widget  -->
-      <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97 cursor-pointer hover:scale-105 hover:bg-neutral-95" text="Add widget" placement="left" offset="15" show-delay="1000">
+      <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97 cursor-pointer hover:scale-105 hover:bg-neutral-95" text="Add new content" placement="left" offset="15" show-delay="1000">
         <lukso-icon name="plus" color="purple-41"></lukso-icon>
       </lukso-tooltip><!-- Add grid  -->
-      <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97 cursor-pointer hover:scale-105 hover:bg-neutral-95" text="Add grid" placement="left" offset="15" show-delay="1000">
+      <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 bg-neutral-97 cursor-pointer hover:scale-105 hover:bg-neutral-95" text="Add new grid" placement="left" offset="15" show-delay="1000">
         <lukso-icon name="add-grid" color="purple-41"></lukso-icon>
       </lukso-tooltip><!-- Reset  -->
       <lukso-tooltip class="flex size-10 items-center justify-center rounded-full transition-all duration-300 cursor-pointer bg-[#ffe0e0] hover:scale-105 hover:bg-[#ffd1d1]" text="Reset changes" placement="left" offset="15" show-delay="1000">
