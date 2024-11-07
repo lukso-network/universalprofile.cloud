@@ -1,6 +1,8 @@
 import { z } from 'zod'
 
-export const elfsightWidgetSchema = iframeWidgetSchema.extend({})
+export const elfsightWidgetSchema = z.object({
+  id: z.string(),
+})
 
 export const elfsightWidgetInputSchema = iframeWidgetSchema
   .partial()
@@ -11,4 +13,4 @@ export const elfsightWidgetInputSchema = iframeWidgetSchema
     platformParseTransform(values.input, ctx, GRID_WIDGET_TYPE.enum.ELFSIGHT)
   )
 
-export type ElfSightWidgetProperties = z.input<typeof elfsightWidgetSchema>
+export type ElfsightWidgetProperties = z.input<typeof elfsightWidgetSchema>
