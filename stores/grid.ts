@@ -11,6 +11,7 @@ export const useGridStore = defineStore(
     const gridRowHeightRatio = ref(DEFAULT_GRID_ROW_HEIGHT_RATIO)
     const gridChainId = ref<string>(DEFAULT_NETWORK_CHAIN_ID)
     const tempGrids = ref<Record<string, Grid[]>>({})
+    const mobileLimitationsDisplayed = ref(false)
 
     // We use tempGrid as a proxy to the actual grid data stored in tempGrids
     const tempGrid = computed<Grid[]>({
@@ -45,6 +46,7 @@ export const useGridStore = defineStore(
       selectedGridId,
       gridRowHeightRatio,
       gridChainId,
+      mobileLimitationsDisplayed,
     }
   },
   {
@@ -55,6 +57,7 @@ export const useGridStore = defineStore(
         'selectedGridId',
         'gridRowHeightRatio',
         'gridChainId',
+        'mobileLimitationsDisplayed',
         'tempGrids',
       ],
       key: STORAGE_KEY.GRID_STORE,
