@@ -49,5 +49,9 @@ export const compareGridWidgets = (
     }
   }
 
+  if (gridLog.enabled && result.length > 0) {
+    gridLog('Unsaved widget changes', toRaw(result))
+  }
+
   return result
 }

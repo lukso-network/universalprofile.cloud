@@ -28,5 +28,9 @@ export const compareGrids = (gridA: Grid[], gridB: Grid[]): GridChange[] => {
     }
   }
 
+  if (gridLog.enabled && result.length > 0) {
+    gridLog('Unsaved grid changes', toRaw(result))
+  }
+
   return result
 }
