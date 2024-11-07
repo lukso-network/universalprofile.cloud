@@ -18,7 +18,7 @@ const processInstagramEmbeds = () => {
 }
 
 watch(
-  () => props,
+  () => props.src,
   async () => {
     embedSrc.value = ''
     await nextTick()

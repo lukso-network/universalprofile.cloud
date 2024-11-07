@@ -183,26 +183,6 @@ onUnmounted(() => {
           class="-rotate-90 transition"
         ></lukso-icon>
       </lukso-tooltip>
-
-      <!-- Save  -->
-      <lukso-tooltip
-        :class="styles.saveButton"
-        :text="
-          hasUnsavedGrid && !isMobile ? formatMessage('grid_can_save') : ''
-        "
-        placement="left"
-        :offset="15"
-        :show-delay="1000"
-        @click="hasUnsavedGrid && !isSavingGrid ? emits('on-save') : undefined"
-      >
-        <lukso-icon
-          :name="isSavingGrid ? 'spinner' : 'tick'"
-          :color="hasUnsavedGrid ? 'green-54' : 'neutral-85'"
-          :class="{
-            'animate-spin': isSavingGrid,
-          }"
-        ></lukso-icon>
-      </lukso-tooltip>
     </div>
 
     <!-- Edit mode toggle -->
@@ -223,6 +203,25 @@ onUnmounted(() => {
       <lukso-icon
         :name="isEditingGrid ? 'close-lg' : 'edit'"
         color="purple-41"
+      ></lukso-icon>
+    </lukso-tooltip>
+
+    <!-- Save  -->
+    <lukso-tooltip
+      v-if="isEditingGrid"
+      :class="styles.saveButton"
+      :text="hasUnsavedGrid && !isMobile ? formatMessage('grid_can_save') : ''"
+      placement="left"
+      :offset="15"
+      :show-delay="1000"
+      @click="hasUnsavedGrid && !isSavingGrid ? emits('on-save') : undefined"
+    >
+      <lukso-icon
+        :name="isSavingGrid ? 'spinner' : 'tick'"
+        :color="hasUnsavedGrid ? 'green-54' : 'neutral-85'"
+        :class="{
+          'animate-spin': isSavingGrid,
+        }"
       ></lukso-icon>
     </lukso-tooltip>
   </div>

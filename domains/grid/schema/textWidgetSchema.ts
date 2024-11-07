@@ -6,6 +6,7 @@ export const textWidgetSchema = z.object({
   backgroundColor: z.string().default('#f9f9f9').superRefine(hexColorValidator),
   title: z.string().optional(),
   text: z.string().optional(),
+  link: z.string().optional(),
 })
 
 export type TextWidgetProperties = z.input<typeof textWidgetSchema>

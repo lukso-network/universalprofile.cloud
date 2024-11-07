@@ -11,6 +11,7 @@ const {
   gridRowHeightRatio,
   selectedGridId,
   isSavingGrid,
+  mobileLimitationsDisplayed,
 } = storeToRefs(useGridStore())
 const {
   saveGrid,
@@ -21,6 +22,8 @@ const {
   getGridById,
   gridsForTabs,
 } = useGrid()
+const { showModal } = useModal()
+const { formatMessage } = useIntl()
 const gridContainer = ref<HTMLElement | null>(null)
 const { width } = useElementSize(gridContainer)
 const gridWidgets = ref<GridWidget[]>([])
@@ -160,6 +163,19 @@ watch(
         hasUnsavedGrid.value = true
       } else {
         hasUnsavedGrid.value = false
+      }
+
+      // show mobile limitations modal (only once)
+      if (isMobile.value && !mobileLimitationsDisplayed.value) {
+        showModal<DefaultModalData>({
+          data: {
+            icon: '/images/grid.svg',
+            title: formatMessage('grid_mobile_limitations_title'),
+            message: formatMessage('grid_mobile_limitations_message'),
+            confirmButtonText: formatMessage('grid_mobile_limitations_confirm'),
+          },
+        })
+        mobileLimitationsDisplayed.value = true
       }
     } else {
       gridWidgets.value = getSelectedGridWidgets(updatedViewedGrid)
