@@ -164,6 +164,17 @@ const handleBackToSelection = () => {
           "
         ></lukso-color-picker>
       </div>
+
+      <!-- Link -->
+      <lukso-input
+        .value="inputValues?.link"
+        :label="formatMessage('add_widget_text_link_label')"
+        :placeholder="formatMessage('add_widget_text_link_placeholder')"
+        is-full-width
+        @on-input="
+          (customEvent: CustomEvent) => handleFieldChange(customEvent, 'link')
+        "
+      ></lukso-input>
     </div>
 
     <!-- Buttons -->
