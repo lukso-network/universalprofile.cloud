@@ -107,7 +107,7 @@ const handleToggleMobile = () => {
         {{ formatMessage('modal_connect_wallet_mobile_scan_text') }}
       </div>
       <WalletConnectQrCode
-        class="flex items-center justify-center pb-6 pt-4"
+        class="flex items-center justify-center"
         @disconnect="handleToggleMobile"
       />
     </div>
