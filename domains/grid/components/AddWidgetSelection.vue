@@ -89,7 +89,7 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
             @click="handleSelectWidget('IMAGES')"
           >
             <lukso-icon
-              name="camera"
+              name="gallery"
               size="medium"
               color="neutral-100"
             ></lukso-icon>
