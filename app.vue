@@ -15,7 +15,6 @@ const {
   isSearchOpen,
   isModalOpen,
   isWalletConnect,
-  isMobile,
 } = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents } =
   useBrowserExtensionProvider()
@@ -62,13 +61,9 @@ const setupWeb3Instances = async () => {
     window.web3 = getWeb3(PROVIDERS.RPC)
   }
 
-  // on mobile we need to initialize WalletConnect provider
-  if (isMobile.value) {
-    await initWalletConnectProvider()
-  }
-
   // reconnect wallet connect
   if (isWalletConnect.value) {
+    await initWalletConnectProvider()
     await connectWalletConnect()
   }
 }
