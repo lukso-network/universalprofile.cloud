@@ -21,7 +21,10 @@ const { addProviderEvents, removeProviderEvents } =
 const { disconnect } = useBaseProvider()
 const { cacheValue } = useCache()
 const { currencyList } = storeToRefs(useCurrencyStore())
-const { initProvider, connect } = useWalletConnectProvider()
+const {
+  initProvider: initWalletConnectProvider,
+  connect: connectWalletConnect,
+} = useWalletConnectProvider()
 const { formatMessage } = useIntl()
 const { gridChainId, tempGrids } = storeToRefs(useGridStore())
 const swHasUpgrade = ref<boolean>(false)
@@ -60,8 +63,8 @@ const setupWeb3Instances = async () => {
 
   // reconnect wallet connect
   if (isWalletConnect.value) {
-    await initProvider()
-    await connect()
+    await initWalletConnectProvider()
+    await connectWalletConnect()
   }
 }
 

@@ -1,11 +1,22 @@
 import { INJECTED_PROVIDER } from '@/shared/provider'
 
 const connect = async () => {
-  const { isWalletConnect, isMobile } = storeToRefs(useAppStore())
-  const { connect: connectWalletConnect } = useWalletConnectProvider()
+  const { isWalletConnect, isMobile, walletConnectProvider } =
+    storeToRefs(useAppStore())
+  const {
+    connect: connectWalletConnect,
+    initProvider: initWalletConnectProvider,
+  } = useWalletConnectProvider()
   const { connect: connectBrowserExtension } = useBrowserExtensionProvider()
 
   if (isWalletConnect.value || isMobile.value) {
+    await initWalletConnectProvider()
+    walletConnectProvider.value?.on('display_uri', (data: string) => {
+      const deepLink = walletConnectDeepLinkUrl(data, {
+        withRedirectUrl: true,
+      })
+      navigateTo(deepLink, { external: true })
+    })
     await connectWalletConnect()
     return
   }

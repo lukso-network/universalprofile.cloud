@@ -94,7 +94,15 @@ const handleClick = async (event: Event) => {
 
   // when we are not connected, we need to connect first
   if (!isConnected.value) {
-    await connect()
+    try {
+      isPending.value = true
+      await connect()
+    } catch (error) {
+      console.warn(error)
+    } finally {
+      isPending.value = false
+    }
+
     invalidateQueries()
 
     // stop if we want to follow ourselves
