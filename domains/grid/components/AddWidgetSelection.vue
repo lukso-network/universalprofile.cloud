@@ -119,14 +119,13 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
           variant="light"
           :show-delay="SHOW_TOOLTIP_DELAY"
           :text="formatMessage('widget_type_elfsight')"
-          class="hidden"
         >
-          <img
-            src="/images/elfsight.png"
-            :alt="formatMessage('widget_type_elfsight')"
-            class="size-10 cursor-pointer transition hover:scale-105"
+          <div
+            class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-105"
             @click="handleSelectWidget('ELFSIGHT')"
-          />
+          >
+            <lukso-icon name="logo-elfsight-mono" size="large"></lukso-icon>
+          </div>
         </lukso-tooltip>
       </div>
     </section>

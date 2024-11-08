@@ -20,7 +20,7 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: 'Basic',
   [GRID_WIDGET_TYPE.enum.WARPCAST]: 'Basic',
   [GRID_WIDGET_TYPE.enum.YOUTUBE]: 'Basic',
-  [GRID_WIDGET_TYPE.enum.ELFSIGHT]: 'Basic',
+  [GRID_WIDGET_TYPE.enum.ELFSIGHT]: 'Elfsight',
 }
 
 const loadComponent = (type?: string): Component | undefined => {
