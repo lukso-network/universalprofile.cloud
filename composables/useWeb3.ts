@@ -9,7 +9,7 @@ export default function useWeb3(providerName: string) {
     const web3 = web3Store.getWeb3(providerName)
 
     if (!web3) {
-      throw new Error('Web3 instance not found')
+      throw new Error(`Web3 instance not found for provider: ${providerName}`)
     }
 
     return web3
