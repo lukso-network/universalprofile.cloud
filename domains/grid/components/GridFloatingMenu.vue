@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useElementSize } from '@vueuse/core'
 import { tv } from 'tailwind-variants'
 
 type Emits = {
@@ -20,6 +21,7 @@ const { showModal } = useModal()
 const bottom = ref(
   isMobile.value ? BOTTOM_MARGIN_MOBILE_PX : BOTTOM_MARGIN_DESKTOP_PX
 )
+const menuRef = ref<HTMLElement | null>(null)
 
 const handleToggleGridEditMode = async () => {
   isEditingGrid.value = !isEditingGrid.value
@@ -112,13 +114,23 @@ const handleScroll = () => {
   const scrollTop = window.scrollY
   const windowHeight = window.innerHeight
   const documentHeight = document.documentElement.scrollHeight
+  const { height: menuHeight } = useElementSize(menuRef)
 
+  // if user scroll to the bottom we keep menu above footer
   if (scrollTop + windowHeight + bottomOffset >= documentHeight) {
     bottom.value =
       scrollTop + windowHeight + bottomOffset + bottomMargin - documentHeight
-  } else {
-    bottom.value = bottomMargin
+    return
   }
+
+  // if mobile keep menu at the bottom of the screen
+  if (isMobile.value) {
+    bottom.value = bottomMargin
+    return
+  }
+
+  // otherwise we keep menu in the middle of the screen
+  bottom.value = windowHeight / 2 - 0.5 * menuHeight.value
 }
 
 onMounted(() => {
@@ -133,6 +145,7 @@ onUnmounted(() => {
 <template>
   <div
     v-if="isConnected && isViewingOwnProfile"
+    ref="menuRef"
     class="fixed z-50 flex animate-fade-in gap-6 overflow-hidden rounded-full bg-neutral-100 p-3 shadow-neutral-shadow-round duration-300 ease-in-out sm:bottom-10 sm:right-10 sm:flex-col sm:transition lg:right-[calc(50%-540px)]"
     :class="{
       'right-[calc(50%-160px)] h-[64px] w-[320px] sm:h-[320px] sm:w-[64px]':
