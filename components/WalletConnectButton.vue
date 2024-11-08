@@ -4,10 +4,10 @@ const deepLink = ref('')
 const { initProvider, connect: connectWalletConnect } =
   useWalletConnectProvider()
 const { walletConnectProvider: provider } = storeToRefs(useAppStore())
-const { closeModal } = useModal()
+const isLoading = ref(false)
 
 const handleClick = async () => {
-  await closeModal()
+  isLoading.value = true
   navigateTo(deepLink.value, { external: true })
 }
 
@@ -32,7 +32,7 @@ onMounted(async () => {
     variant="secondary"
     is-full-width
     target="_self"
-    :is-loading="!deepLink ? true : undefined"
+    :is-loading="!deepLink || isLoading ? true : undefined"
     :loading-text="
       formatMessage(
         'modal_connect_wallet_select_provider_connect_mobile_button'
