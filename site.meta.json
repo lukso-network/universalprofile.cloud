@@ -61,6 +61,10 @@
     {
       "name": "twitter:description",
       "content": "Explore Universal Profiles and view all your assets in one place as well as send and receive tokens to other Universal Profile users."
+    },
+    {
+      "http-equiv": "X-Frame-Options",
+      "content": "DENY"
     }
   ]
 }
