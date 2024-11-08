@@ -98,7 +98,7 @@ const handleResetGrid = async () => {
   const _grid = buildGrid(userGrid, isMobile.value, canEditGrid.value)
 
   // when user has no grids we re-create empty grids
-  if (gridsForTabs.value.length === 1) {
+  if (_grid.length === 0) {
     viewedGrid.value = cloneObject(EMPTY_GRID)
     tempGrid.value = cloneObject(EMPTY_GRID)
   } else {
