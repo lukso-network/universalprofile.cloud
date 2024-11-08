@@ -116,7 +116,8 @@ export const saveConfig = async (address: Address, config: GridConfig[]) => {
     gridLog('Config encoded JSON url', encodedJsonUrl)
   }
 
-  const { contract } = useWeb3(PROVIDERS.INJECTED)
+  const { providerWeb3Instance } = useBaseProvider()
+  const { contract } = providerWeb3Instance.value
   const universalProfileContract = contract<UniversalProfile>(
     UniversalProfileContract.abi as AbiItem[],
     address
