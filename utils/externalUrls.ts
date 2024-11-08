@@ -147,17 +147,34 @@ export const universalSwapsAssetUrl = (address?: Address) => {
  *
  * @param data
  */
-export const walletConnectDeepLinkUrl = (data: string) => {
+export const walletConnectDeepLinkUrl = (
+  data: string,
+  options?: {
+    withRedirectUrl?: boolean
+  }
+) => {
   if (genericLog.enabled) {
     genericLog(`Wallet Connect link: ${data}`)
   }
 
-  const urlData = new URL(data)
-  const redirectUrl = location.href.replace(
-    '&modalTemplate=ConnectWallet&modalSize=auto',
-    ''
-  )
-  const deepLink = `${MOBILE_APP_DEEP_LINK_PREFIX}://wallet-connect/${urlData.pathname}${urlData.search}&redirectUrl=${redirectUrl}`
+  const dataUrl = new URL(data)
+
+  // add redirectUrl to deep link
+  if (options?.withRedirectUrl) {
+    const redirectUrl = new URL(location.href)
+
+    // remove modal query params so we don't re-open the modal
+    redirectUrl.searchParams.delete('modalTemplate')
+    redirectUrl.searchParams.delete('modalSize')
+
+    // add redirectUrl to dataUrl
+    dataUrl.searchParams.append(
+      'redirectUrl',
+      `${redirectUrl.origin}${redirectUrl.pathname}${redirectUrl.search}`
+    )
+  }
+
+  const deepLink = `${MOBILE_APP_DEEP_LINK_PREFIX}://wallet-connect/${dataUrl.pathname}${dataUrl.search}`
 
   if (genericLog.enabled) {
     genericLog(`Mobile App link: ${deepLink}`)

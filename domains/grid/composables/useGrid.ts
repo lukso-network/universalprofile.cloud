@@ -154,7 +154,8 @@ export const useGrid = () => {
         gridLog('Add grid widget', widget)
       }
 
-      placeWidgetInGrid(widget, grid.grid, grid.gridColumns)
+      // widget is added at the end and doesn't have x/y cords yet but findBestPosition algorithm will add them later
+      grid.grid.push(widget as GridWidget)
     },
 
     updateGridWidget: (id?: string, widget?: Partial<GridWidget>) => {

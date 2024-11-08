@@ -40,7 +40,9 @@ const generateQrCode = (data: string) => {
   })
 
   if (qrCodeElement.value) {
+    qrCodeElement.value.innerHTML = '<AppLoader />'
     qrCode.append(qrCodeElement.value as HTMLDivElement)
+    qrCodeElement.value.classList.add('animate-fade-in')
   }
 }
 
@@ -69,6 +71,7 @@ onMounted(async () => {
     >
       <div
         ref="qrCodeElement"
+        class="cursor-pointer"
         :style="{
           'min-height': `${size}px`,
         }"
