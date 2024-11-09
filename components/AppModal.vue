@@ -37,7 +37,7 @@ watch(
       setModal({
         template: modalTemplate,
         data: modalData ? JSON.parse(modalData) : undefined,
-        size: modalSize,
+        size: modalSize || 'small',
       })
     } else {
       loadModalTemplate(MODAL_DEFAULT_TEMPLATE)
