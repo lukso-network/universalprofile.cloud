@@ -52,7 +52,7 @@ const connect = async () => {
 
     // when we connect on the landing page we redirect to profile
     if (route.name === 'index') {
-      navigateTo(profileRoute(address))
+      await navigateTo(profileRoute(address))
     }
   } catch (error: unknown) {
     console.error(error)
