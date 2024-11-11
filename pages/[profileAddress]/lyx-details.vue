@@ -26,7 +26,10 @@ const handleSendLyx = () => {
 
 const handleBuyLyx = () => {
   if (isTestnet.value) {
-    window.open(TESTNET_FAUCET_URL, '_blank')
+    navigateTo(TESTNET_FAUCET_URL, {
+      external: true,
+      open: { target: '_blank' },
+    })
   } else {
     try {
       assertAddress(viewedProfile.value?.address, 'profile')

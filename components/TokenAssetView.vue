@@ -46,7 +46,12 @@ const handlePreviewImage = () => {
 
 const handleBuySellAsset = (event: Event) => {
   event.stopPropagation()
-  window.open(universalSwapsAssetUrl(asset.value?.address), '_blank')
+  navigateTo(universalSwapsAssetUrl(asset.value?.address), {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 </script>
 

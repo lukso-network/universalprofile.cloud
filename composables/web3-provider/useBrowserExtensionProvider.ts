@@ -5,7 +5,12 @@ import type { ProviderAPI } from '@/types/provider'
 const openStoreLink = () => {
   const storeLink = browserInfo().storeLink
 
-  window.open(storeLink, '_blank')
+  navigateTo(storeLink, {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 
 const connect = async () => {
@@ -47,7 +52,7 @@ const connect = async () => {
 
     // when we connect on the landing page we redirect to profile
     if (route.name === 'index') {
-      navigateTo(profileRoute(address))
+      await navigateTo(profileRoute(address))
     }
   } catch (error: unknown) {
     console.error(error)

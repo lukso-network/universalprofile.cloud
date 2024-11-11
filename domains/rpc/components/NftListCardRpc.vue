@@ -16,12 +16,7 @@ const token = useToken()(asset)
 const assetImage = useAssetImage(token, false, 260)
 const { showModal } = useModal()
 const { isCreated } = useFilters()
-const viewedProfileAddress = getCurrentProfileAddress()
-const { isMobile } = storeToRefs(useAppStore())
-
-const viewedProfileIsConnected = computed(() =>
-  useProfile().viewedProfileIsConnected(viewedProfileAddress)
-)
+const { isMobile, isViewedProfileConnected } = storeToRefs(useAppStore())
 
 const handleShowAsset = () => {
   // created LSP8 assets should navigate to collection
@@ -65,10 +60,12 @@ const handleSendAsset = (event: Event) => {
 
 const handleBuySellAsset = (event: Event) => {
   event.stopPropagation()
-  window.open(
-    universalPageAssetUrl(props.asset.address, props.asset.tokenId),
-    '_blank'
-  )
+  navigateTo(universalPageAssetUrl(props.asset.address, props.asset.tokenId), {
+    external: true,
+    open: {
+      target: '_blank',
+    },
+  })
 }
 
 const assetTokenId = computed(() => {
@@ -148,7 +145,7 @@ onMounted(() => {
               {{ $formatNumber(getBalance(token)) }}
             </span>
           </div>
-          <AppPlaceholderLine v-else class="my-[1px] h-[12px] w-1/4" />
+          <AppPlaceholderLine v-else class="my-px h-[12px] w-1/4" />
           <NftListCardCreatorsRpc :asset="token" class="mt-4" />
 
           <!-- Buttons -->
@@ -162,13 +159,13 @@ onMounted(() => {
                 variant="secondary"
                 @click="handleBuySellAsset"
               >
-                <span v-if="viewedProfileIsConnected">{{
+                <span v-if="isViewedProfileConnected">{{
                   $formatMessage('button_sell')
                 }}</span>
                 <span v-else>{{ $formatMessage('button_buy') }}</span>
               </lukso-button>
               <lukso-button
-                v-if="viewedProfileIsConnected"
+                v-if="isViewedProfileConnected"
                 :size="isMobile ? 'medium' : 'small'"
                 variant="secondary"
                 @click="handleSendAsset"

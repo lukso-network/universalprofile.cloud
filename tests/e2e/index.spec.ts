@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test'
+
 import { test } from './helpers/fixtures'
 
 test('landing page when no browser extension', async ({ page }) => {

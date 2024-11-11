@@ -21,8 +21,12 @@ const { addProviderEvents, removeProviderEvents } =
 const { disconnect } = useBaseProvider()
 const { cacheValue } = useCache()
 const { currencyList } = storeToRefs(useCurrencyStore())
-const { initProvider, reconnect } = useWalletConnectProvider()
+const {
+  initProvider: initWalletConnectProvider,
+  connect: connectWalletConnect,
+} = useWalletConnectProvider()
 const { formatMessage } = useIntl()
+const { gridChainId, tempGrids } = storeToRefs(useGridStore())
 const swHasUpgrade = ref<boolean>(false)
 
 // Make the service worker update available to the rest of the app
@@ -39,13 +43,7 @@ const setupTranslations = () => {
  * RPC - from RPC endpoint
  */
 const setupWeb3Instances = async () => {
-  // reconnect wallet connect
-  if (isWalletConnect.value) {
-    await initProvider()
-    await reconnect()
-  }
-
-  // set injected provider
+  // set web3 for injected provider
   if (INJECTED_PROVIDER) {
     // for chain interactions through dapp
     addWeb3(PROVIDERS.INJECTED, INJECTED_PROVIDER)
@@ -61,6 +59,12 @@ const setupWeb3Instances = async () => {
     addWeb3(PROVIDERS.RPC, rpcNode?.host, { headers: rpcNode.headers })
     // expose web3 instance to global scope for console access
     window.web3 = getWeb3(PROVIDERS.RPC)
+  }
+
+  // reconnect wallet connect
+  if (isWalletConnect.value) {
+    await initWalletConnectProvider()
+    await connectWalletConnect()
   }
 }
 
@@ -112,18 +116,19 @@ const setupNetwork = async () => {
   const network = useRouter().currentRoute.value.query?.network
 
   if (!network) {
-    await checkNetwork()
     return
   }
 
   if (SUPPORTED_NETWORK_IDS.includes(network)) {
     selectedChainId.value = getNetworkById(network).chainId
-    await checkNetwork()
+
+    // reset temp grid layout if network is changed
+    if (gridChainId.value !== selectedChainId.value) {
+      tempGrids.value = {}
+    }
   } else {
     console.warn(
-      `Invalid network: ${network}, valid networks are ${SUPPORTED_NETWORK_IDS.join(
-        ', '
-      )}`
+      `Invalid network: ${network}, valid networks are ${SUPPORTED_NETWORK_IDS.join(', ')}`
     )
   }
 }
@@ -190,16 +195,20 @@ const resetDataProvider = () => {
 }
 
 onMounted(async () => {
-  setupTranslations()
-  setupNetwork()
-  await setupWeb3Instances()
-  checkConnectionExpiry()
-  await setupConnectedProfile()
-  resetDataProvider()
-  isLoadedApp.value = true
-  await setupCurrencies()
-  window.scrollTo(0, 0)
-  checkBuyLyx()
+  try {
+    setupTranslations()
+    setupNetwork()
+    await setupWeb3Instances()
+    checkConnectionExpiry()
+    await setupConnectedProfile()
+    resetDataProvider()
+    isLoadedApp.value = true
+    await setupCurrencies()
+    window.scrollTo(0, 0)
+    checkBuyLyx()
+  } catch (error) {
+    console.error(error)
+  }
 })
 
 onUnmounted(() => {

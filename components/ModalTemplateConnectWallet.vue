@@ -5,6 +5,7 @@ const { isUniversalProfileExtension, connect: connectBrowserExtension } =
   useBrowserExtensionProvider()
 const { isConnecting, isMobile } = storeToRefs(useAppStore())
 const isWalletConnect = ref(false)
+const { browserSupportExtension, extensionStore } = useBrowser()
 
 const handleConnectBrowser = async () => {
   // if not supported browser
@@ -14,7 +15,10 @@ const handleConnectBrowser = async () => {
 
   // extension not installed then link to store
   if (!isUniversalProfileExtension) {
-    return window.open(extensionStore.value.url, '_blank')
+    return navigateTo(extensionStore.value.url, {
+      external: true,
+      open: { target: '_blank' },
+    })
   }
 
   await connectBrowserExtension()
@@ -23,18 +27,6 @@ const handleConnectBrowser = async () => {
 const handleToggleMobile = () => {
   isWalletConnect.value = !isWalletConnect.value
 }
-
-const extensionStore = computed(() => {
-  const url = browserInfo().storeLink
-  const icon = `logo-${browserInfo().id}`
-
-  return {
-    icon,
-    url,
-  }
-})
-
-const browserSupportExtension = computed(() => extensionStore.value.url !== '')
 </script>
 
 <template>
@@ -61,7 +53,7 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
           'flex-col-reverse': isMobile,
           'flex-col': !isMobile,
         }"
-        class="flex gap-2"
+        class="flex w-full gap-2"
       >
         <lukso-button
           variant="secondary"
@@ -86,11 +78,11 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
             )
           }}
         </lukso-button>
-        <WalletConnectButton v-if="false" />
+        <WalletConnectButton v-if="isMobile" />
         <lukso-button
+          v-else
           variant="secondary"
           is-full-width
-          disabled
           @click="handleToggleMobile"
         >
           <lukso-icon name="phone-portrait-outline" class="mr-2"></lukso-icon>
@@ -99,7 +91,6 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
               'modal_connect_wallet_select_provider_connect_mobile_button'
             )
           }}
-          (soon)
         </lukso-button>
       </div>
       <div class="paragraph-inter-12-regular mt-4 text-neutral-40">
@@ -116,7 +107,7 @@ const browserSupportExtension = computed(() => extensionStore.value.url !== '')
         {{ formatMessage('modal_connect_wallet_mobile_scan_text') }}
       </div>
       <WalletConnectQrCode
-        class="flex items-center justify-center pb-6 pt-4"
+        class="flex items-center justify-center"
         @disconnect="handleToggleMobile"
       />
     </div>

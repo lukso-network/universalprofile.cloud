@@ -34,7 +34,7 @@ const handlePreviewImage = (image: Image[]) => {
         <div
           v-for="(image, index) in optimizedImages"
           :key="index"
-          class="rounded-8 bg-neutral-90 transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
+          class="rounded-8 bg-neutral-90 transition hover:scale-[1.02] hover:shadow-neutral-shadow-round"
         >
           <AssetImage
             class="max-h-14 min-h-14 w-14 cursor-pointer rounded-8"

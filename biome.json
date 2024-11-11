@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
@@ -15,14 +15,15 @@
   "formatter": {
     "enabled": false,
     "indentWidth": 2,
-    "indentStyle": "space"
+    "indentStyle": "space",
+    "lineWidth": 80
   },
   "javascript": {
     "formatter": {
       "enabled": false,
       "semicolons": "asNeeded",
       "quoteStyle": "single",
-      "trailingComma": "all"
+      "trailingCommas": "all"
     }
   },
   "files": {

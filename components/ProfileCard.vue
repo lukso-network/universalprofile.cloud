@@ -56,7 +56,7 @@ const hasFollowButton = computed(
       :background-url="profileBackground?.url"
       is-full-width
       shadow="small"
-      :border-radius="isMobile ? 'none' : 'medium'"
+      :border-radius="isMobile ? 'none' : 'small'"
       class="-mx-4 -mt-6 w-screen sm:mx-0 sm:mt-0 sm:w-full"
     >
       <div slot="header" class="relative flex size-full flex-col items-center">
@@ -70,7 +70,7 @@ const hasFollowButton = computed(
             :profile-address="viewedProfile?.address"
             size="2x-large"
             has-identicon
-            class="relative z-[1] cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"
+            class="relative z-[1] flex cursor-pointer rounded-full outline outline-4 outline-neutral-100 transition hover:scale-[1.02]"
             @click="handlePreviewProfileImage"
           >
           </lukso-profile>

@@ -4,10 +4,6 @@ import { describe, expect, it } from 'vitest'
 import AppLinks from '@/components/AppLinks.vue'
 
 describe('AppLinks', () => {
-  const profile: Profile = {
-    address: '0x1234567890abcdef1234567890abcdef12345678',
-  }
-
   it('should render empty links', async () => {
     const component = await renderSuspended(AppLinks, {
       props: {

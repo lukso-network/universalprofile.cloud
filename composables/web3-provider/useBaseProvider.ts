@@ -1,11 +1,22 @@
 import { INJECTED_PROVIDER } from '@/shared/provider'
 
 const connect = async () => {
-  const { isWalletConnect, isMobile } = storeToRefs(useAppStore())
-  const { connect: connectWalletConnect } = useWalletConnectProvider()
+  const { isWalletConnect, isMobile, walletConnectProvider } =
+    storeToRefs(useAppStore())
+  const {
+    connect: connectWalletConnect,
+    initProvider: initWalletConnectProvider,
+  } = useWalletConnectProvider()
   const { connect: connectBrowserExtension } = useBrowserExtensionProvider()
 
   if (isWalletConnect.value || isMobile.value) {
+    await initWalletConnectProvider()
+    walletConnectProvider.value?.on('display_uri', (data: string) => {
+      const deepLink = walletConnectDeepLinkUrl(data, {
+        withRedirectUrl: true,
+      })
+      navigateTo(deepLink, { external: true })
+    })
     await connectWalletConnect()
     return
   }
@@ -15,17 +26,26 @@ const connect = async () => {
 
 const disconnect = () => {
   const { removeItem } = useLocalStorage()
-  const { connectedProfileAddress, isWalletConnect, walletConnectProvider } =
-    storeToRefs(useAppStore())
+  const {
+    connectedProfileAddress,
+    isWalletConnect,
+    walletConnectProvider,
+    walletConnectSession,
+  } = storeToRefs(useAppStore())
+  const { isEditingGrid } = storeToRefs(useGridStore())
 
   // disconnect WalletConnect
   if (isWalletConnect.value) {
     walletConnectProvider.value?.disconnect()
-    isWalletConnect.value = false
+    walletConnectSession.value = undefined
   }
 
+  // reset connected profile address
   connectedProfileAddress.value = undefined
+  // remove connection expiry
   removeItem(STORAGE_KEY.CONNECTION_EXPIRY)
+  // exit edit mode for grid
+  isEditingGrid.value = false
 }
 
 /**

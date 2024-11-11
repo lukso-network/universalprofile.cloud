@@ -6,13 +6,20 @@ type Props = {
 const props = defineProps<Props>()
 
 const handleClick = () => {
-  props?.asset && 'url' in props.asset && window.open(props.asset.url, '_blank')
+  if (props.asset && 'url' in props.asset) {
+    navigateTo(props.asset.url, {
+      external: true,
+      open: {
+        target: '_blank',
+      },
+    })
+  }
 }
 </script>
 
 <template>
   <div
-    class="paragraph-inter-10-bold-uppercase flex size-14 cursor-pointer flex-col items-center justify-center rounded-8 border border-neutral-90 bg-neutral-100 bg-cover transition hover:scale-[1.02] hover:shadow-neutral-drop-shadow"
+    class="paragraph-inter-10-bold-uppercase flex size-14 cursor-pointer flex-col items-center justify-center rounded-8 border border-neutral-90 bg-neutral-100 bg-cover transition hover:scale-[1.02] hover:border-transparent hover:shadow-neutral-shadow-round"
     @click="handleClick"
   >
     <lukso-icon name="document-outline" class="mb-1"></lukso-icon>

@@ -1,8 +1,10 @@
 <script setup lang="ts">
+const { gridsForTabs, gridsForDisplay, canEditGrid, initializeGrid } = useGrid()
 const { isOwned, setFilters, filters } = useFilters()
+const { isConnected } = storeToRefs(useAppStore())
 const viewedProfileAddress = getCurrentProfileAddress()
 const viewedProfile = useProfile().getProfile(viewedProfileAddress)
-const assetsData = useProfileAssetsRpc()(viewedProfileAddress)
+const assetsData = useProfileAssets()(viewedProfileAddress)
 const assets = computed(() => assetsData.value || [])
 const isLoadingAssets = computed(() =>
   assets.value.some(asset => asset.isLoading)
@@ -78,24 +80,81 @@ const createdCollectiblesCount = computed(
     ).length
 )
 
-const handleTabChange = (tab: ProfileViewTabName) => {
-  setFilters({ assetGroup: tab }, undefined, true)
+const handleTabChange = (tab: ProfileViewTab) => {
+  setFilters({ assetGroup: tab.id }, undefined, true)
 }
 
-const tabs = computed(() => {
-  return [
-    {
-      id: 'collectibles',
-      count: isOwned.value
-        ? ownedCollectiblesCount.value
-        : createdCollectiblesCount.value,
-    },
-    {
-      id: 'tokens',
-      count: isOwned.value ? ownedTokensCount.value : createdTokensCount.value,
-    },
-  ]
+const tabs = computed<ProfileViewTab[]>(() => {
+  const _tabs = [] as ProfileViewTab[]
+  const grids = canEditGrid.value ? gridsForDisplay.value : gridsForTabs.value
+
+  if (grids.length > 0) {
+    _tabs.push({
+      id: 'grid',
+      count:
+        gridsForDisplay.value.length > 1 ? gridsForDisplay.value.length : 0,
+    })
+  }
+
+  _tabs.push({
+    id: 'collectibles',
+    count: isOwned.value
+      ? ownedCollectiblesCount.value
+      : createdCollectiblesCount.value,
+  })
+  _tabs.push({
+    id: 'tokens',
+    count: isOwned.value ? ownedTokensCount.value : createdTokensCount.value,
+  })
+
+  return _tabs
 })
+
+const activeTab = computed(() => {
+  return filters.assetGroup
+})
+
+const selectBestTab = () => {
+  const route = useRoute()
+  const assetGroup = route.query.assetGroup as FiltersAssetGroup | undefined
+  const grids = canEditGrid.value ? gridsForDisplay.value : gridsForTabs.value
+
+  // if user has grids we switch to grid tab, otherwise we switch to collectibles or tokens
+  const _changeTab = () => {
+    if (grids.length > 0) {
+      setFilters({ assetGroup: 'grid' }, undefined, true)
+    } else if (ownedCollectiblesCount.value > 0) {
+      setFilters({ assetGroup: 'collectibles' }, undefined, true)
+    } else {
+      setFilters({ assetGroup: 'tokens' }, undefined, true)
+    }
+  }
+
+  // if filter is set we don't change it
+  // which might be in case user hit back button
+  if (assetGroup) {
+    // for grid we still need to check if user has grids
+    // in case user connect/disconnect profile without grids
+    if (assetGroup === 'grid') {
+      _changeTab()
+    }
+
+    return
+  }
+
+  _changeTab()
+}
+
+watch(
+  [isConnected, viewedProfileAddress],
+  async () => {
+    // we initialize grid at this point so we can switch tabs if user has no grids
+    await initializeGrid(viewedProfileAddress, canEditGrid.value)
+    // select best tab based for initial display
+    selectBestTab()
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -111,7 +170,7 @@ const tabs = computed(() => {
       >
         {{ $formatMessage('asset_creations') }}
         <span
-          class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 bg-neutral-20 px-1 py-[1px] text-neutral-100"
+          class="paragraph-inter-10-semi-bold ml-2 rounded-4 border border-neutral-20 bg-neutral-20 px-1 py-px text-neutral-100"
           >{{ createdCollectiblesCount }}</span
         >
       </div>
@@ -122,12 +181,24 @@ const tabs = computed(() => {
       />
       <div>
         <ProfileTabs
-          :active-tab="filters.assetGroup"
+          :active-tab="activeTab"
           :tabs="tabs"
           @activate-tab="handleTabChange"
           class="mt-20"
         />
-        <ProfileAssets :assets="filteredAssets" :is-loading="isLoadingAssets" />
+        <GridView
+          :class="{
+            'visible relative z-10 opacity-100': activeTab === 'grid',
+            'invisible absolute z-0 h-0 overflow-hidden opacity-0':
+              activeTab !== 'grid',
+          }"
+        />
+        <ProfileAssets
+          v-show="activeTab !== 'grid'"
+          :assets="filteredAssets"
+          :is-loading="isLoadingAssets"
+          class="relative z-10"
+        />
       </div>
     </div>
     <ProfileViewNotUp v-else :address="viewedProfile?.address" />
