@@ -2,7 +2,7 @@
 import { useElementSize } from '@vueuse/core'
 import { GridItem, GridLayout } from 'grid-layout-plus'
 
-const { isMobile } = storeToRefs(useAppStore())
+const { isMobile, isViewingOwnProfile } = storeToRefs(useAppStore())
 const {
   isEditingGrid,
   tempGrid,
@@ -143,10 +143,13 @@ const handleItemResized = () => {
 watch(
   [tempGrid, isEditingGrid, selectedGridId, isMobile, viewedGrid],
   () => {
+    const withAddContentPlaceholder =
+      canEditGrid.value ||
+      (isViewingOwnProfile.value && gridsForTabs.value.length === 1)
     const updatedViewedGrid = buildGrid(
       viewedGrid.value,
       isMobile.value,
-      canEditGrid.value || gridsForTabs.value.length === 1
+      withAddContentPlaceholder
     )
 
     // if user is in edit mode we use temp grid, otherwise viewed grid
@@ -154,7 +157,7 @@ watch(
       const updatedTempGrid = buildGrid(
         tempGrid.value,
         isMobile.value,
-        canEditGrid.value || gridsForTabs.value.length === 1
+        withAddContentPlaceholder
       )
       gridWidgets.value = getSelectedGridWidgets(updatedTempGrid)
       const changes = compareGrids(updatedViewedGrid, updatedTempGrid)
