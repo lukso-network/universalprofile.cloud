@@ -78,6 +78,7 @@ onUnmounted(() => {
   >
     <div
       ref="modalContainer"
+      class="max-h-[calc(100vh-100px)]"
       :class="{
         'overflow-y-auto': modalHeight > screenHeight - 150,
       }"
