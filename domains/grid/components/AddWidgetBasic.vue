@@ -129,11 +129,13 @@ const hasInstructions = computed(() => widgetInstructions.value !== '-')
       </div>
     </div>
     <div class="paragraph-inter-14-regular pb-6">
-      {{
-        formatMessage(
-          `${isEdit ? 'edit' : 'add'}_widget_${widgetType.toLowerCase()}_description`
-        )
-      }}
+      <lukso-sanitize
+        :html-content="
+          formatMessage(
+            `${isEdit ? 'edit' : 'add'}_widget_${widgetType.toLowerCase()}_description`
+          )
+        "
+      ></lukso-sanitize>
 
       <!-- Instructions -->
       <div v-if="hasInstructions" class="mt-2">
@@ -162,7 +164,7 @@ const hasInstructions = computed(() => widgetInstructions.value !== '-')
           v-if="isInstructionsVisible"
           class="mt-4 animate-fade-in whitespace-pre-line font-600 break-word"
         >
-          {{ widgetInstructions }}
+          <lukso-sanitize :html-content="widgetInstructions"></lukso-sanitize>
         </div>
       </div>
     </div>
