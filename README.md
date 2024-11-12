@@ -1,6 +1,6 @@
-# 🆙 universalprofile.cloud
+# 🆙 universaleverything.io
 
-[![Lint, Test, Build](https://github.com/lukso-network/universalprofile.cloud/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/lukso-network/universalprofile.cloud/actions/workflows/ci.yml)
+[![Lint, Test, Build](https://github.com/universal-everything/universaleverything.io/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/universal-everything/universaleverything.io/actions/workflows/ci.yml)
 
 This dApp runs on [LUKSO](https://lukso.network/) network. It allows to:
 
@@ -22,7 +22,7 @@ When you create a PR, a preview URL will be appended to the PR discussion.
 
 Branch: `main`
 
-- <https://universalprofile.cloud/>
+- <https://universaleverything.io/>
 
 ## Fetch data mode
 

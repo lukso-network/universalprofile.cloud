@@ -15,7 +15,7 @@ const initProvider = async () => {
       description:
         'Explore Universal Profiles and view all your assets in one place as well as send and receive tokens to other Universal Profile users.',
       url: BASE_DAPP_URL,
-      icons: ['https://universalprofile.cloud/favicon.png'],
+      icons: ['https://universaleverything.io/favicon.png'],
     },
     showQrModal: false,
     optionalChains: [numberChainId],

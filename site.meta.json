@@ -28,7 +28,7 @@
     },
     {
       "property": "og:url",
-      "content": "https://universalprofile.cloud"
+      "content": "https://universaleverything.io"
     },
     {
       "property": "og:type",
@@ -44,7 +44,7 @@
     },
     {
       "property": "og:image",
-      "content": "https://universalprofile.cloud/images/social-share.jpg"
+      "content": "https://universaleverything.io/images/social-share.jpg"
     },
     {
       "name": "twitter:card",
@@ -52,7 +52,7 @@
     },
     {
       "name": "twitter:domain",
-      "content": "universalprofile.cloud"
+      "content": "universaleverything.io"
     },
     {
       "name": "twitter:title",
