@@ -7,7 +7,7 @@ export const PLATFORM_PARSING_PARAMETERS_SPOTIFY: PlatformParsingParameters = {
   regexWithCallbacks: [
     {
       regex: createIframeRegex(
-        'https?:\\/\\/open\\.spotify\\.com\\/(?:embed\\/)?(?<type>track|album|playlist|artist)\\/(?<id>[^?"]+)(?:\\?(?<params>[^"\'\\s]*))?'
+        'https?:\\/\\/open\\.spotify\\.com\\/(?:embed\\/)?(?<type>track|album|playlist|artist|show|episode)\\/(?<id>[^?"]+)(?:\\?(?<params>[^"\'\\s]*))?'
       ),
       callback: async (matches: RegExpMatchArray[]) => {
         return processIframeAttributes(matches, {
