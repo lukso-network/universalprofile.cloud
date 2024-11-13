@@ -91,11 +91,13 @@ const handleBackToSelection = () => {
       </div>
     </div>
     <div class="paragraph-inter-14-regular pb-6">
-      {{
-        formatMessage(
-          `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_description`
-        )
-      }}
+      <lukso-sanitize
+        :html-content="
+          formatMessage(
+            `${isEdit ? 'edit' : 'add'}_widget_${type.toLowerCase()}_description`
+          )
+        "
+      ></lukso-sanitize>
     </div>
 
     <div class="flex flex-col gap-4">
