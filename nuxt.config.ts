@@ -62,7 +62,7 @@ export default defineNuxtConfig({
   ],
   ...({
     plausible: {
-      domain: 'universalprofile.cloud',
+      hashMode: true,
     },
   } as any),
   device: {
@@ -93,7 +93,7 @@ export default defineNuxtConfig({
               authToken: process.env.NUXT_PUBLIC_SENTRY_AUTH_TOKEN,
               debug: true,
               org: 'lukso',
-              project: 'universalprofile-cloud',
+              project: 'universaleverything-io',
               sourcemaps: {
                 assets: ['./.nuxt/dist/client/**'],
               },

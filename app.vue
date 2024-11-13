@@ -33,6 +33,22 @@ const swHasUpgrade = ref<boolean>(false)
 // any view can use inject('swHasUpgrade') to access this value
 provide('swHasUpgrade', swHasUpgrade)
 
+/**
+ * Setup redirect from old domain to new domain
+ */
+const setupDomainRedirect = () => {
+  const currentDomain = window.location.hostname
+  const newDomain = 'universaleverything.io'
+  const oldDomain = 'universalprofile.cloud'
+
+  if (currentDomain === oldDomain) {
+    window.location.href = `https://${newDomain}${window.location.pathname}${window.location.search}`
+  }
+}
+
+/**
+ * Setup translations
+ */
 const setupTranslations = () => {
   useIntl().setupIntl(defaultConfig)
 }
@@ -196,6 +212,7 @@ const resetDataProvider = () => {
 
 onMounted(async () => {
   try {
+    setupDomainRedirect()
     setupTranslations()
     setupNetwork()
     await setupWeb3Instances()

@@ -53,7 +53,7 @@ export const SEARCH_RESULTS_LIMIT = 100
 
 // base urls
 export const BASE_MY_UP_CLOUD_URL = 'https://my.universalprofile.cloud'
-export const BASE_DAPP_URL = 'https://universalprofile.cloud'
+export const BASE_DAPP_URL = 'https://universaleverything.io'
 export const BASE_PROFILE_LINK_URL = 'https://profile.link'
 export const BASE_L14_UP_CLOUD_URL = 'https://l14.universalprofile.cloud/'
 export const TXS_APP_LUKSO_PAGE_URL = 'https://txs.app/lukso'
