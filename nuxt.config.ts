@@ -96,6 +96,7 @@ export default defineNuxtConfig({
               project: 'universalprofile-cloud',
               sourcemaps: {
                 assets: ['./.nuxt/dist/client/**'],
+                deleteFilesAfterUpload: '**/*.map',
               },
               telemetry: false,
             }),
@@ -108,9 +109,7 @@ export default defineNuxtConfig({
           // ↓ Needed for build
           nodePolyfills(),
         ],
-        output: {
-          sourcemap: true,
-        },
+        sourcemap: true,
         onwarn(warning, warn) {
           // If we can't show which files have bad source map then we might as well not show the error/warning
           if (warning.message.includes('Sourcemap is likely to be incorrect')) {
