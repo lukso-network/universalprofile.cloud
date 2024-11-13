@@ -82,10 +82,6 @@ onUnmounted(() => {
       :class="{
         'overflow-y-auto': modalHeight > screenHeight - 150,
       }"
-      :style="{
-        maxHeight:
-          modalHeight > screenHeight - 150 ? 'calc(100vh-100px)' : 'auto',
-      }"
     >
       <component
         v-if="modalTemplateComponent"
