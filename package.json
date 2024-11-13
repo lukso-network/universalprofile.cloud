@@ -29,6 +29,7 @@
     "test:unit:ci": "dotenv -- vitest run",
     "test:debug": "npx playwright test --debug",
     "pages:build": "cross-env NODE_ENV=production NITRO_PRESET=cloudflare_pages nuxt build --standalone",
+    "pages:dev": "wrangler pages dev ./dist --port 3000",
     "nuxt:prepare": "nuxt prepare",
     "typechain": "typechain --target web3-v1 --out-dir contracts/ './shared/abis/*.json' && typechain --target web3-v1 --out-dir contracts/ './node_modules/@lukso/lsp-smart-contracts/artifacts/*.json'"
   },
