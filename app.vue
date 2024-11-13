@@ -15,6 +15,7 @@ const {
   isSearchOpen,
   isModalOpen,
   isWalletConnect,
+  isMobile,
 } = storeToRefs(useAppStore())
 const { addProviderEvents, removeProviderEvents } =
   useBrowserExtensionProvider()
@@ -240,7 +241,7 @@ useHead({
       const bodyClass = []
 
       // prevent window scroll when search modal is open
-      if (isSearchOpen.value || isModalOpen.value) {
+      if (isSearchOpen.value || (!isMobile.value && isModalOpen.value)) {
         bodyClass.push('!overflow-hidden')
       }
 
