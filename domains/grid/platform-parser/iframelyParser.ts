@@ -3,14 +3,15 @@ export const PLATFORM_PARSING_PARAMETERS_IFRAMELY: PlatformParsingParameters = {
     // Match whole embed code
     {
       regex:
-        /data-iframely-url="(?<url>[^"]+)"/,
+        /data-iframely-url="(?<iframelyUrl>[^"]+)"|href="(?<url>[^"]+)"/g,
       callback: async (matches: RegExpMatchArray[]) => {
         const properties = getPropertiesFromGroups(matches)
-        const { url } = properties
+        const { url, iframelyUrl } = properties
 
         return {
           widgetType: 'IFRAMELY',
           url,
+          iframelyUrl,
         }
       },
     },

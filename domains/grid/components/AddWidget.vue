@@ -21,6 +21,7 @@ const WIDGET_COMPONENTS: Record<string, string> = {
   [GRID_WIDGET_TYPE.enum.WARPCAST]: 'Basic',
   [GRID_WIDGET_TYPE.enum.YOUTUBE]: 'Basic',
   [GRID_WIDGET_TYPE.enum.ELFSIGHT]: 'Elfsight',
+  [GRID_WIDGET_TYPE.enum.IFRAMELY]: 'Iframely',
 }
 
 const loadComponent = (type?: string): Component | undefined => {

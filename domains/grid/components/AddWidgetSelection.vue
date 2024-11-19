@@ -127,6 +127,20 @@ const handleSelectWidget = (widgetType: GridWidgetType) => {
             <lukso-icon name="logo-elfsight-mono" size="large"></lukso-icon>
           </div>
         </lukso-tooltip>
+
+        <!-- Iframely -->
+        <lukso-tooltip
+          variant="light"
+          :show-delay="SHOW_TOOLTIP_DELAY"
+          :text="formatMessage('widget_type_iframely')"
+        >
+          <div
+            class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-neutral-20 transition hover:scale-105"
+            @click="handleSelectWidget('IFRAMELY')"
+          >
+            <lukso-icon name="logo-iframely-mono" size="large"></lukso-icon>
+          </div>
+        </lukso-tooltip>
       </div>
     </section>
 

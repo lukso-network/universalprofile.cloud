@@ -69,6 +69,7 @@ module.exports = {
           'instagram-.*',
           'twitter-.*',
           'grid-.*',
+          'iframely-.*',
         ],
       },
     ],

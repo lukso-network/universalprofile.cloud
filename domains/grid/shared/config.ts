@@ -77,6 +77,11 @@ export const WIDGET_SCHEMA_MAP: Partial<Record<GridWidgetType, GridSchemaMap>> =
       output: elfsightWidgetSchema,
       build: elfsightWidgetSchema,
     },
+    [GRID_WIDGET_TYPE.enum.IFRAMELY]: {
+      input: iframelyWidgetInputSchema,
+      output: iframelyWidgetSchema,
+      build: iframelyWidgetSchema,
+    },
   }
 
 // grid breakpoint where the grid switches into mobile mode

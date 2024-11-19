@@ -73,6 +73,7 @@ const WIDGET_COMPONENTS: Record<GridWidgetType, string> = {
   [GRID_WIDGET_TYPE.enum.SOUNDCLOUD]: 'Iframe',
   [GRID_WIDGET_TYPE.enum.WARPCAST]: 'Iframe',
   [GRID_WIDGET_TYPE.enum.ELFSIGHT]: 'Elfsight',
+  [GRID_WIDGET_TYPE.enum.IFRAMELY]: 'Iframely',
   [GRID_WIDGET_TYPE.enum.YOUTUBE]: 'Iframe',
 }
 
@@ -218,7 +219,7 @@ onMounted(async () => {
     ref="target"
     class="group relative flex h-full flex-col rounded-12 transition"
     :class="{
-      'bg-neutral-100 shadow-neutral-shadow-round hover:shadow-neutral-shadow-round-1xl':
+      'shadow-neutral-shadow-round hover:shadow-neutral-shadow-round-1xl bg-neutral-100':
         !isAddContentWidget,
       'select-none': isAllowToEdit,
       'z-50': isOpen,
@@ -239,7 +240,7 @@ onMounted(async () => {
       }"
     >
       <div
-        class="mb-1 flex size-[35px] items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 shadow-neutral-shadow-round-1xl transition hover:scale-105"
+        class="shadow-neutral-shadow-round-1xl mb-1 flex size-[35px] items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 transition hover:scale-105"
       >
         <lukso-icon
           :id="dropdownId"
@@ -320,7 +321,7 @@ onMounted(async () => {
     <!-- Resize handle -->
     <div
       v-if="isAllowToEdit && !isMobile"
-      class="grid-widget-resize absolute bottom-2 right-2 z-10 mb-1 flex size-[35px] cursor-pointer items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 opacity-0 shadow-neutral-shadow-round-1xl transition hover:scale-105 group-hover:opacity-100"
+      class="grid-widget-resize shadow-neutral-shadow-round-1xl absolute bottom-2 right-2 z-10 mb-1 flex size-[35px] cursor-pointer items-center justify-center rounded-full border border-neutral-90 bg-neutral-100 opacity-0 transition hover:scale-105 group-hover:opacity-100"
     >
       <lukso-icon
         name="expand"

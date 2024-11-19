@@ -394,5 +394,10 @@
   "success_missing_assets_description": "The below asset has been added to your profile.",
   "modal_delete_widget_cancel": "Cancel",
   "edit_widget_x_title": "Edit X (Twitter) widget",
-  "asset_filter_collection_placeholder": "Collection"
+  "asset_filter_collection_placeholder": "Collection",
+  "widget_type_iframely": "Iframely",
+  "add_widget_iframely_title": "Add Iframely widget",
+  "add_widget_iframely_description": "Use this widget to display any Iframely hosted iframes on your grid.",
+  "add_widget_iframely_input_placeholder": "Add Iframely hosted iframe",
+  "add_widget_iframely_instructions": "1. Go to iframely.com/embed\n2. Copy the generated embed code\n3. Check it contains the data-iframely-url attribute\n4. Paste it here"
 }
