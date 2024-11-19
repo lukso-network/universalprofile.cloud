@@ -18,7 +18,7 @@ const handleAddContent = async () => {
 
 <template>
   <div
-    class="flex h-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-12 p-4 opacity-50 transition hover:opacity-100 hover:shadow-neutral-shadow-round"
+    class="hover:shadow-neutral-shadow-round flex h-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-12 p-4 opacity-50 transition hover:opacity-100"
     :class="{ 'bg-dashed-border': true }"
     @click="handleAddContent"
   >
